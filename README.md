@@ -1,0 +1,4 @@
+egCAS
+=====
+
+Easy graphical CAS
