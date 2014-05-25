@@ -11,6 +11,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = egCAS
 TEMPLATE = app
 
+CONFIG += c++11
+
+LIBS += -legcas
 
 SOURCES += src/main.cpp\
         src/mainwindow.cpp \
