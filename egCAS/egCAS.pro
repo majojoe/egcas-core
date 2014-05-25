@@ -12,9 +12,11 @@ TARGET = egCAS
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += src/main.cpp\
+        src/mainwindow.cpp \
+        src/formula/formulaitem.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += src/mainwindow.h \
+        src/formula/formulaitem.h
 
-FORMS    += mainwindow.ui
+FORMS    += src/ui/mainwindow.ui
