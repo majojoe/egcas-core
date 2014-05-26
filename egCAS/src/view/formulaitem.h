@@ -14,11 +14,17 @@ class QwtMathMLDocument;
  */
 class FormulaItem : public QGraphicsItem
 {
-public:
+public:        
         ///standard constructor
         explicit FormulaItem(QGraphicsItem *parent = 0);
-        ///constructor for instantiating a formula with xml representation already available
-        explicit FormulaItem(const QString &formula, QGraphicsItem *parent = 0);
+        ~FormulaItem();
+        /**
+         * @brief constructor for instantiating a formula with xml representation already available
+         * @param formula the mathml representation of the formula to render
+         * @param point the left bottom start point for rendering the formula
+         * @param parent pointer to parent widget
+         */
+        explicit FormulaItem(const QString &formula, QPointF point, QGraphicsItem *parent = 0);
         /**
          * @brief override paint from QGraphicsItem
          * @param painter pointer to painter
@@ -26,6 +32,11 @@ public:
          * @param widget pointer to parent widget
          */
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        /**
+         * @brief setStartPoint set the start point from where to render the formula
+         * @param point the starting point (bottom left) point from where to render the formula
+         */
+        void setStartPoint(QPointF point);
         /**
          * @brief boundingRect must be implemented when inheriting from QGraphicsItem
          * @return the outermost dimensions of the item created
@@ -41,13 +52,13 @@ public:
          * If the font size of a specific formula should be changed, use the function setFontSize.
          * @param size the font size in points
          */
-        static void setBaseFontSize(quint8 size);
+        static void setBaseFontSize(int size);
         /**
          * @brief set the font size for a formula (changes only the font size of this formula).
          * If the overall font size of all formulas should be changed, use the function setBaseFontSize.
          * @param size the font size in points
          */
-        void setFontSize(quint8 size);
+        void setFontSize(int size);
 
 protected:
         /**
@@ -70,11 +81,12 @@ signals:
 public slots:
 private:
         QString formulaText;
-        QwtMathMLDocument mathMlDoc;
+        QScopedPointer<QwtMathMLDocument> mathMlDoc;
         static quint8 s_baseFontSize;
         quint8 fontSize;
+        QPointF startPoint;
 
-
+        Q_DISABLE_COPY(FormulaItem)
 };
 
 #endif // FORMULAITEM_H

@@ -17,9 +17,9 @@ LIBS += -legcas
 
 SOURCES += src/main.cpp\
         src/mainwindow.cpp \
-        src/formula/formulaitem.cpp
+        src/view/formulaitem.cpp
 
 HEADERS  += src/mainwindow.h \
-        src/formula/formulaitem.h
+        src/view/formulaitem.h
 
 FORMS    += src/ui/mainwindow.ui
