@@ -5,6 +5,7 @@
 #include <QtCore>
 #include <QtGui>
 #include "view/formulaitem.h"
+#include "view/egcasscene.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,7 +21,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsScene *scene;
+    EgCasScene *scene;
 };
 
 #endif // MAINWINDOW_H

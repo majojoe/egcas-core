@@ -1,5 +1,9 @@
+#include <QGraphicsSceneMouseEvent>
 #include <libegcas/qwt_mml_document.h>
 #include "formulaitem.h"
+#include "egcasscene.h"
+
+#include <QDebug>
 
 quint8 FormulaItem::s_baseFontSize = 14;
 
@@ -49,6 +53,13 @@ QRectF FormulaItem::boundingRect() const
         QRectF bounds(QPointF(0,0), mathMlDoc->size());
         bounds.moveBottomLeft(startPoint);
 
+
+/*        QPainter painter(this->window());
+        painter.save();
+        painter.setPen(QPen(Qt::red, 1.0));
+        painter.drawRect(bounds);
+        painter.restore();*/
+
         return bounds;
 }
 
@@ -82,7 +93,22 @@ void FormulaItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 
 void FormulaItem::init()
 {
-        setFlags(ItemIsMovable | /*ItemClipsToShape |*/ ItemIsSelectable | ItemIsFocusable);
+        setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         fontSize = 0;
         mathMlDoc.reset(new QwtMathMLDocument());
 }
+
+QVariant FormulaItem::itemChange(GraphicsItemChange change, const QVariant &value)
+ {
+     if (change == ItemPositionChange && scene()) {
+         // value is the new position.
+         QPointF newPos = value.toPointF();
+         QSizeF grid = qobject_cast<EgCasScene*>(this->scene())->grid();
+         newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
+         newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
+         //startPoint = startPoint + (newPos - pos());
+         //qDebug() << startPoint;
+         return newPos;
+     }
+     return QGraphicsItem::itemChange(change, value);
+ }

@@ -17,9 +17,11 @@ LIBS += -legcas
 
 SOURCES += src/main.cpp\
         src/mainwindow.cpp \
-        src/view/formulaitem.cpp
+        src/view/formulaitem.cpp \
+    src/view/egcasscene.cpp
 
 HEADERS  += src/mainwindow.h \
-        src/view/formulaitem.h
+        src/view/formulaitem.h \
+    src/view/egcasscene.h
 
 FORMS    += src/ui/mainwindow.ui
