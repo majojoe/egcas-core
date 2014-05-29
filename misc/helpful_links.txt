@@ -1,0 +1,5 @@
+http://www.trinitydesktop.org/docs/qt4/graphicsview-diagramscene.html
+
+http://qtmax.googlecode.com/svn-history/r100/trunk/qt.mod/qgraphicsview.mod/qgraphicsview.bmx
+
+http://www.qtcentre.org/archive/index.php/t-5684.html
