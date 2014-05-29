@@ -3,8 +3,6 @@
 #include "formulaitem.h"
 #include "egcasscene.h"
 
-#include <QDebug>
-
 quint8 FormulaItem::s_baseFontSize = 14;
 
 FormulaItem::FormulaItem(QGraphicsItem *parent) :
@@ -38,7 +36,6 @@ void FormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
         QRectF formulaRect(QPointF(0,0), mathMlDoc->size());
         formulaRect.moveBottomLeft(startPoint);
-        //mathMlDoc->setBackgroundColor( Qt::transparent );
         mathMlDoc->paint( painter, formulaRect.topLeft() );
 }
 
@@ -52,13 +49,6 @@ QRectF FormulaItem::boundingRect() const
         //the start point is the bottom left point of the formula
         QRectF bounds(QPointF(0,0), mathMlDoc->size());
         bounds.moveBottomLeft(startPoint);
-
-
-/*        QPainter painter(this->window());
-        painter.save();
-        painter.setPen(QPen(Qt::red, 1.0));
-        painter.drawRect(bounds);
-        painter.restore();*/
 
         return bounds;
 }
@@ -106,8 +96,7 @@ QVariant FormulaItem::itemChange(GraphicsItemChange change, const QVariant &valu
          QSizeF grid = qobject_cast<EgCasScene*>(this->scene())->grid();
          newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
          newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
-         //startPoint = startPoint + (newPos - pos());
-         //qDebug() << startPoint;
+
          return newPos;
      }
      return QGraphicsItem::itemChange(change, value);
