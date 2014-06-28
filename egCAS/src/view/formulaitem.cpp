@@ -30,9 +30,9 @@ void FormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         (void) widget;
 
         if (!fontSize)
-                mathMlDoc->setBaseFontPointSize(static_cast<qreal>(s_baseFontSize));
+                mathMlDoc->setBaseFontPixelSize(static_cast<qreal>(s_baseFontSize));
         else
-                mathMlDoc->setBaseFontPointSize(static_cast<qreal>(fontSize));
+                mathMlDoc->setBaseFontPixelSize(static_cast<qreal>(fontSize));
 
         QRectF formulaRect(QPointF(0,0), mathMlDoc->size());
         formulaRect.moveBottomLeft(startPoint);
