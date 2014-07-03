@@ -1,9 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QPrinter>
-#include <QPrintDialog>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -24,16 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addText(QString("This is a test text"), font_text);
     QRectF rect(0,0,2100,2900);
     scene->setSceneRect(rect);
-
-
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setPaperSize(QPrinter::A4);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName("/home/jo/tmp/nonwritable.pdf");
-
-    QPainter painter(&printer);
-    scene->render(&painter);
-
 }
 
 MainWindow::~MainWindow()
