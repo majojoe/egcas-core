@@ -67,6 +67,8 @@ void FormulaItem::setBaseFontSize(int size)
 void FormulaItem::setFontSize(int size)
 {
         fontSize = size;
+        mathMlDoc->setBaseFontPixelSize(size);
+        //mathMlDoc->
 }
 
 void FormulaItem::mousePressEvent(QGraphicsSceneMouseEvent*event)
@@ -86,6 +88,7 @@ void FormulaItem::init()
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         fontSize = 0;
         mathMlDoc.reset(new QwtMathMLDocument());
+        mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
 }
 
 QVariant FormulaItem::itemChange(GraphicsItemChange change, const QVariant &value)

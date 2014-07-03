@@ -14,8 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QString dummy2("<math><mfrac><mrow><mn> 1 </mn><mo> + </mo><msqrt><mn> 5 </mn></msqrt></mrow><mn> 2 </mn></mfrac></math>");
     ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     ui->graphicsView->setScene(scene);
-    FormulaItem::setBaseFontSize(20);
-    scene->addItem(new FormulaItem(dummy, QPointF(120.0, 200.0)));
+    FormulaItem::setBaseFontSize(30);
+    FormulaItem *formula = new FormulaItem(dummy, QPointF(120.0, 200.0));
+    formula->setFontSize(40);
+    scene->addItem(formula);
     scene->addItem(new FormulaItem(dummy2, QPointF(120.0, 300.0)));
     QFont font_text(QString("Century Schoolbook L"));
     font_text.setPixelSize(60);
