@@ -1,5 +1,5 @@
 #include <QGraphicsSceneMouseEvent>
-#include <libegcas/qwt_mml_document.h>
+#include <libegcas/eg_mml_document.h>
 #include "formulaitem.h"
 #include "egcasscene.h"
 
@@ -87,7 +87,7 @@ void FormulaItem::init()
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         fontSize = 0;
-        mathMlDoc.reset(new QwtMathMLDocument());
+        mathMlDoc.reset(new EgMathMLDocument());
         mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
 }
 

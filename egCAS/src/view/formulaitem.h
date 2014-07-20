@@ -7,7 +7,7 @@
 #include <QGraphicsItem>
 #include <QPainter>
 
-class QwtMathMLDocument;
+class EgMathMLDocument;
 
 /**
  * @brief The FormulaItem class implements a QGraphicsItem to be able to use a formula in a QGraphicsView
@@ -88,7 +88,7 @@ signals:
 public slots:
 private:
         QString formulaText;
-        QScopedPointer<QwtMathMLDocument> mathMlDoc;
+        QScopedPointer<EgMathMLDocument> mathMlDoc;
         static quint8 s_baseFontSize;
         quint8 fontSize;
         QPointF startPoint;
