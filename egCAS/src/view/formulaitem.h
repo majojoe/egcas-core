@@ -92,7 +92,6 @@ private:
         static quint8 s_baseFontSize;
         quint8 fontSize;
         QPointF startPoint;
-        QWidget *m_ui;
 
         Q_DISABLE_COPY(FormulaItem)
 };
