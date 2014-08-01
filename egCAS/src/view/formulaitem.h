@@ -6,13 +6,14 @@
 
 #include <QGraphicsItem>
 #include <QPainter>
+#include "egcasiteminterface.h"
 
 class EgMathMLDocument;
 
 /**
  * @brief The FormulaItem class implements a QGraphicsItem to be able to use a formula in a QGraphicsView
  */
-class FormulaItem : public QGraphicsItem
+class FormulaItem : public QGraphicsItem, public EgcasItemInterface
 {
 public:        
         ///standard constructor
@@ -59,6 +60,11 @@ public:
          * @param size the font size in points
          */
         void setFontSize(int size);
+        /**
+         * @brief getPos overloads the inherited get function for the position of the item
+         * @return the position of the item
+         */
+        virtual QPointF getPos( void ) const;
 
 protected:
         /**

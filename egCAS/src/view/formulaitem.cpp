@@ -104,3 +104,8 @@ QVariant FormulaItem::itemChange(GraphicsItemChange change, const QVariant &valu
      }
      return QGraphicsItem::itemChange(change, value);
  }
+
+QPointF FormulaItem::getPos( void ) const
+{
+        return pos();
+}
