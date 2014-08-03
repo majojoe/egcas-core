@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QtCore>
 #include <QtGui>
-#include "view/formulaitem.h"
 #include "view/egcasscene.h"
 
 namespace Ui {

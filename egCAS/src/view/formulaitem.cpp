@@ -16,7 +16,7 @@ FormulaItem::~FormulaItem()
 
 }
 
-FormulaItem::FormulaItem(const QString &formula, QPointF point, QGraphicsItem*parent) :
+FormulaItem::FormulaItem(const QString &formula, QPointF point, QGraphicsItem *parent) :
         QGraphicsItem(parent)
 {
         init();
