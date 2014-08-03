@@ -18,7 +18,7 @@ class FormulaItem : public QGraphicsItem, public EgcasItemInterface
 public:        
         ///standard constructor
         explicit FormulaItem(QGraphicsItem *parent = 0);
-        ~FormulaItem();
+        virtual ~FormulaItem();
         /**
          * @brief constructor for instantiating a formula with xml representation already available
          * @param formula the mathml representation of the formula to render
