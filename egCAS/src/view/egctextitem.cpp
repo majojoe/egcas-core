@@ -50,6 +50,9 @@ void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent*event)
 
 void EgcTextItem::focusOutEvent(QFocusEvent *event)
 {
+        QTextCursor cursor(textCursor());
+        cursor.clearSelection();
+        setTextCursor(cursor);
         setTextInteractionFlags(Qt::NoTextInteraction);
         QGraphicsItem::focusOutEvent(event);
 }
