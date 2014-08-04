@@ -21,12 +21,12 @@ SOURCES += src/main.cpp\
         src/view/formulaitem.cpp \
     src/view/egcasscene.cpp \
     src/view/egcasiteminterface.cpp \
-    src/view/egcsimpletextitem.cpp
+    src/view/egctextitem.cpp
 
 HEADERS  += src/mainwindow.h \
         src/view/formulaitem.h \
     src/view/egcasscene.h \
     src/view/egcasiteminterface.h \
-    src/view/egcsimpletextitem.h
+    src/view/egctextitem.h
 
 FORMS    += src/ui/mainwindow.ui

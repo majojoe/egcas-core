@@ -1,18 +1,18 @@
-#ifndef EGCSIMPLETEXTITEM_H
-#define EGCSIMPLETEXTITEM_H
+#ifndef EGCTEXTITEM_H
+#define EGCTEXTITEM_H
 
 #include <QGraphicsSimpleTextItem>
 #include "egcasiteminterface.h"
 
-class EgcSimpleTextItem: public QGraphicsSimpleTextItem
+class EgcTextItem: public QGraphicsTextItem
 {
 public:
         ///std constructor
-        explicit EgcSimpleTextItem(QGraphicsItem *parent = 0);
+        explicit EgcTextItem(QGraphicsItem *parent = 0);
         ///constructor for text message
-        EgcSimpleTextItem(const QString & text, QGraphicsItem * parent = 0);
+        EgcTextItem(const QString & text, QGraphicsItem * parent = 0);
         ///std destructor
-        virtual ~EgcSimpleTextItem() { }
+        virtual ~EgcTextItem() { }
         /**
          * @brief getPos overloads the inherited get function for the position of the item
          * @return the position of the item
@@ -30,11 +30,22 @@ protected:
          * @return the value that has been adjusted
          */
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+        /**
+         * @brief mouseDoubleClickEvent overrides mousePressEvent from QGraphicsItem
+         * @param event pointer to QGraphicsSceneMouseEvent
+         */
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+        /**
+         * @brief focusOutEvent overrides
+         * @param event
+         */
+        void focusOutEvent(QFocusEvent*event);
+
 
 private:
-        Q_DISABLE_COPY(EgcSimpleTextItem)
+        Q_DISABLE_COPY(EgcTextItem)
 };
 
-#endif // EGCSIMPLETEXTITEM_H
+#endif // EGCTEXTITEM_H
 
 

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "view/formulaitem.h"
-#include "view/egcsimpletextitem.h"
+#include "view/egctextitem.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -20,9 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addItem(formula);
     scene->addItem(new FormulaItem(dummy2, QPointF(120.0, 300.0)));
     QFont font_text(QString("Century Schoolbook L"));
-    font_text.setPixelSize(60);
+    font_text.setPixelSize(50);
 
-    EgcSimpleTextItem *simpleText = new EgcSimpleTextItem(QString("a second text test"));
+    EgcTextItem *simpleText = new EgcTextItem(QString("a second text test"));
     simpleText->setFont(font_text);
     simpleText->setPos(60.0, 60.0);
     scene->addItem(simpleText);
