@@ -1,18 +1,18 @@
-#ifndef EGCTEXTITEM_H
-#define EGCTEXTITEM_H
+#ifndef EgcPixmapItem_H
+#define EgcPixmapItem_H
 
-#include <QGraphicsTextItem>
+#include <QGraphicsPixmapItem>
 #include "egcasiteminterface.h"
 
-class EgcTextItem: public QGraphicsTextItem
+class EgcPixmapItem: public QGraphicsPixmapItem
 {
 public:
         ///std constructor
-        explicit EgcTextItem(QGraphicsItem *parent = 0);
-        ///constructor for text message
-        EgcTextItem(const QString & text, QGraphicsItem * parent = 0);
+        explicit EgcPixmapItem(QGraphicsItem *parent = 0);
+        ///constructor for pixmap item
+        EgcPixmapItem(const QPixmap & pixmap, QGraphicsItem * parent = 0);
         ///std destructor
-        virtual ~EgcTextItem() { }
+        virtual ~EgcPixmapItem() { }
         /**
          * @brief getPos overloads the inherited get function for the position of the item
          * @return the position of the item
@@ -30,23 +30,13 @@ protected:
          * @return the value that has been adjusted
          */
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-        /**
-         * @brief mouseDoubleClickEvent overrides mousePressEvent from QGraphicsItem
-         * @param event pointer to QGraphicsSceneMouseEvent
-         */
-        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-        /**
-         * @brief focusOutEvent overrides
-         * @param event
-         */
-        void focusOutEvent(QFocusEvent*event);
 signals:
 
 
 private:
-        Q_DISABLE_COPY(EgcTextItem)
+        Q_DISABLE_COPY(EgcPixmapItem)
 };
 
-#endif // EGCTEXTITEM_H
+#endif // EgcPixmapItem_H
 
 

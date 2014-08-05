@@ -20,8 +20,6 @@ QPointF EgcTextItem::getPos( void ) const
 void EgcTextItem::init()
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
-        setTextInteractionFlags(Qt::TextEditable | Qt::TextSelectableByMouse);
-        setTextInteractionFlags(Qt::NoTextInteraction);
 }
 
 QVariant EgcTextItem::itemChange(GraphicsItemChange change, const QVariant &value)
