@@ -41,7 +41,7 @@ void FormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         if (isSelected()) {
                 painter->save();
                 painter->setPen( QPen(Qt::black,
-                                      qreal( 3 ),
+                                      qreal( 1 ),
                                       Qt::PenStyle( Qt::DashLine ) ) );
                 painter->drawRect( formulaRect );
                 painter->restore();
@@ -59,7 +59,7 @@ QRectF FormulaItem::boundingRect() const
         QRectF bounds(QPointF(0,0), mathMlDoc->size());
         bounds.moveBottomLeft(startPoint);
 
-        return bounds;
+        return bounds.adjusted(0, -1.0, +1.0, +1.0);
 }
 
 void FormulaItem::setFormulaText(const QString &formula)
