@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "view/formulaitem.h"
 #include "view/egctextitem.h"
+#include "view/egcpixmapitem.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -15,18 +16,23 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     ui->graphicsView->setScene(scene);
     FormulaItem::setBaseFontSize(30);
-    FormulaItem *formula = new FormulaItem(dummy, QPointF(120.0, 200.0));
+    FormulaItem *formula = new FormulaItem(dummy, QPointF(120.0, 350.0));
     formula->setFontSize(40);
     scene->addItem(formula);
-    scene->addItem(new FormulaItem(dummy2, QPointF(120.0, 300.0)));
+    scene->addItem(new FormulaItem(dummy2, QPointF(120.0, 500.0)));
     QFont font_text(QString("Century Schoolbook L"));
     font_text.setPixelSize(50);
 
     EgcTextItem *simpleText = new EgcTextItem(QString("a second text test"));
     simpleText->setFont(font_text);
-    simpleText->setPos(60.0, 60.0);
+    simpleText->setPos(60.0, 500.0);
     scene->addItem(simpleText);
     scene->addText(QString("This is a test text"), font_text);
+
+    EgcPixmapItem *pixmap = new EgcPixmapItem(QPixmap(":img/plane.png"));
+    pixmap->setPos(900.0, 200.0);
+    scene->addItem(pixmap);
+
     QRectF rect(0,0,2100,2900);
     scene->setSceneRect(rect);
 }

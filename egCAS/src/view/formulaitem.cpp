@@ -37,6 +37,15 @@ void FormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         QRectF formulaRect(QPointF(0,0), mathMlDoc->size());
         formulaRect.moveBottomLeft(startPoint);
         mathMlDoc->paint( painter, formulaRect.topLeft() );
+
+        if (isSelected()) {
+                painter->save();
+                painter->setPen( QPen(Qt::black,
+                                      qreal( 3 ),
+                                      Qt::PenStyle( Qt::DashLine ) ) );
+                painter->drawRect( formulaRect );
+                painter->restore();
+        }
 }
 
 void FormulaItem::setStartPoint(QPointF point)

@@ -32,3 +32,6 @@ HEADERS  += src/mainwindow.h \
     src/view/egcpixmapitem.h
 
 FORMS    += src/ui/mainwindow.ui
+
+RESOURCES += \
+    img/ressources.qrc
