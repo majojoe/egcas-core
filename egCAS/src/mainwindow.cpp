@@ -3,6 +3,7 @@
 #include "view/formulaitem.h"
 #include "view/egctextitem.h"
 #include "view/egcpixmapitem.h"
+#include "view/resizehandle.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString dummy2("<math><mfrac><mrow><mn> 1 </mn><mo> + </mo><msqrt><mn> 5 </mn></msqrt></mrow><mn> 2 </mn></mfrac></math>");
     ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     ui->graphicsView->setScene(scene);
+    //ui->graphicsView->scale(0.5,0.5);
     FormulaItem::setBaseFontSize(30);
     FormulaItem *formula = new FormulaItem(dummy, QPointF(120.0, 350.0));
     formula->setFontSize(40);
@@ -29,9 +31,16 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addItem(simpleText);
     scene->addText(QString("This is a test text"), font_text);
 
-    EgcPixmapItem *pixmap = new EgcPixmapItem(QPixmap(":img/plane.png"));
+    QPixmap pix(":img/plane.png");
+    //pix->setDevicePixelRatio(0.5);
+    pix = pix.scaled(1500, 1500, Qt::KeepAspectRatio);
+    EgcPixmapItem *pixmap = new EgcPixmapItem(pix);
     pixmap->setPos(900.0, 200.0);
     scene->addItem(pixmap);
+
+
+    ResizeHandle *resizeHandle = new ResizeHandle(QSizeF(80.0, 80.0));
+    scene->addItem(resizeHandle);
 
     QRectF rect(0,0,2100,2900);
     scene->setSceneRect(rect);

@@ -18,7 +18,7 @@ QPointF EgcPixmapItem::getPos( void ) const
 
 void EgcPixmapItem::init()
 {
-        setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
+        setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
 }
 
 QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &value)
