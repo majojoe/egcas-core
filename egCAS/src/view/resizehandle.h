@@ -19,7 +19,7 @@ public:
         ///paint the ResizeHandle control here
         void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0);
         /**
-         * @brief itemChange reimplements change function of QGraphicsItem to be able to realize a grid
+         * @brief itemChange reimplements change function of QGraphicsItem to be able to change the cursor shape
          * @param change enum that describes state changes that are notified
          * @param value the value that has changed
          * @return the value that has been adjusted

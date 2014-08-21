@@ -32,15 +32,10 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addText(QString("This is a test text"), font_text);
 
     QPixmap pix(":img/plane.png");
-    //pix->setDevicePixelRatio(0.5);
-    pix = pix.scaled(1500, 1500, Qt::KeepAspectRatio);
+    //pix = pix.scaled(1500, 1500, Qt::KeepAspectRatio);
     EgcPixmapItem *pixmap = new EgcPixmapItem(pix);
     pixmap->setPos(900.0, 200.0);
     scene->addItem(pixmap);
-
-
-    ResizeHandle *resizeHandle = new ResizeHandle(QSizeF(80.0, 80.0));
-    scene->addItem(resizeHandle);
 
     QRectF rect(0,0,2100,2900);
     scene->setSceneRect(rect);

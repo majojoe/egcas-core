@@ -4,6 +4,8 @@
 #include <QGraphicsPixmapItem>
 #include "egcasiteminterface.h"
 
+class ResizeHandle;
+
 class EgcPixmapItem: public QGraphicsPixmapItem
 {
 public:
@@ -30,11 +32,19 @@ protected:
          * @return the value that has been adjusted
          */
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+        /**
+         * @brief mousePressEvent overrides mouseReleaseEvent from QGraphicsItem
+         * @param event pointer to QGraphicsSceneMouseEvent
+         */
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
 signals:
 
 
 private:
         Q_DISABLE_COPY(EgcPixmapItem)
+        ResizeHandle *resizeHandle;
+        bool childSelectionState;
 };
 
 #endif // EgcPixmapItem_H
