@@ -43,8 +43,8 @@ signals:
 
 private:
         Q_DISABLE_COPY(EgcPixmapItem)
-        ResizeHandle *resizeHandle;
-        bool childSelectionState;
+        ResizeHandle *m_resizeHandle;
+        bool m_childSelectionState;
 };
 
 #endif // EgcPixmapItem_H

@@ -2,12 +2,12 @@
 #include "egcasscene.h"
 #include "resizehandle.h"
 
-EgcPixmapItem::EgcPixmapItem(QGraphicsItem*parent) : QGraphicsPixmapItem(parent), resizeHandle(NULL), childSelectionState(false)
+EgcPixmapItem::EgcPixmapItem(QGraphicsItem*parent) : QGraphicsPixmapItem(parent), m_resizeHandle(NULL), m_childSelectionState(false)
 {
         init();
 }
 
-EgcPixmapItem::EgcPixmapItem(const QPixmap&pixmap, QGraphicsItem * parent) : QGraphicsPixmapItem(pixmap, parent), resizeHandle(NULL), childSelectionState(false)
+EgcPixmapItem::EgcPixmapItem(const QPixmap&pixmap, QGraphicsItem * parent) : QGraphicsPixmapItem(pixmap, parent), m_resizeHandle(NULL), m_childSelectionState(false)
 {
         init();
 }
@@ -20,9 +20,9 @@ QPointF EgcPixmapItem::getPos( void ) const
 void EgcPixmapItem::init()
 {
         setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
-        resizeHandle = new ResizeHandle(QSizeF(8.0, 8.0), this);
-        resizeHandle->setPos(boundingRect().bottomRight());
-        resizeHandle->hide();
+        m_resizeHandle = new ResizeHandle(QSizeF(8.0, 8.0), this);
+        m_resizeHandle->setPos(boundingRect().bottomRight());
+        m_resizeHandle->hide();
 }
 
 QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -39,11 +39,11 @@ QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &va
 
         if (change == ItemSelectedHasChanged) {
                 if (value.toBool()) {
-                        resizeHandle->show();
-                        childSelectionState = true;
+                        m_resizeHandle->show();
+                        m_childSelectionState = true;
                 } else {
-                        resizeHandle->hide();
-                        childSelectionState = false;
+                        m_resizeHandle->hide();
+                        m_childSelectionState = false;
                 }
         }
 
@@ -53,8 +53,8 @@ QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &va
 void EgcPixmapItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 {
         QGraphicsItem::mouseReleaseEvent(event);
-        if (childSelectionState)
-                resizeHandle->setSelected(true);
+        if (m_childSelectionState)
+                m_resizeHandle->setSelected(true);
         else
-                resizeHandle->setSelected(false);
+                m_resizeHandle->setSelected(false);
 }

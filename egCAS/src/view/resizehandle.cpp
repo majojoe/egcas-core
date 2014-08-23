@@ -1,10 +1,12 @@
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QCursor>
+#include <QGraphicsSceneMouseEvent>
+#include <QtCore/qmath.h>
 #include "resizehandle.h"
 
 ResizeHandle::ResizeHandle(const QSizeF& size, QGraphicsItem *parent) :
-        QGraphicsItem(parent), m_handleSize(size)
+        QGraphicsItem(parent), m_handleSize(size), m_parent(parent)
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable);
 }
@@ -18,20 +20,36 @@ QRectF ResizeHandle::boundingRect() const
         return bounds;
 }
 
-//void ResizeHandle::mousePressEvent(QGraphicsSceneMouseEvent * event)
-//{
+void ResizeHandle::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+        m_scaleStartPos = mapToParent(event->pos());
+        m_parent->setFlag(ItemIsMovable, false);
+        QGraphicsItem::mousePressEvent(event);
+}
 
-//}
+void ResizeHandle::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
+{
+        QGraphicsItem::mouseMoveEvent(event);
 
-//void ResizeHandle::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
-//{
+        QPointF event_pos = mapToParent(event->pos());
+        qreal width = event_pos.x() - m_scaleStartPos.x();
+        qreal height = event_pos.y() - m_scaleStartPos.y();
+        qreal diag = sqrt(qPow(width, 2) + qPow(height, 2));
+        if (width < 0.0)
+                diag = -1.0 * diag;
 
-//}
+        qreal diag_parent = sqrt(qPow(m_parent->boundingRect().width(), 2) + qPow(m_parent->boundingRect().height(), 2));
 
-//void ResizeHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
-//{
+        qreal m_scale = m_parent->scale() * (1.0 + diag/diag_parent);
 
-//}
+        m_parent->setScale(m_scale);
+}
+
+void ResizeHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{        
+        QGraphicsItem::mouseReleaseEvent(event);
+        m_parent->setFlag(ItemIsMovable, true);
+}
 
 
 void ResizeHandle::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
@@ -60,10 +78,11 @@ QVariant ResizeHandle::itemChange(GraphicsItemChange change, const QVariant &val
          // value is the new position.
          bool selected = value.toBool();
 
-         if (selected)
+         if (selected) {
                  setCursor(QCursor(Qt::SizeFDiagCursor));
-         else
+         } else {
                  setCursor(QCursor(Qt::ArrowCursor));
+         }
      }
 
      return QGraphicsItem::itemChange(change, value);
