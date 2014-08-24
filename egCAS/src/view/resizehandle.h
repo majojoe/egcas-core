@@ -7,7 +7,7 @@ class ResizeHandle : public QGraphicsItem
 {
 public:
         ///std constructor
-        explicit ResizeHandle(const QSizeF&size, QGraphicsItem *parent = 0);
+        explicit ResizeHandle(QGraphicsItem *content, const QSizeF&size);
         ///std destructor
         virtual ~ResizeHandle() {}
         ///set the bounding rect for the ResizeHandle
@@ -31,11 +31,15 @@ signals:
 
 public slots:
 private:
+        QGraphicsItem *m_resizableContent;
         QSizeF m_handleSize;
-        Q_DISABLE_COPY(ResizeHandle)
         ///This is the position where the scaling starts. Thats needed to be able to calculate scaling.
         QPointF m_scaleStartPos;
-        QGraphicsItem *m_parent;
+        qreal m_contentStartScale;
+        qreal m_contentStartDiag;
+
+        Q_DISABLE_COPY(ResizeHandle)
+
 };
 
 #endif // RESIZEHANDLE_H

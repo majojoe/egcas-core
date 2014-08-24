@@ -14,7 +14,7 @@ public:
         ///constructor for pixmap item
         EgcPixmapItem(const QPixmap & pixmap, QGraphicsItem * parent = 0);
         ///std destructor
-        virtual ~EgcPixmapItem() { }
+        virtual ~EgcPixmapItem();
         /**
          * @brief getPos overloads the inherited get function for the position of the item
          * @return the position of the item
@@ -37,6 +37,11 @@ protected:
          * @param event pointer to QGraphicsSceneMouseEvent
          */
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        /**
+         * @brief mousePressEvent overrides mouseMoveEvent from QGraphicsItem
+         * @param event pointer to QGraphicsSceneMouseEvent
+         */
+        void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
 signals:
 
@@ -45,6 +50,7 @@ private:
         Q_DISABLE_COPY(EgcPixmapItem)
         ResizeHandle *m_resizeHandle;
         bool m_childSelectionState;
+        bool m_resizeHandleAdded;
 };
 
 #endif // EgcPixmapItem_H
