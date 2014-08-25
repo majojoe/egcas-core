@@ -2,21 +2,18 @@
 #include "egcasscene.h"
 #include "resizehandle.h"
 
-EgcPixmapItem::EgcPixmapItem(QGraphicsItem*parent) : QGraphicsPixmapItem(parent), m_resizeHandle(NULL), m_childSelectionState(false),
-                                                     m_resizeHandleAdded(false)
+EgcPixmapItem::EgcPixmapItem(QGraphicsItem*parent) : QGraphicsPixmapItem(parent), m_resizeHandle(NULL)
 {
         init();
 }
 
-EgcPixmapItem::EgcPixmapItem(const QPixmap&pixmap, QGraphicsItem * parent) : QGraphicsPixmapItem(pixmap, parent), m_resizeHandle(NULL), m_childSelectionState(false),
-                                                                             m_resizeHandleAdded(false)
+EgcPixmapItem::EgcPixmapItem(const QPixmap&pixmap, QGraphicsItem * parent) : QGraphicsPixmapItem(pixmap, parent), m_resizeHandle(NULL)
 {
         init();
 }
 
 EgcPixmapItem::~EgcPixmapItem()
-{
-        scene()->removeItem(m_resizeHandle);
+{        
         delete(m_resizeHandle);
 }
 
@@ -29,7 +26,6 @@ void EgcPixmapItem::init()
 {
         setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         m_resizeHandle = new ResizeHandle(this, QSizeF(8.0, 8.0));
-        m_resizeHandle->hide();
 }
 
 QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -44,21 +40,7 @@ QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &va
                 return newPos;
         }
 
-        if (change == ItemSelectedHasChanged) {
-                if (value.toBool()) {
-                        m_resizeHandle->show();
-                        m_childSelectionState = true;
-                        if (!m_resizeHandleAdded && scene()) {
-                                scene()->addItem(m_resizeHandle);
-                                m_resizeHandle->setPos(mapToScene(boundingRect().bottomRight()));
-                                m_resizeHandleAdded = true;
-                        }
-
-                } else {
-                        m_resizeHandle->hide();
-                        m_childSelectionState = false;
-                }
-        }
+        m_resizeHandle->itemChangeInfo(change, value, scene());
 
         return QGraphicsItem::itemChange(change, value);
  }
@@ -66,15 +48,13 @@ QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &va
 void EgcPixmapItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 {
         QGraphicsItem::mouseReleaseEvent(event);
-        if (m_childSelectionState)
-                m_resizeHandle->setSelected(true);
-        else
-                m_resizeHandle->setSelected(false);        
+
+        m_resizeHandle->mouseReleaseEventInfo();
 }
 
 void EgcPixmapItem::mouseMoveEvent(QGraphicsSceneMouseEvent*event)
 {
         QGraphicsItem::mouseMoveEvent(event);
 
-        m_resizeHandle->setPos(mapToScene(boundingRect().bottomRight()));
+        m_resizeHandle->mouseMoveEventInfo();
 }

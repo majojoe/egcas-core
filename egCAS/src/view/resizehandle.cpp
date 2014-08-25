@@ -1,14 +1,16 @@
 #include <QPainter>
 #include <QGraphicsItem>
+#include <QGraphicsScene>
 #include <QCursor>
 #include <QGraphicsSceneMouseEvent>
 #include <QtCore/qmath.h>
 #include "resizehandle.h"
 
 ResizeHandle::ResizeHandle(QGraphicsItem *content, const QSizeF& size) :
-        m_resizableContent(content), m_handleSize(size), m_contentStartScale(0.0), m_contentStartDiag(0.0)
+        m_resizableContent(content), m_handleSize(size), m_contentStartScale(0.0), m_contentStartDiag(0.0), m_addedToScene(false), m_selectionState(false)
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable);
+        hide();
 }
 
 QRectF ResizeHandle::boundingRect() const
@@ -94,3 +96,44 @@ QVariant ResizeHandle::itemChange(GraphicsItemChange change, const QVariant &val
 
      return QGraphicsItem::itemChange(change, value);
  }
+
+void ResizeHandle::itemChangeInfo(GraphicsItemChange change, const QVariant &value, QGraphicsScene *content_scene)
+{
+        if (change == ItemSelectedHasChanged) {
+                if (value.toBool()) {
+                        show();
+                        m_selectionState = true;
+                        if (!m_addedToScene && content_scene) {
+                                content_scene->addItem(this);
+                                setPos(mapToScene(mapFromItem(m_resizableContent, m_resizableContent->boundingRect().bottomRight())));
+                                m_addedToScene = true;
+                        }
+
+                } else {
+                        hide();
+                        m_selectionState = false;
+                }
+        }
+
+        //remove the old scene
+        if (change == ItemSceneChange) {
+                QGraphicsScene* old_scene = (QGraphicsScene*)value.value<void*>();
+                if (old_scene) {
+                        old_scene->removeItem(this);
+                        m_addedToScene = false;
+                }
+        }
+}
+
+void ResizeHandle::mouseReleaseEventInfo(void)
+{
+        if (m_selectionState)
+                setSelected(true);
+        else
+                setSelected(false);
+}
+
+void ResizeHandle::mouseMoveEventInfo(void)
+{
+        setPos(mapToScene(mapFromItem(m_resizableContent, m_resizableContent->boundingRect().bottomRight())));
+}

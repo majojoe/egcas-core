@@ -25,7 +25,25 @@ public:
          * @return the value that has been adjusted
          */
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
+        /**
+         * @brief itemChangeInfo informs this handle about item changes of the m_resizableContent item to stay
+         * informed about its state. This must be called in the itemChange method of m_resizableContent.
+         * @param change enum that describes state changes that are notified
+         * @param value the value that has changed
+         * @param content_scene the scene of which m_resizableContent belongs to
+         * @return the value that has been adjusted
+         */
+        void itemChangeInfo(GraphicsItemChange change, const QVariant &value, QGraphicsScene* content_scene);
+        /**
+         * @brief mouseReleaseEventInfo informs this handle object about a mouse release event in m_resizableContent
+         * This must be called after the mouse handle of the base class has been called!!!
+         */
+        void mouseReleaseEventInfo(void);
+        /**
+         * @brief mouseMoveEventInfo informs this handle object about a mouse move event in m_resizableContent
+         * This must be called after the mouse handle of the base class has been called!!!
+         */
+        void mouseMoveEventInfo(void);
 
 signals:
 
@@ -34,9 +52,11 @@ private:
         QGraphicsItem *m_resizableContent;
         QSizeF m_handleSize;
         ///This is the position where the scaling starts. Thats needed to be able to calculate scaling.
-        QPointF m_scaleStartPos;
-        qreal m_contentStartScale;
-        qreal m_contentStartDiag;
+        QPointF m_scaleStartPos;        ///< start position of this handle (mouse move) when starting resizing
+        qreal m_contentStartScale;      ///< start scale of m_resizeableContent when starting resizing
+        qreal m_contentStartDiag;       ///< start diagonal of m_resizeableContent when starting resizing
+        bool m_addedToScene;            ///< variable that holds if this item has already been added to the scene of the scene of m_resizableContent
+        bool m_selectionState;          ///< the selection state of m_resizableContent
 
         Q_DISABLE_COPY(ResizeHandle)
 
