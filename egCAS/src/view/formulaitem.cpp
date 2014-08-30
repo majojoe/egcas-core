@@ -16,12 +16,22 @@ FormulaItem::~FormulaItem()
 
 }
 
-FormulaItem::FormulaItem(const QString &formula, QPointF point, QGraphicsItem *parent) :
+FormulaItem::FormulaItem(const QString &formula, QPointF point, int size, QGraphicsItem *parent) :
         QGraphicsItem(parent)
 {
         init();
         setFormulaText(formula);
         startPoint = point;
+        setFontSize(size);
+}
+
+FormulaItem::FormulaItem(const QString &formula, int size, QGraphicsItem *parent) :
+        QGraphicsItem(parent)
+{
+        init();
+        setFormulaText(formula);
+        setFontSize(size);
+        startPoint = QPointF(0.0, boundingRect().height());
 }
 
 void FormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

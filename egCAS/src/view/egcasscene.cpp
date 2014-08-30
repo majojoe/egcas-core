@@ -2,6 +2,9 @@
 #include <QtCore>
 #include <QPainter>
 #include "egcasscene.h"
+#include "egctextitem.h"
+#include "egcpixmapitem.h"
+#include "formulaitem.h"
 
 
 EgCasScene::EgCasScene(QObject *parent) :
@@ -61,4 +64,34 @@ void EgCasScene::drawBackground(QPainter*painter, const QRectF&rect)
         };
 
         painter->restore();
+}
+
+QGraphicsTextItem * EgCasScene::addText(const QString & text, const QFont & font)
+{
+        EgcTextItem *textItem = new (std::nothrow) EgcTextItem(text);
+        if (textItem) {
+                textItem->setFont(font);
+                addItem(textItem);
+        }
+
+        return static_cast<QGraphicsTextItem*>(textItem);
+}
+
+QGraphicsPixmapItem * EgCasScene::addPixmap(const QPixmap & pixmap)
+{
+        EgcPixmapItem *pixmapItem = new (std::nothrow) EgcPixmapItem(pixmap);
+        if (pixmapItem)
+                addItem(pixmapItem);
+
+        return static_cast<QGraphicsPixmapItem*>(pixmapItem);
+}
+
+
+FormulaItem * EgCasScene::addFormula(const QString & formula, int size)
+{
+        FormulaItem *formulaItem = new (std::nothrow) FormulaItem(formula, size);
+        if (formulaItem)
+                addItem(formulaItem);
+
+        return formulaItem;
 }

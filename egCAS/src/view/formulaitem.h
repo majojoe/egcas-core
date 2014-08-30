@@ -22,10 +22,18 @@ public:
         /**
          * @brief constructor for instantiating a formula with xml representation already available
          * @param formula the mathml representation of the formula to render
-         * @param point the left bottom start point for rendering the formula
+         * @param size the font size in pixel of the formula to be rendered
          * @param parent pointer to parent widget
          */
-        explicit FormulaItem(const QString &formula, QPointF point, QGraphicsItem *parent = 0);
+        explicit FormulaItem(const QString &formula, int size, QGraphicsItem *parent = 0);
+        /**
+         * @brief constructor for instantiating a formula with xml representation already available
+         * @param formula the mathml representation of the formula to render
+         * @param point the left bottom start point for rendering the formula
+         * @param size the font size in pixel of the formula to be rendered
+         * @param parent pointer to parent widget
+         */
+        explicit FormulaItem(const QString &formula, QPointF point, int size, QGraphicsItem *parent = 0);
         /**
          * @brief override paint from QGraphicsItem
          * @param painter pointer to painter
