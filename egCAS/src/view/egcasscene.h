@@ -3,7 +3,7 @@
 
 #include <QGraphicsScene>
 
-class FormulaItem;
+class EgcFormulaItem;
 
 class EgCasScene : public QGraphicsScene
 {
@@ -40,7 +40,7 @@ public:
          * @param size the font size in pixel of the forumla
          * @return a pointer to the formula added
          */
-        FormulaItem * addFormula(const QString & formula, int size);
+        EgcFormulaItem * addFormula(const QString & formula, int size);
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
 private:

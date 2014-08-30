@@ -13,19 +13,19 @@ class EgMathMLDocument;
 /**
  * @brief The FormulaItem class implements a QGraphicsItem to be able to use a formula in a QGraphicsView
  */
-class FormulaItem : public QGraphicsItem, public EgcasItemInterface
+class EgcFormulaItem : public QGraphicsItem, public EgcasItemInterface
 {
 public:        
         ///standard constructor
-        explicit FormulaItem(QGraphicsItem *parent = 0);
-        virtual ~FormulaItem();
+        explicit EgcFormulaItem(QGraphicsItem *parent = 0);
+        virtual ~EgcFormulaItem();
         /**
          * @brief constructor for instantiating a formula with xml representation already available
          * @param formula the mathml representation of the formula to render
          * @param size the font size in pixel of the formula to be rendered
          * @param parent pointer to parent widget
          */
-        explicit FormulaItem(const QString &formula, int size, QGraphicsItem *parent = 0);
+        explicit EgcFormulaItem(const QString &formula, int size, QGraphicsItem *parent = 0);
         /**
          * @brief constructor for instantiating a formula with xml representation already available
          * @param formula the mathml representation of the formula to render
@@ -33,7 +33,7 @@ public:
          * @param size the font size in pixel of the formula to be rendered
          * @param parent pointer to parent widget
          */
-        explicit FormulaItem(const QString &formula, QPointF point, int size, QGraphicsItem *parent = 0);
+        explicit EgcFormulaItem(const QString &formula, QPointF point, int size, QGraphicsItem *parent = 0);
         /**
          * @brief override paint from QGraphicsItem
          * @param painter pointer to painter
@@ -107,7 +107,7 @@ private:
         quint8 fontSize;
         QPointF startPoint;
 
-        Q_DISABLE_COPY(FormulaItem)
+        Q_DISABLE_COPY(EgcFormulaItem)
 };
 
 #endif // FORMULAITEM_H

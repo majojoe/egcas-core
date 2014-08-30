@@ -4,7 +4,7 @@
 #include "egcasscene.h"
 #include "egctextitem.h"
 #include "egcpixmapitem.h"
-#include "formulaitem.h"
+#include "egcformulaitem.h"
 
 
 EgCasScene::EgCasScene(QObject *parent) :
@@ -87,9 +87,9 @@ QGraphicsPixmapItem * EgCasScene::addPixmap(const QPixmap & pixmap)
 }
 
 
-FormulaItem * EgCasScene::addFormula(const QString & formula, int size)
+EgcFormulaItem * EgCasScene::addFormula(const QString & formula, int size)
 {
-        FormulaItem *formulaItem = new (std::nothrow) FormulaItem(formula, size);
+        EgcFormulaItem *formulaItem = new (std::nothrow) EgcFormulaItem(formula, size);
         if (formulaItem)
                 addItem(formulaItem);
 

@@ -18,20 +18,20 @@ LIBS += -legcas
 
 SOURCES += src/main.cpp\
         src/mainwindow.cpp \
-        src/view/formulaitem.cpp \
     src/view/egcasscene.cpp \
     src/view/egcasiteminterface.cpp \
     src/view/egctextitem.cpp \
     src/view/egcpixmapitem.cpp \
-    src/view/resizehandle.cpp
+    src/view/resizehandle.cpp \
+    src/view/egcformulaitem.cpp
 
 HEADERS  += src/mainwindow.h \
-        src/view/formulaitem.h \
     src/view/egcasscene.h \
     src/view/egcasiteminterface.h \
     src/view/egctextitem.h \
     src/view/egcpixmapitem.h \
-    src/view/resizehandle.h
+    src/view/resizehandle.h \
+    src/view/egcformulaitem.h
 
 FORMS    += src/ui/mainwindow.ui
 
