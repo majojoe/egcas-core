@@ -23,7 +23,11 @@ SOURCES += src/main.cpp\
     src/view/egctextitem.cpp \
     src/view/egcpixmapitem.cpp \
     src/view/resizehandle.cpp \
-    src/view/egcformulaitem.cpp
+    src/view/egcformulaitem.cpp \
+    src/structural/egcexpressionnode.cpp \
+    src/structural/egcbinaryexpressionnode.cpp \
+    src/structural/egcunaryexpressionnode.cpp \
+    src/structural/egcrootexpressionnode.cpp
 
 HEADERS  += src/mainwindow.h \
     src/view/egcasscene.h \
@@ -31,7 +35,11 @@ HEADERS  += src/mainwindow.h \
     src/view/egctextitem.h \
     src/view/egcpixmapitem.h \
     src/view/resizehandle.h \
-    src/view/egcformulaitem.h
+    src/view/egcformulaitem.h \
+    src/structural/egcexpressionnode.h \
+    src/structural/egcbinaryexpressionnode.h \
+    src/structural/egcunaryexpressionnode.h \
+    src/structural/egcrootexpressionnode.h
 
 FORMS    += src/ui/mainwindow.ui
 
