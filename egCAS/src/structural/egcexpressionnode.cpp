@@ -3,3 +3,8 @@
 EgcExpressionNode::EgcExpressionNode()
 {
 }
+
+EgcExpressionNode::~EgcExpressionNode()
+{
+
+}
