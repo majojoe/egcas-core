@@ -18,11 +18,17 @@ LIBS += -legcas
 
 
 SOURCES += tst_egcastest_view.cpp \
-           ../../src/view/formulaitem.cpp \
-    ../../src/view/egcasscene.cpp
+           ../../src/view/egcformulaitem.cpp \
+    ../../src/view/egcasscene.cpp \
+    ../../src/view/egcpixmapitem.cpp \
+    ../../src/view/egctextitem.cpp \
+    ../../src/view/resizehandle.cpp \
 
-HEADERS += ../../src/view/formulaitem.h \
-    ../../src/view/egcasscene.h
+HEADERS += ../../src/view/egcformulaitem.h \
+    ../../src/view/egcasscene.h \
+    ../../src/view/egcpixmapitem.h \
+    ../../src/view/egctextitem.h \
+    ../../src/view/resizehandle.h
 
 
 

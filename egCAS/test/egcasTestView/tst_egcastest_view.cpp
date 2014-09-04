@@ -1,6 +1,6 @@
 #include <QString>
 #include <QtTest>
-#include "../../src/view/formulaitem.h"
+#include "../../src/view/egcformulaitem.h"
 
 class EgcasTest_View : public QObject
 {
@@ -20,8 +20,8 @@ EgcasTest_View::EgcasTest_View()
 void EgcasTest_View::testSceneItemSorting()
 {
         QString dummy("");
-        FormulaItem *item1 = new FormulaItem(dummy, QPointF(120.001, 2000.00003));
-        FormulaItem *item2 = new FormulaItem(dummy, QPointF(120.001, 2000.00004));
+        EgcFormulaItem *item1 = new EgcFormulaItem(dummy, QPointF(120.001, 2000.00003), 20);
+        EgcFormulaItem *item2 = new EgcFormulaItem(dummy, QPointF(120.001, 2000.00004), 20);
         //test the bigger and smaller operator overload of the items (for y coordinates)
         QVERIFY(item1 < item2);
         QVERIFY(!(item2 < item1));
