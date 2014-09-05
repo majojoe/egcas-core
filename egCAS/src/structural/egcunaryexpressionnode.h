@@ -4,7 +4,7 @@
 #include "egcexpressionnode.h"
 
 /**
- * @brief The EgcUnaryEx
+ * @brief The EgcUnaryExpressionNode
  * pressionNode class is a base class for an expression that takes one argument (unary) as subexpression.
  * This can be e.g. the not operator.
  */

@@ -6,7 +6,7 @@
 
 QT       += widgets testlib
 
-TARGET = tst_egcastest_structure
+TARGET = tst_egcastest_structural
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -14,15 +14,15 @@ TEMPLATE = app
 
 CONFIG += c++11
 
-#LIBS += -legcas
+SOURCES += tst_egcastest_structural.cpp \
+           ../../src/structural/egcunaryexpressionnode.cpp \
+           ../../src/structural/egcbinaryexpressionnode.cpp \
+           ../../src/structural/egcexpressionnode.cpp \
 
-
-SOURCES += tst_egcastest_view.cpp \
-           ../../src/structure/formulaitem.cpp \
-    ../../src/structure/egcasscene.cpp
-
-HEADERS += ../../src/structure/formulaitem.h \
-    ../../src/structure/egcasscene.h
+HEADERS += ../../src/structural/egcunaryexpressionnode.h \
+           ../../src/structural/egcbinaryexpressionnode.h \
+           ../../src/structural/egcexpressionnode.h \
+    tst_egcastest_structural.h
 
 
 
