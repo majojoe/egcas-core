@@ -6,7 +6,7 @@
  */
 enum class EgcExpressionNodeType
 {
-    NodeUndefined = 0, NumberNode, VariableNode, RootNode
+        NumberNode = 0, VariableNode, RootNode, NodeUndefined
 };
 
 /**
@@ -19,6 +19,11 @@ class EgcExpressionNode
 public:
         EgcExpressionNode();
         virtual ~EgcExpressionNode() = 0;
+        /**
+         * @brief getNodeType returns the node type of the derived class
+         * @return the node type of this class.
+         */
+        EgcExpressionNodeType getNodeType(void);
 private:
         static const EgcExpressionNodeType s_nodeType = EgcExpressionNodeType::NodeUndefined;
 };

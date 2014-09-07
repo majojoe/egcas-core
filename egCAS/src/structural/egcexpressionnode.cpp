@@ -8,3 +8,8 @@ EgcExpressionNode::~EgcExpressionNode()
 {
 
 }
+
+EgcExpressionNodeType EgcExpressionNode::getNodeType(void)
+{
+        return s_nodeType;
+}
