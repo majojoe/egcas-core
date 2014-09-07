@@ -13,6 +13,8 @@ class EgcUnaryExpressionNode : public EgcExpressionNode
 public:
         ///std constructor
         EgcUnaryExpressionNode();
+        ///copy constructor
+        EgcUnaryExpressionNode(const EgcUnaryExpressionNode& orig);
         /// destructor
         virtual ~EgcUnaryExpressionNode() = 0;
         /**

@@ -1,8 +1,15 @@
 #include "egcunaryexpressionnode.h"
+#include "egcexpressionnodecreator.h"
 
 EgcUnaryExpressionNode::EgcUnaryExpressionNode() : m_child(nullptr)
 {
 
+}
+
+EgcUnaryExpressionNode::EgcUnaryExpressionNode(const EgcUnaryExpressionNode& orig)
+{
+        EgcExpressionNode *originalChild = const_cast<EgcUnaryExpressionNode&>(orig).getChild();
+        m_child = EgcExpressionNodeCreator::copy(*originalChild);
 }
 
 EgcUnaryExpressionNode::~EgcUnaryExpressionNode()

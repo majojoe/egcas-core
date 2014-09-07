@@ -1,8 +1,16 @@
 #include "egcbinaryexpressionnode.h"
+#include "egcexpressionnodecreator.h"
 
 EgcBinaryExpressionNode::EgcBinaryExpressionNode() : m_rightChild(nullptr), m_leftChild(nullptr)
 {
+}
 
+EgcBinaryExpressionNode::EgcBinaryExpressionNode(const EgcBinaryExpressionNode& orig)
+{
+        EgcExpressionNode *originalChildLeft = const_cast<EgcBinaryExpressionNode&>(orig).getLeftChild();
+        EgcExpressionNode *originalChildRight = const_cast<EgcBinaryExpressionNode&>(orig).getRightChild();
+        m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);
+        m_rightChild = EgcExpressionNodeCreator::copy(*originalChildRight);
 }
 
 EgcBinaryExpressionNode::~EgcBinaryExpressionNode()

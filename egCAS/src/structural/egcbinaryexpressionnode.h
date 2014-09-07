@@ -12,6 +12,8 @@ class EgcBinaryExpressionNode : public EgcExpressionNode
 public:
         ///std contructor
         EgcBinaryExpressionNode();
+        ///copy constructor
+        EgcBinaryExpressionNode(const EgcBinaryExpressionNode& orig);
         ///destructor
         ~EgcBinaryExpressionNode() = 0;
         /**
