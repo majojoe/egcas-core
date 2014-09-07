@@ -2,6 +2,7 @@
 
 EgcExpressionNode::EgcExpressionNode()
 {
+        m_nodeType = EgcExpressionNodeType::NumberNode;
 }
 
 EgcExpressionNode::~EgcExpressionNode()
@@ -11,5 +12,5 @@ EgcExpressionNode::~EgcExpressionNode()
 
 EgcExpressionNodeType EgcExpressionNode::getNodeType(void)
 {
-        return s_nodeType;
+        return m_nodeType;
 }

@@ -24,8 +24,8 @@ public:
          * @return the node type of this class.
          */
         EgcExpressionNodeType getNodeType(void);
-private:
-        static const EgcExpressionNodeType s_nodeType = EgcExpressionNodeType::NodeUndefined;
+protected:
+        EgcExpressionNodeType m_nodeType;
 };
 
 #endif // EGCEXPRESSIONNODE_H

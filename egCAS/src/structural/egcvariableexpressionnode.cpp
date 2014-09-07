@@ -4,7 +4,7 @@
 
 EgcVariableExpressionNode::EgcVariableExpressionNode() : m_value(QString::null), m_subscript(QString::null)
 {
-
+        m_nodeType = EgcExpressionNodeType::VariableNode;
 }
 
 EgcVariableExpressionNode::~EgcVariableExpressionNode()
