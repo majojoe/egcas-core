@@ -28,6 +28,12 @@ public:
          * @return NULL if no this expression has no child, a pointer to the child otherwise.
          */
         EgcExpressionNode* getChild(void);
+        /**
+         * @brief operator= overloads = operator since we have dynamic elements in this class
+         * @param rhs a reference to the object to be assigned
+         * @return a reference to the object the rhs is assigned to
+         */
+        EgcUnaryExpressionNode& operator=(const EgcUnaryExpressionNode &rhs);
 protected:
         EgcExpressionNode* m_child;
 };

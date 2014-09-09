@@ -29,3 +29,18 @@ EgcExpressionNode* EgcUnaryExpressionNode::getChild(void)
 {
         return m_child;
 }
+
+EgcUnaryExpressionNode& EgcUnaryExpressionNode::operator=(const EgcUnaryExpressionNode &rhs)
+{
+        //test if the object to be assigned to is the same as the rhs
+        if (this == &rhs)
+                return *this;
+
+        //delete the old content
+        delete m_child;
+        //and create a new one
+        EgcExpressionNode *originalChild = const_cast<EgcUnaryExpressionNode&>(rhs).getChild();
+        m_child = EgcExpressionNodeCreator::copy(*originalChild);
+
+        return *this;
+}

@@ -36,6 +36,12 @@ public:
          * @returnNULL if no this expression has no child, a pointer to the child otherwise.
          */
         EgcExpressionNode* getRightChild(void);
+        /**
+         * @brief operator= overloads = operator since we have dynamic elements in this class
+         * @param rhs a reference to the object to be assigned
+         * @return a reference to the object the rhs is assigned to
+         */
+        EgcBinaryExpressionNode& operator=(const EgcBinaryExpressionNode &rhs);
 protected:
         EgcExpressionNode* m_rightChild;
         EgcExpressionNode* m_leftChild;

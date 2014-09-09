@@ -46,3 +46,21 @@ EgcExpressionNode* EgcBinaryExpressionNode::getRightChild(void)
 {
         return m_rightChild;
 }
+
+EgcBinaryExpressionNode& EgcBinaryExpressionNode::operator=(const EgcBinaryExpressionNode &rhs)
+{
+        //test if the object to be assigned to is the same as the rhs
+        if (this == &rhs)
+                return *this;
+
+        //delete the old content
+        delete m_leftChild;
+        delete m_rightChild;
+        //and create a new one
+        EgcExpressionNode *originalChildLeft = const_cast<EgcBinaryExpressionNode&>(rhs).getLeftChild();
+        EgcExpressionNode *originalChildRight = const_cast<EgcBinaryExpressionNode&>(rhs).getRightChild();
+        m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);
+        m_rightChild = EgcExpressionNodeCreator::copy(*originalChildRight);
+
+        return *this;
+}
