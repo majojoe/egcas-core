@@ -9,6 +9,9 @@
  */
 class EgcVariableExpressionNode : public EgcExpressionNode
 {
+        //set the node type of this expression
+        EGC_SET_EXPRESSION_TYPE(EgcExpressionNodeType::VariableNode);
+
 public:
         ///std constructor
         EgcVariableExpressionNode();
@@ -38,7 +41,7 @@ public:
         QString getStuffedVar(void);
 private:
         QString m_value;          ///< the variable name used
-        QString m_subscript;      ///< the subscript if any
+        QString m_subscript;      ///< the subscript if any        
 };
 
 #endif // EGCVARIABLEEXPRESSIONNODE_H

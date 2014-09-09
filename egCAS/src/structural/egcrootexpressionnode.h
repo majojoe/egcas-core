@@ -8,6 +8,8 @@
  */
 class EgcRootExpressionNode : public EgcBinaryExpressionNode
 {
+        //set the node type of this expression
+        EGC_SET_EXPRESSION_TYPE(EgcExpressionNodeType::RootNode);
 public:
         EgcRootExpressionNode();
 };

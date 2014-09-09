@@ -2,5 +2,4 @@
 
 EgcRootExpressionNode::EgcRootExpressionNode()
 {
-        m_nodeType = EgcExpressionNodeType::RootNode;
 }

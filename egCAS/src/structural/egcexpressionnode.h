@@ -9,6 +9,15 @@ enum class EgcExpressionNodeType
         NumberNode = 0, VariableNode, RootNode, NodeUndefined
 };
 
+/** macro for setting the expression type of a class. Change this if you want to have the type
+ * changed in a subclass */
+#define EGC_SET_EXPRESSION_TYPE(type)                                                           \
+public:                                                                                         \
+        virtual EgcExpressionNodeType getNodeType(void) {return s_nodeType;}                    \
+protected:                                                                                      \
+        static const EgcExpressionNodeType s_nodeType = type
+
+
 /**
  * @brief The EgcExpressionNode class defines the base class for all expressions
  * (multiplication, substraction, ...) in the expression tree.
@@ -16,16 +25,12 @@ enum class EgcExpressionNodeType
  */
 class EgcExpressionNode
 {
+        //set the node type of this expression. Set this in each subclass in which you want to have the type changed.
+        EGC_SET_EXPRESSION_TYPE(EgcExpressionNodeType::NodeUndefined);
+
 public:
         EgcExpressionNode();
         virtual ~EgcExpressionNode() = 0;
-        /**
-         * @brief getNodeType returns the node type of the derived class
-         * @return the node type of this class.
-         */
-        EgcExpressionNodeType getNodeType(void);
-protected:
-        EgcExpressionNodeType m_nodeType;
 };
 
 #endif // EGCEXPRESSIONNODE_H
