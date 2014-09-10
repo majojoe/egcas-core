@@ -18,11 +18,19 @@ SOURCES += tst_egcastest_structural.cpp \
            ../../src/structural/egcunaryexpressionnode.cpp \
            ../../src/structural/egcbinaryexpressionnode.cpp \
            ../../src/structural/egcexpressionnode.cpp \
+           ../../src/structural/egcrootexpressionnode.cpp \
+           ../../src/structural/egcnumberexpressionnode.cpp \
+           ../../src/structural/egcexpressionnodecreator.cpp \
+           ../../src/structural/egcvariableexpressionnode.cpp
 
 HEADERS += ../../src/structural/egcunaryexpressionnode.h \
            ../../src/structural/egcbinaryexpressionnode.h \
            ../../src/structural/egcexpressionnode.h \
-    tst_egcastest_structural.h
+           ../../src/structural/egcrootexpressionnode.h \
+           ../../src/structural/egcnumberexpressionnode.h \
+           ../../src/structural/egcexpressonnodecreator.h \
+           ../../src/structural/egcvariableexpressionnode.h \
+           tst_egcastest_structural.h
 
 
 

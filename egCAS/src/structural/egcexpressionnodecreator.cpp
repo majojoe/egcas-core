@@ -16,10 +16,10 @@ EgcExpressionNode* EgcExpressionNodeCreator::copy(EgcExpressionNode& node)
                 retval = new (std::nothrow) EgcNumberExpressionNode(static_cast<EgcNumberExpressionNode&>(node));
                 break;
         case EgcExpressionNodeType::VariableNode:
-                retval = new (std::nothrow) EgcNumberExpressionNode(static_cast<EgcNumberExpressionNode&>(node));
+                retval = new (std::nothrow) EgcVariableExpressionNode(static_cast<EgcVariableExpressionNode&>(node));
                 break;
         case EgcExpressionNodeType::RootNode:
-                retval = new (std::nothrow) EgcNumberExpressionNode(static_cast<EgcNumberExpressionNode&>(node));
+                retval = new (std::nothrow) EgcRootExpressionNode(static_cast<EgcRootExpressionNode&>(node));
                 break;
         default:  //EgcExpressionNodeType::NodeUndefined
                 qDebug("The implementation of this function is not complete, Please provide an implementation for the newly added EgcExpressionNodeType.");

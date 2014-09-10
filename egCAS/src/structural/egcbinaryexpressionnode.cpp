@@ -7,10 +7,14 @@ EgcBinaryExpressionNode::EgcBinaryExpressionNode() : m_rightChild(nullptr), m_le
 
 EgcBinaryExpressionNode::EgcBinaryExpressionNode(const EgcBinaryExpressionNode& orig)
 {
+        m_leftChild = nullptr;
+        m_rightChild = nullptr;
         EgcExpressionNode *originalChildLeft = const_cast<EgcBinaryExpressionNode&>(orig).getLeftChild();
         EgcExpressionNode *originalChildRight = const_cast<EgcBinaryExpressionNode&>(orig).getRightChild();
-        m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);
-        m_rightChild = EgcExpressionNodeCreator::copy(*originalChildRight);
+        if (originalChildLeft)
+                m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);
+        if (originalChildRight)
+                m_rightChild = EgcExpressionNodeCreator::copy(*originalChildRight);
 }
 
 EgcBinaryExpressionNode::~EgcBinaryExpressionNode()
@@ -20,7 +24,6 @@ EgcBinaryExpressionNode::~EgcBinaryExpressionNode()
 
         if (m_rightChild)
                 delete m_rightChild;
-
 }
 
 void EgcBinaryExpressionNode::setLeftChild(const EgcExpressionNode& expression)
@@ -54,13 +57,21 @@ EgcBinaryExpressionNode& EgcBinaryExpressionNode::operator=(const EgcBinaryExpre
                 return *this;
 
         //delete the old content
-        delete m_leftChild;
-        delete m_rightChild;
+        if (m_leftChild) {
+                delete m_leftChild;
+                m_leftChild = nullptr;
+        }
+        if (m_rightChild) {
+                delete m_rightChild;
+                m_rightChild = nullptr;
+        }
         //and create a new one
         EgcExpressionNode *originalChildLeft = const_cast<EgcBinaryExpressionNode&>(rhs).getLeftChild();
         EgcExpressionNode *originalChildRight = const_cast<EgcBinaryExpressionNode&>(rhs).getRightChild();
-        m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);
-        m_rightChild = EgcExpressionNodeCreator::copy(*originalChildRight);
+        if (originalChildLeft)
+                m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);
+        if (originalChildRight)
+                m_rightChild = EgcExpressionNodeCreator::copy(*originalChildRight);
 
         return *this;
 }

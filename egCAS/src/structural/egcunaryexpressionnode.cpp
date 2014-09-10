@@ -8,8 +8,10 @@ EgcUnaryExpressionNode::EgcUnaryExpressionNode() : m_child(nullptr)
 
 EgcUnaryExpressionNode::EgcUnaryExpressionNode(const EgcUnaryExpressionNode& orig)
 {
+        m_child = nullptr;
         EgcExpressionNode *originalChild = const_cast<EgcUnaryExpressionNode&>(orig).getChild();
-        m_child = EgcExpressionNodeCreator::copy(*originalChild);
+        if (originalChild)
+                m_child = EgcExpressionNodeCreator::copy(*originalChild);
 }
 
 EgcUnaryExpressionNode::~EgcUnaryExpressionNode()
@@ -37,10 +39,14 @@ EgcUnaryExpressionNode& EgcUnaryExpressionNode::operator=(const EgcUnaryExpressi
                 return *this;
 
         //delete the old content
-        delete m_child;
+        if (m_child) {
+                delete m_child;
+                m_child = nullptr;
+        }
         //and create a new one
         EgcExpressionNode *originalChild = const_cast<EgcUnaryExpressionNode&>(rhs).getChild();
-        m_child = EgcExpressionNodeCreator::copy(*originalChild);
+        if (originalChild)
+                m_child = EgcExpressionNodeCreator::copy(*originalChild);
 
         return *this;
 }

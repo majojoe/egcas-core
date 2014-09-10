@@ -3,6 +3,8 @@
 
 #include "../../src/structural/egcunaryexpressionnode.h"
 #include "../../src/structural/egcbinaryexpressionnode.h"
+#include "../../src/structural/egcrootexpressionnode.h"
+#include "../../src/structural/egcnumberexpressionnode.h"
 
 
 class EgcUnaryExpressionNodeTestChild : public EgcUnaryExpressionNode
