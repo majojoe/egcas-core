@@ -31,6 +31,12 @@ class EgcExpressionNode
 public:
         EgcExpressionNode();
         virtual ~EgcExpressionNode() = 0;
+        /**
+         * @brief valid returns true if the expression is valid and false otherwise.
+         * An expression is valid if all nodes are valid.
+         * @return true if the expression is valid, false otherwise.
+         */
+        virtual bool valid(void);
 };
 
 #endif // EGCEXPRESSIONNODE_H

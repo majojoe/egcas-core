@@ -8,3 +8,8 @@ EgcExpressionNode::~EgcExpressionNode()
 {
 
 }
+
+bool EgcExpressionNode::valid(void)
+{
+        return true;
+}

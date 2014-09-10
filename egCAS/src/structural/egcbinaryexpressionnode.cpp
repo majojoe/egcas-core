@@ -75,3 +75,12 @@ EgcBinaryExpressionNode& EgcBinaryExpressionNode::operator=(const EgcBinaryExpre
 
         return *this;
 }
+
+bool EgcBinaryExpressionNode::valid(void)
+{
+        if (m_leftChild && m_rightChild)
+                if (m_leftChild->valid() && m_rightChild->valid())
+                        return true;
+
+        return false;
+}

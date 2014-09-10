@@ -42,6 +42,11 @@ public:
          * @return a reference to the object the rhs is assigned to
          */
         EgcBinaryExpressionNode& operator=(const EgcBinaryExpressionNode &rhs);
+        /**
+         * @brief valid checks if the subnodes are valid. This can be the case if e.g. the childs are not NULL.
+         * @return returns true if the expression is valid, false otherwise.
+         */
+        virtual bool valid(void);
 protected:
         EgcExpressionNode* m_rightChild;
         EgcExpressionNode* m_leftChild;

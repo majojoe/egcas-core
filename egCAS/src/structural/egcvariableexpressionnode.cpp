@@ -35,3 +35,11 @@ QString EgcVariableExpressionNode::getStuffedVar(void)
 
         return var % "_" % sub;
 }
+
+bool EgcVariableExpressionNode::valid(void)
+{
+        if (m_value.isEmpty())
+                return false;
+        else
+                return true;
+}

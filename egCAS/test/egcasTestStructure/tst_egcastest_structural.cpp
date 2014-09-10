@@ -66,6 +66,8 @@ void EgcasTest_Structural::testCopyConstructors()
         EgcNumberExpressionNode *numberChild2 = static_cast<EgcNumberExpressionNode*>(copyExpression.getRightChild());
         QVERIFY(numberChild1->getValue() == 200.1);
         QVERIFY(numberChild2->getValue() == 90.365);
+        QVERIFY(copyChild->valid() == false);
+        QVERIFY(numberChild2->valid() == true);
 
 }
 

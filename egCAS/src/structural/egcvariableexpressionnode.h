@@ -39,6 +39,12 @@ public:
          * and variable name and subscript is seperated via "_")
          */
         QString getStuffedVar(void);
+        /**
+         * @brief valid returns true if the expression is valid and false otherwise.
+         * A variable expression is valid if the value is not empty.
+         * @return true if the expression is valid, false otherwise.
+         */
+        virtual bool valid(void);
 private:
         QString m_value;          ///< the variable name used
         QString m_subscript;      ///< the subscript if any        

@@ -50,3 +50,12 @@ EgcUnaryExpressionNode& EgcUnaryExpressionNode::operator=(const EgcUnaryExpressi
 
         return *this;
 }
+
+bool EgcUnaryExpressionNode::valid(void)
+{
+        if (m_child)
+                if (m_child->valid())
+                        return true;
+
+        return false;
+}
