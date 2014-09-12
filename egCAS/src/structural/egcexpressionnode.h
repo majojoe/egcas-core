@@ -6,8 +6,9 @@
  */
 enum class EgcExpressionNodeType
 {
-        NumberNode = 0, VariableNode, RootNode, NodeUndefined
+        NumberNode = 0, VariableNode, RootNode, ParenthesisNode, NodeUndefined
 };
+
 
 /** macro for setting the expression type of a class. Change this if you want to have the type
  * changed in a subclass */
@@ -37,6 +38,21 @@ public:
          * @return true if the expression is valid, false otherwise.
          */
         virtual bool valid(void);
+        /**
+         * @brief isContainer returns if the current element is a container or not
+         * @return true if it is a container, false otherwise
+         */
+        virtual bool isContainer(void);
+        /**
+         * @brief isUnaryExpression returns if the current element is a unary expression (container) or not
+         * @return true if it is a unary expression, false otherwise
+         */
+        virtual bool isUnaryExpression(void);
+        /**
+         * @brief isBinaryExpression returns if the current element is a binary expression (container) or not
+         * @returntrue if it is a binary expression, false otherwise
+         */
+        virtual bool isBinaryExpression(void);
 };
 
 #endif // EGCEXPRESSIONNODE_H

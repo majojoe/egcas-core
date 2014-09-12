@@ -30,7 +30,8 @@ SOURCES += src/main.cpp\
     src/structural/egcrootexpressionnode.cpp \
     src/structural/egcnumberexpressionnode.cpp \
     src/structural/egcvariableexpressionnode.cpp \
-    src/structural/egcexpressionnodecreator.cpp
+    src/structural/egcexpressionnodecreator.cpp \
+    src/structural/egcparenthesisexpressionnode.cpp
 
 HEADERS  += src/mainwindow.h \
     src/view/egcasscene.h \
@@ -45,7 +46,8 @@ HEADERS  += src/mainwindow.h \
     src/structural/egcrootexpressionnode.h \
     src/structural/egcnumberexpressionnode.h \
     src/structural/egcvariableexpressionnode.h \
-    src/structural/egcexpressionnodecreator.h
+    src/structural/egcexpressionnodecreator.h \
+    src/structural/egcparenthesisexpressionnode.h
 
 FORMS    += src/ui/mainwindow.ui
 

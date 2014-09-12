@@ -50,9 +50,9 @@ void EgcasTest_Structural::testCopyConstructors()
 {
         //test copy constructor of binary expression
         EgcRootExpressionNode rootExpression;
-        EgcRootExpressionNode *rootChildExpression = new EgcRootExpressionNode();
-        EgcNumberExpressionNode *numberExpression = new EgcNumberExpressionNode();
-        EgcNumberExpressionNode *numberExpression2 = new EgcNumberExpressionNode();
+        auto *rootChildExpression = new EgcRootExpressionNode();
+        auto *numberExpression = new EgcNumberExpressionNode();
+        auto *numberExpression2 = new EgcNumberExpressionNode();
         numberExpression->setValue(200.1);
         numberExpression2->setValue(90.365);
         rootChildExpression->setLeftChild(*numberExpression);
@@ -61,9 +61,9 @@ void EgcasTest_Structural::testCopyConstructors()
 
         EgcRootExpressionNode copyExpression(rootExpression);
 
-        EgcBinaryExpressionNode *copyChild = static_cast<EgcBinaryExpressionNode*>(copyExpression.getLeftChild());
-        EgcNumberExpressionNode *numberChild1 = static_cast<EgcNumberExpressionNode*>(copyChild->getLeftChild());
-        EgcNumberExpressionNode *numberChild2 = static_cast<EgcNumberExpressionNode*>(copyExpression.getRightChild());
+        auto *copyChild = static_cast<EgcBinaryExpressionNode*>(copyExpression.getLeftChild());
+        auto *numberChild1 = static_cast<EgcNumberExpressionNode*>(copyChild->getLeftChild());
+        auto *numberChild2 = static_cast<EgcNumberExpressionNode*>(copyExpression.getRightChild());
         QVERIFY(numberChild1->getValue() == 200.1);
         QVERIFY(numberChild2->getValue() == 90.365);
         QVERIFY(copyChild->valid() == false);

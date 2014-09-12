@@ -84,3 +84,13 @@ bool EgcBinaryExpressionNode::valid(void)
 
         return false;
 }
+
+bool EgcBinaryExpressionNode::isContainer(void)
+{
+        return true;
+}
+
+bool EgcBinaryExpressionNode::isBinaryExpression(void)
+{
+        return true;
+}

@@ -59,3 +59,14 @@ bool EgcUnaryExpressionNode::valid(void)
 
         return false;
 }
+
+bool EgcUnaryExpressionNode::isContainer(void)
+{
+        return true;
+}
+
+bool EgcUnaryExpressionNode::isUnaryExpression(void)
+{
+        return true;
+}
+

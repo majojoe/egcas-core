@@ -39,6 +39,16 @@ public:
          * @return returns true if the expression is valid, false otherwise.
          */
         virtual bool valid(void);
+        /**
+         * @brief isContainer returns if the current element is a container or not
+         * @return true if it is a container, false otherwise
+         */
+        virtual bool isContainer(void);
+        /**
+         * @brief isUnaryExpression returns if the current element is a unary expression (container) or not
+         * @return true if it is a unary expression, false otherwise
+         */
+        virtual bool isUnaryExpression(void);
 protected:
         EgcExpressionNode* m_child;
 };
