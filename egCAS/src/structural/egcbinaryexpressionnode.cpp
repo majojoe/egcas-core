@@ -12,9 +12,15 @@ EgcBinaryExpressionNode::EgcBinaryExpressionNode(const EgcBinaryExpressionNode& 
         EgcExpressionNode *originalChildLeft = const_cast<EgcBinaryExpressionNode&>(orig).getLeftChild();
         EgcExpressionNode *originalChildRight = const_cast<EgcBinaryExpressionNode&>(orig).getRightChild();
         if (originalChildLeft)
-                m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);
+                m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);        
         if (originalChildRight)
                 m_rightChild = EgcExpressionNodeCreator::copy(*originalChildRight);
+
+        //set the parents also
+        if(originalChildLeft)
+                originalChildLeft->provideParent(*this);
+        if(originalChildRight)
+                originalChildRight->provideParent(*this);
 }
 
 EgcBinaryExpressionNode::~EgcBinaryExpressionNode()
@@ -31,6 +37,9 @@ void EgcBinaryExpressionNode::setLeftChild(const EgcExpressionNode& expression)
         if (m_leftChild)
                 delete m_leftChild;
         m_leftChild = const_cast<EgcExpressionNode*>(&expression);
+
+        if (m_leftChild)
+                m_leftChild->provideParent(*this);
 }
 
 void EgcBinaryExpressionNode::setRightChild(const EgcExpressionNode& expression)
@@ -38,6 +47,9 @@ void EgcBinaryExpressionNode::setRightChild(const EgcExpressionNode& expression)
         if (m_rightChild)
                 delete m_rightChild;
         m_rightChild = const_cast<EgcExpressionNode*>(&expression);
+
+        if (m_rightChild)
+                m_rightChild->provideParent(*this);
 }
 
 EgcExpressionNode* EgcBinaryExpressionNode::getLeftChild(void)
@@ -85,12 +97,15 @@ bool EgcBinaryExpressionNode::valid(void)
         return false;
 }
 
-bool EgcBinaryExpressionNode::isContainer(void)
+bool EgcBinaryExpressionNode::isBinaryExpression(void)
 {
         return true;
 }
 
-bool EgcBinaryExpressionNode::isBinaryExpression(void)
+void EgcBinaryExpressionNode::notifyContainerOnChildDeletion(EgcExpressionNode* child)
 {
-        return true;
+        if (m_leftChild == child)
+                m_leftChild = nullptr;
+        if (m_rightChild == child)
+                m_rightChild = nullptr;
 }

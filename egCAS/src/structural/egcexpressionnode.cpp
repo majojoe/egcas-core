@@ -1,12 +1,12 @@
-#include "egcexpressionnode.h"
+#include "egccontainernode.h"
 
-EgcExpressionNode::EgcExpressionNode()
+EgcExpressionNode::EgcExpressionNode() : m_parent(nullptr)
 {
 }
 
 EgcExpressionNode::~EgcExpressionNode()
 {
-
+        notifyContainerOnChildDeletion(this);
 }
 
 bool EgcExpressionNode::valid(void)
@@ -27,4 +27,14 @@ bool EgcExpressionNode::isUnaryExpression(void)
 bool EgcExpressionNode::isBinaryExpression(void)
 {
         return false;
+}
+
+EgcExpressionNode* EgcExpressionNode::getParent(void)
+{
+        return m_parent;
+}
+
+void EgcExpressionNode::provideParent(EgcContainerNode& parent)
+{
+        m_parent = &parent;
 }

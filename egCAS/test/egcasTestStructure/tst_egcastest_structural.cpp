@@ -44,6 +44,9 @@ void EgcasTest_Structural::testChildDeletion()
         delete(parent_bin);
         QVERIFY(child_bin->deleted == true);
         QVERIFY(child2_bin->deleted == true);
+        //verify parent references
+        QVERIFY(parent_bin->getParent() == nullptr);
+        QVERIFY(child_bin->getParent() == parent_bin);
 }
 
 void EgcasTest_Structural::testCopyConstructors()

@@ -1,13 +1,13 @@
 #ifndef EGCBINARYEXPRESSIONNODE_H
 #define EGCBINARYEXPRESSIONNODE_H
 
-#include "egcexpressionnode.h"
+#include "egccontainernode.h"
 
 /**
  * @brief The EgcBinaryExpressionNode class is a base class for an expression that takes two arguments (binary) as subexpressions.
  * This can be e.g. a multiplication or substraction.
  */
-class EgcBinaryExpressionNode : public EgcExpressionNode
+class EgcBinaryExpressionNode : public EgcContainerNode
 {
 public:
         ///std contructor
@@ -15,7 +15,7 @@ public:
         ///copy constructor
         EgcBinaryExpressionNode(const EgcBinaryExpressionNode& orig);
         ///destructor
-        ~EgcBinaryExpressionNode() = 0;
+        virtual ~EgcBinaryExpressionNode() = 0;
         /**
          * @brief setLeftChild set the left child of this binary expression (two childs can be set since this is a binary).
          * @param expression a reference to the child expression given.
@@ -48,15 +48,15 @@ public:
          */
         virtual bool valid(void);
         /**
-         * @brief isContainer returns if the current element is a container or not
-         * @return true if it is a container, false otherwise
-         */
-        virtual bool isContainer(void);
-        /**
          * @brief isBinaryExpression returns if the current element is a binary expression (container) or not
          * @returntrue if it is a binary expression, false otherwise
          */
         virtual bool isBinaryExpression(void);
+        /**
+         * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
+         * @param child a pointer to the child that will be deleted soon
+         */
+        virtual void notifyContainerOnChildDeletion(EgcExpressionNode* child);
 protected:
         EgcExpressionNode* m_rightChild;
         EgcExpressionNode* m_leftChild;

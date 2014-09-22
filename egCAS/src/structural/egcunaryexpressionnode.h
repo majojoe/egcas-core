@@ -1,14 +1,14 @@
 #ifndef EGCUNARYEXPRESSIONNODE_H
 #define EGCUNARYEXPRESSIONNODE_H
 
-#include "egcexpressionnode.h"
+#include "egccontainernode.h"
 
 /**
  * @brief The EgcUnaryExpressionNode
  * pressionNode class is a base class for an expression that takes one argument (unary) as subexpression.
  * This can be e.g. the not operator.
  */
-class EgcUnaryExpressionNode : public EgcExpressionNode
+class EgcUnaryExpressionNode : public EgcContainerNode
 {
 public:
         ///std constructor
@@ -40,15 +40,15 @@ public:
          */
         virtual bool valid(void);
         /**
-         * @brief isContainer returns if the current element is a container or not
-         * @return true if it is a container, false otherwise
-         */
-        virtual bool isContainer(void);
-        /**
          * @brief isUnaryExpression returns if the current element is a unary expression (container) or not
          * @return true if it is a unary expression, false otherwise
          */
         virtual bool isUnaryExpression(void);
+        /**
+         * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
+         * @param child a pointer to the child that will be deleted soon
+         */
+        virtual void notifyContainerOnChildDeletion(EgcExpressionNode* child);
 protected:
         EgcExpressionNode* m_child;
 };

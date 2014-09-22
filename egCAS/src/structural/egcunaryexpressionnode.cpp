@@ -12,6 +12,10 @@ EgcUnaryExpressionNode::EgcUnaryExpressionNode(const EgcUnaryExpressionNode& ori
         EgcExpressionNode *originalChild = const_cast<EgcUnaryExpressionNode&>(orig).getChild();
         if (originalChild)
                 m_child = EgcExpressionNodeCreator::copy(*originalChild);
+
+        //set the parent also
+        if(originalChild)
+                originalChild->provideParent(*this);
 }
 
 EgcUnaryExpressionNode::~EgcUnaryExpressionNode()
@@ -25,6 +29,10 @@ void EgcUnaryExpressionNode::setChild(const EgcExpressionNode& expression)
         if (m_child)
                 delete m_child;
         m_child = const_cast<EgcExpressionNode*>(&expression);
+
+        //set the parent also
+        if(m_child)
+                m_child->provideParent(*this);
 }
 
 EgcExpressionNode* EgcUnaryExpressionNode::getChild(void)
@@ -60,13 +68,13 @@ bool EgcUnaryExpressionNode::valid(void)
         return false;
 }
 
-bool EgcUnaryExpressionNode::isContainer(void)
-{
-        return true;
-}
-
 bool EgcUnaryExpressionNode::isUnaryExpression(void)
 {
         return true;
 }
 
+void EgcUnaryExpressionNode::notifyContainerOnChildDeletion(EgcExpressionNode* child)
+{
+        if (m_child == child)
+                m_child = nullptr;
+}
