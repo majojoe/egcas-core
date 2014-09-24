@@ -33,7 +33,9 @@ SOURCES += src/main.cpp\
     src/structural/egcexpressionnodecreator.cpp \
     src/structural/egcparenthesisexpressionnode.cpp \
     src/structural/visitor/egcnodevisitor.cpp \
-    src/structural/egccontainernode.cpp
+    src/structural/egccontainernode.cpp \
+    src/structural/egcformulaexpression.cpp \
+    src/structural/iterator/egcexpressionnodeiterator.cpp
 
 HEADERS  += src/mainwindow.h \
     src/view/egcasscene.h \
@@ -51,7 +53,9 @@ HEADERS  += src/mainwindow.h \
     src/structural/egcexpressionnodecreator.h \
     src/structural/egcparenthesisexpressionnode.h \
     src/structural/visitor/egcnodevisitor.h \
-    src/structural/egccontainernode.h
+    src/structural/egccontainernode.h \
+    src/structural/egcformulaexpression.h \
+    src/structural/iterator/egcexpressionnodeiterator.h
 
 FORMS    += src/ui/mainwindow.ui
 
