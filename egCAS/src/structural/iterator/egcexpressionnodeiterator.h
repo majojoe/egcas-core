@@ -72,9 +72,20 @@ public:
          * @return the iterator set for the list.
          */
         EgcExpressionNodeIterator & operator=(const EgcFormulaExpression & tree);
+protected:
+        /**
+         * @brief getNextElement returns the next element in the tree
+         * @return a pointer to the next element
+         */
+        virtual EgcExpressionNode& getNextElement(void) const;
+        /**
+         * @brief getPreviousElement get the previous element in the tree
+         * @return a pointer to the pevious element
+         */
+        virtual EgcExpressionNode& getPreviousElement(void) const;
 private:
-        EgcExpressionNode* m_cursor;            ///< pointer to data element in the tree structure
-        EgcExpressionNode* m_rootElement;       ///< pointer to data element at the root of the tree structure
+        EgcExpressionNode& m_cursor;            ///< pointer to data element in the tree structure
+        EgcExpressionNode& m_rootElement;       ///< pointer to data element at the root of the tree structure
 };
 
 
