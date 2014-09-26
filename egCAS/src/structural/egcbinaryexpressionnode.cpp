@@ -52,12 +52,12 @@ void EgcBinaryExpressionNode::setRightChild(const EgcExpressionNode& expression)
                 m_rightChild->provideParent(*this);
 }
 
-EgcExpressionNode* EgcBinaryExpressionNode::getLeftChild(void)
+EgcExpressionNode* EgcBinaryExpressionNode::getLeftChild(void) const
 {
         return m_leftChild;
 }
 
-EgcExpressionNode* EgcBinaryExpressionNode::getRightChild(void)
+EgcExpressionNode* EgcBinaryExpressionNode::getRightChild(void) const
 {
         return m_rightChild;
 }
@@ -78,8 +78,8 @@ EgcBinaryExpressionNode& EgcBinaryExpressionNode::operator=(const EgcBinaryExpre
                 m_rightChild = nullptr;
         }
         //and create a new one
-        EgcExpressionNode *originalChildLeft = const_cast<EgcBinaryExpressionNode&>(rhs).getLeftChild();
-        EgcExpressionNode *originalChildRight = const_cast<EgcBinaryExpressionNode&>(rhs).getRightChild();
+        EgcExpressionNode *originalChildLeft = rhs.getLeftChild();
+        EgcExpressionNode *originalChildRight = rhs.getRightChild();
         if (originalChildLeft)
                 m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);
         if (originalChildRight)

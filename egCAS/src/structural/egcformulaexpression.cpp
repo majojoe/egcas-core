@@ -13,7 +13,7 @@ EgcFormulaExpression::~EgcFormulaExpression()
         delete m_data;
 }
 
-EgcExpressionNode& EgcFormulaExpression::getRootElement(void)
+EgcExpressionNode& EgcFormulaExpression::getRootElement(void) const
 {
         return *m_data;
 }

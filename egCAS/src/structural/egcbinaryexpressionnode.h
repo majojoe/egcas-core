@@ -30,12 +30,12 @@ public:
          * @brief getLeftChild get a pointer to the left child
          * @return NULL if no this expression has no child, a pointer to the child otherwise.
          */
-        EgcExpressionNode* getLeftChild(void);
+        EgcExpressionNode* getLeftChild(void) const;
         /**
          * @brief getRightChild get a pointer to the right child
          * @returnNULL if no this expression has no child, a pointer to the child otherwise.
          */
-        EgcExpressionNode* getRightChild(void);
+        EgcExpressionNode* getRightChild(void) const;
         /**
          * @brief operator= overloads = operator since we have dynamic elements in this class
          * @param rhs a reference to the object to be assigned

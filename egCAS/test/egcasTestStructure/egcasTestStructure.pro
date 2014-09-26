@@ -14,6 +14,8 @@ TEMPLATE = app
 
 CONFIG += c++11
 
+INCLUDEPATH += "../../src/"
+
 SOURCES += tst_egcastest_structural.cpp \
            ../../src/structural/egcunaryexpressionnode.cpp \
            ../../src/structural/egcbinaryexpressionnode.cpp \
@@ -22,7 +24,9 @@ SOURCES += tst_egcastest_structural.cpp \
            ../../src/structural/egcnumberexpressionnode.cpp \
            ../../src/structural/egcexpressionnodecreator.cpp \
            ../../src/structural/egccontainernode.cpp \
-           ../../src/structural/egcvariableexpressionnode.cpp
+           ../../src/structural/egcvariableexpressionnode.cpp \
+           ../../src/structural/iterator/egcexpressionnodeiterator.cpp \
+           ../../src/structural/egcformulaexpression.cpp
 
 HEADERS += ../../src/structural/egcunaryexpressionnode.h \
            ../../src/structural/egcbinaryexpressionnode.h \
@@ -32,7 +36,9 @@ HEADERS += ../../src/structural/egcunaryexpressionnode.h \
            ../../src/structural/egcexpressonnodecreator.h \
            ../../src/structural/egcvariableexpressionnode.h \
            ../../src/structural/egccontainernode.h \
-           tst_egcastest_structural.h
+           tst_egcastest_structural.h \
+           ../../src/structural/iterator/egcexpressionnodeiterator.h \
+           ../../src/structural/egcformulaexpression.h
 
 
 

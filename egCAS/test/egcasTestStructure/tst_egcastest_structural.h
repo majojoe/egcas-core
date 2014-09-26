@@ -1,11 +1,12 @@
 #ifndef TST_EGCASTEST_STRUCTURAL_H
 #define TST_EGCASTEST_STRUCTURAL_H
 
-#include "../../src/structural/egcunaryexpressionnode.h"
-#include "../../src/structural/egcbinaryexpressionnode.h"
-#include "../../src/structural/egcrootexpressionnode.h"
-#include "../../src/structural/egcnumberexpressionnode.h"
-
+#include "structural/egcunaryexpressionnode.h"
+#include "structural/egcbinaryexpressionnode.h"
+#include "structural/egcrootexpressionnode.h"
+#include "structural/egcnumberexpressionnode.h"
+#include "structural/iterator/egcexpressionnodeiterator.h"
+#include "structural/egcformulaexpression.h"
 
 class EgcUnaryExpressionNodeTestChild : public EgcUnaryExpressionNode
 {

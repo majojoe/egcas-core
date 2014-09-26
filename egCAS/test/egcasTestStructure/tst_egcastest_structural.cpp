@@ -12,6 +12,7 @@ public:
 private Q_SLOTS:
         void testChildDeletion();
         void testCopyConstructors();
+        void testIterator();
 };
 
 
@@ -71,6 +72,26 @@ void EgcasTest_Structural::testCopyConstructors()
         QVERIFY(numberChild2->getValue() == 90.365);
         QVERIFY(copyChild->valid() == false);
         QVERIFY(numberChild2->valid() == true);
+
+}
+
+void EgcasTest_Structural::testIterator()
+{
+        EgcFormulaExpression formula(EgcExpressionNodeType::RootNode);
+        EgcRootExpressionNode& rootExpression = static_cast<EgcRootExpressionNode&>(formula.getRootElement());
+
+        auto *rootChildExpression = new EgcRootExpressionNode();
+        auto *numberExpression = new EgcNumberExpressionNode();
+        auto *numberExpression2 = new EgcNumberExpressionNode();
+        numberExpression->setValue(200.1);
+        numberExpression2->setValue(90.365);
+        rootChildExpression->setLeftChild(*numberExpression);
+        rootExpression.setLeftChild(*rootChildExpression);
+        rootExpression.setRightChild(*numberExpression2);
+
+        EgcExpressionNodeIterator iter(formula);
+        QVERIFY(iter.hasNext() == true);
+        QVERIFY(iter.hasPrevious() == false);
 
 }
 

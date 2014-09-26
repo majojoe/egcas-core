@@ -84,7 +84,7 @@ protected:
          */
         virtual EgcExpressionNode& getPreviousElement(void) const;
 private:
-        EgcExpressionNode& m_cursor;            ///< pointer to data element in the tree structure
+        EgcExpressionNode* m_cursor;            ///< pointer to data element in the tree structure
         EgcExpressionNode& m_rootElement;       ///< pointer to data element at the root of the tree structure
 };
 

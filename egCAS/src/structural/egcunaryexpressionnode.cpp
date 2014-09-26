@@ -35,7 +35,7 @@ void EgcUnaryExpressionNode::setChild(const EgcExpressionNode& expression)
                 m_child->provideParent(*this);
 }
 
-EgcExpressionNode* EgcUnaryExpressionNode::getChild(void)
+EgcExpressionNode* EgcUnaryExpressionNode::getChild(void) const
 {
         return m_child;
 }
@@ -52,7 +52,7 @@ EgcUnaryExpressionNode& EgcUnaryExpressionNode::operator=(const EgcUnaryExpressi
                 m_child = nullptr;
         }
         //and create a new one
-        EgcExpressionNode *originalChild = const_cast<EgcUnaryExpressionNode&>(rhs).getChild();
+        EgcExpressionNode *originalChild = rhs.getChild();
         if (originalChild)
                 m_child = EgcExpressionNodeCreator::copy(*originalChild);
 

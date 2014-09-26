@@ -27,7 +27,7 @@ public:
          * @brief getChild get a pointer to the child
          * @return NULL if no this expression has no child, a pointer to the child otherwise.
          */
-        EgcExpressionNode* getChild(void);
+        EgcExpressionNode* getChild(void) const;
         /**
          * @brief operator= overloads = operator since we have dynamic elements in this class
          * @param rhs a reference to the object to be assigned
