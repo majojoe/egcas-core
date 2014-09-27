@@ -77,8 +77,13 @@ void EgcasTest_Structural::testCopyConstructors()
 
 void EgcasTest_Structural::testIterator()
 {
+        EgcExpressionNode* nodePointer;
         EgcFormulaExpression formula(EgcExpressionNodeType::RootNode);
         EgcRootExpressionNode& rootExpression = static_cast<EgcRootExpressionNode&>(formula.getRootElement());
+
+        EgcExpressionNodeIterator iter(formula);
+        QVERIFY(iter.hasNext() == false);
+        QVERIFY(iter.hasPrevious() == false);
 
         auto *rootChildExpression = new EgcRootExpressionNode();
         auto *numberExpression = new EgcNumberExpressionNode();
@@ -89,9 +94,42 @@ void EgcasTest_Structural::testIterator()
         rootExpression.setLeftChild(*rootChildExpression);
         rootExpression.setRightChild(*numberExpression2);
 
-        EgcExpressionNodeIterator iter(formula);
+        //test hasNext and hasPrevious
         QVERIFY(iter.hasNext() == true);
-        QVERIFY(iter.hasPrevious() == false);
+        QVERIFY(iter.hasPrevious() == true);
+        //test peek functions
+        QVERIFY(&(iter.peekNext()) == rootExpression.getLeftChild());
+        QVERIFY(&(iter.peekPrevious()) == rootExpression.getRightChild());
+
+        //test next functions
+        nodePointer = &(iter.next());
+        QVERIFY(nodePointer == rootChildExpression);
+        QVERIFY(iter.hasNext() == true);
+
+        nodePointer = &(iter.next());
+        QVERIFY(nodePointer == numberExpression);
+        QVERIFY(iter.hasNext() == true);
+
+        nodePointer = &(iter.next());
+        QVERIFY(nodePointer == numberExpression2);
+        QVERIFY(iter.hasNext() == false);
+
+        iter.toBack();
+
+        //test previous functions
+        nodePointer = &(iter.previous());
+        QVERIFY(nodePointer == numberExpression2);
+        QVERIFY(iter.hasNext() == true);
+
+        nodePointer = &(iter.previous());
+        QVERIFY(nodePointer == rootChildExpression);
+        QVERIFY(iter.hasNext() == true);
+
+        nodePointer = &(iter.previous());
+        QVERIFY(nodePointer == numberExpression);
+        QVERIFY(iter.hasNext() == false);
+
+
 
 }
 

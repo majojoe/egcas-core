@@ -141,9 +141,12 @@ EgcExpressionNode& EgcExpressionNodeIterator::getNextElement(void) const
                         EgcExpressionNode* parent = tempCursor->getParent();
                         if (parent) {
                                 if (parent->isBinaryExpression()) {
-                                        if (static_cast<EgcBinaryExpressionNode*>(parent)->getLeftChild() == tempCursor)
-                                                tempCursor = static_cast<EgcBinaryExpressionNode*>(parent)->getRightChild();
-                                        break; //next element found
+                                        if (static_cast<EgcBinaryExpressionNode*>(parent)->getLeftChild() == tempCursor) {
+                                                if (static_cast<EgcBinaryExpressionNode*>(parent)->getRightChild()) {
+                                                        tempCursor = static_cast<EgcBinaryExpressionNode*>(parent)->getRightChild();
+                                                        break; //next element found
+                                                }
+                                        }
                                 }
                                 tempCursor = parent;
                         } else { // if the parent pointer is null, this is the root element or the node is invalid
@@ -194,9 +197,12 @@ EgcExpressionNode& EgcExpressionNodeIterator::getPreviousElement(void) const
                         EgcExpressionNode* parent = tempCursor->getParent();
                         if (parent) {
                                 if (parent->isBinaryExpression()) {
-                                        if (static_cast<EgcBinaryExpressionNode*>(parent)->getRightChild() == tempCursor)
-                                                tempCursor = static_cast<EgcBinaryExpressionNode*>(parent)->getLeftChild();
-                                        break; //next element found
+                                        if (static_cast<EgcBinaryExpressionNode*>(parent)->getRightChild() == tempCursor) {
+                                                if (static_cast<EgcBinaryExpressionNode*>(parent)->getLeftChild()) {
+                                                        tempCursor = static_cast<EgcBinaryExpressionNode*>(parent)->getLeftChild();
+                                                        break; //next element found
+                                                }
+                                        }
                                 }
                                 tempCursor = parent;
                         } else { // if the parent pointer is null, this is the root element or the node is invalid
