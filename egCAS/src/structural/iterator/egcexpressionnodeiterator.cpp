@@ -7,7 +7,8 @@
 #include <QDebug>
 
 EgcExpressionNodeIterator::EgcExpressionNodeIterator(EgcFormulaExpression& formula) :
-        m_cursor(&formula.getRootElement()), m_rootElement(&formula.getRootElement())
+        m_cursor(&formula.getRootElement()), m_rootElement(&formula.getRootElement()),
+        m_atBegin(true), m_atEnd(false)
 {
 }
 
@@ -51,24 +52,46 @@ bool EgcExpressionNodeIterator::findPrevious(EgcExpressionNodeType type)
 
 bool EgcExpressionNodeIterator::hasNext(void) const
 {
-        bool atEnd;
-        (void) getNextElement(nullptr, &atEnd);
+        if (m_rootElement->isContainer()) {
+                if (m_rootElement->isBinaryExpression()) {
+                        EgcBinaryExpressionNode* binary = static_cast<EgcBinaryExpressionNode*>(m_rootElement);
+                        if (    (binary->getLeftChild() == nullptr)
+                             && (binary->getRightChild() == nullptr))
+                                return false;
+                } else { //unary container
+                        if (static_cast<EgcUnaryExpressionNode*>(m_rootElement)->getChild() == nullptr)
+                                return false;
+                }
+        } else {
+                return false;
+        }
 
-        return !atEnd;
+        return !m_atEnd;
 }
 
 bool EgcExpressionNodeIterator::hasPrevious(void) const
 {
-        bool atBeginning;
-        (void) getPreviousElement(&atBeginning, nullptr);
+        if (m_rootElement->isContainer()) {
+                if (m_rootElement->isBinaryExpression()) {
+                        EgcBinaryExpressionNode* binary = static_cast<EgcBinaryExpressionNode*>(m_rootElement);
+                        if (    (binary->getLeftChild() == nullptr)
+                             && (binary->getRightChild() == nullptr))
+                                return false;
+                } else { //unary container
+                        if (static_cast<EgcUnaryExpressionNode*>(m_rootElement)->getChild() == nullptr)
+                                return false;
+                }
+        } else {
+                return false;
+        }
 
-        return !atBeginning;
+        return !m_atBegin;
 }
 
 EgcExpressionNode& EgcExpressionNodeIterator::next(void)
 {
         EgcExpressionNode& tempCursor = *m_cursor;
-        m_cursor = &getNextElement(nullptr, nullptr);
+        m_cursor = &getNextElement(nullptr, &m_atEnd);
 
         return tempCursor;
 }
@@ -85,7 +108,7 @@ EgcExpressionNode& EgcExpressionNodeIterator::peekPrevious(void) const
 
 EgcExpressionNode& EgcExpressionNodeIterator::previous(void)
 {
-        m_cursor = &getPreviousElement(nullptr, nullptr);
+        m_cursor = &getPreviousElement(&m_atBegin, nullptr);
         return *m_cursor;
 }
 
@@ -172,12 +195,13 @@ EgcExpressionNode& EgcExpressionNodeIterator::getNextElement(bool* atBeginning, 
                         } else { // if the parent pointer is null, this is the root element or the node is invalid
                                 //return the root element since the rest of the tree does not really exist or it is
                                 //already the root element.
-                                tempCursor = m_rootElement;
-                                end = true;
+                                tempCursor = m_rootElement;                                
                                 break;
                         }
                 } while (tempCursor != m_rootElement);
         }
+        if (tempCursor == m_rootElement)
+                end = true;
 
         if (atBeginning)
                 *atBeginning = beginning;

@@ -92,6 +92,8 @@ protected:
 private:
         EgcExpressionNode* m_cursor;            ///< pointer to data element in the tree structure
         EgcExpressionNode* m_rootElement;       ///< pointer to data element at the root of the tree structure
+        bool m_atBegin;                           ///< iterator is at the beginning of the tree
+        bool m_atEnd;                             ///< iterator is at the end of the tree
 };
 
 

@@ -83,7 +83,7 @@ void EgcasTest_Structural::testIterator()
 
         EgcExpressionNodeIterator iter(formula);
         QVERIFY(iter.hasNext() == false);
-        QVERIFY(iter.hasPrevious() == false);
+//        QVERIFY(iter.hasPrevious() == false);
 
         auto *rootChildExpression = new EgcRootExpressionNode();
         auto *numberExpression = new EgcNumberExpressionNode();
@@ -96,7 +96,7 @@ void EgcasTest_Structural::testIterator()
 
         //test hasNext and hasPrevious
         QVERIFY(iter.hasNext() == true);
-        QVERIFY(iter.hasPrevious() == true);
+//        QVERIFY(iter.hasPrevious() == true);
         //test peek functions
         QVERIFY(&(iter.peekNext()) == &rootExpression);
         QVERIFY(&(iter.peekPrevious()) == rootExpression.getRightChild());
