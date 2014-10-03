@@ -98,10 +98,14 @@ void EgcasTest_Structural::testIterator()
         QVERIFY(iter.hasNext() == true);
         QVERIFY(iter.hasPrevious() == true);
         //test peek functions
-        QVERIFY(&(iter.peekNext()) == rootExpression.getLeftChild());
+        QVERIFY(&(iter.peekNext()) == &rootExpression);
         QVERIFY(&(iter.peekPrevious()) == rootExpression.getRightChild());
 
         //test next functions
+        nodePointer = &(iter.next());
+        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(iter.hasNext() == true);
+
         nodePointer = &(iter.next());
         QVERIFY(nodePointer == rootChildExpression);
         QVERIFY(iter.hasNext() == true);
