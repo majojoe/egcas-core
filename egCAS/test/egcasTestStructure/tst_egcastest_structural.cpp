@@ -83,7 +83,7 @@ void EgcasTest_Structural::testIterator()
 
         EgcExpressionNodeIterator iter(formula);
         QVERIFY(iter.hasNext() == false);
-//        QVERIFY(iter.hasPrevious() == false);
+        QVERIFY(iter.hasPrevious() == false);
 
         auto *rootChildExpression = new EgcRootExpressionNode();
         auto *numberExpression = new EgcNumberExpressionNode();
@@ -96,7 +96,7 @@ void EgcasTest_Structural::testIterator()
 
         //test hasNext and hasPrevious
         QVERIFY(iter.hasNext() == true);
-//        QVERIFY(iter.hasPrevious() == true);
+        QVERIFY(iter.hasPrevious() == false);
         //test peek functions
         QVERIFY(&(iter.peekNext()) == &rootExpression);
         QVERIFY(&(iter.peekPrevious()) == rootExpression.getRightChild());
@@ -121,19 +121,49 @@ void EgcasTest_Structural::testIterator()
         iter.toBack();
 
         //test previous functions
+        QVERIFY(iter.hasPrevious() == true);
         nodePointer = &(iter.previous());
         QVERIFY(nodePointer == numberExpression2);
-        QVERIFY(iter.hasNext() == true);
-
-        nodePointer = &(iter.previous());
-        QVERIFY(nodePointer == rootChildExpression);
-        QVERIFY(iter.hasNext() == true);
+        QVERIFY(iter.hasPrevious() == true);
 
         nodePointer = &(iter.previous());
         QVERIFY(nodePointer == numberExpression);
+        QVERIFY(iter.hasPrevious() == true);
+
+        nodePointer = &(iter.previous());
+        QVERIFY(nodePointer == rootChildExpression);
+        QVERIFY(iter.hasPrevious() == true);
+
+        nodePointer = &(iter.previous());
+        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(iter.hasPrevious() == false);
+
+        //test overflow
+        nodePointer = &(iter.previous());
+        QVERIFY(nodePointer == numberExpression2);
+
+        iter.toFront();
+
+        //test next functions
+        nodePointer = &(iter.next());
+        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(iter.hasNext() == true);
+
+        nodePointer = &(iter.next());
+        QVERIFY(nodePointer == rootChildExpression);
+        QVERIFY(iter.hasNext() == true);
+
+        nodePointer = &(iter.next());
+        QVERIFY(nodePointer == numberExpression);
+        QVERIFY(iter.hasNext() == true);
+
+        nodePointer = &(iter.next());
+        QVERIFY(nodePointer == numberExpression2);
         QVERIFY(iter.hasNext() == false);
 
-
+        //check overflow
+        nodePointer = &(iter.next());
+        QVERIFY(nodePointer == &rootExpression);
 
 }
 

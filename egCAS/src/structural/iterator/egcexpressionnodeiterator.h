@@ -89,7 +89,28 @@ protected:
          * @return a pointer to the pevious element
          */
         virtual EgcExpressionNode& getPreviousElement(bool* atBeginning, bool* atEnd) const;
+        /**
+         * @brief isRightChild checks if the given child is the right child of the given parent
+         * @param parent reference to the parent to test for
+         * @param child reference to the child to test for
+         * @return true if child is the right child of the given parent, false otherwise
+         */
+        bool isRightChild(EgcExpressionNode& parent, EgcExpressionNode& child) const;
+        /**
+         * @brief isLeftChild checks if the given child is the left child of the given parent
+         * @param parent reference to the parent to test for
+         * @param child reference to the child to test for
+         * @return true if child is the left child of the given parent, false otherwise
+         */
+        bool isLeftChild(EgcExpressionNode& parent, EgcExpressionNode& child) const;
 private:
+        /**
+         * @brief findNextRightMostLeaf finds the next right most leaf at the bottom of the tree
+         * @param start the starting point from where to search
+         * @return the found leaf (this can be a container without childs or a real leaf)
+         */
+        EgcExpressionNode& findNextRightMostLeaf(EgcExpressionNode& start) const;
+
         EgcExpressionNode* m_cursor;            ///< pointer to data element in the tree structure
         EgcExpressionNode* m_rootElement;       ///< pointer to data element at the root of the tree structure
         bool m_atBegin;                           ///< iterator is at the beginning of the tree
