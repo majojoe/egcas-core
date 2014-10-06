@@ -165,6 +165,17 @@ void EgcasTest_Structural::testIterator()
         nodePointer = &(iter.next());
         QVERIFY(nodePointer == &rootExpression);
 
+        //test find routines
+        iter.toFront();
+
+        QVERIFY(iter.findNext(EgcExpressionNodeType::NumberNode) == true);
+        QVERIFY(&(iter.previous()) == numberExpression);
+
+        iter.toBack();
+
+        QVERIFY(iter.findPrevious(EgcExpressionNodeType::NumberNode) == true);
+        QVERIFY(&(iter.next()) == numberExpression2);
+
 }
 
 QTEST_MAIN(EgcasTest_Structural)

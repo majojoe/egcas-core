@@ -19,16 +19,20 @@ EgcExpressionNodeIterator::~EgcExpressionNodeIterator()
 bool EgcExpressionNodeIterator::findNext(EgcExpressionNodeType type)
 {
         EgcExpressionNodeIterator iter = *this;
-        EgcExpressionNode& node = iter.peekNext();
+        EgcExpressionNode* node;
         bool found = false;
 
         while (iter.hasNext()) {
-                node = iter.next();
-                if (node.getNodeType() == type) {
+                node = &(iter.next());
+                if (node->getNodeType() == type) {
                         found = true;
+                        m_cursor = iter.m_cursor;
                         break;
                 }
         }
+
+        if (!found)
+                this->toBack();
 
         return found;
 }
@@ -36,16 +40,20 @@ bool EgcExpressionNodeIterator::findNext(EgcExpressionNodeType type)
 bool EgcExpressionNodeIterator::findPrevious(EgcExpressionNodeType type)
 {
         EgcExpressionNodeIterator iter = *this;
-        EgcExpressionNode& node = iter.peekPrevious();
+        EgcExpressionNode* node;
         bool found = false;
 
         while (iter.hasPrevious()) {
-                node = iter.previous();
-                if (node.getNodeType() == type) {
+                node = &(iter.previous());
+                if (node->getNodeType() == type) {
                         found = true;
+                        m_cursor = iter.m_cursor;
                         break;
                 }
         }
+
+        if (!found)
+                this->toFront();
 
         return found;
 }
