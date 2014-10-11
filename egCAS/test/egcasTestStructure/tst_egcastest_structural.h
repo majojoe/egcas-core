@@ -7,6 +7,7 @@
 #include "structural/egcnumberexpressionnode.h"
 #include "structural/iterator/egcexpressionnodeiterator.h"
 #include "structural/egcformulaexpression.h"
+#include "structural/egcexpressionnodecreator.h"
 
 class EgcUnaryExpressionNodeTestChild : public EgcUnaryExpressionNode
 {

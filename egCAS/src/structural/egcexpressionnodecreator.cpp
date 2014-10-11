@@ -5,6 +5,7 @@
 #include "egcvariableexpressionnode.h"
 #include "egcnumberexpressionnode.h"
 #include "egcrootexpressionnode.h"
+#include "egcparenthesisexpressionnode.h"
 
 EgcExpressionNode* EgcExpressionNodeCreator::copy(EgcExpressionNode& node)
 {
@@ -20,6 +21,9 @@ EgcExpressionNode* EgcExpressionNodeCreator::copy(EgcExpressionNode& node)
                 break;
         case EgcExpressionNodeType::RootNode:
                 retval = new (std::nothrow) EgcRootExpressionNode(static_cast<EgcRootExpressionNode&>(node));
+                break;
+        case EgcExpressionNodeType::ParenthesisNode:
+                retval = new (std::nothrow) EgcParenthesisExpressionNode(static_cast<EgcParenthesisExpressionNode&>(node));
                 break;
         default:  //EgcExpressionNodeType::NodeUndefined
                 qDebug("The implementation of this function is not complete, Please provide an implementation for the newly added EgcExpressionNodeType.");
@@ -43,6 +47,9 @@ EgcExpressionNode* EgcExpressionNodeCreator::create(EgcExpressionNodeType type)
                 break;
         case EgcExpressionNodeType::RootNode:
                 retval = new (std::nothrow) EgcRootExpressionNode();
+                break;
+        case EgcExpressionNodeType::ParenthesisNode:
+                retval = new (std::nothrow) EgcParenthesisExpressionNode();
                 break;
         default: //EgcExpressionNodeType::NodeUndefined
                 qDebug("The implementation of this function is not complete, Please provide an implementation for the newly added EgcExpressionNodeType.");
