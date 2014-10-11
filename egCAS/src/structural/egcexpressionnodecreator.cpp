@@ -1,11 +1,5 @@
 #include "egcexpressionnodecreator.h"
-#include "egcexpressionnode.h"
-#include "egcbinaryexpressionnode.h"
-#include "egcunaryexpressionnode.h"
-#include "egcvariableexpressionnode.h"
-#include "egcnumberexpressionnode.h"
-#include "egcrootexpressionnode.h"
-#include "egcparenthesisexpressionnode.h"
+#include "egcnodes.h"
 
 EgcExpressionNode* EgcExpressionNodeCreator::copy(EgcExpressionNode& node)
 {

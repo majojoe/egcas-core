@@ -55,7 +55,8 @@ HEADERS  += src/mainwindow.h \
     src/structural/visitor/egcnodevisitor.h \
     src/structural/egccontainernode.h \
     src/structural/egcformulaexpression.h \
-    src/structural/iterator/egcexpressionnodeiterator.h
+    src/structural/iterator/egcexpressionnodeiterator.h \
+    src/structural/egcnodes.h
 
 FORMS    += src/ui/mainwindow.ui
 

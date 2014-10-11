@@ -82,20 +82,21 @@ void EgcasTest_Structural::testCopyConstructors()
 void EgcasTest_Structural::testIterator()
 {
 
-        //  This tree is tested within the iterator test below
-        //                                       |---|
-        //                                       | 1 |
-        //                                       |---|
-        //                                     /         \
-        //                                  /               \
-        //                               |---|             |---|
-        //                               | 2 |             | 4 |
-        //                               |---|             |---|
-        //                            /       \
-        //                           /         \
-        //                        |---|       nullptr
-        //                        | 3 |
-        //                        |---|
+        /*  This tree is tested within the iterator test below
+                                               |---|
+                                               | 1 |
+                                               |---|
+                                             /         \
+                                          /               \
+                                       |---|             |---|
+                                       | 2 |             | 4 |
+                                       |---|             |---|
+                                    /       \
+                                   /         \
+                                |---|       nullptr
+                                | 3 |
+                                |---|
+        */
 
         EgcExpressionNode* nodePointer;
         EgcFormulaExpression formula(EgcExpressionNodeType::RootNode);
@@ -197,29 +198,30 @@ void EgcasTest_Structural::testIterator()
         QVERIFY(&(iter.next()) == numberExpression2);
         
 
-        //  This tree is tested within the iterator test below
-        //                                       |---|
-        //                                       | 1 |
-        //                                       |---|
-        //                                     /         \
-        //                                  /               \
-        //                               |---|             |---|
-        //                               | 2 |             | 7 |
-        //                               |---|             |---|
-        //                        /          \               /       \
-        //                      /              \           /               \
-        //                |---|             |---|        |---|             |---|
-        //                | 3 |             | 6 |        | 8 |             | 9 |
-        //                |---|             |---|        |---|             |---|
-        //              /        \                                        /        \
-        //            /            \                                    /             \
-        //      |---|             |---|                             |---|             |---|
-        //      | 4 |             | 5 |                             | 10|             | 12|
-        //      |---|             |---|                             |---|             |---|
-        //                                                            |
-        //                                                          |---|
-        //                                                          | 11|
-        //                                                          |---|
+          /*This tree is tested within the iterator test below
+                                               |---|
+                                               | 1 |
+                                               |---|
+                                             /         \
+                                          /               \
+                                       |---|             |---|
+                                       | 2 |             | 7 |
+                                       |---|             |---|
+                                /          \               /       \
+                              /              \           /               \
+                        |---|             |---|        |---|             |---|
+                        | 3 |             | 6 |        | 8 |             | 9 |
+                        |---|             |---|        |---|             |---|
+                      /        \                                        /        \
+                    /            \                                    /             \
+              |---|             |---|                             |---|             |---|
+              | 4 |             | 5 |                             | 10|             | 12|
+              |---|             |---|                             |---|             |---|
+                                                                    |
+                                                                  |---|
+                                                                  | 11|
+                                                                  |---|
+        */
 
         //test iterator with big structure        
         EgcFormulaExpression formula2(EgcExpressionNodeType::RootNode);
@@ -325,9 +327,73 @@ void EgcasTest_Structural::testIterator()
         nodePointer = &(iter2.next());
         QVERIFY(nodePointer == rootExpression2);
 
+
+
         //test the same with previous functions
+        iter2.toBack();
 
+        //node 12
+        nodePointer = &(iter2.previous());
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node9);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
 
+        //node 11
+        nodePointer = &(iter2.previous());
+        unaryNode = static_cast<EgcUnaryExpressionNode*>(node10);
+        QVERIFY(nodePointer == unaryNode->getChild());
+
+        //node 10
+        nodePointer = &(iter2.previous());
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node9);
+        QVERIFY(nodePointer == binaryNode->getLeftChild());
+
+        //node 9
+        nodePointer = &(iter2.previous());
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node7);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+
+        //node 8
+        nodePointer = &(iter2.previous());
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node7);
+        QVERIFY(nodePointer == binaryNode->getLeftChild());
+
+        //node 7
+        nodePointer = &(iter2.previous());
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(rootExpression2);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+
+        //node 6
+        nodePointer = &(iter2.previous());
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node2);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+
+        //node 5
+        nodePointer = &(iter2.previous());
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node3);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+
+        //node4
+        nodePointer = &(iter2.previous());
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node3);
+        QVERIFY(nodePointer == binaryNode->getLeftChild());
+
+        //node 3
+        nodePointer = &(iter2.previous());
+        QVERIFY(nodePointer == node3);
+
+        //node 2
+        nodePointer = &(iter2.previous());
+        QVERIFY(nodePointer == node2);
+
+        //node 1
+        nodePointer = &(iter2.previous());
+        QVERIFY(nodePointer == rootExpression2);
+        QVERIFY(iter2.hasPrevious() == false);
+
+        //the previous node must now be node 12
+        nodePointer = &(iter2.previous());
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node9);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
 }
 
 

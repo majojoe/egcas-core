@@ -1,10 +1,7 @@
 #ifndef TST_EGCASTEST_STRUCTURAL_H
 #define TST_EGCASTEST_STRUCTURAL_H
 
-#include "structural/egcunaryexpressionnode.h"
-#include "structural/egcbinaryexpressionnode.h"
-#include "structural/egcrootexpressionnode.h"
-#include "structural/egcnumberexpressionnode.h"
+#include "structural/egcnodes.h"
 #include "structural/iterator/egcexpressionnodeiterator.h"
 #include "structural/egcformulaexpression.h"
 #include "structural/egcexpressionnodecreator.h"
