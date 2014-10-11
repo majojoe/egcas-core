@@ -35,7 +35,8 @@ SOURCES += src/main.cpp\
     src/structural/visitor/egcnodevisitor.cpp \
     src/structural/egccontainernode.cpp \
     src/structural/egcformulaexpression.cpp \
-    src/structural/iterator/egcexpressionnodeiterator.cpp
+    src/structural/iterator/egcexpressionnodeiterator.cpp \
+    src/structural/iterator/egcstepnodeiterator.cpp
 
 HEADERS  += src/mainwindow.h \
     src/view/egcasscene.h \
@@ -56,7 +57,8 @@ HEADERS  += src/mainwindow.h \
     src/structural/egccontainernode.h \
     src/structural/egcformulaexpression.h \
     src/structural/iterator/egcexpressionnodeiterator.h \
-    src/structural/egcnodes.h
+    src/structural/egcnodes.h \
+    src/structural/iterator/egcstepnodeiterator.h
 
 FORMS    += src/ui/mainwindow.ui
 
