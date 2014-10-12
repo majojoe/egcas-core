@@ -8,8 +8,10 @@ enum class EgcExpressionNodeType;
 class EgcExpressionNodeIterator
 {
 public:
-        /// std constructor
-        EgcExpressionNodeIterator(EgcFormulaExpression& formula);
+        /// constructor for initialization with formula
+        EgcExpressionNodeIterator(const EgcFormulaExpression& formula);
+        /// constructor for initialization with tree element
+        EgcExpressionNodeIterator(const EgcExpressionNode & node);
         /// std destructor
         virtual ~EgcExpressionNodeIterator();
         /**
@@ -67,17 +69,13 @@ public:
          */
         void toFront(void);
         /**
-         * @brief operator= Sets the iterator to operate on the tree given. The iterator is set before the first item.
-         * @param tree the tree given to operate on.
-         * @return the iterator set for the list.
+         * @brief incrementToNextNonChildNode finds the next node that does not belong to a child or any grandchild of
+         * the given node.
+         * @param start where to start the search (the returned child shall not be any child or grandchild of this).
+         * @return the next node after the given mode that is not a child or a grandchild of the given node.
          */
-        EgcExpressionNodeIterator & operator=(const EgcFormulaExpression & tree);
-        /**
-         * @brief operator= Sets the iterator to operate on the tree given. The iterator is set before the first item.
-         * @param node the node given to point to.
-         * @return the iterator set for the list.
-         */
-        EgcExpressionNodeIterator & operator=(const EgcExpressionNode & node);
+        virtual EgcExpressionNode& incrementToNextNonChildNode(EgcExpressionNode& start);
+
 protected:
         /**
          * @brief getNextElement returns the next element in the tree

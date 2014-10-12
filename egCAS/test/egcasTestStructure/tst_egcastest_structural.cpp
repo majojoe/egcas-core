@@ -394,8 +394,17 @@ void EgcasTest_Structural::testIterator()
         nodePointer = &(iter2.previous());
         binaryNode = static_cast<EgcBinaryExpressionNode*>(node9);
         QVERIFY(nodePointer == binaryNode->getRightChild());
-}
 
+        //test constructor for node
+        EgcExpressionNodeIterator iter3(*node3);
+        QVERIFY(&(iter3.peekNext()) == node3);
+
+        //test incrementToNextNonChildNode
+        EgcExpressionNodeIterator iter4(formula2);
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node2);
+        //next node must be node6
+        QVERIFY(&(iter4.incrementToNextNonChildNode(*node3)) == binaryNode->getRightChild());
+}
 
 EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcExpressionNodeType type, qreal number)
 {

@@ -6,10 +6,25 @@
 
 #include <QDebug>
 
-EgcExpressionNodeIterator::EgcExpressionNodeIterator(EgcFormulaExpression& formula) :
+EgcExpressionNodeIterator::EgcExpressionNodeIterator(const EgcFormulaExpression& formula) :
         m_cursor(&formula.getRootElement()), m_rootElement(&formula.getRootElement()),
         m_atBegin(true), m_atEnd(false)
 {
+}
+
+EgcExpressionNodeIterator::EgcExpressionNodeIterator(const EgcExpressionNode & node)
+{
+        EgcExpressionNode* tempNode = const_cast<EgcExpressionNode*>(&node);
+        EgcExpressionNode* parent = tempNode->getParent();
+        while (parent) {
+                tempNode = parent;
+                parent = tempNode->getParent();
+        };
+
+        m_cursor = const_cast<EgcExpressionNode*>(&node);
+        m_rootElement = tempNode;
+        m_atBegin = true;
+        m_atEnd = false;
 }
 
 EgcExpressionNodeIterator::~EgcExpressionNodeIterator()
@@ -132,30 +147,6 @@ void EgcExpressionNodeIterator::toFront(void)
         m_cursor = m_rootElement;
         m_atBegin = true;
         m_atEnd = false;
-}
-
-EgcExpressionNodeIterator& EgcExpressionNodeIterator::operator=(const EgcFormulaExpression & tree)
-{
-        m_rootElement = &tree.getRootElement();
-        m_cursor = m_rootElement;
-
-        return *this;
-}
-
-EgcExpressionNodeIterator& EgcExpressionNodeIterator::operator=(const EgcExpressionNode & node)
-{
-
-        EgcExpressionNode* tempNode = const_cast<EgcExpressionNode*>(&node);
-        EgcExpressionNode* parent = tempNode->getParent();
-        while (parent) {
-                tempNode = parent;
-                parent = tempNode->getParent();
-        };
-
-        m_rootElement = tempNode;
-        m_cursor = m_rootElement;
-
-        return *this;
 }
 
 EgcExpressionNode& EgcExpressionNodeIterator::getNextElement(bool* atBeginning, bool* atEnd) const
@@ -317,4 +308,12 @@ bool EgcExpressionNodeIterator::isLeftChild(EgcExpressionNode& parent, EgcExpres
         }
 
         return false;
+}
+
+EgcExpressionNode& EgcExpressionNodeIterator::incrementToNextNonChildNode(EgcExpressionNode& start)
+{
+        EgcExpressionNode* tempNode = &findNextRightMostLeaf(start);
+        m_cursor = tempNode;
+        m_cursor = &getNextElement(nullptr, nullptr);
+        return peekNext();
 }
