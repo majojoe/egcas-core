@@ -44,7 +44,7 @@ public:
          * @brief next Returns the next node and increments the iterator by one.
          * @return a reference to the next item.
          */
-        EgcExpressionNode & next(void);
+        virtual EgcExpressionNode & next(void);
         /**
          * @brief peekNext Returns the next node without incrementing the iterator.
          * @return a reference to the next item.
@@ -59,7 +59,7 @@ public:
          * @brief previous Returns the previous node and decrements the iterator by one.
          * @return a refererence to the previous item.
          */
-        EgcExpressionNode & previous(void);
+        virtual EgcExpressionNode & previous(void);
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
@@ -79,11 +79,15 @@ public:
 protected:
         /**
          * @brief getNextElement returns the next element in the tree
+         * @param atBeginning true if beginning of the tree has been reached
+         * @param atEnd true if the end of the tree has been reached
          * @return a pointer to the next element
          */
         virtual EgcExpressionNode& getNextElement(bool* atBeginning, bool* atEnd) const;
         /**
          * @brief getPreviousElement get the previous element in the tree
+         * @param atBeginning true if beginning of the tree has been reached
+         * @param atEnd true if the end of the tree has been reached
          * @return a pointer to the pevious element
          */
         virtual EgcExpressionNode& getPreviousElement(bool* atBeginning, bool* atEnd) const;

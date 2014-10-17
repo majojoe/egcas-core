@@ -27,6 +27,7 @@ SOURCES += tst_egcastest_structural.cpp \
            ../../src/structural/egccontainernode.cpp \
            ../../src/structural/egcvariableexpressionnode.cpp \
            ../../src/structural/iterator/egcexpressionnodeiterator.cpp \
+           ../../src/structural/iterator/egcstepnodeiterator.cpp \
            ../../src/structural/egcformulaexpression.cpp
 
 HEADERS += ../../src/structural/egcunaryexpressionnode.h \
@@ -40,6 +41,7 @@ HEADERS += ../../src/structural/egcunaryexpressionnode.h \
            ../../src/structural/egccontainernode.h \
            tst_egcastest_structural.h \
            ../../src/structural/iterator/egcexpressionnodeiterator.h \
+           ../../src/structural/iterator/egcstepnodeiterator.h \
            ../../src/structural/egcformulaexpression.h
 
 
