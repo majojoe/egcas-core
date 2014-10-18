@@ -34,8 +34,8 @@ public:
          */
         virtual EgcExpressionNode & next(void) override;
         /**
-         * @brief previous Returns the previous node and decrements the iterator by one.
-         * @return a refererence to the previous item.
+         * @brief this is not implemented in the step iterator since that makes no sense
+         * @return returns always the root element
          */
         virtual EgcExpressionNode & previous(void) override;
         /**
