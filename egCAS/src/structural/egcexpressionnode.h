@@ -44,7 +44,7 @@ public:
          * @brief isContainer returns if the current element is a container or not
          * @return true if it is a container, false otherwise
          */
-        virtual bool isContainer(void);
+        virtual bool isContainer(void) const;
         /**
          * @brief isUnaryExpression returns if the current element is a unary expression (container) or not
          * @return true if it is a unary expression, false otherwise
@@ -71,6 +71,12 @@ public:
          * @param child a pointer to the child that will be deleted soon
          */
         virtual void notifyContainerOnChildDeletion(EgcExpressionNode* child) { (void)child; }
+        /**
+         * @brief isLeaf checks if the current node is a leaf (there are no childs)
+         * @return true if it is a leaf, false otherwise
+         */
+        virtual bool isLeaf(void) const;
+
 protected:
         EgcExpressionNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)
 };

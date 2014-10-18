@@ -8,7 +8,7 @@ EgcContainerNode::~EgcContainerNode()
 {
 }
 
-bool EgcContainerNode::isContainer(void)
+bool EgcContainerNode::isContainer(void) const
 {
         return true;
 }

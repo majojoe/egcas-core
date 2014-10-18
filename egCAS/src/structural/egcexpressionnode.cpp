@@ -14,7 +14,7 @@ bool EgcExpressionNode::valid(void)
         return true;
 }
 
-bool EgcExpressionNode::isContainer(void)
+bool EgcExpressionNode::isContainer(void) const
 {
         return false;
 }
@@ -37,4 +37,12 @@ EgcExpressionNode* EgcExpressionNode::getParent(void)
 void EgcExpressionNode::provideParent(EgcContainerNode& parent)
 {
         m_parent = &parent;
+}
+
+bool EgcExpressionNode::isLeaf(void) const
+{
+        if (isContainer())
+                return false;
+        else
+                return true;
 }

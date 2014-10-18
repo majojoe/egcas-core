@@ -109,3 +109,11 @@ void EgcBinaryExpressionNode::notifyContainerOnChildDeletion(EgcExpressionNode* 
         if (m_rightChild == child)
                 m_rightChild = nullptr;
 }
+
+bool EgcBinaryExpressionNode::isLeaf(void) const
+{
+        if (m_leftChild == nullptr && m_rightChild == nullptr)
+                return true;
+        else
+                return false;
+}

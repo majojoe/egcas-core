@@ -78,3 +78,11 @@ void EgcUnaryExpressionNode::notifyContainerOnChildDeletion(EgcExpressionNode* c
         if (m_child == child)
                 m_child = nullptr;
 }
+
+bool EgcUnaryExpressionNode::isLeaf(void) const
+{
+        if (m_child == nullptr)
+                return true;
+        else
+                return false;
+}

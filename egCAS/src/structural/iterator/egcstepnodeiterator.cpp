@@ -25,6 +25,12 @@ EgcStepIteratorState EgcStepNodeIterator::getIterationState(void)
                         iteratorState = EgcStepIteratorState::RightIteration;
         }
 
+        //all leaf type traversals are middle iterations
+        if (m_previousCursor[0]) {
+                if (!m_previousCursor[0]->isContainer())
+                        iteratorState = EgcStepIteratorState::MiddleIteration;
+        }
+
         return iteratorState;
 }
 

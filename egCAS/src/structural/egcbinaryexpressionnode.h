@@ -57,6 +57,12 @@ public:
          * @param child a pointer to the child that will be deleted soon
          */
         virtual void notifyContainerOnChildDeletion(EgcExpressionNode* child);
+        /**
+         * @brief isLeaf checks if the current node is a leaf (there are no childs)
+         * @return true if it is a leaf, false otherwise
+         */
+        virtual bool isLeaf(void) const;
+
 protected:
         EgcExpressionNode* m_rightChild;
         EgcExpressionNode* m_leftChild;

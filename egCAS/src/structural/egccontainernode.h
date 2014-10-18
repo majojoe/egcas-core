@@ -17,7 +17,7 @@ public:
          * @brief isContainer returns if the current element is a container or not
          * @return true if it is a container, false otherwise
          */
-        virtual bool isContainer(void);
+        virtual bool isContainer(void) const;
 };
 
 #endif // EGCCONTAINERNODE_H
