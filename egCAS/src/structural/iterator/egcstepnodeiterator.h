@@ -41,15 +41,15 @@ public:
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
-        void toBack(void);
+        virtual void toBack(void) override;
         /**
          * @brief toFront Moves the iterator to the front of the tree (before the first item).
          */
-        void toFront(void);
+        virtual void toFront(void) override;
 
 protected:
         enum class internalIteratorState {
-                gotoLeft = 0, gotoRight, gotoParent
+                gotoLeft = 0, gotoRight, gotoParent, gotoStart
         };
 
         /**
@@ -84,6 +84,12 @@ protected:
         virtual EgcExpressionNode& _getPreviousElement(bool* atBeginning, bool* atEnd, internalIteratorState* state) const;
 
 private:        
+        /**
+         * @brief getSecondToLast get the previous element of the root element
+         * @return a pointer to the previous element of the root element
+         */
+        EgcExpressionNode* getSecondToLast(void);
+
         EgcExpressionNode* m_previousCursor[2];         ///< the previous elements that was pointed to by the cursor
         internalIteratorState m_internalState;          ///< reflects the internal iterator state to know where to go next time
 };

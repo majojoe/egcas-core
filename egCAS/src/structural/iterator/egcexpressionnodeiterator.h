@@ -34,12 +34,12 @@ public:
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
          */
-        bool hasNext(void) const;
+        virtual bool hasNext(void) const;
         /**
          * @brief hasPrevious Checks if there is at most one more item before the current item.
          * @return True if an item was found, false otherwise.
          */
-        bool hasPrevious(void) const;
+        virtual bool hasPrevious(void) const;
         /**
          * @brief next Returns the next node and increments the iterator by one.
          * @return a reference to the next item.
@@ -63,11 +63,11 @@ public:
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
-        void toBack(void);
+        virtual void toBack(void);
         /**
          * @brief toFront Moves the iterator to the front of the tree (before the first item).
          */
-        void toFront(void);
+        virtual void toFront(void);
         /**
          * @brief incrementToNextNonChildNode finds the next node that does not belong to a child or any grandchild of
          * the given node.

@@ -38,8 +38,18 @@ EgcExpressionNode& EgcStepNodeIterator::next(void)
 {
         m_previousCursor[1] = m_previousCursor[0];
         m_previousCursor[0] = m_cursor;
+
+        if (m_internalState == internalIteratorState::gotoStart) {
+                toFront();                        
+        } else if (    m_previousCursor[0] == m_rootElement
+                    && m_previousCursor[1] == getSecondToLast()) {
+                m_internalState = internalIteratorState::gotoStart;
+                m_atEnd = true;
+        }
+
         EgcExpressionNode& tempCursor = *m_cursor;
-        m_cursor = &_getNextElement(nullptr, &m_atEnd, &m_internalState);
+
+        m_cursor = &_getNextElement(nullptr, nullptr, &m_internalState);
 
         return tempCursor;
 }
@@ -140,6 +150,8 @@ EgcExpressionNode& EgcStepNodeIterator::_getPreviousElement(bool* atBeginning, b
         (void) atBeginning;
         (void) atEnd;
         (void) state;
+        *atBeginning = true;
+        *atEnd = false;
 
         return *m_rootElement;
 }
@@ -158,4 +170,22 @@ void EgcStepNodeIterator::toFront(void)
         m_previousCursor[0] = nullptr;
         m_previousCursor[1] = nullptr;
         m_internalState = internalIteratorState::gotoLeft;
+}
+
+EgcExpressionNode* EgcStepNodeIterator::getSecondToLast(void)
+{
+        EgcExpressionNode* retval = nullptr;
+
+        if (m_rootElement->isContainer()) {
+                if (m_rootElement->isBinaryExpression()) {
+                        retval = static_cast<EgcBinaryExpressionNode*>(m_rootElement)->getRightChild();
+                        if (!retval) {
+                                retval = static_cast<EgcBinaryExpressionNode*>(m_rootElement)->getLeftChild();
+                        }
+                } else {
+                        retval = static_cast<EgcUnaryExpressionNode*>(m_rootElement)->getChild();
+                }
+        }
+
+        return retval;
 }

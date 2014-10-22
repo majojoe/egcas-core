@@ -574,6 +574,12 @@ void EgcasTest_Structural::testIterator()
         QVERIFY(iter5.getIterationState() == EgcStepIteratorState::RightIteration);
         QVERIFY(iter5.hasNext() == false);
 
+        //jump over to the start if one doesn't look at hasNext
+        //node 1
+        nodePointer = &(iter5.next());
+        QVERIFY(nodePointer == rootExpression2);
+        QVERIFY(iter5.getIterationState() == EgcStepIteratorState::LeftIteration);
+        QVERIFY(iter5.hasNext() == true);
 
         //test the previous function
         iter5.toBack();
