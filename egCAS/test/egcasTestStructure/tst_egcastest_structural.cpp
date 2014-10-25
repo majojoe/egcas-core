@@ -200,6 +200,61 @@ void EgcasTest_Structural::testIterator()
 
         QVERIFY(iter.findPrevious(EgcExpressionNodeType::NumberNode) == true);
         QVERIFY(&(iter.next()) == numberExpression2);
+
+
+        //-------------------test this structure with step iterator--------------------
+
+        EgcStepNodeIterator iter6(formula);
+
+        //test hasNext and hasPrevious
+        QVERIFY(iter6.hasNext() == true);
+        //test peek functions
+        QVERIFY(&(iter6.peekNext()) == &rootExpression);
+
+        //test next functions (node 1)
+        nodePointer = &(iter6.next());
+        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(iter6.hasNext() == true);
+        QVERIFY(iter6.getIterationState() == EgcStepIteratorState::LeftIteration);
+        QVERIFY(iter6.hasNext() == true);
+
+        //node 2
+        nodePointer = &(iter6.next());
+        QVERIFY(nodePointer == rootChildExpression);
+        QVERIFY(iter6.getIterationState() == EgcStepIteratorState::LeftIteration);
+        QVERIFY(iter6.hasNext() == true);
+
+        //node 3
+        nodePointer = &(iter6.next());
+        QVERIFY(nodePointer == numberExpression);
+        QVERIFY(iter6.getIterationState() == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter6.hasNext() == true);
+
+        //node 2
+        nodePointer = &(iter6.next());
+        QVERIFY(nodePointer == rootChildExpression);
+        QVERIFY(iter6.getIterationState() == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter6.hasNext() == true);
+
+        //node 1
+        nodePointer = &(iter6.next());
+        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(iter6.getIterationState() == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter6.hasNext() == true);
+
+        //node 4
+        nodePointer = &(iter6.next());
+        QVERIFY(nodePointer == numberExpression2);
+        QVERIFY(iter6.getIterationState() == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter6.hasNext() == true);
+
+        //node 1
+        nodePointer = &(iter6.next());
+        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(iter6.getIterationState() == EgcStepIteratorState::RightIteration);
+        QVERIFY(iter6.hasNext() == false);
+
+
         
         //-----------------------------------------------------------------------------
         /*This tree is tested within the iterator test below
