@@ -41,10 +41,11 @@ EgcExpressionNode& EgcStepNodeIterator::next(void)
 
         if (m_internalState == internalIteratorState::gotoStart) {
                 toFront();                        
-        } else if (    m_previousCursor[0] == m_rootElement
-                    && m_previousCursor[1] == getSecondToLast()) {
-                m_internalState = internalIteratorState::gotoStart;
-                m_atEnd = true;
+        } else if (    m_previousCursor[0] == m_rootElement) {
+                if (m_previousCursor[1] == getSecondToLast()) {
+                        m_internalState = internalIteratorState::gotoStart;
+                        m_atEnd = true;
+                }
         }
 
         EgcExpressionNode& tempCursor = *m_cursor;
