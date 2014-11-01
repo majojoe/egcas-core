@@ -2,6 +2,7 @@
 #define EGCFORMULAEXPRESSION_H
 
 class EgcExpressionNode;
+class EgcBaseExpressionNode;
 enum class EgcExpressionNodeType;
 
 class EgcFormulaExpression
@@ -15,12 +16,17 @@ public:
         ///std destructor
         virtual ~EgcFormulaExpression();
         /**
-         * @brief getRootElement returns the root element of a formula
+         * @brief getBaseElement returns the base element of a formula
          * @return the root element of the formula
          */
-        EgcExpressionNode& getRootElement(void) const;
+        EgcBaseExpressionNode& getBaseElement(void) const;
+        /**
+         * @brief getRootElement returns the root (child of base element) element of a formula
+         * @return the root element of the formula
+         */
+        EgcExpressionNode* getRootElement(void) const;
 private:
-        EgcExpressionNode *m_data;              ///< holds a pointer to the root element of the formula tree
+        EgcBaseExpressionNode *m_data;              ///< holds a pointer to the root element of the formula tree
 };
 
 #endif // EGCFORMULAEXPRESSION_H

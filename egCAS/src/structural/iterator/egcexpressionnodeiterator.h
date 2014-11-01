@@ -3,6 +3,7 @@
 
 class EgcFormulaExpression;
 class EgcExpressionNode;
+class EgcBaseExpressionNode;
 enum class EgcExpressionNodeType;
 
 class EgcExpressionNodeIterator
@@ -107,9 +108,9 @@ protected:
         bool isLeftChild(EgcExpressionNode& parent, EgcExpressionNode& child) const;
 
         EgcExpressionNode* m_cursor;            ///< pointer to data element in the tree structure
-        EgcExpressionNode* m_rootElement;       ///< pointer to data element at the root of the tree structure
-        bool m_atBegin;                           ///< iterator is at the beginning of the tree
-        bool m_atEnd;                             ///< iterator is at the end of the tree
+        EgcBaseExpressionNode* m_baseElement;   ///< pointer to data element at the root of the tree structure
+        bool m_atBegin;                         ///< iterator is at the beginning of the tree
+        bool m_atEnd;                           ///< iterator is at the end of the tree
 
 private:
         /**

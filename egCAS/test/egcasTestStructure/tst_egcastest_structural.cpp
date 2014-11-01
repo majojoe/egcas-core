@@ -100,35 +100,35 @@ void EgcasTest_Structural::testIterator()
 
         EgcExpressionNode* nodePointer;
         EgcFormulaExpression formula(EgcExpressionNodeType::RootNode);
-        EgcRootExpressionNode& rootExpression = static_cast<EgcRootExpressionNode&>(formula.getRootElement());
 
         EgcExpressionNodeIterator iter(formula);
         QVERIFY(iter.hasNext() == false);
         QVERIFY(iter.hasPrevious() == false);
 
+        EgcRootExpressionNode* rootExpression = static_cast<EgcRootExpressionNode*>(formula.getRootElement());
         auto *rootChildExpression = new EgcRootExpressionNode();
         auto *numberExpression = new EgcNumberExpressionNode();
         auto *numberExpression2 = new EgcNumberExpressionNode();
-        QVERIFY(rootExpression.isLeaf() == true);
+        QVERIFY(rootExpression->isLeaf() == true);
         QVERIFY(numberExpression->isLeaf() == true);
         numberExpression->setValue(200.1);
         numberExpression2->setValue(90.365);
         rootChildExpression->setLeftChild(*numberExpression);
-        rootExpression.setLeftChild(*rootChildExpression);
-        QVERIFY(rootExpression.isLeaf() == false);
-        rootExpression.setRightChild(*numberExpression2);
-        QVERIFY(rootExpression.isLeaf() == false);
+        rootExpression->setLeftChild(*rootChildExpression);
+        QVERIFY(rootExpression->isLeaf() == false);
+        rootExpression->setRightChild(*numberExpression2);
+        QVERIFY(rootExpression->isLeaf() == false);
 
         //test hasNext and hasPrevious
         QVERIFY(iter.hasNext() == true);
         QVERIFY(iter.hasPrevious() == false);
         //test peek functions
-        QVERIFY(&(iter.peekNext()) == &rootExpression);
-        QVERIFY(&(iter.peekPrevious()) == rootExpression.getRightChild());
+        QVERIFY(&(iter.peekNext()) == rootExpression);
+        QVERIFY(&(iter.peekPrevious()) == rootExpression->getRightChild());
 
         //test next functions
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(nodePointer == rootExpression);
         QVERIFY(iter.hasNext() == true);
 
         nodePointer = &(iter.next());
@@ -160,7 +160,7 @@ void EgcasTest_Structural::testIterator()
         QVERIFY(iter.hasPrevious() == true);
 
         nodePointer = &(iter.previous());
-        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(nodePointer == rootExpression);
         QVERIFY(iter.hasPrevious() == false);
 
         //test overflow
@@ -171,7 +171,7 @@ void EgcasTest_Structural::testIterator()
 
         //test next functions
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(nodePointer == rootExpression);
         QVERIFY(iter.hasNext() == true);
 
         nodePointer = &(iter.next());
@@ -188,7 +188,7 @@ void EgcasTest_Structural::testIterator()
 
         //check overflow
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(nodePointer == rootExpression);
 
         //test find routines
         iter.toFront();
@@ -209,11 +209,11 @@ void EgcasTest_Structural::testIterator()
         //test hasNext and hasPrevious
         QVERIFY(iter6.hasNext() == true);
         //test peek functions
-        QVERIFY(&(iter6.peekNext()) == &rootExpression);
+        QVERIFY(&(iter6.peekNext()) == rootExpression);
 
         //test next functions (node 1)
         nodePointer = &(iter6.next());
-        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(nodePointer == rootExpression);
         QVERIFY(iter6.hasNext() == true);
         QVERIFY(iter6.getIterationState() == EgcStepIteratorState::LeftIteration);
         QVERIFY(iter6.hasNext() == true);
@@ -238,7 +238,7 @@ void EgcasTest_Structural::testIterator()
 
         //node 1
         nodePointer = &(iter6.next());
-        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(nodePointer == rootExpression);
         QVERIFY(iter6.getIterationState() == EgcStepIteratorState::MiddleIteration);
         QVERIFY(iter6.hasNext() == true);
 
@@ -250,7 +250,7 @@ void EgcasTest_Structural::testIterator()
 
         //node 1
         nodePointer = &(iter6.next());
-        QVERIFY(nodePointer == &rootExpression);
+        QVERIFY(nodePointer == rootExpression);
         QVERIFY(iter6.getIterationState() == EgcStepIteratorState::RightIteration);
         QVERIFY(iter6.hasNext() == false);
 
@@ -285,7 +285,8 @@ void EgcasTest_Structural::testIterator()
 
         //test iterator with big structure        
         EgcFormulaExpression formula2(EgcExpressionNodeType::RootNode);
-        EgcExpressionNode* rootExpression2 = &(formula2.getRootElement());
+
+        EgcExpressionNode* rootExpression2;
         EgcExpressionNode* node2;
         EgcExpressionNode* node3;
         EgcExpressionNode* node7;
@@ -293,7 +294,7 @@ void EgcasTest_Structural::testIterator()
         EgcExpressionNode* node10;
 
         EgcExpressionNodeIterator iter2(formula2);
-
+        rootExpression2 = static_cast<EgcRootExpressionNode*>(formula2.getRootElement());
         node2 = addLeftChild(*rootExpression2, EgcExpressionNodeType::RootNode);
         QVERIFY(node2 != nullptr);
 

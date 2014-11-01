@@ -8,5 +8,6 @@
 #include "egcnumberexpressionnode.h"
 #include "egcvariableexpressionnode.h"
 #include "egcparenthesisexpressionnode.h"
+#include "egcbaseexpressionnode.h"
 
 #endif // EGCNODES_H
