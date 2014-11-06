@@ -77,12 +77,6 @@ EgcExpressionNode& EgcNaturalNodeIterator::getNextElement(bool* atBeginning, boo
         if (!m_baseElement->getChild())
                 return *m_baseElement;
 
-        //jump over to the beginning if already at the end
-        if (m_cursor == m_endNode) {
-                if (atBeginning)
-                        *atBeginning = true;
-                tempCursor = m_startNode;
-        }
 
         if (m_cursor->isContainer()) {
                 if (m_cursor->isUnaryExpression()) {
@@ -106,6 +100,13 @@ EgcExpressionNode& EgcNaturalNodeIterator::getNextElement(bool* atBeginning, boo
         //if the tempPointer is null, set the base element as next element
         if (!tempPointer)
                 tempCursor = m_baseElement;
+
+        //jump over to the beginning if already at the end
+        if (m_cursor == m_endNode) {
+                if (atBeginning)
+                        *atBeginning = true;
+                tempCursor = m_startNode;
+        }
 
         if (m_cursor == m_endNode) {
                 end = true;

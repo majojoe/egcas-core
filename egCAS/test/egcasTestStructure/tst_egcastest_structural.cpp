@@ -728,6 +728,11 @@ void EgcasTest_Structural::testIterator()
         nodePointer = &(iter7.next());
         QVERIFY(nodePointer == &formula2.getBaseElement());
         QVERIFY(iter7.hasNext() == false);
+
+        //start node
+        nodePointer = &(iter7.next());
+        QVERIFY(nodePointer == node4);
+        QVERIFY(iter7.hasNext() == true);
 }
 
 EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcExpressionNodeType type, qreal number)
