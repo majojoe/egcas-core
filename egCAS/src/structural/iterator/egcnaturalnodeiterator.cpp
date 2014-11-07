@@ -118,11 +118,58 @@ EgcExpressionNode& EgcNaturalNodeIterator::getNextElement(bool* atBeginning, boo
                 *atEnd = end;
 
         return *tempCursor;
-
 }
 
 EgcExpressionNode& EgcNaturalNodeIterator::getPreviousElement(bool* atBeginning, bool* atEnd) const
 {
+        EgcExpressionNode* tempCursor = m_cursor;
+        EgcExpressionNode* tempPointer = nullptr;
+        bool beginning = false;
+        bool end = false;
+
+        //if the base element has no child
+        if (!m_baseElement->getChild())
+                return *m_baseElement;
+
+
+        if (m_cursor->isContainer()) {
+                if (m_cursor->isUnaryExpression()) {
+                        tempCursor = tempPointer = &findNextRightMostNode(*m_cursor);
+                } else { //must be binary expression
+                        //traverse right child
+                        EgcBinaryExpressionNode *temp = static_cast<EgcBinaryExpressionNode*>(m_cursor);
+                        if (temp->getLeftChild()) {
+                                tempCursor = tempPointer = &findNextRightMostNode(*(temp->getLeftChild()));
+                        } else {
+                                //find the parent of the first left child
+                                tempPointer = tempCursor = &findFirstRightChildParent(*m_cursor);
+                        }
+                }
+        } else { //is a leaf
+                tempPointer = tempCursor = &findFirstRightChildParent(*m_cursor);
+        }
+
+        //if the tempPointer is null, set the base element as next element
+        if (!tempPointer)
+                tempCursor = m_baseElement;
+
+        //jump over to the beginning if already at the end
+        if (m_cursor == m_startNode) {
+                if (atEnd)
+                        *atEnd = true;
+                tempCursor = m_endNode;
+        }
+
+        if (tempCursor == m_startNode) {
+                beginning = true;
+        }
+
+        if (atBeginning)
+                *atBeginning = beginning;
+        if (atEnd)
+                *atEnd = end;
+
+        return *tempCursor;
 
 }
 
@@ -160,4 +207,73 @@ EgcExpressionNode& EgcNaturalNodeIterator::findFirstLeftChildParent(EgcExpressio
         } while (1);
 
         return *retval;
+}
+
+EgcExpressionNode& EgcNaturalNodeIterator::findFirstRightChildParent(EgcExpressionNode& startNode) const
+{
+        EgcExpressionNode *node = &startNode;
+        EgcExpressionNode *parent;
+        EgcExpressionNode *retval = m_baseElement;
+
+
+        do {
+                parent = node->getParent();
+                if (parent) {
+                        if (parent->isBinaryExpression()) {
+                                if (isRightChild(*parent, *node)) { //we found the correct node
+                                        retval = parent;
+                                        break;
+                                } else { //search must go on
+                                        node = parent;
+                                        continue;
+                                }
+                        } else { // if it is a unary expression, we have found the next node already
+                                retval = parent;
+                                break;
+                        }
+                } else {
+                        break;
+                }
+        } while (1);
+
+        return *retval;
+}
+
+EgcExpressionNode& EgcNaturalNodeIterator::findNextRightMostNode(EgcExpressionNode& start) const
+{
+        EgcExpressionNode* tempCursor = &start;
+        EgcExpressionNode* tempPointer = nullptr;
+
+        do {
+                if (tempCursor->isContainer()) {
+                        if (tempCursor->isBinaryExpression()) {
+                                tempPointer = static_cast<EgcBinaryExpressionNode*>(tempCursor)->getRightChild();
+                                if (tempPointer) {
+                                        tempCursor = tempPointer;
+                                } else { // check the left child also, maybe this is not null
+                                        tempPointer = static_cast<EgcBinaryExpressionNode*>(tempCursor)->getLeftChild();
+                                        if (tempPointer) {
+                                                tempCursor = tempPointer;
+                                        } else { // this binary container has no childs, so this is also a leaf.
+                                                break;
+                                        }
+                                }
+                        } else { // unary expression
+                                if (tempCursor == &start) {
+                                        tempPointer = static_cast<EgcUnaryExpressionNode*>(tempCursor)->getChild();
+                                        if (tempPointer) {
+                                                tempCursor = tempPointer;
+                                        } else { // we found a unary container without child, so this is a leaf
+                                                break;
+                                        }
+                                } else {
+                                        break;
+                                }
+                        }
+                } else { // we found a leaf, so return
+                        break;
+                }
+        } while (tempPointer);
+
+        return *tempCursor;
 }

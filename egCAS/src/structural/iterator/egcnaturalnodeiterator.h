@@ -65,6 +65,20 @@ private:
          * @return the parent of the first node which is a left child
          */
         EgcExpressionNode& findFirstLeftChildParent(EgcExpressionNode& startNode) const;
+        /**
+         * @brief findFirstRightChildParent finds the first node that is a right child of its parent and gets its
+         * parent.
+         * @param startNode the node where to start the search
+         * @return the parent of the first node which is a right child
+         */
+        EgcExpressionNode& findFirstRightChildParent(EgcExpressionNode& startNode) const;
+        /**
+         * @brief findNextRightMostLeaf finds the next right most node downwards the tree (doing previous stepping in
+         * natural stepping order). This is different from findNextRightMostLeaf when handling unary containers.
+         * @param start the starting point from where to search
+         * @return the found node
+         */
+        EgcExpressionNode& findNextRightMostNode(EgcExpressionNode& start) const;
 
         EgcExpressionNode* m_startNode;         ///< the starting point of the tree when doing natural traversing
         EgcExpressionNode* m_endNode;           ///< the end point of the tree when doing natural traversing

@@ -733,6 +733,101 @@ void EgcasTest_Structural::testIterator()
         nodePointer = &(iter7.next());
         QVERIFY(nodePointer == node4);
         QVERIFY(iter7.hasNext() == true);
+
+
+        //test natural iterator with formula 1
+        //------------------------------------
+
+        EgcNaturalNodeIterator iter8(formula);
+        //test next functions
+
+        nodePointer = &(iter8.next());
+        QVERIFY(nodePointer == numberExpression);
+        QVERIFY(iter8.hasNext() == true);
+
+        nodePointer = &(iter8.next());
+        QVERIFY(nodePointer == rootChildExpression);
+        QVERIFY(iter8.hasNext() == true);
+
+        nodePointer = &(iter8.next());
+        QVERIFY(nodePointer == rootExpression);
+        QVERIFY(iter8.hasNext() == true);
+
+        nodePointer = &(iter8.next());
+        QVERIFY(nodePointer == numberExpression2);
+
+        //test natural iterator previous functions with formula2
+        //-----------------------------------------------------
+
+        iter7.toBack();
+
+        //base node
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == &formula2.getBaseElement());
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 12
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node12);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 9
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node9);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 10
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node10);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 11
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node11);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 7
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node7);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 8
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node8);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 1
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == rootExpression2);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 6
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node6);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 2
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node2);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 5
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node5);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 3
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node3);
+        QVERIFY(iter7.hasPrevious() == true);
+
+        //node 4
+        nodePointer = &(iter7.previous());
+        QVERIFY(nodePointer == node4);
+        QVERIFY(iter7.hasPrevious() == false);
+
+
+
 }
 
 EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcExpressionNodeType type, qreal number)
