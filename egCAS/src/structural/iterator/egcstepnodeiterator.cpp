@@ -6,7 +6,7 @@
 #include "../egcbaseexpressionnode.h"
 
 EgcStepNodeIterator::EgcStepNodeIterator(EgcFormulaExpression& formula) : EgcExpressionNodeIterator(formula),
-        m_previousCursor{nullptr, nullptr}, m_internalState(internalIteratorState::gotoLeft)
+        m_State(EgcStepIteratorState::LeftIteration)
 {        
 }
 
@@ -15,62 +15,40 @@ EgcStepNodeIterator::~EgcStepNodeIterator()
 
 }
 
-EgcStepIteratorState EgcStepNodeIterator::getIterationState(void)
+EgcExpressionNode & EgcStepNodeIterator::next(EgcStepIteratorState &state)
 {
-        EgcStepIteratorState iteratorState = EgcStepIteratorState::LeftIteration;
+        //if the base element has no child
+        if (!m_baseElement->getChild())
+                return *m_baseElement;
 
-        if (m_previousCursor[0] || m_previousCursor[1]) {
-                if ( isLeftChild(*(m_previousCursor[0]),  *(m_previousCursor[1])) )
-                        iteratorState = EgcStepIteratorState::MiddleIteration;
-                else if( isRightChild(*(m_previousCursor[0]),  *(m_previousCursor[1])) )
-                        iteratorState = EgcStepIteratorState::RightIteration;
-        }
+        EgcExpressionNode& tempCursor = *m_cursor;
+        state = m_State;
 
-        //all leaf type traversals are middle iterations
-        if (m_previousCursor[0]) {
-                if (!m_previousCursor[0]->isContainer())
-                        iteratorState = EgcStepIteratorState::MiddleIteration;
-        }
+        m_cursor = &_getNextElement(nullptr, &m_atEnd, &m_State);
 
-        return iteratorState;
+        return tempCursor;
+
+}
+
+EgcExpressionNode & EgcStepNodeIterator::previous(EgcStepIteratorState &state)
+{
+        //if the base element has no child
+        if (!m_baseElement->getChild())
+                return *m_baseElement;
+
+        m_cursor = &_getPreviousElement(&m_atBegin, nullptr, &m_State);
+
+        return *m_cursor;
 }
 
 EgcExpressionNode& EgcStepNodeIterator::next(void)
 {
-        //if the base element has no child
-        if (!m_baseElement->getChild())
-                return *m_baseElement;
-
-        m_previousCursor[1] = m_previousCursor[0];
-        m_previousCursor[0] = m_cursor;
-
-        if (m_internalState == internalIteratorState::gotoStart) {
-                toFront();                        
-        } else if (    m_previousCursor[0] == m_baseElement->getChild()) {
-                if (m_previousCursor[1] == getSecondToLast()) {
-                        m_internalState = internalIteratorState::gotoStart;
-                        m_atEnd = true;
-                }
-        }
-
-        EgcExpressionNode& tempCursor = *m_cursor;
-
-        m_cursor = &_getNextElement(nullptr, nullptr, &m_internalState);
-
-        return tempCursor;
+        return *m_baseElement;
 }
 
 EgcExpressionNode& EgcStepNodeIterator::previous(void)
 {
-        //if the base element has no child
-        if (!m_baseElement->getChild())
-                return *m_baseElement;
-
-        m_previousCursor[1] = m_cursor;
-        m_cursor = &_getPreviousElement(&m_atBegin, nullptr, &m_internalState);
-        m_previousCursor[0] = m_cursor;
-
-        return *m_cursor;
+        return *m_baseElement;
 }
 
 EgcExpressionNode& EgcStepNodeIterator::getNextElement(bool* atBeginning, bool* atEnd) const
@@ -78,75 +56,99 @@ EgcExpressionNode& EgcStepNodeIterator::getNextElement(bool* atBeginning, bool* 
         return _getNextElement(atBeginning, atEnd, nullptr);
 }
 
-EgcExpressionNode& EgcStepNodeIterator::_getNextElement(bool* atBeginning, bool* atEnd, internalIteratorState* state) const
+EgcExpressionNode& EgcStepNodeIterator::_getNextElement(bool* atBeginning, bool* atEnd, EgcStepIteratorState* state) const
 {
         EgcExpressionNode* tempCursor = m_cursor;
         EgcExpressionNode* tempPointer = nullptr;
-        bool searchUpwards = true;
+        EgcExpressionNode* rootElement = m_baseElement->getChild();
         bool beginning = false;
         bool end = false;
-        internalIteratorState localState = m_internalState;
+        EgcStepIteratorState localState = m_State;
+        bool restart_at_begin = false;
+
 
         //if the base element has no child
-        if (!m_baseElement->getChild())
+        if (!rootElement)
                 return *m_baseElement;
 
-        if (   tempCursor->isContainer()
-            && (localState == internalIteratorState::gotoLeft || localState == internalIteratorState::gotoRight)) {
+        if (   tempCursor->isContainer()) {
                 //search downwards since this is a containter
                 if (tempCursor->isBinaryExpression()) { //this is a binary container
-                        if (localState == internalIteratorState::gotoRight) {
-                                tempPointer = static_cast<EgcBinaryExpressionNode*>(tempCursor)->getRightChild();
-                        } else {
+                        if (localState == EgcStepIteratorState::LeftIteration) {
                                 tempPointer = static_cast<EgcBinaryExpressionNode*>(tempCursor)->getLeftChild();
-                        }
-                        if (tempPointer) {
-                                tempCursor = tempPointer;
-                                searchUpwards = false;
-                        }
-
-                        if (!tempPointer && localState == internalIteratorState::gotoLeft) {
-                                //the left child is null, maybe the right child is not null
+                                if (tempPointer) {
+                                        tempCursor = tempPointer;                                        
+                                } else {
+                                        tempPointer = static_cast<EgcBinaryExpressionNode*>(tempCursor)->getRightChild();
+                                        if (tempPointer) {
+                                                tempCursor = tempPointer;
+                                        } else {
+                                                tempPointer = tempCursor->getParent();
+                                                if (tempPointer)
+                                                        tempCursor = tempPointer;
+                                                else
+                                                        restart_at_begin = true;
+                                        }
+                                }
+                        } else if (localState == EgcStepIteratorState::MiddleIteration) {
                                 tempPointer = static_cast<EgcBinaryExpressionNode*>(tempCursor)->getRightChild();
                                 if (tempPointer) {
                                         tempCursor = tempPointer;
-                                        searchUpwards = false;
+                                } else {
+                                        tempPointer = tempCursor->getParent();
+                                        if (tempPointer)
+                                                tempCursor = tempPointer;
+                                        else
+                                                restart_at_begin = true;
                                 }
-                        }
-                 } else {  //this is a unary container
-                        tempPointer = static_cast<EgcUnaryExpressionNode*>(tempCursor)->getChild();
-                        if (tempPointer) {
-                                tempCursor = tempPointer;
-                                searchUpwards = false;
-                        }
-                }
-        }
-
-        if (!searchUpwards) {
-                localState = internalIteratorState::gotoLeft;
-        } else {
-                //search for a binary containter whose node has not been visited yet,
-                //since only that one can have another unvisited node.
-                EgcExpressionNode* parent = tempCursor->getParent();
-                if (parent) {
-                        if (parent->getNodeType() != EgcExpressionNodeType::BaseNode) {
-                                if (isLeftChild(*parent, *tempCursor))
-                                        localState = internalIteratorState::gotoRight;
+                        } else {
+                                tempPointer = tempCursor->getParent();
+                                if (tempPointer)
+                                        tempCursor = tempPointer;
                                 else
-                                        localState = internalIteratorState::gotoParent;
-
-                                tempCursor = parent;
-                        } else { //this is the base element so return the root element
-                                tempCursor = m_baseElement->getChild();
+                                        restart_at_begin = true;
                         }
-                } else { // if the parent pointer is null, this is the base element or the node is invalid
-                        //return the root element since the rest of the tree does not really exist or it is
-                        //already the root element.
-                        tempCursor = m_baseElement->getChild();
+                } else { // a unary expression
+                        if (localState == EgcStepIteratorState::LeftIteration) {
+                                tempPointer = static_cast<EgcUnaryExpressionNode*>(tempCursor)->getChild();
+                                if (tempPointer) {
+                                        tempCursor = tempPointer;
+                                } else {
+                                        tempPointer = tempCursor->getParent();
+                                        if (tempPointer)
+                                                tempCursor = tempPointer;
+                                        else
+                                                restart_at_begin = true;
+                                }
+                        } else {
+                                tempPointer = tempCursor->getParent();
+                                if (tempPointer)
+                                        tempCursor = tempPointer;
+                                else
+                                        restart_at_begin = true;
+                        }
                 }
+        } else { // a leaf
+                tempPointer = tempCursor->getParent();
+                if (tempPointer)
+                        tempCursor = tempPointer;
+                else
+                        restart_at_begin = true;
         }
-        if (tempCursor == m_baseElement->getChild())
+
+        if (    restart_at_begin
+             || tempCursor == m_baseElement) {
                 end = true;
+                tempCursor = tempPointer = rootElement;
+                localState = EgcStepIteratorState::LeftIteration;
+        } else {
+                localState = determineFollowingState(*m_cursor, *tempCursor);
+        }
+
+        //check if this is the end
+        if (tempCursor == m_baseElement) {
+                end = true;
+        }
 
         if (atBeginning)
                 *atBeginning = beginning;
@@ -163,7 +165,7 @@ EgcExpressionNode& EgcStepNodeIterator::getPreviousElement(bool* atBeginning, bo
         return _getPreviousElement(atBeginning, atEnd, nullptr);
 }
 
-EgcExpressionNode& EgcStepNodeIterator::_getPreviousElement(bool* atBeginning, bool* atEnd, internalIteratorState* state) const
+EgcExpressionNode& EgcStepNodeIterator::_getPreviousElement(bool* atBeginning, bool* atEnd, EgcStepIteratorState* state) const
 {
         (void) atBeginning;
         (void) atEnd;
@@ -181,38 +183,36 @@ EgcExpressionNode& EgcStepNodeIterator::_getPreviousElement(bool* atBeginning, b
 void EgcStepNodeIterator::toBack(void)
 {
         EgcExpressionNodeIterator::toBack();
-        m_previousCursor[0] = nullptr;
-        m_previousCursor[1] = nullptr;
-        m_internalState = internalIteratorState::gotoRight;
+        m_State = EgcStepIteratorState::RightIteration;
 }
 
 void EgcStepNodeIterator::toFront(void)
 {
         EgcExpressionNodeIterator::toFront();
-        m_previousCursor[0] = nullptr;
-        m_previousCursor[1] = nullptr;
-        m_internalState = internalIteratorState::gotoLeft;
+        m_State = EgcStepIteratorState::LeftIteration;
 }
 
-EgcExpressionNode* EgcStepNodeIterator::getSecondToLast(void)
+EgcStepIteratorState EgcStepNodeIterator::determineFollowingState(EgcExpressionNode &current, EgcExpressionNode &following) const
 {
-        EgcExpressionNode* retval = nullptr;
+        EgcStepIteratorState localState = EgcStepIteratorState::LeftIteration;
 
-        EgcExpressionNode *rootNode = m_baseElement->getChild();
-        //if the base element has no child
-        if (!rootNode)
-                return m_baseElement;
-
-        if (rootNode->isContainer()) {
-                if (rootNode->isBinaryExpression()) {
-                        retval = static_cast<EgcBinaryExpressionNode*>(rootNode)->getRightChild();
-                        if (!retval) {
-                                retval = static_cast<EgcBinaryExpressionNode*>(rootNode)->getLeftChild();
-                        }
-                } else {
-                        retval = static_cast<EgcUnaryExpressionNode*>(rootNode)->getChild();
+        if (following.isContainer()) {
+                if (following.isBinaryExpression()) {
+                        if (isLeftChild(following, current))
+                                localState = EgcStepIteratorState::MiddleIteration;
+                        else if (isRightChild(following, current))
+                                localState = EgcStepIteratorState::RightIteration;
+                        else
+                                localState = EgcStepIteratorState::LeftIteration;
+                } else { //this must be a unary expression
+                        if (following.getParent() == &current)
+                                localState = EgcStepIteratorState::LeftIteration;
+                        else
+                                localState = EgcStepIteratorState::RightIteration;
                 }
+        } else {
+                localState = EgcStepIteratorState::MiddleIteration;
         }
 
-        return retval;
+        return localState;
 }

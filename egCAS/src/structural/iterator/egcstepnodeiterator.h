@@ -19,26 +19,6 @@ public:
         /// std destructor
         virtual ~EgcStepNodeIterator();
         /**
-         * @brief getIterationState returns the iteration state of the recently returned node.
-         * If the node is a binary node and has been recently traversed via the left link, it is in the LeftIteration
-         * state. If the node is a binary node and has been recently traversed from its left child to itsself, it is in
-         * the Middle Iteration state. If a binary node is traversed via its right link it is in the RightIteration
-         * state. A unary node can only be in Left- or RightIteration state and a leaf can only be in MiddleIteration
-         * state.
-         * @return returns the state of the current node;
-         */
-        EgcStepIteratorState getIterationState(void);
-        /**
-         * @brief next Returns the next node and increments the iterator by one.
-         * @return a reference to the next item.
-         */
-        virtual EgcExpressionNode & next(void) override;
-        /**
-         * @brief this is not implemented in the step iterator since that makes no sense
-         * @return returns always the root element
-         */
-        virtual EgcExpressionNode & previous(void) override;
-        /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
         virtual void toBack(void) override;
@@ -46,10 +26,20 @@ public:
          * @brief toFront Moves the iterator to the front of the tree (before the first item).
          */
         virtual void toFront(void) override;
+        /**
+         * @brief next Returns the next node and increments the iterator by one.
+         * @return a reference to the next item.
+         */
+        virtual EgcExpressionNode & next(EgcStepIteratorState &state);
+        /**
+         * @brief this is not implemented in the step iterator since that makes no sense
+         * @return returns always the root element
+         */
+        virtual EgcExpressionNode & previous(EgcStepIteratorState &state);
 
 protected:
         enum class internalIteratorState {
-                gotoLeft = 0, gotoRight, gotoParent, gotoStart
+                fromLeft = 0, fromRight, fromParent
         };
 
         /**
@@ -73,7 +63,7 @@ protected:
          * @param state enumeration to be able to decide which node visit next
          * @return a pointer to the next element
          */
-        virtual EgcExpressionNode& _getNextElement(bool* atBeginning, bool* atEnd, internalIteratorState* state) const;
+        virtual EgcExpressionNode& _getNextElement(bool* atBeginning, bool* atEnd, EgcStepIteratorState*state) const;
         /**
          * @brief getPreviousElement get the previous element in the tree
          * @param atBeginning true if beginning of the tree has been reached
@@ -81,17 +71,30 @@ protected:
          * @param state enumeration to be able to decide which node visit next
          * @return a pointer to the pevious element
          */
-        virtual EgcExpressionNode& _getPreviousElement(bool* atBeginning, bool* atEnd, internalIteratorState* state) const;
+        virtual EgcExpressionNode& _getPreviousElement(bool* atBeginning, bool* atEnd, EgcStepIteratorState* state) const;
 
 private:        
         /**
-         * @brief getSecondToLast get the previous element of the root element
-         * @return a pointer to the previous element of the root element
+         * @brief determineFollowingState determines the following state upon the following node
+         * @param current current node
+         * @param following the following node
+         * @return the next state upon the following node
          */
-        EgcExpressionNode* getSecondToLast(void);
+        EgcStepIteratorState determineFollowingState(EgcExpressionNode &current, EgcExpressionNode &following) const;
+        /**
+         * @brief next Returns the next node and increments the iterator by one.
+         * @return a reference to the next item.
+         */
+        virtual EgcExpressionNode & next(void) override;
+        /**
+         * @brief this is not implemented in the step iterator since that makes no sense
+         * @return returns always the root element
+         */
+        virtual EgcExpressionNode & previous(void) override;
 
-        EgcExpressionNode* m_previousCursor[2];         ///< the previous elements that was pointed to by the cursor
-        internalIteratorState m_internalState;          ///< reflects the internal iterator state to know where to go next time
+
+        EgcStepIteratorState m_State;          ///< reflects the internal iterator state to know where to go next time
+
 };
 
 #endif // EGCSTEPNODEITERATOR_H
