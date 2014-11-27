@@ -607,6 +607,7 @@ void EgcasTest_Structural::testIterator()
         nodePointer = &(iter5.next(stepState));
         binaryNode = static_cast<EgcBinaryExpressionNode*>(node9);
         QVERIFY(nodePointer == binaryNode->getLeftChild());
+        QVERIFY(stepState == EgcStepIteratorState::RightIteration);
         QVERIFY(iter5.hasNext() == true);
 
         //node 9
@@ -653,6 +654,161 @@ void EgcasTest_Structural::testIterator()
         //test the previous function
         iter5.toBack();
 
+        //-----------------------------------------------------------------------------
+        //test step iterator backwards
+        //-----------------------------------------------------------------------------
+
+        //node 1
+        nodePointer = &(iter5.previous(stepState));
+        QVERIFY(nodePointer == rootExpression2);
+        QVERIFY(stepState == EgcStepIteratorState::RightIteration);
+        QVERIFY(iter5.hasPrevious() == false);
+
+        //node 7
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(rootExpression2);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+        QVERIFY(stepState == EgcStepIteratorState::RightIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 9
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node7);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+        QVERIFY(stepState == EgcStepIteratorState::RightIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 12
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node9);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 9
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node7);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 10
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node9);
+        QVERIFY(nodePointer == binaryNode->getLeftChild());
+        QVERIFY(stepState == EgcStepIteratorState::RightIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 11
+        nodePointer = &(iter5.previous(stepState));
+        unaryNode = static_cast<EgcUnaryExpressionNode*>(node10);
+        QVERIFY(nodePointer == unaryNode->getChild());
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 10
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node9);
+        QVERIFY(nodePointer == binaryNode->getLeftChild());
+        QVERIFY(stepState == EgcStepIteratorState::LeftIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 9
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node7);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+        QVERIFY(stepState == EgcStepIteratorState::LeftIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 7
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(rootExpression2);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 8
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node7);
+        QVERIFY(nodePointer == binaryNode->getLeftChild());
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 7
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(rootExpression2);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+        QVERIFY(stepState == EgcStepIteratorState::LeftIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 1
+        nodePointer = &(iter5.previous(stepState));
+        QVERIFY(nodePointer == rootExpression2);
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 2
+        nodePointer = &(iter5.previous(stepState));
+        QVERIFY(nodePointer == node2);
+        QVERIFY(stepState == EgcStepIteratorState::RightIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 6
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node2);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 2
+        nodePointer = &(iter5.previous(stepState));
+        QVERIFY(nodePointer == node2);
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 3
+        nodePointer = &(iter5.previous(stepState));
+        QVERIFY(nodePointer == node3);
+        QVERIFY(stepState == EgcStepIteratorState::RightIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 5
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node3);
+        QVERIFY(nodePointer == binaryNode->getRightChild());
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 3
+        nodePointer = &(iter5.previous(stepState));
+        QVERIFY(nodePointer == node3);
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node4
+        nodePointer = &(iter5.previous(stepState));
+        binaryNode = static_cast<EgcBinaryExpressionNode*>(node3);
+        QVERIFY(nodePointer == binaryNode->getLeftChild());
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 3
+        nodePointer = &(iter5.previous(stepState));
+        QVERIFY(nodePointer == node3);
+        QVERIFY(stepState == EgcStepIteratorState::LeftIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 2
+        nodePointer = &(iter5.previous(stepState));
+        QVERIFY(nodePointer == node2);
+        QVERIFY(stepState == EgcStepIteratorState::LeftIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
+        //node 1
+        nodePointer = &(iter5.previous(stepState));
+        QVERIFY(nodePointer == rootExpression2);
+        QVERIFY(stepState == EgcStepIteratorState::LeftIteration);
+        QVERIFY(iter5.hasPrevious() == false);
 
 }
 

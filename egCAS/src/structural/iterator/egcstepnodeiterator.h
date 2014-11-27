@@ -78,9 +78,10 @@ private:
          * @brief determineFollowingState determines the following state upon the following node
          * @param current current node
          * @param following the following node
+         * @param forwardDirection if the iteration is in forward direction, set true here, false otherwise
          * @return the next state upon the following node
          */
-        EgcStepIteratorState determineFollowingState(EgcExpressionNode &current, EgcExpressionNode &following) const;
+        EgcStepIteratorState determineFollowingState(EgcExpressionNode &current, EgcExpressionNode &following, bool forwardDirection) const;
         /**
          * @brief next Returns the next node and increments the iterator by one.
          * @return a reference to the next item.
@@ -92,9 +93,9 @@ private:
          */
         virtual EgcExpressionNode & previous(void) override;
 
-
-        EgcStepIteratorState m_State;          ///< reflects the internal iterator state to know where to go next time
-
+        EgcStepIteratorState m_State;          ///< reflects the iterator state to know where to go next time
+        bool m_forward;                        ///< true if tree is traversed in forward direction
+        EgcExpressionNode* m_previousCursor;   ///< a pointer to the previous node
 };
 
 #endif // EGCSTEPNODEITERATOR_H
