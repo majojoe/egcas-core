@@ -46,8 +46,17 @@ EgcExpressionNode & EgcStepNodeIterator::previous(EgcStepIteratorState &state)
         if (!m_baseElement->getChild())
                 return *m_baseElement;
 
-        m_cursor = &_getPreviousElement(&m_atBegin, nullptr, &m_State);
-        state = m_State;
+        if (m_forward) {
+                state = m_State = determineFollowingState(*m_cursor, *m_previousCursor, false);
+                EgcExpressionNode *tempCursor = m_cursor;
+                m_cursor = m_previousCursor;
+                m_previousCursor = tempCursor;
+                m_forward = false;
+        } else {
+                m_previousCursor = m_cursor;
+                m_cursor = &_getPreviousElement(&m_atBegin, nullptr, &m_State);
+                state = m_State;
+        }
 
         return *m_cursor;
 }
