@@ -659,10 +659,12 @@ void EgcasTest_Structural::testIterator()
         //-----------------------------------------------------------------------------
 
         //node 1
+        QVERIFY(iter5.hasPrevious() == true);
+        QVERIFY(iter5.hasNext() == false);
         nodePointer = &(iter5.previous(stepState));
         QVERIFY(nodePointer == rootExpression2);
         QVERIFY(stepState == EgcStepIteratorState::RightIteration);
-        QVERIFY(iter5.hasPrevious() == false);
+        QVERIFY(iter5.hasPrevious() == true);
 
         //node 7
         nodePointer = &(iter5.previous(stepState));
@@ -809,6 +811,14 @@ void EgcasTest_Structural::testIterator()
         QVERIFY(nodePointer == rootExpression2);
         QVERIFY(stepState == EgcStepIteratorState::LeftIteration);
         QVERIFY(iter5.hasPrevious() == false);
+
+        //jump over to the start if one doesn't look at hasPrevious
+        //node 1
+        nodePointer = &(iter5.previous(stepState));
+        QVERIFY(nodePointer == rootExpression2);
+        QVERIFY(stepState == EgcStepIteratorState::RightIteration);
+        QVERIFY(iter5.hasPrevious() == true);
+
 
 }
 

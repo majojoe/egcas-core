@@ -256,7 +256,7 @@ EgcExpressionNode& EgcStepNodeIterator::_getPreviousElement(bool* atBeginning, b
 
         if (    restart_at_end
              || tempCursor == m_baseElement) {
-                beginning = true;
+                beginning = false;
                 tempCursor = tempPointer = rootElement;
                 localState = EgcStepIteratorState::RightIteration;
         } else {
@@ -264,7 +264,8 @@ EgcExpressionNode& EgcStepNodeIterator::_getPreviousElement(bool* atBeginning, b
         }
 
         //check if this is the end
-        if (tempCursor == m_baseElement) {
+        if (    (tempCursor == rootElement)
+             && (localState == EgcStepIteratorState::LeftIteration)) {
                 beginning = true;
         }
 
