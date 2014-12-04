@@ -29,6 +29,7 @@ EgcExpressionNode & EgcStepNodeIterator::next(EgcStepIteratorState &state)
                 state = m_State = determineFollowingState(*m_previousCursor, *m_cursor, true);
                 tempCursor = *m_previousCursor = *m_cursor;
                 m_cursor = &_getNextElement(nullptr, &m_atEnd, &m_State);
+                m_atBegin = false;
                 m_forward = true;
         } else {
                 state = m_State;
@@ -50,7 +51,15 @@ EgcExpressionNode & EgcStepNodeIterator::previous(EgcStepIteratorState &state)
                 state = m_State = determineFollowingState(*m_cursor, *m_previousCursor, false);
                 EgcExpressionNode *tempCursor = m_cursor;
                 m_cursor = m_previousCursor;
-                m_previousCursor = tempCursor;
+                m_previousCursor = tempCursor;                
+                if (m_atBegin) { //if we are already at the beginning: we are at the end then
+                        m_atEnd = true;
+                        m_atBegin = false;
+                } else {
+                        m_atEnd = false;
+                        if (m_cursor->getParent() == m_baseElement)
+                                m_atBegin = true;
+                }
                 m_forward = false;
         } else {
                 m_previousCursor = m_cursor;
@@ -293,6 +302,7 @@ void EgcStepNodeIterator::toBack(void)
         EgcExpressionNodeIterator::toBack();
         m_cursor = m_baseElement;
         m_State = EgcStepIteratorState::RightIteration;
+        m_forward = false;
 }
 
 void EgcStepNodeIterator::toFront(void)
