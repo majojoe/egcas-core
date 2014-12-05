@@ -8,7 +8,7 @@ class EgcContainerNode;
  */
 enum class EgcExpressionNodeType
 {
-        NumberNode = 0, VariableNode, RootNode, ParenthesisNode, BaseNode, NodeUndefined
+        NumberNode = 0, VariableNode, RootNode, ParenthesisNode, BaseNode, EmptyNode, NodeUndefined
 };
 
 

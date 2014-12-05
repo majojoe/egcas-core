@@ -13,6 +13,9 @@ EgcExpressionNode* EgcExpressionNodeCreator::copy(EgcExpressionNode& node)
         case EgcExpressionNodeType::VariableNode:
                 retval = new (std::nothrow) EgcVariableExpressionNode(static_cast<EgcVariableExpressionNode&>(node));
                 break;
+        case EgcExpressionNodeType::EmptyNode:
+                retval = new (std::nothrow) EgcEmptyExpressionNode(static_cast<EgcEmptyExpressionNode&>(node));
+                break;
         case EgcExpressionNodeType::RootNode:
                 retval = new (std::nothrow) EgcRootExpressionNode(static_cast<EgcRootExpressionNode&>(node));
                 break;
@@ -38,6 +41,9 @@ EgcExpressionNode* EgcExpressionNodeCreator::create(EgcExpressionNodeType type)
                 break;
         case EgcExpressionNodeType::VariableNode:
                 retval = new (std::nothrow) EgcVariableExpressionNode();
+                break;
+        case EgcExpressionNodeType::EmptyNode:
+                retval = new (std::nothrow) EgcEmptyExpressionNode();
                 break;
         case EgcExpressionNodeType::RootNode:
                 retval = new (std::nothrow) EgcRootExpressionNode();

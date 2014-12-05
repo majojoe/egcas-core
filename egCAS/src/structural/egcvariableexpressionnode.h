@@ -22,7 +22,7 @@ public:
          * @param varName the variable name as a string
          * @param subscript the subscript of the variable if any
          */
-        void setValue(QString& varName, QString& subscript);
+        virtual void setValue(QString& varName, QString& subscript);
         /**
          * @brief getValue returns the variable name (without subscript)
          * @return the variable name
@@ -32,20 +32,20 @@ public:
          * @brief getSubscript returns the subscript of a variable name
          * @return the subscript of this variable object
          */
-        QString& getSubscript(void);
+        virtual QString& getSubscript(void);
         /**
          * @brief getStuffedVar returns the stuffed variable name (with subscript)
          * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
          * and variable name and subscript is seperated via "_")
          */
-        QString getStuffedVar(void);
+        virtual QString getStuffedVar(void);
         /**
          * @brief valid returns true if the expression is valid and false otherwise.
          * A variable expression is valid if the value is not empty.
          * @return true if the expression is valid, false otherwise.
          */
         virtual bool valid(void);
-private:
+protected:
         QString m_value;          ///< the variable name used
         QString m_subscript;      ///< the subscript if any        
 };
