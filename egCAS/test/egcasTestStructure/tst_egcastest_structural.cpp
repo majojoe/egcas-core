@@ -13,6 +13,7 @@ private Q_SLOTS:
         void testChildDeletion();
         void testCopyConstructors();
         void testIterator();
+        void testTransferProperties();
 private:
         EgcExpressionNode* addChild(EgcExpressionNode&parent, EgcExpressionNodeType type, qreal number = 0);
         EgcExpressionNode* addLeftChild(EgcExpressionNode&parent, EgcExpressionNodeType type, qreal number = 0);
@@ -77,6 +78,77 @@ void EgcasTest_Structural::testCopyConstructors()
         QVERIFY(copyChild->valid() == false);
         QVERIFY(numberChild2->valid() == true);
 
+}
+
+void EgcasTest_Structural::testTransferProperties()
+{
+
+        /*  This tree is tested within the transfer test below
+                                               |---|
+                                               | 1 |
+                                               |---|
+                                             /         \
+                                          /               \
+                                       |---|             |---|
+                                       | 2 |             | 5 |
+                                       |---|             |---|
+                                    /       \
+                                   /         \
+                                |---|       |---|
+                                | 3 |       | 4 |
+                                |---|       |---|
+        */
+
+        EgcFormulaExpression formula(EgcExpressionNodeType::RootNode);
+
+        EgcRootExpressionNode* node1 = static_cast<EgcRootExpressionNode*>(formula.getRootElement());
+        auto *node2 = new EgcRootExpressionNode();
+        auto *node3 = new EgcNumberExpressionNode();
+        auto *node4 = new EgcNumberExpressionNode();
+        auto *node5 = new EgcNumberExpressionNode();
+        node3->setValue(3);
+        node4->setValue(4);
+        node5->setValue(5);
+        node1->setLeftChild(*node2);
+        node1->setRightChild(*node5);
+        node2->setLeftChild(*node3);
+        node2->setRightChild(*node4);
+
+        bool retval;
+        EgcRootExpressionNode *transferNode1 = static_cast<EgcRootExpressionNode*>(
+                                        EgcExpressionNodeCreator::create(EgcExpressionNodeType::RootNode));
+        transferNode1->setLeftChild(*(new EgcEmptyExpressionNode()));
+        retval = node2->transferPropertiesTo(*transferNode1);
+        QVERIFY(retval == false);
+        EgcRootExpressionNode *transferNode2 = static_cast<EgcRootExpressionNode*>(
+                                        EgcExpressionNodeCreator::create(EgcExpressionNodeType::RootNode));
+        transferNode2->setRightChild(*(new EgcEmptyExpressionNode()));
+        retval = node2->transferPropertiesTo(*transferNode2);
+        QVERIFY(retval == false);
+        EgcParenthesisExpressionNode *transferNode3 = static_cast<EgcParenthesisExpressionNode*>(
+                                        EgcExpressionNodeCreator::create(EgcExpressionNodeType::ParenthesisNode));
+        transferNode3->setChild(*(new EgcEmptyExpressionNode()));
+        retval = node2->transferPropertiesTo(*transferNode3);
+        QVERIFY(retval == false);
+        EgcRootExpressionNode *transferNode4 = static_cast<EgcRootExpressionNode*>(
+                                        EgcExpressionNodeCreator::create(EgcExpressionNodeType::RootNode));
+        retval = node2->transferPropertiesTo(*transferNode4);
+        QVERIFY(retval == true);
+
+        QVERIFY(node2->getLeftChild() == nullptr);
+        QVERIFY(node2->getRightChild() == nullptr);
+        QVERIFY(node2->getParent() == nullptr);
+        QVERIFY(node1->getLeftChild() == transferNode4);
+
+        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getLeftChild()))->getValue() == 3);
+        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getRightChild()))->getValue() == 4);
+        QVERIFY(transferNode4->getParent() == node1);
+
+        delete(node2);
+
+        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getLeftChild()))->getValue() == 3);
+        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getRightChild()))->getValue() == 4);
+        QVERIFY(transferNode4->getParent() == node1);
 }
 
 void EgcasTest_Structural::testIterator()

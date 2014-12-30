@@ -25,11 +25,15 @@ EgcBinaryExpressionNode::EgcBinaryExpressionNode(const EgcBinaryExpressionNode& 
 
 EgcBinaryExpressionNode::~EgcBinaryExpressionNode()
 {
-        if (m_leftChild)
+        if (m_leftChild) {
                 delete m_leftChild;
+                m_leftChild = nullptr;
+        }
 
-        if (m_rightChild)
+        if (m_rightChild) {
                 delete m_rightChild;
+                m_rightChild = nullptr;
+        }
 }
 
 void EgcBinaryExpressionNode::setLeftChild(const EgcExpressionNode& expression)
@@ -125,10 +129,13 @@ bool EgcBinaryExpressionNode::transferPropertiesTo(EgcExpressionNode &to)
 
         if (to_bin.m_rightChild == nullptr && to_bin.m_leftChild == nullptr) {
                 if (to.isBinaryExpression()) {
+                        EgcContainerNode *parent_container;
                         retval = true;
                         to_bin.m_rightChild = m_rightChild;
                         to_bin.m_leftChild = m_leftChild;
                         to_bin.m_parent = m_parent;
+                        parent_container = static_cast<EgcContainerNode*>(m_parent);
+                        parent_container->adjustChildPointers(*this, to);
                         m_leftChild = nullptr;
                         m_rightChild = nullptr;
                         m_parent = nullptr;
@@ -136,4 +143,12 @@ bool EgcBinaryExpressionNode::transferPropertiesTo(EgcExpressionNode &to)
         }
 
         return retval;
+}
+
+void EgcBinaryExpressionNode::adjustChildPointers(EgcExpressionNode &old_child, EgcExpressionNode &new_child)
+{
+        if (m_leftChild == &old_child)
+                m_leftChild = &new_child;
+        else if (m_rightChild == &old_child)
+                m_rightChild = &new_child;
 }

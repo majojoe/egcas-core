@@ -65,7 +65,16 @@ public:
          */
         virtual bool transferPropertiesTo(EgcExpressionNode &to);
 
-protected:
+        /**
+         * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
+         * ATTENTION: use this with care since the operation doesn't take care about the old childs. The caller must
+         * assure that the old child will be properly deleted -> leak otherwise. It is very unlikely that you will need
+         * this function outside the container classes.
+         * @param old_child the old child that shall be adjusted to the new one
+         * @param new_child child pointers of the current object will be adjusted to this child object.
+         */
+        virtual void adjustChildPointers(EgcExpressionNode &old_child, EgcExpressionNode &new_child) override;
+
         EgcExpressionNode* m_child;
 };
 

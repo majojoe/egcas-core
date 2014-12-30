@@ -20,8 +20,10 @@ EgcUnaryExpressionNode::EgcUnaryExpressionNode(const EgcUnaryExpressionNode& ori
 
 EgcUnaryExpressionNode::~EgcUnaryExpressionNode()
 {
-        if (m_child)
+        if (m_child) {
                 delete m_child;
+                m_child = nullptr;
+        }
 }
 
 void EgcUnaryExpressionNode::setChild(const EgcExpressionNode& expression)
@@ -94,9 +96,12 @@ bool EgcUnaryExpressionNode::transferPropertiesTo(EgcExpressionNode &to)
 
         if (to_una.m_child == nullptr) {
                 if (to.isUnaryExpression()) {
+                        EgcContainerNode *parent_container;
                         retval = true;
                         to_una.m_child = m_child;
                         to_una.m_parent = m_parent;
+                        parent_container = static_cast<EgcContainerNode*>(m_parent);
+                        parent_container->adjustChildPointers(*this, to);
                         m_child = nullptr;
                         m_parent = nullptr;
                 }
@@ -105,3 +110,8 @@ bool EgcUnaryExpressionNode::transferPropertiesTo(EgcExpressionNode &to)
         return retval;
 }
 
+void EgcUnaryExpressionNode::adjustChildPointers(EgcExpressionNode &old_child, EgcExpressionNode &new_child)
+{
+        if (m_child == &old_child)
+                m_child = &new_child;
+}
