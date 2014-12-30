@@ -16,7 +16,7 @@ enum class EgcExpressionNodeType
  * changed in a subclass */
 #define EGC_SET_EXPRESSION_TYPE(type)                                                           \
 public:                                                                                         \
-        virtual EgcExpressionNodeType getNodeType(void) {return s_nodeType;}                    \
+        virtual EgcExpressionNodeType getNodeType(void) const {return s_nodeType;}                    \
 protected:                                                                                      \
         static const EgcExpressionNodeType s_nodeType = type
 

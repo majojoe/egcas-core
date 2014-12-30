@@ -76,6 +76,23 @@ public:
          * @return the next node after the given mode that is not a child or a grandchild of the given node.
          */
         virtual EgcExpressionNode& incrementToNextNonChildNode(EgcExpressionNode& start);
+        /**
+         * @brief insert inserts the given item at the current position.
+         * @param type the node type to be inserted
+         * @return false if insertiation in the tree is not possible (e.g. not a containter type), true otherwise
+         */
+        virtual bool insert(EgcExpressionNodeType type);
+        /**
+         * @brief remove removes the last item it was jumped over.
+         */
+        virtual void remove();
+        /**
+         * @brief replace replace the given node by the type given
+         * @param node the node to be replaced
+         * @param type the node type to use instead
+         * @return true if replacement was possible, false otherwise
+         */
+        virtual bool replace(EgcExpressionNode& node, EgcExpressionNodeType type);
 
 protected:
         /**
@@ -112,11 +129,16 @@ protected:
          * @return the found leaf (this can be a container without childs or a real leaf)
          */
         EgcExpressionNode& findNextRightMostLeaf(EgcExpressionNode& start) const;
+        /**
+         * @brief correct_end_pointers corrects the m_atBegin and m_atEnd upon inserts and deletes
+         */
+        void correct_end_pointers(void);
 
         EgcExpressionNode* m_cursor;            ///< pointer to data element in the tree structure
         EgcBaseExpressionNode* m_baseElement;   ///< pointer to data element at the root of the tree structure
         bool m_atBegin;                         ///< iterator is at the beginning of the tree
         bool m_atEnd;                           ///< iterator is at the end of the tree
+        EgcExpressionNode* m_history;           ///< pointer to node we jumped over last time
 
 };
 

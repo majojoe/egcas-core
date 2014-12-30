@@ -1,13 +1,15 @@
+#include <QSharedPointer>
 #include "egcexpressionnodeiterator.h"
 #include "../egcformulaexpression.h"
 #include "../egcexpressionnode.h"
 #include "../egcbinaryexpressionnode.h"
 #include "../egcunaryexpressionnode.h"
 #include "../egcbaseexpressionnode.h"
+#include "../egcexpressionnodecreator.h"
 
 EgcExpressionNodeIterator::EgcExpressionNodeIterator(const EgcFormulaExpression& formula) :
         m_cursor(formula.getBaseElement().getChild()), m_baseElement(&formula.getBaseElement()),
-        m_atBegin(true), m_atEnd(false)
+        m_atBegin(true), m_atEnd(false), m_history(m_baseElement)
 {
 }
 
@@ -123,11 +125,15 @@ bool EgcExpressionNodeIterator::hasPrevious(void) const
 EgcExpressionNode& EgcExpressionNodeIterator::next(void)
 {
         //if the base element has no child
-        if (!m_baseElement->getChild())
+        if (!m_baseElement->getChild()) {
+                m_history = m_baseElement;
                 return *m_baseElement;
+        }
 
         EgcExpressionNode& tempCursor = *m_cursor;
         m_cursor = &getNextElement(nullptr, &m_atEnd);
+
+        m_history = &tempCursor;
 
         return tempCursor;
 }
@@ -152,10 +158,14 @@ EgcExpressionNode& EgcExpressionNodeIterator::peekPrevious(void) const
 EgcExpressionNode& EgcExpressionNodeIterator::previous(void)
 {
         //if the base element has no child
-        if (!m_baseElement->getChild())
+        if (!m_baseElement->getChild()) {
+                m_history =  m_baseElement;
                 return *m_baseElement;
+        }
 
-        m_cursor = &getPreviousElement(&m_atBegin, nullptr);
+        m_cursor = &getPreviousElement(&m_atBegin, nullptr);        
+        m_history = m_cursor;
+
         return *m_cursor;
 }
 
@@ -360,4 +370,130 @@ EgcExpressionNode& EgcExpressionNodeIterator::incrementToNextNonChildNode(EgcExp
         m_cursor = tempNode;
         m_cursor = &getNextElement(nullptr, nullptr);
         return peekNext();
+}
+
+bool EgcExpressionNodeIterator::insert(EgcExpressionNodeType type)
+{        
+        bool retval = false;
+
+        QScopedPointer<EgcExpressionNode> node (EgcExpressionNodeCreator::create(type));
+
+        // only containers can be inserted in the tree
+        if (node->isContainer()) {
+                retval = true;
+                if (node->isBinaryExpression()) {
+                        // set the right child to a empty child
+                        QScopedPointer<EgcExpressionNode> tempNode(EgcExpressionNodeCreator::
+                                                                  create(EgcExpressionNodeType::EmptyNode));
+                        static_cast<EgcBinaryExpressionNode*>(node.data())->setRightChild(*(tempNode.take()));
+                }
+                //insert the container into the tree
+                EgcExpressionNode &nextNode = getNextElement(nullptr, nullptr);
+                EgcExpressionNode &previousNode = getPreviousElement(nullptr, nullptr);
+                QScopedPointer<EgcExpressionNode> childNode;
+                EgcExpressionNode *parentNode;
+                if (nextNode.getParent() == &previousNode) {
+                        childNode.reset(&nextNode);
+                        parentNode = &previousNode;
+                } else {
+                        parentNode = previousNode.getParent();
+                        childNode.reset(&previousNode);
+                }
+                if (parentNode == nullptr || parentNode == childNode.data()) {
+                        parentNode = m_baseElement;
+                }
+
+                //set the parent
+                if (parentNode->isBinaryExpression()) {
+                        if (isRightChild(*parentNode, *childNode)) {
+                                static_cast<EgcBinaryExpressionNode*>(parentNode)->setRightChild(*(node.take()));
+                        } else {
+                                static_cast<EgcBinaryExpressionNode*>(parentNode)->setLeftChild(*(node.take()));
+                        }
+
+                } else {
+                        static_cast<EgcUnaryExpressionNode*>(parentNode)->setChild(*(node.take()));
+                }
+
+                //set the child if one
+                if (childNode.data()) {
+                        if (node->isBinaryExpression())
+                                static_cast<EgcBinaryExpressionNode*>(node.data())->setLeftChild(*(childNode.take()));
+                        else
+                                static_cast<EgcUnaryExpressionNode*>(node.data())->setChild(*(childNode.take()));
+                } else { // insert empty nodes if no child node is present
+                        if (node->isBinaryExpression())
+                                static_cast<EgcBinaryExpressionNode*>(node.data())->
+                                        setLeftChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
+                        else
+                                static_cast<EgcUnaryExpressionNode*>(node.data())->
+                                        setChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
+
+                }
+
+        } else { // if the next node is a empty node, replace it by the non container type node
+#warning code for replacing an empty node is going here
+
+        }
+
+        //repair the node pointer organization data
+        m_cursor = node.data();
+        correct_end_pointers();
+
+        return retval;
+}
+
+void EgcExpressionNodeIterator::remove()
+{
+        //the last node jumped over is in m_history
+        m_cursor = &incrementToNextNonChildNode(*m_history);
+        EgcExpressionNode *parent = m_history->getParent();
+        if (parent->isBinaryExpression()) {
+                if (isRightChild(*parent, *m_history))
+                        static_cast<EgcBinaryExpressionNode*>(parent)->
+                                setRightChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
+                else
+                        static_cast<EgcBinaryExpressionNode*>(parent)->
+                                setLeftChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
+
+        } else {
+                static_cast<EgcUnaryExpressionNode*>(parent)->
+                                setChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
+        }
+        delete(m_history);
+        m_history = m_baseElement;
+        correct_end_pointers();
+}
+
+void EgcExpressionNodeIterator::correct_end_pointers(void)
+{
+
+}
+
+bool EgcExpressionNodeIterator::replace(EgcExpressionNode& node, EgcExpressionNodeType type)
+{
+        bool replaceable = false;
+
+        QScopedPointer<EgcExpressionNode> replacement(EgcExpressionNodeCreator::create(type));
+
+        if (node.isBinaryExpression() && replacement.data()->isBinaryExpression()) {
+                EgcBinaryExpressionNode &bin_node = static_cast<EgcBinaryExpressionNode&>(node);
+                if (bin_node.transferPropertiesTo(*static_cast<EgcBinaryExpressionNode*>(replacement.data())))
+                        replaceable = true;
+        }
+
+        if (node.isUnaryExpression() && replacement.data()->isUnaryExpression()) {
+                EgcUnaryExpressionNode &una_node = static_cast<EgcUnaryExpressionNode&>(node);
+                if (una_node.transferPropertiesTo(*static_cast<EgcUnaryExpressionNode*>(replacement.data())))
+                        replaceable = true;
+        }
+
+        if (replaceable) {
+                if (m_cursor == &node)
+                        m_cursor = replacement.data();
+                if (m_history == &node)
+                        m_history = replacement.data();
+        }
+
+        return replaceable;
 }

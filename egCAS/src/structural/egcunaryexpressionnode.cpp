@@ -86,3 +86,22 @@ bool EgcUnaryExpressionNode::isLeaf(void) const
         else
                 return false;
 }
+
+bool EgcUnaryExpressionNode::transferPropertiesTo(EgcExpressionNode &to)
+{
+        bool retval = false;
+        EgcUnaryExpressionNode &to_una = static_cast<EgcUnaryExpressionNode&>(to);
+
+        if (to_una.m_child == nullptr) {
+                if (to.isUnaryExpression()) {
+                        retval = true;
+                        to_una.m_child = m_child;
+                        to_una.m_parent = m_parent;
+                        m_child = nullptr;
+                        m_parent = nullptr;
+                }
+        }
+
+        return retval;
+}
+

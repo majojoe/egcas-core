@@ -18,8 +18,10 @@ EgcStepNodeIterator::~EgcStepNodeIterator()
 EgcExpressionNode & EgcStepNodeIterator::next(EgcStepIteratorState &state)
 {
         //if the base element has no child
-        if (!m_baseElement->getChild())
+        if (!m_baseElement->getChild()) {
+                m_history = m_baseElement;
                 return *m_baseElement;
+        }
 
         EgcExpressionNode& tempCursor = *m_cursor;
         m_previousCursor = m_cursor;
@@ -37,6 +39,8 @@ EgcExpressionNode & EgcStepNodeIterator::next(EgcStepIteratorState &state)
                 m_cursor = &_getNextElement(nullptr, &m_atEnd, &m_State);
         }
 
+        m_history = &tempCursor;
+
         return tempCursor;
 
 }
@@ -44,8 +48,10 @@ EgcExpressionNode & EgcStepNodeIterator::next(EgcStepIteratorState &state)
 EgcExpressionNode & EgcStepNodeIterator::previous(EgcStepIteratorState &state)
 {
         //if the base element has no child
-        if (!m_baseElement->getChild())
+        if (!m_baseElement->getChild()) {
+                m_history = m_baseElement;
                 return *m_baseElement;
+        }
 
         if (m_forward) {
                 state = m_State = determineFollowingState(*m_cursor, *m_previousCursor, false);
@@ -66,6 +72,8 @@ EgcExpressionNode & EgcStepNodeIterator::previous(EgcStepIteratorState &state)
                 m_cursor = &_getPreviousElement(&m_atBegin, nullptr, &m_State);
                 state = m_State;
         }
+
+        m_history = m_cursor;
 
         return *m_cursor;
 }
