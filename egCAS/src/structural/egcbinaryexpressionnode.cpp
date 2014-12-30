@@ -117,3 +117,23 @@ bool EgcBinaryExpressionNode::isLeaf(void) const
         else
                 return false;
 }
+
+bool EgcBinaryExpressionNode::transferPropertiesTo(EgcExpressionNode &to)
+{
+        bool retval = false;
+        EgcBinaryExpressionNode &to_bin = static_cast<EgcBinaryExpressionNode&>(to);
+
+        if (to_bin.m_rightChild == nullptr && to_bin.m_leftChild == nullptr) {
+                if (to.isBinaryExpression()) {
+                        retval = true;
+                        to_bin.m_rightChild = m_rightChild;
+                        to_bin.m_leftChild = m_leftChild;
+                        to_bin.m_parent = m_parent;
+                        m_leftChild = nullptr;
+                        m_rightChild = nullptr;
+                        m_parent = nullptr;
+                }
+        }
+
+        return retval;
+}
