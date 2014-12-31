@@ -438,7 +438,13 @@ bool EgcExpressionNodeIterator::insert(EgcExpressionNodeType type)
 
         //repair the node pointer organization data
         m_cursor = node.data();
-        correct_end_pointers();
+        if (m_cursor == m_baseElement->getChild()) {
+                m_atBegin = true;
+                m_atEnd = false;
+        } else {
+                m_atBegin = false;
+                m_atEnd = false;
+        }
 
         return retval;
 }
@@ -462,12 +468,13 @@ void EgcExpressionNodeIterator::remove()
         }
         delete(m_history);
         m_history = m_baseElement;
-        correct_end_pointers();
-}
-
-void EgcExpressionNodeIterator::correct_end_pointers(void)
-{
-
+        if (m_cursor == m_baseElement->getChild()) {
+                m_atBegin = true;
+                m_atEnd = false;
+        } else {
+                m_atBegin = false;
+                m_atEnd = false;
+        }
 }
 
 bool EgcExpressionNodeIterator::replace(EgcExpressionNode& node, EgcExpressionNodeType type)
@@ -492,7 +499,10 @@ bool EgcExpressionNodeIterator::replace(EgcExpressionNode& node, EgcExpressionNo
                 if (m_cursor == &node)
                         m_cursor = replacement.data();
                 if (m_history == &node)
-                        m_history = replacement.data();
+                        m_history = replacement.data();                
+#warning activate this code for handling previous node in step node iterator
+//                if (m_previousCursor == &node)
+//                        m_previousCursor = replacement.data();
         }
 
         return replaceable;

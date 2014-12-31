@@ -129,10 +129,6 @@ protected:
          * @return the found leaf (this can be a container without childs or a real leaf)
          */
         EgcExpressionNode& findNextRightMostLeaf(EgcExpressionNode& start) const;
-        /**
-         * @brief correct_end_pointers corrects the m_atBegin and m_atEnd upon inserts and deletes
-         */
-        void correct_end_pointers(void);
 
         EgcExpressionNode* m_cursor;            ///< pointer to data element in the tree structure
         EgcBaseExpressionNode* m_baseElement;   ///< pointer to data element at the root of the tree structure

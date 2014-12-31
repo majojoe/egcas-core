@@ -36,12 +36,18 @@ public:
          * @return returns always the root element
          */
         virtual EgcExpressionNode & previous(EgcStepIteratorState &state);
+        /**
+         * @brief insert inserts the given item at the current position.
+         * @param type the node type to be inserted
+         * @return false if insertiation in the tree is not possible (e.g. not a containter type), true otherwise
+         */
+        virtual bool insert(EgcExpressionNodeType type);
+        /**
+         * @brief remove removes the last item it was jumped over.
+         */
+        virtual void remove();
 
 protected:
-        enum class internalIteratorState {
-                fromLeft = 0, fromRight, fromParent
-        };
-
         /**
          * @brief getNextElement returns the next element in the tree
          * @param atBeginning true if beginning of the tree has been reached
