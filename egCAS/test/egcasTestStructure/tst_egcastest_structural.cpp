@@ -952,6 +952,35 @@ void EgcasTest_Structural::testIterator()
         QVERIFY(stepState == EgcStepIteratorState::LeftIteration);
         QVERIFY(iter5.hasPrevious() == false);
 
+        // ------------------------------------------------------
+        //           test nextParent
+        // ------------------------------------------------------
+        iter5.toFront();
+        iter5.next(stepState);
+        iter5.next(stepState);
+        nodePointer = &(iter5.next(stepState));
+        QVERIFY(nodePointer == node3);
+        //is now between node 3 and 4
+        EgcExpressionNode *parentNode = &(iter5.nextParent());
+        QVERIFY(parentNode == node2);
+        nodePointer = &(iter5.next(stepState));
+        QVERIFY(nodePointer == node6);
+
+        iter5.toFront();
+        parentNode = &(iter5.nextParent());
+        QVERIFY(parentNode == rootExpression2);
+
+        iter5.toFront();
+        while (nodePointer != node11) {
+                nodePointer = &(iter5.next(stepState));
+        }
+        parentNode = &(iter5.nextParent());
+        QVERIFY(parentNode == node10);
+        nodePointer = &(iter5.next(stepState));
+        QVERIFY(nodePointer == node9);
+        QVERIFY(stepState == EgcStepIteratorState::MiddleIteration);
+
+
 }
 
 EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcExpressionNodeType type, qreal number)

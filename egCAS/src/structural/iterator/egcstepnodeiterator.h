@@ -46,6 +46,12 @@ public:
          * @brief remove removes the last item it was jumped over.
          */
         virtual void remove();
+        /**
+         * @brief nextParent increments the iterator to the parent of the last node it was jumped over.
+         * @return the parent of the last item it was jumped over.
+         */
+        virtual EgcExpressionNode& nextParent(void);
+
 
 protected:
         /**
@@ -88,6 +94,7 @@ private:
          * @return the next state upon the following node
          */
         EgcStepIteratorState determineFollowingState(EgcExpressionNode &current, EgcExpressionNode &following, bool forwardDirection) const;
+#warning remove following if EgcExpressionNodeIterator has been removed
         /**
          * @brief next Returns the next node and increments the iterator by one.
          * @return a reference to the next item.

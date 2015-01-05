@@ -313,12 +313,14 @@ void EgcStepNodeIterator::toBack(void)
         m_cursor = m_baseElement;
         m_State = EgcStepIteratorState::RightIteration;
         m_forward = false;
+        m_history = m_baseElement;
 }
 
 void EgcStepNodeIterator::toFront(void)
 {
         EgcExpressionNodeIterator::toFront();
         m_State = EgcStepIteratorState::LeftIteration;
+        m_history = m_baseElement;
 }
 
 EgcStepIteratorState EgcStepNodeIterator::determineFollowingState(EgcExpressionNode &current, EgcExpressionNode &following, bool forwardDirection) const
@@ -447,28 +449,76 @@ bool EgcStepNodeIterator::insert(EgcExpressionNodeType type)
 
 void EgcStepNodeIterator::remove()
 {
-//        //the last node jumped over is in m_history
-//        m_cursor = &incrementToNextNonChildNode(*m_history);
-//        EgcExpressionNode *parent = m_history->getParent();
-//        if (parent->isBinaryExpression()) {
-//                if (isRightChild(*parent, *m_history))
-//                        static_cast<EgcBinaryExpressionNode*>(parent)->
-//                                setRightChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
-//                else
-//                        static_cast<EgcBinaryExpressionNode*>(parent)->
-//                                setLeftChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
+        //the last node jumped over is in m_history
+        m_cursor = &incrementToNextNonChildNode(*m_history);
+        EgcExpressionNode *parent = m_history->getParent();
+        if (parent->isBinaryExpression()) {
+                if (isRightChild(*parent, *m_history))
+                        static_cast<EgcBinaryExpressionNode*>(parent)->
+                                setRightChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
+                else
+                        static_cast<EgcBinaryExpressionNode*>(parent)->
+                                setLeftChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
 
-//        } else {
-//                static_cast<EgcUnaryExpressionNode*>(parent)->
-//                                setChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
-//        }
-//        delete(m_history);
-//        m_history = m_baseElement;
-//        if (m_cursor == m_baseElement->getChild()) {
-//                m_atBegin = true;
-//                m_atEnd = false;
-//        } else {
-//                m_atBegin = false;
-//                m_atEnd = false;
-//        }
+        } else {
+                static_cast<EgcUnaryExpressionNode*>(parent)->
+                                setChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
+        }
+        delete(m_history);
+        m_history = m_baseElement;
+        if (m_cursor == m_baseElement->getChild()) {
+                m_atBegin = true;
+                m_atEnd = false;
+        } else {
+                m_atBegin = false;
+                m_atEnd = false;
+        }
 }
+
+EgcExpressionNode& EgcStepNodeIterator::nextParent(void)
+{
+        EgcExpressionNode* tempNode;
+
+        if (   m_history == m_baseElement->getChild()
+            || m_history == m_baseElement)
+                tempNode = m_baseElement->getChild();
+        else
+                tempNode = m_history->getParent();
+
+        if (tempNode == nullptr) {
+                m_cursor = m_baseElement;
+                m_atBegin = true;
+                m_atEnd = false;
+                m_history = m_baseElement;
+                m_previousCursor = m_baseElement;
+                m_forward = true;
+                m_State = EgcStepIteratorState::LeftIteration;
+                return *m_baseElement;
+        }
+
+        m_cursor = tempNode;
+        m_forward = true;
+        m_previousCursor = m_history;
+        m_atBegin = false;
+        if (m_cursor == m_baseElement->getChild())
+                m_atEnd = true;
+        else
+                m_atEnd = false;
+
+        if (tempNode->isBinaryExpression()) {
+                if (isLeftChild(*tempNode, *m_history)) {
+                        m_State = EgcStepIteratorState::MiddleIteration;
+                } else {
+                        m_State = EgcStepIteratorState::RightIteration;
+                }
+        } else { //must be a unary expression
+                m_State = EgcStepIteratorState::RightIteration;
+        }
+
+        // we need to increment by one to jump over the element to return
+        EgcStepIteratorState tempState;
+        (void) next(tempState);
+
+        return *tempNode;
+}
+
