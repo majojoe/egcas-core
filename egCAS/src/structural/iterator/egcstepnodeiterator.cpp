@@ -450,8 +450,7 @@ bool EgcStepNodeIterator::insert(EgcExpressionNodeType type)
 void EgcStepNodeIterator::remove()
 {
         //the last node jumped over is in m_history
-        m_cursor = &incrementToNextNonChildNode(*m_history);
-        EgcExpressionNode *parent = m_history->getParent();
+        EgcExpressionNode *parent = &nextParent();
         if (parent->isBinaryExpression()) {
                 if (isRightChild(*parent, *m_history))
                         static_cast<EgcBinaryExpressionNode*>(parent)->
