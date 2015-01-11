@@ -6,6 +6,11 @@ class EgcExpressionNode;
 class EgcBaseExpressionNode;
 enum class EgcExpressionNodeType;
 
+
+enum class EgcNodeIteratorState {
+        LeftIteration = 0, MiddleIteration, RightIteration
+};
+
 class EgcExpressionNodeIterator
 {
 public:
@@ -43,9 +48,10 @@ public:
         virtual bool hasPrevious(void) const;
         /**
          * @brief next Returns the next node and increments the iterator by one.
+         * @param state the state of the node we jumped over
          * @return a reference to the next item.
          */
-        virtual EgcExpressionNode & next(void);
+        virtual EgcExpressionNode & next(EgcNodeIteratorState &state);
         /**
          * @brief peekNext Returns the next node without incrementing the iterator.
          * @return a reference to the next item.
@@ -58,9 +64,10 @@ public:
         EgcExpressionNode & peekPrevious(void) const;
         /**
          * @brief previous Returns the previous node and decrements the iterator by one.
+         * @param state the state of the node we jumped over
          * @return a refererence to the previous item.
          */
-        virtual EgcExpressionNode & previous(void);
+        virtual EgcExpressionNode & previous(EgcNodeIteratorState &state);
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
@@ -69,13 +76,6 @@ public:
          * @brief toFront Moves the iterator to the front of the tree (before the first item).
          */
         virtual void toFront(void);
-        /**
-         * @brief incrementToNextNonChildNode finds the next node that does not belong to a child or any grandchild of
-         * the given node.
-         * @param start where to start the search (the returned child shall not be any child or grandchild of this).
-         * @return the next node after the given mode that is not a child or a grandchild of the given node.
-         */
-        virtual EgcExpressionNode& incrementToNextNonChildNode(EgcExpressionNode& start);
         /**
          * @brief insert inserts the given item at the current position.
          * @param type the node type to be inserted
@@ -93,22 +93,29 @@ public:
          * @return true if replacement was possible, false otherwise
          */
         virtual bool replace(EgcExpressionNode& node, EgcExpressionNodeType type);
+        /**
+         * @brief nextParent increments the iterator to the parent of the last node it was jumped over.
+         * @return the parent of the last item it was jumped over.
+         */
+        virtual EgcExpressionNode& nextParent(void);
 
 protected:
         /**
          * @brief getNextElement returns the next element in the tree
          * @param atBeginning true if beginning of the tree has been reached
          * @param atEnd true if the end of the tree has been reached
+         * @param state enumeration to be able to decide which node visit next
          * @return a pointer to the next element
          */
-        virtual EgcExpressionNode& getNextElement(bool* atBeginning, bool* atEnd) const;
+        virtual EgcExpressionNode& getNextElement(bool* atBeginning, bool* atEnd, EgcNodeIteratorState* state) const;
         /**
          * @brief getPreviousElement get the previous element in the tree
          * @param atBeginning true if beginning of the tree has been reached
          * @param atEnd true if the end of the tree has been reached
+         * @param state enumeration to be able to decide which node visit next
          * @return a pointer to the pevious element
          */
-        virtual EgcExpressionNode& getPreviousElement(bool* atBeginning, bool* atEnd) const;
+        virtual EgcExpressionNode& getPreviousElement(bool* atBeginning, bool* atEnd, EgcNodeIteratorState* state) const;
         /**
          * @brief isRightChild checks if the given child is the right child of the given parent
          * @param parent reference to the parent to test for
@@ -129,12 +136,25 @@ protected:
          * @return the found leaf (this can be a container without childs or a real leaf)
          */
         EgcExpressionNode& findNextRightMostLeaf(EgcExpressionNode& start) const;
+        /**
+         * @brief determineFollowingState determines the following state upon the following node
+         * @param current current node
+         * @param following the following node
+         * @param forwardDirection if the iteration is in forward direction, set true here, false otherwise
+         * @return the next state upon the following node
+         */
+        EgcNodeIteratorState determineFollowingState(EgcExpressionNode &current, EgcExpressionNode &following,
+                                                     bool forwardDirection) const;
 
         EgcExpressionNode* m_cursor;            ///< pointer to data element in the tree structure
         EgcBaseExpressionNode* m_baseElement;   ///< pointer to data element at the root of the tree structure
         bool m_atBegin;                         ///< iterator is at the beginning of the tree
         bool m_atEnd;                           ///< iterator is at the end of the tree
         EgcExpressionNode* m_history;           ///< pointer to node we jumped over last time
+        EgcNodeIteratorState m_State;           ///< reflects the iterator state to know where to go next time
+        bool m_forward;                         ///< true if tree is traversed in forward direction
+        EgcExpressionNode* m_previousCursor;    ///< a pointer to the previous node
+
 
 };
 
