@@ -15,7 +15,7 @@ EgcExpressionNodeIterator::EgcExpressionNodeIterator(const EgcFormulaExpression&
 }
 
 EgcExpressionNodeIterator::EgcExpressionNodeIterator(const EgcExpressionNode & node)
-{
+{        
         EgcExpressionNode* tempNode = const_cast<EgcExpressionNode*>(&node);
         EgcExpressionNode* parent = tempNode->getParent();
         while (parent) {
@@ -25,14 +25,18 @@ EgcExpressionNodeIterator::EgcExpressionNodeIterator(const EgcExpressionNode & n
 
         m_cursor = const_cast<EgcExpressionNode*>(&node);
         m_baseElement = static_cast<EgcBaseExpressionNode*>(tempNode);
+        m_history = m_baseElement;
+        m_State = EgcNodeIteratorState::LeftIteration;
         m_atBegin = true;
         m_atEnd = false;
+        m_forward = true;
+        m_previousCursor = m_baseElement;
+        EgcExpressionNode *nextNode = m_baseElement;
+        EgcNodeIteratorState state;
 
-#warning set this when completely rewritten.
-        /*m_State(EgcNodeIteratorState::LeftIteration),
-                m_forward(true), m_previousCursor(m_baseElement)*/
-
-
+        while (nextNode != &node) {
+                *nextNode = next(state);
+        }
 }
 
 EgcExpressionNodeIterator::~EgcExpressionNodeIterator()
@@ -92,6 +96,7 @@ EgcExpressionNode & EgcExpressionNodeIterator::previous(EgcNodeIteratorState &st
                 }
                 m_forward = false;
         } else {
+                m_atEnd = false;
                 m_previousCursor = m_cursor;
                 m_cursor = &getPreviousElement(&m_atBegin, nullptr, &m_State);
                 state = m_State;
