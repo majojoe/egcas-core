@@ -63,8 +63,9 @@ EgcExpressionNode & EgcExpressionNodeIterator::next(EgcNodeIteratorState &state)
                 m_forward = true;
         } else {
                 state = m_State;
-
                 m_cursor = &getNextElement(nullptr, &m_atEnd, &m_State);
+                if (m_cursor != &tempCursor)
+                        m_atBegin = false;
         }
 
         m_history = &tempCursor;
@@ -96,10 +97,11 @@ EgcExpressionNode & EgcExpressionNodeIterator::previous(EgcNodeIteratorState &st
                 }
                 m_forward = false;
         } else {
-                m_atEnd = false;
                 m_previousCursor = m_cursor;
                 m_cursor = &getPreviousElement(&m_atBegin, nullptr, &m_State);
                 state = m_State;
+                if (m_cursor != m_history)
+                        m_atEnd = false;
         }
 
         m_history = m_cursor;
@@ -109,44 +111,42 @@ EgcExpressionNode & EgcExpressionNodeIterator::previous(EgcNodeIteratorState &st
 
 bool EgcExpressionNodeIterator::findNext(EgcExpressionNodeType type)
 {
-        EgcExpressionNodeIterator iter = *this;
+        EgcExpressionNodeIterator *iter = this;
         EgcExpressionNode* node;
         bool found = false;
         EgcNodeIteratorState state;
 
-        while (iter.hasNext()) {
-                node = &(iter.next(state));
+        while (iter->hasNext()) {
+                node = &(iter->next(state));
                 if (node->getNodeType() == type) {
                         found = true;
-                        m_cursor = iter.m_cursor;
                         break;
                 }
         }
 
         if (!found)
-                this->toBack();
+                iter->toBack();
 
         return found;
 }
 
 bool EgcExpressionNodeIterator::findPrevious(EgcExpressionNodeType type)
 {
-        EgcExpressionNodeIterator iter = *this;
+        EgcExpressionNodeIterator *iter = this;
         EgcExpressionNode* node;
         bool found = false;
         EgcNodeIteratorState state;
 
-        while (iter.hasPrevious()) {
-                node = &(iter.previous(state));
+        while (iter->hasPrevious()) {
+                node = &(iter->previous(state));
                 if (node->getNodeType() == type) {
                         found = true;
-                        m_cursor = iter.m_cursor;
                         break;
                 }
         }
 
         if (!found)
-                this->toFront();
+                iter->toFront();
 
         return found;
 }

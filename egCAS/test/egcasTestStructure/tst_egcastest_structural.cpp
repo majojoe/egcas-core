@@ -302,11 +302,12 @@ void EgcasTest_Structural::testIterator()
         iter6.toFront();
 
         //node 1
+        QVERIFY(iter6.hasPrevious() == false);
         nodePointer = &(iter6.next(stepState));
         QVERIFY(nodePointer == rootExpression);
         QVERIFY(iter6.hasNext() == true);
         QVERIFY(stepState == EgcNodeIteratorState::LeftIteration);
-        QVERIFY(iter6.hasPrevious() == false);
+        QVERIFY(iter6.hasPrevious() == true);
 
         //node 2
         nodePointer = &(iter6.next(stepState));
@@ -349,23 +350,18 @@ void EgcasTest_Structural::testIterator()
         QVERIFY(nodePointer == rootExpression);
         QVERIFY(iter6.hasNext() == true);
         QVERIFY(stepState == EgcNodeIteratorState::LeftIteration);
-#warning remove comment after debugging
-        //QVERIFY(iter6.hasPrevious() == true);
-
+        QVERIFY(iter6.hasPrevious() == true);
 
         //test find routines
         iter6.toFront();
 
         QVERIFY(iter6.findNext(EgcExpressionNodeType::NumberNode) == true);
-#warning remove comment after debugging
-        //QVERIFY(&(iter6.previous(stepState)) == numberExpression);
+        QVERIFY(&(iter6.previous(stepState)) == numberExpression);
 
-        iter.toBack();
+        iter6.toBack();
 
-#warning remove comment after debugging
-        //QVERIFY(iter6.findPrevious(EgcExpressionNodeType::NumberNode) == true);
-#warning remove comment after debugging
-        //QVERIFY(&(iter6.next(stepState)) == numberExpression2);
+        QVERIFY(iter6.findPrevious(EgcExpressionNodeType::NumberNode) == true);
+        QVERIFY(&(iter6.next(stepState)) == numberExpression2);
 
 
         //-----------------------------------------------------------------------------
