@@ -153,48 +153,16 @@ bool EgcExpressionNodeIterator::findPrevious(EgcExpressionNodeType type)
 
 bool EgcExpressionNodeIterator::hasNext(void) const
 {
-        EgcExpressionNode *rootNode = m_baseElement->getChild();
-        if (rootNode) {
-                if (rootNode->isContainer()) {
-                        if (rootNode->isBinaryExpression()) {
-                                EgcBinaryExpressionNode* binary = static_cast<EgcBinaryExpressionNode*>(rootNode);
-                                if (    (binary->getLeftChild() == nullptr)
-                                                && (binary->getRightChild() == nullptr))
-                                        return false;
-                        } else { //unary container
-                                if (static_cast<EgcUnaryExpressionNode*>(rootNode)->getChild() == nullptr)
-                                        return false;
-                        }
-                } else {
-                        return false;
-                }
-        } else {
+        if (!m_baseElement->getChild())
                 return false;
-        }
 
         return !m_atEnd;
 }
 
 bool EgcExpressionNodeIterator::hasPrevious(void) const
 {
-        EgcExpressionNode *rootNode = m_baseElement->getChild();
-        if (rootNode) {
-                if (rootNode->isContainer()) {
-                        if (rootNode->isBinaryExpression()) {
-                                EgcBinaryExpressionNode* binary = static_cast<EgcBinaryExpressionNode*>(rootNode);
-                                if (    (binary->getLeftChild() == nullptr)
-                                                && (binary->getRightChild() == nullptr))
-                                        return false;
-                        } else { //unary container
-                                if (static_cast<EgcUnaryExpressionNode*>(rootNode)->getChild() == nullptr)
-                                        return false;
-                        }
-                } else {
-                        return false;
-                }
-        } else {
+        if (!m_baseElement->getChild())
                 return false;
-        }
 
         return !m_atBegin;
 }
@@ -429,7 +397,9 @@ EgcExpressionNode& EgcExpressionNodeIterator::getPreviousElement(bool* atBeginni
 
         //check if this is the beginning
         if (    (tempCursor == rootElement)
-             && (localState == EgcNodeIteratorState::LeftIteration)) {
+             && (   ((localState == EgcNodeIteratorState::LeftIteration) && (rootElement->isContainer()) )
+                 || ((localState == EgcNodeIteratorState::MiddleIteration) && !(rootElement->isContainer()) ) ) )
+        {
                 beginning = true;
         }
 

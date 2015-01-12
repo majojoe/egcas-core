@@ -153,6 +153,48 @@ void EgcasTest_Structural::testTransferProperties()
 
 void EgcasTest_Structural::testIterator()
 {
+        //-----------------------------------------------------------------------------
+        /*This tree is tested within the iterator test below
+        //-----------------------------------------------------------------------------
+
+                                               |---|
+                                               | 1 |  (Numbernode)
+                                               |---|
+        */
+
+        //test iterator with big structure
+        EgcFormulaExpression formula3(EgcExpressionNodeType::NumberNode);
+        EgcNodeIteratorState stepState;
+        EgcExpressionNode* nodePointer;
+
+        //test step iterator
+        EgcExpressionNodeIterator iter7(formula3);
+
+        iter7.toFront();
+
+        QVERIFY(iter7.hasNext() == true);
+        QVERIFY(iter7.hasPrevious() == false);
+        nodePointer = &(iter7.next(stepState));
+        QVERIFY(nodePointer == formula3.getRootElement());
+        QVERIFY(iter7.hasNext() == false);
+
+        nodePointer = &(iter7.next(stepState));
+        QVERIFY(nodePointer == formula3.getRootElement());
+
+        nodePointer = &(iter7.next(stepState));
+        QVERIFY(nodePointer == formula3.getRootElement());
+
+        iter7.toBack();
+
+        QVERIFY(iter7.hasPrevious() == true);
+        QVERIFY(iter7.hasNext() == false);
+        nodePointer = &(iter7.previous(stepState));
+        QVERIFY(nodePointer == formula3.getRootElement());
+        QVERIFY(iter7.hasPrevious() == false);
+
+        nodePointer = &(iter7.previous(stepState));
+        QVERIFY(nodePointer == formula3.getRootElement());
+
 
         /*  This tree is tested within the iterator test below
                                                |---|
@@ -170,11 +212,10 @@ void EgcasTest_Structural::testIterator()
                                 |---|
         */
 
-        EgcExpressionNode* nodePointer;
         EgcFormulaExpression formula(EgcExpressionNodeType::RootNode);
 
         EgcExpressionNodeIterator iter(formula);
-        QVERIFY(iter.hasNext() == false);
+        QVERIFY(iter.hasNext() == true);
         QVERIFY(iter.hasPrevious() == false);
 
         EgcRootExpressionNode* rootExpression = static_cast<EgcRootExpressionNode*>(formula.getRootElement());
@@ -195,7 +236,6 @@ void EgcasTest_Structural::testIterator()
 
 
         EgcExpressionNodeIterator iter6(formula);
-        EgcNodeIteratorState stepState;
 
         //test hasNext and hasPrevious
         QVERIFY(iter6.hasNext() == true);
