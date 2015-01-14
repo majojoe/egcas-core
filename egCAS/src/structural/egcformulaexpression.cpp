@@ -3,14 +3,34 @@
 #include "egcexpressionnode.h"
 #include "egcexpressionnodecreator.h"
 #include "egcbaseexpressionnode.h"
+#include "egcnodes.h"
 
 EgcFormulaExpression::EgcFormulaExpression(EgcExpressionNodeType type)
 {
         m_data = new (std::nothrow) EgcBaseExpressionNode();
         if (m_data) {
                 EgcExpressionNode* tmp = EgcExpressionNodeCreator::create(type);
-                if (tmp)
+                if (tmp) {
                         m_data->setChild(*tmp);
+                        if (tmp->isContainer()) {
+                                if (tmp->isBinaryExpression()) {
+                                        EgcBinaryExpressionNode *node = static_cast<EgcBinaryExpressionNode*>(tmp);
+                                        EgcExpressionNode *child =
+                                                EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode);
+                                        if (child)
+                                                node->setLeftChild(*child);
+                                        child = EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode);
+                                        if (child)
+                                                node->setRightChild(*child);
+                                } else { // unary expression
+                                        EgcUnaryExpressionNode *node = static_cast<EgcUnaryExpressionNode*>(tmp);
+                                        EgcExpressionNode *child =
+                                                EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode);
+                                        if (child)
+                                                node->setChild(*child);
+                                }
+                        }
+                }
         }
 }
 

@@ -14,6 +14,7 @@ private Q_SLOTS:
         void testCopyConstructors();
         void testIterator();
         void testTransferProperties();
+        void testInsertDelete();
 private:
         EgcExpressionNode* addChild(EgcExpressionNode&parent, EgcExpressionNodeType type, qreal number = 0);
         EgcExpressionNode* addLeftChild(EgcExpressionNode&parent, EgcExpressionNodeType type, qreal number = 0);
@@ -222,7 +223,6 @@ void EgcasTest_Structural::testIterator()
         auto *rootChildExpression = new EgcRootExpressionNode();
         auto *numberExpression = new EgcNumberExpressionNode();
         auto *numberExpression2 = new EgcNumberExpressionNode();
-        QVERIFY(rootExpression->isLeaf() == true);
         QVERIFY(numberExpression->isLeaf() == true);
         numberExpression->setValue(200.1);
         numberExpression2->setValue(90.365);
@@ -908,6 +908,15 @@ void EgcasTest_Structural::testIterator()
         nodePointer = &(iter5.next(stepState));
         QVERIFY(nodePointer == node9);
         QVERIFY(stepState == EgcNodeIteratorState::MiddleIteration);
+}
+
+void EgcasTest_Structural::testInsertDelete()
+{
+        EgcFormulaExpression formula4(EgcExpressionNodeType::RootNode);
+
+        EgcExpressionNodeIterator iter8(formula4);
+
+        //iter8.next()
 
 
 }
@@ -916,22 +925,20 @@ EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcE
 {
         if (parent.isUnaryExpression()) {
                 EgcUnaryExpressionNode& node = static_cast<EgcUnaryExpressionNode&>(parent);
-                if (node.getChild() == nullptr) {
-                        if (   type == EgcExpressionNodeType::RootNode
-                            || type == EgcExpressionNodeType::NumberNode
-                            || type == EgcExpressionNodeType::ParenthesisNode) {
-                                node.setChild(*EgcExpressionNodeCreator::create(type));
-                                if (node.getChild() != nullptr) {
-                                        if (    type == EgcExpressionNodeType::RootNode
-                                             || type == EgcExpressionNodeType::ParenthesisNode) {
-                                                return node.getChild();
-                                        } else {
-                                                EgcNumberExpressionNode* num = static_cast<EgcNumberExpressionNode*>(node.getChild());
-                                                num->setValue(number);
-                                                return node.getChild();
-                                        }
-
+                if (   type == EgcExpressionNodeType::RootNode
+                                || type == EgcExpressionNodeType::NumberNode
+                                || type == EgcExpressionNodeType::ParenthesisNode) {
+                        node.setChild(*EgcExpressionNodeCreator::create(type));
+                        if (node.getChild() != nullptr) {
+                                if (    type == EgcExpressionNodeType::RootNode
+                                                || type == EgcExpressionNodeType::ParenthesisNode) {
+                                        return node.getChild();
+                                } else {
+                                        EgcNumberExpressionNode* num = static_cast<EgcNumberExpressionNode*>(node.getChild());
+                                        num->setValue(number);
+                                        return node.getChild();
                                 }
+
                         }
                 }
         }
@@ -943,22 +950,20 @@ EgcExpressionNode*EgcasTest_Structural::addLeftChild(EgcExpressionNode& parent, 
 {
         if (parent.isBinaryExpression()) {
                 EgcBinaryExpressionNode& node = static_cast<EgcBinaryExpressionNode&>(parent);
-                if (node.getLeftChild() == nullptr) {
-                        if (   type == EgcExpressionNodeType::RootNode
-                            || type == EgcExpressionNodeType::NumberNode
-                            || type == EgcExpressionNodeType::ParenthesisNode) {
-                                node.setLeftChild(*EgcExpressionNodeCreator::create(type));
-                                if (node.getLeftChild() != nullptr) {
-                                        if (    type == EgcExpressionNodeType::RootNode
-                                             || type == EgcExpressionNodeType::ParenthesisNode) {
-                                                return node.getLeftChild();
-                                        } else {
-                                                EgcNumberExpressionNode* num = static_cast<EgcNumberExpressionNode*>(node.getLeftChild());
-                                                num->setValue(number);
-                                                return node.getLeftChild();
-                                        }
-
+                if (   type == EgcExpressionNodeType::RootNode
+                                || type == EgcExpressionNodeType::NumberNode
+                                || type == EgcExpressionNodeType::ParenthesisNode) {
+                        node.setLeftChild(*EgcExpressionNodeCreator::create(type));
+                        if (node.getLeftChild() != nullptr) {
+                                if (    type == EgcExpressionNodeType::RootNode
+                                                || type == EgcExpressionNodeType::ParenthesisNode) {
+                                        return node.getLeftChild();
+                                } else {
+                                        EgcNumberExpressionNode* num = static_cast<EgcNumberExpressionNode*>(node.getLeftChild());
+                                        num->setValue(number);
+                                        return node.getLeftChild();
                                 }
+
                         }
                 }
         }
@@ -970,22 +975,20 @@ EgcExpressionNode* EgcasTest_Structural::addRightChild(EgcExpressionNode& parent
 {
         if (parent.isBinaryExpression()) {
                 EgcBinaryExpressionNode& node = static_cast<EgcBinaryExpressionNode&>(parent);
-                if (node.getRightChild() == nullptr) {
-                        if (   type == EgcExpressionNodeType::RootNode
-                            || type == EgcExpressionNodeType::NumberNode
-                            || type == EgcExpressionNodeType::ParenthesisNode) {
-                                node.setRightChild(*EgcExpressionNodeCreator::create(type));
-                                if (node.getRightChild() != nullptr) {
-                                        if (    type == EgcExpressionNodeType::RootNode
-                                             || type == EgcExpressionNodeType::ParenthesisNode) {
-                                                return node.getRightChild();
-                                        } else {
-                                                EgcNumberExpressionNode* num = static_cast<EgcNumberExpressionNode*>(node.getRightChild());
-                                                num->setValue(number);
-                                                return node.getRightChild();
-                                        }
-
+                if (   type == EgcExpressionNodeType::RootNode
+                                || type == EgcExpressionNodeType::NumberNode
+                                || type == EgcExpressionNodeType::ParenthesisNode) {
+                        node.setRightChild(*EgcExpressionNodeCreator::create(type));
+                        if (node.getRightChild() != nullptr) {
+                                if (    type == EgcExpressionNodeType::RootNode
+                                                || type == EgcExpressionNodeType::ParenthesisNode) {
+                                        return node.getRightChild();
+                                } else {
+                                        EgcNumberExpressionNode* num = static_cast<EgcNumberExpressionNode*>(node.getRightChild());
+                                        num->setValue(number);
+                                        return node.getRightChild();
                                 }
+
                         }
                 }
         }
