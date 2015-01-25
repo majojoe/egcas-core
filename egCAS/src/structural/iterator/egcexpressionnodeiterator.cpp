@@ -516,6 +516,7 @@ bool EgcExpressionNodeIterator::insert(EgcExpressionNodeType type)
 
                 //repair the node pointer organization data
                 m_cursor = nodePtr;
+                m_State = determineFollowingState(*m_history, *m_cursor, m_forward);
         }
 
         return retval;
@@ -600,17 +601,42 @@ EgcExpressionNode* EgcExpressionNodeIterator::replace(EgcExpressionNode& node, E
         EgcExpressionNode *retval = nullptr;
 
         QScopedPointer<EgcExpressionNode> replacement(EgcExpressionNodeCreator::create(type));
+        QScopedPointer<EgcExpressionNode> theReplaced(&node);
 
         if (node.isBinaryExpression() && replacement.data()->isBinaryExpression()) {
                 EgcBinaryExpressionNode &bin_node = static_cast<EgcBinaryExpressionNode&>(node);
-                if (bin_node.transferPropertiesTo(*static_cast<EgcBinaryExpressionNode*>(replacement.data())))
-                        retval = replacement.data();
-        }
-
-        if (node.isUnaryExpression() && replacement.data()->isUnaryExpression()) {
+                if (bin_node.transferPropertiesTo(*static_cast<EgcBinaryExpressionNode*>(replacement.data()))) {
+                        retval = replacement.take();
+                } else {
+                        //leave the tree as it is
+                        (void) theReplaced.take();
+                }
+        } else if (node.isUnaryExpression() && replacement.data()->isUnaryExpression()) {
                 EgcUnaryExpressionNode &una_node = static_cast<EgcUnaryExpressionNode&>(node);
-                if (una_node.transferPropertiesTo(*static_cast<EgcUnaryExpressionNode*>(replacement.data())))
-                        retval = replacement.data();
+                if (una_node.transferPropertiesTo(*static_cast<EgcUnaryExpressionNode*>(replacement.data()))){
+                        retval = replacement.take();
+                } else {
+                        //leave the tree as it is
+                        (void) theReplaced.take();
+                }
+        } else {
+                EgcExpressionNode *parent = node.getParent();
+
+                if(parent) {
+                        if (parent->isBinaryExpression()) {
+                                if (isLeftChild(*parent, node))
+                                        static_cast<EgcBinaryExpressionNode*>(parent)
+                                                ->setLeftChild(*replacement.data());
+                                else
+                                        static_cast<EgcBinaryExpressionNode*>(parent)
+                                                ->setRightChild(*replacement.data());
+                        } else {
+                                static_cast<EgcUnaryExpressionNode*>(parent)->setChild(*replacement.data());
+                        }
+                        //the replaced node has already been deleted
+                        (void) theReplaced.take();
+                        retval = replacement.take();
+                }
         }
 
         if (retval) {
@@ -625,7 +651,9 @@ EgcExpressionNode* EgcExpressionNodeIterator::replace(EgcExpressionNode& node, E
         return retval;
 }
 
-EgcNodeIteratorState EgcExpressionNodeIterator::determineFollowingState(EgcExpressionNode &current, EgcExpressionNode &following, bool forwardDirection) const
+EgcNodeIteratorState EgcExpressionNodeIterator::determineFollowingState(EgcExpressionNode &current,
+                                                                        EgcExpressionNode &following,
+                                                                        bool forwardDirection) const
 {
         EgcNodeIteratorState localState;
 
