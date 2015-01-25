@@ -34,9 +34,9 @@ EgcExpressionNode* EgcExpressionNode::getParent(void)
         return m_parent;
 }
 
-void EgcExpressionNode::provideParent(EgcContainerNode& parent)
+void EgcExpressionNode::provideParent(EgcContainerNode* parent)
 {
-        m_parent = &parent;
+        m_parent = parent;
 }
 
 bool EgcExpressionNode::isLeaf(void) const

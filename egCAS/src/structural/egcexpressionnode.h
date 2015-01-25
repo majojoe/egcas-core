@@ -65,7 +65,7 @@ public:
          * This is used to set the parent pointers in the implementation of the tree.
          * @param parent a pointer to the parent of this node. This must be a container pointer.
          */
-        void provideParent(EgcContainerNode& parent);
+        void provideParent(EgcContainerNode* parent);
         /**
          * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
          * @param child a pointer to the child that will be deleted soon

@@ -92,7 +92,7 @@ public:
          * @param type the node type to use instead
          * @return true if replacement was possible, false otherwise
          */
-        virtual bool replace(EgcExpressionNode& node, EgcExpressionNodeType type);
+        virtual EgcExpressionNode* replace(EgcExpressionNode& node, EgcExpressionNodeType type);
         /**
          * @brief nextParent increments the iterator to the parent of the last node it was jumped over.
          * @return the parent of the last item it was jumped over.

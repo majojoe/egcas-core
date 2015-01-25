@@ -15,7 +15,7 @@ EgcUnaryExpressionNode::EgcUnaryExpressionNode(const EgcUnaryExpressionNode& ori
 
         //set the parent also
         if(originalChild)
-                originalChild->provideParent(*this);
+                originalChild->provideParent(this);
 }
 
 EgcUnaryExpressionNode::~EgcUnaryExpressionNode()
@@ -34,7 +34,7 @@ void EgcUnaryExpressionNode::setChild(const EgcExpressionNode& expression)
 
         //set the parent also
         if(m_child)
-                m_child->provideParent(*this);
+                m_child->provideParent(this);
 }
 
 EgcExpressionNode* EgcUnaryExpressionNode::getChild(void) const
@@ -114,4 +114,17 @@ void EgcUnaryExpressionNode::adjustChildPointers(EgcExpressionNode &old_child, E
 {
         if (m_child == &old_child)
                 m_child = &new_child;
+}
+
+EgcExpressionNode* EgcUnaryExpressionNode::takeOwnership(EgcExpressionNode &child)
+{
+        EgcExpressionNode* retval = nullptr;
+
+        if (m_child == &child) {
+                m_child = nullptr;
+                child.provideParent(nullptr);
+                retval = &child;
+        }
+
+        return retval;
 }

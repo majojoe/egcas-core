@@ -37,6 +37,13 @@ public:
          * @param new_child child pointers of the current object will be adjusted to this child object.
          */
         virtual void adjustChildPointers(EgcExpressionNode &old_child, EgcExpressionNode &new_child) = 0;
+        /**
+         * @brief takeOwnership takes ownership of the child given. The user is responsible for deleting the child.
+         * If the user doesn't handle the child properly a leak will occur.
+         * @param child the child to take ownership over.
+         * @return a pointer to the child the ownership taken.
+         */
+        virtual EgcExpressionNode* takeOwnership(EgcExpressionNode &child) = 0;
 };
 
 #endif // EGCCONTAINERNODE_H

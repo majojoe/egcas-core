@@ -439,6 +439,9 @@ bool EgcExpressionNodeIterator::insert(EgcExpressionNodeType type)
 
         QScopedPointer<EgcExpressionNode> node (EgcExpressionNodeCreator::create(type));
 
+        if (!node.data())
+                return retval;
+
         // only containers can be inserted in the tree
         if (node->isContainer()) {
                 retval = true;
@@ -446,25 +449,35 @@ bool EgcExpressionNodeIterator::insert(EgcExpressionNodeType type)
                         // set the right child to a empty child
                         QScopedPointer<EgcExpressionNode> tempNode(EgcExpressionNodeCreator::
                                                                   create(EgcExpressionNodeType::EmptyNode));
-                        static_cast<EgcBinaryExpressionNode*>(node.data())->setRightChild(*(tempNode.take()));
+                        if (m_forward)
+                                static_cast<EgcBinaryExpressionNode*>(node.data())->setRightChild(*(tempNode.take()));
+                        else
+                                static_cast<EgcBinaryExpressionNode*>(node.data())->setLeftChild(*(tempNode.take()));
                 }
                 //insert the container into the tree
                 EgcExpressionNode &nextNode = peekNext();
                 EgcExpressionNode &previousNode = peekPrevious();
                 QScopedPointer<EgcExpressionNode> childNode;
                 EgcExpressionNode *parentNode;
+                EgcContainerNode* container;
                 if (nextNode.getParent() == &previousNode) {
-                        childNode.reset(&nextNode);
                         parentNode = &previousNode;
+                        container = static_cast<EgcContainerNode*>(parentNode);
+                        childNode.reset(container->takeOwnership(nextNode));
                 } else {
                         parentNode = previousNode.getParent();
-                        childNode.reset(&previousNode);
+                        container = static_cast<EgcContainerNode*>(parentNode);
+                        childNode.reset(container->takeOwnership(previousNode));
                 }
                 if (parentNode == nullptr || parentNode == childNode.data()) {
                         parentNode = m_baseElement;
+                        container = static_cast<EgcContainerNode*>(parentNode);
+                        if (m_baseElement->getChild())
+                                childNode.reset(container->takeOwnership(*(m_baseElement->getChild())));
                 }
 
                 //set the parent
+                EgcExpressionNode *nodePtr = node.data();
                 if (parentNode->isBinaryExpression()) {
                         if (isRightChild(*parentNode, *childNode)) {
                                 static_cast<EgcBinaryExpressionNode*>(parentNode)->setRightChild(*(node.take()));
@@ -478,33 +491,32 @@ bool EgcExpressionNodeIterator::insert(EgcExpressionNodeType type)
 
                 //set the child if one
                 if (childNode.data()) {
-                        if (node->isBinaryExpression()) {
+                        if (nodePtr->isBinaryExpression()) {
                                 if (m_forward)
-                                        static_cast<EgcBinaryExpressionNode*>(node.data())->setLeftChild(*(childNode.take()));
+                                        static_cast<EgcBinaryExpressionNode*>(nodePtr)->setLeftChild(*(childNode.take()));
                                 else
-                                        static_cast<EgcBinaryExpressionNode*>(node.data())->setRightChild(*(childNode.take()));
+                                        static_cast<EgcBinaryExpressionNode*>(nodePtr)->setRightChild(*(childNode.take()));
                         } else {
-                                static_cast<EgcUnaryExpressionNode*>(node.data())->setChild(*(childNode.take()));
+                                static_cast<EgcUnaryExpressionNode*>(nodePtr)->setChild(*(childNode.take()));
                         }
                 } else { // insert empty nodes if no child node is present
-                        if (node->isBinaryExpression()) {
+                        if (nodePtr->isBinaryExpression()) {
                                 if (m_forward)
-                                        static_cast<EgcBinaryExpressionNode*>(node.data())->
+                                        static_cast<EgcBinaryExpressionNode*>(nodePtr)->
                                                 setLeftChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
                                 else
-                                        static_cast<EgcBinaryExpressionNode*>(node.data())->
+                                        static_cast<EgcBinaryExpressionNode*>(nodePtr)->
                                                 setRightChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
                         } else {
-                                static_cast<EgcUnaryExpressionNode*>(node.data())->
+                                static_cast<EgcUnaryExpressionNode*>(nodePtr)->
                                         setChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
                         }
 
                 }
 
+                //repair the node pointer organization data
+                m_cursor = nodePtr;
         }
-
-        //repair the node pointer organization data
-        m_cursor = node.data();
 
         return retval;
 }
@@ -583,25 +595,25 @@ EgcExpressionNode& EgcExpressionNodeIterator::nextParent(void)
         return *tempNode;
 }
 
-bool EgcExpressionNodeIterator::replace(EgcExpressionNode& node, EgcExpressionNodeType type)
+EgcExpressionNode* EgcExpressionNodeIterator::replace(EgcExpressionNode& node, EgcExpressionNodeType type)
 {
-        bool replaceable = false;
+        EgcExpressionNode *retval = nullptr;
 
         QScopedPointer<EgcExpressionNode> replacement(EgcExpressionNodeCreator::create(type));
 
         if (node.isBinaryExpression() && replacement.data()->isBinaryExpression()) {
                 EgcBinaryExpressionNode &bin_node = static_cast<EgcBinaryExpressionNode&>(node);
                 if (bin_node.transferPropertiesTo(*static_cast<EgcBinaryExpressionNode*>(replacement.data())))
-                        replaceable = true;
+                        retval = replacement.data();
         }
 
         if (node.isUnaryExpression() && replacement.data()->isUnaryExpression()) {
                 EgcUnaryExpressionNode &una_node = static_cast<EgcUnaryExpressionNode&>(node);
                 if (una_node.transferPropertiesTo(*static_cast<EgcUnaryExpressionNode*>(replacement.data())))
-                        replaceable = true;
+                        retval = replacement.data();
         }
 
-        if (replaceable) {
+        if (retval) {
                 if (m_cursor == &node)
                         m_cursor = replacement.data();
                 if (m_history == &node)
@@ -610,7 +622,7 @@ bool EgcExpressionNodeIterator::replace(EgcExpressionNode& node, EgcExpressionNo
                         m_previousCursor = replacement.data();
         }
 
-        return replaceable;
+        return retval;
 }
 
 EgcNodeIteratorState EgcExpressionNodeIterator::determineFollowingState(EgcExpressionNode &current, EgcExpressionNode &following, bool forwardDirection) const
