@@ -51,26 +51,26 @@ EgcExpressionNode & EgcExpressionNodeIterator::next(EgcNodeIteratorState &state)
                 return *m_baseElement;
         }
 
-        EgcExpressionNode& tempCursor = *m_cursor;
+        EgcExpressionNode* tempCursor = m_cursor;
         m_previousCursor = m_cursor;
 
         if (!m_forward) {
                 m_previousCursor = &getPreviousElement(nullptr, nullptr, &m_State);
                 state = m_State = determineFollowingState(*m_previousCursor, *m_cursor, true);
-                tempCursor = *m_previousCursor = *m_cursor;
+                tempCursor = m_previousCursor = m_cursor;
                 m_cursor = &getNextElement(nullptr, &m_atEnd, &m_State);
                 m_atBegin = false;
                 m_forward = true;
         } else {
                 state = m_State;
                 m_cursor = &getNextElement(nullptr, &m_atEnd, &m_State);
-                if (m_cursor != &tempCursor)
+                if (m_cursor != tempCursor)
                         m_atBegin = false;
         }
 
-        m_history = &tempCursor;
+        m_history = tempCursor;
 
-        return tempCursor;
+        return *tempCursor;
 
 }
 
@@ -525,9 +525,13 @@ bool EgcExpressionNodeIterator::insert(EgcExpressionNodeType type)
 void EgcExpressionNodeIterator::remove()
 {
         //the last node jumped over is in m_history
+        EgcExpressionNode *history = m_history;
         EgcExpressionNode *parent = &nextParent();
+        //jump back again
+        EgcNodeIteratorState state;
+        (void) previous(state);
         if (parent->isBinaryExpression()) {
-                if (isRightChild(*parent, *m_history))
+                if (isRightChild(*parent, *history))
                         static_cast<EgcBinaryExpressionNode*>(parent)->
                                 setRightChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
                 else
@@ -537,10 +541,10 @@ void EgcExpressionNodeIterator::remove()
         } else {
                 static_cast<EgcUnaryExpressionNode*>(parent)->
                                 setChild(*EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode));
-        }
-        delete(m_history);
+        }        
         m_history = m_baseElement;
-        if (m_cursor == m_baseElement->getChild()) {
+        if (   m_cursor == m_baseElement->getChild()
+            && m_State == EgcNodeIteratorState::RightIteration) {
                 m_atBegin = true;
                 m_atEnd = false;
         } else {

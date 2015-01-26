@@ -934,6 +934,7 @@ void EgcasTest_Structural::testInsertDelete()
         EgcExpressionNodeIterator iter8(formula4);
         EgcExpressionNode *node1;
         EgcExpressionNode *node3;
+        EgcExpressionNode *node2;
         EgcExpressionNode *node4;
         EgcExpressionNode *node5;
 
@@ -941,12 +942,14 @@ void EgcasTest_Structural::testInsertDelete()
         node1 = nodePointer;
         iter8.insert(EgcExpressionNodeType::RootNode);
         nodePointer = &(iter8.next(state));
+        node2 = nodePointer;
         nodePointer = &(iter8.next(state));
         node3 = nodePointer;
         QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::EmptyNode);
         nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
         QVERIFY(nodePointer != nullptr);
         static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(3.452);
+        node3 = nodePointer;
         nodePointer = &(iter8.next(state));
         nodePointer = &(iter8.next(state));
         node5 = nodePointer;
@@ -954,7 +957,47 @@ void EgcasTest_Structural::testInsertDelete()
         nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
         QVERIFY(nodePointer != nullptr);
         static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(5.647);
+        node5 = nodePointer;
         node4 = static_cast<EgcBinaryExpressionNode*>(node1)->getRightChild();
+
+        //test if the nodes are in the order intended
+        iter8.toFront();
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcNodeIteratorState::LeftIteration);
+
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node2);
+        QVERIFY(state == EgcNodeIteratorState::LeftIteration);
+
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node3);
+        QVERIFY(state == EgcNodeIteratorState::MiddleIteration);
+
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node2);
+        QVERIFY(state == EgcNodeIteratorState::MiddleIteration);
+
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node5);
+        QVERIFY(state == EgcNodeIteratorState::MiddleIteration);
+
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node2);
+        QVERIFY(state == EgcNodeIteratorState::RightIteration);
+
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcNodeIteratorState::MiddleIteration);
+
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node4);
+        QVERIFY(state == EgcNodeIteratorState::MiddleIteration);
+
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcNodeIteratorState::RightIteration);
+
 
         //now we remove node 2
         iter8.toFront();
@@ -972,6 +1015,18 @@ void EgcasTest_Structural::testInsertDelete()
         QVERIFY(nodePointer == node1);
         QVERIFY(state == EgcNodeIteratorState::LeftIteration);
         nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::EmptyNode);
+        QVERIFY(state == EgcNodeIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcNodeIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node4);
+        QVERIFY(state == EgcNodeIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next(state));
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcNodeIteratorState::RightIteration);
+
 
 
 
