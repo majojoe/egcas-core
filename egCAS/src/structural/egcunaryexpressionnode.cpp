@@ -1,5 +1,6 @@
 #include "egcunaryexpressionnode.h"
 #include "egcexpressionnodecreator.h"
+#include "visitor/egcnodevisitor.h"
 
 EgcUnaryExpressionNode::EgcUnaryExpressionNode() : m_child(nullptr)
 {
@@ -127,4 +128,9 @@ EgcExpressionNode* EgcUnaryExpressionNode::takeOwnership(EgcExpressionNode &chil
         }
 
         return retval;
+}
+
+void EgcUnaryExpressionNode::accept(EgcNodeVisitor *visitor)
+{
+        visitor->visit(this);
 }

@@ -1,5 +1,6 @@
 #include "egcbinaryexpressionnode.h"
 #include "egcexpressionnodecreator.h"
+#include "visitor/egcnodevisitor.h"
 
 EgcBinaryExpressionNode::EgcBinaryExpressionNode() : m_rightChild(nullptr), m_leftChild(nullptr)
 {
@@ -170,3 +171,7 @@ EgcExpressionNode* EgcBinaryExpressionNode::takeOwnership(EgcExpressionNode &chi
         return retval;
 }
 
+void EgcBinaryExpressionNode::accept(EgcNodeVisitor *visitor)
+{
+        visitor->visit(this);
+}

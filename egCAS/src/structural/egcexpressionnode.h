@@ -2,6 +2,7 @@
 #define EGCEXPRESSIONNODE_H
 
 class EgcContainerNode;
+class EgcNodeVisitor;
 
 /**
  * @brief The EgcExpressionNodeType enum is a enum to differentiate the different node types
@@ -76,6 +77,11 @@ public:
          * @return true if it is a leaf, false otherwise
          */
         virtual bool isLeaf(void) const;
+        /**
+         * @brief accept takes a visitor and calls the given visitor back to be able to extract data from this node
+         * @param visitor the visitor to call back
+         */
+        virtual void accept(EgcNodeVisitor *visitor);
 
 protected:
         EgcExpressionNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)

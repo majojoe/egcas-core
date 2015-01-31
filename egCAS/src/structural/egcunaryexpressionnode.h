@@ -81,6 +81,12 @@ public:
          * @return a pointer to the child the ownership taken.
          */
         virtual EgcExpressionNode* takeOwnership(EgcExpressionNode &child) override;
+        /**
+         * @brief accept takes a visitor and calls the given visitor back to be able to extract data from this node
+         * @param visitor the visitor to call back
+         */
+        virtual void accept(EgcNodeVisitor *visitor) override;
+
 
         EgcExpressionNode* m_child;
 };

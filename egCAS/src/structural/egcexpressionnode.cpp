@@ -1,4 +1,5 @@
 #include "egccontainernode.h"
+#include "visitor/egcnodevisitor.h"
 
 EgcExpressionNode::EgcExpressionNode() : m_parent(nullptr)
 {
@@ -45,4 +46,9 @@ bool EgcExpressionNode::isLeaf(void) const
                 return false;
         else
                 return true;
+}
+
+void EgcExpressionNode::accept(EgcNodeVisitor *visitor)
+{
+        visitor->visit(this);
 }

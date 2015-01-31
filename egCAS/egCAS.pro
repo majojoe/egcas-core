@@ -37,7 +37,8 @@ SOURCES += src/main.cpp\
     src/structural/egcformulaexpression.cpp \
     src/structural/iterator/egcexpressionnodeiterator.cpp \
     src/structural/egcbaseexpressionnode.cpp \
-    src/structural/egcemptyexpressionnode.cpp
+    src/structural/egcemptyexpressionnode.cpp \
+    src/structural/visitor/egcmaximavisitor.cpp
 
 HEADERS  += src/mainwindow.h \
     src/view/egcasscene.h \
@@ -60,7 +61,8 @@ HEADERS  += src/mainwindow.h \
     src/structural/iterator/egcexpressionnodeiterator.h \
     src/structural/egcnodes.h \
     src/structural/egcbaseexpressionnode.h \
-    src/structural/egcemptyexpressionnode.h
+    src/structural/egcemptyexpressionnode.h \
+    src/structural/visitor/egcmaximavisitor.h
 
 FORMS    += src/ui/mainwindow.ui
 

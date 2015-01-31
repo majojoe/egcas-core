@@ -5,6 +5,8 @@
 #include "structural/iterator/egcexpressionnodeiterator.h"
 #include "structural/egcformulaexpression.h"
 #include "structural/egcexpressionnodecreator.h"
+#include "structural/visitor/egcnodevisitor.h"
+#include "structural/visitor/egcmaximavisitor.h"
 
 class EgcUnaryExpressionNodeTestChild : public EgcUnaryExpressionNode
 {

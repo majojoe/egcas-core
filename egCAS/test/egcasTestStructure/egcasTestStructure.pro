@@ -29,14 +29,17 @@ SOURCES += tst_egcastest_structural.cpp \
            ../../src/structural/iterator/egcexpressionnodeiterator.cpp \
            ../../src/structural/egcformulaexpression.cpp \
            ../../src/structural/egcbaseexpressionnode.cpp \
-           ../../src/structural/egcemptyexpressionnode.cpp
+           ../../src/structural/egcemptyexpressionnode.cpp \
+           ../../src/structural/visitor/egcnodevisitor.cpp \
+           ../../src/structural/visitor/egcmaximavisitor.cpp
+
 
 HEADERS += ../../src/structural/egcunaryexpressionnode.h \
            ../../src/structural/egcbinaryexpressionnode.h \
            ../../src/structural/egcexpressionnode.h \
            ../../src/structural/egcrootexpressionnode.h \
            ../../src/structural/egcnumberexpressionnode.h \
-           ../../src/structural/egcexpressonnodecreator.h \
+           ../../src/structural/egcexpressionnodecreator.h \
            ../../src/structural/egcvariableexpressionnode.h \
            ../../src/structural/egcparenthesisexpressionnode.h \
            ../../src/structural/egccontainernode.h \
@@ -44,7 +47,9 @@ HEADERS += ../../src/structural/egcunaryexpressionnode.h \
            ../../src/structural/iterator/egcexpressionnodeiterator.h \
            ../../src/structural/egcformulaexpression.h \
            ../../src/structural/egcbaseexpressionnode.h \
-           ../../src/structural/egcemptyexpressionnode.h
+           ../../src/structural/egcemptyexpressionnode.h \
+           ../../src/structural/visitor/egcnodevisitor.h \
+           ../../src/structural/visitor/egcmaximavisitor.h
 
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"

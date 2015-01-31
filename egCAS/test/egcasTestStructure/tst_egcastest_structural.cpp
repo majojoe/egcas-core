@@ -15,6 +15,7 @@ private Q_SLOTS:
         void testIterator();
         void testTransferProperties();
         void testInsertDelete();
+        void testMaximaVisitor();
 private:
         EgcExpressionNode* addChild(EgcExpressionNode&parent, EgcExpressionNodeType type, qreal number = 0);
         EgcExpressionNode* addLeftChild(EgcExpressionNode&parent, EgcExpressionNodeType type, qreal number = 0);
@@ -1030,6 +1031,66 @@ void EgcasTest_Structural::testInsertDelete()
 
 
 
+}
+
+void EgcasTest_Structural::testMaximaVisitor()
+{
+        /*  This tree is tested within the iterator test below
+                                               |---|
+                                               | 1 |
+                                               |---|
+                                             /         \
+                                          /               \
+                                       |---|             |---|
+                                       | 2 |             | 4 |
+                                       |---|             |---|
+                                    /       \
+                                   /         \
+                                |---|       |---|
+                                | 3 |       | 5 |
+                                |---|       |---|
+        */
+
+        EgcFormulaExpression formula4(EgcExpressionNodeType::RootNode);
+        EgcNodeIteratorState state;
+        EgcExpressionNode *nodePointer;
+        EgcExpressionNodeIterator iter8(formula4);
+        EgcExpressionNode *node1;
+        EgcExpressionNode *node3;
+        EgcExpressionNode *node2;
+        EgcExpressionNode *node4;
+        EgcExpressionNode *node5;
+
+        nodePointer = &(iter8.next(state));
+        node1 = nodePointer;
+        iter8.insert(EgcExpressionNodeType::RootNode);
+        nodePointer = &(iter8.next(state));
+        node2 = nodePointer;
+        nodePointer = &(iter8.next(state));
+        node3 = nodePointer;
+        QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::EmptyNode);
+        nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
+        QVERIFY(nodePointer != nullptr);
+        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(30.452);
+        node3 = nodePointer;
+        nodePointer = &(iter8.next(state));
+        nodePointer = &(iter8.next(state));
+        node5 = nodePointer;
+        QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::EmptyNode);
+        nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
+        QVERIFY(nodePointer != nullptr);
+        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(1/3.0);
+        node5 = nodePointer;
+        nodePointer = &(iter8.next(state));
+        nodePointer = &(iter8.next(state));
+        nodePointer = &(iter8.next(state));
+        nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
+        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(0.5);
+        node4 = nodePointer;
+
+        EgcMaximaVisitor maximaVisitor(formula4);
+        QString result(maximaVisitor.getResult());
+        QVERIFY(result == QString("((30.452)^(0.333333))^(0.5)"));
 }
 
 EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcExpressionNodeType type, qreal number)
