@@ -31,8 +31,8 @@ SOURCES += tst_egcastest_structural.cpp \
            ../../src/structural/egcbaseexpressionnode.cpp \
            ../../src/structural/egcemptyexpressionnode.cpp \
            ../../src/structural/visitor/egcnodevisitor.cpp \
-           ../../src/structural/visitor/egcmaximavisitor.cpp
-
+           ../../src/structural/visitor/egcmaximavisitor.cpp \
+           ../../src/structural/visitor/egcmathmlvisitor.cpp
 
 HEADERS += ../../src/structural/egcunaryexpressionnode.h \
            ../../src/structural/egcbinaryexpressionnode.h \
@@ -49,7 +49,8 @@ HEADERS += ../../src/structural/egcunaryexpressionnode.h \
            ../../src/structural/egcbaseexpressionnode.h \
            ../../src/structural/egcemptyexpressionnode.h \
            ../../src/structural/visitor/egcnodevisitor.h \
-           ../../src/structural/visitor/egcmaximavisitor.h
+           ../../src/structural/visitor/egcmaximavisitor.h \
+           ../../src/structural/visitor/egcmathmlvisitor.h
 
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"

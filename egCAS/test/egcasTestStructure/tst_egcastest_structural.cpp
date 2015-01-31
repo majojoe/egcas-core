@@ -1079,18 +1079,25 @@ void EgcasTest_Structural::testMaximaVisitor()
         QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::EmptyNode);
         nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
         QVERIFY(nodePointer != nullptr);
-        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(1/3.0);
+        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(3.0);
         node5 = nodePointer;
         nodePointer = &(iter8.next(state));
         nodePointer = &(iter8.next(state));
         nodePointer = &(iter8.next(state));
         nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
-        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(0.5);
+        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(2.0);
         node4 = nodePointer;
 
+        //test maxima visitor
         EgcMaximaVisitor maximaVisitor(formula4);
         QString result(maximaVisitor.getResult());
-        QVERIFY(result == QString("((30.452)^(0.333333))^(0.5)"));
+        QVERIFY(result == QString("((30.452)^(1/3))^(1/2)"));
+
+        //test math ml visitor
+        EgcMathMlVisitor mathMlVisitor(formula4);
+        result = mathMlVisitor.getResult();
+        QVERIFY(result == QString("<mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot>"));
+
 }
 
 EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcExpressionNodeType type, qreal number)

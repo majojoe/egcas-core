@@ -1,22 +1,22 @@
-#ifndef EGCMAXIMAVISITOR_H
-#define EGCMAXIMAVISITOR_H
+#ifndef EGCMATHMLVISITOR_H
+#define EGCMATHMLVISITOR_H
 
 #include <QString>
 #include "egcnodevisitor.h"
 
 /**
- * @brief The EgcKernelVisitor class is a visitor class for parsing the tree and output expressions formatted for the
+ * @brief The EgcMathMlVisitor class is a visitor class for parsing the tree and output expressions formatted for the
  * used cas kernel.
  */
 
-class EgcMaximaVisitor : public EgcNodeVisitor
+class EgcMathMlVisitor : public EgcNodeVisitor
 {
 public:
         /**
          * @brief EgcNodeVisitor std constructor for the visitor
          * @param formula the formula to be parsed
          */
-        EgcMaximaVisitor(EgcFormulaExpression& formula);
+        EgcMathMlVisitor(EgcFormulaExpression& formula);
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.
@@ -37,4 +37,4 @@ public:
         virtual void visit(EgcExpressionNode* node) override;
 };
 
-#endif // EGCMAXIMAVISITOR_H
+#endif // EGCMATHMLVISITOR_H

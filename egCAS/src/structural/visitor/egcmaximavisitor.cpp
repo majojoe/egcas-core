@@ -17,7 +17,7 @@ void EgcMaximaVisitor::visit(EgcBinaryExpressionNode* binary)
                 else if (m_state == EgcNodeIteratorState::RightIteration)
                         str = ")";
                 else
-                        str = ")^(";
+                        str = ")^(1/";
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", binary->getNodeType()) ;

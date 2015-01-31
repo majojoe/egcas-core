@@ -7,6 +7,7 @@
 #include "structural/egcexpressionnodecreator.h"
 #include "structural/visitor/egcnodevisitor.h"
 #include "structural/visitor/egcmaximavisitor.h"
+#include "structural/visitor/egcmathmlvisitor.h"
 
 class EgcUnaryExpressionNodeTestChild : public EgcUnaryExpressionNode
 {
