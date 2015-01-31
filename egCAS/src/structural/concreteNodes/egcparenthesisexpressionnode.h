@@ -1,7 +1,7 @@
 #ifndef EGCPARENTHESISEXPRESSIONNODE_H
 #define EGCPARENTHESISEXPRESSIONNODE_H
 
-#include "egcunaryexpressionnode.h"
+#include "../egcunaryexpressionnode.h"
 
 /**
  * @brief The EgcParenthesisExpressionNode class is a class that reflects parenthesis' in an equation. This manages e.g. something like 3x*(4+8y).

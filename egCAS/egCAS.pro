@@ -27,18 +27,18 @@ SOURCES += src/main.cpp\
     src/structural/egcexpressionnode.cpp \
     src/structural/egcbinaryexpressionnode.cpp \
     src/structural/egcunaryexpressionnode.cpp \
-    src/structural/egcrootexpressionnode.cpp \
-    src/structural/egcnumberexpressionnode.cpp \
-    src/structural/egcvariableexpressionnode.cpp \
     src/structural/egcexpressionnodecreator.cpp \
-    src/structural/egcparenthesisexpressionnode.cpp \
     src/structural/visitor/egcnodevisitor.cpp \
     src/structural/egccontainernode.cpp \
     src/structural/egcformulaexpression.cpp \
     src/structural/iterator/egcexpressionnodeiterator.cpp \
     src/structural/egcbaseexpressionnode.cpp \
     src/structural/egcemptyexpressionnode.cpp \
-    src/structural/visitor/egcmaximavisitor.cpp
+    src/structural/visitor/egcmaximavisitor.cpp \
+    src/structural/concreteNodes/egcnumberexpressionnode.cpp \
+    src/structural/concreteNodes/egcparenthesisexpressionnode.cpp \
+    src/structural/concreteNodes/egcrootexpressionnode.cpp \
+    src/structural/concreteNodes/egcvariableexpressionnode.cpp
 
 HEADERS  += src/mainwindow.h \
     src/view/egcasscene.h \
@@ -50,11 +50,7 @@ HEADERS  += src/mainwindow.h \
     src/structural/egcexpressionnode.h \
     src/structural/egcbinaryexpressionnode.h \
     src/structural/egcunaryexpressionnode.h \
-    src/structural/egcrootexpressionnode.h \
-    src/structural/egcnumberexpressionnode.h \
-    src/structural/egcvariableexpressionnode.h \
     src/structural/egcexpressionnodecreator.h \
-    src/structural/egcparenthesisexpressionnode.h \
     src/structural/visitor/egcnodevisitor.h \
     src/structural/egccontainernode.h \
     src/structural/egcformulaexpression.h \
@@ -62,7 +58,11 @@ HEADERS  += src/mainwindow.h \
     src/structural/egcnodes.h \
     src/structural/egcbaseexpressionnode.h \
     src/structural/egcemptyexpressionnode.h \
-    src/structural/visitor/egcmaximavisitor.h
+    src/structural/visitor/egcmaximavisitor.h \
+    src/structural/concreteNodes/egcnumberexpressionnode.h \
+    src/structural/concreteNodes/egcparenthesisexpressionnode.h \
+    src/structural/concreteNodes/egcrootexpressionnode.h \
+    src/structural/concreteNodes/egcvariableexpressionnode.h
 
 FORMS    += src/ui/mainwindow.ui
 

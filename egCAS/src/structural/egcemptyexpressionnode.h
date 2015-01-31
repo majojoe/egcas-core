@@ -1,7 +1,7 @@
 #ifndef EGCEMPTYEXPRESSIONNODE_H
 #define EGCEMPTYEXPRESSIONNODE_H
 
-#include "egcvariableexpressionnode.h"
+#include "concreteNodes/egcvariableexpressionnode.h"
 
 /**
  * @brief The EgcEmptyExpressionNode class is a class that holds the leafes that are empty until now
