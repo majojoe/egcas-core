@@ -1,6 +1,8 @@
 #ifndef EGCFORMULAEXPRESSION_H
 #define EGCFORMULAEXPRESSION_H
 
+#include <QString>
+
 class EgcExpressionNode;
 class EgcBaseExpressionNode;
 enum class EgcExpressionNodeType;
@@ -25,6 +27,17 @@ public:
          * @return the root element of the formula
          */
         EgcExpressionNode* getRootElement(void) const;
+        /**
+         * @brief getMathMlCode returns the mathMl representation for this formula
+         * @return the mathMl representation of this formula as a string
+         */
+        QString getMathMlCode(void);
+        /**
+         * @brief getCASKernelCommand returns the command to execute the calculation(s) needed for this formula in the
+         * used CAS kernel
+         * @return the command to be executed in the CAS kernel as a string
+         */
+        QString getCASKernelCommand(void);
 private:
         EgcBaseExpressionNode *m_data;              ///< holds a pointer to the root element of the formula tree
 };

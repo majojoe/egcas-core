@@ -4,6 +4,8 @@
 #include "egcexpressionnodecreator.h"
 #include "egcbaseexpressionnode.h"
 #include "egcnodes.h"
+#include "visitor/egcmaximavisitor.h"
+#include "visitor/egcmathmlvisitor.h"
 
 EgcFormulaExpression::EgcFormulaExpression(EgcExpressionNodeType type)
 {
@@ -53,4 +55,16 @@ EgcExpressionNode* EgcFormulaExpression::getRootElement(void) const
                 retval = m_data->getChild();
 
         return retval;
+}
+
+QString EgcFormulaExpression::getMathMlCode(void)
+{
+        EgcMathMlVisitor mathMlVisitor(*this);
+        return mathMlVisitor.getResult();
+}
+
+QString EgcFormulaExpression::getCASKernelCommand(void)
+{
+        EgcMaximaVisitor maximaVisitor(*this);
+        return maximaVisitor.getResult();
 }
