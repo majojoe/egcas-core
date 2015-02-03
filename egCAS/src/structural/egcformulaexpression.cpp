@@ -59,8 +59,14 @@ EgcExpressionNode* EgcFormulaExpression::getRootElement(void) const
 
 QString EgcFormulaExpression::getMathMlCode(void)
 {
+        QString temp;
+
+        temp = "<math>";
         EgcMathMlVisitor mathMlVisitor(*this);
-        return mathMlVisitor.getResult();
+        temp += mathMlVisitor.getResult();
+        temp += "</math>";
+
+        return temp;
 }
 
 QString EgcFormulaExpression::getCASKernelCommand(void)

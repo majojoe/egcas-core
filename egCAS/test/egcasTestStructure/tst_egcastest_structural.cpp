@@ -1098,7 +1098,7 @@ void EgcasTest_Structural::testMaximaVisitor()
         EgcMathMlVisitor mathMlVisitor(formula4);
         result = mathMlVisitor.getResult();
         QVERIFY(result == QString("<mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot>"));
-        QVERIFY(formula4.getMathMlCode() == QString("<mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot>"));
+        QVERIFY(formula4.getMathMlCode() == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
 
 }
 
