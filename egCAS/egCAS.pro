@@ -40,7 +40,8 @@ SOURCES += src/main.cpp\
     src/structural/concreteNodes/egcrootexpressionnode.cpp \
     src/structural/concreteNodes/egcvariableexpressionnode.cpp \
     src/structural/visitor/egcmathmlvisitor.cpp \
-    src/casKernel/egcmaximaconn.cpp
+    src/casKernel/egcmaximaconn.cpp \
+    src/casKernel/egckernelconn.cpp
 
 HEADERS  += src/mainwindow.h \
     src/view/egcasscene.h \
@@ -66,7 +67,8 @@ HEADERS  += src/mainwindow.h \
     src/structural/concreteNodes/egcrootexpressionnode.h \
     src/structural/concreteNodes/egcvariableexpressionnode.h \
     src/structural/visitor/egcmathmlvisitor.h \
-    src/casKernel/egcmaximaconn.h
+    src/casKernel/egcmaximaconn.h \
+    src/casKernel/egckernelconn.h
 
 FORMS    += src/ui/mainwindow.ui
 
