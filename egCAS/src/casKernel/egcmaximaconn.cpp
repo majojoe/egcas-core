@@ -3,15 +3,15 @@
 EgcMaximaConn::EgcMaximaConn(QString executeMaximaCmd, QObject *parent) : QObject(parent), m_result(QString()),
                                                                           m_error(QString())
 {
-        m_regex = QRegExp(".*\\(%i[0-9]+\\)");
+        m_regex = QRegularExpression("\\(%o[0-9]+\\).*\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
         m_casKernelProcess = new QProcess();
         m_casKernelProcess->start(executeMaximaCmd);
 
         /* show output */
         connect(m_casKernelProcess, SIGNAL(readyReadStandardOutput()),this, SLOT(stdOutput()) );
         connect(m_casKernelProcess, SIGNAL(readyReadStandardError()), this, SLOT(errorOutput()) );
-        connect(m_casKernelProcess, SIGNAL(error()), this, SLOT(kernelError()) );
-        connect(m_casKernelProcess, SIGNAL(finished()), this, SLOT(kernelTerm()) );
+        connect(m_casKernelProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(kernelError(QProcess::ProcessError)) );
+        connect(m_casKernelProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(kernelTerm()) );
         connect(m_casKernelProcess, SIGNAL(started()), this, SLOT(kernelStart()) );
 }
 
@@ -29,7 +29,7 @@ void EgcMaximaConn::stdOutput(void)
 {
         QByteArray temp = m_casKernelProcess->readAllStandardOutput();
         m_result += temp;
-        if (m_regex.exactMatch(m_result)) {
+        if (m_regex.match(m_result).hasMatch()) {
                 emit resultReceived(m_result);
                 m_result.clear();
         } else {
@@ -41,7 +41,7 @@ void EgcMaximaConn::errorOutput(void)
 {
         QByteArray temp = m_casKernelProcess->readAllStandardError();
         m_error += temp;
-        if (m_regex.exactMatch(m_error)) {
+        if (m_regex.match(m_error).hasMatch()) {
                 emit errorReceived(m_error);
                 m_error.clear();
         } else {
@@ -63,4 +63,9 @@ void EgcMaximaConn::kernelTerm(void)
 void EgcMaximaConn::kernelError(QProcess::ProcessError error)
 {
         emit kernelErrorOccurred(error);
+}
+
+void EgcMaximaConn::quit(void)
+{
+        this->sendCommand("quit();");
 }

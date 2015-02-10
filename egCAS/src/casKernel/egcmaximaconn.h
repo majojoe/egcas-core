@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QProcess>
+#include <QRegularExpression>
 
 class EgcMaximaConn : public QObject
 {
@@ -21,6 +22,10 @@ public:
          * @param cmd command to be sent to the kernel
          */
         void sendCommand(QString cmd);
+        /**
+         * @brief quit quit maxima subprocess
+         */
+        void quit(void);
 
 signals:
         /**
@@ -42,8 +47,8 @@ protected slots:
 protected:
         QString m_result;                      ///< stores the result until the result is complete
         QString m_error;                       ///< stores the error message until the message is complete
-        QRegExp m_regex;                       ///< regex for filtering maxima output
-        QProcess *m_casKernelProcess;             ///< pointer to the maxima QProcess object
+        QRegularExpression m_regex;            ///< regex for filtering maxima output
+        QProcess *m_casKernelProcess;          ///< pointer to the maxima QProcess object
 };
 
 #endif // EGCMAXIMACONN_H

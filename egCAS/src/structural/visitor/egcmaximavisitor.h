@@ -35,6 +35,11 @@ public:
          * @param binary the node with the information to be extracted.
          */
         virtual void visit(EgcExpressionNode* node) override;
+        /**
+         * @brief getResult returns the result of the traversion of the tree
+         * @return the result of the traversion as string
+         */
+        virtual QString getResult(void);
 };
 
 #endif // EGCMAXIMAVISITOR_H

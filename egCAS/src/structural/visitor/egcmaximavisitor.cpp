@@ -65,3 +65,8 @@ void EgcMaximaVisitor::visit(EgcExpressionNode* node)
         m_result += str;
 }
 
+QString EgcMaximaVisitor::getResult(void)
+{
+        return EgcNodeVisitor::getResult() + ";\n";
+}
+
