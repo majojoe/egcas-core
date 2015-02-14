@@ -1,11 +1,29 @@
+#include <QVector>
 #include "egcmaximaconn.h"
 
-QString EgcMaximaConn::s_startupConfig = QString("set_display(none);display2d=false;");
+QString EgcMaximaConn::s_startupConfig = QString("set_display(none);display2d:false;");
 
 EgcMaximaConn::EgcMaximaConn(QString executeMaximaCmd, QObject *parent) : EgcKernelConn(executeMaximaCmd, parent)
 {
+        //information to remove from error messages of maxima
+        //use the vector below to add more messages that we don't want to show to the user.
+        QVector<QString> errorMsgFilter;
+        errorMsgFilter.append("To debug this try:");
+        errorMsgFilter.append("Maxima ");
+
+        QString regexFilterStr;
+        QString str;
+        foreach (str, errorMsgFilter) {
+                regexFilterStr += QRegularExpression::escape(str);
+                regexFilterStr += QString("|");
+        }
+        if (regexFilterStr.endsWith('|'))
+                regexFilterStr.remove(-1, 1);
+
         m_startRegex = QRegularExpression(".*\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
+        m_errRegex = QRegularExpression("(.*)\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
         m_regex = QRegularExpression("\\(%o[0-9]+\\)(.*)\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
+        m_errUnwantedRegex = QRegularExpression("(.*)(" + regexFilterStr + ").*", QRegularExpression::DotMatchesEverythingOption);
 }
 
 EgcMaximaConn::~EgcMaximaConn()
@@ -39,15 +57,28 @@ void EgcMaximaConn::stdOutput(void)
                         emit kernelStarted();
                         m_result.clear();
                         m_startState = EgcKernelStart::Started;
+                        sendCommand("2+2;");
                 }
                 break;
         default:
                 match = m_regex.match(m_result);
                 if (match.hasMatch()) {
-                        emit resultReceived(match.captured(1).trimmed());
+                        emit resultReceived(match.captured(1).trimmed().simplified());
+                        qDebug("formula: %s", qPrintable(match.captured(1).trimmed().simplified()));
                         m_result.clear();
+                        sendCommand("sin(x,x);");
                 } else {
+                        match = m_errRegex.match(m_result);
+                        if (match.hasMatch()) {
+                                QString errorString = match.captured(1).trimmed();
+                                if (m_errUnwantedRegex.match(errorString).hasMatch())
+                                        errorString = m_errUnwantedRegex.match(errorString).captured(1);
+                                emit errorReceived(errorString);
+                                qDebug("output: %s", qPrintable(errorString));
+                                m_result.clear();
+                        } else {  //this seems to be a normal result, but only a part of it
 #warning start a timer here. If the operation doesn't complete within a specific amount of time -> error in parsing...
+                        }
                 }
                 break;
         }

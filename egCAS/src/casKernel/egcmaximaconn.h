@@ -33,6 +33,7 @@ protected slots:
         virtual void stdOutput(void);
 protected:
         static QString s_startupConfig;         ///< startup configuration for CAS kernel
+        QRegularExpression m_errUnwantedRegex;  ///< regex for filtering kernel unwanted information from error message
 };
 
 #endif // EGCMAXIMACONN_H

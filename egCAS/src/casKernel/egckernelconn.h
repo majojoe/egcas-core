@@ -60,6 +60,7 @@ protected:
         QProcess *m_casKernelProcess;           ///< pointer to the kernel QProcess object
         EgcKernelStart m_startState;            ///< marks the starting state of the CAS kernel
         QRegularExpression m_startRegex;        ///< regex for filtering kernel output at startup
+        QRegularExpression m_errRegex;          ///< regex for filtering kernel errors
         QRegularExpression m_regex;             ///< regex for filtering regular kernel output
 };
 
