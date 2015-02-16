@@ -35,8 +35,14 @@ public:
         virtual void sendCommand(QString cmd);
         /**
          * @brief quit quit kernel subprocess
+         *
+         * To avoid just killing the kernel you should call quit and wait for the kernelTerminated(); signal
          */
         virtual void quit(void) = 0;
+        /**
+         * @brief reset resets all variables assinged in the CAS kernel.
+         */
+        virtual void reset() = 0;
 
 signals:
         /**

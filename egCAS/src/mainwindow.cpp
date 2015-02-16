@@ -6,9 +6,6 @@
 #include "view/resizehandle.h"
 
 
-#include "casKernel/egcmaximaconn.h"
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -40,7 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QRectF rect(0,0,2100,2900);
     scene->setSceneRect(rect);
 
-    new EgcMaximaConn("/usr/bin/maxima", this);
 }
 
 MainWindow::~MainWindow()

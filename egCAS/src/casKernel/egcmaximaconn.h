@@ -4,6 +4,7 @@
 #include <QString>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QMap>
 #include "egckernelconn.h"
 
 
@@ -28,12 +29,17 @@ public:
          * @brief quit quit maxima subprocess
          */
         void quit(void);
+        /**
+         * @brief reset resets all variables assinged in the CAS kernel.
+         */
+        virtual void reset();
 
 protected slots:
         virtual void stdOutput(void);
 protected:
         static QString s_startupConfig;         ///< startup configuration for CAS kernel
         QRegularExpression m_errUnwantedRegex;  ///< regex for filtering kernel unwanted information from error message
+        QMap<QString, QString> m_wordsToReplace;///< words that schould be replaced
 };
 
 #endif // EGCMAXIMACONN_H

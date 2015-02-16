@@ -1,4 +1,5 @@
 #include <QVector>
+#include <QMap>
 #include "egcmaximaconn.h"
 
 QString EgcMaximaConn::s_startupConfig = QString("set_display(none);display2d:false;");
@@ -10,6 +11,11 @@ EgcMaximaConn::EgcMaximaConn(QString executeMaximaCmd, QObject *parent) : EgcKer
         QVector<QString> errorMsgFilter;
         errorMsgFilter.append("To debug this try:");
         errorMsgFilter.append("Maxima ");
+
+        //there are some words That should be replaced in error messages
+        m_wordsToReplace.insert("Maxima", "The CAS kernel");
+        m_wordsToReplace.insert("maxima", "the CAS kernel");
+
 
         QString regexFilterStr;
         QString str;
@@ -57,24 +63,28 @@ void EgcMaximaConn::stdOutput(void)
                         emit kernelStarted();
                         m_result.clear();
                         m_startState = EgcKernelStart::Started;
-                        sendCommand("2+2;");
                 }
                 break;
         default:
                 match = m_regex.match(m_result);
                 if (match.hasMatch()) {
                         emit resultReceived(match.captured(1).trimmed().simplified());
-                        qDebug("formula: %s", qPrintable(match.captured(1).trimmed().simplified()));
                         m_result.clear();
-                        sendCommand("sin(x,x);");
                 } else {
                         match = m_errRegex.match(m_result);
                         if (match.hasMatch()) {
                                 QString errorString = match.captured(1).trimmed();
                                 if (m_errUnwantedRegex.match(errorString).hasMatch())
                                         errorString = m_errUnwantedRegex.match(errorString).captured(1);
+
+                                QMapIterator<QString, QString> i(m_wordsToReplace);
+                                while (i.hasNext()) {
+                                    i.next();
+                                    if (errorString.contains(i.key()))
+                                            errorString.replace(i.key(), i.value());
+                                }
+
                                 emit errorReceived(errorString);
-                                qDebug("output: %s", qPrintable(errorString));
                                 m_result.clear();
                         } else {  //this seems to be a normal result, but only a part of it
 #warning start a timer here. If the operation doesn't complete within a specific amount of time -> error in parsing...
@@ -88,3 +98,9 @@ void EgcMaximaConn::quit(void)
 {
         this->sendCommand("quit();");
 }
+
+void EgcMaximaConn::reset(void)
+{
+        this->sendCommand("kill(all);");
+}
+
