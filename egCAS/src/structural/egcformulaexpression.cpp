@@ -74,3 +74,23 @@ QString EgcFormulaExpression::getCASKernelCommand(void)
         EgcMaximaVisitor maximaVisitor(*this);
         return maximaVisitor.getResult();
 }
+
+bool EgcFormulaExpression::isResult(void)
+{
+        return m_isResult;
+}
+
+bool EgcFormulaExpression::isNumberResult(void)
+{
+        return m_isNumberResult;
+}
+
+void EgcFormulaExpression::setNumberOfSignificantDigits(quint8 digits)
+{
+        m_numberSignificantDigits = digits;
+}
+
+void EgcFormulaExpression::setNumberResultType(EgcNumberResultType resultType)
+{
+        m_numberResultType = resultType;
+}
