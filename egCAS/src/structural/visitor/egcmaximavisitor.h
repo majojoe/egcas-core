@@ -39,7 +39,7 @@ public:
          * @brief getResult returns the result of the traversion of the tree
          * @return the result of the traversion as string
          */
-        virtual QString getResult(void);
+        virtual QString getResult(void) override;
 };
 
 #endif // EGCMAXIMAVISITOR_H

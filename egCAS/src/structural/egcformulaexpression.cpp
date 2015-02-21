@@ -7,7 +7,14 @@
 #include "visitor/egcmaximavisitor.h"
 #include "visitor/egcmathmlvisitor.h"
 
-EgcFormulaExpression::EgcFormulaExpression(EgcExpressionNodeType type)
+
+#warning implement a copy constructor and assignment operator
+
+quint8 EgcFormulaExpression::s_stdNrSignificantDigits = 0;
+
+EgcFormulaExpression::EgcFormulaExpression(EgcExpressionNodeType type) : m_isResult(false), m_isNumberResult(false),
+                                                                  m_numberSignificantDigits(0),
+                                                                  m_numberResultType(EgcNumberResultType::StandardType)
 {
         m_data = new (std::nothrow) EgcBaseExpressionNode();
         if (m_data) {
@@ -59,14 +66,8 @@ EgcExpressionNode* EgcFormulaExpression::getRootElement(void) const
 
 QString EgcFormulaExpression::getMathMlCode(void)
 {
-        QString temp;
-
-        temp = "<math>";
         EgcMathMlVisitor mathMlVisitor(*this);
-        temp += mathMlVisitor.getResult();
-        temp += "</math>";
-
-        return temp;
+        return mathMlVisitor.getResult();
 }
 
 QString EgcFormulaExpression::getCASKernelCommand(void)
@@ -93,4 +94,30 @@ void EgcFormulaExpression::setNumberOfSignificantDigits(quint8 digits)
 void EgcFormulaExpression::setNumberResultType(EgcNumberResultType resultType)
 {
         m_numberResultType = resultType;
+}
+
+quint8 EgcFormulaExpression::getNumberOfSignificantDigits(void)
+{
+        if (m_isNumberResult)
+                return m_numberSignificantDigits;
+        else
+                return 0;
+}
+
+EgcNumberResultType EgcFormulaExpression::getNumberResultType()
+{
+        if (m_isNumberResult)
+                return m_numberResultType;
+        else
+                return EgcNumberResultType::NotApplicable;
+}
+
+quint8 EgcFormulaExpression::getStdNrSignificantDigis(void)
+{
+        return s_stdNrSignificantDigits;
+}
+
+void EgcFormulaExpression::setStdNrSignificantDigis(quint8 digits)
+{
+        s_stdNrSignificantDigits = digits;
 }

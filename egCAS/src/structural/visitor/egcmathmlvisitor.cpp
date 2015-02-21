@@ -65,3 +65,13 @@ void EgcMathMlVisitor::visit(EgcExpressionNode* node)
         m_result += str;
 }
 
+QString EgcMathMlVisitor::getResult(void)
+{
+        QString temp;
+
+        temp = "<math>";
+        temp += EgcNodeVisitor::getResult();
+        temp += "</math>";
+
+        return temp;
+}

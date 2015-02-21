@@ -1,6 +1,7 @@
 #include <QStringBuilder>
 #include "../egcnodes.h"
 #include "egcmaximavisitor.h"
+#include "../egcformulaexpression.h"
 
 EgcMaximaVisitor::EgcMaximaVisitor(EgcFormulaExpression& formula) : EgcNodeVisitor(formula)
 {
@@ -67,6 +68,37 @@ void EgcMaximaVisitor::visit(EgcExpressionNode* node)
 
 QString EgcMaximaVisitor::getResult(void)
 {
-        return EgcNodeVisitor::getResult() + ";\n";
+        QString tmp = EgcNodeVisitor::getResult();
+
+        if (m_formula) {
+                if (m_formula->isNumberResult())
+                {
+                        quint8 nrDigits = m_formula->getNumberOfSignificantDigits();
+                        if (nrDigits == 1 || nrDigits > 16)
+                                nrDigits = 0;
+
+                        QString tmpOptions = QString("fpprintprec:%1$").arg(nrDigits);
+
+                        switch(m_formula->getNumberResultType()) {
+                        case EgcNumberResultType::IntegerType:
+                                tmp = tmpOptions + "round(" + tmp + ")";
+                                break;
+                        case EgcNumberResultType::ScientificType:
+                                tmp = tmpOptions + "float(" + tmp + ")";
+                                break;
+                        case EgcNumberResultType::EngineeringType:
+#warning maxima function for engineering type is missing
+                                tmp = tmpOptions + tmp;
+                                break;
+                        default:
+                                tmp = tmpOptions + tmp;
+                                break;
+                        }
+                        //reset the precision again to standard type
+                        tmp += QString("ffprintprec:%1$").arg(EgcFormulaExpression::getStdNrSignificantDigis());
+                }
+        }
+
+        return tmp + ";\n";
 }
 

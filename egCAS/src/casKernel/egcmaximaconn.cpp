@@ -87,7 +87,7 @@ void EgcMaximaConn::stdOutput(void)
                                 emit errorReceived(errorString);
                                 m_result.clear();
                         } else {  //this seems to be a normal result, but only a part of it
-#warning start a timer here. If the operation doesn't complete within a specific amount of time -> error in parsing...
+#warning start a timer here. If the operation does not complete within a specific amount of time -> error in parsing...
                         }
                 }
                 break;
