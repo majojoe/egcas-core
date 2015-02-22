@@ -1,10 +1,10 @@
 #include <QScopedPointer>
 #include "egcexpressionnodeiterator.h"
 #include "../egcformulaexpression.h"
-#include "../egcexpressionnode.h"
-#include "../egcbinaryexpressionnode.h"
-#include "../egcunaryexpressionnode.h"
-#include "../egcbaseexpressionnode.h"
+#include "../specialNodes/egcexpressionnode.h"
+#include "../specialNodes/egcbinaryexpressionnode.h"
+#include "../specialNodes/egcunaryexpressionnode.h"
+#include "../specialNodes/egcbaseexpressionnode.h"
 #include "../egcexpressionnodecreator.h"
 
 EgcExpressionNodeIterator::EgcExpressionNodeIterator(const EgcFormulaExpression& formula) :

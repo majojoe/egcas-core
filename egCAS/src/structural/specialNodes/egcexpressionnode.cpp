@@ -1,5 +1,5 @@
 #include "egccontainernode.h"
-#include "visitor/egcnodevisitor.h"
+#include "../visitor/egcnodevisitor.h"
 
 EgcExpressionNode::EgcExpressionNode() : m_parent(nullptr)
 {

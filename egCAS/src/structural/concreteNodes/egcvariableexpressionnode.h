@@ -2,7 +2,7 @@
 #define EGCVARIABLEEXPRESSIONNODE_H
 
 #include <QString>
-#include "../egcexpressionnode.h"
+#include "../specialNodes/egcexpressionnode.h"
 
 /**
  * @brief The EgcVariableExpressionNode class is a class that holds the leafes with variable names

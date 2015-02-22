@@ -1091,15 +1091,14 @@ void EgcasTest_Structural::testMaximaVisitor()
         //test maxima visitor
         EgcMaximaVisitor maximaVisitor(formula4);
         QString result(maximaVisitor.getResult());
-        QVERIFY(result == QString("((30.452)^(1/3))^(1/2)"));
-        QVERIFY(formula4.getCASKernelCommand() == QString("((30.452)^(1/3))^(1/2)"));
+        QVERIFY(result == QString("((30.452)^(1/3))^(1/2);\n"));
+        QVERIFY(formula4.getCASKernelCommand() == QString("((30.452)^(1/3))^(1/2);\n"));
 
         //test math ml visitor
         EgcMathMlVisitor mathMlVisitor(formula4);
         result = mathMlVisitor.getResult();
-        QVERIFY(result == QString("<mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot>"));
+        QVERIFY(result == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
         QVERIFY(formula4.getMathMlCode() == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
-
 }
 
 EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcExpressionNodeType type, qreal number)

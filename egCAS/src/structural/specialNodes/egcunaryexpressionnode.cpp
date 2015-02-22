@@ -1,6 +1,6 @@
 #include "egcunaryexpressionnode.h"
-#include "egcexpressionnodecreator.h"
-#include "visitor/egcnodevisitor.h"
+#include "../egcexpressionnodecreator.h"
+#include "../visitor/egcnodevisitor.h"
 
 EgcUnaryExpressionNode::EgcUnaryExpressionNode() : m_child(nullptr)
 {

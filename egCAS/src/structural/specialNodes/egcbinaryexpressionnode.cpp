@@ -1,6 +1,6 @@
 #include "egcbinaryexpressionnode.h"
-#include "egcexpressionnodecreator.h"
-#include "visitor/egcnodevisitor.h"
+#include "../egcexpressionnodecreator.h"
+#include "../visitor/egcnodevisitor.h"
 
 EgcBinaryExpressionNode::EgcBinaryExpressionNode() : m_rightChild(nullptr), m_leftChild(nullptr)
 {

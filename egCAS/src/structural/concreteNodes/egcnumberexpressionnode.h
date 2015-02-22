@@ -2,7 +2,7 @@
 #define EGCNUMBEREXPRESSIONNODE_H
 
 #include <QtGlobal>
-#include "../egcexpressionnode.h"
+#include "../specialNodes/egcexpressionnode.h"
 
 /**
  * @brief The EgcNumberExpressionNode class is a class that holds leafes with numbers

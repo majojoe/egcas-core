@@ -87,7 +87,7 @@ QString EgcMaximaVisitor::getResult(void)
                                 tmp = tmpOptions + "float(" + tmp + ")";
                                 break;
                         case EgcNumberResultType::EngineeringType:
-#warning maxima function for engineering type is missing
+#warning maxima function for engineering type is missing (load lisp function "engineering-format" from share/contrib/engineering-format.lisp)
                                 tmp = tmpOptions + tmp;
                                 break;
                         default:

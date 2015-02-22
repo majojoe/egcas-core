@@ -1,8 +1,8 @@
 #include <new>
 #include "egcformulaexpression.h"
-#include "egcexpressionnode.h"
+#include "specialNodes/egcexpressionnode.h"
 #include "egcexpressionnodecreator.h"
-#include "egcbaseexpressionnode.h"
+#include "specialNodes/egcbaseexpressionnode.h"
 #include "egcnodes.h"
 #include "visitor/egcmaximavisitor.h"
 #include "visitor/egcmathmlvisitor.h"
