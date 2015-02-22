@@ -22,7 +22,7 @@ public:
          * @param varName the variable name as a string
          * @param subscript the subscript of the variable if any
          */
-        virtual void setValue(QString& varName, QString& subscript);
+        virtual void setValue(const QString& varName, const QString& subscript);
         /**
          * @brief getValue returns the variable name (without subscript)
          * @return the variable name

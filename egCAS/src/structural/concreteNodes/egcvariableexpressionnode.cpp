@@ -11,7 +11,7 @@ EgcVariableExpressionNode::~EgcVariableExpressionNode()
 
 }
 
-void EgcVariableExpressionNode::setValue(QString& varName, QString& subscript)
+void EgcVariableExpressionNode::setValue(const QString& varName, const QString& subscript)
 {
         m_value = varName;
         m_subscript = subscript;

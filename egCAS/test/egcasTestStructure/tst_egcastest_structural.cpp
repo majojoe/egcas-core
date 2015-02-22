@@ -17,9 +17,9 @@ private Q_SLOTS:
         void testInsertDelete();
         void testMaximaVisitor();
 private:
-        EgcExpressionNode* addChild(EgcExpressionNode&parent, EgcExpressionNodeType type, qreal number = 0);
-        EgcExpressionNode* addLeftChild(EgcExpressionNode&parent, EgcExpressionNodeType type, qreal number = 0);
-        EgcExpressionNode* addRightChild(EgcExpressionNode&parent, EgcExpressionNodeType type, qreal number = 0);
+        EgcExpressionNode* addChild(EgcExpressionNode&parent, EgcExpressionNodeType type, QString number = "0");
+        EgcExpressionNode* addLeftChild(EgcExpressionNode&parent, EgcExpressionNodeType type, QString number = "0");
+        EgcExpressionNode* addRightChild(EgcExpressionNode&parent, EgcExpressionNodeType type, QString number = "0");
 };
 
 
@@ -64,8 +64,8 @@ void EgcasTest_Structural::testCopyConstructors()
         auto *rootChildExpression = new EgcRootExpressionNode();
         auto *numberExpression = new EgcNumberExpressionNode();
         auto *numberExpression2 = new EgcNumberExpressionNode();
-        numberExpression->setValue(200.1);
-        numberExpression2->setValue(90.365);
+        numberExpression->setValue(QString("200.1"));
+        numberExpression2->setValue("90.365");
         rootChildExpression->setLeftChild(*numberExpression);
         rootExpression.setLeftChild(*rootChildExpression);
         rootExpression.setRightChild(*numberExpression2);
@@ -75,8 +75,8 @@ void EgcasTest_Structural::testCopyConstructors()
         auto *copyChild = static_cast<EgcBinaryExpressionNode*>(copyExpression.getLeftChild());
         auto *numberChild1 = static_cast<EgcNumberExpressionNode*>(copyChild->getLeftChild());
         auto *numberChild2 = static_cast<EgcNumberExpressionNode*>(copyExpression.getRightChild());
-        QVERIFY(numberChild1->getValue() == 200.1);
-        QVERIFY(numberChild2->getValue() == 90.365);
+        QVERIFY(numberChild1->getValue() == "200.1");
+        QVERIFY(numberChild2->getValue() == "90.365");
         QVERIFY(copyChild->valid() == false);
         QVERIFY(numberChild2->valid() == true);
 
@@ -108,9 +108,9 @@ void EgcasTest_Structural::testTransferProperties()
         auto *node3 = new EgcNumberExpressionNode();
         auto *node4 = new EgcNumberExpressionNode();
         auto *node5 = new EgcNumberExpressionNode();
-        node3->setValue(3);
-        node4->setValue(4);
-        node5->setValue(5);
+        node3->setValue("3");
+        node4->setValue("4");
+        node5->setValue("5");
         node1->setLeftChild(*node2);
         node1->setRightChild(*node5);
         node2->setLeftChild(*node3);
@@ -142,14 +142,14 @@ void EgcasTest_Structural::testTransferProperties()
         QVERIFY(node2->getParent() == nullptr);
         QVERIFY(node1->getLeftChild() == transferNode4);
 
-        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getLeftChild()))->getValue() == 3);
-        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getRightChild()))->getValue() == 4);
+        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getLeftChild()))->getValue() == "3");
+        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getRightChild()))->getValue() == "4");
         QVERIFY(transferNode4->getParent() == node1);
 
         delete(node2);
 
-        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getLeftChild()))->getValue() == 3);
-        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getRightChild()))->getValue() == 4);
+        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getLeftChild()))->getValue() == "3");
+        QVERIFY((static_cast<EgcNumberExpressionNode*>(transferNode4->getRightChild()))->getValue() == "4");
         QVERIFY(transferNode4->getParent() == node1);
 }
 
@@ -225,8 +225,8 @@ void EgcasTest_Structural::testIterator()
         auto *numberExpression = new EgcNumberExpressionNode();
         auto *numberExpression2 = new EgcNumberExpressionNode();
         QVERIFY(numberExpression->isLeaf() == true);
-        numberExpression->setValue(200.1);
-        numberExpression2->setValue(90.365);
+        numberExpression->setValue("200.1");
+        numberExpression2->setValue("90.365");
         rootChildExpression->setLeftChild(*numberExpression);
         rootExpression->setLeftChild(*rootChildExpression);
         QVERIFY(rootExpression->isLeaf() == false);
@@ -452,20 +452,20 @@ void EgcasTest_Structural::testIterator()
         node2 = addLeftChild(*rootExpression2, EgcExpressionNodeType::RootNode);
         QVERIFY(node2 != nullptr);
 
-        QVERIFY(addRightChild(*node2, EgcExpressionNodeType::NumberNode, 6.0) != nullptr);
+        QVERIFY(addRightChild(*node2, EgcExpressionNodeType::NumberNode, "6.0") != nullptr);
         node6 = static_cast<EgcBinaryExpressionNode*>(node2)->getRightChild();
 
         node3 = addLeftChild(*node2, EgcExpressionNodeType::RootNode);
 
-        QVERIFY(addLeftChild(*node3, EgcExpressionNodeType::NumberNode, 4.0) != nullptr);
-        QVERIFY(addRightChild(*node3, EgcExpressionNodeType::NumberNode, 5.0) != nullptr);
+        QVERIFY(addLeftChild(*node3, EgcExpressionNodeType::NumberNode, "4.0") != nullptr);
+        QVERIFY(addRightChild(*node3, EgcExpressionNodeType::NumberNode, "5.0") != nullptr);
         node4 = static_cast<EgcBinaryExpressionNode*>(node3)->getLeftChild();
         node5 = static_cast<EgcBinaryExpressionNode*>(node3)->getRightChild();
 
         node7 = addRightChild(*rootExpression2, EgcExpressionNodeType::RootNode);
         QVERIFY(node7 != nullptr);        
 
-        QVERIFY(addLeftChild(*node7, EgcExpressionNodeType::NumberNode, 8.0) != nullptr);
+        QVERIFY(addLeftChild(*node7, EgcExpressionNodeType::NumberNode, "8.0") != nullptr);
         node8 = static_cast<EgcBinaryExpressionNode*>(node7)->getLeftChild();
 
         node9 = addRightChild(*node7, EgcExpressionNodeType::RootNode);
@@ -474,10 +474,10 @@ void EgcasTest_Structural::testIterator()
         node10 = addLeftChild(*node9, EgcExpressionNodeType::ParenthesisNode);
         QVERIFY(node10 != nullptr);
 
-        QVERIFY(addChild(*node10, EgcExpressionNodeType::NumberNode, 11.0) != nullptr);
+        QVERIFY(addChild(*node10, EgcExpressionNodeType::NumberNode, "11.0") != nullptr);
         node11 = static_cast<EgcUnaryExpressionNode*>(node10)->getChild();
 
-        QVERIFY(addRightChild(*node9, EgcExpressionNodeType::NumberNode, 12.0) != nullptr);
+        QVERIFY(addRightChild(*node9, EgcExpressionNodeType::NumberNode, "12.0") != nullptr);
         node12 = static_cast<EgcBinaryExpressionNode*>(node9)->getRightChild();
         
         EgcBinaryExpressionNode* binaryNode;
@@ -949,7 +949,7 @@ void EgcasTest_Structural::testInsertDelete()
         QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::EmptyNode);
         nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
         QVERIFY(nodePointer != nullptr);
-        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(3.452);
+        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue("3.452");
         node3 = nodePointer;
         nodePointer = &(iter8.next(state));
         nodePointer = &(iter8.next(state));
@@ -957,7 +957,7 @@ void EgcasTest_Structural::testInsertDelete()
         QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::EmptyNode);
         nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
         QVERIFY(nodePointer != nullptr);
-        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(5.647);
+        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue("5.647");
         node5 = nodePointer;
         node4 = static_cast<EgcBinaryExpressionNode*>(node1)->getRightChild();
 
@@ -1071,7 +1071,7 @@ void EgcasTest_Structural::testMaximaVisitor()
         QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::EmptyNode);
         nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
         QVERIFY(nodePointer != nullptr);
-        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(30.452);
+        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue("30.452");
         node3 = nodePointer;
         nodePointer = &(iter8.next(state));
         nodePointer = &(iter8.next(state));
@@ -1079,13 +1079,13 @@ void EgcasTest_Structural::testMaximaVisitor()
         QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::EmptyNode);
         nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
         QVERIFY(nodePointer != nullptr);
-        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(3.0);
+        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue("3");
         node5 = nodePointer;
         nodePointer = &(iter8.next(state));
         nodePointer = &(iter8.next(state));
         nodePointer = &(iter8.next(state));
         nodePointer = iter8.replace(*nodePointer, EgcExpressionNodeType::NumberNode);
-        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue(2.0);
+        static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue("2");
         node4 = nodePointer;
 
         //test maxima visitor
@@ -1101,7 +1101,7 @@ void EgcasTest_Structural::testMaximaVisitor()
         QVERIFY(formula4.getMathMlCode() == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
 }
 
-EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcExpressionNodeType type, qreal number)
+EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcExpressionNodeType type, QString number)
 {
         if (parent.isUnaryExpression()) {
                 EgcUnaryExpressionNode& node = static_cast<EgcUnaryExpressionNode&>(parent);
@@ -1126,7 +1126,7 @@ EgcExpressionNode*EgcasTest_Structural::addChild(EgcExpressionNode& parent, EgcE
         return nullptr;
 }
 
-EgcExpressionNode*EgcasTest_Structural::addLeftChild(EgcExpressionNode& parent, EgcExpressionNodeType type, qreal number)
+EgcExpressionNode*EgcasTest_Structural::addLeftChild(EgcExpressionNode& parent, EgcExpressionNodeType type, QString number)
 {
         if (parent.isBinaryExpression()) {
                 EgcBinaryExpressionNode& node = static_cast<EgcBinaryExpressionNode&>(parent);
@@ -1151,7 +1151,7 @@ EgcExpressionNode*EgcasTest_Structural::addLeftChild(EgcExpressionNode& parent, 
         return nullptr;
 }
 
-EgcExpressionNode* EgcasTest_Structural::addRightChild(EgcExpressionNode& parent, EgcExpressionNodeType type, qreal number)
+EgcExpressionNode* EgcasTest_Structural::addRightChild(EgcExpressionNode& parent, EgcExpressionNodeType type, QString number)
 {
         if (parent.isBinaryExpression()) {
                 EgcBinaryExpressionNode& node = static_cast<EgcBinaryExpressionNode&>(parent);

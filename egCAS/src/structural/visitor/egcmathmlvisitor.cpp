@@ -52,7 +52,7 @@ void EgcMathMlVisitor::visit(EgcExpressionNode* node)
 
         switch (node->getNodeType()) {
         case EgcExpressionNodeType::NumberNode:
-                str = "<mn>" + QString::number(static_cast<EgcNumberExpressionNode*>(node)->getValue(), 'g') + "</mn>";
+                str = "<mn>" + static_cast<EgcNumberExpressionNode*>(node)->getValue() + "</mn>";
                 break;
         case EgcExpressionNodeType::VariableNode:
                 str = "<mi>" + static_cast<EgcVariableExpressionNode*>(node)->getValue() + "</mi>";

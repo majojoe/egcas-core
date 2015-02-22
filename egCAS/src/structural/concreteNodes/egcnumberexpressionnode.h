@@ -2,6 +2,7 @@
 #define EGCNUMBEREXPRESSIONNODE_H
 
 #include <QtGlobal>
+#include <QString>
 #include "../specialNodes/egcexpressionnode.h"
 
 /**
@@ -21,14 +22,14 @@ public:
          * @brief setValue set the value of this leaf
          * @param value the number value to be set
          */
-        void setValue(qreal value);
+        void setValue(const QString& value);
         /**
          * @brief getValue returns the value saved in this class
          * @return the value of this object
          */
-        qreal getValue(void);
+        QString& getValue(void);
 private:
-        qreal m_value;
+        QString m_value;
 };
 
 #endif // EGCNUMBEREXPRESSIONNODE_H

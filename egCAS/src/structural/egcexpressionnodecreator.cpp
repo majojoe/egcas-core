@@ -22,6 +22,9 @@ EgcExpressionNode* EgcExpressionNodeCreator::copy(const EgcExpressionNode&node)
         case EgcExpressionNodeType::ParenthesisNode:
                 retval = new (std::nothrow) EgcParenthesisExpressionNode(static_cast<const EgcParenthesisExpressionNode&>(node));
                 break;
+        case EgcExpressionNodeType::BaseNode:
+                retval = new (std::nothrow) EgcBaseExpressionNode(static_cast<const EgcBaseExpressionNode&>(node));
+                break;
         default:  //EgcExpressionNodeType::NodeUndefined
                 qDebug("The implementation of this function is not complete, Please provide an implementation for the newly added EgcExpressionNodeType.");
                 retval = nullptr;
@@ -50,6 +53,9 @@ EgcExpressionNode* EgcExpressionNodeCreator::create(EgcExpressionNodeType type)
                 break;
         case EgcExpressionNodeType::ParenthesisNode:
                 retval = new (std::nothrow) EgcParenthesisExpressionNode();
+                break;
+        case EgcExpressionNodeType::BaseNode:
+                retval = new (std::nothrow) EgcBaseExpressionNode();
                 break;
         default: //EgcExpressionNodeType::NodeUndefined
                 qDebug("The implementation of this function is not complete, Please provide an implementation for the newly added EgcExpressionNodeType.");

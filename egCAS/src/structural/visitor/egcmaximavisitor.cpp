@@ -53,7 +53,7 @@ void EgcMaximaVisitor::visit(EgcExpressionNode* node)
 
         switch (node->getNodeType()) {
         case EgcExpressionNodeType::NumberNode:
-                str = QString::number(static_cast<EgcNumberExpressionNode*>(node)->getValue(), 'g');
+                str = static_cast<EgcNumberExpressionNode*>(node)->getValue();
                 break;
         case EgcExpressionNodeType::VariableNode:
                 str = static_cast<EgcVariableExpressionNode*>(node)->getValue();
