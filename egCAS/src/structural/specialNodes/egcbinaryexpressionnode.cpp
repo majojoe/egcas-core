@@ -18,10 +18,10 @@ EgcBinaryExpressionNode::EgcBinaryExpressionNode(const EgcBinaryExpressionNode& 
                 m_rightChild = EgcExpressionNodeCreator::copy(*originalChildRight);
 
         //set the parents also
-        if(originalChildLeft)
-                originalChildLeft->provideParent(this);
-        if(originalChildRight)
-                originalChildRight->provideParent(this);
+        if(m_leftChild)
+                m_leftChild->provideParent(this);
+        if(m_rightChild)
+                m_rightChild->provideParent(this);
 }
 
 EgcBinaryExpressionNode::~EgcBinaryExpressionNode()

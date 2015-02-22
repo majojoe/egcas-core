@@ -1088,6 +1088,13 @@ void EgcasTest_Structural::testMaximaVisitor()
         static_cast<EgcNumberExpressionNode*>(nodePointer)->setValue("2");
         node4 = nodePointer;
 
+        //test copy constructor of the formula expression
+        EgcFormulaExpression formula5 = EgcFormulaExpression(formula4);
+        EgcExpressionNode *node1_5 = formula5.getRootElement();
+        QVERIFY(node1 != node1_5);
+        nodePointer = static_cast<EgcRootExpressionNode*>(node1_5)->getRightChild();
+        QVERIFY(static_cast<EgcNumberExpressionNode*>(nodePointer)->getValue() == "2");
+
         //test maxima visitor
         EgcMaximaVisitor maximaVisitor(formula4);
         QString result(maximaVisitor.getResult());

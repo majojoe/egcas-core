@@ -8,8 +8,6 @@
 #include "visitor/egcmathmlvisitor.h"
 
 
-#warning implement a copy constructor and assignment operator
-
 quint8 EgcFormulaExpression::s_stdNrSignificantDigits = 0;
 
 EgcFormulaExpression::EgcFormulaExpression(EgcExpressionNodeType type) : m_isResult(false), m_isNumberResult(false),
@@ -41,6 +39,41 @@ EgcFormulaExpression::EgcFormulaExpression(EgcExpressionNodeType type) : m_isRes
                         }
                 }
         }
+}
+
+EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
+{
+        m_data = nullptr;
+        EgcBaseExpressionNode& originalBase = orig.getBaseElement();
+        m_data = new (std::nothrow) EgcBaseExpressionNode(originalBase);
+        m_isResult = orig.m_isResult;
+        m_isNumberResult = orig.m_isNumberResult;
+        m_numberSignificantDigits = orig.m_numberSignificantDigits;
+        m_numberResultType = orig.m_numberResultType;
+
+}
+
+EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression &rhs)
+{
+        //test if the object to be assigned to is the same as the rhs
+        if (this == &rhs)
+                return *this;
+
+        //delete the old content
+        if (m_data) {
+                delete m_data;
+                m_data = nullptr;
+        }
+
+        //and create a new one
+        EgcBaseExpressionNode& originalBase = rhs.getBaseElement();
+        m_data = new (std::nothrow) EgcBaseExpressionNode(originalBase);
+        m_isResult = rhs.m_isResult;
+        m_isNumberResult = rhs.m_isNumberResult;
+        m_numberSignificantDigits = rhs.m_numberSignificantDigits;
+        m_numberResultType = rhs.m_numberResultType;
+
+        return *this;
 }
 
 EgcFormulaExpression::~EgcFormulaExpression()

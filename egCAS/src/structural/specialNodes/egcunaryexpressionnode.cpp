@@ -15,8 +15,8 @@ EgcUnaryExpressionNode::EgcUnaryExpressionNode(const EgcUnaryExpressionNode& ori
                 m_child = EgcExpressionNodeCreator::copy(*originalChild);
 
         //set the parent also
-        if(originalChild)
-                originalChild->provideParent(this);
+        if(m_child)
+                m_child->provideParent(this);
 }
 
 EgcUnaryExpressionNode::~EgcUnaryExpressionNode()
