@@ -1101,6 +1101,12 @@ void EgcasTest_Structural::testMaximaVisitor()
         QVERIFY(result == QString("((30.452)^(1/3))^(1/2);\n"));
         QVERIFY(formula4.getCASKernelCommand() == QString("((30.452)^(1/3))^(1/2);\n"));
 
+        //test maxima visitor with copied formula
+        EgcMaximaVisitor maximaVisitor2(formula5);
+        QString result2(maximaVisitor2.getResult());
+        QVERIFY(result2 == QString("((30.452)^(1/3))^(1/2);\n"));
+        QVERIFY(formula5.getCASKernelCommand() == QString("((30.452)^(1/3))^(1/2);\n"));
+
         //test math ml visitor
         EgcMathMlVisitor mathMlVisitor(formula4);
         result = mathMlVisitor.getResult();
