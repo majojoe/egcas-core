@@ -37,8 +37,8 @@
 	using namespace std;
 
 	// Original yyterminate() macro returns int. Since we're using Bison 3 variants
-	// as tokens, we must redefine it to change type from `int` to `Parser::semantic_type`
-	#define yyterminate() EzAquarii::Parser::make_END(EzAquarii::location());
+        // as tokens, we must redefine it to change type from `int` to `MaximaParser::semantic_type`
+        #define yyterminate() CASParser::MaximaParser::make_END(CASParser::location());
 
 	// This will track current scanner location.
 	// Action is called when length of the token is known.
@@ -58,35 +58,35 @@
 %option nodefault
 %option noyywrap
 %option c++
-%option yyclass="Scanner"
-%option prefix="EzAquarii_"
+%option yyclass="MaximaScanner"
+%option prefix="CASParser_"
 
 %%
 
 
 [a-z]+      { 
                 cout << "Scanner: identifier [" << yytext << "]" << endl;
-                return EzAquarii::Parser::make_STRING(yytext, EzAquarii::location( /* put location data here if you want */ )); 
+                return CASParser::MaximaParser::make_STRING(yytext, CASParser::location( /* put location data here if you want */ ));
             }
             
 \(          {
                 cout << "Scanner: '('" << endl;
-                return EzAquarii::Parser::make_LEFTPAR(EzAquarii::location());
+                return CASParser::MaximaParser::make_LEFTPAR(CASParser::location());
             }
             
 \)          { 
                 cout << "Scanner: ')'" << endl;
-                return EzAquarii::Parser::make_RIGHTPAR(EzAquarii::location());
+                return CASParser::MaximaParser::make_RIGHTPAR(CASParser::location());
             }
             
 ;           {
                 cout << "Scanner: ';'" << endl;
-                return EzAquarii::Parser::make_SEMICOLON(EzAquarii::location());
+                return CASParser::MaximaParser::make_SEMICOLON(CASParser::location());
             }
             
 ,           {
                 cout << "Scanner: ','" << endl;
-                return EzAquarii::Parser::make_COMMA(EzAquarii::location());
+                return CASParser::MaximaParser::make_COMMA(CASParser::location());
             }
             
 [\n\t ]     {
@@ -96,7 +96,7 @@
 [1-9][0-9]* {
                 cout << "Scanner: decimal number: " << yytext << endl;
                 uint64_t number = strtoull(yytext, 0, 10);
-                return EzAquarii::Parser::make_NUMBER(number, EzAquarii::location());
+                return CASParser::MaximaParser::make_NUMBER(number, CASParser::location());
             }
 
 .           { 

@@ -37,7 +37,7 @@
 // if your IDE can't resolve it - call make first
 #include "parser.hpp"
 
-namespace EzAquarii {
+namespace CASParser {
 
 // forward declare our simplistic AST node class so we
 // can declare container for it without the header
@@ -84,22 +84,22 @@ public:
      * This is needed so that Scanner and Parser can call some
      * methods that we want to keep hidden from the end user.
      */
-    friend class Parser;
-    friend class Scanner;
+    friend class MaximaParser;
+    friend class MaximaScanner;
     
 private:
     // Used internally by Parser to insert AST nodes.
     void addCommand(const Command &cmd);
     
-    // Used internally by Scanner YY_USER_ACTION to update location indicator
+    // Used internally by MaximaScanner YY_USER_ACTION to update location indicator
     void increaseLocation(unsigned int loc);
     
-    // Used to get last Scanner location. Used in error messages.
+    // Used to get last MaximaScanner location. Used in error messages.
     unsigned int location() const;
     
 private:
-    Scanner m_scanner;
-    Parser m_parser;
+    MaximaScanner m_scanner;
+    MaximaParser m_parser;
     std::vector<Command> m_commands;  // Example AST
     unsigned int m_location;          // Used by scanner
 };
