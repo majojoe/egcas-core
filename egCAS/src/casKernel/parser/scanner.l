@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2014 Krzysztof Narkiewicz <krzysztof.narkiewicz@ezaquarii.com>
+ * Copyright (c) 2015 Johannes Maier <maier_jo@gmx.de>
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -53,6 +54,16 @@
 	//
 	// Location class can be found in location.hh and posistion.hh files. It's just a bit too much
 	// boilerplate for this small example. Bummer.
+
+        #define PARSER_DEBUG 1
+        #ifdef PARSER_DEBUG
+        #define parser_dbg(x, y) do{                                                                     \
+                                              cout << "Scanner: "  << y << "[" << x << "]" << endl;     \
+                              }while(0)
+        #else //#ifdef PARSER_DEBUG
+        #define parser_dbg(x, y) do{                                                                     \
+                              }while(0)
+        #endif //#ifdef PARSER_DEBUG
 %}
 
 %option nodefault
@@ -61,49 +72,45 @@
 %option yyclass="MaximaScanner"
 %option prefix="CASParser_"
 
+
+EXPONENT     ([Eeb][-+]?[0-9]+)
+
 %%
 
+"," |
+"=" |
+"+" |
+"-" |
+"*" |
+"/" |
+"|" |
+"(" |
+")"     {
+                parser_dbg(yytext, "operator");
+                //return CASParser::MaximaParser::make_OPERATOR(yytext[0], CASParser::location());
+                return CASParser::MaximaParser::basic_symbol (TOKEN_OPERATOR, yytext[0], CASParser::location());
+        }
 
-[a-z]+      { 
-                cout << "Scanner: identifier [" << yytext << "]" << endl;
-                return CASParser::MaximaParser::make_STRING(yytext, CASParser::location( /* put location data here if you want */ ));
-            }
-            
-\(          {
-                cout << "Scanner: '('" << endl;
-                return CASParser::MaximaParser::make_LEFTPAR(CASParser::location());
-            }
-            
-\)          { 
-                cout << "Scanner: ')'" << endl;
-                return CASParser::MaximaParser::make_RIGHTPAR(CASParser::location());
-            }
-            
-;           {
-                cout << "Scanner: ';'" << endl;
-                return CASParser::MaximaParser::make_SEMICOLON(CASParser::location());
-            }
-            
-,           {
-                cout << "Scanner: ','" << endl;
-                return CASParser::MaximaParser::make_COMMA(CASParser::location());
-            }
-            
-[\n\t ]     {
-                //cout << "Scanner: whitechar (ignored)" << endl;
-            }
+[0-9]+"."[0-9]*{EXPONENT}? |
+"."?[0-9]+{EXPONENT}? {
+                parser_dbg(yytext, "number");
+                return CASParser::MaximaParser::make_NUMBER(yytext, CASParser::location());
+        }
 
-[1-9][0-9]* {
-                cout << "Scanner: decimal number: " << yytext << endl;
-                uint64_t number = strtoull(yytext, 0, 10);
-                return CASParser::MaximaParser::make_NUMBER(number, CASParser::location());
-            }
+ /*variables*/
+[a-zA-Z][a-zA-Z0-9]* {
+                parser_dbg(yytext, "variable");
+                return CASParser::MaximaParser::make_VARIABLE(yytext, CASParser::location());
+        }
+                                    
+[\n\t ] { /*ignore whitechar*/ }
 
-.           { 
-                cout << "Scanner: unknown character [" << yytext << "]" << endl; 
-            }
+.       {
+                location loc;
+                throw CASParser::MaximaParser::syntax_error(loc, "Lexer: unrecognized character: " + std::string(yytext, yyleng));
+        }
             
-<<EOF>>     { return yyterminate(); }
+<<EOF>> { return yyterminate(); }
 
 
 %%

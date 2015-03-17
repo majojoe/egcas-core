@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2014 Krzysztof Narkiewicz <krzysztof.narkiewicz@ezaquarii.com>
+ * Copyright (c) 2015 Johannes Maier <maier_jo@gmx.de>
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -30,7 +31,6 @@
 %require "3.0"
 %defines
 %define parser_class_name { MaximaParser }
-
 %define api.token.constructor
 %define api.value.type variant
 %define parse.assert
@@ -87,21 +87,38 @@
 %define api.token.prefix {TOKEN_}
 
 %token END 0 "end of file"
-%token <std::string> STRING  "string";
-%token <uint64_t> NUMBER "number";
-%token LEFTPAR "leftpar";
-%token RIGHTPAR "rightpar";
-%token SEMICOLON "semicolon";
-%token COMMA "comma";
+%token <std::string> NUMBER "number";
+%token <char> OPERATOR "operator";
+%token <std::string> VARIABLE "variable";
 
-%type< CASParser::Command > command;
-%type< std::vector<uint64_t> > arguments;
+%left '+' '-'
+%left '*' '/'
 
-%start program
+
+%type<std::string> expr;
+
+/*%type< CASParser::Command > command;
+%type< std::vector<uint64_t> > arguments;*/
+
+%start formula
 
 %%
 
-program :   {
+ /*use always the driver methods to buildup an AST*/
+
+formula : /*nothing*/ { cout << "***start" << endl; /*driver.clear();*/ }
+  | formula expr END {cout << "***end" << endl; /*driver.str();*/}
+  ;
+
+expr : expr '+' expr    {cout << "+" << endl;}
+  | expr '-' expr       {cout << "-" << endl;}
+  | expr '*' expr       {cout << "*" << endl;}
+  | expr '/' expr       {cout << "/" << endl;}
+  | '(' expr ')'        {cout << "( " << $2 << " )" << endl;}
+  | NUMBER              {cout << $1 << endl;}
+  ;
+
+/*program :   {
                 cout << "*** RUN ***" << endl;
                 cout << "Type function with list of parmeters. Parameter list can be empty" << endl
                      << "or contain positive integers only. Examples: " << endl
@@ -129,7 +146,7 @@ program :   {
         ;
 
 
-command : STRING LEFTPAR RIGHTPAR
+ command : STRING LEFTPAR RIGHTPAR
         {
             string &id = $1;
             cout << "ID: " << id << endl;
@@ -144,7 +161,7 @@ command : STRING LEFTPAR RIGHTPAR
         }
     ;
 
-arguments : NUMBER
+ arguments : NUMBER
         {
             uint64_t number = $1;
             $$ = std::vector<uint64_t>();
@@ -159,7 +176,7 @@ arguments : NUMBER
             $$ = args;
             cout << "next argument: " << number << ", arg list size = " << args.size() << endl;
         }
-    ;
+    ;*/
     
 %%
 
