@@ -2,6 +2,7 @@
  * The MIT License (MIT)
  * 
  * Copyright (c) 2014 Krzysztof Narkiewicz <krzysztof.narkiewicz@ezaquarii.com>
+ * Copyright (c) 2015 Johannes Maier <maier_jo@gmx.de>
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,6 +28,8 @@
  */
 
 #include <iostream>
+#include <string>
+#include <sstream>
 #include "scanner.h"
 #include "parser.hpp"
 #include "interpreter.h"
@@ -35,8 +38,17 @@ using namespace CASParser;
 using namespace std;
 
 int main(int argc, char **argv) {
-    Interpreter i;
-    int res = i.parse();
-    cout << "Parse complete. Result = " << res << endl;
-    return res;
+        Interpreter i;
+        stringstream ss;
+
+        if (argc != 2) {
+                cerr << "you must give a argument that should be parsed." << endl;
+                return -1;
+        }
+
+        ss << argv[1];
+        i.switchInputStream(&ss);
+        int res = i.parse();
+        cout << "Parse complete. Result = " << res << endl;
+        return res;
 }
