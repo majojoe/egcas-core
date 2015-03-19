@@ -89,10 +89,18 @@
 %token END 0 "end of file"
 %token <std::string> NUMBER "number";
 %token <char> OPERATOR "operator";
-%token <std::string> VARIABLE "variable";
+%token <std::string> NAMES "names";
+%token PLUS "+";
+%token MINUS "-";
+%token MULTIPLICATION "*";
+%token DIVISION "/";
+%token EQUAL "=";
+%token COMMA ",";
+%token LEFTPARENTESIS "(";
+%token RIGHTPARENTHESIS ")";
 
-%left '+' '-'
-%left '*' '/'
+%left "+" "-"
+%left "*" "/"
 
 
 %type<std::string> expr;
@@ -106,15 +114,25 @@
 
  /*use always the driver methods to buildup an AST*/
 
-formula : /*nothing*/ { cout << "***start" << endl; /*driver.clear();*/ }
-  | formula expr END {cout << "***end" << endl; /*driver.str();*/}
+formula : /*nothing*/
+        {
+                #if (EGC_PARSER_DEBUG >= 1)
+                cout << "***start" << endl; /*driver.clear();*/
+                #endif //#if (EGC_PARSER_DEBUG >= 1)
+        }
+  | formula expr END
+        {
+                #if (EGC_PARSER_DEBUG >= 1)
+                cout << "***end" << endl; /*driver.str();*/
+                #endif //#if (EGC_PARSER_DEBUG >= 1)
+        }
   ;
 
-expr : expr '+' expr    {cout << "+" << endl;}
-  | expr '-' expr       {cout << "-" << endl;}
-  | expr '*' expr       {cout << "*" << endl;}
-  | expr '/' expr       {cout << "/" << endl;}
-  | '(' expr ')'        {cout << "( " << $2 << " )" << endl;}
+expr : expr "+" expr    {cout << "+" << endl;}
+  | expr "-" expr       {cout << "-" << endl;}
+  | expr "*" expr       {cout << "*" << endl;}
+  | expr "/" expr       {cout << "/" << endl;}
+  | "(" expr ")"        {cout << "( " << $2 << " )" << endl;}
   | NUMBER              {cout << $1 << endl;}
   ;
 

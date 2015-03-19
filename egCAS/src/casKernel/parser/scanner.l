@@ -43,7 +43,7 @@
 
 	// This will track current scanner location.
 	// Action is called when length of the token is known.
-	#define YY_USER_ACTION m_driver.increaseLocation(yyleng);
+        #define YY_USER_ACTION m_driver.increaseLocation(yyleng); scanner_dbg(yytext);
 	
 	// !!!WARNING!!!
 	// Location API is used, but the location is not initialized, 'cause I'm lazy. When making
@@ -55,15 +55,13 @@
 	// Location class can be found in location.hh and posistion.hh files. It's just a bit too much
 	// boilerplate for this small example. Bummer.
 
-        #define PARSER_DEBUG 1
-        #ifdef PARSER_DEBUG
-        #define parser_dbg(x, y) do{                                                                     \
-                                              cout << "Scanner: "  << y << "[" << x << "]" << endl;     \
-                              }while(0)
-        #else //#ifdef PARSER_DEBUG
-        #define parser_dbg(x, y) do{                                                                     \
-                              }while(0)
-        #endif //#ifdef PARSER_DEBUG
+        void scanner_dbg(char* tokenText)
+        {
+                #if (EGC_SCANNER_DEBUG >= 3)
+                        cout << "Lexer: matched token -> [" << tokenText << "]" << endl;
+                #endif //#if (EGC_SCANNER_DEBUG >= 3)
+        }
+
 %}
 
 %option nodefault
@@ -77,34 +75,28 @@ EXPONENT     ([Eeb][-+]?[0-9]+)
 
 %%
 
-"," |
-"=" |
-"+" |
-"-" |
-"*" |
-"/" |
-"|" |
-"(" |
-")"     {
-                parser_dbg(yytext, "operator");
-                //return CASParser::MaximaParser::make_OPERATOR(yytext[0], CASParser::location());
-                return CASParser::MaximaParser::basic_symbol (TOKEN_OPERATOR, yytext[0], CASParser::location());
-        }
+ /*operators*/
+"+"     { return CASParser::MaximaParser::make_PLUS(CASParser::location()); }
+"-"     { return CASParser::MaximaParser::make_MINUS(CASParser::location()); }
+"*"     { return CASParser::MaximaParser::make_MULTIPLICATION(CASParser::location()); }
+"/"     { return CASParser::MaximaParser::make_DIVISION(CASParser::location()); }
+"="     { return CASParser::MaximaParser::make_EQUAL(CASParser::location()); }
+","     { return CASParser::MaximaParser::make_COMMA(CASParser::location()); }
+"("     { return CASParser::MaximaParser::make_LEFTPARENTESIS(CASParser::location()); }
+")"     { return CASParser::MaximaParser::make_RIGHTPARENTHESIS(CASParser::location()); }
 
+ /*numbers*/
 [0-9]+"."[0-9]*{EXPONENT}? |
-"."?[0-9]+{EXPONENT}? {
-                parser_dbg(yytext, "number");
-                return CASParser::MaximaParser::make_NUMBER(yytext, CASParser::location());
-        }
+"."?[0-9]+{EXPONENT}? { return CASParser::MaximaParser::make_NUMBER(yytext, CASParser::location()); }
 
- /*variables*/
+ /*names*/
 [a-zA-Z][a-zA-Z0-9]* {
-                parser_dbg(yytext, "variable");
-                return CASParser::MaximaParser::make_VARIABLE(yytext, CASParser::location());
+                return CASParser::MaximaParser::make_NAMES(yytext, CASParser::location());
         }
                                     
 [\n\t ] { /*ignore whitechar*/ }
 
+ /*all other not recognized characters*/
 .       {
                 location loc;
                 throw CASParser::MaximaParser::syntax_error(loc, "Lexer: unrecognized character: " + std::string(yytext, yyleng));

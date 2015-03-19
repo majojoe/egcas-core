@@ -54,27 +54,31 @@ void Interpreter::clear() {
 }
 
 std::string Interpreter::str() const {
-    std::stringstream s;
-    s << "Interpreter: " << m_commands.size() << " commands received from command line." << endl;
-    for(int i = 0; i < m_commands.size(); i++) {
-        s << " * " << m_commands[i].str() << endl;
-    }
-    return s.str();
+        std::stringstream s;
+#if (EGC_PARSER_DEBUG >= 2)
+        s << "Interpreter: " << m_commands.size() << " commands received from command line." << endl;
+#endif //#if (EGC_PARSER_DEBUG >= 2)
+        for(int i = 0; i < m_commands.size(); i++) {
+                s << " * " << m_commands[i].str() << endl;
+        }
+        return s.str();
 }
 
 void Interpreter::switchInputStream(std::istream *is) {
-    m_scanner.switch_streams(is, NULL);
-    m_commands.clear();    
+        m_scanner.switch_streams(is, NULL);
+        m_commands.clear();
 }
 
 void Interpreter::addCommand(const Command &cmd)
 {
-    m_commands.push_back(cmd);
+        m_commands.push_back(cmd);
 }
 
 void Interpreter::increaseLocation(unsigned int loc) {
-    m_location += loc;
-    cout << "increaseLocation(): " << loc << ", total = " << m_location << endl;
+        m_location += loc;
+#if (EGC_PARSER_DEBUG >= 3)
+        cout << "increaseLocation(): " << loc << ", total = " << m_location << endl;
+#endif //#if (EGC_PARSER_DEBUG >= 3)
 }
 
 unsigned int Interpreter::location() const {

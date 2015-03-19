@@ -19,6 +19,10 @@ add_executable(cas_output_parser
         ${FLEX_cas_scanner_OUTPUTS}
 )
 
+#set the verbosity level of the scanner and parser
+add_definitions(-DEGC_SCANNER_DEBUG=0)
+add_definitions(-DEGC_PARSER_DEBUG=0)
+
 #target_link_libraries(maxima_output_parser 
 #        m
 #)
