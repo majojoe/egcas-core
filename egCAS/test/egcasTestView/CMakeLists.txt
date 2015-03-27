@@ -1,35 +1,31 @@
 cmake_minimum_required(VERSION 2.8.11)
 
-project(mathmlview)
-
 # Tell CMake to run moc when necessary:
 set(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake
 # to always look for includes there:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#set(CMAKE_BUILD_TYPE Release)
 
-add_executable(mathmlview 
-        formulaview.cpp 
-        mainwindow.cpp 
-        main.cpp
-)
-
-#only for cmake >= 3.1
-#set_property(TARGET mathmlview PROPERTY CXX_STANDARD 11)
-#set_property(TARGET mathmlview PROPERTY CXX_STANDARD_REQUIRED ON)
-
-if(${CMAKE_COMPILER_IS_GNUCXX})
+if(CMAKE_COMPILER_IS_GNUCXX)
+#        set(CMAKE_EXE_LINKER_FLAGS "-s")  ## Strip binary        
         add_definitions(-std=c++11)
-endif(${CMAKE_COMPILER_IS_GNUCXX})
+endif()
 
 # Widgets finds its own dependencies.
-find_package(Qt5 COMPONENTS Widgets Xml)
-target_link_libraries(mathmlview mmlegcas Qt5::Xml Qt5::Widgets)
-include_directories(../library)
-  
-#if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-#    set_target_properties(target PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
-#    set_target_properties(target PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
-#endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  
- 
+find_package(Qt5 COMPONENTS Widgets Core Test)
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+set(tst_egcastest_view_SOURCES
+        tst_egcastest_view.cpp 
+        ../../src/view/egcformulaitem.cpp 
+        ../../src/view/egcasscene.cpp 
+        ../../src/view/egcpixmapitem.cpp 
+        ../../src/view/egctextitem.cpp 
+        ../../src/view/resizehandle.cpp 
+)
+
+add_executable(tst_egcastest_view ${tst_egcastest_view_SOURCES} )
+
+target_link_libraries(tst_egcastest_view mmlegcas Qt5::Widgets Qt5::Core Qt5::Test)

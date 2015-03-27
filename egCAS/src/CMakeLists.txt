@@ -59,6 +59,21 @@ add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS})
 #set_property(TARGET egCAS PROPERTY CXX_STANDARD_REQUIRED ON)
 
 target_link_libraries(egCAS mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
-
 install (TARGETS egCAS RUNTIME DESTINATION bin)
- 
+
+set(CPACK_GENERATOR "DEB")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY " egcas is a Easy to use Graphical Computer Algebra System.")
+set(CPACK_PACKAGE_NAME "egcas")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+        set(PACKAGE_OS "linux")
+        if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
+                set(CPACK_SYSTEM_NAME "${PACKAGE_OS}-amd64")
+        endif()
+        if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "i386")
+                set(CPACK_SYSTEM_NAME "${PACKAGE_OS}-i386")
+        endif()        
+endif()
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Johannes Maier <maier_jo@gmx.de>")
+set(CPACK_PACKAGE_VERSION "0.0.1")
+
+include(CPack)
