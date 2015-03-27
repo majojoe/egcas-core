@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(egCAS)
 
+add_subdirectory(casKernel/parser)
+
 # Tell CMake to run moc when necessary:
 set(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake
@@ -64,6 +66,7 @@ install (TARGETS egCAS RUNTIME DESTINATION bin)
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY " egcas is a Easy to use Graphical Computer Algebra System.")
 set(CPACK_PACKAGE_NAME "egcas")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS libmmlegcas libqt5widgets5 libqt5xml5 libqt5printsupport5 maxima)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         set(PACKAGE_OS "linux")
         if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
