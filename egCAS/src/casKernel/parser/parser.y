@@ -42,6 +42,7 @@
     #include <vector>
     #include <stdint.h>
     #include "command.h"
+    #include "../../structural/egcnodes.h"
 
     using namespace std;
 
@@ -128,7 +129,18 @@ formula : /*nothing*/
         }
   ;
 
-expr : expr "+" expr    {cout << "+" << endl;}
+expr : expr "+" expr
+        {        cout << "+" << endl;
+                 EgcBinaryExpressionNode *node = new (std::nothrow) EgcRootExpressionNode();
+                 if (node) {
+                         node.setLeftChild($1);
+                         node.setRightChild($3);
+                 } else {
+                         delete $1;
+                         delete $3;
+                 }
+                 $$ = static_cast<EgcExpressionNode*>(node);
+        }
   | expr "-" expr       {cout << "-" << endl;}
   | expr "*" expr       {cout << "*" << endl;}
   | expr "/" expr       {cout << "/" << endl;}
