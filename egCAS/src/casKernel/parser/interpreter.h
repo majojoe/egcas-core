@@ -90,7 +90,10 @@ public:
 private:
     // Used internally by Parser to insert AST nodes.
     void addCommand(const Command &cmd);
-    
+
+    template<typename... Args>
+    EgcExpressionNode* addExpression(EgcExpressionNodeType type, Args... args);
+
     // Used internally by MaximaScanner YY_USER_ACTION to update location indicator
     void increaseLocation(unsigned int loc);
     

@@ -104,7 +104,7 @@
 %left "*" "/"
 
 
-%type<std::string> expr;
+%type<EgcExpressionNode*> expr;
 
 /*%type< CASParser::Command > command;
 %type< std::vector<uint64_t> > arguments;*/
@@ -133,8 +133,8 @@ expr : expr "+" expr
         {        cout << "+" << endl;
                  EgcBinaryExpressionNode *node = new (std::nothrow) EgcRootExpressionNode();
                  if (node) {
-                         node.setLeftChild($1);
-                         node.setRightChild($3);
+                         node->setLeftChild(*($1));
+                         node->setRightChild(*($3));
                  } else {
                          delete $1;
                          delete $3;

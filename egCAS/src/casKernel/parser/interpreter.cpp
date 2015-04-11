@@ -31,6 +31,7 @@
 
 #include <sstream>
 #include <boost/concept_check.hpp>
+#include <QVector>
 
 using namespace CASParser;
 
@@ -84,3 +85,21 @@ void Interpreter::increaseLocation(unsigned int loc) {
 unsigned int Interpreter::location() const {
     return m_location;
 }
+
+
+struct pass {
+    template<typename ...T> pass(T...) {}
+};
+
+template<typename... Args>
+EgcExpressionNode* Interpreter::addExpression(EgcExpressionNodeType type, Args... args)
+{
+    //func(args...) ;
+        static const int nr_args = sizeof...(Args);
+        QVector<EgcExpressionNode*> temp(nr_args);
+        pass{(temp << args, 1)...};
+}
+
+//template EgcExpressionNode* Interpreter::addExpression<EgcExpressionNode*>(EgcExpressionNodeType type, EgcExpressionNode*, EgcExpressionNode*);
+//template void foo::do<std::string>(const std::string&);
+
