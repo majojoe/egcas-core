@@ -55,13 +55,17 @@ qt5_wrap_ui(EGCAS_UIS ui/mainwindow.ui)
 qt5_add_resources(EGCAS_RCCS ../img/ressources.qrc)
 
 
-add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS})
+add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS} )
 #only for cmake >= 3.1
 #set_property(TARGET egCAS PROPERTY CXX_STANDARD 11)
 #set_property(TARGET egCAS PROPERTY CXX_STANDARD_REQUIRED ON)
 
 target_link_libraries(egCAS mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
 install (TARGETS egCAS RUNTIME DESTINATION bin)
+
+add_custom_command(TARGET egcas_generate_node_list COMMAND cog.py -r structural/egcnodes_gen.h DEPENDS structural/egcnodes_gen.h VERBATIM)
+add_custom_target(egcas_generate_node_list ALL DEPENDS structural/egcnodes_gen.h COMMENT "---------generate" )
+add_dependencies(egCAS egcas_generate_node_list)
 
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY " egcas is a Easy to use Graphical Computer Algebra System.")
