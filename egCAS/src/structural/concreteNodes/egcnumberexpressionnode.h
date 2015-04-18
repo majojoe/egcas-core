@@ -11,7 +11,7 @@
 class EgcNumberExpressionNode : public EgcExpressionNode
 {
         //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcExpressionNodeType::NumberNode);
+        EGC_SET_EXPRESSION_TYPE(EgcNumberExpressionNode, EgcExpressionNodeType::NumberNode);
 
 public:
         ///std constructor

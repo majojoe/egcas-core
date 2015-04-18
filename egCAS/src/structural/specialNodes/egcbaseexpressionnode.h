@@ -9,7 +9,7 @@
 class EgcBaseExpressionNode : public EgcUnaryExpressionNode
 {
         //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcExpressionNodeType::BaseNode);
+        EGC_SET_EXPRESSION_TYPE(EgcBaseExpressionNode, EgcExpressionNodeType::BaseNode);
 public:
         EgcBaseExpressionNode();
 

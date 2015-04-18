@@ -15,12 +15,15 @@ enum class EgcExpressionNodeType
 
 /** macro for setting the expression type of a class. Change this if you want to have the type
  * changed in a subclass */
-#define EGC_SET_EXPRESSION_TYPE(type)                                                           \
-public:                                                                                         \
-        virtual EgcExpressionNodeType getNodeType(void) const {return s_nodeType;}                    \
-protected:                                                                                      \
+#define EGC_SET_EXPRESSION_TYPE(classname, type)                                                                       \
+public:                                                                                                                \
+        virtual EgcExpressionNodeType getNodeType(void) const {return s_nodeType;}                                     \
+        virtual EgcExpressionNode* copy(void) {                                                                        \
+                return new (std::nothrow) classname(static_cast<const classname&>(*this));                             \
+        }                                                                                                              \
+        static EgcExpressionNode* create(void) {return new (std::nothrow) classname();}                                \
+protected:                                                                                                             \
         static const EgcExpressionNodeType s_nodeType = type
-
 
 /**
  * @brief The EgcExpressionNode class defines the base class for all expressions
@@ -29,8 +32,12 @@ protected:                                                                      
  */
 class EgcExpressionNode
 {
-        //set the node type of this expression. Set this in each subclass in which you want to have the type changed.
-        EGC_SET_EXPRESSION_TYPE(EgcExpressionNodeType::NodeUndefined);
+public:
+        virtual EgcExpressionNodeType getNodeType(void) const {return s_nodeType;}
+        virtual EgcExpressionNode* copy(void) {return nullptr;}
+        static EgcExpressionNode* create() {return nullptr;}
+protected:
+        static const EgcExpressionNodeType s_nodeType = EgcExpressionNodeType::NodeUndefined;
 
 public:
         EgcExpressionNode();

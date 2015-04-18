@@ -9,7 +9,7 @@
 class EgcEmptyExpressionNode : public EgcVariableExpressionNode
 {
         //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcExpressionNodeType::EmptyNode);
+        EGC_SET_EXPRESSION_TYPE(EgcEmptyExpressionNode, EgcExpressionNodeType::EmptyNode);
 
 public:
         ///std constructor

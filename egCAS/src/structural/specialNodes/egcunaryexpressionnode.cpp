@@ -12,7 +12,7 @@ EgcUnaryExpressionNode::EgcUnaryExpressionNode(const EgcUnaryExpressionNode& ori
         m_child = nullptr;
         EgcExpressionNode *originalChild = const_cast<EgcUnaryExpressionNode&>(orig).getChild();
         if (originalChild)
-                m_child = EgcExpressionNodeCreator::copy(*originalChild);
+                m_child = originalChild->copy();
 
         //set the parent also
         if(m_child)
@@ -57,7 +57,7 @@ EgcUnaryExpressionNode& EgcUnaryExpressionNode::operator=(const EgcUnaryExpressi
         //and create a new one
         EgcExpressionNode *originalChild = rhs.getChild();
         if (originalChild)
-                m_child = EgcExpressionNodeCreator::copy(*originalChild);
+                m_child = originalChild->copy();
 
         return *this;
 }

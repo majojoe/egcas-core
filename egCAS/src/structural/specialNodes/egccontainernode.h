@@ -1,6 +1,7 @@
 #ifndef EGCCONTAINERNODE_H
 #define EGCCONTAINERNODE_H
 
+#include <new>
 #include "egcexpressionnode.h"
 
 /**

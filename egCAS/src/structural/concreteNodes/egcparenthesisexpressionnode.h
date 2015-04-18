@@ -9,7 +9,7 @@
 class EgcParenthesisExpressionNode : public EgcUnaryExpressionNode
 {
         //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcExpressionNodeType::ParenthesisNode);
+        EGC_SET_EXPRESSION_TYPE(EgcParenthesisExpressionNode, EgcExpressionNodeType::ParenthesisNode);
 public:
         EgcParenthesisExpressionNode();
 };

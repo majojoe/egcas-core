@@ -13,9 +13,9 @@ EgcBinaryExpressionNode::EgcBinaryExpressionNode(const EgcBinaryExpressionNode& 
         EgcExpressionNode *originalChildLeft = const_cast<EgcBinaryExpressionNode&>(orig).getLeftChild();
         EgcExpressionNode *originalChildRight = const_cast<EgcBinaryExpressionNode&>(orig).getRightChild();
         if (originalChildLeft)
-                m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);        
+                m_leftChild = originalChildLeft->copy();
         if (originalChildRight)
-                m_rightChild = EgcExpressionNodeCreator::copy(*originalChildRight);
+                m_rightChild = originalChildRight->copy();
 
         //set the parents also
         if(m_leftChild)
@@ -86,9 +86,9 @@ EgcBinaryExpressionNode& EgcBinaryExpressionNode::operator=(const EgcBinaryExpre
         EgcExpressionNode *originalChildLeft = rhs.getLeftChild();
         EgcExpressionNode *originalChildRight = rhs.getRightChild();
         if (originalChildLeft)
-                m_leftChild = EgcExpressionNodeCreator::copy(*originalChildLeft);
+                m_leftChild = originalChildLeft->copy();
         if (originalChildRight)
-                m_rightChild = EgcExpressionNodeCreator::copy(*originalChildRight);
+                m_rightChild = originalChildRight->copy();
 
         return *this;
 }
