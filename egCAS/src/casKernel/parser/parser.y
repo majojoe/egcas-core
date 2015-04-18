@@ -66,7 +66,7 @@
     #include "location.hh"
     
     // yylex() arguments are defined in parser.y
-    static CASParser::MaximaParser::symbol_type yylex(CASParser::MaximaScanner &scanner, CASParser::Interpreter &driver) {
+    static CASParser::MaximaParser::symbol_type yylex(CASParser::MaximaScanner &scanner, CASParser::Interpreter &interpreter) {
         return scanner.get_next_token();
     }
     
@@ -78,9 +78,9 @@
 }
 
 %lex-param { CASParser::MaximaScanner &scanner }
-%lex-param { CASParser::Interpreter &driver }
+%lex-param { CASParser::Interpreter &interpreter }
 %parse-param { CASParser::MaximaScanner &scanner }
-%parse-param { CASParser::Interpreter &driver }
+%parse-param { CASParser::Interpreter &interpreter }
 %locations
 %define parse.trace
 %define parse.error verbose
@@ -113,38 +113,29 @@
 
 %%
 
- /*use always the driver methods to buildup an AST*/
+ /*use always the interpreter methods to buildup an AST*/
 
 formula : /*nothing*/
         {
                 #if (EGC_PARSER_DEBUG >= 1)
-                cout << "***start" << endl; /*driver.clear();*/
+                cout << "***start" << endl; /*interpreter.clear();*/
                 #endif //#if (EGC_PARSER_DEBUG >= 1)
         }
   | formula expr END
         {
                 #if (EGC_PARSER_DEBUG >= 1)
-                cout << "***end" << endl; /*driver.str();*/
+                cout << "***end" << endl; /*interpreter.str();*/
                 #endif //#if (EGC_PARSER_DEBUG >= 1)
         }
   ;
 
-expr : expr "+" expr
-        {        cout << "+" << endl;
-                 EgcBinaryExpressionNode *node = new (std::nothrow) EgcRootExpressionNode();
-                 if (node) {
-                         node->setLeftChild(*($1));
-                         node->setRightChild(*($3));
-                 } else {
-                         delete $1;
-                         delete $3;
-                 }
-                 $$ = static_cast<EgcExpressionNode*>(node);
-        }
-  | expr "-" expr       {cout << "-" << endl;}
-  | expr "*" expr       {cout << "*" << endl;}
-  | expr "/" expr       {cout << "/" << endl;}
-  | "(" expr ")"        {cout << "( " << $2 << " )" << endl;}
+
+ /*#warning change this if plus, minus, etc. node exist*/
+expr : expr "+" expr    {cout << "+" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
+  | expr "-" expr       {cout << "-" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
+  | expr "*" expr       {cout << "*" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
+  | expr "/" expr       {cout << "/" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
+  | "(" expr ")"        {cout << "( " << $2 << " )" << endl; $$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
   | NUMBER              {cout << $1 << endl;}
   ;
 
@@ -159,19 +150,19 @@ expr : expr "+" expr
                 
                 cout << endl << "prompt> ";
                 
-                driver.clear();
+                interpreter.clear();
             }
         | program command
             {
                 const Command &cmd = $2;
                 cout << "command parsed, updating AST" << endl;
-                driver.addCommand(cmd);
+                interpreter.addCommand(cmd);
                 cout << endl << "prompt> ";
             }
         | program SEMICOLON
             {
                 cout << "*** STOP RUN ***" << endl;
-                cout << driver.str() << endl;
+                cout << interpreter.str() << endl;
             }
         ;
 
@@ -214,8 +205,8 @@ expr : expr "+" expr
 void CASParser::MaximaParser::error(const location &loc , const std::string &message) {
         
         // Location should be initialized inside scanner action, but is not in this example.
-        // Let's grab location directly from driver class.
+        // Let's grab location directly from interpreter class.
 	// cout << "Error: " << message << endl << "Location: " << loc << endl;
 	
-        cout << "Error: " << message << endl << "Error location: " << driver.location() << endl;
+        cout << "Error: " << message << endl << "Error location: " << interpreter.location() << endl;
 }

@@ -91,8 +91,23 @@ private:
     // Used internally by Parser to insert AST nodes.
     void addCommand(const Command &cmd);
 
-    template<typename... Args>
-    EgcExpressionNode* addExpression(EgcExpressionNodeType type, Args... args);
+    /**
+     * @brief addBinaryExpression add binary Expression to the current AST
+     * @param type the type of binary expression to create
+     * @param node0 the first node to add to the binary expression
+     * @param node1 the second (right) node to add to the binary expression
+     * @return a pointer to the binary expression created
+     */
+    EgcExpressionNode* addBinaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0,
+                                           EgcExpressionNode* node1);
+
+    /**
+     * @brief addUnaryExpression add unary Expression to the current AST
+     * @param type the type of binary expression to create
+     * @param node0 the node to add to the unary expression
+     * @return a pointer to the unary expression created
+     */
+    EgcExpressionNode* addUnaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0);
 
     // Used internally by MaximaScanner YY_USER_ACTION to update location indicator
     void increaseLocation(unsigned int loc);

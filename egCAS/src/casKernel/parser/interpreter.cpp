@@ -26,12 +26,14 @@
  * 
  */
 
-#include "interpreter.h"
-#include "command.h"
-
 #include <sstream>
 #include <boost/concept_check.hpp>
 #include <QVector>
+
+#include "interpreter.h"
+#include "command.h"
+#include "../../structural/egcexpressionnodecreator.h"
+#include "../../structural/egcnodes.h"
 
 using namespace CASParser;
 
@@ -86,20 +88,31 @@ unsigned int Interpreter::location() const {
     return m_location;
 }
 
-
-struct pass {
-    template<typename ...T> pass(T...) {}
-};
-
-template<typename... Args>
-EgcExpressionNode* Interpreter::addExpression(EgcExpressionNodeType type, Args... args)
+EgcExpressionNode* Interpreter::addBinaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0,
+                                                    EgcExpressionNode* node1)
 {
-    //func(args...) ;
-        static const int nr_args = sizeof...(Args);
-        QVector<EgcExpressionNode*> temp(nr_args);
-        pass{(temp << args, 1)...};
+        EgcBinaryExpressionNode *node = static_cast<EgcBinaryExpressionNode*>(EgcExpressionNodeCreator::create(type));
+        if (node) {
+                node->setLeftChild(*node0);
+                node->setRightChild(*node1);
+        } else {
+#warning improve error handling
+                delete node0;
+                delete node1;
+        }
+
+        return node;
 }
 
-//template EgcExpressionNode* Interpreter::addExpression<EgcExpressionNode*>(EgcExpressionNodeType type, EgcExpressionNode*, EgcExpressionNode*);
-//template void foo::do<std::string>(const std::string&);
+EgcExpressionNode* Interpreter::addUnaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0)
+{
+        EgcUnaryExpressionNode *node = static_cast<EgcUnaryExpressionNode*>(EgcExpressionNodeCreator::create(type));
+        if (node) {
+                node->setChild(*node0);
+        } else {
+#warning improve error handling
+                delete node0;
+        }
 
+        return node;
+}
