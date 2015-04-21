@@ -63,7 +63,9 @@ add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS} )
 target_link_libraries(egCAS mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
 install (TARGETS egCAS RUNTIME DESTINATION bin)
 
-add_custom_target(egcas_generate_node_list COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes_gen.h DEPENDS structural/egcnodes_gen.h COMMENT "generate node list" )
+add_custom_target(egcas_generate_node_list COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} 
+                  ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcexpressionnode_gen.h 
+                  DEPENDS structural/specialNodes/egcexpressionnode_gen.h COMMENT "generate node list" )
 add_dependencies(egCAS egcas_generate_node_list)
 
 set(CPACK_GENERATOR "DEB")

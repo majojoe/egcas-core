@@ -1,17 +1,10 @@
 #ifndef EGCEXPRESSIONNODE_H
 #define EGCEXPRESSIONNODE_H
 
+#include "egcexpressionnode_gen.h"
+
 class EgcContainerNode;
 class EgcNodeVisitor;
-
-/**
- * @brief The EgcExpressionNodeType enum is a enum to differentiate the different node types
- */
-enum class EgcExpressionNodeType
-{
-        NumberNode = 0, VariableNode, RootNode, ParenthesisNode, BaseNode, EmptyNode, NodeUndefined
-};
-
 
 /** macro for setting the expression type of a class. Change this if you want to have the type
  * changed in a subclass */
