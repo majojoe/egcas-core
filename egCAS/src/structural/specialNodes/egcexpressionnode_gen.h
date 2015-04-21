@@ -40,8 +40,8 @@ def find_nodes_in_dir(base_path, sub_path):
             nodes_temp = find_nodes_in_file(file)
             if nodes_temp:
                 nodes.append(nodes_temp)
-    #if not nodes:
-        #cog.error("Seems you have changed the macro name \"EGC_SET_EXPRESSION_TYPE\" please change the above regex also to function again!")
+    if not nodes:
+        cog.error("Seems you have changed the macro name \"EGC_SET_EXPRESSION_TYPE\" please change the above regex also to function again!")
     return nodes
 
 def flatten(param):
