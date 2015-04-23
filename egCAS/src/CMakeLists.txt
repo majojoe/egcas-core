@@ -68,6 +68,11 @@ add_custom_target(egcas_generate_node_list COMMAND cog.py -r -D BaseDirToSearch=
                   DEPENDS structural/specialNodes/egcexpressionnode_gen.h COMMENT "generate node list" )
 add_dependencies(egCAS egcas_generate_node_list)
 
+add_custom_target(egcas_generate_node_creator COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}
+                  ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcexpressionnodecreator.cpp
+                  DEPENDS structural/egcexpressionnodecreator.cpp COMMENT "generate node creator" )
+add_dependencies(egCAS egcas_generate_node_creator)
+
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY " egcas is a Easy to use Graphical Computer Algebra System.")
 set(CPACK_PACKAGE_NAME "egcas")
