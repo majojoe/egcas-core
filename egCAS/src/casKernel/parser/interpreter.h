@@ -109,6 +109,14 @@ private:
      */
     EgcExpressionNode* addUnaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0);
 
+    /**
+     * @brief addStringNode add node Expression to the current AST
+     * @param type the type of binary expression to create
+     * @param value the value to use to build the node from
+     * @return a pointer to the expression created
+     */
+    EgcExpressionNode* addStringNode(EgcExpressionNodeType type, const std::string& value);
+
     // Used internally by MaximaScanner YY_USER_ACTION to update location indicator
     void increaseLocation(unsigned int loc);
     

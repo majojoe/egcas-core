@@ -24,6 +24,11 @@ public:
          */
         virtual void setValue(const QString& varName, const QString& subscript);
         /**
+         * @brief setValue set the raw variable name (value) maybe including stuffed subscript
+         * @param varName the variable name as a string. This can include the stuffed subscript
+         */
+        virtual void setValueRaw(const QString& varName);
+        /**
          * @brief getValue returns the variable name (without subscript)
          * @return the variable name
          */

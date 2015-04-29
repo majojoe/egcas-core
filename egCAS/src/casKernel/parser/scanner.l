@@ -90,7 +90,7 @@ EXPONENT     ([Eeb][-+]?[0-9]+)
 "."?[0-9]+{EXPONENT}? { return CASParser::MaximaParser::make_NUMBER(yytext, CASParser::location()); }
 
  /*names*/
-[a-zA-Z][a-zA-Z0-9]* {
+[a-zA-Z_][a-zA-Z0-9_]* {
                 return CASParser::MaximaParser::make_NAMES(yytext, CASParser::location());
         }
                                     

@@ -116,3 +116,29 @@ EgcExpressionNode* Interpreter::addUnaryExpression(EgcExpressionNodeType type, E
 
         return node;
 }
+
+EgcExpressionNode* Interpreter::addStringNode(EgcExpressionNodeType type, const std::string& value)
+{
+        EgcExpressionNode *node = static_cast<EgcExpressionNode*>(EgcExpressionNodeCreator::create(type));
+        if (node) {
+                switch (type) {
+                case EgcExpressionNodeType::NumberNode: {
+                        EgcNumberExpressionNode* tmp = static_cast<EgcNumberExpressionNode*>(node);
+                        tmp->setValue(QString::fromStdString(value));
+                        break;
+                }
+                case EgcExpressionNodeType::VariableNode: {
+                        EgcVariableExpressionNode* tmp = static_cast<EgcVariableExpressionNode*>(node);
+                        tmp->setValueRaw(QString::fromStdString(value));
+                        break;
+                }
+                default: /*do nothing*/
+                        break;
+                }
+        } else {
+#warning improve error handling
+                delete node;
+        }
+
+        return node;
+}

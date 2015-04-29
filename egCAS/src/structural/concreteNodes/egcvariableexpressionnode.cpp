@@ -1,5 +1,6 @@
 #include <QString>
 #include <QStringBuilder>
+#include <QRegularExpression>
 #include "egcvariableexpressionnode.h"
 
 EgcVariableExpressionNode::EgcVariableExpressionNode() : m_value(QString::null), m_subscript(QString::null)
@@ -15,6 +16,24 @@ void EgcVariableExpressionNode::setValue(const QString& varName, const QString& 
 {
         m_value = varName;
         m_subscript = subscript;
+}
+
+void EgcVariableExpressionNode::setValueRaw(const QString& varName)
+{
+        QRegularExpression regex = QRegularExpression("(.*[^_]+)_([^_]+.*)");
+        QRegularExpressionMatch regexMatch = regex.match(varName);
+        if (regexMatch.hasMatch()) {
+                QString tmp = regexMatch.captured(1);
+                tmp.replace("__", "_");
+                m_value = tmp;
+                tmp = regexMatch.captured(2);
+                tmp.replace("__", "_");
+                m_subscript = tmp;
+        } else {
+                m_value = varName;
+                m_value.replace("__", "_");
+                m_subscript = QString::null;
+        }
 }
 
 QString& EgcVariableExpressionNode::getValue(void)

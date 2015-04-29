@@ -37,16 +37,11 @@
 using namespace CASParser;
 using namespace std;
 
-int main(int argc, char **argv) {
+int main() {
         Interpreter i;
         stringstream ss;
 
-        if (argc != 2) {
-                cerr << "you must give a argument that should be parsed." << endl;
-                return -1;
-        }
-
-        ss << argv[1];
+        ss << "(45+a)-n__j5_lm__3+kl__9-js_z";
         i.switchInputStream(&ss);
         int res = i.parse();
         cout << "Parse complete. Result = " << res << endl;

@@ -118,8 +118,9 @@
 formula : /*nothing*/
         {
                 #if (EGC_PARSER_DEBUG >= 1)
-                cout << "***start" << endl; /*interpreter.clear();*/
+                cout << "***start" << endl;
                 #endif //#if (EGC_PARSER_DEBUG >= 1)
+                interpreter.clear();
         }
   | formula expr END
         {
@@ -129,75 +130,15 @@ formula : /*nothing*/
         }
   ;
 
-
  /*#warning change this if plus, minus, etc. node exist*/
 expr : expr "+" expr    {cout << "+" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
   | expr "-" expr       {cout << "-" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
   | expr "*" expr       {cout << "*" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
   | expr "/" expr       {cout << "/" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
   | "(" expr ")"        {cout << "( " << $2 << " )" << endl; $$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
-  | NUMBER              {cout << $1 << endl;}
+  | NUMBER              {cout << $1 << endl; $$ = interpreter.addStringNode(EgcExpressionNodeType::NumberNode, $1);}
+  | NAMES               {cout << $1 << endl; $$ = interpreter.addStringNode(EgcExpressionNodeType::VariableNode, $1);}
   ;
-
-/*program :   {
-                cout << "*** RUN ***" << endl;
-                cout << "Type function with list of parmeters. Parameter list can be empty" << endl
-                     << "or contain positive integers only. Examples: " << endl
-                     << " * function()" << endl
-                     << " * function(1,2,3)" << endl
-                     << "Terminate listing with ; to see parsed AST" << endl
-                     << "Terminate parser with Ctrl-D" << endl;
-                
-                cout << endl << "prompt> ";
-                
-                interpreter.clear();
-            }
-        | program command
-            {
-                const Command &cmd = $2;
-                cout << "command parsed, updating AST" << endl;
-                interpreter.addCommand(cmd);
-                cout << endl << "prompt> ";
-            }
-        | program SEMICOLON
-            {
-                cout << "*** STOP RUN ***" << endl;
-                cout << interpreter.str() << endl;
-            }
-        ;
-
-
- command : STRING LEFTPAR RIGHTPAR
-        {
-            string &id = $1;
-            cout << "ID: " << id << endl;
-            $$ = Command(id);
-        }
-    | STRING LEFTPAR arguments RIGHTPAR
-        {
-            string &id = $1;
-            const std::vector<uint64_t> &args = $3;
-            cout << "function: " << id << ", " << args.size() << endl;
-            $$ = Command(id, args);
-        }
-    ;
-
- arguments : NUMBER
-        {
-            uint64_t number = $1;
-            $$ = std::vector<uint64_t>();
-            $$.push_back(number);
-            cout << "first argument: " << number << endl;
-        }
-    | arguments COMMA NUMBER
-        {
-            uint64_t number = $3;
-            std::vector<uint64_t> &args = $1;
-            args.push_back(number);
-            $$ = args;
-            cout << "next argument: " << number << ", arg list size = " << args.size() << endl;
-        }
-    ;*/
     
 %%
 
