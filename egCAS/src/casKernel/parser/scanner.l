@@ -81,6 +81,7 @@ EXPONENT     ([Eeb][-+]?[0-9]+)
 "*"     { return CASParser::MaximaParser::make_MULTIPLICATION(CASParser::location()); }
 "/"     { return CASParser::MaximaParser::make_DIVISION(CASParser::location()); }
 "="     { return CASParser::MaximaParser::make_EQUAL(CASParser::location()); }
+":="    { return CASParser::MaximaParser::make_DEFINE(CASParser::location()); }
 ","     { return CASParser::MaximaParser::make_COMMA(CASParser::location()); }
 "("     { return CASParser::MaximaParser::make_LEFTPARENTESIS(CASParser::location()); }
 ")"     { return CASParser::MaximaParser::make_RIGHTPARENTHESIS(CASParser::location()); }
@@ -89,11 +90,18 @@ EXPONENT     ([Eeb][-+]?[0-9]+)
 [0-9]+"."[0-9]*{EXPONENT}? |
 "."?[0-9]+{EXPONENT}? { return CASParser::MaximaParser::make_NUMBER(yytext, CASParser::location()); }
 
+ /*builtin functions*/
+sin |
+cos
+{
+               return CASParser::MaximaParser::make_BUILTIN_FNCS(yytext, CASParser::location());
+       }
+
  /*names*/
 [a-zA-Z_][a-zA-Z0-9_]* {
                 return CASParser::MaximaParser::make_NAMES(yytext, CASParser::location());
         }
-                                    
+
 [\n\t ] { /*ignore whitechar*/ }
 
  /*all other not recognized characters*/

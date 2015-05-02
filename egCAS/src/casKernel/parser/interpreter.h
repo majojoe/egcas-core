@@ -52,87 +52,124 @@ namespace CASParser {
 class Interpreter
 {
 public:
-    Interpreter();
-    ///destructor
-     virtual ~Interpreter();
-    
-    /**
-     * Run parser. Results are stored inside.
-     * \returns 0 on success, 1 on failure
-     */
-    int parse();
-    
-    /**
-     * Clear AST
-     */
-    void clear();
-    
-    /**
-     * @brief createBaseNode create a base node an stores it inside the interpreter class.
-     * @param node the node below the base node to add to the base node.
-     */
-    void createBaseNode(EgcExpressionNode* node);
-    
-    /**
-     * @brief getBaseNode returns the base node of the lastly parsed formula. ATTENTION: the caller takes ownership
-     * of the formula returned.
-     * @return a pointer to the base node of the lastly parsed formula
-     */
-    EgcBaseExpressionNode* getBaseNode(void);
+        Interpreter();
+        ///destructor
+        virtual ~Interpreter();
 
-    /**
-     * Switch scanner input stream. Default is standard input (std::cin).
-     * It will also reset AST.
-     */
-    void switchInputStream(std::istream *is);
-    
-    /**
-     * This is needed so that Scanner and Parser can call some
-     * methods that we want to keep hidden from the end user.
-     */
-    friend class MaximaParser;
-    friend class MaximaScanner;
-    
+        /**
+         * Run parser. Results are stored inside.
+         * \returns 0 on success, 1 on failure
+         */
+        int parse();
+
+        /**
+         * Clear AST
+         */
+        void clear();
+
+        /**
+         * @brief createBaseNode create a base node an stores it inside the interpreter class.
+         * @param node the node below the base node to add to the base node.
+         */
+        void createBaseNode(EgcExpressionNode* node);
+
+        /**
+         * @brief getBaseNode returns the base node of the lastly parsed formula. ATTENTION: the caller takes ownership
+         * of the formula returned.
+         * @return a pointer to the base node of the lastly parsed formula
+         */
+        EgcBaseExpressionNode* getBaseNode(void);
+
+        /**
+         * Switch scanner input stream. Default is standard input (std::cin).
+         * It will also reset AST.
+         */
+        void switchInputStream(std::istream *is);
+
+        /**
+         * This is needed so that Scanner and Parser can call some
+         * methods that we want to keep hidden from the end user.
+         */
+        friend class MaximaParser;
+        friend class MaximaScanner;
+
 private:
-    Q_DISABLE_COPY(Interpreter)
+        Q_DISABLE_COPY(Interpreter)
 
-    /**
-     * @brief addBinaryExpression add binary Expression to the current AST
-     * @param type the type of binary expression to create
-     * @param node0 the first node to add to the binary expression
-     * @param node1 the second (right) node to add to the binary expression
-     * @return a pointer to the binary expression created
-     */
-    EgcExpressionNode* addBinaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0,
+        /**
+         * @brief addBinaryExpression add binary Expression to the current AST
+         * @param type the type of binary expression to create
+         * @param node0 the first node to add to the binary expression
+         * @param node1 the second (right) node to add to the binary expression
+         * @return a pointer to the binary expression created
+         */
+        EgcExpressionNode* addBinaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0,
                                            EgcExpressionNode* node1);
 
-    /**
-     * @brief addUnaryExpression add unary Expression to the current AST
-     * @param type the type of binary expression to create
-     * @param node0 the node to add to the unary expression
-     * @return a pointer to the unary expression created
-     */
-    EgcExpressionNode* addUnaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0);
+        /**
+         * @brief addUnaryExpression add unary Expression to the current AST
+         * @param type the type of binary expression to create
+         * @param node0 the node to add to the unary expression
+         * @return a pointer to the unary expression created
+         */
+        EgcExpressionNode* addUnaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0);
 
-    /**
-     * @brief addStringNode add node Expression to the current AST
-     * @param type the type of binary expression to create
-     * @param value the value to use to build the node from
-     * @return a pointer to the expression created
-     */
-    EgcExpressionNode* addStringNode(EgcExpressionNodeType type, const std::string& value);
+        /**
+         * @brief addStringNode add node Expression to the current AST
+         * @param type the type of binary expression to create
+         * @param value the value to use to build the node from
+         * @return a pointer to the expression created
+         */
+        EgcExpressionNode* addStringNode(EgcExpressionNodeType type, const std::string& value);
 
-    // Used internally by MaximaScanner YY_USER_ACTION to update location indicator
-    void increaseLocation(unsigned int loc);
+#warning turn EgcExpressionNode into s.th. like EgcArgListExpressionNode to be more typesafe
+        /**
+         * @brief addFunction add a user defined function to the formula
+         * @param fncName the function name of the function to create
+         * @param argList the argument list with all expression to add to the function. The List can be integrated
+         * directly into the function.
+         * @return pointer to the function created
+         */
+        EgcExpressionNode* addFunction(const std::string& fncName, EgcExpressionNode* argList);
+
+#warning turn EgcExpressionNode into s.th. like EgcArgListExpressionNode to be more typesafe
+        /**
+         * @brief addBuiltinFunction add a builtin function to the formula
+         * @param fncName the function name of the function to create
+         * @param argList the argument list with all expression to add to the function. The List can be integrated
+         * directly into the function.
+         * @return pointer to the function created
+         */
+        EgcExpressionNode* addBuiltinFunction(const std::string& fncName, EgcExpressionNode* argList);
+
+#warning turn returnvalue into s.th. like EgcArgListExpressionNode to be more typesafe
+        /**
+         * @brief createArgList creates an argument list that is integrated later on in the function where it is used in
+         * @param expression the expression to add to the argument list
+         * @return a pointer to the created argument list
+         */
+        EgcExpressionNode* createArgList(EgcExpressionNode* expression);
+
+#warning turn returnvalue and 2nd argument into s.th. like EgcArgListExpressionNode to be more typesafe
+        /**
+         * @brief addArgument adds an argument to the argument list given
+         * @param expressionToAdd the expression (argument) to add
+         * @param argumentList the argument list to use to add the argument to
+         * @return a pointer to the changed argument list
+         */
+        EgcExpressionNode* addArgument(EgcExpressionNode* expressionToAdd, EgcExpressionNode* argumentList);
+
+        // Used internally by MaximaScanner YY_USER_ACTION to update location indicator
+        void increaseLocation(unsigned int loc);
     
-    // Used to get last MaximaScanner location. Used in error messages.
-    unsigned int location() const;
+        // Used to get last MaximaScanner location. Used in error messages.
+        unsigned int location() const;
     
 private:
-    MaximaScanner m_scanner;            /// the scanner to use for parsing
-    MaximaParser m_parser;              /// the parser to use
-    EgcBaseExpressionNode *m_baseNode;  /// the base node of the formula
-    unsigned int m_location;            /// Used by scanner
+        MaximaScanner m_scanner;            /// the scanner to use for parsing
+        MaximaParser m_parser;              /// the parser to use
+        EgcBaseExpressionNode *m_baseNode;  /// the base node of the formula
+        unsigned int m_location;            /// Used by scanner
 };
 
 }

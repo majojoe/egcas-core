@@ -90,24 +90,27 @@
 %token <std::string> NUMBER "number";
 %token <char> OPERATOR "operator";
 %token <std::string> NAMES "names";
+%token <std::string> BUILTIN_FNCS "builtin_fncs";
 %token PLUS "+";
 %token MINUS "-";
 %token MULTIPLICATION "*";
 %token DIVISION "/";
 %token EQUAL "=";
+%token DEFINE ":="
 %token COMMA ",";
 %token LEFTPARENTESIS "(";
 %token RIGHTPARENTHESIS ")";
 
+%right "=" ":="
 %left "+" "-"
 %left "*" "/"
 
+%nonassoc "|" UMINUS
+
 
 %type<EgcExpressionNode*> expr;
+%type<EgcExpressionNode*> explist;
 %type<EgcBaseExpressionNode*> base_node;
-
-/*%type< CASParser::Command > command;
-%type< std::vector<uint64_t> > arguments;*/
 
 %start base_node
 
@@ -125,22 +128,31 @@ base_node : /*nothing*/
   | base_node expr END
         {
                 #if (EGC_PARSER_DEBUG >= 1)
-                cout << "***end" << endl; /*interpreter.str();*/
+                cout << "***end" << endl;
                 #endif //#if (EGC_PARSER_DEBUG >= 1)
                 interpreter.createBaseNode($2);
         }
   ;
 
  /*#warning change this if plus, minus, etc. node exist*/
-expr : expr "+" expr    {cout << "+" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
-  | expr "-" expr       {cout << "-" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
-  | expr "*" expr       {cout << "*" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
-  | expr "/" expr       {cout << "/" << endl; $$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
-  | "(" expr ")"        {cout << "( " << $2 << " )" << endl; $$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
-  | NUMBER              {cout << $1 << endl; $$ = interpreter.addStringNode(EgcExpressionNodeType::NumberNode, $1);}
-  | NAMES               {cout << $1 << endl; $$ = interpreter.addStringNode(EgcExpressionNodeType::VariableNode, $1);}
-  ;
+expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
+     | expr "-" expr       {$$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
+     | expr "*" expr       {$$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
+     | expr "/" expr       {$$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
+     | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
+     | "-" expr %prec UMINUS {$$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
+     | "=" expr            {$$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
+     | ":=" expr           {$$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
+     | NUMBER              {$$ = interpreter.addStringNode(EgcExpressionNodeType::NumberNode, $1);}
+     | NAMES               {$$ = interpreter.addStringNode(EgcExpressionNodeType::VariableNode, $1);}
+     | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}
+     | BUILTIN_FNCS "(" explist ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
+;
     
+explist: expr            {$$ = interpreter.createArgList($1);}
+     | expr "," explist    {$$ = interpreter.addArgument($1, $3);}
+;
+
 %%
 
 // Bison expects us to provide implementation - otherwise linker complains

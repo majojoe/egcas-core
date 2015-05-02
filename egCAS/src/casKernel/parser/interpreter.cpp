@@ -151,3 +151,24 @@ EgcBaseExpressionNode* Interpreter::getBaseNode(void)
         m_baseNode = nullptr;
         return baseNode;
 }
+
+
+EgcExpressionNode* Interpreter::addFunction(const std::string& fncName, EgcExpressionNode* argList)
+{
+#warning implement this function
+}
+
+EgcExpressionNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcExpressionNode* argList)
+{
+#warning implement this function
+}
+
+EgcExpressionNode* Interpreter::createArgList(EgcExpressionNode* expression)
+{
+#warning implement this function
+}
+
+EgcExpressionNode* Interpreter::addArgument(EgcExpressionNode* expressionToAdd, EgcExpressionNode* argumentList)
+{
+#warning implement this function
+}
