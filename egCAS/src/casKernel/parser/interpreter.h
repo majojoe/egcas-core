@@ -39,10 +39,6 @@
 
 namespace CASParser {
 
-// forward declare our simplistic AST node class so we
-// can declare container for it without the header
-class Command;
-
 /**
  * This class is the interface for our scanner/lexer. The end user
  * is expected to use this. It drives scanner/lexer, keeps
@@ -57,6 +53,8 @@ class Interpreter
 {
 public:
     Interpreter();
+    ///destructor
+     virtual ~Interpreter();
     
     /**
      * Run parser. Results are stored inside.
@@ -70,10 +68,18 @@ public:
     void clear();
     
     /**
-     * Print AST
+     * @brief createBaseNode create a base node an stores it inside the interpreter class.
+     * @param node the node below the base node to add to the base node.
      */
-    std::string str() const;
+    void createBaseNode(EgcExpressionNode* node);
     
+    /**
+     * @brief getBaseNode returns the base node of the lastly parsed formula. ATTENTION: the caller takes ownership
+     * of the formula returned.
+     * @return a pointer to the base node of the lastly parsed formula
+     */
+    EgcBaseExpressionNode* getBaseNode(void);
+
     /**
      * Switch scanner input stream. Default is standard input (std::cin).
      * It will also reset AST.
@@ -88,8 +94,7 @@ public:
     friend class MaximaScanner;
     
 private:
-    // Used internally by Parser to insert AST nodes.
-    void addCommand(const Command &cmd);
+    Q_DISABLE_COPY(Interpreter)
 
     /**
      * @brief addBinaryExpression add binary Expression to the current AST
@@ -124,10 +129,10 @@ private:
     unsigned int location() const;
     
 private:
-    MaximaScanner m_scanner;
-    MaximaParser m_parser;
-    std::vector<Command> m_commands;  // Example AST
-    unsigned int m_location;          // Used by scanner
+    MaximaScanner m_scanner;            /// the scanner to use for parsing
+    MaximaParser m_parser;              /// the parser to use
+    EgcBaseExpressionNode *m_baseNode;  /// the base node of the formula
+    unsigned int m_location;            /// Used by scanner
 };
 
 }

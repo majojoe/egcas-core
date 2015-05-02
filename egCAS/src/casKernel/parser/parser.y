@@ -105,28 +105,30 @@
 
 
 %type<EgcExpressionNode*> expr;
+%type<EgcBaseExpressionNode*> base_node;
 
 /*%type< CASParser::Command > command;
 %type< std::vector<uint64_t> > arguments;*/
 
-%start formula
+%start base_node
 
 %%
 
  /*use always the interpreter methods to buildup an AST*/
 
-formula : /*nothing*/
+base_node : /*nothing*/
         {
                 #if (EGC_PARSER_DEBUG >= 1)
                 cout << "***start" << endl;
                 #endif //#if (EGC_PARSER_DEBUG >= 1)
                 interpreter.clear();
         }
-  | formula expr END
+  | base_node expr END
         {
                 #if (EGC_PARSER_DEBUG >= 1)
                 cout << "***end" << endl; /*interpreter.str();*/
                 #endif //#if (EGC_PARSER_DEBUG >= 1)
+                interpreter.createBaseNode($2);
         }
   ;
 

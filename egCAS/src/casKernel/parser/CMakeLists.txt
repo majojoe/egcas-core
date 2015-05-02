@@ -31,6 +31,7 @@ add_executable(cas_output_parser
         main.cpp
         interpreter.cpp 
         command.cpp    
+        egckernelparser.cpp
         ${BISON_cas_parser_OUTPUTS}
         ${FLEX_cas_scanner_OUTPUTS}
         ../../structural/specialNodes/egcunaryexpressionnode.cpp

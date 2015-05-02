@@ -31,50 +31,39 @@
 #include <QVector>
 
 #include "interpreter.h"
-#include "command.h"
 #include "../../structural/egcexpressionnodecreator.h"
 #include "../../structural/egcnodes.h"
 
 using namespace CASParser;
 
 Interpreter::Interpreter() :
-    m_commands(),
-    m_scanner(*this),
-    m_parser(m_scanner, *this),
-    m_location(0)
+        m_scanner(*this),
+        m_baseNode(nullptr),
+        m_parser(m_scanner, *this),
+        m_location(0)
 {
 
 }
 
+Interpreter::~Interpreter()
+{
+        delete m_baseNode;
+        m_baseNode = nullptr;
+}
+
 int Interpreter::parse() {
-    m_location = 0;
-    return m_parser.parse();
+        m_location = 0;
+        return m_parser.parse();
 }
 
 void Interpreter::clear() {
-    m_location = 0;
-    m_commands.clear();
-}
-
-std::string Interpreter::str() const {
-        std::stringstream s;
-#if (EGC_PARSER_DEBUG >= 2)
-        s << "Interpreter: " << m_commands.size() << " commands received from command line." << endl;
-#endif //#if (EGC_PARSER_DEBUG >= 2)
-        for(int i = 0; i < m_commands.size(); i++) {
-                s << " * " << m_commands[i].str() << endl;
-        }
-        return s.str();
+        m_location = 0;
+        delete m_baseNode;
+        m_baseNode = nullptr;
 }
 
 void Interpreter::switchInputStream(std::istream *is) {
         m_scanner.switch_streams(is, NULL);
-        m_commands.clear();
-}
-
-void Interpreter::addCommand(const Command &cmd)
-{
-        m_commands.push_back(cmd);
 }
 
 void Interpreter::increaseLocation(unsigned int loc) {
@@ -85,7 +74,7 @@ void Interpreter::increaseLocation(unsigned int loc) {
 }
 
 unsigned int Interpreter::location() const {
-    return m_location;
+        return m_location;
 }
 
 EgcExpressionNode* Interpreter::addBinaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0,
@@ -99,6 +88,7 @@ EgcExpressionNode* Interpreter::addBinaryExpression(EgcExpressionNodeType type, 
 #warning improve error handling
                 delete node0;
                 delete node1;
+                throw std::runtime_error("Not enough memory to complete operation!");
         }
 
         return node;
@@ -112,6 +102,7 @@ EgcExpressionNode* Interpreter::addUnaryExpression(EgcExpressionNodeType type, E
         } else {
 #warning improve error handling
                 delete node0;
+                throw std::runtime_error("Not enough memory to complete operation!");
         }
 
         return node;
@@ -138,7 +129,25 @@ EgcExpressionNode* Interpreter::addStringNode(EgcExpressionNodeType type, const 
         } else {
 #warning improve error handling
                 delete node;
+                throw std::runtime_error("Not enough memory to complete operation!");
         }
 
         return node;
+}
+
+void Interpreter::createBaseNode(EgcExpressionNode* node)
+{
+        m_baseNode = static_cast<EgcBaseExpressionNode*>(EgcExpressionNodeCreator::create(EgcExpressionNodeType::BaseNode));
+        if (m_baseNode) {
+                m_baseNode->setChild(*node);
+        } else {
+                throw std::runtime_error("Not enough memory to complete operation!");
+        }
+}
+
+EgcBaseExpressionNode* Interpreter::getBaseNode(void)
+{
+        EgcBaseExpressionNode *baseNode = m_baseNode;
+        m_baseNode = nullptr;
+        return baseNode;
 }
