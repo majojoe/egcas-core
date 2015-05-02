@@ -41,7 +41,6 @@
     #include <string>
     #include <vector>
     #include <stdint.h>
-    #include "command.h"
     #include "../../structural/egcnodes.h"
 
     using namespace std;
