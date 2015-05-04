@@ -92,23 +92,20 @@ EXPONENT     ([Eeb][-+]?[0-9]+)
 
  /*builtin functions*/
 sin |
-cos
-{
-               return CASParser::MaximaParser::make_BUILTIN_FNCS(yytext, CASParser::location());
-       }
+cos {
+        return CASParser::MaximaParser::make_BUILTIN_FNCS(yytext, CASParser::location());
+ }
 
  /*names*/
-[a-zA-Z_][a-zA-Z0-9_]* {
-                return CASParser::MaximaParser::make_NAMES(yytext, CASParser::location());
-        }
+[a-zA-Z_][a-zA-Z0-9_]* { return CASParser::MaximaParser::make_NAMES(yytext, CASParser::location());}
 
 [\n\t ] { /*ignore whitechar*/ }
 
  /*all other not recognized characters*/
-.       {
-                location loc;
-                throw CASParser::MaximaParser::syntax_error(loc, "Lexer: unrecognized character: " + std::string(yytext, yyleng));
-        }
+. {
+        location loc;
+        throw CASParser::MaximaParser::syntax_error(loc, "Lexer: unrecognized character: " + std::string(yytext, yyleng));
+ }
             
 <<EOF>> { return yyterminate(); }
 
