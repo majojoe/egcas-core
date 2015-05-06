@@ -28,22 +28,17 @@
  */
 
 #include <iostream>
-#include <string>
-#include <sstream>
-#include "scanner.h"
-#include "parser.hpp"
-#include "interpreter.h"
-
-using namespace CASParser;
-using namespace std;
+#include "egckernelparser.h"
 
 int main() {
-        Interpreter i;
-        stringstream ss;
+        int res;
 
-        ss << "(45+a)-n__j5_lm__3+kl__9-js_z";
-        i.switchInputStream(&ss);
-        int res = i.parse();
-        cout << "Parse complete. Result = " << res << endl;
-        return res;
+        EgcKernelParser parser;
+        EgcBaseExpressionNode *tree;
+        res = parser.parseKernelOutput("(45+a)-n__j5_lm__3+kl__9-js_z", &tree);
+        if (!res) {
+                std::cout << parser.getErrorMessage().toStdString();
+        }
+
+        return !res;
 }

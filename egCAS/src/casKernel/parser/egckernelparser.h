@@ -2,8 +2,9 @@
 #define EGCKERNELPARSER_H
 
 class EgcExpressionNode;
-class QString;
+class EgcBaseExpressionNode;
 
+#include <QString>
 
 /**
  * @brief The EgcKernelParser class encapsulates the parsing of the cas kernel output and creates a node tree thereof.
@@ -20,7 +21,7 @@ public:
          * @param result the tree generated. A nullptr if an error ocurred.
          * @return true if everything was fine, false otherwise.
          */
-        bool parseKernelOutput(const QString strToParse, EgcExpressionNode * result);
+        bool parseKernelOutput(const QString&strToParse, EgcBaseExpressionNode** result);
 
         /**
          * @brief getErrorMessage the error message if an error while parsing ocurred.

@@ -16,7 +16,7 @@ EgcKernelParser::EgcKernelParser()
 {
 }
 
-bool EgcKernelParser::parseKernelOutput(const QString strToParse, EgcExpressionNode * result)
+bool EgcKernelParser::parseKernelOutput(const QString& strToParse, EgcBaseExpressionNode ** result)
 {
         Interpreter i;
         stringstream ss;
@@ -24,7 +24,7 @@ bool EgcKernelParser::parseKernelOutput(const QString strToParse, EgcExpressionN
         ss << strToParse.toStdString();
         i.switchInputStream(&ss);
         try {
-                if (!i.parse()) {
+                if (i.parse()) {
                         m_errMessage = "common unspecified error while parsing input";
                         result = nullptr;
                         return false;
@@ -44,7 +44,7 @@ bool EgcKernelParser::parseKernelOutput(const QString strToParse, EgcExpressionN
                 return false;
         }
 
-        result = i.getBaseNode();
+        *result = i.getBaseNode();
         return true;
 }
 
