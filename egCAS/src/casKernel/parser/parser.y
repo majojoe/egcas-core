@@ -157,7 +157,8 @@ explist: expr            {$$ = interpreter.createArgList($1);}
 
 // Bison expects us to provide implementation - otherwise linker complains
 void CASParser::MaximaParser::error(const location &loc , const std::string &message) {
-        
+        //remove dangling nodes that already have been allocated during AST built up
+        interpreter.deleteDanglingNodes();
         // Location should be initialized inside scanner action, but is not in this example.
         // Let's grab location directly from interpreter class.
 	// cout << "Error: " << message << endl << "Location: " << loc << endl;
