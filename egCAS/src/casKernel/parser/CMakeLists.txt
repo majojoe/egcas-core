@@ -26,6 +26,8 @@ endif()
 find_package(Qt5 COMPONENTS Core)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(../../structural/specialNodes)
+include_directories(../../structural/concreteNodes)
 
 add_executable(cas_output_parser
         main.cpp

@@ -21,6 +21,8 @@ endif()
 find_package(Qt5 COMPONENTS Widgets Xml PrintSupport Gui Core)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(structural/specialNodes)
+include_directories(structural/concreteNodes)
 
 set(egCAS_SOURCES
         main.cpp

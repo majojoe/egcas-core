@@ -5,6 +5,7 @@ class EgcExpressionNode;
 class EgcBaseExpressionNode;
 
 #include <QString>
+#include "egcbaseexpressionnode.h"
 
 /**
  * @brief The EgcKernelParser class encapsulates the parsing of the cas kernel output and creates a node tree thereof.

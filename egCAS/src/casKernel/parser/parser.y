@@ -122,7 +122,7 @@ base_node : /*nothing*/
         {
                 #if (EGC_PARSER_DEBUG >= 1)
                 cout << "***start" << endl;
-                #endif //#if (EGC_PARSER_DEBUG >= 1)
+                #endif //#if (EGC_PARSER_DEBUG >= 1)                
                 interpreter.clear();
         }
   | base_node expr END
@@ -132,7 +132,7 @@ base_node : /*nothing*/
                 #endif //#if (EGC_PARSER_DEBUG >= 1)
                 interpreter.createBaseNode($2);
         }
-  ;
+;
 
  /*#warning change this if plus, minus, etc. node exist*/
 expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}

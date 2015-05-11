@@ -60,6 +60,9 @@ void Interpreter::clear() {
         m_location = 0;
         delete m_baseNode;
         m_baseNode = nullptr;
+#if (EGC_PARSER_DEBUG >= 3)
+        m_parser.set_debug_level(3);
+#endif //#if (EGC_PARSER_DEBUG >= 3)
 }
 
 void Interpreter::switchInputStream(std::istream *is) {

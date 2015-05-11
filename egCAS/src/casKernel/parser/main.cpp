@@ -40,5 +40,7 @@ int main() {
                 std::cout << parser.getErrorMessage().toStdString();
         }
 
+        delete tree;
+
         return !res;
 }
