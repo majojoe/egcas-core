@@ -12,6 +12,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #set(CMAKE_BUILD_TYPE Release)
 
+find_package(BISON)
+find_package(FLEX)
+
+BISON_TARGET(cas_parser casKernel/parser/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
+FLEX_TARGET(cas_scanner casKernel/parser/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp )
+ADD_FLEX_BISON_DEPENDENCY(cas_scanner cas_parser)
+
 if(CMAKE_COMPILER_IS_GNUCXX)
 #        set(CMAKE_EXE_LINKER_FLAGS "-s")  ## Strip binary        
         add_definitions(-std=c++11)
@@ -20,6 +27,7 @@ endif()
 # Widgets finds its own dependencies.
 find_package(Qt5 COMPONENTS Widgets Xml PrintSupport Gui Core)
 
+include_directories(casKernel/parser)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(structural/specialNodes)
 include_directories(structural/concreteNodes)
@@ -51,11 +59,18 @@ set(egCAS_SOURCES
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 
         casKernel/egckernelconn.cpp
+        casKernel/parser/interpreter.cpp
+        casKernel/parser/egckernelparser.cpp
+        ${BISON_cas_parser_OUTPUTS}
+        ${FLEX_cas_scanner_OUTPUTS}
 )
 
 qt5_wrap_ui(EGCAS_UIS ui/mainwindow.ui)
 qt5_add_resources(EGCAS_RCCS ../img/ressources.qrc)
 
+#set the verbosity level of the scanner and parser
+add_definitions(-DEGC_SCANNER_DEBUG=0)
+add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS} )
 #only for cmake >= 3.1
