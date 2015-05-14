@@ -107,6 +107,19 @@ void EgcasTest_Parser::treeTestParser()
         QVERIFY(static_cast<EgcVariableExpressionNode*>(nodePointer)->getValue() == QString("n_j5"));
         QVERIFY(static_cast<EgcVariableExpressionNode*>(nodePointer)->getSubscript() == QString("lm_3"));
 
+        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next(stepState));
+        QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::VariableNode);
+        QVERIFY(static_cast<EgcVariableExpressionNode*>(nodePointer)->getValue() == QString("kl_9"));
+
+        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next(stepState));
+        QVERIFY(nodePointer->getNodeType() == EgcExpressionNodeType::VariableNode);
+        QVERIFY(static_cast<EgcVariableExpressionNode*>(nodePointer)->getValue() == QString("js"));
+        QVERIFY(static_cast<EgcVariableExpressionNode*>(nodePointer)->getSubscript() == QString("z"));
+
         delete tree;
 
         QVERIFY(res != 0);
