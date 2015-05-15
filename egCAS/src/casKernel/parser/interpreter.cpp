@@ -31,7 +31,7 @@
 #include <QVector>
 
 #include "interpreter.h"
-#include "../../structural/egcexpressionnodecreator.h"
+#include "../../structural/egcnodecreator.h"
 #include "../../structural/egcnodes.h"
 
 using namespace CASParser;
@@ -82,10 +82,10 @@ unsigned int Interpreter::location() const {
         return m_location;
 }
 
-EgcExpressionNode* Interpreter::addBinaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0,
-                                                    EgcExpressionNode* node1)
+EgcNode* Interpreter::addBinaryExpression(EgcNodeType type, EgcNode* node0,
+                                                    EgcNode* node1)
 {
-        EgcBinaryExpressionNode *node = static_cast<EgcBinaryExpressionNode*>(EgcExpressionNodeCreator::create(type));
+        EgcBinaryNode *node = static_cast<EgcBinaryNode*>(EgcNodeCreator::create(type));
         if (node) {
                 node->setLeftChild(*node0);
                 node->setRightChild(*node1);
@@ -103,9 +103,9 @@ EgcExpressionNode* Interpreter::addBinaryExpression(EgcExpressionNodeType type, 
         return node;
 }
 
-EgcExpressionNode* Interpreter::addUnaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0)
+EgcNode* Interpreter::addUnaryExpression(EgcNodeType type, EgcNode* node0)
 {
-        EgcUnaryExpressionNode *node = static_cast<EgcUnaryExpressionNode*>(EgcExpressionNodeCreator::create(type));
+        EgcUnaryNode *node = static_cast<EgcUnaryNode*>(EgcNodeCreator::create(type));
         if (node) {
                 node->setChild(*node0);
                 removeDanglingNode(node0);
@@ -119,18 +119,18 @@ EgcExpressionNode* Interpreter::addUnaryExpression(EgcExpressionNodeType type, E
         return node;
 }
 
-EgcExpressionNode* Interpreter::addStringNode(EgcExpressionNodeType type, const std::string& value)
+EgcNode* Interpreter::addStringNode(EgcNodeType type, const std::string& value)
 {
-        EgcExpressionNode *node = static_cast<EgcExpressionNode*>(EgcExpressionNodeCreator::create(type));
+        EgcNode *node = static_cast<EgcNode*>(EgcNodeCreator::create(type));
         if (node) {
                 switch (type) {
-                case EgcExpressionNodeType::NumberNode: {
-                        EgcNumberExpressionNode* tmp = static_cast<EgcNumberExpressionNode*>(node);
+                case EgcNodeType::NumberNode: {
+                        EgcNumberNode* tmp = static_cast<EgcNumberNode*>(node);
                         tmp->setValue(QString::fromStdString(value));
                         break;
                 }
-                case EgcExpressionNodeType::VariableNode: {
-                        EgcVariableExpressionNode* tmp = static_cast<EgcVariableExpressionNode*>(node);
+                case EgcNodeType::VariableNode: {
+                        EgcVariableNode* tmp = static_cast<EgcVariableNode*>(node);
                         tmp->setValueRaw(QString::fromStdString(value));
                         break;
                 }
@@ -145,9 +145,9 @@ EgcExpressionNode* Interpreter::addStringNode(EgcExpressionNodeType type, const 
         return node;
 }
 
-void Interpreter::createBaseNode(EgcExpressionNode* node)
+void Interpreter::createBaseNode(EgcNode* node)
 {
-        m_baseNode = static_cast<EgcBaseExpressionNode*>(EgcExpressionNodeCreator::create(EgcExpressionNodeType::BaseNode));
+        m_baseNode = static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode));
         if (m_baseNode) {
                 m_baseNode->setChild(*node);
                 removeDanglingNode(node);
@@ -156,51 +156,51 @@ void Interpreter::createBaseNode(EgcExpressionNode* node)
         }
 }
 
-EgcBaseExpressionNode* Interpreter::getBaseNode(void)
+EgcBaseNode* Interpreter::getBaseNode(void)
 {
-        EgcBaseExpressionNode *baseNode = m_baseNode;
+        EgcBaseNode *baseNode = m_baseNode;
         m_baseNode = nullptr;
         return baseNode;
 }
 
 
-EgcExpressionNode* Interpreter::addFunction(const std::string& fncName, EgcExpressionNode* argList)
+EgcNode* Interpreter::addFunction(const std::string& fncName, EgcNode* argList)
 {
 #warning implement this function
         removeDanglingNode(argList);
 }
 
-EgcExpressionNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcExpressionNode* argList)
+EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcNode* argList)
 {
 #warning implement this function
         removeDanglingNode(argList);
 }
 
-EgcExpressionNode* Interpreter::createArgList(EgcExpressionNode* expression)
+EgcNode* Interpreter::createArgList(EgcNode* expression)
 {
 #warning implement this function
         removeDanglingNode(expression);
 }
 
-EgcExpressionNode* Interpreter::addArgument(EgcExpressionNode* expressionToAdd, EgcExpressionNode* argumentList)
+EgcNode* Interpreter::addArgument(EgcNode* expressionToAdd, EgcNode* argumentList)
 {
 #warning implement this function
         removeDanglingNode(expressionToAdd);
 }
 
-void Interpreter::addDanglingNode(EgcExpressionNode* node)
+void Interpreter::addDanglingNode(EgcNode* node)
 {
         m_danglingNodes.insert(node);
 }
 
-void Interpreter::removeDanglingNode(EgcExpressionNode* node)
+void Interpreter::removeDanglingNode(EgcNode* node)
 {
         m_danglingNodes.remove(node);
 }
 
 void Interpreter::deleteDanglingNodes(void)
 {
-        foreach (EgcExpressionNode* node, m_danglingNodes) {
+        foreach (EgcNode* node, m_danglingNodes) {
                 delete node;
         }
         m_danglingNodes.clear();

@@ -10,7 +10,7 @@ QString EgcNodeVisitor::getResult(void)
 {
         EgcExpressionNodeIterator iter(*m_formula);
         EgcNodeIteratorState state;
-        EgcExpressionNode *node;
+        EgcNode *node;
         QString result;
 
         while(iter.hasNext()) {

@@ -3,9 +3,9 @@
 
 #include <QString>
 
-class EgcExpressionNode;
-class EgcBaseExpressionNode;
-enum class EgcExpressionNodeType;
+class EgcNode;
+class EgcBaseNode;
+enum class EgcNodeType;
 
 
 /**
@@ -30,7 +30,7 @@ public:
          * @brief EgcFormulaExpression std constructor
          * @param type the type of the root element of the formula to generate
          */
-        EgcFormulaExpression(EgcExpressionNodeType type);
+        EgcFormulaExpression(EgcNodeType type);
         ///copy constructor
         EgcFormulaExpression(const EgcFormulaExpression& orig);
         ///std destructor
@@ -45,12 +45,12 @@ public:
          * @brief getBaseElement returns the base element of a formula
          * @return the root element of the formula
          */
-        EgcBaseExpressionNode& getBaseElement(void) const;
+        EgcBaseNode& getBaseElement(void) const;
         /**
          * @brief getRootElement returns the root (child of base element) element of a formula
          * @return the root element of the formula
          */
-        EgcExpressionNode* getRootElement(void) const;
+        EgcNode* getRootElement(void) const;
         /**
          * @brief getMathMlCode returns the mathMl representation for this formula
          * @return the mathMl representation of this formula as a string
@@ -108,7 +108,7 @@ private:
         bool m_isNumberResult;                  ///< true if it is a result of number type (not variable or algebraic)
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
-        EgcBaseExpressionNode *m_data;          ///< holds a pointer to the root element of the formula tree
+        EgcBaseNode *m_data;          ///< holds a pointer to the root element of the formula tree
         static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
 };
 

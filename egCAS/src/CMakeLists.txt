@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(egCAS)
 
-add_subdirectory(casKernel/parser)
-
 # Tell CMake to run moc when necessary:
 set(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake
@@ -41,21 +39,21 @@ set(egCAS_SOURCES
         view/egcpixmapitem.cpp 
         view/resizehandle.cpp 
         view/egcformulaitem.cpp 
-        structural/specialNodes/egcexpressionnode.cpp 
-        structural/specialNodes/egcbinaryexpressionnode.cpp 
-        structural/specialNodes/egcunaryexpressionnode.cpp 
-        structural/egcexpressionnodecreator.cpp 
+        structural/specialNodes/egcnode.cpp
+        structural/specialNodes/egcbinarynode.cpp
+        structural/specialNodes/egcunarynode.cpp
+        structural/egcnodecreator.cpp
         structural/visitor/egcnodevisitor.cpp 
         structural/specialNodes/egccontainernode.cpp 
         structural/egcformulaexpression.cpp 
         structural/iterator/egcexpressionnodeiterator.cpp 
-        structural/specialNodes/egcbaseexpressionnode.cpp 
-        structural/specialNodes/egcemptyexpressionnode.cpp 
+        structural/specialNodes/egcbasenode.cpp
+        structural/specialNodes/egcemptynode.cpp
         structural/visitor/egcmaximavisitor.cpp 
-        structural/concreteNodes/egcnumberexpressionnode.cpp 
-        structural/concreteNodes/egcparenthesisexpressionnode.cpp 
-        structural/concreteNodes/egcrootexpressionnode.cpp 
-        structural/concreteNodes/egcvariableexpressionnode.cpp 
+        structural/concreteNodes/egcnumbernode.cpp
+        structural/concreteNodes/egcparenthesisnode.cpp
+        structural/concreteNodes/egcrootnode.cpp
+        structural/concreteNodes/egcvariablenode.cpp
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 
         casKernel/egckernelconn.cpp
@@ -81,13 +79,13 @@ target_link_libraries(egCAS mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5
 install (TARGETS egCAS RUNTIME DESTINATION bin)
 
 add_custom_target(egcas_generate_node_list COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} 
-                  ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcexpressionnode_gen.h 
-                  DEPENDS structural/specialNodes/egcexpressionnode_gen.h COMMENT "generate node list" )
+                  ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h
+                  DEPENDS structural/specialNodes/egcnode_gen.h COMMENT "generate node list" )
 add_dependencies(egCAS egcas_generate_node_list)
 
 add_custom_target(egcas_generate_node_creator COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}
-                  ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcexpressionnodecreator.cpp
-                  DEPENDS structural/egcexpressionnodecreator.cpp COMMENT "generate node creator" )
+                  ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp
+                  DEPENDS structural/egcnodecreator.cpp COMMENT "generate node creator" )
 add_dependencies(egCAS egcas_generate_node_creator)
 
 set(CPACK_GENERATOR "DEB")

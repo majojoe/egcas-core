@@ -1,22 +1,22 @@
-#ifndef EGCVARIABLEEXPRESSIONNODE_H
-#define EGCVARIABLEEXPRESSIONNODE_H
+#ifndef EGCVARIABLENODE_H
+#define EGCVARIABLENODE_H
 
 #include <QString>
-#include "../specialNodes/egcexpressionnode.h"
+#include "../specialNodes/egcnode.h"
 
 /**
- * @brief The EgcVariableExpressionNode class is a class that holds the leafes with variable names
+ * @brief The EgcVariableNode class is a class that holds the leafes with variable names
  */
-class EgcVariableExpressionNode : public EgcExpressionNode
+class EgcVariableNode : public EgcNode
 {
         //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcVariableExpressionNode, EgcExpressionNodeType::VariableNode);
+        EGC_SET_EXPRESSION_TYPE(EgcVariableNode, EgcNodeType::VariableNode);
 
 public:
         ///std constructor
-        EgcVariableExpressionNode();
+        EgcVariableNode();
         ///destructor
-        virtual ~EgcVariableExpressionNode();
+        virtual ~EgcVariableNode();
         /**
          * @brief setValue set the variable name (value)
          * @param varName the variable name as a string
@@ -55,4 +55,4 @@ protected:
         QString m_subscript;      ///< the subscript if any        
 };
 
-#endif // EGCVARIABLEEXPRESSIONNODE_H
+#endif // EGCVARIABLENODE_H

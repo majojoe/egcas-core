@@ -2,12 +2,12 @@
 #define EGCCONTAINERNODE_H
 
 #include <new>
-#include "egcexpressionnode.h"
+#include "egcnode.h"
 
 /**
  * @brief The EgcContainerNode class is a base class for a container expression that (binary or unary expression).
  */
-class EgcContainerNode : public EgcExpressionNode
+class EgcContainerNode : public EgcNode
 {
 public:
         ///std contructor
@@ -28,7 +28,7 @@ public:
          * @return true if the operation succeeded, false if the nodes are of different types or the node "to" is not
          * empty.
          */
-        virtual bool transferPropertiesTo(EgcExpressionNode &to) = 0;
+        virtual bool transferPropertiesTo(EgcNode &to) = 0;
         /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
          * ATTENTION: use this with care since the operation doesn't take care about the old childs. The caller must
@@ -37,14 +37,14 @@ public:
          * @param old_child the old child that shall be adjusted to the new one
          * @param new_child child pointers of the current object will be adjusted to this child object.
          */
-        virtual void adjustChildPointers(EgcExpressionNode &old_child, EgcExpressionNode &new_child) = 0;
+        virtual void adjustChildPointers(EgcNode &old_child, EgcNode &new_child) = 0;
         /**
          * @brief takeOwnership takes ownership of the child given. The user is responsible for deleting the child.
          * If the user doesn't handle the child properly a leak will occur.
          * @param child the child to take ownership over.
          * @return a pointer to the child the ownership taken.
          */
-        virtual EgcExpressionNode* takeOwnership(EgcExpressionNode &child) = 0;
+        virtual EgcNode* takeOwnership(EgcNode &child) = 0;
 };
 
 #endif // EGCCONTAINERNODE_H

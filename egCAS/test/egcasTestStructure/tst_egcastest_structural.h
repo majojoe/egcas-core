@@ -4,46 +4,46 @@
 #include "structural/egcnodes.h"
 #include "structural/iterator/egcexpressionnodeiterator.h"
 #include "structural/egcformulaexpression.h"
-#include "structural/egcexpressionnodecreator.h"
+#include "structural/egcnodecreator.h"
 #include "structural/visitor/egcnodevisitor.h"
 #include "structural/visitor/egcmaximavisitor.h"
 #include "structural/visitor/egcmathmlvisitor.h"
 
-class EgcUnaryExpressionNodeTestChild : public EgcUnaryExpressionNode
+class EgcUnaryNodeTestChild : public EgcUnaryNode
 {
 public:
         ///std constructor
-        EgcUnaryExpressionNodeTestChild() {deleted = false;}
+        EgcUnaryNodeTestChild() {deleted = false;}
         /// destructor
-        virtual ~EgcUnaryExpressionNodeTestChild() {deleted = true;}
+        virtual ~EgcUnaryNodeTestChild() {deleted = true;}
         static bool deleted;
 };
 
-class EgcUnaryExpressionNodeTest : public EgcUnaryExpressionNode
+class EgcUnaryNodeTest : public EgcUnaryNode
 {
 };
 
-class EgcBinaryExpressionNodeTestChild : public EgcBinaryExpressionNode
-{
-public:
-        ///std constructor
-        EgcBinaryExpressionNodeTestChild() {deleted = false;}
-        /// destructor
-        virtual ~EgcBinaryExpressionNodeTestChild() {deleted = true;}
-        static bool deleted;
-};
-
-class EgcBinaryExpressionNodeTestChild2 : public EgcBinaryExpressionNode
+class EgcBinaryNodeTestChild : public EgcBinaryNode
 {
 public:
         ///std constructor
-        EgcBinaryExpressionNodeTestChild2() {deleted = false;}
+        EgcBinaryNodeTestChild() {deleted = false;}
         /// destructor
-        virtual ~EgcBinaryExpressionNodeTestChild2() {deleted = true;}
+        virtual ~EgcBinaryNodeTestChild() {deleted = true;}
         static bool deleted;
 };
 
-class EgcBinaryExpressionNodeTest : public EgcBinaryExpressionNode
+class EgcBinaryNodeTestChild2 : public EgcBinaryNode
+{
+public:
+        ///std constructor
+        EgcBinaryNodeTestChild2() {deleted = false;}
+        /// destructor
+        virtual ~EgcBinaryNodeTestChild2() {deleted = true;}
+        static bool deleted;
+};
+
+class EgcBinaryNodeTest : public EgcBinaryNode
 {
 };
 

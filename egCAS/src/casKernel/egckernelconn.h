@@ -6,7 +6,7 @@
 #include <QRegularExpression>
 
 /**
- * @brief The EgcExpressionNodeType enum is a enum to differentiate the different node types
+ * @brief The EgcNodeType enum is a enum to differentiate the different node types
  */
 enum class EgcKernelStart
 {

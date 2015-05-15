@@ -7,12 +7,12 @@ EgcMaximaVisitor::EgcMaximaVisitor(EgcFormulaExpression& formula) : EgcNodeVisit
 {
 }
 
-void EgcMaximaVisitor::visit(EgcBinaryExpressionNode* binary)
+void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
 {
         QString str;
 
         switch (binary->getNodeType()) {
-        case EgcExpressionNodeType::RootNode:
+        case EgcNodeType::RootNode:
                 if (m_state == EgcNodeIteratorState::LeftIteration)
                         str = "(";
                 else if (m_state == EgcNodeIteratorState::RightIteration)
@@ -28,12 +28,12 @@ void EgcMaximaVisitor::visit(EgcBinaryExpressionNode* binary)
         m_result += str;
 }
 
-void EgcMaximaVisitor::visit(EgcUnaryExpressionNode* unary)
+void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
 {
         QString str;
 
         switch (unary->getNodeType()) {
-        case EgcExpressionNodeType::ParenthesisNode:
+        case EgcNodeType::ParenthesisNode:
                 if (m_state == EgcNodeIteratorState::LeftIteration)
                         str = "(";
                 else
@@ -47,16 +47,16 @@ void EgcMaximaVisitor::visit(EgcUnaryExpressionNode* unary)
         m_result += str;
 }
 
-void EgcMaximaVisitor::visit(EgcExpressionNode* node)
+void EgcMaximaVisitor::visit(EgcNode* node)
 {
         QString str;
 
         switch (node->getNodeType()) {
-        case EgcExpressionNodeType::NumberNode:
-                str = static_cast<EgcNumberExpressionNode*>(node)->getValue();
+        case EgcNodeType::NumberNode:
+                str = static_cast<EgcNumberNode*>(node)->getValue();
                 break;
-        case EgcExpressionNodeType::VariableNode:
-                str = static_cast<EgcVariableExpressionNode*>(node)->getValue();
+        case EgcNodeType::VariableNode:
+                str = static_cast<EgcVariableNode*>(node)->getValue();
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", node->getNodeType()) ;

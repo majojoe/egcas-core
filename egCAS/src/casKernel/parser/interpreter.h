@@ -70,14 +70,14 @@ public:
          * @brief createBaseNode create a base node an stores it inside the interpreter class.
          * @param node the node below the base node to add to the base node.
          */
-        void createBaseNode(EgcExpressionNode* node);
+        void createBaseNode(EgcNode* node);
 
         /**
          * @brief getBaseNode returns the base node of the lastly parsed formula. ATTENTION: the caller takes ownership
          * of the formula returned.
          * @return a pointer to the base node of the lastly parsed formula
          */
-        EgcBaseExpressionNode* getBaseNode(void);
+        EgcBaseNode* getBaseNode(void);
 
         /**
          * Switch scanner input stream. Default is standard input (std::cin).
@@ -102,8 +102,8 @@ private:
          * @param node1 the second (right) node to add to the binary expression
          * @return a pointer to the binary expression created
          */
-        EgcExpressionNode* addBinaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0,
-                                           EgcExpressionNode* node1);
+        EgcNode* addBinaryExpression(EgcNodeType type, EgcNode* node0,
+                                           EgcNode* node1);
 
         /**
          * @brief addUnaryExpression add unary Expression to the current AST
@@ -111,7 +111,7 @@ private:
          * @param node0 the node to add to the unary expression
          * @return a pointer to the unary expression created
          */
-        EgcExpressionNode* addUnaryExpression(EgcExpressionNodeType type, EgcExpressionNode* node0);
+        EgcNode* addUnaryExpression(EgcNodeType type, EgcNode* node0);
 
         /**
          * @brief addStringNode add node Expression to the current AST
@@ -119,7 +119,7 @@ private:
          * @param value the value to use to build the node from
          * @return a pointer to the expression created
          */
-        EgcExpressionNode* addStringNode(EgcExpressionNodeType type, const std::string& value);
+        EgcNode* addStringNode(EgcNodeType type, const std::string& value);
 
 #warning turn EgcExpressionNode into s.th. like EgcArgListExpressionNode to be more typesafe
         /**
@@ -129,7 +129,7 @@ private:
          * directly into the function.
          * @return pointer to the function created
          */
-        EgcExpressionNode* addFunction(const std::string& fncName, EgcExpressionNode* argList);
+        EgcNode* addFunction(const std::string& fncName, EgcNode* argList);
 
 #warning turn EgcExpressionNode into s.th. like EgcArgListExpressionNode to be more typesafe
         /**
@@ -139,7 +139,7 @@ private:
          * directly into the function.
          * @return pointer to the function created
          */
-        EgcExpressionNode* addBuiltinFunction(const std::string& fncName, EgcExpressionNode* argList);
+        EgcNode* addBuiltinFunction(const std::string& fncName, EgcNode* argList);
 
 #warning turn returnvalue into s.th. like EgcArgListExpressionNode to be more typesafe
         /**
@@ -147,7 +147,7 @@ private:
          * @param expression the expression to add to the argument list
          * @return a pointer to the created argument list
          */
-        EgcExpressionNode* createArgList(EgcExpressionNode* expression);
+        EgcNode* createArgList(EgcNode* expression);
 
 #warning turn returnvalue and 2nd argument into s.th. like EgcArgListExpressionNode to be more typesafe
         /**
@@ -156,21 +156,21 @@ private:
          * @param argumentList the argument list to use to add the argument to
          * @return a pointer to the changed argument list
          */
-        EgcExpressionNode* addArgument(EgcExpressionNode* expressionToAdd, EgcExpressionNode* argumentList);
+        EgcNode* addArgument(EgcNode* expressionToAdd, EgcNode* argumentList);
 
         /**
          * @brief addDanglingNode add a dangling node to the set of dangling nodes. So it is easy to delete them later
          * in case of an error during parsing.
          * @param node the node to add
          */
-        void addDanglingNode(EgcExpressionNode* node);
+        void addDanglingNode(EgcNode* node);
 
         /**
          * * @brief removeDanglingNode remove a dangling node from the set of dangling nodes. So it is easy to delete
          * them later in case of an error during parsing.
          * @param node the node to remove
          */
-        void removeDanglingNode(EgcExpressionNode* node);
+        void removeDanglingNode(EgcNode* node);
 
         /**
          * @brief deleteDanglingNodes delete all dangling nodes in case of an error during build up of the AST
@@ -186,9 +186,9 @@ private:
 private:
         MaximaScanner m_scanner;                        /// the scanner to use for parsing
         MaximaParser m_parser;                          /// the parser to use
-        EgcBaseExpressionNode *m_baseNode;              /// the base node of the formula
+        EgcBaseNode *m_baseNode;              /// the base node of the formula
         unsigned int m_location;                        /// Used by scanner
-        QSet<EgcExpressionNode*> m_danglingNodes;        /// holds the dangling nodes during AST is built up
+        QSet<EgcNode*> m_danglingNodes;        /// holds the dangling nodes during AST is built up
 };
 
 }

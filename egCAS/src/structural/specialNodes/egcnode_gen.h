@@ -1,13 +1,13 @@
-#ifndef EGCEXPRESSIONNODE_GEN_H
-#define EGCEXPRESSIONNODE_GEN_H
+#ifndef EGCNODETYPE_GEN_H
+#define EGCNODETYPE_GEN_H
 
 
 /**
- * @brief The EgcExpressionNodeType enum is a enum to differentiate the different node types
+ * @brief The EgcNodeType enum is a enum to differentiate the different node types
  * 
  * This list is generated form the cog python code below. Do not change it manually!!!
  */
-enum class EgcExpressionNodeType
+enum class EgcNodeType
 {
 /*[[[cog
 import cog
@@ -69,15 +69,15 @@ for node in nodes:
 cog.outl("        NodeUndefined")
 
 ]]]*/
-EmptyNode = 0,
-BaseNode,
-NumberNode,
-VariableNode,
+BaseNode = 0,
+EmptyNode,
 ParenthesisNode,
+VariableNode,
+NumberNode,
 RootNode,
 NodeUndefined
 //[[[end]]]
 //The list is generated automatically. Do NOT change it manually.
 };
 
-#endif //#ifndef EGCEXPRESSIONNODE_GEN_H
+#endif //#ifndef EGCNODETYPE_GEN_H

@@ -22,19 +22,19 @@ public:
          * necessary information from the node given.
          * @param binary the node with the information to be extracted.
          */
-        virtual void visit(EgcBinaryExpressionNode* binary) override;
+        virtual void visit(EgcBinaryNode* binary) override;
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.
          * @param binary the node with the information to be extracted.
          */
-        virtual void visit(EgcUnaryExpressionNode* unary) override;
+        virtual void visit(EgcUnaryNode* unary) override;
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.
          * @param binary the node with the information to be extracted.
          */
-        virtual void visit(EgcExpressionNode* node) override;
+        virtual void visit(EgcNode* node) override;
         /**
          * @brief getResult returns the result of the traversion of the tree
          * @return the result of the traversion as string

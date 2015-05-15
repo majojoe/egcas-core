@@ -1,17 +1,17 @@
-#include "egcbinaryexpressionnode.h"
-#include "../egcexpressionnodecreator.h"
+#include "egcbinarynode.h"
+#include "../egcnodecreator.h"
 #include "../visitor/egcnodevisitor.h"
 
-EgcBinaryExpressionNode::EgcBinaryExpressionNode() : m_rightChild(nullptr), m_leftChild(nullptr)
+EgcBinaryNode::EgcBinaryNode() : m_rightChild(nullptr), m_leftChild(nullptr)
 {
 }
 
-EgcBinaryExpressionNode::EgcBinaryExpressionNode(const EgcBinaryExpressionNode& orig)
+EgcBinaryNode::EgcBinaryNode(const EgcBinaryNode& orig)
 {
         m_leftChild = nullptr;
         m_rightChild = nullptr;
-        EgcExpressionNode *originalChildLeft = const_cast<EgcBinaryExpressionNode&>(orig).getLeftChild();
-        EgcExpressionNode *originalChildRight = const_cast<EgcBinaryExpressionNode&>(orig).getRightChild();
+        EgcNode *originalChildLeft = const_cast<EgcBinaryNode&>(orig).getLeftChild();
+        EgcNode *originalChildRight = const_cast<EgcBinaryNode&>(orig).getRightChild();
         if (originalChildLeft)
                 m_leftChild = originalChildLeft->copy();
         if (originalChildRight)
@@ -24,7 +24,7 @@ EgcBinaryExpressionNode::EgcBinaryExpressionNode(const EgcBinaryExpressionNode& 
                 m_rightChild->provideParent(this);
 }
 
-EgcBinaryExpressionNode::~EgcBinaryExpressionNode()
+EgcBinaryNode::~EgcBinaryNode()
 {
         if (m_leftChild) {
                 delete m_leftChild;
@@ -37,37 +37,37 @@ EgcBinaryExpressionNode::~EgcBinaryExpressionNode()
         }
 }
 
-void EgcBinaryExpressionNode::setLeftChild(const EgcExpressionNode& expression)
+void EgcBinaryNode::setLeftChild(const EgcNode& expression)
 {
         if (m_leftChild)
                 delete m_leftChild;
-        m_leftChild = const_cast<EgcExpressionNode*>(&expression);
+        m_leftChild = const_cast<EgcNode*>(&expression);
 
         if (m_leftChild)
                 m_leftChild->provideParent(this);
 }
 
-void EgcBinaryExpressionNode::setRightChild(const EgcExpressionNode& expression)
+void EgcBinaryNode::setRightChild(const EgcNode& expression)
 {
         if (m_rightChild)
                 delete m_rightChild;
-        m_rightChild = const_cast<EgcExpressionNode*>(&expression);
+        m_rightChild = const_cast<EgcNode*>(&expression);
 
         if (m_rightChild)
                 m_rightChild->provideParent(this);
 }
 
-EgcExpressionNode* EgcBinaryExpressionNode::getLeftChild(void) const
+EgcNode* EgcBinaryNode::getLeftChild(void) const
 {
         return m_leftChild;
 }
 
-EgcExpressionNode* EgcBinaryExpressionNode::getRightChild(void) const
+EgcNode* EgcBinaryNode::getRightChild(void) const
 {
         return m_rightChild;
 }
 
-EgcBinaryExpressionNode& EgcBinaryExpressionNode::operator=(const EgcBinaryExpressionNode &rhs)
+EgcBinaryNode& EgcBinaryNode::operator=(const EgcBinaryNode &rhs)
 {
         //test if the object to be assigned to is the same as the rhs
         if (this == &rhs)
@@ -83,8 +83,8 @@ EgcBinaryExpressionNode& EgcBinaryExpressionNode::operator=(const EgcBinaryExpre
                 m_rightChild = nullptr;
         }
         //and create a new one
-        EgcExpressionNode *originalChildLeft = rhs.getLeftChild();
-        EgcExpressionNode *originalChildRight = rhs.getRightChild();
+        EgcNode *originalChildLeft = rhs.getLeftChild();
+        EgcNode *originalChildRight = rhs.getRightChild();
         if (originalChildLeft)
                 m_leftChild = originalChildLeft->copy();
         if (originalChildRight)
@@ -93,7 +93,7 @@ EgcBinaryExpressionNode& EgcBinaryExpressionNode::operator=(const EgcBinaryExpre
         return *this;
 }
 
-bool EgcBinaryExpressionNode::valid(void)
+bool EgcBinaryNode::valid(void)
 {
         if (m_leftChild && m_rightChild)
                 if (m_leftChild->valid() && m_rightChild->valid())
@@ -102,12 +102,12 @@ bool EgcBinaryExpressionNode::valid(void)
         return false;
 }
 
-bool EgcBinaryExpressionNode::isBinaryExpression(void)
+bool EgcBinaryNode::isBinaryExpression(void)
 {
         return true;
 }
 
-void EgcBinaryExpressionNode::notifyContainerOnChildDeletion(EgcExpressionNode* child)
+void EgcBinaryNode::notifyContainerOnChildDeletion(EgcNode* child)
 {
         if (m_leftChild == child)
                 m_leftChild = nullptr;
@@ -115,7 +115,7 @@ void EgcBinaryExpressionNode::notifyContainerOnChildDeletion(EgcExpressionNode* 
                 m_rightChild = nullptr;
 }
 
-bool EgcBinaryExpressionNode::isLeaf(void) const
+bool EgcBinaryNode::isLeaf(void) const
 {
         if (m_leftChild == nullptr && m_rightChild == nullptr)
                 return true;
@@ -123,10 +123,10 @@ bool EgcBinaryExpressionNode::isLeaf(void) const
                 return false;
 }
 
-bool EgcBinaryExpressionNode::transferPropertiesTo(EgcExpressionNode &to)
+bool EgcBinaryNode::transferPropertiesTo(EgcNode &to)
 {
         bool retval = false;
-        EgcBinaryExpressionNode &to_bin = static_cast<EgcBinaryExpressionNode&>(to);
+        EgcBinaryNode &to_bin = static_cast<EgcBinaryNode&>(to);
 
         if (to_bin.m_rightChild == nullptr && to_bin.m_leftChild == nullptr) {
                 if (to.isBinaryExpression()) {
@@ -146,7 +146,7 @@ bool EgcBinaryExpressionNode::transferPropertiesTo(EgcExpressionNode &to)
         return retval;
 }
 
-void EgcBinaryExpressionNode::adjustChildPointers(EgcExpressionNode &old_child, EgcExpressionNode &new_child)
+void EgcBinaryNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_child)
 {
         if (m_leftChild == &old_child)
                 m_leftChild = &new_child;
@@ -154,9 +154,9 @@ void EgcBinaryExpressionNode::adjustChildPointers(EgcExpressionNode &old_child, 
                 m_rightChild = &new_child;
 }
 
-EgcExpressionNode* EgcBinaryExpressionNode::takeOwnership(EgcExpressionNode &child)
+EgcNode* EgcBinaryNode::takeOwnership(EgcNode &child)
 {
-        EgcExpressionNode* retval = nullptr;
+        EgcNode* retval = nullptr;
 
         if (m_leftChild == &child) {
                 m_leftChild = nullptr;
@@ -171,7 +171,7 @@ EgcExpressionNode* EgcBinaryExpressionNode::takeOwnership(EgcExpressionNode &chi
         return retval;
 }
 
-void EgcBinaryExpressionNode::accept(EgcNodeVisitor *visitor)
+void EgcBinaryNode::accept(EgcNodeVisitor *visitor)
 {
         visitor->visit(this);
 }

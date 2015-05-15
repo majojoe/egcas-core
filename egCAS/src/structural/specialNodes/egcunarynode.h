@@ -1,39 +1,39 @@
-#ifndef EGCUNARYEXPRESSIONNODE_H
-#define EGCUNARYEXPRESSIONNODE_H
+#ifndef EGCUNARYNODE_H
+#define EGCUNARYNODE_H
 
 #include "egccontainernode.h"
 
 /**
- * @brief The EgcUnaryExpressionNode
+ * @brief The EgcUnaryNode
  * pressionNode class is a base class for an expression that takes one argument (unary) as subexpression.
  * This can be e.g. the not operator.
  */
-class EgcUnaryExpressionNode : public EgcContainerNode
+class EgcUnaryNode : public EgcContainerNode
 {
 public:
         ///std constructor
-        EgcUnaryExpressionNode();
+        EgcUnaryNode();
         ///copy constructor
-        EgcUnaryExpressionNode(const EgcUnaryExpressionNode& orig);
+        EgcUnaryNode(const EgcUnaryNode& orig);
         /// destructor
-        virtual ~EgcUnaryExpressionNode() = 0;
+        virtual ~EgcUnaryNode() = 0;
         /**
          * @brief setChild set the child of this unary expression (only one child can be set).
          * This function takes ownership of the child and will delete the child automatically in its destructor.
          * @param expression a reference to the child expression given.
          */
-        void setChild(const EgcExpressionNode&expression);
+        void setChild(const EgcNode&expression);
         /**
          * @brief getChild get a pointer to the child
          * @return NULL if no this expression has no child, a pointer to the child otherwise.
          */
-        EgcExpressionNode* getChild(void) const;
+        EgcNode* getChild(void) const;
         /**
          * @brief operator= overloads = operator since we have dynamic elements in this class
          * @param rhs a reference to the object to be assigned
          * @return a reference to the object the rhs is assigned to
          */
-        EgcUnaryExpressionNode& operator=(const EgcUnaryExpressionNode &rhs);
+        EgcUnaryNode& operator=(const EgcUnaryNode &rhs);
         /**
          * @brief valid checks if the subnode is valid. This can be the case if e.g. the child is not NULL.
          * @return returns true if the expression is valid, false otherwise.
@@ -48,7 +48,7 @@ public:
          * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
          * @param child a pointer to the child that will be deleted soon
          */
-        virtual void notifyContainerOnChildDeletion(EgcExpressionNode* child);
+        virtual void notifyContainerOnChildDeletion(EgcNode* child);
         /**
          * @brief isLeaf checks if the current node is a leaf (there are no childs)
          * @return true if it is a leaf, false otherwise
@@ -63,7 +63,7 @@ public:
          * @return true if the operation succeeded, false if the nodes are of different types or the node "to" is not
          * empty.
          */
-        virtual bool transferPropertiesTo(EgcExpressionNode &to);
+        virtual bool transferPropertiesTo(EgcNode &to);
 
         /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
@@ -73,14 +73,14 @@ public:
          * @param old_child the old child that shall be adjusted to the new one
          * @param new_child child pointers of the current object will be adjusted to this child object.
          */
-        virtual void adjustChildPointers(EgcExpressionNode &old_child, EgcExpressionNode &new_child) override;
+        virtual void adjustChildPointers(EgcNode &old_child, EgcNode &new_child) override;
         /**
          * @brief takeOwnership takes ownership of the child given. The user is responsible for deleting the child.
          * If the user doesn't handle the child properly a leak will occur.
          * @param child the child to take ownership over.
          * @return a pointer to the child the ownership taken.
          */
-        virtual EgcExpressionNode* takeOwnership(EgcExpressionNode &child) override;
+        virtual EgcNode* takeOwnership(EgcNode &child) override;
         /**
          * @brief accept takes a visitor and calls the given visitor back to be able to extract data from this node
          * @param visitor the visitor to call back
@@ -88,7 +88,7 @@ public:
         virtual void accept(EgcNodeVisitor *visitor) override;
 
 
-        EgcExpressionNode* m_child;
+        EgcNode* m_child;
 };
 
-#endif // EGCUNARYEXPRESSIONNODE_H
+#endif // EGCUNARYNODE_H

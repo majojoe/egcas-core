@@ -1,8 +1,8 @@
 #include <new>
 #include "egcformulaexpression.h"
-#include "specialNodes/egcexpressionnode.h"
-#include "egcexpressionnodecreator.h"
-#include "specialNodes/egcbaseexpressionnode.h"
+#include "specialNodes/egcnode.h"
+#include "egcnodecreator.h"
+#include "specialNodes/egcbasenode.h"
 #include "egcnodes.h"
 #include "visitor/egcmaximavisitor.h"
 #include "visitor/egcmathmlvisitor.h"
@@ -10,29 +10,29 @@
 
 quint8 EgcFormulaExpression::s_stdNrSignificantDigits = 0;
 
-EgcFormulaExpression::EgcFormulaExpression(EgcExpressionNodeType type) : m_isResult(false), m_isNumberResult(false),
+EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false), m_isNumberResult(false),
                                                                   m_numberSignificantDigits(0),
                                                                   m_numberResultType(EgcNumberResultType::StandardType)
 {
-        m_data = new (std::nothrow) EgcBaseExpressionNode();
+        m_data = new (std::nothrow) EgcBaseNode();
         if (m_data) {
-                EgcExpressionNode* tmp = EgcExpressionNodeCreator::create(type);
+                EgcNode* tmp = EgcNodeCreator::create(type);
                 if (tmp) {
                         m_data->setChild(*tmp);
                         if (tmp->isContainer()) {
                                 if (tmp->isBinaryExpression()) {
-                                        EgcBinaryExpressionNode *node = static_cast<EgcBinaryExpressionNode*>(tmp);
-                                        EgcExpressionNode *child =
-                                                EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode);
+                                        EgcBinaryNode *node = static_cast<EgcBinaryNode*>(tmp);
+                                        EgcNode *child =
+                                                EgcNodeCreator::create(EgcNodeType::EmptyNode);
                                         if (child)
                                                 node->setLeftChild(*child);
-                                        child = EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode);
+                                        child = EgcNodeCreator::create(EgcNodeType::EmptyNode);
                                         if (child)
                                                 node->setRightChild(*child);
                                 } else { // unary expression
-                                        EgcUnaryExpressionNode *node = static_cast<EgcUnaryExpressionNode*>(tmp);
-                                        EgcExpressionNode *child =
-                                                EgcExpressionNodeCreator::create(EgcExpressionNodeType::EmptyNode);
+                                        EgcUnaryNode *node = static_cast<EgcUnaryNode*>(tmp);
+                                        EgcNode *child =
+                                                EgcNodeCreator::create(EgcNodeType::EmptyNode);
                                         if (child)
                                                 node->setChild(*child);
                                 }
@@ -44,8 +44,8 @@ EgcFormulaExpression::EgcFormulaExpression(EgcExpressionNodeType type) : m_isRes
 EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
 {
         m_data = nullptr;
-        EgcBaseExpressionNode& originalBase = orig.getBaseElement();
-        m_data = new (std::nothrow) EgcBaseExpressionNode(originalBase);
+        EgcBaseNode& originalBase = orig.getBaseElement();
+        m_data = new (std::nothrow) EgcBaseNode(originalBase);
         m_isResult = orig.m_isResult;
         m_isNumberResult = orig.m_isNumberResult;
         m_numberSignificantDigits = orig.m_numberSignificantDigits;
@@ -66,8 +66,8 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression
         }
 
         //and create a new one
-        EgcBaseExpressionNode& originalBase = rhs.getBaseElement();
-        m_data = new (std::nothrow) EgcBaseExpressionNode(originalBase);
+        EgcBaseNode& originalBase = rhs.getBaseElement();
+        m_data = new (std::nothrow) EgcBaseNode(originalBase);
         m_isResult = rhs.m_isResult;
         m_isNumberResult = rhs.m_isNumberResult;
         m_numberSignificantDigits = rhs.m_numberSignificantDigits;
@@ -82,14 +82,14 @@ EgcFormulaExpression::~EgcFormulaExpression()
         delete m_data;
 }
 
-EgcBaseExpressionNode& EgcFormulaExpression::getBaseElement(void) const
+EgcBaseNode& EgcFormulaExpression::getBaseElement(void) const
 {
         return *m_data;
 }
 
-EgcExpressionNode* EgcFormulaExpression::getRootElement(void) const
+EgcNode* EgcFormulaExpression::getRootElement(void) const
 {
-        EgcExpressionNode* retval = nullptr;
+        EgcNode* retval = nullptr;
 
         if (m_data)
                 retval = m_data->getChild();

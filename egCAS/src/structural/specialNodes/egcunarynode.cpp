@@ -1,16 +1,16 @@
-#include "egcunaryexpressionnode.h"
-#include "../egcexpressionnodecreator.h"
+#include "egcunarynode.h"
+#include "../egcnodecreator.h"
 #include "../visitor/egcnodevisitor.h"
 
-EgcUnaryExpressionNode::EgcUnaryExpressionNode() : m_child(nullptr)
+EgcUnaryNode::EgcUnaryNode() : m_child(nullptr)
 {
 
 }
 
-EgcUnaryExpressionNode::EgcUnaryExpressionNode(const EgcUnaryExpressionNode& orig)
+EgcUnaryNode::EgcUnaryNode(const EgcUnaryNode& orig)
 {
         m_child = nullptr;
-        EgcExpressionNode *originalChild = const_cast<EgcUnaryExpressionNode&>(orig).getChild();
+        EgcNode *originalChild = const_cast<EgcUnaryNode&>(orig).getChild();
         if (originalChild)
                 m_child = originalChild->copy();
 
@@ -19,7 +19,7 @@ EgcUnaryExpressionNode::EgcUnaryExpressionNode(const EgcUnaryExpressionNode& ori
                 m_child->provideParent(this);
 }
 
-EgcUnaryExpressionNode::~EgcUnaryExpressionNode()
+EgcUnaryNode::~EgcUnaryNode()
 {
         if (m_child) {
                 delete m_child;
@@ -27,23 +27,23 @@ EgcUnaryExpressionNode::~EgcUnaryExpressionNode()
         }
 }
 
-void EgcUnaryExpressionNode::setChild(const EgcExpressionNode& expression)
+void EgcUnaryNode::setChild(const EgcNode& expression)
 {
         if (m_child)
                 delete m_child;
-        m_child = const_cast<EgcExpressionNode*>(&expression);
+        m_child = const_cast<EgcNode*>(&expression);
 
         //set the parent also
         if(m_child)
                 m_child->provideParent(this);
 }
 
-EgcExpressionNode* EgcUnaryExpressionNode::getChild(void) const
+EgcNode* EgcUnaryNode::getChild(void) const
 {
         return m_child;
 }
 
-EgcUnaryExpressionNode& EgcUnaryExpressionNode::operator=(const EgcUnaryExpressionNode &rhs)
+EgcUnaryNode& EgcUnaryNode::operator=(const EgcUnaryNode &rhs)
 {
         //test if the object to be assigned to is the same as the rhs
         if (this == &rhs)
@@ -55,14 +55,14 @@ EgcUnaryExpressionNode& EgcUnaryExpressionNode::operator=(const EgcUnaryExpressi
                 m_child = nullptr;
         }
         //and create a new one
-        EgcExpressionNode *originalChild = rhs.getChild();
+        EgcNode *originalChild = rhs.getChild();
         if (originalChild)
                 m_child = originalChild->copy();
 
         return *this;
 }
 
-bool EgcUnaryExpressionNode::valid(void)
+bool EgcUnaryNode::valid(void)
 {
         if (m_child)
                 if (m_child->valid())
@@ -71,18 +71,18 @@ bool EgcUnaryExpressionNode::valid(void)
         return false;
 }
 
-bool EgcUnaryExpressionNode::isUnaryExpression(void)
+bool EgcUnaryNode::isUnaryExpression(void)
 {
         return true;
 }
 
-void EgcUnaryExpressionNode::notifyContainerOnChildDeletion(EgcExpressionNode* child)
+void EgcUnaryNode::notifyContainerOnChildDeletion(EgcNode* child)
 {
         if (m_child == child)
                 m_child = nullptr;
 }
 
-bool EgcUnaryExpressionNode::isLeaf(void) const
+bool EgcUnaryNode::isLeaf(void) const
 {
         if (m_child == nullptr)
                 return true;
@@ -90,10 +90,10 @@ bool EgcUnaryExpressionNode::isLeaf(void) const
                 return false;
 }
 
-bool EgcUnaryExpressionNode::transferPropertiesTo(EgcExpressionNode &to)
+bool EgcUnaryNode::transferPropertiesTo(EgcNode &to)
 {
         bool retval = false;
-        EgcUnaryExpressionNode &to_una = static_cast<EgcUnaryExpressionNode&>(to);
+        EgcUnaryNode &to_una = static_cast<EgcUnaryNode&>(to);
 
         if (to_una.m_child == nullptr) {
                 if (to.isUnaryExpression()) {
@@ -111,15 +111,15 @@ bool EgcUnaryExpressionNode::transferPropertiesTo(EgcExpressionNode &to)
         return retval;
 }
 
-void EgcUnaryExpressionNode::adjustChildPointers(EgcExpressionNode &old_child, EgcExpressionNode &new_child)
+void EgcUnaryNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_child)
 {
         if (m_child == &old_child)
                 m_child = &new_child;
 }
 
-EgcExpressionNode* EgcUnaryExpressionNode::takeOwnership(EgcExpressionNode &child)
+EgcNode* EgcUnaryNode::takeOwnership(EgcNode &child)
 {
-        EgcExpressionNode* retval = nullptr;
+        EgcNode* retval = nullptr;
 
         if (m_child == &child) {
                 m_child = nullptr;
@@ -130,7 +130,7 @@ EgcExpressionNode* EgcUnaryExpressionNode::takeOwnership(EgcExpressionNode &chil
         return retval;
 }
 
-void EgcUnaryExpressionNode::accept(EgcNodeVisitor *visitor)
+void EgcUnaryNode::accept(EgcNodeVisitor *visitor)
 {
         visitor->visit(this);
 }

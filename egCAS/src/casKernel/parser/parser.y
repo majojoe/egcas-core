@@ -108,9 +108,9 @@
 %nonassoc "|" UMINUS
 
 
-%type<EgcExpressionNode*> expr;
-%type<EgcExpressionNode*> explist;
-%type<EgcBaseExpressionNode*> base_node;
+%type<EgcNode*> expr;
+%type<EgcNode*> explist;
+%type<EgcBaseNode*> base_node;
 
 %start base_node
 
@@ -135,16 +135,16 @@ base_node : /*nothing*/
 ;
 
  /*#warning change this if plus, minus, etc. node exist*/
-expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
-     | expr "-" expr       {$$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
-     | expr "*" expr       {$$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
-     | expr "/" expr       {$$ = interpreter.addBinaryExpression(EgcExpressionNodeType::RootNode, $1, $3);}
-     | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
-     | "-" expr %prec UMINUS {$$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
-     | "=" expr            {$$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
-     | ":=" expr           {$$ = interpreter.addUnaryExpression(EgcExpressionNodeType::ParenthesisNode, $2);}
-     | NUMBER              {$$ = interpreter.addStringNode(EgcExpressionNodeType::NumberNode, $1);}
-     | NAMES               {$$ = interpreter.addStringNode(EgcExpressionNodeType::VariableNode, $1);}
+expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $1, $3);}
+     | expr "-" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $1, $3);}
+     | expr "*" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $1, $3);}
+     | expr "/" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $1, $3);}
+     | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
+     | "-" expr %prec UMINUS {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
+     | "=" expr            {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
+     | ":=" expr           {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
+     | NUMBER              {$$ = interpreter.addStringNode(EgcNodeType::NumberNode, $1);}
+     | NAMES               {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1);}
      | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}
      | BUILTIN_FNCS "(" explist ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
 ;

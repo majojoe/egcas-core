@@ -1,9 +1,9 @@
-#include "egcexpressionnodecreator.h"
+#include "egcnodecreator.h"
 #include "egcnodes.h"
 
-EgcExpressionNode* EgcExpressionNodeCreator::create(EgcExpressionNodeType type)
+EgcNode* EgcNodeCreator::create(EgcNodeType type)
 {
-        EgcExpressionNode *retval;
+        EgcNode *retval;
         switch (type) {
 
         /*[[[cog
@@ -57,34 +57,34 @@ EgcExpressionNode* EgcExpressionNodeCreator::create(EgcExpressionNodeType type)
 
         for node in nodes:
             if node[1] != "NodeUndefined":
-                cog.outl("case EgcExpressionNodeType::%s:" % node[1])
+                cog.outl("case EgcNodeType::%s:" % node[1])
                 cog.outl("        retval = new (std::nothrow) %s();" % node[0])
                 cog.outl("        break;")
 
         ]]]*/
-        case EgcExpressionNodeType::EmptyNode:
-                retval = new (std::nothrow) EgcEmptyExpressionNode();
+        case EgcNodeType::BaseNode:
+                retval = new (std::nothrow) EgcBaseNode();
                 break;
-        case EgcExpressionNodeType::BaseNode:
-                retval = new (std::nothrow) EgcBaseExpressionNode();
+        case EgcNodeType::EmptyNode:
+                retval = new (std::nothrow) EgcEmptyNode();
                 break;
-        case EgcExpressionNodeType::NumberNode:
-                retval = new (std::nothrow) EgcNumberExpressionNode();
+        case EgcNodeType::ParenthesisNode:
+                retval = new (std::nothrow) EgcParenthesisNode();
                 break;
-        case EgcExpressionNodeType::VariableNode:
-                retval = new (std::nothrow) EgcVariableExpressionNode();
+        case EgcNodeType::VariableNode:
+                retval = new (std::nothrow) EgcVariableNode();
                 break;
-        case EgcExpressionNodeType::ParenthesisNode:
-                retval = new (std::nothrow) EgcParenthesisExpressionNode();
+        case EgcNodeType::NumberNode:
+                retval = new (std::nothrow) EgcNumberNode();
                 break;
-        case EgcExpressionNodeType::RootNode:
-                retval = new (std::nothrow) EgcRootExpressionNode();
+        case EgcNodeType::RootNode:
+                retval = new (std::nothrow) EgcRootNode();
                 break;
         //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.
 
-        default: //EgcExpressionNodeType::NodeUndefined
-                qDebug("The implementation of this function is not complete, Please provide an implementation for the newly added EgcExpressionNodeType.");
+        default: //EgcNodeType::NodeUndefined
+                qDebug("The implementation of this function is not complete, Please provide an implementation for the newly added EgcNodeType.");
                 retval = nullptr;
                 break;
         }

@@ -16,7 +16,7 @@ EgcKernelParser::EgcKernelParser()
 {
 }
 
-bool EgcKernelParser::parseKernelOutput(const QString& strToParse, EgcBaseExpressionNode ** result)
+bool EgcKernelParser::parseKernelOutput(const QString& strToParse, EgcBaseNode ** result)
 {
         Interpreter i;
         stringstream ss;

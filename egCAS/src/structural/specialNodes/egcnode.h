@@ -1,7 +1,7 @@
-#ifndef EGCEXPRESSIONNODE_H
-#define EGCEXPRESSIONNODE_H
+#ifndef EGCNODE_H
+#define EGCNODE_H
 
-#include "egcexpressionnode_gen.h"
+#include "egcnode_gen.h"
 
 class EgcContainerNode;
 class EgcNodeVisitor;
@@ -10,31 +10,31 @@ class EgcNodeVisitor;
  * changed in a subclass */
 #define EGC_SET_EXPRESSION_TYPE(classname, type)                                                                       \
 public:                                                                                                                \
-        virtual EgcExpressionNodeType getNodeType(void) const {return s_nodeType;}                                     \
-        virtual EgcExpressionNode* copy(void) {                                                                        \
+        virtual EgcNodeType getNodeType(void) const {return s_nodeType;}                                     \
+        virtual EgcNode* copy(void) {                                                                        \
                 return new (std::nothrow) classname(static_cast<const classname&>(*this));                             \
         }                                                                                                              \
-        static EgcExpressionNode* create(void) {return new (std::nothrow) classname();}                                \
+        static EgcNode* create(void) {return new (std::nothrow) classname();}                                \
 protected:                                                                                                             \
-        static const EgcExpressionNodeType s_nodeType = type
+        static const EgcNodeType s_nodeType = type
 
 /**
- * @brief The EgcExpressionNode class defines the base class for all expressions
+ * @brief The EgcNode class defines the base class for all expressions
  * (multiplication, substraction, ...) in the expression tree.
  * The class is built up as composite pattern.
  */
-class EgcExpressionNode
+class EgcNode
 {
 public:
-        virtual EgcExpressionNodeType getNodeType(void) const {return s_nodeType;}
-        virtual EgcExpressionNode* copy(void) {return nullptr;}
-        static EgcExpressionNode* create() {return nullptr;}
+        virtual EgcNodeType getNodeType(void) const {return s_nodeType;}
+        virtual EgcNode* copy(void) {return nullptr;}
+        static EgcNode* create() {return nullptr;}
 protected:
-        static const EgcExpressionNodeType s_nodeType = EgcExpressionNodeType::NodeUndefined;
+        static const EgcNodeType s_nodeType = EgcNodeType::NodeUndefined;
 
 public:
-        EgcExpressionNode();
-        virtual ~EgcExpressionNode() = 0;
+        EgcNode();
+        virtual ~EgcNode() = 0;
         /**
          * @brief valid returns true if the expression is valid and false otherwise.
          * An expression is valid if all nodes are valid.
@@ -60,7 +60,7 @@ public:
          * @brief getParent returns a pointer to the parent node
          * @return a pointer to the parent node or NULL if this is the root element
          */
-        EgcExpressionNode* getParent(void);
+        EgcNode* getParent(void);
         /**
          * @brief provideParent THIS IS NO USER INTERFACE! DO NOT USE THAT FROM USER POINT OF VIEW!
          * This is used to set the parent pointers in the implementation of the tree.
@@ -71,7 +71,7 @@ public:
          * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
          * @param child a pointer to the child that will be deleted soon
          */
-        virtual void notifyContainerOnChildDeletion(EgcExpressionNode* child) { (void)child; }
+        virtual void notifyContainerOnChildDeletion(EgcNode* child) { (void)child; }
         /**
          * @brief isLeaf checks if the current node is a leaf (there are no childs)
          * @return true if it is a leaf, false otherwise
@@ -84,7 +84,7 @@ public:
         virtual void accept(EgcNodeVisitor *visitor);
 
 protected:
-        EgcExpressionNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)
+        EgcNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)
 };
 
-#endif // EGCEXPRESSIONNODE_H
+#endif // EGCNODE_H

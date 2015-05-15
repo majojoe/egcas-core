@@ -6,9 +6,9 @@
 
 
 class EgcFormulaExpression;
-class EgcBinaryExpressionNode;
-class EgcUnaryExpressionNode;
-class EgcExpressionNode;
+class EgcBinaryNode;
+class EgcUnaryNode;
+class EgcNode;
 
 /**
  * @brief The EgcNodeVisitor class is a base class for all visitors to parse information from a tree
@@ -26,19 +26,19 @@ public:
          * necessary information from the node given.
          * @param binary the node with the information to be extracted.
          */
-        virtual void visit(EgcBinaryExpressionNode* binary) = 0;
+        virtual void visit(EgcBinaryNode* binary) = 0;
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.
          * @param binary the node with the information to be extracted.
          */
-        virtual void visit(EgcUnaryExpressionNode* unary) = 0;
+        virtual void visit(EgcUnaryNode* unary) = 0;
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.
          * @param binary the node with the information to be extracted.
          */
-        virtual void visit(EgcExpressionNode* node) = 0;
+        virtual void visit(EgcNode* node) = 0;
         /**
          * @brief getResult returns the result of the traversion of the tree
          * @return the result of the traversion as string

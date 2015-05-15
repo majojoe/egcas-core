@@ -2,9 +2,9 @@
 #define EGCNODEEXPRESSIONITERATOR_H
 
 class EgcFormulaExpression;
-class EgcExpressionNode;
-class EgcBaseExpressionNode;
-enum class EgcExpressionNodeType;
+class EgcNode;
+class EgcBaseNode;
+enum class EgcNodeType;
 
 
 enum class EgcNodeIteratorState {
@@ -17,25 +17,25 @@ public:
         /// constructor for initialization with formula
         EgcExpressionNodeIterator(const EgcFormulaExpression& formula);
         /// constructor for initialization with tree element
-        EgcExpressionNodeIterator(const EgcExpressionNode & node);
+        EgcExpressionNodeIterator(const EgcNode & node);
         /// std destructor
         virtual ~EgcExpressionNodeIterator();
         /**
-         * @brief findNext Searches for an EgcExpressionNodeType node starting from the current iterator position in forward direction.
+         * @brief findNext Searches for an EgcNodeType node starting from the current iterator position in forward direction.
          * If type was found after the call, the iterator is positioned just after the matching item.
          * otherwise, the iterator is positioned at the back of the container.
          * @param type the type of the node to be found.
          * @return returns true if value is found, false otherwise
          */
-        bool findNext(EgcExpressionNodeType type);
+        bool findNext(EgcNodeType type);
         /**
-         * @brief findPrevious Searches for an EgcExpressionNodeType node starting from the current iterator position in backward direction.
+         * @brief findPrevious Searches for an EgcNodeType node starting from the current iterator position in backward direction.
          * If type was found after the call, the iterator is positioned just before the matching item.
          * otherwise, the iterator is positioned at the front of the container.
          * @param type the type of the node to be found.
          * @return returns true if value is found, false otherwise
          */
-        bool findPrevious(EgcExpressionNodeType type);
+        bool findPrevious(EgcNodeType type);
         /**
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
@@ -51,23 +51,23 @@ public:
          * @param state the state of the node we jumped over
          * @return a reference to the next item.
          */
-        virtual EgcExpressionNode & next(EgcNodeIteratorState &state);
+        virtual EgcNode & next(EgcNodeIteratorState &state);
         /**
          * @brief peekNext Returns the next node without incrementing the iterator.
          * @return a reference to the next item.
          */
-        EgcExpressionNode & peekNext(void) const;
+        EgcNode & peekNext(void) const;
         /**
          * @brief peekPrevious Returns the previous node without decrementing the iterator.
          * @return a reference to the previous item.
          */
-        EgcExpressionNode & peekPrevious(void) const;
+        EgcNode & peekPrevious(void) const;
         /**
          * @brief previous Returns the previous node and decrements the iterator by one.
          * @param state the state of the node we jumped over
          * @return a refererence to the previous item.
          */
-        virtual EgcExpressionNode & previous(EgcNodeIteratorState &state);
+        virtual EgcNode & previous(EgcNodeIteratorState &state);
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
@@ -81,7 +81,7 @@ public:
          * @param type the node type to be inserted
          * @return false if insertiation in the tree is not possible (e.g. not a containter type), true otherwise
          */
-        virtual bool insert(EgcExpressionNodeType type);
+        virtual bool insert(EgcNodeType type);
         /**
          * @brief remove removes the last item it was jumped over.
          */
@@ -92,12 +92,12 @@ public:
          * @param type the node type to use instead
          * @return true if replacement was possible, false otherwise
          */
-        virtual EgcExpressionNode* replace(EgcExpressionNode& node, EgcExpressionNodeType type);
+        virtual EgcNode* replace(EgcNode& node, EgcNodeType type);
         /**
          * @brief nextParent increments the iterator to the parent of the last node it was jumped over.
          * @return the parent of the last item it was jumped over.
          */
-        virtual EgcExpressionNode& nextParent(void);
+        virtual EgcNode& nextParent(void);
 
 protected:
         /**
@@ -107,7 +107,7 @@ protected:
          * @param state enumeration to be able to decide which node visit next
          * @return a pointer to the next element
          */
-        virtual EgcExpressionNode& getNextElement(bool* atBeginning, bool* atEnd, EgcNodeIteratorState* state) const;
+        virtual EgcNode& getNextElement(bool* atBeginning, bool* atEnd, EgcNodeIteratorState* state) const;
         /**
          * @brief getPreviousElement get the previous element in the tree
          * @param atBeginning true if beginning of the tree has been reached
@@ -115,27 +115,27 @@ protected:
          * @param state enumeration to be able to decide which node visit next
          * @return a pointer to the pevious element
          */
-        virtual EgcExpressionNode& getPreviousElement(bool* atBeginning, bool* atEnd, EgcNodeIteratorState* state) const;
+        virtual EgcNode& getPreviousElement(bool* atBeginning, bool* atEnd, EgcNodeIteratorState* state) const;
         /**
          * @brief isRightChild checks if the given child is the right child of the given parent
          * @param parent reference to the parent to test for
          * @param child reference to the child to test for
          * @return true if child is the right child of the given parent, false otherwise
          */
-        bool isRightChild(EgcExpressionNode& parent, EgcExpressionNode& child) const;
+        bool isRightChild(EgcNode& parent, EgcNode& child) const;
         /**
          * @brief isLeftChild checks if the given child is the left child of the given parent
          * @param parent reference to the parent to test for
          * @param child reference to the child to test for
          * @return true if child is the left child of the given parent, false otherwise
          */
-        bool isLeftChild(EgcExpressionNode& parent, EgcExpressionNode& child) const;
+        bool isLeftChild(EgcNode& parent, EgcNode& child) const;
         /**
          * @brief findNextRightMostLeaf finds the next right most leaf at the bottom of the tree
          * @param start the starting point from where to search
          * @return the found leaf (this can be a container without childs or a real leaf)
          */
-        EgcExpressionNode& findNextRightMostLeaf(EgcExpressionNode& start) const;
+        EgcNode& findNextRightMostLeaf(EgcNode& start) const;
         /**
          * @brief determineFollowingState determines the following state upon the following node
          * @param current current node
@@ -143,17 +143,17 @@ protected:
          * @param forwardDirection if the iteration is in forward direction, set true here, false otherwise
          * @return the next state upon the following node
          */
-        EgcNodeIteratorState determineFollowingState(EgcExpressionNode &current, EgcExpressionNode &following,
+        EgcNodeIteratorState determineFollowingState(EgcNode &current, EgcNode &following,
                                                      bool forwardDirection) const;
 
-        EgcExpressionNode* m_cursor;            ///< pointer to data element in the tree structure
-        EgcBaseExpressionNode* m_baseElement;   ///< pointer to data element at the root of the tree structure
+        EgcNode* m_cursor;            ///< pointer to data element in the tree structure
+        EgcBaseNode* m_baseElement;   ///< pointer to data element at the root of the tree structure
         bool m_atBegin;                         ///< iterator is at the beginning of the tree
         bool m_atEnd;                           ///< iterator is at the end of the tree
-        EgcExpressionNode* m_history;           ///< pointer to node we jumped over last time
+        EgcNode* m_history;           ///< pointer to node we jumped over last time
         EgcNodeIteratorState m_State;           ///< reflects the iterator state to know where to go next time
         bool m_forward;                         ///< true if tree is traversed in forward direction
-        EgcExpressionNode* m_previousCursor;    ///< a pointer to the previous node
+        EgcNode* m_previousCursor;    ///< a pointer to the previous node
 
 
 };

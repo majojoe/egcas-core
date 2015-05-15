@@ -1,21 +1,21 @@
-#ifndef EGCEMPTYEXPRESSIONNODE_H
-#define EGCEMPTYEXPRESSIONNODE_H
+#ifndef EGCEMPTYNODE_H
+#define EGCEMPTYNODE_H
 
-#include "../concreteNodes/egcvariableexpressionnode.h"
+#include "../concreteNodes/egcvariablenode.h"
 
 /**
- * @brief The EgcEmptyExpressionNode class is a class that holds the leafes that are empty until now
+ * @brief The EgcEmptyNode class is a class that holds the leafes that are empty until now
  */
-class EgcEmptyExpressionNode : public EgcVariableExpressionNode
+class EgcEmptyNode : public EgcVariableNode
 {
         //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcEmptyExpressionNode, EgcExpressionNodeType::EmptyNode);
+        EGC_SET_EXPRESSION_TYPE(EgcEmptyNode, EgcNodeType::EmptyNode);
 
 public:
         ///std constructor
-        EgcEmptyExpressionNode();
+        EgcEmptyNode();
         ///destructor
-        virtual ~EgcEmptyExpressionNode();
+        virtual ~EgcEmptyNode();
         /**
          * @brief getValue returns the variable name (without subscript)
          * @return the variable name
@@ -38,7 +38,7 @@ private:
          * @brief getSubscript returns the subscript of a variable name
          * @return the subscript of this variable object
          */
-        virtual QString& getSubscript(void) override {return EgcVariableExpressionNode::getSubscript();}
+        virtual QString& getSubscript(void) override {return EgcVariableNode::getSubscript();}
         /**
          * @brief getStuffedVar returns the stuffed variable name (with subscript)
          * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
@@ -48,4 +48,4 @@ private:
 };
 
 
-#endif // EGCEMPTYEXPRESSIONNODE_H
+#endif // EGCEMPTYNODE_H

@@ -1,24 +1,24 @@
 #include <QString>
 #include <QStringBuilder>
 #include <QRegularExpression>
-#include "egcvariableexpressionnode.h"
+#include "egcvariablenode.h"
 
-EgcVariableExpressionNode::EgcVariableExpressionNode() : m_value(QString::null), m_subscript(QString::null)
+EgcVariableNode::EgcVariableNode() : m_value(QString::null), m_subscript(QString::null)
 {
 }
 
-EgcVariableExpressionNode::~EgcVariableExpressionNode()
+EgcVariableNode::~EgcVariableNode()
 {
 
 }
 
-void EgcVariableExpressionNode::setValue(const QString& varName, const QString& subscript)
+void EgcVariableNode::setValue(const QString& varName, const QString& subscript)
 {
         m_value = varName;
         m_subscript = subscript;
 }
 
-void EgcVariableExpressionNode::setValueRaw(const QString& varName)
+void EgcVariableNode::setValueRaw(const QString& varName)
 {
         QRegularExpression regex = QRegularExpression("(.*[^_]+)_([^_]+.*)");
         QRegularExpressionMatch regexMatch = regex.match(varName);
@@ -36,17 +36,17 @@ void EgcVariableExpressionNode::setValueRaw(const QString& varName)
         }
 }
 
-QString& EgcVariableExpressionNode::getValue(void)
+QString& EgcVariableNode::getValue(void)
 {
         return m_value;
 }
 
-QString& EgcVariableExpressionNode::getSubscript(void)
+QString& EgcVariableNode::getSubscript(void)
 {
         return m_subscript;
 }
 
-QString EgcVariableExpressionNode::getStuffedVar(void)
+QString EgcVariableNode::getStuffedVar(void)
 {
         //replace (stuffing) of "_" with "__" since "_" is used to concatenate variable name and subscript
         QString var = m_value.replace("_", "__");
@@ -55,7 +55,7 @@ QString EgcVariableExpressionNode::getStuffedVar(void)
         return var % "_" % sub;
 }
 
-bool EgcVariableExpressionNode::valid(void)
+bool EgcVariableNode::valid(void)
 {
         if (m_value.isEmpty())
                 return false;

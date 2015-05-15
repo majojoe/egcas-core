@@ -1,23 +1,23 @@
-#ifndef EGCNUMBEREXPRESSIONNODE_H
-#define EGCNUMBEREXPRESSIONNODE_H
+#ifndef EGCNUMBERNODE_H
+#define EGCNUMBERNODE_H
 
 #include <QtGlobal>
 #include <QString>
-#include "../specialNodes/egcexpressionnode.h"
+#include "../specialNodes/egcnode.h"
 
 /**
- * @brief The EgcNumberExpressionNode class is a class that holds leafes with numbers
+ * @brief The EgcNumberNode class is a class that holds leafes with numbers
  */
-class EgcNumberExpressionNode : public EgcExpressionNode
+class EgcNumberNode : public EgcNode
 {
         //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcNumberExpressionNode, EgcExpressionNodeType::NumberNode);
+        EGC_SET_EXPRESSION_TYPE(EgcNumberNode, EgcNodeType::NumberNode);
 
 public:
         ///std constructor
-        EgcNumberExpressionNode();
+        EgcNumberNode();
         ///destructor
-        virtual ~EgcNumberExpressionNode();
+        virtual ~EgcNumberNode();
         /**
          * @brief setValue set the value of this leaf
          * @param value the number value to be set
@@ -32,4 +32,4 @@ private:
         QString m_value;
 };
 
-#endif // EGCNUMBEREXPRESSIONNODE_H
+#endif // EGCNUMBERNODE_H

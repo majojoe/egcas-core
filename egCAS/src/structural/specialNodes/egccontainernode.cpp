@@ -13,14 +13,14 @@ bool EgcContainerNode::isContainer(void) const
         return true;
 }
 
-bool EgcContainerNode::transferPropertiesTo(EgcExpressionNode &to)
+bool EgcContainerNode::transferPropertiesTo(EgcNode &to)
 {
         (void) to;
 
         return false;
 }
 
-void EgcContainerNode::adjustChildPointers(EgcExpressionNode &old_child, EgcExpressionNode &new_child)
+void EgcContainerNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_child)
 {
         (void) old_child;
         (void) new_child;

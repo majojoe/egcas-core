@@ -39,19 +39,19 @@ set(tst_egcastest_parser_SOURCES
         ../../src/casKernel/parser/egckernelparser.cpp
         ${BISON_cas_parser_tst_OUTPUTS}
         ${FLEX_cas_scanner_tst_OUTPUTS}
-        ../../src/structural/specialNodes/egcunaryexpressionnode.cpp
-        ../../src/structural/specialNodes/egcbinaryexpressionnode.cpp
-        ../../src/structural/specialNodes/egcexpressionnode.cpp
-        ../../src/structural/concreteNodes/egcrootexpressionnode.cpp
-        ../../src/structural/concreteNodes/egcnumberexpressionnode.cpp
-        ../../src/structural/egcexpressionnodecreator.cpp
-        ../../src/structural/concreteNodes/egcparenthesisexpressionnode.cpp
+        ../../src/structural/specialNodes/egcunarynode.cpp
+        ../../src/structural/specialNodes/egcbinarynode.cpp
+        ../../src/structural/specialNodes/egcnode.cpp
+        ../../src/structural/concreteNodes/egcrootnode.cpp
+        ../../src/structural/concreteNodes/egcnumbernode.cpp
+        ../../src/structural/egcnodecreator.cpp
+        ../../src/structural/concreteNodes/egcparenthesisnode.cpp
         ../../src/structural/specialNodes/egccontainernode.cpp
-        ../../src/structural/concreteNodes/egcvariableexpressionnode.cpp
+        ../../src/structural/concreteNodes/egcvariablenode.cpp
         ../../src/structural/iterator/egcexpressionnodeiterator.cpp
         ../../src/structural/egcformulaexpression.cpp
-        ../../src/structural/specialNodes/egcbaseexpressionnode.cpp
-        ../../src/structural/specialNodes/egcemptyexpressionnode.cpp
+        ../../src/structural/specialNodes/egcbasenode.cpp
+        ../../src/structural/specialNodes/egcemptynode.cpp
         ../../src/structural/visitor/egcnodevisitor.cpp
         ../../src/structural/visitor/egcmaximavisitor.cpp
         ../../src/structural/visitor/egcmathmlvisitor.cpp
