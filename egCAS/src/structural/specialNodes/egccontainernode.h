@@ -12,6 +12,8 @@ class EgcContainerNode : public EgcNode
 public:
         ///std contructor
         EgcContainerNode();
+        ///copy constructor
+        EgcContainerNode(const EgcContainerNode& orig);
         ///destructor
         virtual ~EgcContainerNode() = 0;
         /**

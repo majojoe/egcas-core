@@ -6,7 +6,7 @@ EgcBinaryNode::EgcBinaryNode() : m_rightChild(nullptr), m_leftChild(nullptr)
 {
 }
 
-EgcBinaryNode::EgcBinaryNode(const EgcBinaryNode& orig)
+EgcBinaryNode::EgcBinaryNode(const EgcBinaryNode& orig) : EgcContainerNode(orig)
 {
         m_leftChild = nullptr;
         m_rightChild = nullptr;

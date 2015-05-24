@@ -7,7 +7,7 @@ EgcUnaryNode::EgcUnaryNode() : m_child(nullptr)
 
 }
 
-EgcUnaryNode::EgcUnaryNode(const EgcUnaryNode& orig)
+EgcUnaryNode::EgcUnaryNode(const EgcUnaryNode& orig) : EgcContainerNode(orig)
 {
         m_child = nullptr;
         EgcNode *originalChild = const_cast<EgcUnaryNode&>(orig).getChild();

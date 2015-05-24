@@ -4,6 +4,11 @@ EgcContainerNode::EgcContainerNode()
 {
 }
 
+EgcContainerNode::EgcContainerNode(const EgcContainerNode& orig)
+{
+        m_parent = nullptr;
+}
+
 EgcContainerNode::~EgcContainerNode()
 {
 }
