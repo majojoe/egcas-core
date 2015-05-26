@@ -68,54 +68,53 @@ void EgcasTest_Parser::treeTestParser()
 
 
         EgcExpressionNodeIterator iter(*tree);
-        EgcNodeIteratorState stepState;
         EgcNode* nodePointer;
 
         //test next functions (node 1)
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::BaseNode);
 
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
 
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
 
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
 
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::ParenthesisNode);
 
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
 
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
         QVERIFY(static_cast<EgcNumberNode*>(nodePointer)->getValue() == QString("45"));
 
-        nodePointer = &(iter.next(stepState));
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
         QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getValue() == QString("a"));
 
-        nodePointer = &(iter.next(stepState));
-        nodePointer = &(iter.next(stepState));
-        nodePointer = &(iter.next(stepState));
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
+        nodePointer = &(iter.next());
+        nodePointer = &(iter.next());
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
         QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getValue() == QString("n_j5"));
         QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getSubscript() == QString("lm_3"));
 
-        nodePointer = &(iter.next(stepState));
-        nodePointer = &(iter.next(stepState));
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
+        nodePointer = &(iter.next());
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
         QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getValue() == QString("kl_9"));
 
-        nodePointer = &(iter.next(stepState));
-        nodePointer = &(iter.next(stepState));
-        nodePointer = &(iter.next(stepState));
+        nodePointer = &(iter.next());
+        nodePointer = &(iter.next());
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
         QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getValue() == QString("js"));
         QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getSubscript() == QString("z"));

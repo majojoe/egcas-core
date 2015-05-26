@@ -48,10 +48,14 @@ public:
         virtual bool hasPrevious(void) const;
         /**
          * @brief next Returns the next node and increments the iterator by one.
-         * @param state the state of the node we jumped over
          * @return a reference to the next item.
          */
-        virtual EgcNode & next(EgcNodeIteratorState &state);
+        virtual EgcNode & next(void);
+        /**
+         * @brief getState retruns the state of the last traversion
+         * @return state the state of the node we jumped over
+         */
+        virtual EgcNodeIteratorState getLastState(void) const;
         /**
          * @brief peekNext Returns the next node without incrementing the iterator.
          * @return a reference to the next item.
@@ -64,10 +68,9 @@ public:
         EgcNode & peekPrevious(void) const;
         /**
          * @brief previous Returns the previous node and decrements the iterator by one.
-         * @param state the state of the node we jumped over
          * @return a refererence to the previous item.
          */
-        virtual EgcNode & previous(EgcNodeIteratorState &state);
+        virtual EgcNode & previous(void);
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
@@ -146,14 +149,15 @@ protected:
         EgcNodeIteratorState determineFollowingState(EgcNode &current, EgcNode &following,
                                                      bool forwardDirection) const;
 
-        EgcNode* m_cursor;            ///< pointer to data element in the tree structure
-        EgcBaseNode* m_baseElement;   ///< pointer to data element at the root of the tree structure
+        EgcNode* m_cursor;                      ///< pointer to data element in the tree structure
+        EgcBaseNode* m_baseElement;             ///< pointer to data element at the root of the tree structure
         bool m_atBegin;                         ///< iterator is at the beginning of the tree
         bool m_atEnd;                           ///< iterator is at the end of the tree
-        EgcNode* m_history;           ///< pointer to node we jumped over last time
+        EgcNode* m_history;                     ///< pointer to node we jumped over last time
         EgcNodeIteratorState m_State;           ///< reflects the iterator state to know where to go next time
+        EgcNodeIteratorState m_currentState;    ///< reflects the iterator state to know where to go next time
         bool m_forward;                         ///< true if tree is traversed in forward direction
-        EgcNode* m_previousCursor;    ///< a pointer to the previous node
+        EgcNode* m_previousCursor;              ///< a pointer to the previous node
 
 
 };

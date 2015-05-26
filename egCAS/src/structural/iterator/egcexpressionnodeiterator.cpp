@@ -10,7 +10,7 @@
 EgcExpressionNodeIterator::EgcExpressionNodeIterator(const EgcFormulaExpression& formula) :
         m_cursor(formula.getBaseElement().getChild()), m_baseElement(&formula.getBaseElement()),
         m_atBegin(true), m_atEnd(false), m_history(m_baseElement), m_State(EgcNodeIteratorState::LeftIteration),
-        m_forward(true), m_previousCursor(m_baseElement)
+        m_currentState(EgcNodeIteratorState::LeftIteration), m_forward(true), m_previousCursor(m_baseElement)
 {
 }
 
@@ -27,15 +27,15 @@ EgcExpressionNodeIterator::EgcExpressionNodeIterator(const EgcNode & node)
         m_baseElement = static_cast<EgcBaseNode*>(tempNode);
         m_history = m_baseElement;
         m_State = EgcNodeIteratorState::LeftIteration;
+        m_currentState = EgcNodeIteratorState::LeftIteration;
         m_atBegin = true;
         m_atEnd = false;
         m_forward = true;
         m_previousCursor = m_baseElement;
         EgcNode *nextNode = m_baseElement;
-        EgcNodeIteratorState state;
 
         while (nextNode != &node) {
-                *nextNode = next(state);
+                *nextNode = next();
         }
 }
 
@@ -43,7 +43,7 @@ EgcExpressionNodeIterator::~EgcExpressionNodeIterator()
 {
 }
 
-EgcNode & EgcExpressionNodeIterator::next(EgcNodeIteratorState &state)
+EgcNode & EgcExpressionNodeIterator::next(void)
 {
         //if the base element has no child
         if (!m_baseElement->getChild()) {
@@ -56,13 +56,13 @@ EgcNode & EgcExpressionNodeIterator::next(EgcNodeIteratorState &state)
 
         if (!m_forward) {
                 m_previousCursor = &getPreviousElement(nullptr, nullptr, &m_State);
-                state = m_State = determineFollowingState(*m_previousCursor, *m_cursor, true);
+                m_currentState = m_State = determineFollowingState(*m_previousCursor, *m_cursor, true);
                 tempCursor = m_previousCursor = m_cursor;
                 m_cursor = &getNextElement(nullptr, &m_atEnd, &m_State);
                 m_atBegin = false;
                 m_forward = true;
         } else {
-                state = m_State;
+                m_currentState = m_State;
                 m_cursor = &getNextElement(nullptr, &m_atEnd, &m_State);
                 if (m_cursor != tempCursor)
                         m_atBegin = false;
@@ -74,7 +74,7 @@ EgcNode & EgcExpressionNodeIterator::next(EgcNodeIteratorState &state)
 
 }
 
-EgcNode & EgcExpressionNodeIterator::previous(EgcNodeIteratorState &state)
+EgcNode & EgcExpressionNodeIterator::previous(void)
 {
         //if the base element has no child
         if (!m_baseElement->getChild()) {
@@ -83,7 +83,7 @@ EgcNode & EgcExpressionNodeIterator::previous(EgcNodeIteratorState &state)
         }
 
         if (m_forward) {
-                state = m_State = determineFollowingState(*m_cursor, *m_previousCursor, false);
+                m_currentState = m_State = determineFollowingState(*m_cursor, *m_previousCursor, false);
                 EgcNode *tempCursor = m_cursor;
                 m_cursor = m_previousCursor;
                 m_previousCursor = tempCursor;
@@ -99,7 +99,7 @@ EgcNode & EgcExpressionNodeIterator::previous(EgcNodeIteratorState &state)
         } else {
                 m_previousCursor = m_cursor;
                 m_cursor = &getPreviousElement(&m_atBegin, nullptr, &m_State);
-                state = m_State;
+                m_currentState = m_State;
                 if (m_cursor != m_history)
                         m_atEnd = false;
         }
@@ -109,15 +109,19 @@ EgcNode & EgcExpressionNodeIterator::previous(EgcNodeIteratorState &state)
         return *m_cursor;
 }
 
+EgcNodeIteratorState EgcExpressionNodeIterator::getLastState(void) const
+{
+        return m_currentState;
+}
+
 bool EgcExpressionNodeIterator::findNext(EgcNodeType type)
 {
         EgcExpressionNodeIterator *iter = this;
         EgcNode* node;
         bool found = false;
-        EgcNodeIteratorState state;
 
         while (iter->hasNext()) {
-                node = &(iter->next(state));
+                node = &(iter->next());
                 if (node->getNodeType() == type) {
                         found = true;
                         break;
@@ -135,10 +139,9 @@ bool EgcExpressionNodeIterator::findPrevious(EgcNodeType type)
         EgcExpressionNodeIterator *iter = this;
         EgcNode* node;
         bool found = false;
-        EgcNodeIteratorState state;
 
         while (iter->hasPrevious()) {
-                node = &(iter->previous(state));
+                node = &(iter->previous());
                 if (node->getNodeType() == type) {
                         found = true;
                         break;
@@ -528,8 +531,7 @@ void EgcExpressionNodeIterator::remove()
         EgcNode *history = m_history;
         EgcNode *parent = &nextParent();
         //jump back again
-        EgcNodeIteratorState state;
-        (void) previous(state);
+        (void) previous();
         if (parent->isBinaryExpression()) {
                 if (isRightChild(*parent, *history))
                         static_cast<EgcBinaryNode*>(parent)->
@@ -594,8 +596,7 @@ EgcNode& EgcExpressionNodeIterator::nextParent(void)
         }
 
         // we need to increment by one to jump over the element to return
-        EgcNodeIteratorState tempState;
-        (void) next(tempState);
+        (void) next();
 
         return *tempNode;
 }
