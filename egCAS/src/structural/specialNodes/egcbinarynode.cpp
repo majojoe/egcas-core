@@ -175,3 +175,44 @@ void EgcBinaryNode::accept(EgcNodeVisitor *visitor)
 {
         visitor->visit(this);
 }
+
+EgcNode* EgcBinaryNode::getChild(quint32 index) const
+{
+        if (index == 0)
+                return m_leftChild;
+        else if (index == 1)
+                return m_rightChild;
+        else
+                return nullptr;
+}
+
+bool EgcBinaryNode::setChild(quint32 index, const EgcNode& expression)
+{
+        bool retval = true;
+
+        if (index == 0) {
+                if (m_leftChild)
+                        delete m_leftChild;
+                m_leftChild = const_cast<EgcNode*>(&expression);
+
+                if (m_leftChild)
+                        m_leftChild->provideParent(this);
+        } else if (index == 1) {
+                if (m_rightChild)
+                        delete m_rightChild;
+                m_rightChild = const_cast<EgcNode*>(&expression);
+
+                if (m_rightChild)
+                        m_rightChild->provideParent(this);
+        } else {
+                retval = false;
+        }
+
+        return retval;
+}
+
+quint32 EgcBinaryNode::getNumberChildNodes(void) const
+{
+        return 2;
+}
+

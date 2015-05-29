@@ -30,3 +30,21 @@ void EgcContainerNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_chil
         (void) old_child;
         (void) new_child;
 }
+
+EgcNode* EgcContainerNode::getChild(quint32 index) const
+{
+        (void) index;
+
+        return nullptr;
+}
+
+bool EgcContainerNode::setChild(quint32 index, const EgcNode& expression)
+{
+        (void) index;
+        (void) expression;
+}
+
+quint32 EgcContainerNode::getNumberChildNodes(void) const
+{
+        return 0;
+}

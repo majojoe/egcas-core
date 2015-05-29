@@ -134,3 +134,36 @@ void EgcUnaryNode::accept(EgcNodeVisitor *visitor)
 {
         visitor->visit(this);
 }
+
+EgcNode* EgcUnaryNode::getChild(quint32 index) const
+{
+        if (index == 0)
+                return m_child;
+        else
+                return nullptr;
+}
+
+bool EgcUnaryNode::setChild(quint32 index, const EgcNode& expression)
+{
+        bool retval = true;
+
+        if (index == 0) {
+                if (m_child)
+                        delete m_child;
+                m_child = const_cast<EgcNode*>(&expression);
+
+                //set the parent also
+                if(m_child)
+                        m_child->provideParent(this);
+        } else {
+                retval = false;
+        }
+
+        return retval;
+}
+
+quint32 EgcUnaryNode::getNumberChildNodes(void) const
+{
+        return 1;
+}
+

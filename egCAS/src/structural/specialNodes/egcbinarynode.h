@@ -93,6 +93,29 @@ public:
          * @param visitor the visitor to call back
          */
         virtual void accept(EgcNodeVisitor *visitor) override;
+        /**
+         * @brief getChild get a pointer to the child at index. If index is > getNumberChildNodes() - 1, the returned
+         * pointer is NULL.
+         * @param index the index where the child is. E.g. a binary node has a left child 0 and a right child with index
+         * 1 (the index starts at 0)
+         * @return a pointer to the child at the index position
+         */
+        virtual EgcNode* getChild(quint32 index) const override;
+        /**
+         * @brief setChild set the given expression as a child at position index. If
+         * @param index the position at which the child should be inserted. E.g. 0 will set the left child of a binary
+         * expression.
+         * @param expression the expression to set as child.
+         * @return true if everything went well, false if index is > getNumberChildNodes() - 1
+         */
+        virtual bool setChild(quint32 index, const EgcNode& expression) override;
+        /**
+         * @brief getNumberChildNodes returns the number of child nodes a container can have. Even the childs that are
+         * null are counted in this context. Only the possibility to hold a number of childs counts. E.g. a binary
+         * expression will always return 2 even if one or both of the child pointers are null.
+         * @return the number of childs a container can hold.
+         */
+        virtual quint32 getNumberChildNodes(void) const override;
 
 
         EgcNode* m_rightChild;
