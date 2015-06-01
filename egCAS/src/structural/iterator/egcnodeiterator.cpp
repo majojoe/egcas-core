@@ -656,50 +656,29 @@ EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
         return retval;
 }
 
-EgcIteratorState EgcNodeIterator::determineFollowingState(EgcNode &current,
-                                                                        EgcNode &following,
-                                                                        bool forwardDirection) const
+EgcIteratorState EgcNodeIterator::determineFollowingState(EgcNode &previous, EgcNode &next, bool forward) const
 {
         EgcIteratorState localState;
 
-        if (forwardDirection) {
-                localState = EgcIteratorState::LeftIteration;
-                if (following.isContainer()) {
-                        if (following.isBinaryExpression()) {
-                                if (isLeftChild(following, current))
-                                        localState = EgcIteratorState::MiddleIteration;
-                                else if (isRightChild(following, current))
-                                        localState = EgcIteratorState::RightIteration;
-                                else
-                                        localState = EgcIteratorState::LeftIteration;
-                        } else { //this must be a unary expression
-                                if (following.getParent() == &current)
-                                        localState = EgcIteratorState::LeftIteration;
-                                else
-                                        localState = EgcIteratorState::RightIteration;
-                        }
+        localState = EgcIteratorState::LeftIteration;
+        if (next.isContainer()) {
+                if (forward) {
+                        if (next.getParent() == &previous)
+                                localState = EgcIteratorState::LeftIteration;
+                        else if (previous.isLastChild(next))
+                                localState = EgcIteratorState::RightIteration;
+                        else
+                                localState = EgcIteratorState::MiddleIteration;
                 } else {
-                        localState = EgcIteratorState::MiddleIteration;
+                        if (next.getParent() == &previous)
+                                localState = EgcIteratorState::RightIteration;
+                        else if (previous.isFirstChild(next))
+                                localState = EgcIteratorState::LeftIteration;
+                        else
+                                localState = EgcIteratorState::MiddleIteration;
                 }
-        } else {
-                localState = EgcIteratorState::RightIteration;
-                if (following.isContainer()) {
-                        if (following.isBinaryExpression()) {
-                                if (isRightChild(following, current))
-                                        localState = EgcIteratorState::MiddleIteration;
-                                else if (isLeftChild(following, current))
-                                        localState = EgcIteratorState::LeftIteration;
-                                else
-                                        localState = EgcIteratorState::RightIteration;
-                        } else { //this must be a unary expression
-                                if (following.getParent() == &current)
-                                        localState = EgcIteratorState::RightIteration;
-                                else
-                                        localState = EgcIteratorState::LeftIteration;
-                        }
                 } else {
-                        localState = EgcIteratorState::MiddleIteration;
-                }
+                localState = EgcIteratorState::MiddleIteration;
         }
 
         return localState;

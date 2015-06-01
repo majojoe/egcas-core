@@ -216,3 +216,18 @@ quint32 EgcBinaryNode::getNumberChildNodes(void) const
         return 2;
 }
 
+bool EgcBinaryNode::isFirstChild(EgcNode &child) const
+{
+        if (m_leftChild == &child)
+                return true;
+        else
+                return false;
+}
+
+bool EgcBinaryNode::isLastChild(EgcNode &child) const
+{
+        if (m_rightChild == &child)
+                return true;
+        else
+                return false;
+}

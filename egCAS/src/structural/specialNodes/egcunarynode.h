@@ -109,7 +109,20 @@ public:
          * @return the number of childs a container can hold.
          */
         virtual quint32 getNumberChildNodes(void) const;
+        /**
+         * @brief isFirstChild checks if the given node is the first (not the second or third) child of the current node.
+         * @param child the child to check wether it is the first child the current parent holds.
+         * @return true if given node is the first child, false otherwise.
+         */
+        virtual bool isFirstChild(EgcNode &child) const override;
+        /**
+         * @brief isLastChild checks if the given node is the last (not the first or second) child of the current node.
+         * @param child the child to check wether it is the last child the current parent holds.
+         * @return  true if the given node is the last child, false otherwise.
+         */
+        virtual bool isLastChild(EgcNode &child) const override;
 
+protected:
         EgcNode* m_child;
 };
 

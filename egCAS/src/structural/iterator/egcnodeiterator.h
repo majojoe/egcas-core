@@ -141,23 +141,19 @@ protected:
         EgcNode& findNextRightMostLeaf(EgcNode& start) const;
         /**
          * @brief determineFollowingState determines the following state upon the following node
-         * @param current current node
-         * @param following the following node
-         * @param forwardDirection if the iteration is in forward direction, set true here, false otherwise
+         * @param previous previous node
+         * @param next the following node
+         * @param forward true if iteration is in forward direction, false if reverse direction
          * @return the next state upon the following node
          */
-        EgcIteratorState determineFollowingState(EgcNode &current, EgcNode &following,
-                                                     bool forwardDirection) const;
+        EgcIteratorState determineFollowingState(EgcNode &previous, EgcNode &next, bool forward) const;
 
-        EgcNode* m_cursor;                      ///< pointer to data element in the tree structure
+        EgcNode* m_next;                        ///< pointer to next data element in the tree structure
+        EgcNode* m_previous;                    ///< pointer to previous data element in the tree structure
         EgcBaseNode* m_baseElement;             ///< pointer to data element at the root of the tree structure
         bool m_atBegin;                         ///< iterator is at the beginning of the tree
         bool m_atEnd;                           ///< iterator is at the end of the tree
-        EgcNode* m_history;                     ///< pointer to node we jumped over last time
-        EgcIteratorState m_State;           ///< reflects the iterator state to know where to go next time
-        EgcIteratorState m_currentState;    ///< reflects the iterator state to know where to go next time
-        bool m_forward;                         ///< true if tree is traversed in forward direction
-        EgcNode* m_previousCursor;              ///< a pointer to the previous node
+        EgcIteratorState m_State;               ///< reflects the iterator state to know where to go next time
 
 
 };

@@ -48,3 +48,18 @@ quint32 EgcContainerNode::getNumberChildNodes(void) const
 {
         return 0;
 }
+
+bool EgcContainerNode::isFirstChild(EgcNode &child) const
+{
+        (void) child;
+
+        return false;
+}
+
+bool EgcContainerNode::isLastChild(EgcNode &child) const
+{
+        (void) child;
+
+        return false;
+}
+

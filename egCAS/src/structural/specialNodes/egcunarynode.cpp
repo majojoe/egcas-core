@@ -167,3 +167,18 @@ quint32 EgcUnaryNode::getNumberChildNodes(void) const
         return 1;
 }
 
+bool EgcUnaryNode::isFirstChild(EgcNode &child) const
+{
+        if (m_child == &child)
+                return true;
+        else
+                return false;
+}
+
+bool EgcUnaryNode::isLastChild(EgcNode &child) const
+{
+        if (m_child == &child)
+                return true;
+        else
+                return false;
+}
