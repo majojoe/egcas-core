@@ -52,3 +52,11 @@ void EgcNode::accept(EgcNodeVisitor *visitor)
 {
         visitor->visit(this);
 }
+
+bool EgcNode::isChild(EgcNode& parent)
+{
+        if (&parent == m_parent)
+                return true;
+        else
+                return false;
+}

@@ -62,6 +62,12 @@ public:
          */
         EgcNode* getParent(void);
         /**
+         * @brief isParent checks if the given node is the parent of this node
+         * @param parent the node to check wether it is the parent of the current node or not.
+         * @return true if the given node is the parent, false otherwise
+         */
+        bool isChild(EgcNode& parent);
+        /**
          * @brief provideParent THIS IS NO USER INTERFACE! DO NOT USE THAT FROM USER POINT OF VIEW!
          * This is used to set the parent pointers in the implementation of the tree.
          * @param parent a pointer to the parent of this node. This must be a container pointer.

@@ -182,3 +182,17 @@ bool EgcUnaryNode::isLastChild(EgcNode &child) const
         else
                 return false;
 }
+
+EgcNode* EgcUnaryNode::incrementToNextChild(EgcNode &previousChild) const
+{
+        (void) previousChild;
+
+        return nullptr;
+}
+
+EgcNode* EgcUnaryNode::decrementToPrevChild(EgcNode &previousChild) const
+{
+        (void) previousChild;
+
+        return nullptr;
+}

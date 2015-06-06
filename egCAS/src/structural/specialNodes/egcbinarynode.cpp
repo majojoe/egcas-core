@@ -231,3 +231,19 @@ bool EgcBinaryNode::isLastChild(EgcNode &child) const
         else
                 return false;
 }
+
+EgcNode* EgcBinaryNode::incrementToNextChild(EgcNode &previousChild) const
+{
+        if (m_leftChild == &previousChild)
+                return m_rightChild;
+        else
+                return nullptr;
+}
+
+EgcNode* EgcBinaryNode::decrementToPrevChild(EgcNode &previousChild) const
+{
+        if (m_rightChild == &previousChild)
+                return m_leftChild;
+        else
+                return nullptr;
+}

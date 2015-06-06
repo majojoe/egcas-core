@@ -121,6 +121,23 @@ public:
          * @return  true if the given node is the last child, false otherwise.
          */
         virtual bool isLastChild(EgcNode &child) const override;
+        /**
+         * @brief incrementToNextChild increment to the next non NULL child. Nevertheless the Returned pointer can be
+         * a nullptr if there is no child at all.
+         * @param previousChild a reference to the previous child, to have a starting point to find the next child.
+         * @return the next non NULL child. Nevertheless the Returned pointer can be a nullptr if there is no child at
+         * all.
+         */
+        virtual EgcNode* incrementToNextChild(EgcNode &previousChild) const override;
+        /**
+         * @brief incrementToNextChild increment to the next non NULL child. Nevertheless the Returned pointer can be
+         * a nullptr if there is no child at all.
+         * @param previousChild a reference to the previous child (next child in ascending order), to have a starting
+         * point to find the next child.
+         * @return the next (previous in descending order) non NULL child. Nevertheless the Returned pointer can be a
+         * nullptr if there is no child at all.
+         */
+        virtual EgcNode* decrementToPrevChild(EgcNode &previousChild) const override;
 
 protected:
         EgcNode* m_child;

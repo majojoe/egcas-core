@@ -44,6 +44,8 @@ EgcNodeIterator::~EgcNodeIterator()
 
 EgcNode & EgcNodeIterator::next(void)
 {
+        bool errorRestart;
+
         //if the base element has no child
         if (!m_baseElement->getChild(0)) {
                 return *m_baseElement;
@@ -59,8 +61,12 @@ EgcNode & EgcNodeIterator::next(void)
 
         m_state = determineFollowingState(*m_previous, *m_next, true);
 
-        m_next = &getNextElement(*m_next, m_state);
+        m_next = &getNextElement(*m_next, *m_previous, errorRestart);
         m_previous = tempNode;
+        if (errorRestart) {
+                m_next = m_baseElement->getChild(0);
+                m_previous = m_baseElement;
+        }
 
         if (m_previous == m_baseElement)
                 m_atBegin = true;
@@ -204,107 +210,34 @@ void EgcNodeIterator::toFront(void)
         m_previous = m_baseElement;
 }
 
-EgcNode& EgcNodeIterator::getNextElement(EgcNode& currentNext, EgcIteratorState state) const
+EgcNode& EgcNodeIterator::getNextElement(EgcNode& currentNext, EgcNode& currentPrev, bool& restart) const
 {
-        EgcNode* tempCursor = m_cursor;
-        EgcNode* tempPointer = nullptr;
-        EgcNode* rootElement = m_baseElement->getChild();
-        bool beginning = false;
-        bool end = false;
-        EgcIteratorState localState = m_state;
-        bool restart_at_begin = false;
+        EgcNode* next = nullptr;
+        restart = false;
 
-        //if the base element has no child
-        if (!rootElement)
-                return *m_baseElement;
+        if (currentNext.isContainer()) {
+                bool isChild = currentNext.isChild(currentPrev);
 
-        if (   tempCursor->isContainer()) {
-                //search downwards since this is a containter
-                if (tempCursor->isBinaryExpression()) { //this is a binary container
-                        if (localState == EgcIteratorState::LeftIteration) {
-                                tempPointer = static_cast<EgcBinaryNode*>(tempCursor)->getLeftChild();
-                                if (tempPointer) {
-                                        tempCursor = tempPointer;
-                                } else {
-                                        tempPointer = static_cast<EgcBinaryNode*>(tempCursor)->getRightChild();
-                                        if (tempPointer) {
-                                                tempCursor = tempPointer;
-                                        } else {
-                                                tempPointer = tempCursor->getParent();
-                                                if (tempPointer)
-                                                        tempCursor = tempPointer;
-                                                else
-                                                        restart_at_begin = true;
-                                        }
-                                }
-                        } else if (localState == EgcIteratorState::MiddleIteration) {
-                                tempPointer = static_cast<EgcBinaryNode*>(tempCursor)->getRightChild();
-                                if (tempPointer) {
-                                        tempCursor = tempPointer;
-                                } else {
-                                        tempPointer = tempCursor->getParent();
-                                        if (tempPointer)
-                                                tempCursor = tempPointer;
-                                        else
-                                                restart_at_begin = true;
-                                }
-                        } else {
-                                tempPointer = tempCursor->getParent();
-                                if (tempPointer)
-                                        tempCursor = tempPointer;
-                                else
-                                        restart_at_begin = true;
-                        }
-                } else { // a unary expression
-                        if (localState == EgcIteratorState::LeftIteration) {
-                                tempPointer = static_cast<EgcUnaryNode*>(tempCursor)->getChild();
-                                if (tempPointer) {
-                                        tempCursor = tempPointer;
-                                } else {
-                                        tempPointer = tempCursor->getParent();
-                                        if (tempPointer)
-                                                tempCursor = tempPointer;
-                                        else
-                                                restart_at_begin = true;
-                                }
-                        } else {
-                                tempPointer = tempCursor->getParent();
-                                if (tempPointer)
-                                        tempCursor = tempPointer;
-                                else
-                                        restart_at_begin = true;
-                        }
+                if (isChild) {
+                        next = static_cast<EgcContainerNode&>(currentNext).getChild(0);
                 }
-        } else { // a leaf
-                tempPointer = tempCursor->getParent();
-                if (tempPointer)
-                        tempCursor = tempPointer;
-                else
-                        restart_at_begin = true;
-        }
-
-        if (    restart_at_begin
-             || tempCursor == m_baseElement) {
-                end = true;
-                tempCursor = tempPointer = rootElement;
-                localState = EgcIteratorState::LeftIteration;
+                if (!isChild || next == nullptr) {
+                        next = static_cast<EgcContainerNode&>(currentNext).incrementToNextChild(currentPrev);
+                }
+                if (next == nullptr || static_cast<EgcContainerNode&>(currentNext).isLastChild(currentPrev)) {
+                        next = currentNext.getParent();
+                }
         } else {
-                localState = determineFollowingState(*m_cursor, *tempCursor, true);
+                next = &currentPrev;
         }
 
-        //check if this is the end
-        if (tempCursor == m_baseElement) {
-                end = true;
+        // in case the tree is defect or if we jump over the end of the tree
+        if (next == nullptr) {
+                next = m_baseElement->getChild(0);
+                restart = true;
         }
 
-        if (atBeginning)
-                *atBeginning = beginning;
-        if (atEnd)
-                *atEnd = end;
-        if (state)
-                *state = localState;
-
-        return *tempCursor;
+        return *next;
 }
 
 EgcNode& EgcNodeIterator::getPreviousElement(bool* atBeginning, bool* atEnd, EgcIteratorState* state) const

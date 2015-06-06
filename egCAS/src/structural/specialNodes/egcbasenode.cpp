@@ -2,4 +2,5 @@
 
 EgcBaseNode::EgcBaseNode()
 {
+        m_parent = nullptr;
 }
