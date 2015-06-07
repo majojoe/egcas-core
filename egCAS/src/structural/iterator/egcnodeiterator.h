@@ -96,11 +96,6 @@ public:
          * @return true if replacement was possible, false otherwise
          */
         virtual EgcNode* replace(EgcNode& node, EgcNodeType type);
-        /**
-         * @brief nextParent increments the iterator to the parent of the last node it was jumped over.
-         * @return the parent of the last item it was jumped over.
-         */
-        virtual EgcNode& nextParent(void);
 
 protected:
         /**
@@ -151,11 +146,8 @@ protected:
         EgcNode* m_next;                        ///< pointer to next data element in the tree structure
         EgcNode* m_previous;                    ///< pointer to previous data element in the tree structure
         EgcBaseNode* m_baseElement;             ///< pointer to data element at the root of the tree structure
-        bool m_atBegin;                         ///< iterator is at the beginning of the tree
-        bool m_atEnd;                           ///< iterator is at the end of the tree
         EgcIteratorState m_state;               ///< reflects the iterator state to know where to go next time
-
-
+        EgcNode* m_history;                     ///< the last node we jumped over
 };
 
 

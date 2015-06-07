@@ -9,8 +9,7 @@
 
 EgcNodeIterator::EgcNodeIterator(const EgcFormulaExpression& formula) :
         m_next(formula.getBaseElement().getChild()), m_previous(&formula.getBaseElement()),
-        m_baseElement(&formula.getBaseElement()), m_atBegin(true), m_atEnd(false),
-        m_state(EgcIteratorState::LeftIteration)
+        m_baseElement(&formula.getBaseElement()), m_state(EgcIteratorState::LeftIteration), m_history(nullptr)
 {
 }
 
@@ -26,8 +25,6 @@ EgcNodeIterator::EgcNodeIterator(const EgcNode & node)
         m_next = static_cast<EgcBaseNode*>(tempNode)->getChild(0);
         m_previous = tempNode;
         m_baseElement = static_cast<EgcBaseNode*>(tempNode);
-        m_atBegin = true;
-        m_atEnd = false;
         m_state = EgcIteratorState::LeftIteration;
         EgcNode *nextNode = m_baseElement;
 
@@ -50,7 +47,7 @@ EgcNode & EgcNodeIterator::next(void)
         }
 
         //if we are at the end and do a next
-        if (m_atEnd) {
+        if (m_next == m_baseElement) {
                 m_next = m_baseElement->getChild(0);
                 m_previous = m_baseElement;
         }
@@ -65,16 +62,7 @@ EgcNode & EgcNodeIterator::next(void)
                 m_next = m_baseElement->getChild(0);
                 m_previous = m_baseElement;
         }
-
-        if (m_previous == m_baseElement)
-                m_atBegin = true;
-        else
-                m_atBegin = false;
-
-        if (m_next == m_baseElement)
-                m_atEnd = true;
-        else
-                m_atEnd = false;
+        m_history = tempNode;
 
         return *tempNode;
 }
@@ -89,7 +77,7 @@ EgcNode & EgcNodeIterator::previous(void)
         }
 
         //if we are at the beginning and do a previous
-        if (m_atBegin) {
+        if (m_previous == m_baseElement) {
                 m_next = m_baseElement;
                 m_previous = m_baseElement->getChild(0);
         }
@@ -104,16 +92,7 @@ EgcNode & EgcNodeIterator::previous(void)
                 m_next = m_baseElement;
                 m_previous = m_baseElement->getChild(0);
         }
-
-        if (m_next == m_baseElement)
-                m_atEnd = true;
-        else
-                m_atEnd = false;
-
-        if (m_previous == m_baseElement)
-                m_atBegin = true;
-        else
-                m_atBegin = false;
+        m_history = tempNode;
 
         return *tempNode;
 }
@@ -168,7 +147,10 @@ bool EgcNodeIterator::hasNext(void) const
         if (!m_baseElement->getChild(0))
                 return false;
 
-        return !m_atEnd;
+        if (m_next == m_baseElement)
+                return false;
+        else
+                return true;
 }
 
 bool EgcNodeIterator::hasPrevious(void) const
@@ -176,7 +158,10 @@ bool EgcNodeIterator::hasPrevious(void) const
         if (!m_baseElement->getChild(0))
                 return false;
 
-        return !m_atBegin;
+        if (m_previous == m_baseElement)
+                return false;
+        else
+                return true;
 }
 
 EgcNode& EgcNodeIterator::peekNext(void) const
@@ -198,16 +183,12 @@ EgcNode& EgcNodeIterator::peekPrevious(void) const
 
 void EgcNodeIterator::toBack(void)
 {
-        m_atBegin = false;
-        m_atEnd = true;
         m_next = m_baseElement;
         m_previous = m_baseElement->getChild(0);
 }
 
 void EgcNodeIterator::toFront(void)
 {
-        m_atBegin = true;
-        m_atEnd = false;
         m_next = m_baseElement->getChild(0);
         m_previous = m_baseElement;
 }
@@ -402,60 +383,6 @@ void EgcNodeIterator::remove()
 //                                setChild(*EgcNodeCreator::create(EgcNodeType::EmptyNode));
 //        }
 //        m_history = m_baseElement;
-//        if (   m_cursor == m_baseElement->getChild()
-//            && m_state == EgcIteratorState::RightIteration) {
-//                m_atBegin = true;
-//                m_atEnd = false;
-//        } else {
-//                m_atBegin = false;
-//                m_atEnd = false;
-//        }
-}
-
-EgcNode& EgcNodeIterator::nextParent(void)
-{
-        EgcNode* tempNode;
-
-//        if (   m_history == m_baseElement->getChild()
-//            || m_history == m_baseElement)
-//                tempNode = m_baseElement->getChild();
-//        else
-//                tempNode = m_history->getParent();
-
-//        if (tempNode == nullptr) {
-//                m_cursor = m_baseElement;
-//                m_atBegin = true;
-//                m_atEnd = false;
-//                m_history = m_baseElement;
-//                m_previousCursor = m_baseElement;
-//                m_forward = true;
-//                m_state = EgcIteratorState::LeftIteration;
-//                return *m_baseElement;
-//        }
-
-//        m_cursor = tempNode;
-//        m_forward = true;
-//        m_previousCursor = m_history;
-//        m_atBegin = false;
-//        if (m_cursor == m_baseElement->getChild())
-//                m_atEnd = true;
-//        else
-//                m_atEnd = false;
-
-//        if (tempNode->isBinaryExpression()) {
-//                if (isLeftChild(*tempNode, *m_history)) {
-//                        m_state = EgcIteratorState::MiddleIteration;
-//                } else {
-//                        m_state = EgcIteratorState::RightIteration;
-//                }
-//        } else { //must be a unary expression
-//                m_state = EgcIteratorState::RightIteration;
-//        }
-
-//        // we need to increment by one to jump over the element to return
-//        (void) next();
-
-        return *tempNode;
 }
 
 EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
