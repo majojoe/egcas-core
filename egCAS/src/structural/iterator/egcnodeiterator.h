@@ -112,13 +112,13 @@ protected:
          */
         virtual EgcNode& getNextElement(EgcNode& currentNext, EgcNode &currentPrev, bool &restart) const;
         /**
-         * @brief getPreviousElement get the previous element in the tree
-         * @param atBeginning true if beginning of the tree has been reached
-         * @param atEnd true if the end of the tree has been reached
-         * @param state enumeration to be able to decide which node visit next
-         * @return a pointer to the pevious element
+         * @brief getPreviousElement returns the previous element in the tree
+         * @param currentPrev the currently previous node in the tree
+         * @param currentNext the currently next node in the tree
+         * @param restart an error while parsing the tree ocurred, so restart at the beginning of the tree
+         * @return a pointer to the previous (previous of currentPrev) element
          */
-        virtual EgcNode& getPreviousElement(bool* atBeginning, bool* atEnd, EgcIteratorState* state) const;
+        virtual EgcNode& getPreviousElement(EgcNode& currentPrev, EgcNode& currentNext, bool& restart) const;
         /**
          * @brief isRightChild checks if the given child is the right child of the given parent
          * @param parent reference to the parent to test for
