@@ -3,6 +3,7 @@
 
 #include "structural/egcnodes.h"
 #include "structural/iterator/egcexpressionnodeiterator.h"
+#include "structural/iterator/egcnodeiterator.h"
 #include "structural/egcformulaexpression.h"
 #include "structural/egcnodecreator.h"
 #include "structural/visitor/egcnodevisitor.h"
