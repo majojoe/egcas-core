@@ -100,6 +100,13 @@ public:
          * nullptr if there is no child at all.
          */
         virtual EgcNode* decrementToPrevChild(EgcNode &previousChild) const = 0;
+        /**
+         * @brief getIndexChild returns the index of the child given within this node as parent
+         * @param child the child to calculate the index position for.
+         * @param index reverence where to write the index result to.
+         * @return true if child is a child of this current node (and index could be calculated), false otherwise.
+         */
+        virtual bool getIndexChild(EgcNode& child, quint32& index) const = 0;
 };
 
 #endif // EGCCONTAINERNODE_H

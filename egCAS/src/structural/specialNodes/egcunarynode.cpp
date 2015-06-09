@@ -196,3 +196,13 @@ EgcNode* EgcUnaryNode::decrementToPrevChild(EgcNode &previousChild) const
 
         return nullptr;
 }
+
+bool EgcUnaryNode::getIndexChild(EgcNode& child, quint32& index) const
+{
+        if (child.getParent() == this) {
+                index = 0;
+                return true;
+        }
+
+        return false;
+}

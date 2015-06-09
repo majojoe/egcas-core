@@ -365,24 +365,30 @@ bool EgcNodeIterator::insert(EgcNodeType type)
 
 void EgcNodeIterator::remove()
 {
-//        //the last node jumped over is in m_history
-//        EgcNode *history = m_history;
-//        EgcNode *parent = &nextParent();
-//        //jump back again
-//        (void) previous();
-//        if (parent->isBinaryExpression()) {
-//                if (isRightChild(*parent, *history))
-//                        static_cast<EgcBinaryNode*>(parent)->
-//                                setRightChild(*EgcNodeCreator::create(EgcNodeType::EmptyNode));
-//                else
-//                        static_cast<EgcBinaryNode*>(parent)->
-//                                setLeftChild(*EgcNodeCreator::create(EgcNodeType::EmptyNode));
+        //the last node jumped over is in m_history
+        EgcNode *history = m_history;
+        if (!history) //if there is no history, we are going to delete the root node
+                history = m_baseElement->getChild(0);
+        EgcNode *parent = history->getParent();
+        if (!parent) //nullptr is not allowed
+                return;
+        quint32 index = 0;
+        m_next = parent;
+        m_previous = history;
+        m_history = nullptr;
+        (void) next();
 
-//        } else {
-//                static_cast<EgcUnaryNode*>(parent)->
-//                                setChild(*EgcNodeCreator::create(EgcNodeType::EmptyNode));
-//        }
-//        m_history = m_baseElement;
+        if (parent->isContainer()) { //must be true, only for case of error
+                if (static_cast<EgcContainerNode*>(parent)->getIndexChild(*history, index)) {
+                        static_cast<EgcContainerNode*>(parent)->
+                                                       setChild(index,*EgcNodeCreator::create(EgcNodeType::EmptyNode));
+                }
+        }
+        //jump back again
+        (void) previous();
+        //correct the history
+        if (parent->isContainer()) //must be true, only for case of error
+                m_history = static_cast<EgcContainerNode*>(parent)->getChild(index);
 }
 
 EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)

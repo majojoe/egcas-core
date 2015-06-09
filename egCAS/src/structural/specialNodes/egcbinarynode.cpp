@@ -247,3 +247,16 @@ EgcNode* EgcBinaryNode::decrementToPrevChild(EgcNode &previousChild) const
         else
                 return nullptr;
 }
+
+bool EgcBinaryNode::getIndexChild(EgcNode& child, quint32& index) const
+{
+        if (child.getParent() == this) {
+                index = 0;
+                if (&child == m_rightChild) {
+                        index = 1;
+                }
+                return true;
+        }
+
+        return false;
+}

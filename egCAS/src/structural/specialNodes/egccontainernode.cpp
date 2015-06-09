@@ -63,3 +63,10 @@ bool EgcContainerNode::isLastChild(EgcNode &child) const
         return false;
 }
 
+bool EgcContainerNode::getIndexChild(EgcNode& child, quint32& index) const
+{
+        (void) child;
+        (void) index;
+
+        return false;
+}

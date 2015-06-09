@@ -960,35 +960,6 @@ void EgcasTest_Structural::testIterator()
         QVERIFY(nodePointer == rootExpression2);
         QVERIFY(stepState == EgcIteratorState::LeftIteration);
         QVERIFY(iter5.hasPrevious() == false);
-
-//        // ------------------------------------------------------
-//        //           test nextParent
-//        // ------------------------------------------------------
-//        iter5.toFront();
-//        iter5.next();
-//        iter5.next();
-//        nodePointer = &(iter5.next());
-//        QVERIFY(nodePointer == node3);
-//        //is now between node 3 and 4
-//        EgcNode *parentNode = &(iter5.nextParent());
-//        QVERIFY(parentNode == node2);
-//        nodePointer = &(iter5.next());
-//        QVERIFY(nodePointer == node6);
-
-//        iter5.toFront();
-//        parentNode = &(iter5.nextParent());
-//        QVERIFY(parentNode == rootExpression2);
-
-//        iter5.toFront();
-//        while (nodePointer != node11) {
-//                nodePointer = &(iter5.next());
-//        }
-//        parentNode = &(iter5.nextParent());
-//        QVERIFY(parentNode == node10);
-//        nodePointer = &(iter5.next());
-//        stepState = iter5.getLastState();
-//        QVERIFY(nodePointer == node9);
-//        QVERIFY(stepState == EgcIteratorState::MiddleIteration);
 }
 
 void EgcasTest_Structural::testInsertDelete()
