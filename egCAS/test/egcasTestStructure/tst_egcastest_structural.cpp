@@ -964,220 +964,217 @@ void EgcasTest_Structural::testIterator()
 
 void EgcasTest_Structural::testInsertDelete()
 {
-//        /*  This tree is tested within the iterator test below
-//                                               |---|
-//                                               | 1 |
-//                                               |---|
-//                                             /         \
-//                                          /               \
-//                                       |---|             |---|
-//                                       | 2 |             | 4 |
-//                                       |---|             |---|
-//                                    /       \
-//                                   /         \
-//                                |---|       |---|
-//                                | 3 |       | 5 |
-//                                |---|       |---|
-//        */
+        /*  This tree is tested within the iterator test below
+                                               |---|
+                                               | 1 |
+                                               |---|
+                                             /         \
+                                          /               \
+                                       |---|             |---|
+                                       | 2 |             | 4 |
+                                       |---|             |---|
+                                    /       \
+                                   /         \
+                                |---|       |---|
+                                | 3 |       | 5 |
+                                |---|       |---|
+        */
 
-//        EgcFormulaExpression formula4(EgcNodeType::RootNode);
-//        EgcIteratorState state;
-//        EgcNode *nodePointer;
-//        EgcExpressionNodeIterator iter8(formula4);
-//        EgcNode *node1;
-//        EgcNode *node3;
-//        EgcNode *node2;
-//        EgcNode *node4;
-//        EgcNode *node5;
+        EgcFormulaExpression formula4(EgcNodeType::RootNode);
+        EgcIteratorState state;
+        EgcNode *nodePointer;
+        EgcNodeIterator iter8(formula4);
+        EgcNode *node1;
+        EgcNode *node3;
+        EgcNode *node2;
+        EgcNode *node4;
+        EgcNode *node5;
 
-//        nodePointer = &(iter8.next());
-//        node1 = nodePointer;
-//        iter8.insert(EgcNodeType::RootNode);
-//        nodePointer = &(iter8.next());
-//        node2 = nodePointer;
-//        nodePointer = &(iter8.next());
-//        node3 = nodePointer;
-//        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
-//        nodePointer = iter8.replace(*nodePointer, EgcNodeType::NumberNode);
-//        QVERIFY(nodePointer != nullptr);
-//        static_cast<EgcNumberNode*>(nodePointer)->setValue("3.452");
-//        node3 = nodePointer;
-//        nodePointer = &(iter8.next());
-//        nodePointer = &(iter8.next());
-//        node5 = nodePointer;
-//        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
-//        nodePointer = iter8.replace(*nodePointer, EgcNodeType::NumberNode);
-//        QVERIFY(nodePointer != nullptr);
-//        static_cast<EgcNumberNode*>(nodePointer)->setValue("5.647");
-//        node5 = nodePointer;
-//        node4 = static_cast<EgcBinaryNode*>(node1)->getRightChild();
+        nodePointer = &(iter8.next());
+        node1 = nodePointer;
+        iter8.insert(EgcNodeType::RootNode);
+        nodePointer = &(iter8.next());
+        node2 = nodePointer;
+        nodePointer = &(iter8.next());
+        node3 = nodePointer;
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
+        nodePointer = iter8.replace(*nodePointer, EgcNodeType::NumberNode);
+        QVERIFY(nodePointer != nullptr);
+        static_cast<EgcNumberNode*>(nodePointer)->setValue("3.452");
+        node3 = nodePointer;
+        nodePointer = &(iter8.next());
+        nodePointer = &(iter8.next());
+        node5 = nodePointer;
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
+        nodePointer = iter8.replace(*nodePointer, EgcNodeType::NumberNode);
+        QVERIFY(nodePointer != nullptr);
+        static_cast<EgcNumberNode*>(nodePointer)->setValue("5.647");
+        node5 = nodePointer;
+        node4 = static_cast<EgcBinaryNode*>(node1)->getRightChild();
 
-//        //test if the nodes are in the order intended
-//        iter8.toFront();
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node1);
-//        QVERIFY(state == EgcIteratorState::LeftIteration);
+        //test if the nodes are in the order intended
+        iter8.toFront();
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcIteratorState::LeftIteration);
 
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node2);
-//        QVERIFY(state == EgcIteratorState::LeftIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node2);
+        QVERIFY(state == EgcIteratorState::LeftIteration);
 
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node3);
-//        QVERIFY(state == EgcIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node3);
+        QVERIFY(state == EgcIteratorState::MiddleIteration);
 
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node2);
-//        QVERIFY(state == EgcIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node2);
+        QVERIFY(state == EgcIteratorState::MiddleIteration);
 
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node5);
-//        QVERIFY(state == EgcIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node5);
+        QVERIFY(state == EgcIteratorState::MiddleIteration);
 
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node2);
-//        QVERIFY(state == EgcIteratorState::RightIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node2);
+        QVERIFY(state == EgcIteratorState::RightIteration);
 
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node1);
-//        QVERIFY(state == EgcIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcIteratorState::MiddleIteration);
 
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node4);
-//        QVERIFY(state == EgcIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node4);
+        QVERIFY(state == EgcIteratorState::MiddleIteration);
 
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node1);
-//        QVERIFY(state == EgcIteratorState::RightIteration);
-
-
-//        //now we remove node 2
-//        iter8.toFront();
-//        (void) iter8.next();
-//        (void) iter8.next();
-//        iter8.remove();
-
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == formula4.getRootElement());
-//        QVERIFY(state == EgcIteratorState::MiddleIteration);
-
-//        //test if the nodes are in the order intended
-//        iter8.toFront();
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node1);
-//        QVERIFY(state == EgcIteratorState::LeftIteration);
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
-//        QVERIFY(state == EgcIteratorState::MiddleIteration);
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node1);
-//        QVERIFY(state == EgcIteratorState::MiddleIteration);
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node4);
-//        QVERIFY(state == EgcIteratorState::MiddleIteration);
-//        nodePointer = &(iter8.next());
-//        state = iter8.getLastState();
-//        QVERIFY(nodePointer == node1);
-//        QVERIFY(state == EgcIteratorState::RightIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcIteratorState::RightIteration);
 
 
+        //now we remove node 2
+        iter8.toFront();
+        (void) iter8.next();
+        (void) iter8.next();
+        iter8.remove();
 
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == formula4.getRootElement());
+        QVERIFY(state == EgcIteratorState::MiddleIteration);
+
+        //test if the nodes are in the order intended
+        iter8.toFront();
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcIteratorState::LeftIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
+        QVERIFY(state == EgcIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node4);
+        QVERIFY(state == EgcIteratorState::MiddleIteration);
+        nodePointer = &(iter8.next());
+        state = iter8.getLastState();
+        QVERIFY(nodePointer == node1);
+        QVERIFY(state == EgcIteratorState::RightIteration);
 
 }
 
 void EgcasTest_Structural::testMaximaVisitor()
 {
-//        /*  This tree is tested within the iterator test below
-//                                               |---|
-//                                               | 1 |
-//                                               |---|
-//                                             /         \
-//                                          /               \
-//                                       |---|             |---|
-//                                       | 2 |             | 4 |
-//                                       |---|             |---|
-//                                    /       \
-//                                   /         \
-//                                |---|       |---|
-//                                | 3 |       | 5 |
-//                                |---|       |---|
-//        */
+        /*  This tree is tested within the iterator test below
+                                               |---|
+                                               | 1 |
+                                               |---|
+                                             /         \
+                                          /               \
+                                       |---|             |---|
+                                       | 2 |             | 4 |
+                                       |---|             |---|
+                                    /       \
+                                   /         \
+                                |---|       |---|
+                                | 3 |       | 5 |
+                                |---|       |---|
+        */
 
-//        EgcFormulaExpression formula4(EgcNodeType::RootNode);
-//        EgcIteratorState state;
-//        EgcNode *nodePointer;
-//        EgcExpressionNodeIterator iter8(formula4);
-//        EgcNode *node1;
-//        EgcNode *node3;
-//        EgcNode *node2;
-//        EgcNode *node4;
-//        EgcNode *node5;
+        EgcFormulaExpression formula4(EgcNodeType::RootNode);
+        EgcIteratorState state;
+        EgcNode *nodePointer;
+        EgcNodeIterator iter8(formula4);
+        EgcNode *node1;
+        EgcNode *node3;
+        EgcNode *node2;
+        EgcNode *node4;
+        EgcNode *node5;
 
-//        nodePointer = &(iter8.next());
-//        node1 = nodePointer;
-//        iter8.insert(EgcNodeType::RootNode);
-//        nodePointer = &(iter8.next());
-//        node2 = nodePointer;
-//        nodePointer = &(iter8.next());
-//        node3 = nodePointer;
-//        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
-//        nodePointer = iter8.replace(*nodePointer, EgcNodeType::NumberNode);
-//        QVERIFY(nodePointer != nullptr);
-//        static_cast<EgcNumberNode*>(nodePointer)->setValue("30.452");
-//        node3 = nodePointer;
-//        nodePointer = &(iter8.next());
-//        nodePointer = &(iter8.next());
-//        node5 = nodePointer;
-//        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
-//        nodePointer = iter8.replace(*nodePointer, EgcNodeType::NumberNode);
-//        QVERIFY(nodePointer != nullptr);
-//        static_cast<EgcNumberNode*>(nodePointer)->setValue("3");
-//        node5 = nodePointer;
-//        nodePointer = &(iter8.next());
-//        nodePointer = &(iter8.next());
-//        nodePointer = &(iter8.next());
-//        nodePointer = iter8.replace(*nodePointer, EgcNodeType::NumberNode);
-//        static_cast<EgcNumberNode*>(nodePointer)->setValue("2");
-//        node4 = nodePointer;
+        nodePointer = &(iter8.next());
+        node1 = nodePointer;
+        iter8.insert(EgcNodeType::RootNode);
+        nodePointer = &(iter8.next());
+        node2 = nodePointer;
+        nodePointer = &(iter8.next());
+        node3 = nodePointer;
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
+        nodePointer = iter8.replace(*nodePointer, EgcNodeType::NumberNode);
+        QVERIFY(nodePointer != nullptr);
+        static_cast<EgcNumberNode*>(nodePointer)->setValue("30.452");
+        node3 = nodePointer;
+        nodePointer = &(iter8.next());
+        nodePointer = &(iter8.next());
+        node5 = nodePointer;
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
+        nodePointer = iter8.replace(*nodePointer, EgcNodeType::NumberNode);
+        QVERIFY(nodePointer != nullptr);
+        static_cast<EgcNumberNode*>(nodePointer)->setValue("3");
+        node5 = nodePointer;
+        nodePointer = &(iter8.next());
+        nodePointer = &(iter8.next());
+        nodePointer = &(iter8.next());
+        nodePointer = iter8.replace(*nodePointer, EgcNodeType::NumberNode);
+        static_cast<EgcNumberNode*>(nodePointer)->setValue("2");
+        node4 = nodePointer;
 
-//        //test copy constructor of the formula expression
-//        EgcFormulaExpression formula5 = EgcFormulaExpression(formula4);
-//        EgcNode *node1_5 = formula5.getRootElement();
-//        QVERIFY(node1 != node1_5);
-//        nodePointer = static_cast<EgcRootNode*>(node1_5)->getRightChild();
-//        QVERIFY(static_cast<EgcNumberNode*>(nodePointer)->getValue() == "2");
+        //test copy constructor of the formula expression
+        EgcFormulaExpression formula5 = EgcFormulaExpression(formula4);
+        EgcNode *node1_5 = formula5.getRootElement();
+        QVERIFY(node1 != node1_5);
+        nodePointer = static_cast<EgcRootNode*>(node1_5)->getRightChild();
+        QVERIFY(static_cast<EgcNumberNode*>(nodePointer)->getValue() == "2");
 
-//        //test maxima visitor
-//        EgcMaximaVisitor maximaVisitor(formula4);
-//        QString result(maximaVisitor.getResult());
-//        QVERIFY(result == QString("((30.452)^(1/3))^(1/2);\n"));
-//        QVERIFY(formula4.getCASKernelCommand() == QString("((30.452)^(1/3))^(1/2);\n"));
+        //test maxima visitor
+        EgcMaximaVisitor maximaVisitor(formula4);
+        QString result(maximaVisitor.getResult());
+        QVERIFY(result == QString("((30.452)^(1/3))^(1/2);\n"));
+        QVERIFY(formula4.getCASKernelCommand() == QString("((30.452)^(1/3))^(1/2);\n"));
 
-//        //test maxima visitor with copied formula
-//        EgcMaximaVisitor maximaVisitor2(formula5);
-//        QString result2(maximaVisitor2.getResult());
-//        QVERIFY(result2 == QString("((30.452)^(1/3))^(1/2);\n"));
-//        QVERIFY(formula5.getCASKernelCommand() == QString("((30.452)^(1/3))^(1/2);\n"));
+        //test maxima visitor with copied formula
+        EgcMaximaVisitor maximaVisitor2(formula5);
+        QString result2(maximaVisitor2.getResult());
+        QVERIFY(result2 == QString("((30.452)^(1/3))^(1/2);\n"));
+        QVERIFY(formula5.getCASKernelCommand() == QString("((30.452)^(1/3))^(1/2);\n"));
 
-//        //test math ml visitor
-//        EgcMathMlVisitor mathMlVisitor(formula4);
-//        result = mathMlVisitor.getResult();
-//        QVERIFY(result == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
-//        QVERIFY(formula4.getMathMlCode() == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
+        //test math ml visitor
+        EgcMathMlVisitor mathMlVisitor(formula4);
+        result = mathMlVisitor.getResult();
+        QVERIFY(result == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
+        QVERIFY(formula4.getMathMlCode() == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
 }
 
 EgcNode*EgcasTest_Structural::addChild(EgcNode& parent, EgcNodeType type, QString number)

@@ -97,12 +97,10 @@ bool EgcUnaryNode::transferPropertiesTo(EgcNode &to)
 
         if (to_una.m_child == nullptr) {
                 if (to.isUnaryExpression()) {
-                        EgcContainerNode *parent_container;
                         retval = true;
                         to_una.m_child = m_child;
                         to_una.m_parent = m_parent;
-                        parent_container = static_cast<EgcContainerNode*>(m_parent);
-                        parent_container->adjustChildPointers(*this, to);
+                        m_parent->adjustChildPointers(*this, to);
                         m_child = nullptr;
                         m_parent = nullptr;
                 }

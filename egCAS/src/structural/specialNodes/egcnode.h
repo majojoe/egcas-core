@@ -90,7 +90,7 @@ public:
         virtual void accept(EgcNodeVisitor *visitor);
 
 protected:
-        EgcNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)
+        EgcContainerNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)
 };
 
 #endif // EGCNODE_H

@@ -278,87 +278,86 @@ bool EgcNodeIterator::insert(EgcNodeType type)
 {
         bool retval = false;
 
-//        QScopedPointer<EgcNode> node (EgcNodeCreator::create(type));
+        QScopedPointer<EgcNode> node (EgcNodeCreator::create(type));
 
-//        if (!node.data())
-//                return retval;
+        if (!node.data())
+                return retval;
 
-//        // only containers can be inserted in the tree
-//        if (node->isContainer()) {
-//                retval = true;
-//                if (node->isBinaryExpression()) {
-//                        // set the right child to a empty child
-//                        QScopedPointer<EgcNode> tempNode(EgcNodeCreator::
-//                                                                  create(EgcNodeType::EmptyNode));
-//                        if (m_forward)
-//                                static_cast<EgcBinaryNode*>(node.data())->setRightChild(*(tempNode.take()));
-//                        else
-//                                static_cast<EgcBinaryNode*>(node.data())->setLeftChild(*(tempNode.take()));
-//                }
-//                //insert the container into the tree
-//                EgcNode &nextNode = peekNext();
-//                EgcNode &previousNode = peekPrevious();
-//                QScopedPointer<EgcNode> childNode;
-//                EgcNode *parentNode;
-//                EgcContainerNode* container;
-//                if (nextNode.getParent() == &previousNode) {
-//                        parentNode = &previousNode;
-//                        container = static_cast<EgcContainerNode*>(parentNode);
-//                        childNode.reset(container->takeOwnership(nextNode));
-//                } else {
-//                        parentNode = previousNode.getParent();
-//                        container = static_cast<EgcContainerNode*>(parentNode);
-//                        childNode.reset(container->takeOwnership(previousNode));
-//                }
-//                if (parentNode == nullptr || parentNode == childNode.data()) {
-//                        parentNode = m_baseElement;
-//                        container = static_cast<EgcContainerNode*>(parentNode);
-//                        if (m_baseElement->getChild())
-//                                childNode.reset(container->takeOwnership(*(m_baseElement->getChild())));
-//                }
+        // only containers can be inserted in the tree
+        if (node->isContainer()) {
+                EgcContainerNode* node_cont = static_cast<EgcContainerNode*>(node.data());
+                quint32 nodeIndex = 0;
+                quint32 nrChildNodes = node_cont->getNumberChildNodes();
+                bool forward = true;
+                if (m_history == m_previous)
+                        forward = false;
 
-//                //set the parent
-//                EgcNode *nodePtr = node.data();
-//                if (parentNode->isBinaryExpression()) {
-//                        if (isRightChild(*parentNode, *childNode)) {
-//                                static_cast<EgcBinaryNode*>(parentNode)->setRightChild(*(node.take()));
-//                        } else {
-//                                static_cast<EgcBinaryNode*>(parentNode)->setLeftChild(*(node.take()));
-//                        }
+                if (nrChildNodes > 1) {
+                        quint32 n = nrChildNodes - 1;
+                        quint32 start;
 
-//                } else {
-//                        static_cast<EgcUnaryNode*>(parentNode)->setChild(*(node.take()));
-//                }
+                        if (forward) {
+                                start = 1;
+                                n = nrChildNodes;
+                                nodeIndex = 0;
+                        } else {
+                                start = 0;
+                                n = nrChildNodes - 1;
+                                nodeIndex = nrChildNodes - 1;
+                        }
 
-//                //set the child if one
-//                if (childNode.data()) {
-//                        if (nodePtr->isBinaryExpression()) {
-//                                if (m_forward)
-//                                        static_cast<EgcBinaryNode*>(nodePtr)->setLeftChild(*(childNode.take()));
-//                                else
-//                                        static_cast<EgcBinaryNode*>(nodePtr)->setRightChild(*(childNode.take()));
-//                        } else {
-//                                static_cast<EgcUnaryNode*>(nodePtr)->setChild(*(childNode.take()));
-//                        }
-//                } else { // insert empty nodes if no child node is present
-//                        if (nodePtr->isBinaryExpression()) {
-//                                if (m_forward)
-//                                        static_cast<EgcBinaryNode*>(nodePtr)->
-//                                                setLeftChild(*EgcNodeCreator::create(EgcNodeType::EmptyNode));
-//                                else
-//                                        static_cast<EgcBinaryNode*>(nodePtr)->
-//                                                setRightChild(*EgcNodeCreator::create(EgcNodeType::EmptyNode));
-//                        } else {
-//                                static_cast<EgcUnaryNode*>(nodePtr)->
-//                                        setChild(*EgcNodeCreator::create(EgcNodeType::EmptyNode));
-//                        }
+                        for (int i = start; i < n; i++) {
+                                QScopedPointer<EgcNode> tempNode(EgcNodeCreator::
+                                                                          create(EgcNodeType::EmptyNode));
+                                if (tempNode.data() == nullptr)
+                                        return false;
 
-//                }
+                                node_cont->setChild(i, *(tempNode.take()));
+                        }
+                }
 
-//                //repair the node pointer organization data
-//                m_cursor = nodePtr;
-//                m_state = determineFollowingState(*m_history, *m_cursor, m_forward);
-//        }
+                //insert the container into the tree
+                if (!m_next || !m_previous)
+                        return false;
+
+                QScopedPointer<EgcNode> childNode;
+                EgcContainerNode *parentNode;
+                if (m_next->getParent() == m_previous) {
+                        parentNode = static_cast<EgcContainerNode*>(m_previous);
+                        if (parentNode)
+                                childNode.reset(parentNode->takeOwnership(*m_next));
+                } else {
+                        parentNode = static_cast<EgcContainerNode*>(m_previous->getParent());
+                        if (parentNode)
+                                childNode.reset(parentNode->takeOwnership(*m_previous));
+                }
+                if (!parentNode || parentNode == childNode.data())
+                        return false;
+
+                //set the parent
+                EgcContainerNode *nodePtr = static_cast<EgcContainerNode*>(node.data());
+                quint32 parentIndex;
+
+                if (parentNode->getIndexChild(*childNode, parentIndex)) {
+                        if (parentNode->setChild(parentIndex, *(node.take())))
+                                retval = true;
+                }
+
+                //set the child if one
+                if (childNode.data()) {
+                        if (!nodePtr->setChild(nodeIndex, *(childNode.take())))
+                                retval = false;
+                } else { // insert empty nodes if no child node is present
+                        if (!nodePtr->setChild(nodeIndex, *EgcNodeCreator::create(EgcNodeType::EmptyNode)))
+                                retval = false;
+                }
+
+                //repair the node pointer organization data
+                if (forward)
+                        m_previous = m_history = nodePtr;
+                else
+                        m_next = m_history = nodePtr;
+        }
 
         return retval;
 }
@@ -395,53 +394,53 @@ EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
 {
         EgcNode *retval = nullptr;
 
-//        QScopedPointer<EgcNode> replacement(EgcNodeCreator::create(type));
-//        QScopedPointer<EgcNode> theReplaced(&node);
+        QScopedPointer<EgcNode> replacement(EgcNodeCreator::create(type));
+        QScopedPointer<EgcNode> theReplaced(&node);
 
-//        if (node.isBinaryExpression() && replacement.data()->isBinaryExpression()) {
-//                EgcBinaryNode &bin_node = static_cast<EgcBinaryNode&>(node);
-//                if (bin_node.transferPropertiesTo(*static_cast<EgcBinaryNode*>(replacement.data()))) {
-//                        retval = replacement.take();
-//                } else {
-//                        //leave the tree as it is
-//                        (void) theReplaced.take();
-//                }
-//        } else if (node.isUnaryExpression() && replacement.data()->isUnaryExpression()) {
-//                EgcUnaryNode &una_node = static_cast<EgcUnaryNode&>(node);
-//                if (una_node.transferPropertiesTo(*static_cast<EgcUnaryNode*>(replacement.data()))){
-//                        retval = replacement.take();
-//                } else {
-//                        //leave the tree as it is
-//                        (void) theReplaced.take();
-//                }
-//        } else {
-//                EgcNode *parent = node.getParent();
+        if (!replacement.data())
+                return nullptr;
 
-//                if(parent) {
-//                        if (parent->isBinaryExpression()) {
-//                                if (isLeftChild(*parent, node))
-//                                        static_cast<EgcBinaryNode*>(parent)
-//                                                ->setLeftChild(*replacement.data());
-//                                else
-//                                        static_cast<EgcBinaryNode*>(parent)
-//                                                ->setRightChild(*replacement.data());
-//                        } else {
-//                                static_cast<EgcUnaryNode*>(parent)->setChild(*replacement.data());
-//                        }
-//                        //the replaced node has already been deleted
-//                        (void) theReplaced.take();
-//                        retval = replacement.take();
-//                }
-//        }
+        if (node.isContainer() && replacement.data()->isContainer()) {
+                //both are container types and have the same number of childs
+                EgcContainerNode* node_cont = static_cast<EgcContainerNode*>(&node);
+                EgcContainerNode* replace_cont = static_cast<EgcContainerNode*>(replacement.data());
 
-//        if (retval) {
-//                if (m_cursor == &node)
-//                        m_cursor = replacement.data();
-//                if (m_history == &node)
-//                        m_history = replacement.data();
-//                if (m_previousCursor == &node)
-//                        m_previousCursor = replacement.data();
-//        }
+                if (node_cont->getNumberChildNodes() == replace_cont->getNumberChildNodes()) {
+                        // the number of child nodes is equal, so we can transfer the childs
+                        if (node_cont->transferPropertiesTo(*replace_cont))
+                                retval = replacement.take();
+                }
+
+        } else if (!node.isContainer() && !replacement.data()->isContainer()) { //both are leafes (no container types)
+                EgcNode *parent = node.getParent();
+
+                if(parent) {
+                        if (parent->isContainer()) {
+                                EgcContainerNode* parentCont = static_cast<EgcContainerNode*>(parent);
+                                quint32 index;
+
+                                if (parentCont->getIndexChild(node, index)) {
+                                        parentCont->setChild(index, *replacement.data());
+                                        //the replaced node has already been deleted
+                                        (void) theReplaced.take();
+                                        retval = replacement.take();
+                                }
+                        }
+                }
+
+        }
+
+        if (retval) { //all other cases
+                if (m_next == &node)
+                        m_next = replacement.data();
+                if (m_history == &node)
+                        m_history = replacement.data();
+                if (m_previous == &node)
+                        m_previous = replacement.data();
+        } else {
+                //leave the tree as it is
+                (void) theReplaced.take();
+        }
 
         return retval;
 }

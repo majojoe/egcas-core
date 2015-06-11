@@ -130,13 +130,11 @@ bool EgcBinaryNode::transferPropertiesTo(EgcNode &to)
 
         if (to_bin.m_rightChild == nullptr && to_bin.m_leftChild == nullptr) {
                 if (to.isBinaryExpression()) {
-                        EgcContainerNode *parent_container;
                         retval = true;
                         to_bin.m_rightChild = m_rightChild;
                         to_bin.m_leftChild = m_leftChild;
                         to_bin.m_parent = m_parent;
-                        parent_container = static_cast<EgcContainerNode*>(m_parent);
-                        parent_container->adjustChildPointers(*this, to);
+                        m_parent->adjustChildPointers(*this, to);
                         m_leftChild = nullptr;
                         m_rightChild = nullptr;
                         m_parent = nullptr;
