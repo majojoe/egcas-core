@@ -993,6 +993,7 @@ void EgcasTest_Structural::testInsertDelete()
         nodePointer = &(iter8.next());
         node1 = nodePointer;
         iter8.insert(EgcNodeType::RootNode);
+        nodePointer = &(iter8.previous());
         nodePointer = &(iter8.next());
         node2 = nodePointer;
         nodePointer = &(iter8.next());
@@ -1127,6 +1128,7 @@ void EgcasTest_Structural::testMaximaVisitor()
         nodePointer = &(iter8.next());
         node1 = nodePointer;
         iter8.insert(EgcNodeType::RootNode);
+        nodePointer = &(iter8.previous());
         nodePointer = &(iter8.next());
         node2 = nodePointer;
         nodePointer = &(iter8.next());

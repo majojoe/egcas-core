@@ -1,4 +1,5 @@
 #include <new>
+#include <QScopedPointer>
 #include "egcformulaexpression.h"
 #include "specialNodes/egcnode.h"
 #include "egcnodecreator.h"
@@ -16,25 +17,20 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false)
 {
         m_data = new (std::nothrow) EgcBaseNode();
         if (m_data) {
-                EgcNode* tmp = EgcNodeCreator::create(type);
-                if (tmp) {
-                        m_data->setChild(*tmp);
-                        if (tmp->isContainer()) {
-                                if (tmp->isBinaryExpression()) {
-                                        EgcBinaryNode *node = static_cast<EgcBinaryNode*>(tmp);
-                                        EgcNode *child =
-                                                EgcNodeCreator::create(EgcNodeType::EmptyNode);
-                                        if (child)
-                                                node->setLeftChild(*child);
-                                        child = EgcNodeCreator::create(EgcNodeType::EmptyNode);
-                                        if (child)
-                                                node->setRightChild(*child);
-                                } else { // unary expression
-                                        EgcUnaryNode *node = static_cast<EgcUnaryNode*>(tmp);
-                                        EgcNode *child =
-                                                EgcNodeCreator::create(EgcNodeType::EmptyNode);
-                                        if (child)
-                                                node->setChild(*child);
+                QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
+                if (tmp.data()) {
+                        EgcNode* tmp_ptr = tmp.data();
+                        if (m_data->setChild(0, *tmp)) //if everything is fine
+                                (void) tmp.take();
+                        if (tmp_ptr->isContainer()) {
+                                EgcContainerNode* cont = static_cast<EgcContainerNode*>(tmp_ptr);
+                                quint32 nrChildNodes = cont->getNumberChildNodes();
+
+                                for (int i = 0; i < nrChildNodes; i++) {
+                                        QScopedPointer<EgcNode> tempNode(EgcNodeCreator::
+                                                                         create(EgcNodeType::EmptyNode));
+                                        if (tempNode.data() != nullptr)
+                                                cont->setChild(i, *(tempNode.take()));
                                 }
                         }
                 }

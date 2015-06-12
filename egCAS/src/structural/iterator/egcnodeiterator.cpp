@@ -289,11 +289,11 @@ bool EgcNodeIterator::insert(EgcNodeType type)
                 quint32 nodeIndex = 0;
                 quint32 nrChildNodes = node_cont->getNumberChildNodes();
                 bool forward = true;
-                if (m_history == m_previous)
+                if (m_history == m_next)
                         forward = false;
 
                 if (nrChildNodes > 1) {
-                        quint32 n = nrChildNodes - 1;
+                        quint32 n;
                         quint32 start;
 
                         if (forward) {
@@ -321,27 +321,30 @@ bool EgcNodeIterator::insert(EgcNodeType type)
                         return false;
 
                 QScopedPointer<EgcNode> childNode;
+                EgcNode* childNodePtr;
                 EgcContainerNode *parentNode;
+                quint32 parentIndex;
+                bool indexOk;
+
                 if (m_next->getParent() == m_previous) {
                         parentNode = static_cast<EgcContainerNode*>(m_previous);
-                        if (parentNode)
-                                childNode.reset(parentNode->takeOwnership(*m_next));
+                        childNodePtr = m_next;
                 } else {
                         parentNode = static_cast<EgcContainerNode*>(m_previous->getParent());
-                        if (parentNode)
-                                childNode.reset(parentNode->takeOwnership(*m_previous));
+                        childNodePtr = m_previous;
                 }
-                if (!parentNode || parentNode == childNode.data())
+                indexOk = parentNode->getIndexChild(*childNodePtr, parentIndex);
+                if (parentNode)
+                        childNode.reset(parentNode->takeOwnership(*childNodePtr));
+
+                if (!parentNode || parentNode == childNode.data() || !indexOk)
                         return false;
 
                 //set the parent
                 EgcContainerNode *nodePtr = static_cast<EgcContainerNode*>(node.data());
-                quint32 parentIndex;
 
-                if (parentNode->getIndexChild(*childNode, parentIndex)) {
-                        if (parentNode->setChild(parentIndex, *(node.take())))
-                                retval = true;
-                }
+                if (parentNode->setChild(parentIndex, *(node.take())))
+                        retval = true;
 
                 //set the child if one
                 if (childNode.data()) {
@@ -353,10 +356,7 @@ bool EgcNodeIterator::insert(EgcNodeType type)
                 }
 
                 //repair the node pointer organization data
-                if (forward)
-                        m_previous = m_history = nodePtr;
-                else
-                        m_next = m_history = nodePtr;
+                m_previous = m_history = nodePtr;
         }
 
         return retval;
