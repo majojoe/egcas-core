@@ -432,11 +432,11 @@ EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
 
         if (retval) { //all other cases
                 if (m_next == &node)
-                        m_next = replacement.data();
+                        m_next = retval;
                 if (m_history == &node)
-                        m_history = replacement.data();
+                        m_history = retval;
                 if (m_previous == &node)
-                        m_previous = replacement.data();
+                        m_previous = retval;
         } else {
                 //leave the tree as it is
                 (void) theReplaced.take();
