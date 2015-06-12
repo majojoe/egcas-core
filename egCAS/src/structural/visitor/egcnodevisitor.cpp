@@ -8,7 +8,7 @@ EgcNodeVisitor::EgcNodeVisitor(EgcFormulaExpression& formula) : m_formula(&formu
 
 QString EgcNodeVisitor::getResult(void)
 {
-        EgcExpressionNodeIterator iter(*m_formula);
+        EgcNodeIterator iter(*m_formula);
         EgcNode *node;
         QString result;
 

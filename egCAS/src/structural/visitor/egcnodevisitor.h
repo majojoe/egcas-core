@@ -2,7 +2,7 @@
 #define EGCNODEVISITOR_H
 
 #include <QString>
-#include "../iterator/egcexpressionnodeiterator.h"
+#include "../iterator/egcnodeiterator.h"
 
 
 class EgcFormulaExpression;
@@ -47,7 +47,7 @@ public:
 protected:
         QString m_result;                       ///< saves the result of the information extracted.
         EgcFormulaExpression *m_formula;        ///< the formula to with the nodes to work on
-        EgcNodeIteratorState m_state;           ///< the current state (helps to extract the correct information from tree)
+        EgcIteratorState m_state;               ///< the current state (helps to extract the correct information from tree)
 
 };
 

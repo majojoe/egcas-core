@@ -12,9 +12,9 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
 
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode:
-                if (m_state == EgcNodeIteratorState::LeftIteration)
+                if (m_state == EgcIteratorState::LeftIteration)
                         str = "<mroot><mrow>";
-                else if (m_state == EgcNodeIteratorState::MiddleIteration)
+                else if (m_state == EgcIteratorState::MiddleIteration)
                         str = "</mrow><mrow>";
                 else
                         str = "</mrow></mroot>";
@@ -33,7 +33,7 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
 
         switch (unary->getNodeType()) {
         case EgcNodeType::ParenthesisNode:
-                if (m_state == EgcNodeIteratorState::LeftIteration)
+                if (m_state == EgcIteratorState::LeftIteration)
                         str = "<mfenced open=\"(\" close=\")\" separators=\",\"><mrow>";
                 else
                         str = "</mrow></mfenced>";

@@ -13,9 +13,9 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
 
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode:
-                if (m_state == EgcNodeIteratorState::LeftIteration)
+                if (m_state == EgcIteratorState::LeftIteration)
                         str = "(";
-                else if (m_state == EgcNodeIteratorState::RightIteration)
+                else if (m_state == EgcIteratorState::RightIteration)
                         str = ")";
                 else
                         str = ")^(1/";
@@ -34,7 +34,7 @@ void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
 
         switch (unary->getNodeType()) {
         case EgcNodeType::ParenthesisNode:
-                if (m_state == EgcNodeIteratorState::LeftIteration)
+                if (m_state == EgcIteratorState::LeftIteration)
                         str = "(";
                 else
                         str = ")";

@@ -3,7 +3,7 @@
 #include <iostream>
 #include "egckernelparser.h"
 #include "egcnodes.h"
-#include "egcexpressionnodeiterator.h"
+#include "egcnodeiterator.h"
 #include "egcformulaexpression.h"
 #include "egcnodecreator.h"
 #include "egcnodevisitor.h"
@@ -67,12 +67,8 @@ void EgcasTest_Parser::treeTestParser()
         }
 
 
-        EgcExpressionNodeIterator iter(*tree);
+        EgcNodeIterator iter(*tree);
         EgcNode* nodePointer;
-
-        //test next functions (node 1)
-        nodePointer = &(iter.next());
-        QVERIFY(nodePointer->getNodeType() == EgcNodeType::BaseNode);
 
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
