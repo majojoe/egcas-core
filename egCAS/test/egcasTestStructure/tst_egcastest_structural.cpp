@@ -119,22 +119,22 @@ void EgcasTest_Structural::testTransferProperties()
         bool retval;
         EgcRootNode *transferNode1 = static_cast<EgcRootNode*>(
                                         EgcNodeCreator::create(EgcNodeType::RootNode));
-        transferNode1->setChild(0, *(new EgcEmptyNode()));
-        retval = node2->transferPropertiesTo(*transferNode1);
+        transferNode1->setChild(0, *(new EgcEmptyNode()));        
+        retval = transferNode1->transferProperties(*node2);
         QVERIFY(retval == false);
         EgcRootNode *transferNode2 = static_cast<EgcRootNode*>(
                                         EgcNodeCreator::create(EgcNodeType::RootNode));
         transferNode2->setChild(1, *(new EgcEmptyNode()));
-        retval = node2->transferPropertiesTo(*transferNode2);
+        retval = transferNode2->transferProperties(*node2);
         QVERIFY(retval == false);
         EgcParenthesisNode *transferNode3 = static_cast<EgcParenthesisNode*>(
                                         EgcNodeCreator::create(EgcNodeType::ParenthesisNode));
         transferNode3->setChild(0, *(new EgcEmptyNode()));
-        retval = node2->transferPropertiesTo(*transferNode3);
+        retval = transferNode3->transferProperties(*node2);
         QVERIFY(retval == false);
         EgcRootNode *transferNode4 = static_cast<EgcRootNode*>(
                                         EgcNodeCreator::create(EgcNodeType::RootNode));
-        retval = node2->transferPropertiesTo(*transferNode4);
+        retval = transferNode4->transferProperties(*node2);
         QVERIFY(retval == true);
 
         QVERIFY(node2->getChild(0) == nullptr);
@@ -1181,7 +1181,7 @@ void EgcasTest_Structural::testMaximaVisitor()
 
 EgcNode*EgcasTest_Structural::addChild(EgcNode& parent, EgcNodeType type, QString number)
 {
-        if (parent.isUnaryExpression()) {
+        if (parent.isUnaryNode()) {
                 EgcUnaryNode& node = static_cast<EgcUnaryNode&>(parent);
                 if (   type == EgcNodeType::RootNode
                                 || type == EgcNodeType::NumberNode
@@ -1206,7 +1206,7 @@ EgcNode*EgcasTest_Structural::addChild(EgcNode& parent, EgcNodeType type, QStrin
 
 EgcNode*EgcasTest_Structural::addLeftChild(EgcNode& parent, EgcNodeType type, QString number)
 {
-        if (parent.isBinaryExpression()) {
+        if (parent.isBinaryNode()) {
                 EgcBinaryNode& node = static_cast<EgcBinaryNode&>(parent);
                 if (   type == EgcNodeType::RootNode
                                 || type == EgcNodeType::NumberNode
@@ -1231,7 +1231,7 @@ EgcNode*EgcasTest_Structural::addLeftChild(EgcNode& parent, EgcNodeType type, QS
 
 EgcNode* EgcasTest_Structural::addRightChild(EgcNode& parent, EgcNodeType type, QString number)
 {
-        if (parent.isBinaryExpression()) {
+        if (parent.isBinaryNode()) {
                 EgcBinaryNode& node = static_cast<EgcBinaryNode&>(parent);
                 if (   type == EgcNodeType::RootNode
                                 || type == EgcNodeType::NumberNode

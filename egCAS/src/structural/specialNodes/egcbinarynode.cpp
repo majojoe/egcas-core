@@ -72,7 +72,7 @@ bool EgcBinaryNode::valid(void)
         return false;
 }
 
-bool EgcBinaryNode::isBinaryExpression(void)
+bool EgcBinaryNode::isBinaryNode(void)
 {
         return true;
 }
@@ -91,27 +91,6 @@ bool EgcBinaryNode::isLeaf(void) const
                 return true;
         else
                 return false;
-}
-
-bool EgcBinaryNode::transferPropertiesTo(EgcNode &to)
-{
-        bool retval = false;
-        EgcBinaryNode &to_bin = static_cast<EgcBinaryNode&>(to);
-
-        if (to_bin.m_rightChild == nullptr && to_bin.m_leftChild == nullptr) {
-                if (to.isBinaryExpression()) {
-                        retval = true;
-                        to_bin.m_rightChild = m_rightChild;
-                        to_bin.m_leftChild = m_leftChild;
-                        to_bin.m_parent = m_parent;
-                        m_parent->adjustChildPointers(*this, to);
-                        m_leftChild = nullptr;
-                        m_rightChild = nullptr;
-                        m_parent = nullptr;
-                }
-        }
-
-        return retval;
 }
 
 void EgcBinaryNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_child)

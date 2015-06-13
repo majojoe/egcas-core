@@ -387,7 +387,7 @@ EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
 
                 if (node_cont->getNumberChildNodes() == replace_cont->getNumberChildNodes()) {
                         // the number of child nodes is equal, so we can transfer the childs
-                        if (node_cont->transferPropertiesTo(*replace_cont))
+                        if (replace_cont->transferProperties(*node_cont))
                                 retval = replacement.take();
                 }
 

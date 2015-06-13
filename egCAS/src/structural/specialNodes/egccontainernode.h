@@ -23,16 +23,6 @@ public:
          */
         virtual bool isContainer(void) const;
         /**
-         * @brief transferChilds transfers all properties (childs and parent) from the node "from" to the node "to".
-         * After this operation has succeeded the node "from" has no childs or parent anymore. The operation is only
-         * possible if the node "to" has no childs at all and the nodes "from" and "to" are of the same type (all are
-         * unary or binary types). The node "to" takes ownership of the childs of the node "from".
-         * @param to the node to transfer the childs to.
-         * @return true if the operation succeeded, false if the nodes are of different types or the node "to" is not
-         * empty.
-         */
-        virtual bool transferPropertiesTo(EgcNode &to) = 0;
-        /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
          * ATTENTION: use this with care since the operation doesn't take care about the old childs. The caller must
          * assure that the old child will be properly deleted -> leak otherwise. It is very unlikely that you will need
@@ -107,6 +97,18 @@ public:
          * @return true if child is a child of this current node (and index could be calculated), false otherwise.
          */
         virtual bool getIndexChild(EgcNode& child, quint32& index) const = 0;
+
+        /**
+         * @brief transferProperties transfers all properties (childs and parent) from the node "from" to this node.
+         * After this operation has succeeded the node "from" has no childs or parent anymore. The operation is only
+         * possible if this node has no childs at all and the number of childs of "from" and this node are equal. This
+         * node takes ownership of the childs of the node "from".
+         * @param from the node to transfer the childs from.
+         * @return true if the operation succeeded, false if the number of childs are different or this node is not
+         * empty.
+         */
+        bool transferProperties(EgcContainerNode &from);
+
 };
 
 #endif // EGCCONTAINERNODE_H

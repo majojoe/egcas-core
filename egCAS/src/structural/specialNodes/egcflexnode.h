@@ -37,16 +37,6 @@ public:
          */
         virtual bool isLeaf(void) const;
         /**
-         * @brief transferChilds transfers all properties (childs and parent) from the node "from" to the node "to".
-         * After this operation has succeeded the node "from" has no childs or parent anymore. The operation is only
-         * possible if the node "to" has no childs at all and the nodes "from" and "to" are of the same type (all are
-         * flex or binary types). The node "to" takes ownership of the childs of the node "from".
-         * @param to the node to transfer the childs to.
-         * @return true if the operation succeeded, false if the nodes are of different types or the node "to" is not
-         * empty.
-         */
-        virtual bool transferPropertiesTo(EgcNode &to);
-        /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
          * ATTENTION: use this with care since the operation doesn't take care about the old childs. The caller must
          * assure that the old child will be properly deleted -> leak otherwise. It is very unlikely that you will need
@@ -126,6 +116,11 @@ public:
          * @return true if child is a child of this current node (and index could be calculated), false otherwise.
          */
         virtual bool getIndexChild(EgcNode& child, quint32& index) const override;
+        /**
+         * @brief isFlexNode returns if the current element is a flex node (container) or not
+         * @return true if it is a flex node, false otherwise
+         */
+        virtual bool isFlexNode(void) const override;
 
 protected:
         EgcNode* m_child;

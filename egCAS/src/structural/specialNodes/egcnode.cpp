@@ -20,12 +20,12 @@ bool EgcNode::isContainer(void) const
         return false;
 }
 
-bool EgcNode::isUnaryExpression(void)
+bool EgcNode::isUnaryNode(void)
 {
         return false;
 }
 
-bool EgcNode::isBinaryExpression(void)
+bool EgcNode::isBinaryNode(void)
 {
         return false;
 }
@@ -59,4 +59,9 @@ bool EgcNode::isChild(EgcNode& parent)
                 return true;
         else
                 return false;
+}
+
+bool EgcNode::isFlexNode(void) const
+{
+        return false;
 }

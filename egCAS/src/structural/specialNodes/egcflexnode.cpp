@@ -69,25 +69,6 @@ bool EgcFlexNode::isLeaf(void) const
                 return false;
 }
 
-bool EgcFlexNode::transferPropertiesTo(EgcNode &to)
-{
-        bool retval = false;
-        EgcFlexNode &to_una = static_cast<EgcFlexNode&>(to);
-
-        if (to_una.m_child == nullptr) {
-                if (to.isFlexExpression()) {
-                        retval = true;
-                        to_una.m_child = m_child;
-                        to_una.m_parent = m_parent;
-                        m_parent->adjustChildPointers(*this, to);
-                        m_child = nullptr;
-                        m_parent = nullptr;
-                }
-        }
-
-        return retval;
-}
-
 void EgcFlexNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_child)
 {
         if (m_child == &old_child)
@@ -182,4 +163,9 @@ bool EgcFlexNode::getIndexChild(EgcNode& child, quint32& index) const
         }
 
         return false;
+}
+
+bool EgcFlexNode::isFlexNode(void) const
+{
+        return true;
 }

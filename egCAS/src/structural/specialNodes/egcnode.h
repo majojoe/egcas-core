@@ -50,12 +50,17 @@ public:
          * @brief isUnaryExpression returns if the current element is a unary expression (container) or not
          * @return true if it is a unary expression, false otherwise
          */
-        virtual bool isUnaryExpression(void);
+        virtual bool isUnaryNode(void);
         /**
          * @brief isBinaryExpression returns if the current element is a binary expression (container) or not
-         * @returntrue if it is a binary expression, false otherwise
+         * @return true if it is a binary expression, false otherwise
          */
-        virtual bool isBinaryExpression(void);
+        virtual bool isBinaryNode(void);
+        /**
+         * @brief isFlexNode returns if the current element is a flex node (container) or not
+         * @return true if it is a flex node, false otherwise
+         */
+        virtual bool isFlexNode(void) const;
         /**
          * @brief getParent returns a pointer to the parent node
          * @return a pointer to the parent node or NULL if this is the root element

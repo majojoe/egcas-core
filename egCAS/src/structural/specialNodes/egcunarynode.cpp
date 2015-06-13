@@ -55,7 +55,7 @@ bool EgcUnaryNode::valid(void)
         return false;
 }
 
-bool EgcUnaryNode::isUnaryExpression(void)
+bool EgcUnaryNode::isUnaryNode(void)
 {
         return true;
 }
@@ -72,25 +72,6 @@ bool EgcUnaryNode::isLeaf(void) const
                 return true;
         else
                 return false;
-}
-
-bool EgcUnaryNode::transferPropertiesTo(EgcNode &to)
-{
-        bool retval = false;
-        EgcUnaryNode &to_una = static_cast<EgcUnaryNode&>(to);
-
-        if (to_una.m_child == nullptr) {
-                if (to.isUnaryExpression()) {
-                        retval = true;
-                        to_una.m_child = m_child;
-                        to_una.m_parent = m_parent;
-                        m_parent->adjustChildPointers(*this, to);
-                        m_child = nullptr;
-                        m_parent = nullptr;
-                }
-        }
-
-        return retval;
 }
 
 void EgcUnaryNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_child)

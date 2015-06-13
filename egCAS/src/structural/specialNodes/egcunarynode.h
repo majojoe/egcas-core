@@ -32,7 +32,7 @@ public:
          * @brief isUnaryExpression returns if the current element is a unary expression (container) or not
          * @return true if it is a unary expression, false otherwise
          */
-        virtual bool isUnaryExpression(void);
+        virtual bool isUnaryNode(void);
         /**
          * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
          * @param child a pointer to the child that will be deleted soon
@@ -43,17 +43,6 @@ public:
          * @return true if it is a leaf, false otherwise
          */
         virtual bool isLeaf(void) const;
-        /**
-         * @brief transferChilds transfers all properties (childs and parent) from the node "from" to the node "to".
-         * After this operation has succeeded the node "from" has no childs or parent anymore. The operation is only
-         * possible if the node "to" has no childs at all and the nodes "from" and "to" are of the same type (all are
-         * unary or binary types). The node "to" takes ownership of the childs of the node "from".
-         * @param to the node to transfer the childs to.
-         * @return true if the operation succeeded, false if the nodes are of different types or the node "to" is not
-         * empty.
-         */
-        virtual bool transferPropertiesTo(EgcNode &to);
-
         /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
          * ATTENTION: use this with care since the operation doesn't take care about the old childs. The caller must
