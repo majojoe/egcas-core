@@ -8,7 +8,7 @@
 #include "../egcnodecreator.h"
 
 EgcNodeIterator::EgcNodeIterator(const EgcFormulaExpression& formula) :
-        m_next(formula.getBaseElement().getChild()), m_previous(&formula.getBaseElement()),
+        m_next(formula.getBaseElement().getChild(0)), m_previous(&formula.getBaseElement()),
         m_baseElement(&formula.getBaseElement()), m_state(EgcIteratorState::LeftIteration), m_history(nullptr)
 {
 }
