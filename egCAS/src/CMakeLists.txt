@@ -42,6 +42,7 @@ set(egCAS_SOURCES
         structural/specialNodes/egcnode.cpp
         structural/specialNodes/egcbinarynode.cpp
         structural/specialNodes/egcunarynode.cpp
+        structural/specialNodes/egcflexnode.cpp
         structural/egcnodecreator.cpp
         structural/visitor/egcnodevisitor.cpp 
         structural/specialNodes/egccontainernode.cpp 
