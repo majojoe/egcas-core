@@ -87,8 +87,8 @@ EgcNode* Interpreter::addBinaryExpression(EgcNodeType type, EgcNode* node0,
 {
         EgcBinaryNode *node = static_cast<EgcBinaryNode*>(EgcNodeCreator::create(type));
         if (node) {
-                node->setLeftChild(*node0);
-                node->setRightChild(*node1);
+                node->setChild(0, *node0);
+                node->setChild(1, *node1);
                 removeDanglingNode(node0);
                 removeDanglingNode(node1);
         } else {
@@ -107,7 +107,7 @@ EgcNode* Interpreter::addUnaryExpression(EgcNodeType type, EgcNode* node0)
 {
         EgcUnaryNode *node = static_cast<EgcUnaryNode*>(EgcNodeCreator::create(type));
         if (node) {
-                node->setChild(*node0);
+                node->setChild(0, *node0);
                 removeDanglingNode(node0);
         } else {
                 delete node0;
@@ -149,7 +149,7 @@ void Interpreter::createBaseNode(EgcNode* node)
 {
         m_baseNode = static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode));
         if (m_baseNode) {
-                m_baseNode->setChild(*node);
+                m_baseNode->setChild(0, *node);
                 removeDanglingNode(node);
         } else {
                 throw std::runtime_error("Not enough memory to complete operation!");

@@ -10,7 +10,7 @@ EgcUnaryNode::EgcUnaryNode() : m_child(nullptr)
 EgcUnaryNode::EgcUnaryNode(const EgcUnaryNode& orig) : EgcContainerNode(orig)
 {
         m_child = nullptr;
-        EgcNode *originalChild = const_cast<EgcUnaryNode&>(orig).getChild();
+        EgcNode *originalChild = const_cast<EgcUnaryNode&>(orig).getChild(0);
         if (originalChild)
                 m_child = originalChild->copy();
 
@@ -27,22 +27,6 @@ EgcUnaryNode::~EgcUnaryNode()
         }
 }
 
-void EgcUnaryNode::setChild(const EgcNode& expression)
-{
-        if (m_child)
-                delete m_child;
-        m_child = const_cast<EgcNode*>(&expression);
-
-        //set the parent also
-        if(m_child)
-                m_child->provideParent(this);
-}
-
-EgcNode* EgcUnaryNode::getChild(void) const
-{
-        return m_child;
-}
-
 EgcUnaryNode& EgcUnaryNode::operator=(const EgcUnaryNode &rhs)
 {
         //test if the object to be assigned to is the same as the rhs
@@ -55,7 +39,7 @@ EgcUnaryNode& EgcUnaryNode::operator=(const EgcUnaryNode &rhs)
                 m_child = nullptr;
         }
         //and create a new one
-        EgcNode *originalChild = rhs.getChild();
+        EgcNode *originalChild = rhs.getChild(0);
         if (originalChild)
                 m_child = originalChild->copy();
 

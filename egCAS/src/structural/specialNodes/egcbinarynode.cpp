@@ -10,8 +10,8 @@ EgcBinaryNode::EgcBinaryNode(const EgcBinaryNode& orig) : EgcContainerNode(orig)
 {
         m_leftChild = nullptr;
         m_rightChild = nullptr;
-        EgcNode *originalChildLeft = const_cast<EgcBinaryNode&>(orig).getLeftChild();
-        EgcNode *originalChildRight = const_cast<EgcBinaryNode&>(orig).getRightChild();
+        EgcNode *originalChildLeft = const_cast<EgcBinaryNode&>(orig).getChild(0);
+        EgcNode *originalChildRight = const_cast<EgcBinaryNode&>(orig).getChild(1);
         if (originalChildLeft)
                 m_leftChild = originalChildLeft->copy();
         if (originalChildRight)
@@ -37,36 +37,6 @@ EgcBinaryNode::~EgcBinaryNode()
         }
 }
 
-void EgcBinaryNode::setLeftChild(const EgcNode& expression)
-{
-        if (m_leftChild)
-                delete m_leftChild;
-        m_leftChild = const_cast<EgcNode*>(&expression);
-
-        if (m_leftChild)
-                m_leftChild->provideParent(this);
-}
-
-void EgcBinaryNode::setRightChild(const EgcNode& expression)
-{
-        if (m_rightChild)
-                delete m_rightChild;
-        m_rightChild = const_cast<EgcNode*>(&expression);
-
-        if (m_rightChild)
-                m_rightChild->provideParent(this);
-}
-
-EgcNode* EgcBinaryNode::getLeftChild(void) const
-{
-        return m_leftChild;
-}
-
-EgcNode* EgcBinaryNode::getRightChild(void) const
-{
-        return m_rightChild;
-}
-
 EgcBinaryNode& EgcBinaryNode::operator=(const EgcBinaryNode &rhs)
 {
         //test if the object to be assigned to is the same as the rhs
@@ -83,8 +53,8 @@ EgcBinaryNode& EgcBinaryNode::operator=(const EgcBinaryNode &rhs)
                 m_rightChild = nullptr;
         }
         //and create a new one
-        EgcNode *originalChildLeft = rhs.getLeftChild();
-        EgcNode *originalChildRight = rhs.getRightChild();
+        EgcNode *originalChildLeft = rhs.getChild(0);
+        EgcNode *originalChildRight = rhs.getChild(1);
         if (originalChildLeft)
                 m_leftChild = originalChildLeft->copy();
         if (originalChildRight)

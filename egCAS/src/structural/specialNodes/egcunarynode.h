@@ -18,17 +18,6 @@ public:
         /// destructor
         virtual ~EgcUnaryNode() = 0;
         /**
-         * @brief setChild set the child of this unary expression (only one child can be set).
-         * This function takes ownership of the child and will delete the child automatically in its destructor.
-         * @param expression a reference to the child expression given.
-         */
-        void setChild(const EgcNode&expression);
-        /**
-         * @brief getChild get a pointer to the child
-         * @return NULL if no this expression has no child, a pointer to the child otherwise.
-         */
-        EgcNode* getChild(void) const;
-        /**
          * @brief operator= overloads = operator since we have dynamic elements in this class
          * @param rhs a reference to the object to be assigned
          * @return a reference to the object the rhs is assigned to

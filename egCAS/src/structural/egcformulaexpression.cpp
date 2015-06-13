@@ -88,7 +88,7 @@ EgcNode* EgcFormulaExpression::getRootElement(void) const
         EgcNode* retval = nullptr;
 
         if (m_data)
-                retval = m_data->getChild();
+                retval = m_data->getChild(0);
 
         return retval;
 }
