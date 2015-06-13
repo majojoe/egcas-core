@@ -115,20 +115,6 @@ protected:
          */
         virtual EgcNode& getPreviousElement(EgcNode& currentPrev, EgcNode& currentNext, bool& restart) const;
         /**
-         * @brief isRightChild checks if the given child is the right child of the given parent
-         * @param parent reference to the parent to test for
-         * @param child reference to the child to test for
-         * @return true if child is the right child of the given parent, false otherwise
-         */
-        bool isRightChild(EgcNode& parent, EgcNode& child) const;
-        /**
-         * @brief isLeftChild checks if the given child is the left child of the given parent
-         * @param parent reference to the parent to test for
-         * @param child reference to the child to test for
-         * @return true if child is the left child of the given parent, false otherwise
-         */
-        bool isLeftChild(EgcNode& parent, EgcNode& child) const;
-        /**
          * @brief findNextRightMostLeaf finds the next right most leaf at the bottom of the tree
          * @param start the starting point from where to search
          * @return the found leaf (this can be a container without childs or a real leaf)

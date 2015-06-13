@@ -254,26 +254,6 @@ EgcNode& EgcNodeIterator::getPreviousElement(EgcNode& currentPrev, EgcNode& curr
         return *prev;
 }
 
-bool EgcNodeIterator::isRightChild(EgcNode& parent, EgcNode& child) const
-{
-        if (parent.isBinaryExpression()) {
-                if (static_cast<EgcBinaryNode&>(parent).getChild(1) == &child)
-                        return true;
-        }
-
-        return false;
-}
-
-bool EgcNodeIterator::isLeftChild(EgcNode& parent, EgcNode& child) const
-{
-        if (parent.isBinaryExpression()) {
-                if (static_cast<EgcBinaryNode&>(parent).getChild(0) == &child)
-                        return true;
-        }
-
-        return false;
-}
-
 bool EgcNodeIterator::insert(EgcNodeType type)
 {
         bool retval = false;
