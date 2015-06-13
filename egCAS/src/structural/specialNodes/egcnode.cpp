@@ -30,7 +30,7 @@ bool EgcNode::isBinaryExpression(void)
         return false;
 }
 
-EgcNode* EgcNode::getParent(void)
+EgcContainerNode *EgcNode::getParent(void)
 {
         return m_parent;
 }

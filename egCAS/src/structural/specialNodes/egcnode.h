@@ -60,7 +60,7 @@ public:
          * @brief getParent returns a pointer to the parent node
          * @return a pointer to the parent node or NULL if this is the root element
          */
-        EgcNode* getParent(void);
+        EgcContainerNode* getParent(void);
         /**
          * @brief isParent checks if the given node is the parent of this node
          * @param parent the node to check wether it is the parent of the current node or not.
