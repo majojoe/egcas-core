@@ -40,14 +40,6 @@ void EgcNode::provideParent(EgcContainerNode* parent)
         m_parent = parent;
 }
 
-bool EgcNode::isLeaf(void) const
-{
-        if (isContainer())
-                return false;
-        else
-                return true;
-}
-
 void EgcNode::accept(EgcNodeVisitor *visitor)
 {
         visitor->visit(this);

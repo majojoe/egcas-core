@@ -224,14 +224,11 @@ void EgcasTest_Structural::testIterator()
         auto *rootChildExpression = new EgcRootNode();
         auto *numberExpression = new EgcNumberNode();
         auto *numberExpression2 = new EgcNumberNode();
-        QVERIFY(numberExpression->isLeaf() == true);
         numberExpression->setValue("200.1");
         numberExpression2->setValue("90.365");
         rootChildExpression->setChild(0, *numberExpression);
         rootExpression->setChild(0, *rootChildExpression);
-        QVERIFY(rootExpression->isLeaf() == false);
         rootExpression->setChild(1, *numberExpression2);
-        QVERIFY(rootExpression->isLeaf() == false);
 
         //-------------------test this structure with iterator--------------------
 

@@ -96,13 +96,12 @@ public:
          * @param index reverence where to write the index result to.
          * @return true if child is a child of this current node (and index could be calculated), false otherwise.
          */
-        virtual bool getIndexChild(EgcNode& child, quint32& index) const = 0;
-
+        virtual bool getIndexOfChild(EgcNode& child, quint32& index) const = 0;
         /**
          * @brief transferProperties transfers all properties (childs and parent) from the node "from" to this node.
          * After this operation has succeeded the node "from" has no childs or parent anymore. The operation is only
-         * possible if this node has no childs at all and the number of childs of "from" and this node are equal. This
-         * node takes ownership of the childs of the node "from".
+         * possible if this node has no childs at all and the number of childs of "from" and this node are equal or this
+         * node is a variable node like a FlexNode. This node takes ownership of the childs of the node "from".
          * @param from the node to transfer the childs from.
          * @return true if the operation succeeded, false if the number of childs are different or this node is not
          * empty.

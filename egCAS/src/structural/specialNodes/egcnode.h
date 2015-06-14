@@ -84,11 +84,6 @@ public:
          */
         virtual void notifyContainerOnChildDeletion(EgcNode* child) { (void)child; }
         /**
-         * @brief isLeaf checks if the current node is a leaf (there are no childs)
-         * @return true if it is a leaf, false otherwise
-         */
-        virtual bool isLeaf(void) const;
-        /**
          * @brief accept takes a visitor and calls the given visitor back to be able to extract data from this node
          * @param visitor the visitor to call back
          */

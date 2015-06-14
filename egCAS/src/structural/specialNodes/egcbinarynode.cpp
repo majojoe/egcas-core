@@ -85,14 +85,6 @@ void EgcBinaryNode::notifyContainerOnChildDeletion(EgcNode* child)
                 m_rightChild = nullptr;
 }
 
-bool EgcBinaryNode::isLeaf(void) const
-{
-        if (m_leftChild == nullptr && m_rightChild == nullptr)
-                return true;
-        else
-                return false;
-}
-
 void EgcBinaryNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_child)
 {
         if (m_leftChild == &old_child)
@@ -195,7 +187,7 @@ EgcNode* EgcBinaryNode::decrementToPrevChild(EgcNode &previousChild) const
                 return nullptr;
 }
 
-bool EgcBinaryNode::getIndexChild(EgcNode& child, quint32& index) const
+bool EgcBinaryNode::getIndexOfChild(EgcNode& child, quint32& index) const
 {
         if (child.getParent() == this) {
                 index = 0;

@@ -61,14 +61,6 @@ void EgcFlexNode::notifyContainerOnChildDeletion(EgcNode* child)
                 m_child = nullptr;
 }
 
-bool EgcFlexNode::isLeaf(void) const
-{
-        if (m_child == nullptr)
-                return true;
-        else
-                return false;
-}
-
 void EgcFlexNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_child)
 {
         if (m_child == &old_child)
@@ -155,7 +147,7 @@ EgcNode* EgcFlexNode::decrementToPrevChild(EgcNode &previousChild) const
         return nullptr;
 }
 
-bool EgcFlexNode::getIndexChild(EgcNode& child, quint32& index) const
+bool EgcFlexNode::getIndexOfChild(EgcNode& child, quint32& index) const
 {
         if (child.getParent() == this) {
                 index = 0;

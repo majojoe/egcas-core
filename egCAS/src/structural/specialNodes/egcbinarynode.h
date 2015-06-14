@@ -38,11 +38,6 @@ public:
          */
         virtual void notifyContainerOnChildDeletion(EgcNode* child);
         /**
-         * @brief isLeaf checks if the current node is a leaf (there are no childs)
-         * @return true if it is a leaf, false otherwise
-         */
-        virtual bool isLeaf(void) const;
-        /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
          * ATTENTION: use this with care since the operation doesn't take care about the old childs. The caller must
          * assure that the old child will be properly deleted -> leak otherwise. It is very unlikely that you will need
@@ -121,7 +116,7 @@ public:
          * @param index reverence where to write the index result to.
          * @return true if child is a child of this current node (and index could be calculated), false otherwise.
          */
-        virtual bool getIndexChild(EgcNode& child, quint32& index) const override;
+        virtual bool getIndexOfChild(EgcNode& child, quint32& index) const override;
 
 protected:
         EgcNode* m_rightChild;
