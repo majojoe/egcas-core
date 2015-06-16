@@ -1,6 +1,7 @@
 #ifndef EGCFLEXNODE_H
 #define EGCFLEXNODE_H
 
+#include <QVector>
 #include "egccontainernode.h"
 
 /**
@@ -116,9 +117,17 @@ public:
          * @return true if it is a flex node, false otherwise
          */
         virtual bool isFlexNode(void) const override;
+        /**
+         * @brief insert insert child node at position index
+         * @param index the index at which to insert a new node. If index is 0 the node will be prepended to all childs
+         * if the index is equal to getNumberChildNodes() the node will be appended to the end of all childs.
+         * @param node the node to insert
+         */
+        void insert(quint32 index, EgcNode& node);
 
 protected:
-        EgcNode* m_child;
+        QVector<EgcNode*> m_childs;              //a vector that holds all childs of the FlexNode
+#warning use a additional hash table here for child lookup if class is too slow QHash<EgcNode*, quint32> childsLookup
 };
 
 #endif // EGCFLEXNODE_H
