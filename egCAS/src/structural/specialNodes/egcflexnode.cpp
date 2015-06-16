@@ -114,7 +114,6 @@ void EgcFlexNode::notifyContainerOnChildDeletion(EgcNode* child)
 
 void EgcFlexNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_child)
 {
-#warning try to make this function protected (not public)
         int ind = m_childs.indexOf(&old_child);
         if (ind > 0) {
                 m_childs[ind] = &new_child;
@@ -152,24 +151,32 @@ EgcNode* EgcFlexNode::getChild(quint32 index) const
         }
 }
 
-//bool EgcFlexNode::setChild(quint32 index, const EgcNode& expression)
-//{
-//        bool retval = true;
+bool EgcFlexNode::setChild(quint32 index, const EgcNode& expression)
+{
+        quint32 i;
 
-//        if (index == 0) {
-//                if (m_child)
-//                        delete m_child;
-//                m_child = const_cast<EgcNode*>(&expression);
+        quint32 count = (quint32)m_childs.count();
+        if (index >= count) {
+                m_childs.resize(index + 1);
+        }
+        quint32 countNew = (quint32)m_childs.count();
 
-//                //set the parent also
-//                if(m_child)
-//                        m_child->provideParent(this);
-//        } else {
-//                retval = false;
-//        }
+        for (i = count; i < countNew; i++) {
+                m_childs[i] = nullptr;
+        }
 
-//        return retval;
-//}
+        if (m_childs[index]) {
+                delete m_childs[index];
+        }
+
+        m_childs[index] = const_cast<EgcNode*>(&expression);
+
+        //set the parent also
+        if(m_childs[index])
+                m_childs[index]->provideParent(this);
+
+        return true;
+}
 
 quint32 EgcFlexNode::getNumberChildNodes(void) const
 {
@@ -252,7 +259,24 @@ bool EgcFlexNode::isFlexNode(void) const
         return true;
 }
 
-void EgcFlexNode::insert(quint32 index, EgcNode& node)
+bool EgcFlexNode::insert(quint32 index, EgcNode& node)
 {
-#warning implement this function
+        bool retval = true;
+        quint32 count = (quint32)m_childs.count();
+
+        if (index > count)
+                return false;
+
+        m_childs.insert((int)index, &node);
+
+        count = (quint32)m_childs.count();
+        if (index >= 0 && index < count) {
+                //set the parent also
+                if(m_childs[index])
+                        m_childs[index]->provideParent(this);
+        } else {
+                retval = false;
+        }
+
+        return retval;
 }

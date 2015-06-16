@@ -33,15 +33,6 @@ public:
          */
         virtual void notifyContainerOnChildDeletion(EgcNode* child);
         /**
-         * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
-         * ATTENTION: use this with care since the operation doesn't take care about the old childs. The caller must
-         * assure that the old child will be properly deleted -> leak otherwise. It is very unlikely that you will need
-         * this function outside the container classes.
-         * @param old_child the old child that shall be adjusted to the new one
-         * @param new_child child pointers of the current object will be adjusted to this child object.
-         */
-        virtual void adjustChildPointers(EgcNode &old_child, EgcNode &new_child) override;
-        /**
          * @brief takeOwnership takes ownership of the child given. The user is responsible for deleting the child.
          * If the user doesn't handle the child properly a leak will occur.
          * @param child the child to take ownership over.
@@ -122,10 +113,21 @@ public:
          * @param index the index at which to insert a new node. If index is 0 the node will be prepended to all childs
          * if the index is equal to getNumberChildNodes() the node will be appended to the end of all childs.
          * @param node the node to insert
+         * @return true if everything went well, false otherwise
          */
-        void insert(quint32 index, EgcNode& node);
+        bool insert(quint32 index, EgcNode& node);
 
 protected:
+        /**
+         * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
+         * ATTENTION: use this with care since the operation doesn't take care about the old childs. The caller must
+         * assure that the old child will be properly deleted -> leak otherwise. It is very unlikely that you will need
+         * this function outside the container classes.
+         * @param old_child the old child that shall be adjusted to the new one
+         * @param new_child child pointers of the current object will be adjusted to this child object.
+         */
+        virtual void adjustChildPointers(EgcNode &old_child, EgcNode &new_child) override;
+
         QVector<EgcNode*> m_childs;              //a vector that holds all childs of the FlexNode
 #warning use a additional hash table here for child lookup if class is too slow QHash<EgcNode*, quint32> childsLookup
 };
