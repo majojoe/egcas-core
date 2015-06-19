@@ -2,6 +2,7 @@
 #define EGCUNARYNODE_H
 
 #include "egccontainernode.h"
+#include <QScopedPointer>
 
 /**
  * @brief The EgcUnaryNode
@@ -121,7 +122,7 @@ protected:
          */
         virtual void adjustChildPointers(EgcNode &old_child, EgcNode &new_child) override;
 
-        EgcNode* m_child;
+        QScopedPointer<EgcNode> m_child;
 };
 
 #endif // EGCUNARYNODE_H

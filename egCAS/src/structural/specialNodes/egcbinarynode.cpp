@@ -8,14 +8,12 @@ EgcBinaryNode::EgcBinaryNode() : m_rightChild(nullptr), m_leftChild(nullptr)
 
 EgcBinaryNode::EgcBinaryNode(const EgcBinaryNode& orig) : EgcContainerNode(orig)
 {
-        m_leftChild = nullptr;
-        m_rightChild = nullptr;
         EgcNode *originalChildLeft = const_cast<EgcBinaryNode&>(orig).getChild(0);
         EgcNode *originalChildRight = const_cast<EgcBinaryNode&>(orig).getChild(1);
         if (originalChildLeft)
-                m_leftChild = originalChildLeft->copy();
+                m_leftChild.reset(originalChildLeft->copy());
         if (originalChildRight)
-                m_rightChild = originalChildRight->copy();
+                m_rightChild.reset(originalChildRight->copy());
 
         //set the parents also
         if(m_leftChild)
@@ -26,15 +24,6 @@ EgcBinaryNode::EgcBinaryNode(const EgcBinaryNode& orig) : EgcContainerNode(orig)
 
 EgcBinaryNode::~EgcBinaryNode()
 {
-        if (m_leftChild) {
-                delete m_leftChild;
-                m_leftChild = nullptr;
-        }
-
-        if (m_rightChild) {
-                delete m_rightChild;
-                m_rightChild = nullptr;
-        }
 }
 
 EgcBinaryNode& EgcBinaryNode::operator=(const EgcBinaryNode &rhs)
@@ -43,22 +32,13 @@ EgcBinaryNode& EgcBinaryNode::operator=(const EgcBinaryNode &rhs)
         if (this == &rhs)
                 return *this;
 
-        //delete the old content
-        if (m_leftChild) {
-                delete m_leftChild;
-                m_leftChild = nullptr;
-        }
-        if (m_rightChild) {
-                delete m_rightChild;
-                m_rightChild = nullptr;
-        }
         //and create a new one
         EgcNode *originalChildLeft = rhs.getChild(0);
         EgcNode *originalChildRight = rhs.getChild(1);
         if (originalChildLeft)
-                m_leftChild = originalChildLeft->copy();
+                m_leftChild.reset(originalChildLeft->copy());
         if (originalChildRight)
-                m_rightChild = originalChildRight->copy();
+                m_rightChild.reset(originalChildRight->copy());
 
         return *this;
 }
@@ -79,32 +59,33 @@ bool EgcBinaryNode::isBinaryNode(void)
 
 void EgcBinaryNode::notifyContainerOnChildDeletion(EgcNode* child)
 {
-        if (m_leftChild == child)
-                m_leftChild = nullptr;
-        if (m_rightChild == child)
-                m_rightChild = nullptr;
+        if (m_leftChild.data() == child)
+                m_leftChild.reset(nullptr);
+        if (m_rightChild.data() == child)
+                m_rightChild.reset(nullptr);
 }
 
 void EgcBinaryNode::adjustChildPointers(EgcNode &old_child, EgcNode &new_child)
 {
-        if (m_leftChild == &old_child)
-                m_leftChild = &new_child;
-        else if (m_rightChild == &old_child)
-                m_rightChild = &new_child;
+        if (m_leftChild.data() == &old_child) {
+                (void) m_leftChild.take(); //do not delete the old child
+                m_leftChild.reset(&new_child);
+        } else if (m_rightChild.data() == &old_child) {
+                (void) m_rightChild.take(); //do not delete the old child
+                m_rightChild.reset(&new_child);
+        }
 }
 
 EgcNode* EgcBinaryNode::takeOwnership(EgcNode &child)
 {
         EgcNode* retval = nullptr;
 
-        if (m_leftChild == &child) {
-                m_leftChild = nullptr;
-                child.provideParent(nullptr);
-                retval = &child;
-        } else if (m_rightChild == &child) {
-                m_rightChild = nullptr;
-                child.provideParent(nullptr);
-                retval = &child;
+        if (m_leftChild.data() == &child) {
+                retval = m_leftChild.take();
+                retval->provideParent(nullptr);
+        } else if (m_rightChild.data() == &child) {
+                retval = m_rightChild.take();
+                retval->provideParent(nullptr);
         }
 
         return retval;
@@ -118,9 +99,9 @@ void EgcBinaryNode::accept(EgcNodeVisitor *visitor)
 EgcNode* EgcBinaryNode::getChild(quint32 index) const
 {
         if (index == 0)
-                return m_leftChild;
+                return m_leftChild.data();
         else if (index == 1)
-                return m_rightChild;
+                return m_rightChild.data();
         else
                 return nullptr;
 }
@@ -130,16 +111,12 @@ bool EgcBinaryNode::setChild(quint32 index, const EgcNode& expression)
         bool retval = true;
 
         if (index == 0) {
-                if (m_leftChild)
-                        delete m_leftChild;
-                m_leftChild = const_cast<EgcNode*>(&expression);
+                m_leftChild.reset(const_cast<EgcNode*>(&expression));
 
                 if (m_leftChild)
                         m_leftChild->provideParent(this);
         } else if (index == 1) {
-                if (m_rightChild)
-                        delete m_rightChild;
-                m_rightChild = const_cast<EgcNode*>(&expression);
+                m_rightChild.reset(const_cast<EgcNode*>(&expression));
 
                 if (m_rightChild)
                         m_rightChild->provideParent(this);
@@ -157,7 +134,7 @@ quint32 EgcBinaryNode::getNumberChildNodes(void) const
 
 bool EgcBinaryNode::isFirstChild(EgcNode &child) const
 {
-        if (m_leftChild == &child)
+        if (m_leftChild.data() == &child)
                 return true;
         else
                 return false;
@@ -165,7 +142,7 @@ bool EgcBinaryNode::isFirstChild(EgcNode &child) const
 
 bool EgcBinaryNode::isLastChild(EgcNode &child) const
 {
-        if (m_rightChild == &child)
+        if (m_rightChild.data() == &child)
                 return true;
         else
                 return false;
@@ -173,16 +150,16 @@ bool EgcBinaryNode::isLastChild(EgcNode &child) const
 
 EgcNode* EgcBinaryNode::incrementToNextChild(EgcNode &previousChild) const
 {
-        if (m_leftChild == &previousChild || m_leftChild == nullptr)
-                return m_rightChild;
+        if (m_leftChild.data() == &previousChild || m_leftChild.data() == nullptr)
+                return m_rightChild.data();
         else
                 return nullptr;
 }
 
 EgcNode* EgcBinaryNode::decrementToPrevChild(EgcNode &previousChild) const
 {
-        if (m_rightChild == &previousChild || m_rightChild == nullptr)
-                return m_leftChild;
+        if (m_rightChild.data() == &previousChild || m_rightChild.data() == nullptr)
+                return m_leftChild.data();
         else
                 return nullptr;
 }
@@ -191,7 +168,7 @@ bool EgcBinaryNode::getIndexOfChild(EgcNode& child, quint32& index) const
 {
         if (child.getParent() == this) {
                 index = 0;
-                if (&child == m_rightChild) {
+                if (&child == m_rightChild.data()) {
                         index = 1;
                 }
                 return true;

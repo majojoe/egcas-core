@@ -2,6 +2,7 @@
 #define EGCBINARYNODE_H
 
 #include "egccontainernode.h"
+#include <QScopedPointer>
 
 /**
  * @brief The EgcBinaryExpressionNode class is a base class for an expression that takes two arguments (binary) as subexpressions.
@@ -120,8 +121,8 @@ protected:
          */
         virtual void adjustChildPointers(EgcNode &old_child, EgcNode &new_child) override;
 
-        EgcNode* m_rightChild;
-        EgcNode* m_leftChild;
+        QScopedPointer<EgcNode> m_rightChild;
+        QScopedPointer<EgcNode> m_leftChild;
 };
 
 #endif // EGCBINARYNODE_H
