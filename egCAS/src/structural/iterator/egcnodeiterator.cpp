@@ -5,6 +5,7 @@
 #include "../specialNodes/egcbinarynode.h"
 #include "../specialNodes/egcunarynode.h"
 #include "../specialNodes/egcbasenode.h"
+#include "../specialNodes/egcflexnode.h"
 #include "../egcnodecreator.h"
 
 EgcNodeIterator::EgcNodeIterator(const EgcFormulaExpression& formula) :
@@ -291,7 +292,6 @@ bool EgcNodeIterator::insert(EgcNodeType type)
                                                                           create(EgcNodeType::EmptyNode));
                                 if (tempNode.data() == nullptr)
                                         return false;
-
                                 node_cont->setChild(i, *(tempNode.take()));
                         }
                 }
@@ -313,7 +313,7 @@ bool EgcNodeIterator::insert(EgcNodeType type)
                         parentNode = static_cast<EgcContainerNode*>(m_previous->getParent());
                         childNodePtr = m_previous;
                 }
-                indexOk = parentNode->getIndexChild(*childNodePtr, parentIndex);
+                indexOk = parentNode->getIndexOfChild(*childNodePtr, parentIndex);
                 if (parentNode)
                         childNode.reset(parentNode->takeOwnership(*childNodePtr));
 
@@ -358,7 +358,7 @@ void EgcNodeIterator::remove()
         (void) next();
 
         if (parent->isContainer()) { //must be true, only for case of error
-                if (static_cast<EgcContainerNode*>(parent)->getIndexChild(*history, index)) {
+                if (static_cast<EgcContainerNode*>(parent)->getIndexOfChild(*history, index)) {
                         static_cast<EgcContainerNode*>(parent)->
                                                        setChild(index,*EgcNodeCreator::create(EgcNodeType::EmptyNode));
                 }
@@ -399,7 +399,7 @@ EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
                                 EgcContainerNode* parentCont = static_cast<EgcContainerNode*>(parent);
                                 quint32 index;
 
-                                if (parentCont->getIndexChild(node, index)) {
+                                if (parentCont->getIndexOfChild(node, index)) {
                                         parentCont->setChild(index, *replacement.data());
                                         //the replaced node has already been deleted
                                         (void) theReplaced.take();
@@ -458,3 +458,42 @@ EgcIteratorState EgcNodeIterator::determineFollowingState(EgcNode &previous, Egc
         return localState;
 }
 
+bool EgcNodeIterator::insertChildSpace(void)
+{
+        EgcFlexNode* node = nullptr;
+        EgcNode* child = nullptr;
+        bool forward;
+        quint32 index;
+
+        if (m_previous->isFlexNode()) {
+                node = static_cast<EgcFlexNode*>(m_previous);
+                child = m_next;
+                forward = false;
+        }
+
+        if (m_next->isFlexNode()) {
+                node = static_cast<EgcFlexNode*>(m_next);
+                child = m_previous;
+                forward = true;
+        }
+
+        if (!node || !child)
+                return false;
+
+        node->getIndexOfChild(*child, index);
+
+        if (forward) {
+                QScopedPointer<EgcNode> tempNode(EgcNodeCreator::create(EgcNodeType::EmptyNode));
+                index++;
+                node->insert(index, *tempNode.take());
+        } else {
+                QScopedPointer<EgcNode> tempNode(EgcNodeCreator::create(EgcNodeType::EmptyNode));
+                EgcNode* ptr = tempNode.data();
+                node->insert(index, *tempNode.take());
+                if (m_previous == m_history)
+                        m_history = ptr;
+                m_previous = ptr;
+        }
+
+        return true;
+}

@@ -41,6 +41,7 @@ set(tst_egcastest_parser_SOURCES
         ${FLEX_cas_scanner_tst_OUTPUTS}
         ../../src/structural/specialNodes/egcunarynode.cpp
         ../../src/structural/specialNodes/egcbinarynode.cpp
+        ../../src/structural/specialNodes/egcflexnode.cpp
         ../../src/structural/specialNodes/egcnode.cpp
         ../../src/structural/concreteNodes/egcrootnode.cpp
         ../../src/structural/concreteNodes/egcnumbernode.cpp

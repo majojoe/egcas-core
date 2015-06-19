@@ -96,6 +96,12 @@ public:
          * @return true if replacement was possible, false otherwise
          */
         virtual EgcNode* replace(EgcNode& node, EgcNodeType type);
+        /**
+         * @brief insertChildSpace insert an EgcEmpty child node at position where m_next or m_previous points to
+         * (this works e.g. with EgcFlexNode)
+         * @return true if everything went well, false otherwise
+         */
+        virtual bool insertChildSpace(void);
 
 protected:
         /**
