@@ -4,6 +4,7 @@
 #include <QString>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QScopedPointer>
 
 /**
  * @brief The EgcNodeType enum is a enum to differentiate the different node types
@@ -61,13 +62,13 @@ protected slots:
         void kernelError(QProcess::ProcessError error);
 
 protected:
-        QString m_result;                       ///< stores the result until the result is complete
-        QString m_error;                        ///< stores the error message until the message is complete
-        QProcess *m_casKernelProcess;           ///< pointer to the kernel QProcess object
-        EgcKernelStart m_startState;            ///< marks the starting state of the CAS kernel
-        QRegularExpression m_startRegex;        ///< regex for filtering kernel output at startup
-        QRegularExpression m_errRegex;          ///< regex for filtering kernel errors
-        QRegularExpression m_regex;             ///< regex for filtering regular kernel output
+        QString m_result;                               ///< stores the result until the result is complete
+        QString m_error;                                ///< stores the error message until the message is complete
+        QScopedPointer<QProcess> m_casKernelProcess;    ///< pointer to the kernel QProcess object
+        EgcKernelStart m_startState;                    ///< marks the starting state of the CAS kernel
+        QRegularExpression m_startRegex;                ///< regex for filtering kernel output at startup
+        QRegularExpression m_errRegex;                  ///< regex for filtering kernel errors
+        QRegularExpression m_regex;                     ///< regex for filtering regular kernel output
 };
 
 #endif // EGCKERNELCONN_H

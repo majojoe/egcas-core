@@ -15,8 +15,8 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false)
                                                                   m_numberSignificantDigits(0),
                                                                   m_numberResultType(EgcNumberResultType::StandardType)
 {
-        m_data = new (std::nothrow) EgcBaseNode();
-        if (m_data) {
+        m_data.reset(static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode)));
+        if (!m_data.isNull()) {
                 QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
                 if (tmp.data()) {
                         EgcNode* tmp_ptr = tmp.data();
@@ -39,9 +39,8 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false)
 
 EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
 {
-        m_data = nullptr;
         EgcBaseNode& originalBase = orig.getBaseElement();
-        m_data = new (std::nothrow) EgcBaseNode(originalBase);
+        m_data.reset(static_cast<EgcBaseNode*>(originalBase.copy()));
         m_isResult = orig.m_isResult;
         m_isNumberResult = orig.m_isNumberResult;
         m_numberSignificantDigits = orig.m_numberSignificantDigits;
@@ -55,15 +54,9 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression
         if (this == &rhs)
                 return *this;
 
-        //delete the old content
-        if (m_data) {
-                delete m_data;
-                m_data = nullptr;
-        }
-
         //and create a new one
         EgcBaseNode& originalBase = rhs.getBaseElement();
-        m_data = new (std::nothrow) EgcBaseNode(originalBase);
+        m_data.reset(static_cast<EgcBaseNode*>(originalBase.copy()));
         m_isResult = rhs.m_isResult;
         m_isNumberResult = rhs.m_isNumberResult;
         m_numberSignificantDigits = rhs.m_numberSignificantDigits;
@@ -74,20 +67,18 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression
 
 EgcFormulaExpression::~EgcFormulaExpression()
 {
-        // delete the formula with the complete tree
-        delete m_data;
 }
 
 EgcBaseNode& EgcFormulaExpression::getBaseElement(void) const
 {
-        return *m_data;
+        return *m_data.data();
 }
 
 EgcNode* EgcFormulaExpression::getRootElement(void) const
 {
         EgcNode* retval = nullptr;
 
-        if (m_data)
+        if (m_data.data())
                 retval = m_data->getChild(0);
 
         return retval;

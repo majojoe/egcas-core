@@ -4,19 +4,18 @@ EgcKernelConn::EgcKernelConn(QString executeCmd, QObject *parent) : QObject(pare
                                                                           m_error(QString()),
                                                                           m_startState(EgcKernelStart::beforeStart)
 {
-        m_casKernelProcess = new QProcess();
+        m_casKernelProcess.reset(new QProcess());
         m_casKernelProcess->start(executeCmd);
 
         /* show output */
-        connect(m_casKernelProcess, SIGNAL(readyReadStandardOutput()),this, SLOT(stdOutput()) );
-        connect(m_casKernelProcess, SIGNAL(readyReadStandardError()), this, SLOT(errorOutput()) );
-        connect(m_casKernelProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(kernelError(QProcess::ProcessError)) );
-        connect(m_casKernelProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(kernelTerm()) );
+        connect(m_casKernelProcess.data(), SIGNAL(readyReadStandardOutput()),this, SLOT(stdOutput()) );
+        connect(m_casKernelProcess.data(), SIGNAL(readyReadStandardError()), this, SLOT(errorOutput()) );
+        connect(m_casKernelProcess.data(), SIGNAL(error(QProcess::ProcessError)), this, SLOT(kernelError(QProcess::ProcessError)) );
+        connect(m_casKernelProcess.data(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(kernelTerm()) );
 }
 
 EgcKernelConn::~EgcKernelConn()
 {
-        delete m_casKernelProcess;
 }
 
 void EgcKernelConn::sendCommand(QString cmd)

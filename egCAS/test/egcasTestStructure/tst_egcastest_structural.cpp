@@ -1113,7 +1113,6 @@ void EgcasTest_Structural::testMaximaVisitor()
         */
 
         EgcFormulaExpression formula4(EgcNodeType::RootNode);
-        EgcIteratorState state;
         EgcNode *nodePointer;
         EgcNodeIterator iter8(formula4);
         EgcNode *node1;

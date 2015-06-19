@@ -186,9 +186,9 @@ private:
 private:
         MaximaScanner m_scanner;                        /// the scanner to use for parsing
         MaximaParser m_parser;                          /// the parser to use
-        EgcBaseNode *m_baseNode;              /// the base node of the formula
+        QScopedPointer<EgcBaseNode> m_baseNode;         /// the base node of the formula
         unsigned int m_location;                        /// Used by scanner
-        QSet<EgcNode*> m_danglingNodes;        /// holds the dangling nodes during AST is built up
+        QSet<EgcNode*> m_danglingNodes;                 /// holds the dangling nodes during AST is built up
 };
 
 }

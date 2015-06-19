@@ -2,6 +2,7 @@
 #define EgcPixmapItem_H
 
 #include <QGraphicsPixmapItem>
+#include <QScopedPointer>
 #include "egcasiteminterface.h"
 
 class ResizeHandle;
@@ -48,7 +49,7 @@ signals:
 
 private:
         Q_DISABLE_COPY(EgcPixmapItem)
-        ResizeHandle *m_resizeHandle;
+        QScopedPointer<ResizeHandle> m_resizeHandle;
         bool m_childSelectionState;
         bool m_resizeHandleAdded;
 };

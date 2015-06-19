@@ -29,7 +29,6 @@
 #include <sstream>
 #include <boost/concept_check.hpp>
 #include <QVector>
-
 #include "interpreter.h"
 #include "../../structural/egcnodecreator.h"
 #include "../../structural/egcnodes.h"
@@ -38,7 +37,6 @@ using namespace CASParser;
 
 Interpreter::Interpreter() :
         m_scanner(*this),
-        m_baseNode(nullptr),
         m_parser(m_scanner, *this),
         m_location(0)
 {
@@ -47,8 +45,6 @@ Interpreter::Interpreter() :
 
 Interpreter::~Interpreter()
 {
-        delete m_baseNode;
-        m_baseNode = nullptr;
         deleteDanglingNodes();
 }
 
@@ -59,8 +55,7 @@ int Interpreter::parse() {
 
 void Interpreter::clear() {
         m_location = 0;
-        delete m_baseNode;
-        m_baseNode = nullptr;
+        m_baseNode.reset(nullptr);
         deleteDanglingNodes();
 #if (EGC_PARSER_DEBUG >= 3)
         m_parser.set_debug_level(3);
@@ -147,8 +142,8 @@ EgcNode* Interpreter::addStringNode(EgcNodeType type, const std::string& value)
 
 void Interpreter::createBaseNode(EgcNode* node)
 {
-        m_baseNode = static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode));
-        if (m_baseNode) {
+        m_baseNode.reset(static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode)));
+        if (m_baseNode.data()) {
                 m_baseNode->setChild(0, *node);
                 removeDanglingNode(node);
         } else {
@@ -158,9 +153,7 @@ void Interpreter::createBaseNode(EgcNode* node)
 
 EgcBaseNode* Interpreter::getBaseNode(void)
 {
-        EgcBaseNode *baseNode = m_baseNode;
-        m_baseNode = nullptr;
-        return baseNode;
+        return m_baseNode.take();
 }
 
 

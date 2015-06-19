@@ -2,19 +2,18 @@
 #include "egcasscene.h"
 #include "resizehandle.h"
 
-EgcPixmapItem::EgcPixmapItem(QGraphicsItem*parent) : QGraphicsPixmapItem(parent), m_resizeHandle(NULL)
+EgcPixmapItem::EgcPixmapItem(QGraphicsItem*parent) : QGraphicsPixmapItem(parent)
 {
         init();
 }
 
-EgcPixmapItem::EgcPixmapItem(const QPixmap&pixmap, QGraphicsItem * parent) : QGraphicsPixmapItem(pixmap, parent), m_resizeHandle(NULL)
+EgcPixmapItem::EgcPixmapItem(const QPixmap&pixmap, QGraphicsItem * parent) : QGraphicsPixmapItem(pixmap, parent)
 {
         init();
 }
 
 EgcPixmapItem::~EgcPixmapItem()
 {        
-        delete(m_resizeHandle);
 }
 
 QPointF EgcPixmapItem::getPos( void ) const
@@ -24,8 +23,8 @@ QPointF EgcPixmapItem::getPos( void ) const
 
 void EgcPixmapItem::init()
 {
+        m_resizeHandle.reset(new ResizeHandle(this, QSizeF(8.0, 8.0)));
         setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
-        m_resizeHandle = new ResizeHandle(this, QSizeF(8.0, 8.0));
 }
 
 QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &value)
