@@ -17,19 +17,17 @@ find_package(Qt5 COMPONENTS Widgets Core Test)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/../../src/")
 
+file(GLOB_RECURSE tst_egcastest_structural_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
+
 set(tst_egcastest_structural_SOURCES
         tst_egcastest_structural.cpp 
         ../../src/structural/specialNodes/egcunarynode.cpp
         ../../src/structural/specialNodes/egcbinarynode.cpp
         ../../src/structural/specialNodes/egcflexnode.cpp
         ../../src/structural/specialNodes/egcnode.cpp
-        ../../src/structural/concreteNodes/egcrootnode.cpp
-        ../../src/structural/concreteNodes/egcnumbernode.cpp
         ../../src/structural/egcnodecreator.cpp
-        ../../src/structural/concreteNodes/egcparenthesisnode.cpp
-        ../../src/structural/specialNodes/egccontainernode.cpp 
-        ../../src/structural/concreteNodes/egcvariablenode.cpp
-        ../../src/structural/concreteNodes/egcfunctionnode.cpp
+        ${tst_egcastest_structural_concrete_SOURCES}
+        ../../src/structural/specialNodes/egccontainernode.cpp
         ../../src/structural/iterator/egcnodeiterator.cpp
         ../../src/structural/egcformulaexpression.cpp 
         ../../src/structural/specialNodes/egcbasenode.cpp

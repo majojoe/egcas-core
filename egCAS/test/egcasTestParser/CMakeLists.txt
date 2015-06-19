@@ -33,6 +33,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/iterator)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/specialNodes)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/concreteNodes)
 
+file(GLOB_RECURSE tst_egcastest_parser_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
+
 set(tst_egcastest_parser_SOURCES
         tst_egcastest_parser.cpp 
         ../../src/casKernel/parser/interpreter.cpp 
@@ -43,13 +45,9 @@ set(tst_egcastest_parser_SOURCES
         ../../src/structural/specialNodes/egcbinarynode.cpp
         ../../src/structural/specialNodes/egcflexnode.cpp
         ../../src/structural/specialNodes/egcnode.cpp
-        ../../src/structural/concreteNodes/egcrootnode.cpp
-        ../../src/structural/concreteNodes/egcnumbernode.cpp
         ../../src/structural/egcnodecreator.cpp
-        ../../src/structural/concreteNodes/egcparenthesisnode.cpp
         ../../src/structural/specialNodes/egccontainernode.cpp
-        ../../src/structural/concreteNodes/egcvariablenode.cpp
-        ../../src/structural/concreteNodes/egcfunctionnode.cpp
+        ${tst_egcastest_parser_concrete_SOURCES}
         ../../src/structural/iterator/egcnodeiterator.cpp
         ../../src/structural/egcformulaexpression.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp

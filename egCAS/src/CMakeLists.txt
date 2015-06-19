@@ -30,6 +30,14 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(structural/specialNodes)
 include_directories(structural/concreteNodes)
 
+set(egCAS_concrete_node_SOURCES
+        structural/concreteNodes/egcnumbernode.cpp
+        structural/concreteNodes/egcparenthesisnode.cpp
+        structural/concreteNodes/egcrootnode.cpp
+        structural/concreteNodes/egcvariablenode.cpp
+        structural/concreteNodes/egcfunctionnode.cpp
+)
+
 set(egCAS_SOURCES
         main.cpp
         mainwindow.cpp 
@@ -51,11 +59,7 @@ set(egCAS_SOURCES
         structural/specialNodes/egcbasenode.cpp
         structural/specialNodes/egcemptynode.cpp
         structural/visitor/egcmaximavisitor.cpp 
-        structural/concreteNodes/egcnumbernode.cpp
-        structural/concreteNodes/egcparenthesisnode.cpp
-        structural/concreteNodes/egcrootnode.cpp
-        structural/concreteNodes/egcvariablenode.cpp
-        structural/concreteNodes/egcfunctionnode.cpp
+        ${egCAS_concrete_node_SOURCES}
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 
         casKernel/egckernelconn.cpp
