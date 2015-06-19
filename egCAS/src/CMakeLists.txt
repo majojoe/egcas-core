@@ -55,6 +55,7 @@ set(egCAS_SOURCES
         structural/concreteNodes/egcparenthesisnode.cpp
         structural/concreteNodes/egcrootnode.cpp
         structural/concreteNodes/egcvariablenode.cpp
+        structural/concreteNodes/egcfunctionnode.cpp
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 
         casKernel/egckernelconn.cpp
@@ -88,6 +89,11 @@ add_custom_target(egcas_generate_node_creator COMMAND cog.py -r -D BaseDirToSear
                   ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp
                   DEPENDS structural/egcnodecreator.cpp COMMENT "generate node creator" )
 add_dependencies(egCAS egcas_generate_node_creator)
+
+add_custom_target(egcas_generate_node_headers COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}
+                  ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h
+                  DEPENDS structural/egcnodes.h COMMENT "generate node header file" )
+add_dependencies(egCAS egcas_generate_node_headers)
 
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY " egcas is a Easy to use Graphical Computer Algebra System.")

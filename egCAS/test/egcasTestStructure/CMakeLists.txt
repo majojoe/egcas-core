@@ -29,6 +29,7 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/concreteNodes/egcparenthesisnode.cpp
         ../../src/structural/specialNodes/egccontainernode.cpp 
         ../../src/structural/concreteNodes/egcvariablenode.cpp
+        ../../src/structural/concreteNodes/egcfunctionnode.cpp
         ../../src/structural/iterator/egcnodeiterator.cpp
         ../../src/structural/egcformulaexpression.cpp 
         ../../src/structural/specialNodes/egcbasenode.cpp

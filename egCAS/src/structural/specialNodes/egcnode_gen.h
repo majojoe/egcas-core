@@ -73,6 +73,7 @@ BaseNode = 0,
 EmptyNode,
 ParenthesisNode,
 VariableNode,
+FunctionNode,
 NumberNode,
 RootNode,
 NodeUndefined

@@ -74,6 +74,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::VariableNode:
                 retval = new (std::nothrow) EgcVariableNode();
                 break;
+        case EgcNodeType::FunctionNode:
+                retval = new (std::nothrow) EgcFunctionNode();
+                break;
         case EgcNodeType::NumberNode:
                 retval = new (std::nothrow) EgcNumberNode();
                 break;

@@ -16,6 +16,7 @@ private Q_SLOTS:
         void testTransferProperties();
         void testInsertDelete();
         void testMaximaVisitor();
+        void testFlexNode();
 private:
         EgcNode* addChild(EgcNode&parent, EgcNodeType type, QString number = "0");
         EgcNode* addLeftChild(EgcNode&parent, EgcNodeType type, QString number = "0");
@@ -1173,6 +1174,11 @@ void EgcasTest_Structural::testMaximaVisitor()
         result = mathMlVisitor.getResult();
         QVERIFY(result == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
         QVERIFY(formula4.getMathMlCode() == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
+}
+
+void EgcasTest_Structural::testFlexNode()
+{
+
 }
 
 EgcNode*EgcasTest_Structural::addChild(EgcNode& parent, EgcNodeType type, QString number)
