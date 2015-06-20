@@ -1178,6 +1178,66 @@ void EgcasTest_Structural::testMaximaVisitor()
 
 void EgcasTest_Structural::testFlexNode()
 {
+        /*  This tree is tested within the iterator test below
+                                               |---|
+                                               | 1 |
+                                               |---|  \
+                                              /           \
+                                             /                \
+                                       |----------|             |---|
+                                       |    2     |             | 8 |
+                                       |----------|             |---|
+                                    /    |      |    \
+                                   /     |      |     \
+                                |---|  |---|  |---|  |---|
+                                | 3 |  | 4 |  | 6 |  | 7 |
+                                |---|  |---|  |---|  |---|
+                                         |
+                                         |
+                                       |---|
+                                       | 5 |
+                                       |---|
+        */
+
+        EgcFormulaExpression formula5(EgcNodeType::RootNode);
+        EgcNode *nodePointer;
+        EgcNodeIterator iter9(formula5);
+        EgcNode *node1;
+        EgcNode *node3;
+        EgcNode *node2;
+        EgcNode *node4;
+        EgcNode *node5;
+        EgcNode *node6;
+        EgcNode *node7;
+        EgcNode *node8;
+
+        nodePointer = &(iter9.next());
+        node1 = nodePointer;
+        iter8.insert(EgcNodeType::FunctionNode);
+        nodePointer = &(iter9.previous());
+        nodePointer = &(iter9.next());
+        node2 = nodePointer;
+        nodePointer = &(iter9.next());
+        node3 = nodePointer;
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
+        nodePointer = iter9.replace(*nodePointer, EgcNodeType::NumberNode);
+        QVERIFY(nodePointer != nullptr);
+        static_cast<EgcNumberNode*>(nodePointer)->setValue("3");
+        node3 = nodePointer;
+        QVERIFY(iter9.insertChildSpace() == true);
+        nodePointer = &(iter9.next());
+        QVERIFY(nodePointer->isFlexNode() == true);
+        nodePointer = &(iter9.next());
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
+        nodePointer = iter9.replace(*nodePointer, EgcNodeType::ParenthesisNode);
+        node4 = nodePointer;
+        nodePointer = &(iter9.next());
+        nodePointer = iter9.replace(*nodePointer, EgcNodeType::NumberNode);
+        node5 = nodePointer;
+        static_cast<EgcNumberNode*>(nodePointer)->setValue("5");
+        nodePointer = &(iter9.next());
+        nodePointer = &(iter9.next());
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::FunctionNode);
 
 }
 
