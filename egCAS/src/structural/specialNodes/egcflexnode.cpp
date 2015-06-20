@@ -211,11 +211,12 @@ EgcNode* EgcFlexNode::incrementToNextChild(EgcNode &previousChild) const
         int tempIndex = m_childs.indexOf(&previousChild);
         quint32 i;
         quint32 index = (quint32)tempIndex;
+        quint32 nrChilds = m_childs.count();
 
         if (m_childs.empty() || tempIndex < 0)
                 return nullptr;
 
-        for (i = index + 1; i < index; i++) {
+        for (i = index + 1; i < nrChilds; i++) {
                 if (m_childs.at(i))
                         return m_childs.at(i);
         }
@@ -245,7 +246,7 @@ bool EgcFlexNode::getIndexOfChild(EgcNode& child, quint32& index) const
 {
         if (child.getParent() == this) {
                 int ind = m_childs.indexOf(&child);
-                if (ind > 0) {
+                if (ind >= 0) {
                         index = (quint32)ind;
                         return true;
                 }

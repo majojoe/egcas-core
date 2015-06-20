@@ -1213,7 +1213,7 @@ void EgcasTest_Structural::testFlexNode()
 
         nodePointer = &(iter9.next());
         node1 = nodePointer;
-        iter8.insert(EgcNodeType::FunctionNode);
+        iter9.insert(EgcNodeType::FunctionNode);
         nodePointer = &(iter9.previous());
         nodePointer = &(iter9.next());
         node2 = nodePointer;
@@ -1238,6 +1238,30 @@ void EgcasTest_Structural::testFlexNode()
         nodePointer = &(iter9.next());
         nodePointer = &(iter9.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::FunctionNode);
+        QVERIFY(iter9.insertChildSpace() == true);
+        nodePointer = &(iter9.next());
+        QVERIFY(nodePointer->isFlexNode() == true);
+        nodePointer = &(iter9.next());
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
+        nodePointer = iter9.replace(*nodePointer, EgcNodeType::NumberNode);
+        node6 = nodePointer;
+        static_cast<EgcNumberNode*>(nodePointer)->setValue("6");
+        QVERIFY(iter9.insertChildSpace() == true);
+        nodePointer = &(iter9.next());
+        QVERIFY(nodePointer->isFlexNode() == true);
+        nodePointer = &(iter9.next());
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::EmptyNode);
+        nodePointer = iter9.replace(*nodePointer, EgcNodeType::NumberNode);
+        node7 = nodePointer;
+        static_cast<EgcNumberNode*>(nodePointer)->setValue("7");
+        nodePointer = &(iter9.next());
+        nodePointer = &(iter9.next());
+        nodePointer = &(iter9.next());
+        nodePointer = iter9.replace(*nodePointer, EgcNodeType::NumberNode);
+        node8 = nodePointer;
+        static_cast<EgcNumberNode*>(nodePointer)->setValue("8");
+
+
 
 }
 
