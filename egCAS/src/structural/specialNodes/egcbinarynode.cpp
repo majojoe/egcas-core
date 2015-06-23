@@ -22,6 +22,22 @@ EgcBinaryNode::EgcBinaryNode(const EgcBinaryNode& orig) : EgcContainerNode(orig)
                 m_rightChild->provideParent(this);
 }
 
+EgcBinaryNode::EgcBinaryNode(EgcBinaryNode&& orig) : EgcContainerNode(orig)
+{
+        EgcNode *originalChildLeft = const_cast<EgcBinaryNode&>(orig).getChild(0);
+        EgcNode *originalChildRight = const_cast<EgcBinaryNode&>(orig).getChild(1);
+        if (originalChildLeft)
+                m_leftChild.reset(orig.takeOwnership(*originalChildLeft));
+        if (originalChildRight)
+                m_rightChild.reset(orig.takeOwnership(*originalChildRight));
+
+        //set the parents also
+        if(m_leftChild)
+                m_leftChild->provideParent(this);
+        if(m_rightChild)
+                m_rightChild->provideParent(this);
+}
+
 EgcBinaryNode::~EgcBinaryNode()
 {
 }
@@ -39,6 +55,23 @@ EgcBinaryNode& EgcBinaryNode::operator=(const EgcBinaryNode &rhs)
                 m_leftChild.reset(originalChildLeft->copy());
         if (originalChildRight)
                 m_rightChild.reset(originalChildRight->copy());
+
+        return *this;
+}
+
+EgcBinaryNode& EgcBinaryNode::operator=(EgcBinaryNode&& rhs)
+{
+        //test if the object to be assigned to is the same as the rhs
+        if (this == &rhs)
+                return *this;
+
+        //and create a new one
+        EgcNode *originalChildLeft = rhs.getChild(0);
+        EgcNode *originalChildRight = rhs.getChild(1);
+        if (originalChildLeft)
+                m_leftChild.reset(rhs.takeOwnership(*originalChildLeft));
+        if (originalChildRight)
+                m_rightChild.reset(rhs.takeOwnership(*originalChildRight));
 
         return *this;
 }

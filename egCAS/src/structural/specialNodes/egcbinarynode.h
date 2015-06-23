@@ -15,6 +15,8 @@ public:
         EgcBinaryNode();
         ///copy constructor
         EgcBinaryNode(const EgcBinaryNode& orig);
+        ///move constructor
+        EgcBinaryNode(EgcBinaryNode&& orig);
         ///destructor
         virtual ~EgcBinaryNode() = 0;
         /**
@@ -23,6 +25,12 @@ public:
          * @return a reference to the object the rhs is assigned to
          */
         EgcBinaryNode& operator=(const EgcBinaryNode &rhs);
+        /**
+         * @brief operator= overloads = operator since we have dynamic elements in this class (move semantic)
+         * @param rhs a reference to the object to be assigned
+         * @return a reference to the object the rhs is assigned to
+         */
+        EgcBinaryNode& operator=(EgcBinaryNode&& rhs);
         /**
          * @brief valid checks if the subnodes are valid. This can be the case if e.g. the childs are not NULL.
          * @return returns true if the expression is valid, false otherwise.

@@ -18,6 +18,17 @@ EgcUnaryNode::EgcUnaryNode(const EgcUnaryNode& orig) : EgcContainerNode(orig)
                 m_child->provideParent(this);
 }
 
+EgcUnaryNode::EgcUnaryNode(EgcUnaryNode&& orig) : EgcContainerNode(orig)
+{
+        EgcNode *originalChild = const_cast<EgcUnaryNode&>(orig).getChild(0);
+        if (originalChild)
+                m_child.reset(orig.takeOwnership(*originalChild));
+
+        //set the parent also
+        if(m_child)
+                m_child->provideParent(this);
+}
+
 EgcUnaryNode::~EgcUnaryNode()
 {
 }
@@ -32,6 +43,21 @@ EgcUnaryNode& EgcUnaryNode::operator=(const EgcUnaryNode &rhs)
         EgcNode *originalChild = rhs.getChild(0);
         if (originalChild)
                 m_child.reset(originalChild->copy());
+
+        return *this;
+}
+
+EgcUnaryNode& EgcUnaryNode::operator=(EgcUnaryNode&& rhs)
+{
+        //test if the object to be assigned to is the same as the rhs
+        if (this == &rhs)
+                return *this;
+
+        //and create a new one
+        EgcNode *originalChild = rhs.getChild(0);
+        if (originalChild) {
+                m_child.reset(rhs.takeOwnership(*originalChild));
+        }
 
         return *this;
 }
