@@ -1266,6 +1266,15 @@ void EgcasTest_Structural::testFlexNode()
         QVERIFY(nodePointer != nullptr);
         node8 = nodePointer;
         static_cast<EgcNumberNode*>(nodePointer)->setValue("8");
+        nodePointer = &(iter9.previous());
+        nodePointer = &(iter9.previous());
+        nodePointer = &(iter9.previous());
+        nodePointer = &(iter9.previous());
+        nodePointer = &(iter9.previous());
+        nodePointer = &(iter9.previous());
+        QVERIFY(static_cast<EgcNumberNode*>(nodePointer)->getValue() == "6");
+        iter9.remove();
+        QVERIFY(static_cast<EgcFlexNode*>(node2)->getNumberChildNodes() == 3);
 
 
 

@@ -116,6 +116,12 @@ public:
          * @return true if everything went well, false otherwise
          */
         bool insert(quint32 index, EgcNode& node);
+        /**
+         * @brief remove removes a child at position index
+         * @param index the index position to remove
+         * @return true if everything was fine, false otherwise
+         */
+        bool remove(quint32 index);
 
 protected:
         /**

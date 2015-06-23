@@ -281,3 +281,15 @@ bool EgcFlexNode::insert(quint32 index, EgcNode& node)
 
         return retval;
 }
+
+bool EgcFlexNode::remove(quint32 index)
+{
+        bool retval = true;
+
+        if (index < m_childs.count())
+                m_childs.remove(index);
+        else
+                retval = false;
+
+        return retval;
+}

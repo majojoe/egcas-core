@@ -359,7 +359,10 @@ void EgcNodeIterator::remove()
 
         if (parent->isContainer()) { //must be true, only for case of error
                 if (static_cast<EgcContainerNode*>(parent)->getIndexOfChild(*history, index)) {
-                        static_cast<EgcContainerNode*>(parent)->
+                        if (parent->isFlexNode() && (static_cast<EgcFlexNode*>(parent)->getNumberChildNodes() > 1))
+                                static_cast<EgcFlexNode*>(parent)->remove(index);
+                        else
+                                static_cast<EgcContainerNode*>(parent)->
                                                        setChild(index,*EgcNodeCreator::create(EgcNodeType::EmptyNode));
                 }
         }
@@ -485,16 +488,16 @@ bool EgcNodeIterator::insertChildSpace(void)
         bool forward;
         quint32 index;
 
-        if (m_previous->isFlexNode()) {
-                node = static_cast<EgcFlexNode*>(m_previous);
-                child = m_next;
-                forward = false;
-        }
-
         if (m_next->isFlexNode()) {
                 node = static_cast<EgcFlexNode*>(m_next);
                 child = m_previous;
                 forward = true;
+        }
+
+        if (m_previous->isFlexNode()) {
+                node = static_cast<EgcFlexNode*>(m_previous);
+                child = m_next;
+                forward = false;
         }
 
         if (!node || !child)
