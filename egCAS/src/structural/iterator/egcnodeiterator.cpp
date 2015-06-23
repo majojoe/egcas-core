@@ -373,6 +373,7 @@ void EgcNodeIterator::remove()
 EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
 {
         EgcNode *retval = nullptr;
+        bool allOk = false;
 
         QScopedPointer<EgcNode> replacement(EgcNodeCreator::create(type));
         QScopedPointer<EgcNode> theReplaced(&node);
@@ -387,11 +388,13 @@ EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
 
                 if (node_cont->getNumberChildNodes() == replace_cont->getNumberChildNodes()) {
                         // the number of child nodes is equal, so we can transfer the childs
-                        if (replace_cont->transferProperties(*node_cont))
-                                retval = replacement.take();
+                        if (replace_cont->transferProperties(*node_cont)) {
+                                if (replacement.data())
+                                        allOk = true;
+                        }
                 }
 
-        } else if (!node.isContainer() && !replacement.data()->isContainer()) { //both are leafes (no container types)
+        } else if (!node.isContainer()) { //both are leafes (no container types)
                 EgcNode *parent = node.getParent();
 
                 if(parent) {
@@ -400,15 +403,32 @@ EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
                                 quint32 index;
 
                                 if (parentCont->getIndexOfChild(node, index)) {
-                                        parentCont->setChild(index, *replacement.data());
-                                        //the replaced node has already been deleted
-                                        (void) theReplaced.take();
-                                        retval = replacement.take();
+                                        if (parentCont->setChild(index, *replacement.data())) {
+                                                //the replaced node has already been deleted
+                                                (void) theReplaced.take();
+                                                if (replacement.data())
+                                                        allOk = true;
+                                        }
                                 }
                         }
                 }
 
+                if (allOk && replacement.data()->isContainer()) { // allocate empty nodes for the childs
+                        EgcContainerNode* replContainer = static_cast<EgcContainerNode*>(replacement.data());
+                        quint32 nrChilds = replContainer->getNumberChildNodes();
+                        for (int i = 0; i < nrChilds; i++) {
+                                QScopedPointer<EgcNode> tempNode(EgcNodeCreator::
+                                                                          create(EgcNodeType::EmptyNode));
+                                if (tempNode.data() == nullptr)
+                                        allOk = false;
+                                replContainer->setChild(i, *(tempNode.take()));
+                        }
+                }
         }
+
+
+        if (allOk)
+                retval = replacement.take();
 
         if (retval) { //all other cases
                 if (m_next == &node)
