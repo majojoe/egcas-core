@@ -286,10 +286,13 @@ bool EgcFlexNode::remove(quint32 index)
 {
         bool retval = true;
 
-        if (index < m_childs.count())
+        if (index < m_childs.count()) {
+                delete m_childs.at(index);
+                m_childs[index] = nullptr;
                 m_childs.remove(index);
-        else
+        } else {
                 retval = false;
+        }
 
         return retval;
 }

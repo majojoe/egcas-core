@@ -53,9 +53,6 @@ void EgcasTest_Structural::testChildDeletion()
         delete(parent_bin);
         QVERIFY(child_bin->deleted == true);
         QVERIFY(child2_bin->deleted == true);
-        //verify parent references
-        QVERIFY(parent_bin->getParent() == nullptr);
-        QVERIFY(child_bin->getParent() == parent_bin);
 }
 
 void EgcasTest_Structural::testCopyConstructors()
@@ -152,6 +149,10 @@ void EgcasTest_Structural::testTransferProperties()
         QVERIFY((static_cast<EgcNumberNode*>(transferNode4->getChild(0)))->getValue() == "3");
         QVERIFY((static_cast<EgcNumberNode*>(transferNode4->getChild(1)))->getValue() == "4");
         QVERIFY(transferNode4->getParent() == node1);
+
+        delete(transferNode1);
+        delete(transferNode2);
+        delete(transferNode3);
 }
 
 void EgcasTest_Structural::testIterator()
