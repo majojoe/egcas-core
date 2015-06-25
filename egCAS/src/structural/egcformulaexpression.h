@@ -34,6 +34,8 @@ public:
         EgcFormulaExpression(EgcNodeType type);
         ///copy constructor
         EgcFormulaExpression(const EgcFormulaExpression& orig);
+        ///move constructor
+        EgcFormulaExpression(EgcFormulaExpression&& orig);
         ///std destructor
         virtual ~EgcFormulaExpression();
         /**
@@ -42,6 +44,12 @@ public:
          * @return a reference to the object the rhs is assigned to
          */
         EgcFormulaExpression& operator=(const EgcFormulaExpression &rhs);
+        /**
+         * @brief operator= overloads = operator since we have dynamic elements in this class
+         * @param rhs a reference to the object to be assigned
+         * @return a reference to the object the rhs is assigned to
+         */
+        EgcFormulaExpression& operator=(EgcFormulaExpression&& rhs);
         /**
          * @brief getBaseElement returns the base element of a formula
          * @return the root element of the formula

@@ -14,6 +14,8 @@ public:
         EgcFlexNode();
         ///copy constructor
         EgcFlexNode(const EgcFlexNode& orig);
+        ///move constructor
+        EgcFlexNode(EgcFlexNode&& orig);
         /// destructor
         virtual ~EgcFlexNode() = 0;
         /**
@@ -22,6 +24,12 @@ public:
          * @return a reference to the object the rhs is assigned to
          */
         EgcFlexNode& operator=(const EgcFlexNode &rhs);
+        /**
+         * @brief operator= overloads = operator since we have dynamic elements in this class (move semantic)
+         * @param rhs a reference to the object to be assigned
+         * @return a reference to the object the rhs is assigned to
+         */
+        EgcFlexNode& operator=(EgcFlexNode&& rhs);
         /**
          * @brief valid checks if the subnode is valid. This can be the case if e.g. the child is not NULL.
          * @return returns true if the expression is valid, false otherwise.

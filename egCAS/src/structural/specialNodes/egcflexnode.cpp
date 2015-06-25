@@ -33,6 +33,31 @@ EgcFlexNode::EgcFlexNode(const EgcFlexNode& orig) : EgcContainerNode(orig)
         }
 }
 
+EgcFlexNode::EgcFlexNode(EgcFlexNode&& orig) : EgcContainerNode(orig)
+{
+        m_childs.clear();
+        EgcNode *originalChild;
+        quint32 i;
+        quint32 cnt = orig.m_childs.count();
+        QScopedPointer<EgcNode> child;
+        for (i = 0; i < cnt; i++) {
+                originalChild = orig.getChild(i);
+                if (originalChild)
+                        child.reset(orig.takeOwnership(*originalChild));
+
+                //set the parent also
+                if(child.data()) {
+                        child->provideParent(this);
+                        m_childs.append(child.take());
+                }
+        }
+
+        if (m_childs.empty()) {
+                m_childs.resize(1);
+                m_childs[0] = nullptr;
+        }
+}
+
 EgcFlexNode::~EgcFlexNode()
 {
         quint32 i;
@@ -74,11 +99,45 @@ EgcFlexNode& EgcFlexNode::operator=(const EgcFlexNode &rhs)
         //and create a new one
         if (cntRhs != 0) {
                 for (i = 0; i < cntRhs; i++) {
-                        child = rhs.getChild(0);
+                        child = rhs.getChild(i);
                         QScopedPointer<EgcNode> childCopy;
                         if (child)
                                 childCopy.reset(child->copy());
                         m_childs.append(childCopy.take());
+                }
+        }
+
+        return *this;
+}
+
+EgcFlexNode& EgcFlexNode::operator=(EgcFlexNode&& rhs)
+{
+        quint32 i;
+        quint32 cnt = m_childs.count();
+        EgcNode* child;
+        quint32 cntRhs = rhs.getNumberChildNodes();
+
+        //test if the object to be assigned to is the same as the rhs
+        if (this == &rhs)
+                return *this;
+
+        //delete the old content
+        if (!m_childs.empty()) {
+                for (i = 0; i < cnt; i++) {
+                        child = m_childs.at(i);
+                        delete child;
+                }
+                m_childs.clear();
+        }
+
+        //and create a new one
+        if (cntRhs != 0) {
+                for (i = 0; i < cntRhs; i++) {
+                        child = rhs.getChild(i);
+                        QScopedPointer<EgcNode> childMove;
+                        if (child)
+                                childMove.reset(rhs.takeOwnership(*child));
+                        m_childs.append(childMove.take());
                 }
         }
 

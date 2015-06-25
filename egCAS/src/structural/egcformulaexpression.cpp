@@ -48,6 +48,30 @@ EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
 
 }
 
+EgcFormulaExpression::EgcFormulaExpression(EgcFormulaExpression&& orig)
+{
+        bool completelyInit = false;
+        m_data.reset(static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode)));
+        if (!m_data.isNull()) {
+                EgcNode* originalRoot = orig.getRootElement();
+                if (originalRoot) {
+                        m_data.reset(static_cast<EgcBaseNode*>(orig.getBaseElement().takeOwnership(*originalRoot)));
+                        originalRoot->provideParent(&static_cast<EgcContainerNode&>(this->getBaseElement()));
+                        m_isResult = orig.m_isResult;
+                        m_isNumberResult = orig.m_isNumberResult;
+                        m_numberSignificantDigits = orig.m_numberSignificantDigits;
+                        m_numberResultType = orig.m_numberResultType;
+                        completelyInit = true;
+                }
+        }
+        if (!completelyInit) {
+                m_isResult = false;
+                m_isNumberResult = false;
+                m_numberSignificantDigits = 0;
+                m_numberResultType = EgcNumberResultType::StandardType;
+        }
+}
+
 EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression &rhs)
 {
         //test if the object to be assigned to is the same as the rhs
@@ -61,6 +85,36 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression
         m_isNumberResult = rhs.m_isNumberResult;
         m_numberSignificantDigits = rhs.m_numberSignificantDigits;
         m_numberResultType = rhs.m_numberResultType;
+
+        return *this;
+}
+
+EgcFormulaExpression& EgcFormulaExpression::operator=(EgcFormulaExpression&& rhs)
+{
+        //test if the object to be assigned to is the same as the rhs
+        if (this == &rhs)
+                return *this;
+
+        bool completelyInit = false;
+        m_data.reset(static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode)));
+        if (!m_data.isNull()) {
+                EgcNode* originalRoot = rhs.getRootElement();
+                if (originalRoot) {
+                        m_data.reset(static_cast<EgcBaseNode*>(rhs.getBaseElement().takeOwnership(*originalRoot)));
+                        originalRoot->provideParent(&static_cast<EgcContainerNode&>(this->getBaseElement()));
+                        m_isResult = rhs.m_isResult;
+                        m_isNumberResult = rhs.m_isNumberResult;
+                        m_numberSignificantDigits = rhs.m_numberSignificantDigits;
+                        m_numberResultType = rhs.m_numberResultType;
+                        completelyInit = true;
+                }
+        }
+        if (!completelyInit) {
+                m_isResult = false;
+                m_isNumberResult = false;
+                m_numberSignificantDigits = 0;
+                m_numberResultType = EgcNumberResultType::StandardType;
+        }
 
         return *this;
 }
