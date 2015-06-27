@@ -110,27 +110,26 @@
 
 %type<EgcNode*> expr;
 %type<EgcNode*> explist;
-%type<EgcBaseNode*> base_node;
 
-%start base_node
+%start formula
 
 %%
 
  /*use always the interpreter methods to buildup an AST*/
 
-base_node : /*nothing*/
+formula : /*nothing*/
         {
                 #if (EGC_PARSER_DEBUG >= 1)
                 cout << "***start" << endl;
                 #endif //#if (EGC_PARSER_DEBUG >= 1)                
                 interpreter.clear();
         }
-  | base_node expr END
+  | formula expr END
         {
                 #if (EGC_PARSER_DEBUG >= 1)
                 cout << "***end" << endl;
                 #endif //#if (EGC_PARSER_DEBUG >= 1)
-                interpreter.createBaseNode($2);
+                interpreter.setRootNode($2);
         }
 ;
 

@@ -67,17 +67,17 @@ public:
         void clear();
 
         /**
-         * @brief createBaseNode create a base node an stores it inside the interpreter class.
-         * @param node the node below the base node to add to the base node.
+         * @brief setRootNode stores the root node inside the interpreter class.
+         * @param node root node of the parsed formula to remember.
          */
-        void createBaseNode(EgcNode* node);
+        void setRootNode(EgcNode* node);
 
         /**
-         * @brief getBaseNode returns the base node of the lastly parsed formula. ATTENTION: the caller takes ownership
-         * of the formula returned.
-         * @return a pointer to the base node of the lastly parsed formula
+         * @brief getRootNode returns the root node of the lastly parsed formula. ATTENTION: the caller takes ownership
+         * of the root node returned.
+         * @return a pointer to the root node of the lastly parsed formula
          */
-        EgcBaseNode* getBaseNode(void);
+        EgcNode* getRootNode(void);
 
         /**
          * Switch scanner input stream. Default is standard input (std::cin).
@@ -170,7 +170,7 @@ private:
          * them later in case of an error during parsing.
          * @param node the node to remove
          */
-        void removeDanglingNode(EgcNode* node);
+        void setNotDangling(EgcNode* node);
 
         /**
          * @brief deleteDanglingNodes delete all dangling nodes in case of an error during build up of the AST
@@ -186,7 +186,7 @@ private:
 private:
         MaximaScanner m_scanner;                        /// the scanner to use for parsing
         MaximaParser m_parser;                          /// the parser to use
-        QScopedPointer<EgcBaseNode> m_baseNode;         /// the base node of the formula
+        QScopedPointer<EgcNode> m_rootNode;             /// the base node of the formula
         unsigned int m_location;                        /// Used by scanner
         QSet<EgcNode*> m_danglingNodes;                 /// holds the dangling nodes during AST is built up
 };

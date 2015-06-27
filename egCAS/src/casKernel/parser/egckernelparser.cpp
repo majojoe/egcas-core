@@ -16,7 +16,7 @@ EgcKernelParser::EgcKernelParser()
 {
 }
 
-bool EgcKernelParser::parseKernelOutput(const QString& strToParse, EgcBaseNode ** result)
+EgcNode* EgcKernelParser::parseKernelOutput(const QString& strToParse)
 {
         Interpreter i;
         stringstream ss;
@@ -26,26 +26,21 @@ bool EgcKernelParser::parseKernelOutput(const QString& strToParse, EgcBaseNode *
         try {
                 if (i.parse()) {
                         m_errMessage = "common unspecified error while parsing input";
-                        result = nullptr;
-                        return false;
+                        return nullptr;
                 }
         } catch (const MaximaParser::syntax_error& e) {
                 m_errMessage = "parsing error: " % QString(e.what()) %
                                QString(" at position: %1, %2").arg(e.location.begin.line).arg(e.location.begin.column);
-                result = nullptr;
-                return false;
+                return nullptr;
         } catch (runtime_error& e) {
                 m_errMessage = "runtime error: " % QString(e.what()) % " : Not enough memory?";
-                result = nullptr;
-                return false;
+                return nullptr;
         } catch (...) {
                 m_errMessage = "common unspecified exception while parsing input";
-                result = nullptr;
-                return false;
+                return nullptr;
         }
 
-        *result = i.getBaseNode();
-        return true;
+        return i.getRootNode();
 }
 
 QString EgcKernelParser::getErrorMessage()

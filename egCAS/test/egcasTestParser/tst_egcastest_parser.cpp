@@ -28,46 +28,38 @@ private:
 
 void EgcasTest_Parser::basicTestParser()
 {
-        int res;
-
         EgcKernelParser parser;
-        EgcBaseNode *tree;
-        res = parser.parseKernelOutput("(45+a)-n__j5_lm__3+kl__9-js_z", &tree);
-        if (!res) {
+        QScopedPointer<EgcNode> tree;
+        tree.reset(parser.parseKernelOutput("(45+a)-n__j5_lm__3+kl__9-js_z"));
+        if (tree.isNull()) {
                 std::cout << parser.getErrorMessage().toStdString();
         }
 
-        delete tree;
-
-        QVERIFY(res != 0);
+        QVERIFY(!tree.isNull());
 }
 
 void EgcasTest_Parser::falseTestParser()
 {
-        int res;
-
         EgcKernelParser parser;
-        EgcBaseNode *tree;
-        res = parser.parseKernelOutput("(45+a)-:n__j5_lm__3+kl__9-js_z", &tree);
+        QScopedPointer<EgcNode> tree;
+        tree.reset(parser.parseKernelOutput("(45+a)-:n__j5_lm__3+kl__9-js_z"));
 
-        delete tree;
-
-        QVERIFY(res == 0);
+        QVERIFY(tree.isNull());
 }
 
 void EgcasTest_Parser::treeTestParser()
 {
-        int res;
-
         EgcKernelParser parser;
-        EgcBaseNode *tree;
-        res = parser.parseKernelOutput("(45+a)-n__j5_lm__3+kl__9-js_z", &tree);
-        if (!res) {
-                std::cout << parser.getErrorMessage().toStdString();
+        QScopedPointer<EgcNode> tree;
+        tree.reset(parser.parseKernelOutput("(45+a)-n__j5_lm__3+kl__9-js_z"));
+        if (tree.isNull()) {
+                std::cout << parser.getErrorMessage().toStdString();               
         }
+        QVERIFY(!tree.isNull());
 
-
-        EgcNodeIterator iter(*tree);
+        EgcBaseNode base;
+        QVERIFY(base.setChild(0, *tree.take()));
+        EgcNodeIterator iter(base);
         EgcNode* nodePointer;
 
         nodePointer = &(iter.next());
@@ -114,10 +106,6 @@ void EgcasTest_Parser::treeTestParser()
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
         QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getValue() == QString("js"));
         QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getSubscript() == QString("z"));
-
-        delete tree;
-
-        QVERIFY(res != 0);
 }
 
 QTEST_MAIN(EgcasTest_Parser)

@@ -55,7 +55,7 @@ int Interpreter::parse() {
 
 void Interpreter::clear() {
         m_location = 0;
-        m_baseNode.reset(nullptr);
+        m_rootNode.reset(nullptr);
         deleteDanglingNodes();
 #if (EGC_PARSER_DEBUG >= 3)
         m_parser.set_debug_level(3);
@@ -84,13 +84,13 @@ EgcNode* Interpreter::addBinaryExpression(EgcNodeType type, EgcNode* node0,
         if (node) {
                 node->setChild(0, *node0);
                 node->setChild(1, *node1);
-                removeDanglingNode(node0);
-                removeDanglingNode(node1);
+                setNotDangling(node0);
+                setNotDangling(node1);
         } else {
                 delete node0;
                 delete node1;
-                removeDanglingNode(node0);
-                removeDanglingNode(node1);
+                setNotDangling(node0);
+                setNotDangling(node1);
                 throw std::runtime_error("Not enough memory to complete operation!");
         }
         addDanglingNode(node);
@@ -103,10 +103,10 @@ EgcNode* Interpreter::addUnaryExpression(EgcNodeType type, EgcNode* node0)
         EgcUnaryNode *node = static_cast<EgcUnaryNode*>(EgcNodeCreator::create(type));
         if (node) {
                 node->setChild(0, *node0);
-                removeDanglingNode(node0);
+                setNotDangling(node0);
         } else {
                 delete node0;
-                removeDanglingNode(node0);
+                setNotDangling(node0);
                 throw std::runtime_error("Not enough memory to complete operation!");
         }
         addDanglingNode(node);
@@ -140,45 +140,40 @@ EgcNode* Interpreter::addStringNode(EgcNodeType type, const std::string& value)
         return node;
 }
 
-void Interpreter::createBaseNode(EgcNode* node)
+void Interpreter::setRootNode(EgcNode* node)
 {
-        m_baseNode.reset(static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode)));
-        if (m_baseNode.data()) {
-                m_baseNode->setChild(0, *node);
-                removeDanglingNode(node);
-        } else {
-                throw std::runtime_error("Not enough memory to complete operation!");
-        }
+        m_rootNode.reset(node);
+        setNotDangling(node);
 }
 
-EgcBaseNode* Interpreter::getBaseNode(void)
+EgcNode* Interpreter::getRootNode(void)
 {
-        return m_baseNode.take();
+        return m_rootNode.take();
 }
 
 
 EgcNode* Interpreter::addFunction(const std::string& fncName, EgcNode* argList)
 {
 #warning implement this function
-        removeDanglingNode(argList);
+        setNotDangling(argList);
 }
 
 EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcNode* argList)
 {
 #warning implement this function
-        removeDanglingNode(argList);
+        setNotDangling(argList);
 }
 
 EgcNode* Interpreter::createArgList(EgcNode* expression)
 {
 #warning implement this function
-        removeDanglingNode(expression);
+        setNotDangling(expression);
 }
 
 EgcNode* Interpreter::addArgument(EgcNode* expressionToAdd, EgcNode* argumentList)
 {
 #warning implement this function
-        removeDanglingNode(expressionToAdd);
+        setNotDangling(expressionToAdd);
 }
 
 void Interpreter::addDanglingNode(EgcNode* node)
@@ -186,7 +181,7 @@ void Interpreter::addDanglingNode(EgcNode* node)
         m_danglingNodes.insert(node);
 }
 
-void Interpreter::removeDanglingNode(EgcNode* node)
+void Interpreter::setNotDangling(EgcNode* node)
 {
         m_danglingNodes.remove(node);
 }
