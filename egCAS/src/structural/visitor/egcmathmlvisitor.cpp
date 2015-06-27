@@ -74,6 +74,28 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
         m_result += str;
 }
 
+void EgcMathMlVisitor::visit(EgcFlexNode* flex)
+{
+        QString str;
+
+        switch (flex->getNodeType()) {
+        case EgcNodeType::FunctionNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = QString("<mrow><mi>%1</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>")
+                                      .arg(static_cast<EgcFunctionNode*>(flex)->getName());
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = "</mrow><mo>)</mo></mrow></mrow>";
+                else
+                        str = "<mo>,</mo>";
+                break;
+        default:
+                qDebug("No visitor code for mathml defined for this type: %d", flex->getNodeType()) ;
+                break;
+        }
+
+        m_result += str;
+}
+
 void EgcMathMlVisitor::visit(EgcNode* node)
 {
         QString str;

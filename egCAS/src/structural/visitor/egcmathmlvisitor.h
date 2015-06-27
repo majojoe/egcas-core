@@ -60,6 +60,12 @@ public:
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.
+         * @param flex the node with the information to be extracted.
+         */
+        virtual void visit(EgcFlexNode* flex) override;
+        /**
+         * @brief visit this method is called from the current node and implements the code that extracts the
+         * necessary information from the node given.
          * @param binary the node with the information to be extracted.
          */
         virtual void visit(EgcNode* node) override;

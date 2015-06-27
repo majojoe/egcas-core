@@ -31,3 +31,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcFunctionNode::EgcFunctionNode()
 {
 }
+
+void EgcFunctionNode::setName(const QString& fncName)
+{
+        m_name = fncName;
+}
+
+QString& EgcFunctionNode::getName(void)
+{
+        return m_name;
+}

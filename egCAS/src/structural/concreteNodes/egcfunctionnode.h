@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCFUNCTIONNODE_H
 #define EGCFUNCTIONNODE_H
 
+#include <QString>
 #include "../specialNodes/egcflexnode.h"
 
 /**
@@ -40,6 +41,19 @@ class EgcFunctionNode : public EgcFlexNode
         EGC_SET_EXPRESSION_TYPE(EgcFunctionNode, EgcNodeType::FunctionNode);
 public:
         EgcFunctionNode();
+        /**
+         * @brief setName set the function name
+         * @param fncName the variable name as a string
+         */
+        virtual void setName(const QString& fncName);
+        /**
+         * @brief getName returns the function name
+         * @return the function name
+         */
+        QString& getName(void);
+
+protected:
+        QString m_name;
 };
 
 #endif // EGCFUNCTIONNODE_H

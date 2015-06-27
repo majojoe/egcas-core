@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgcFormulaExpression;
 class EgcBinaryNode;
 class EgcUnaryNode;
+class EgcFlexNode;
 class EgcNode;
 
 /**
@@ -64,8 +65,14 @@ public:
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.
-         * @param binary the node with the information to be extracted.
+         * @param flex the node with the information to be extracted.
          */
+        virtual void visit(EgcFlexNode* flex) = 0;
+        /**
+         * @brief visit this method is called from the current node and implements the code that extracts the
+         * necessary information from the node given.
+         * @param binary the node with the information to be extracted.
+         */        
         virtual void visit(EgcNode* node) = 0;
         /**
          * @brief getResult returns the result of the traversion of the tree

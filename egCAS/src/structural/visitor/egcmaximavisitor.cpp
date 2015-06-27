@@ -75,6 +75,27 @@ void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
         m_result += str;
 }
 
+void EgcMaximaVisitor::visit(EgcFlexNode* flex)
+{
+        QString str;
+
+        switch (flex->getNodeType()) {
+        case EgcNodeType::FunctionNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = static_cast<EgcFunctionNode*>(flex)->getName() % "(";
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = ")";
+                else
+                        str = ",";
+                break;
+        default:
+                qDebug("No visitor code for maxima defined for this type: %d", flex->getNodeType()) ;
+                break;
+        }
+
+        m_result += str;
+}
+
 void EgcMaximaVisitor::visit(EgcNode* node)
 {
         QString str;
