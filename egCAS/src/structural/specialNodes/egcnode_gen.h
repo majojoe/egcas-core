@@ -61,21 +61,21 @@ nodes = flatten(nodes)
 #NumberNode = 0, VariableNode, RootNode, ParenthesisNode, BaseNode, EmptyNode, NodeUndefined
 first = nodes[0][1]
 for node in nodes:
-    if node[1] != "NodeUndefined":
+    if (node[1] != "NodeUndefined") and (node[1] != "BaseNode"):
         if node[1] is first:
             cog.outl("        %s = 0," % node[1])
         else:
             cog.outl("        %s," % node[1])
+cog.outl("        BaseNode,")
 cog.outl("        NodeUndefined")
-
 ]]]*/
-BaseNode = 0,
-EmptyNode,
-ParenthesisNode,
-VariableNode,
-FunctionNode,
+EmptyNode = 0,
 NumberNode,
+VariableNode,
 RootNode,
+FunctionNode,
+ParenthesisNode,
+BaseNode,
 NodeUndefined
 //[[[end]]]
 //The list is generated automatically. Do NOT change it manually.

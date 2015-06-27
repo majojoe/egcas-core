@@ -11,6 +11,10 @@ enum class EgcIteratorState {
         LeftIteration = 0, MiddleIteration, RightIteration
 };
 
+/**
+ * @brief The EgcNodeIterator class is a class to iterate over a (valid) node tree. A node tree must have a EgcBaseNode
+ * node at the top of the tree and one or more childs below.
+ */
 class EgcNodeIterator
 {
 public:
