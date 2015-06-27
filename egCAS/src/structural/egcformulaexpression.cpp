@@ -15,23 +15,20 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false)
                                                                   m_numberSignificantDigits(0),
                                                                   m_numberResultType(EgcNumberResultType::StandardType)
 {
-        m_data.reset(static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode)));
-        if (!m_data.isNull()) {
-                QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
-                if (tmp.data()) {
-                        EgcNode* tmp_ptr = tmp.data();
-                        if (m_data->setChild(0, *tmp)) //if everything is fine
-                                (void) tmp.take();
-                        if (tmp_ptr->isContainer()) {
-                                EgcContainerNode* cont = static_cast<EgcContainerNode*>(tmp_ptr);
-                                quint32 nrChildNodes = cont->getNumberChildNodes();
+        QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
+        if (tmp.data()) {
+                EgcNode* tmp_ptr = tmp.data();
+                if (m_data.setChild(0, *tmp)) //if everything is fine
+                        (void) tmp.take();
+                if (tmp_ptr->isContainer()) {
+                        EgcContainerNode* cont = static_cast<EgcContainerNode*>(tmp_ptr);
+                        quint32 nrChildNodes = cont->getNumberChildNodes();
 
-                                for (int i = 0; i < nrChildNodes; i++) {
-                                        QScopedPointer<EgcNode> tempNode(EgcNodeCreator::
-                                                                         create(EgcNodeType::EmptyNode));
-                                        if (tempNode.data() != nullptr)
-                                                cont->setChild(i, *(tempNode.take()));
-                                }
+                        for (int i = 0; i < nrChildNodes; i++) {
+                                QScopedPointer<EgcNode> tempNode(EgcNodeCreator::
+                                                                 create(EgcNodeType::EmptyNode));
+                                if (tempNode.data() != nullptr)
+                                        cont->setChild(i, *(tempNode.take()));
                         }
                 }
         }
@@ -39,8 +36,13 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false)
 
 EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
 {
-        EgcBaseNode& originalBase = orig.getBaseElement();
-        m_data.reset(static_cast<EgcBaseNode*>(originalBase.copy()));
+        QScopedPointer<EgcNode> tmp;
+        EgcNode* originalRoot = orig.getRootElement();
+        tmp.reset(originalRoot->copy());
+        if (tmp.data()) {
+                if (m_data.setChild(0, *tmp.data()))
+                        (void) tmp.take();
+        }
         m_isResult = orig.m_isResult;
         m_isNumberResult = orig.m_isNumberResult;
         m_numberSignificantDigits = orig.m_numberSignificantDigits;
@@ -50,21 +52,15 @@ EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
 
 EgcFormulaExpression::EgcFormulaExpression(EgcFormulaExpression&& orig)
 {
-        bool completelyInit = false;
-        m_data.reset(static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode)));
-        if (!m_data.isNull()) {
-                EgcNode* originalRoot = orig.getRootElement();
-                if (originalRoot) {
-                        m_data.reset(static_cast<EgcBaseNode*>(orig.getBaseElement().takeOwnership(*originalRoot)));
-                        originalRoot->provideParent(&static_cast<EgcContainerNode&>(this->getBaseElement()));
-                        m_isResult = orig.m_isResult;
-                        m_isNumberResult = orig.m_isNumberResult;
-                        m_numberSignificantDigits = orig.m_numberSignificantDigits;
-                        m_numberResultType = orig.m_numberResultType;
-                        completelyInit = true;
-                }
-        }
-        if (!completelyInit) {
+        EgcNode* originalRoot = orig.getRootElement();
+        if (originalRoot) {
+                m_data.setChild(0, *static_cast<EgcBaseNode&>(orig.getBaseElement()).takeOwnership(*originalRoot));
+                originalRoot->provideParent(&static_cast<EgcContainerNode&>(this->getBaseElement()));
+                m_isResult = orig.m_isResult;
+                m_isNumberResult = orig.m_isNumberResult;
+                m_numberSignificantDigits = orig.m_numberSignificantDigits;
+                m_numberResultType = orig.m_numberResultType;
+        } else {
                 m_isResult = false;
                 m_isNumberResult = false;
                 m_numberSignificantDigits = 0;
@@ -78,9 +74,14 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression
         if (this == &rhs)
                 return *this;
 
-        //and create a new one
-        EgcBaseNode& originalBase = rhs.getBaseElement();
-        m_data.reset(static_cast<EgcBaseNode*>(originalBase.copy()));
+        QScopedPointer<EgcNode> tmp;
+        EgcNode* rhsRoot = rhs.getRootElement();
+        tmp.reset(rhsRoot->copy());
+        if (tmp.data()) {
+                if (m_data.setChild(0, *tmp.data()))
+                        (void) tmp.take();
+        }
+
         m_isResult = rhs.m_isResult;
         m_isNumberResult = rhs.m_isNumberResult;
         m_numberSignificantDigits = rhs.m_numberSignificantDigits;
@@ -95,21 +96,15 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(EgcFormulaExpression&& rhs
         if (this == &rhs)
                 return *this;
 
-        bool completelyInit = false;
-        m_data.reset(static_cast<EgcBaseNode*>(EgcNodeCreator::create(EgcNodeType::BaseNode)));
-        if (!m_data.isNull()) {
-                EgcNode* originalRoot = rhs.getRootElement();
-                if (originalRoot) {
-                        m_data.reset(static_cast<EgcBaseNode*>(rhs.getBaseElement().takeOwnership(*originalRoot)));
-                        originalRoot->provideParent(&static_cast<EgcContainerNode&>(this->getBaseElement()));
-                        m_isResult = rhs.m_isResult;
-                        m_isNumberResult = rhs.m_isNumberResult;
-                        m_numberSignificantDigits = rhs.m_numberSignificantDigits;
-                        m_numberResultType = rhs.m_numberResultType;
-                        completelyInit = true;
-                }
-        }
-        if (!completelyInit) {
+        EgcNode* rhsRoot = rhs.getRootElement();
+        if (rhsRoot) {
+                m_data.setChild(0, *static_cast<EgcBaseNode&>(rhs.getBaseElement()).takeOwnership(*rhsRoot));
+                rhsRoot->provideParent(&static_cast<EgcContainerNode&>(this->getBaseElement()));
+                m_isResult = rhs.m_isResult;
+                m_isNumberResult = rhs.m_isNumberResult;
+                m_numberSignificantDigits = rhs.m_numberSignificantDigits;
+                m_numberResultType = rhs.m_numberResultType;
+        } else {
                 m_isResult = false;
                 m_isNumberResult = false;
                 m_numberSignificantDigits = 0;
@@ -125,17 +120,12 @@ EgcFormulaExpression::~EgcFormulaExpression()
 
 EgcBaseNode& EgcFormulaExpression::getBaseElement(void) const
 {
-        return *m_data.data();
+        return const_cast<EgcBaseNode&>(m_data);
 }
 
 EgcNode* EgcFormulaExpression::getRootElement(void) const
 {
-        EgcNode* retval = nullptr;
-
-        if (m_data.data())
-                retval = m_data->getChild(0);
-
-        return retval;
+        return m_data.getChild(0);;
 }
 
 QString EgcFormulaExpression::getMathMlCode(void)

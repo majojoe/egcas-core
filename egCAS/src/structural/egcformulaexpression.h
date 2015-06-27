@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QScopedPointer>
+#include "specialNodes/egcbasenode.h"
 
 class EgcNode;
 class EgcBaseNode;
@@ -117,7 +118,7 @@ private:
         bool m_isNumberResult;                  ///< true if it is a result of number type (not variable or algebraic)
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
-        QScopedPointer<EgcBaseNode> m_data;     ///< holds a pointer to the root element of the formula tree
+        EgcBaseNode m_data;                     ///< holds a pointer to the root element of the formula tree
         static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
 };
 
