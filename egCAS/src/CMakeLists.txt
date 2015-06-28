@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(egCAS)
 
+#set the project name
+add_definitions(-DEGC_PROJ_NAME=egCAS)
+
 # Tell CMake to run moc when necessary:
 set(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake

@@ -171,7 +171,6 @@ protected:
         virtual void adjustChildPointers(EgcNode &old_child, EgcNode &new_child) override;
 
         QVector<EgcNode*> m_childs;              //a vector that holds all childs of the FlexNode
-#warning use a additional hash table here for child lookup if class is too slow QHash<EgcNode*, quint32> childsLookup
 };
 
 #endif // EGCFLEXNODE_H

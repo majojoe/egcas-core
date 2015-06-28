@@ -109,7 +109,7 @@
 
 
 %type<EgcNode*> expr;
-%type<EgcNode*> explist;
+%type<EgcFunctionNode*> explist;
 
 %start formula
 
@@ -148,8 +148,8 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Ro
      | BUILTIN_FNCS "(" explist ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
 ;
     
-explist: expr            {$$ = interpreter.createArgList($1);}
-     | expr "," explist    {$$ = interpreter.addArgument($1, $3);}
+explist: expr            {$$ = interpreter.createFncArgList($1);}
+     | expr "," explist    {$$ = interpreter.addFncArgument($1, $3);}
 ;
 
 %%

@@ -31,6 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../egcnodecreator.h"
 #include "../visitor/egcnodevisitor.h"
 
+#ifdef EGC_PROJ_NAME
+#warning use a additional hash table for child lookup in this class if class is too slow QHash<EgcNode*, quint32> childsLookup
+#endif //#ifdef EGC_PROJ_NAME
+
 EgcFlexNode::EgcFlexNode() : m_childs(1)
 {
 

@@ -70,11 +70,11 @@ cog.outl("        BaseNode,")
 cog.outl("        NodeUndefined")
 ]]]*/
 EmptyNode = 0,
-NumberNode,
-VariableNode,
-RootNode,
-FunctionNode,
 ParenthesisNode,
+VariableNode,
+FunctionNode,
+NumberNode,
+RootNode,
 BaseNode,
 NodeUndefined
 //[[[end]]]

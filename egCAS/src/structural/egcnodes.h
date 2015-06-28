@@ -62,11 +62,11 @@ for node in nodes:
     cog.outl("#include \"concreteNodes/egc%s.h\"" % node[1].lower())
 
 ]]]*/
-#include "concreteNodes/egcnumbernode.h"
-#include "concreteNodes/egcvariablenode.h"
-#include "concreteNodes/egcrootnode.h"
-#include "concreteNodes/egcfunctionnode.h"
 #include "concreteNodes/egcparenthesisnode.h"
+#include "concreteNodes/egcvariablenode.h"
+#include "concreteNodes/egcfunctionnode.h"
+#include "concreteNodes/egcnumbernode.h"
+#include "concreteNodes/egcrootnode.h"
 //[[[end]]]
 //The list is generated automatically. Do NOT change it manually.
 

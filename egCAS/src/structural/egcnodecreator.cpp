@@ -93,20 +93,20 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::EmptyNode:
                 retval = new (std::nothrow) EgcEmptyNode();
                 break;
-        case EgcNodeType::NumberNode:
-                retval = new (std::nothrow) EgcNumberNode();
+        case EgcNodeType::ParenthesisNode:
+                retval = new (std::nothrow) EgcParenthesisNode();
                 break;
         case EgcNodeType::VariableNode:
                 retval = new (std::nothrow) EgcVariableNode();
                 break;
-        case EgcNodeType::RootNode:
-                retval = new (std::nothrow) EgcRootNode();
-                break;
         case EgcNodeType::FunctionNode:
                 retval = new (std::nothrow) EgcFunctionNode();
                 break;
-        case EgcNodeType::ParenthesisNode:
-                retval = new (std::nothrow) EgcParenthesisNode();
+        case EgcNodeType::NumberNode:
+                retval = new (std::nothrow) EgcNumberNode();
+                break;
+        case EgcNodeType::RootNode:
+                retval = new (std::nothrow) EgcRootNode();
                 break;
         //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.

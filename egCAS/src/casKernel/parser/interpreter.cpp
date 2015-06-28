@@ -30,6 +30,7 @@
 #include <sstream>
 #include <boost/concept_check.hpp>
 #include <QVector>
+#include <QScopedPointer>
 #include "interpreter.h"
 #include "../../structural/egcnodecreator.h"
 #include "../../structural/egcnodes.h"
@@ -81,64 +82,67 @@ unsigned int Interpreter::location() const {
 EgcNode* Interpreter::addBinaryExpression(EgcNodeType type, EgcNode* node0,
                                                     EgcNode* node1)
 {
-        EgcBinaryNode *node = static_cast<EgcBinaryNode*>(EgcNodeCreator::create(type));
-        if (node) {
-                node->setChild(0, *node0);
-                node->setChild(1, *node1);
-                setNotDangling(node0);
-                setNotDangling(node1);
+        QScopedPointer<EgcBinaryNode> node;
+        node.reset(static_cast<EgcBinaryNode*>(EgcNodeCreator::create(type)));
+        QScopedPointer<EgcNode> node0Tmp(node0);
+        QScopedPointer<EgcNode> node1Tmp(node1);
+        setNotDangling(node0);
+        setNotDangling(node1);
+        if (!node.isNull()) {
+                node->setChild(0, *node0Tmp.take());
+                node->setChild(1, *node1Tmp.take());
         } else {
-                delete node0;
-                delete node1;
-                setNotDangling(node0);
-                setNotDangling(node1);
                 throw std::runtime_error("Not enough memory to complete operation!");
         }
-        addDanglingNode(node);
+        EgcNode *nodePtr = node.data();
+        addDanglingNode(node.take());
 
-        return node;
+        return nodePtr;
 }
 
 EgcNode* Interpreter::addUnaryExpression(EgcNodeType type, EgcNode* node0)
 {
-        EgcUnaryNode *node = static_cast<EgcUnaryNode*>(EgcNodeCreator::create(type));
-        if (node) {
-                node->setChild(0, *node0);
-                setNotDangling(node0);
+        QScopedPointer<EgcUnaryNode> node(static_cast<EgcUnaryNode*>(EgcNodeCreator::create(type)));
+        QScopedPointer<EgcNode> node0Tmp(node0);
+        setNotDangling(node0);
+        if (!node.isNull()) {
+                node->setChild(0, *node0Tmp.take());
         } else {
-                delete node0;
-                setNotDangling(node0);
                 throw std::runtime_error("Not enough memory to complete operation!");
         }
-        addDanglingNode(node);
+        EgcNode *nodePtr = node.data();
+        addDanglingNode(node.take());
 
-        return node;
+        return nodePtr;
 }
 
 EgcNode* Interpreter::addStringNode(EgcNodeType type, const std::string& value)
 {
-        EgcNode *node = static_cast<EgcNode*>(EgcNodeCreator::create(type));
-        if (node) {
+        EgcNode *nodePtr = nullptr;
+        QScopedPointer<EgcNode> node(static_cast<EgcNode*>(EgcNodeCreator::create(type)));
+        if (!node.isNull()) {
                 switch (type) {
                 case EgcNodeType::NumberNode: {
-                        EgcNumberNode* tmp = static_cast<EgcNumberNode*>(node);
+                        EgcNumberNode* tmp = static_cast<EgcNumberNode*>(node.data());
                         tmp->setValue(QString::fromStdString(value));
                         break;
                 }
                 case EgcNodeType::VariableNode: {
-                        EgcVariableNode* tmp = static_cast<EgcVariableNode*>(node);
+                        EgcVariableNode* tmp = static_cast<EgcVariableNode*>(node.data());
                         tmp->setValueRaw(QString::fromStdString(value));
                         break;
                 }
                 default: /*do nothing*/
                         break;
                 }
-                addDanglingNode(node);
+                nodePtr = node.data();
+                addDanglingNode(node.take());
         } else {
                 throw std::runtime_error("Not enough memory to complete operation!");
         }
 
-        return node;
+
+        return nodePtr;
 }
 
 void Interpreter::setRootNode(EgcNode* node)
@@ -153,27 +157,46 @@ EgcNode* Interpreter::getRootNode(void)
 }
 
 
-EgcNode* Interpreter::addFunction(const std::string& fncName, EgcNode* argList)
+EgcNode* Interpreter::addFunction(const std::string& fncName, EgcFunctionNode* argList)
 {
+#ifdef EGC_PROJ_NAME
 #warning implement this function
+#warning turn EgcExpressionNode into s.th. like EgcArgListExpressionNode to be more typesafe
+#endif //#ifdef EGC_PROJ_NAME
         setNotDangling(argList);
 }
 
 EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcNode* argList)
 {
+#ifdef EGC_PROJ_NAME
 #warning implement this function
+#warning turn EgcExpressionNode into s.th. like EgcArgListExpressionNode to be more typesafe
+#endif //#ifdef EGC_PROJ_NAME
         setNotDangling(argList);
 }
 
-EgcNode* Interpreter::createArgList(EgcNode* expression)
+EgcFunctionNode* Interpreter::createFncArgList(EgcNode* expression)
 {
-#warning implement this function
+        QScopedPointer<EgcFunctionNode> node(static_cast<EgcFunctionNode*>(EgcNodeCreator::create(EgcNodeType::FunctionNode)));
+        QScopedPointer<EgcNode> exprPtr(expression);
         setNotDangling(expression);
+        if (!node.isNull()) {
+                node->setChild(0, *exprPtr.take());
+        } else {
+                throw std::runtime_error("Not enough memory to complete operation!");
+        }
+        EgcFunctionNode *nodePtr = node.data();
+        addDanglingNode(node.take());
+
+        return nodePtr;
 }
 
-EgcNode* Interpreter::addArgument(EgcNode* expressionToAdd, EgcNode* argumentList)
+EgcFunctionNode* Interpreter::addFncArgument(EgcNode* expressionToAdd, EgcFunctionNode* argumentList)
 {
+#ifdef EGC_PROJ_NAME
+#warning turn returnvalue and 2nd argument into s.th. like EgcArgListExpressionNode to be more typesafe
 #warning implement this function
+#endif //#ifdef EGC_PROJ_NAME
         setNotDangling(expressionToAdd);
 }
 

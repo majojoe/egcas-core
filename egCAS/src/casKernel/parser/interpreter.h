@@ -122,7 +122,6 @@ private:
          */
         EgcNode* addStringNode(EgcNodeType type, const std::string& value);
 
-#warning turn EgcExpressionNode into s.th. like EgcArgListExpressionNode to be more typesafe
         /**
          * @brief addFunction add a user defined function to the formula
          * @param fncName the function name of the function to create
@@ -130,9 +129,8 @@ private:
          * directly into the function.
          * @return pointer to the function created
          */
-        EgcNode* addFunction(const std::string& fncName, EgcNode* argList);
+        EgcNode* addFunction(const std::string& fncName, EgcFunctionNode*argList);
 
-#warning turn EgcExpressionNode into s.th. like EgcArgListExpressionNode to be more typesafe
         /**
          * @brief addBuiltinFunction add a builtin function to the formula
          * @param fncName the function name of the function to create
@@ -142,22 +140,20 @@ private:
          */
         EgcNode* addBuiltinFunction(const std::string& fncName, EgcNode* argList);
 
-#warning turn returnvalue into s.th. like EgcArgListExpressionNode to be more typesafe
         /**
          * @brief createArgList creates an argument list that is integrated later on in the function where it is used in
          * @param expression the expression to add to the argument list
          * @return a pointer to the created argument list
          */
-        EgcNode* createArgList(EgcNode* expression);
+        EgcFunctionNode* createFncArgList(EgcNode* expression);
 
-#warning turn returnvalue and 2nd argument into s.th. like EgcArgListExpressionNode to be more typesafe
         /**
          * @brief addArgument adds an argument to the argument list given
          * @param expressionToAdd the expression (argument) to add
          * @param argumentList the argument list to use to add the argument to
          * @return a pointer to the changed argument list
          */
-        EgcNode* addArgument(EgcNode* expressionToAdd, EgcNode* argumentList);
+        EgcFunctionNode* addFncArgument(EgcNode* expressionToAdd, EgcFunctionNode* argumentList);
 
         /**
          * @brief addDanglingNode add a dangling node to the set of dangling nodes. So it is easy to delete them later
