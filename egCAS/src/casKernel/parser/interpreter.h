@@ -138,7 +138,7 @@ private:
          * directly into the function.
          * @return pointer to the function created
          */
-        EgcNode* addBuiltinFunction(const std::string& fncName, EgcNode* argList);
+        EgcNode* addBuiltinFunction(const std::string& fncName, EgcFunctionNode* argList);
 
         /**
          * @brief createArgList creates an argument list that is integrated later on in the function where it is used in
