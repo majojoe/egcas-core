@@ -180,6 +180,7 @@ void EgcasTest_Parser::fncTreeTestParser()
 
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
+        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
         QCOMPARE(static_cast<EgcVariableNode*>(nodePointer)->getValue(), QString("Pt"));
 
