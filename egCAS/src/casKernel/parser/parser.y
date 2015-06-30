@@ -134,14 +134,14 @@ formula : /*nothing*/
 ;
 
  /*#warning change this if plus, minus, etc. node exist*/
-expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $1, $3);}
-     | expr "-" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $1, $3);}
-     | expr "*" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $1, $3);}
-     | expr "/" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $1, $3);}
+expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::PlusNode, $1, $3);}
+     | expr "-" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::MinusNode, $1, $3);}
+     | expr "*" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::MultiplicationNode, $1, $3);}
+     | expr "/" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::DivisionNode, $1, $3);}
      | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
-     | "-" expr %prec UMINUS {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
-     | "=" expr            {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
-     | ":=" expr           {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
+     | "-" expr %prec UMINUS {$$ = interpreter.addUnaryExpression(EgcNodeType::UnaryMinusNode, $2);}
+     | "=" expr            {$$ = interpreter.addUnaryExpression(EgcNodeType::EqualNode, $2);}
+     | ":=" expr           {$$ = interpreter.addUnaryExpression(EgcNodeType::DefinitionNode, $2);}
      | NUMBER              {$$ = interpreter.addStringNode(EgcNodeType::NumberNode, $1);}
      | NAMES               {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1);}
      | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}

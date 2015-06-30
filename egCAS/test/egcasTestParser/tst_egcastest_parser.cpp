@@ -92,19 +92,19 @@ void EgcasTest_Parser::treeTestParser()
         EgcNode* nodePointer;
 
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::MinusNode);
 
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::PlusNode);
 
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::MinusNode);
 
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::ParenthesisNode);
 
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::PlusNode);
 
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
@@ -153,21 +153,21 @@ void EgcasTest_Parser::fncTreeTestParser()
         EgcNode* nodePointer;
 
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::PlusNode);
 
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
         QVERIFY(static_cast<EgcNumberNode*>(nodePointer)->getValue() == QString("k"));
 
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::PlusNode);
 
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::FunctionNode);
 
         nodePointer = &(iter.next());
         //Plus sign in first function argument
-        QVERIFY(nodePointer->getNodeType() == EgcNodeType::RootNode);
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::PlusNode);
 
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
