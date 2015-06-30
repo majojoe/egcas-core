@@ -72,9 +72,17 @@ cog.outl("        NodeUndefined")
 EmptyNode = 0,
 ParenthesisNode,
 VariableNode,
+PlusNode,
 FunctionNode,
+DivisionNode,
+MinusNode,
 NumberNode,
 RootNode,
+UnaryMinusNode,
+DefinitionNode,
+ExponentNode,
+MultiplicationNode,
+EqualNode,
 BaseNode,
 NodeUndefined
 //[[[end]]]

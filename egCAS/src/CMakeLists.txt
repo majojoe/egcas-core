@@ -39,6 +39,14 @@ set(egCAS_concrete_node_SOURCES
         structural/concreteNodes/egcrootnode.cpp
         structural/concreteNodes/egcvariablenode.cpp
         structural/concreteNodes/egcfunctionnode.cpp
+        structural/concreteNodes/egcunaryminusnode.cpp
+        structural/concreteNodes/egcplusnode.cpp
+        structural/concreteNodes/egcminusnode.cpp
+        structural/concreteNodes/egcexponentnode.cpp
+        structural/concreteNodes/egcdivisionnode.cpp
+        structural/concreteNodes/egcmultiplicationnode.cpp
+        structural/concreteNodes/egcdefinitionnode.cpp
+        structural/concreteNodes/egcequalnode.cpp
 )
 
 set(egCAS_SOURCES
