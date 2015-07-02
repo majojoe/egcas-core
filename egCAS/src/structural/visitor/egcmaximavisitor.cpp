@@ -48,6 +48,55 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                 else
                         str = ")^(1/";
                 break;
+        case EgcNodeType::PlusNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "(";
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = ")";
+                else
+                        str = ")+(";
+                break;
+        case EgcNodeType::MinusNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "(";
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = ")";
+                else
+                        str = ")-(";
+                break;
+        case EgcNodeType::MultiplicationNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "(";
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = ")";
+                else
+                        str = ")*(";
+                break;
+        case EgcNodeType::DivisionNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "(";
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = ")";
+                else
+                        str = ")/(";
+                break;
+        case EgcNodeType::ExponentNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "(";
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = ")";
+                else
+                        str = ")^(";
+                break;
+        case EgcNodeType::EqualNode:
+                if (m_state == EgcIteratorState::MiddleIteration)
+                        str = "=";
+                break;
+        case EgcNodeType::DefinitionNode:
+                if (m_state == EgcIteratorState::MiddleIteration)
+                        str = ":=";
+                break;
+
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", binary->getNodeType()) ;
                 break;
@@ -64,6 +113,12 @@ void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
         case EgcNodeType::ParenthesisNode:
                 if (m_state == EgcIteratorState::LeftIteration)
                         str = "(";
+                else
+                        str = ")";
+                break;
+        case EgcNodeType::UnaryMinusNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "-(";
                 else
                         str = ")";
                 break;

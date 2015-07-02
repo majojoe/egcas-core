@@ -62,6 +62,15 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false)
         }
 }
 
+EgcFormulaExpression::EgcFormulaExpression(EgcNode& rootElement)
+{
+        QScopedPointer<EgcNode> tmp(&rootElement);
+        if (tmp.data()) {
+                if (m_data.setChild(0, *tmp)) //if everything is fine
+                        (void) tmp.take();
+        }
+}
+
 EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
 {
         QScopedPointer<EgcNode> tmp;
