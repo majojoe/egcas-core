@@ -62,7 +62,9 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false)
         }
 }
 
-EgcFormulaExpression::EgcFormulaExpression(EgcNode& rootElement)
+EgcFormulaExpression::EgcFormulaExpression(EgcNode& rootElement) : m_isResult(false), m_isNumberResult(false),
+                                                                   m_numberSignificantDigits(0),
+                                                                   m_numberResultType(EgcNumberResultType::StandardType)
 {
         QScopedPointer<EgcNode> tmp(&rootElement);
         if (tmp.data()) {
