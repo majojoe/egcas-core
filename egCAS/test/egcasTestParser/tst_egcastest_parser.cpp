@@ -52,6 +52,7 @@ private Q_SLOTS:
         void treeTestParser();
         void fncTreeTestParser();
         void fncOperations1TestParser();
+        void fncOperations2TestParser();
 private:
 };
 
@@ -255,6 +256,24 @@ void EgcasTest_Parser::fncOperations1TestParser()
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
         QCOMPARE(static_cast<EgcVariableNode*>(nodePointer)->getValue(), QString("3"));
 }
+
+void EgcasTest_Parser::fncOperations2TestParser()
+{
+        EgcKernelParser parser;
+        QScopedPointer<EgcNode> tree;
+        tree.reset(parser.parseKernelOutput("ost:=rn^45.8+a/3"));
+        if (tree.isNull()) {
+                std::cout << parser.getErrorMessage().toStdString();
+        }
+        QVERIFY(!tree.isNull());
+
+        EgcBaseNode base;
+        QVERIFY(base.setChild(0, *tree.take()));
+
+        EgcFormulaExpression formula(*base.takeOwnership(*base.getChild(0)));
+        QVERIFY(formula.getCASKernelCommand().contains("ost:=((rn)^(45.8))+((a)/(3))") == true);
+}
+
 
 QTEST_MAIN(EgcasTest_Parser)
 
