@@ -94,7 +94,7 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                 break;
         case EgcNodeType::DefinitionNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
-                        str = ":=";
+                        str = ":";
                 break;
 
         default:

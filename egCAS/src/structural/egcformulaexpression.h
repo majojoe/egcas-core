@@ -63,6 +63,10 @@ public:
         EgcFormulaExpression(EgcNodeType type);
         /**
          * @brief EgcFormulaExpression std constructor
+         */
+        EgcFormulaExpression(void);
+        /**
+         * @brief EgcFormulaExpression std constructor
          * @param rootElement a reference to the rootElement of the formula to create (if the root element already exists)
          */
         EgcFormulaExpression(EgcNode& rootElement);

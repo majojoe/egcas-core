@@ -261,7 +261,7 @@ void EgcasTest_Parser::fncOperations2TestParser()
 {
         EgcKernelParser parser;
         QScopedPointer<EgcNode> tree;
-        tree.reset(parser.parseKernelOutput("ost:=rn^45.8+a/3"));
+        tree.reset(parser.parseKernelOutput("ost:rn^45.8+a/3"));
         if (tree.isNull()) {
                 std::cout << parser.getErrorMessage().toStdString();
         }
@@ -271,7 +271,7 @@ void EgcasTest_Parser::fncOperations2TestParser()
         QVERIFY(base.setChild(0, *tree.take()));
 
         EgcFormulaExpression formula(*base.takeOwnership(*base.getChild(0)));
-        QVERIFY(formula.getCASKernelCommand().contains("ost:=((rn)^(45.8))+((a)/(3))") == true);
+        QVERIFY(formula.getCASKernelCommand().contains("ost:((rn)^(45.8))+((a)/(3))") == true);
 }
 
 

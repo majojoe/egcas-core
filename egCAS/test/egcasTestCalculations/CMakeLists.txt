@@ -18,6 +18,7 @@ ADD_FLEX_BISON_DEPENDENCY(cas_scanner_tst cas_calculations_tst)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
+
 if(CMAKE_COMPILER_IS_GNUCXX)
         add_definitions(-std=c++11)
 endif()
@@ -32,6 +33,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/visitor)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/iterator)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/specialNodes)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/concreteNodes)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/)
 
 file(GLOB_RECURSE tst_egcastest_calculations_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
 

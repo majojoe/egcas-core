@@ -73,6 +73,10 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNode& rootElement) : m_isResult(fa
         }
 }
 
+EgcFormulaExpression::EgcFormulaExpression(void) : EgcFormulaExpression(EgcNodeType::EmptyNode)
+{
+}
+
 EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
 {
         QScopedPointer<EgcNode> tmp;

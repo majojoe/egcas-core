@@ -96,13 +96,13 @@
 %token MULTIPLICATION "*";
 %token DIVISION "/";
 %token EQUAL "=";
-%token DEFINE ":="
+%token DEFINE ":"
 %token COMMA ",";
 %token LEFTPARENTESIS "(";
 %token RIGHTPARENTHESIS ")";
 %token EXPONENT "^"
 
-%right "=" ":="
+%right "=" ":"
 %left "+" "-"
 %left "*" "/"
 %left "^"
@@ -142,7 +142,7 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
      | "-" expr %prec UMINUS {$$ = interpreter.addUnaryExpression(EgcNodeType::UnaryMinusNode, $2);}
      | expr "=" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::EqualNode, $1, $3);}
-     | expr ":=" expr      {$$ = interpreter.addBinaryExpression(EgcNodeType::DefinitionNode, $1, $3);}
+     | expr ":" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::DefinitionNode, $1, $3);}
      | NUMBER              {$$ = interpreter.addStringNode(EgcNodeType::NumberNode, $1);}
      | NAMES               {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1);}
      | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}

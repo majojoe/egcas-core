@@ -37,6 +37,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcnodevisitor.h"
 #include "egcmaximavisitor.h"
 #include "egcmathmlvisitor.h"
+#include "casKernel/egcmaximaconn.h"
+#include "egcformulaexpression.h"
 
 
 class EgcasTest_Calculation : public QObject
@@ -54,14 +56,28 @@ private:
 
 void EgcasTest_Calculation::basicTestCalculation()
 {
+        EgcFormulaExpression formula1;
         EgcKernelParser parser;
-        QScopedPointer<EgcNode> tree;
-        tree.reset(parser.parseKernelOutput("(45+a)-n__j5_lm__3+kl__9-js_z"));
-        if (tree.isNull()) {
+        QScopedPointer<EgcNode> tree1;
+        tree1.reset(parser.parseKernelOutput("x:33.1"));
+        if (tree1.isNull()) {
                 std::cout << parser.getErrorMessage().toStdString();
         }
+        QVERIFY(!tree1.isNull());
 
-        QVERIFY(!tree.isNull());
+        // this shall be possible
+        formula1 = tree1.take();
+
+        QScopedPointer<EgcNode> tree2;
+        tree2.reset(parser.parseKernelOutput("x^3+36-8*651.984"));
+        if (tree2.isNull()) {
+                std::cout << parser.getErrorMessage().toStdString();
+        }
+        QVERIFY(!tree2.isNull());
+
+        EgcMaximaConn *conn = new (std::nothrow) EgcMaximaConn("/usr/bin/maxima", this);
+
+        conn->sendCommand(formula1.getCASKernelCommand());
 }
 
 

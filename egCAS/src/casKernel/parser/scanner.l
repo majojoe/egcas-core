@@ -81,7 +81,7 @@ EXPONENT     ([Eeb][-+]?[0-9]+)
 "*"     { return CASParser::MaximaParser::make_MULTIPLICATION(CASParser::location()); }
 "/"     { return CASParser::MaximaParser::make_DIVISION(CASParser::location()); }
 "="     { return CASParser::MaximaParser::make_EQUAL(CASParser::location()); }
-":="    { return CASParser::MaximaParser::make_DEFINE(CASParser::location()); }
+":"     { return CASParser::MaximaParser::make_DEFINE(CASParser::location()); }
 ","     { return CASParser::MaximaParser::make_COMMA(CASParser::location()); }
 "("     { return CASParser::MaximaParser::make_LEFTPARENTESIS(CASParser::location()); }
 ")"     { return CASParser::MaximaParser::make_RIGHTPARENTHESIS(CASParser::location()); }
