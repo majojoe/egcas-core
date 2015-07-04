@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include <QtTest>
 #include <iostream>
+#include <QScopedPointer>
 #include "egckernelparser.h"
 #include "egcnodes.h"
 #include "egcnodeiterator.h"
@@ -41,44 +42,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcformulaexpression.h"
 
 
+#include <QDebug>
+
 class EgcasTest_Calculation : public QObject
 {
         Q_OBJECT
 
 public:
-        EgcasTest_Calculation() {}
-
+        EgcasTest_Calculation() : hasEnded(false) {}
+public Q_SLOTS:
+        void evaluateResult(QString result);
+        void kernelStarted();
 private Q_SLOTS:
         void basicTestCalculation();
 private:
+        EgcNode* getTree(QString formula);
+        QScopedPointer<EgcMaximaConn> conn;
+        EgcFormulaExpression formula;
+        EgcKernelParser parser;
+        bool hasEnded;
 };
 
+EgcNode* EgcasTest_Calculation::getTree(QString formula)
+{
+        QScopedPointer<EgcNode> tree(parser.parseKernelOutput(formula));
+        if (tree.isNull()) {
+                std::cout << parser.getErrorMessage().toStdString();
+        }
+
+        return tree.take();
+}
 
 void EgcasTest_Calculation::basicTestCalculation()
-{
-        EgcFormulaExpression formula1;
-        EgcKernelParser parser;
-        QScopedPointer<EgcNode> tree1;
-        tree1.reset(parser.parseKernelOutput("x:33.1"));
-        if (tree1.isNull()) {
-                std::cout << parser.getErrorMessage().toStdString();
-        }
-        QVERIFY(!tree1.isNull());
-
-        // this shall be possible
-        formula1 = tree1.take();
-
-        QScopedPointer<EgcNode> tree2;
-        tree2.reset(parser.parseKernelOutput("x^3+36-8*651.984"));
-        if (tree2.isNull()) {
-                std::cout << parser.getErrorMessage().toStdString();
-        }
-        QVERIFY(!tree2.isNull());
-
-        EgcMaximaConn *conn = new (std::nothrow) EgcMaximaConn("/usr/bin/maxima", this);
-
-        conn->sendCommand(formula1.getCASKernelCommand());
+{                
+        conn.reset(new (std::nothrow) EgcMaximaConn("/usr/bin/maxima", this));
+        connect(conn.data(), SIGNAL(resultReceived(QString)), this, SLOT(evaluateResult(QString)));
+        connect(conn.data(), SIGNAL(kernelStarted()), this, SLOT(kernelStarted()));
+        QVERIFY(!conn.isNull());
+        do {
+                QTest::qWait(100);
+        } while (!hasEnded);
+        conn->quit();
+        QTest::qWait(500);
 }
+
+void EgcasTest_Calculation::kernelStarted()
+{
+        formula.setRootElement(getTree("x:33.1"));
+        conn->sendCommand(formula.getCASKernelCommand());
+}
+
+void EgcasTest_Calculation::evaluateResult(QString result)
+{
+        static int i = 0;
+
+        if (i == 0) {
+                QVERIFY(result == "33.1");
+                formula.setRootElement(getTree("x^3+36-8*651.984"));
+                conn->sendCommand(formula.getCASKernelCommand());
+        } else if (i == 1) {
+                QVERIFY(result == "31084.819");
+                EgcFormulaExpression form_res;
+                form_res.setRootElement(getTree(result));
+                QVERIFY(form_res.getMathMlCode() == "<math><mn>31084.819</mn></math>");
+                hasEnded = true;
+        }
+
+        i++;
+}
+
+
+
 
 
 

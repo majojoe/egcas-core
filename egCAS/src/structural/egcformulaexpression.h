@@ -99,6 +99,11 @@ public:
          */
         EgcNode* getRootElement(void) const;
         /**
+         * @brief setRootElement sets the root element of a formula. The formula takes ownership of the tree.
+         * @param rootElement is a reference to the root Element of the formula tree to be set
+         */
+        void setRootElement(EgcNode *rootElement);
+        /**
          * @brief getMathMlCode returns the mathMl representation for this formula
          * @return the mathMl representation of this formula as a string
          */

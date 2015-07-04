@@ -57,6 +57,8 @@ set(tst_egcastest_calculations_SOURCES
         ../../src/structural/visitor/egcnodevisitor.cpp
         ../../src/structural/visitor/egcmaximavisitor.cpp
         ../../src/structural/visitor/egcmathmlvisitor.cpp
+        ../../src/casKernel/egcmaximaconn.cpp
+        ../../src/casKernel/egckernelconn.cpp
 )
 
 #set the verbosity level of the scanner and parser

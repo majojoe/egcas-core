@@ -37,7 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "visitor/egcmathmlvisitor.h"
 
 
-quint8 EgcFormulaExpression::s_stdNrSignificantDigits = 0;
+quint8 EgcFormulaExpression::s_stdNrSignificantDigits = 15;
 
 EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false), m_isNumberResult(false),
                                                                   m_numberSignificantDigits(0),
@@ -169,6 +169,15 @@ EgcBaseNode& EgcFormulaExpression::getBaseElement(void) const
 EgcNode* EgcFormulaExpression::getRootElement(void) const
 {
         return m_data.getChild(0);;
+}
+
+void EgcFormulaExpression::setRootElement(EgcNode* rootElement)
+{
+        QScopedPointer<EgcNode> tmp(rootElement);
+        if (tmp.data()) {
+                if (m_data.setChild(0, *tmp)) //if everything is fine
+                        (void) tmp.take();
+        }
 }
 
 QString EgcFormulaExpression::getMathMlCode(void)
