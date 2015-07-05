@@ -89,10 +89,8 @@ EgcNode* Interpreter::addBinaryExpression(EgcNodeType type, EgcNode* node0,
         setNotDangling(node0);
         setNotDangling(node1);
         if (!node.isNull() && node0 && node1) {
-                if (node->setChild(0, *node0Tmp.data()))
-                        (void) node0Tmp.take();
-                if (node->setChild(1, *node1Tmp.data()))
-                        (void) node1Tmp.take();
+                node->setChild(0, *node0Tmp.take());
+                node->setChild(1, *node1Tmp.take());
         } else {
                 throw std::runtime_error("Not enough memory to complete operation!");
         }
@@ -108,8 +106,7 @@ EgcNode* Interpreter::addUnaryExpression(EgcNodeType type, EgcNode* node0)
         QScopedPointer<EgcNode> node0Tmp(node0);
         setNotDangling(node0);
         if (!node.isNull() && node0) {
-                if (node->setChild(0, *node0Tmp.data()))
-                        (void) node0Tmp.take();
+                node->setChild(0, *node0Tmp.take());
         } else {
                 throw std::runtime_error("Not enough memory to complete operation!");
         }
@@ -184,8 +181,7 @@ EgcFunctionNode* Interpreter::createFncArgList(EgcNode* expression)
         QScopedPointer<EgcNode> exprPtr(expression);
         setNotDangling(expression);
         if (!node.isNull()) {
-                if (node->setChild(0, *exprPtr.data()))
-                        (void) exprPtr.take();
+                node->setChild(0, *exprPtr.take());
         } else {
                 throw std::runtime_error("Not enough memory to complete operation!");
         }

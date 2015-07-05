@@ -246,6 +246,8 @@ bool EgcFlexNode::setChild(quint32 index, const EgcNode& expression)
 {
         quint32 i;
 
+        QScopedPointer<const EgcNode> expr(&expression);
+
         quint32 count = (quint32)m_childs.count();
         if (index >= count) {
                 m_childs.resize(index + 1);
@@ -260,7 +262,7 @@ bool EgcFlexNode::setChild(quint32 index, const EgcNode& expression)
                 delete m_childs[index];
         }
 
-        m_childs[index] = const_cast<EgcNode*>(&expression);
+        m_childs[index] = const_cast<EgcNode*>(expr.take());
 
         //set the parent also
         if(m_childs[index])

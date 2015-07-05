@@ -66,7 +66,7 @@ public:
          */
         EgcFormulaExpression(void);
         /**
-         * @brief EgcFormulaExpression std constructor
+         * @brief EgcFormulaExpression std constructor. Takes ownership of the rootElement.
          * @param rootElement a reference to the rootElement of the formula to create (if the root element already exists)
          */
         EgcFormulaExpression(EgcNode& rootElement);
@@ -115,7 +115,8 @@ public:
          */
         QString getCASKernelCommand(void);
         /**
-         * @brief Is the formula a result of a calculation? (Has to be set by the formula(visitor) - when the formula changes)
+         * @brief Is the formula a result of a calculation? (Has to be set by the formula(visitor) - when the formula
+         * changes)
          * @return true if the formula is a result of a calculation
          */
         bool isResult(void);
@@ -155,6 +156,18 @@ public:
          * @param digits the number of global significant digits
          */
         static void setStdNrSignificantDigis(quint8 digits);
+        /**
+         * @brief setResult sets the tree as result of the formula. The formula takes ownership of the result, even if
+         * it's not possible to set the result as result of the formula (the result given will be deleted in this case).
+         * @param result the EgcNode tree to to set as result of the formula. Of course the result
+         * @return true if formula needs a repaint.
+         */
+        bool setResult(EgcNode* result);
+        /**
+         * @brief resetResult if the content of the formula is a result, delete the result and set it empty
+         * @return true if a reset was sucessful, false otherwise
+         */
+        bool resetResult(void);
 private:
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user

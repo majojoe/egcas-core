@@ -95,7 +95,8 @@ public:
          */
         virtual EgcNode* getChild(quint32 index) const override;
         /**
-         * @brief setChild set the given expression as a child at position index. If
+         * @brief setChild set the given expression as a child at position index. Takes ownership of the node given,
+         * even if setting the child failed (the given node will be deleted in this case).
          * @param index the position at which the child should be inserted. E.g. 0 will set the left child of a binary
          * expression.
          * @param expression the expression to set as child.

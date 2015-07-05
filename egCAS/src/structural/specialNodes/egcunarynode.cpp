@@ -147,8 +147,10 @@ bool EgcUnaryNode::setChild(quint32 index, const EgcNode& expression)
 {
         bool retval = true;
 
+        QScopedPointer<const EgcNode> expr(&expression);
+
         if (index == 0) {
-                m_child.reset(const_cast<EgcNode*>(&expression));
+                m_child.reset(const_cast<EgcNode*>(expr.take()));
 
                 //set the parent also
                 if(m_child)

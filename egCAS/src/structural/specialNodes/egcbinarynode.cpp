@@ -171,13 +171,15 @@ bool EgcBinaryNode::setChild(quint32 index, const EgcNode& expression)
 {
         bool retval = true;
 
+        QScopedPointer<const EgcNode> expr(&expression);
+
         if (index == 0) {
-                m_leftChild.reset(const_cast<EgcNode*>(&expression));
+                m_leftChild.reset(const_cast<EgcNode*>(expr.take()));
 
                 if (m_leftChild)
                         m_leftChild->provideParent(this);
         } else if (index == 1) {
-                m_rightChild.reset(const_cast<EgcNode*>(&expression));
+                m_rightChild.reset(const_cast<EgcNode*>(expr.take()));
 
                 if (m_rightChild)
                         m_rightChild->provideParent(this);

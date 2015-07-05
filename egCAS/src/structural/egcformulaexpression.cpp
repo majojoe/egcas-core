@@ -66,8 +66,7 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNode& rootElement) : m_numberSigni
 {
         QScopedPointer<EgcNode> tmp(&rootElement);
         if (tmp.data()) {
-                if (m_data.setChild(0, *tmp)) //if everything is fine
-                        (void) tmp.take();
+                m_data.setChild(0, *(tmp.take()));
         }
 }
 
@@ -81,8 +80,7 @@ EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
         EgcNode* originalRoot = orig.getRootElement();
         tmp.reset(originalRoot->copy());
         if (tmp.data()) {
-                if (m_data.setChild(0, *tmp.data()))
-                        (void) tmp.take();
+                m_data.setChild(0, *(tmp.take()));
         }
         m_numberSignificantDigits = orig.m_numberSignificantDigits;
         m_numberResultType = orig.m_numberResultType;
@@ -113,8 +111,7 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression
         EgcNode* rhsRoot = rhs.getRootElement();
         tmp.reset(rhsRoot->copy());
         if (tmp.data()) {
-                if (m_data.setChild(0, *tmp.data()))
-                        (void) tmp.take();
+                m_data.setChild(0, *(tmp.take()));
         }
 
         m_numberSignificantDigits = rhs.m_numberSignificantDigits;
@@ -161,8 +158,7 @@ void EgcFormulaExpression::setRootElement(EgcNode* rootElement)
 {
         QScopedPointer<EgcNode> tmp(rootElement);
         if (tmp.data()) {
-                if (m_data.setChild(0, *tmp)) //if everything is fine
-                        (void) tmp.take();
+                m_data.setChild(0, *(tmp.take()));
         }
 }
 
@@ -244,4 +240,39 @@ quint8 EgcFormulaExpression::getStdNrSignificantDigis(void)
 void EgcFormulaExpression::setStdNrSignificantDigis(quint8 digits)
 {
         s_stdNrSignificantDigits = digits;
+}
+
+bool EgcFormulaExpression::setResult(EgcNode* result)
+{
+        bool repaint = false;
+        bool equal = true;
+        QScopedPointer<EgcNode> res(result);
+        if (isResult()) {
+                EgcEqualNode* root = static_cast<EgcEqualNode*>(getRootElement());
+                //check if result is equal with result in formula
+                EgcNode* rightChild = root->getChild(1);
+                if (rightChild) {
+#warning implement isEqual and uncomment the following
+                        //if (rightChild->isEqual(res.data()))
+                                equal = true;
+                }
+
+                //set the result
+                root->setChild(1, *(res.take()));
+                if (!equal)
+                        repaint = true;
+        }
+}
+
+bool EgcFormulaExpression::resetResult(void)
+{
+        bool retval = false;
+
+        if (isResult()) {
+                QScopedPointer<EgcNode> emptyNode(EgcNodeCreator::create(EgcNodeType::EmptyNode));
+                if (!emptyNode.isNull()) {
+                        EgcEqualNode *root = static_cast<EgcEqualNode*>(getRootElement());
+                        root->setChild(1, *(emptyNode.take()));
+                }
+        }
 }
