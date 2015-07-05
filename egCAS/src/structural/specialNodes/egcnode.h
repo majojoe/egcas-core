@@ -116,6 +116,11 @@ public:
          * @param visitor the visitor to call back
          */
         virtual void accept(EgcNodeVisitor *visitor);
+        /**
+         * @brief isEqual checks if this node (and its childs) is equal with the node given (and those childs)
+         * @return true if the node given is equal with this node, false otherwise.
+         */
+        virtual bool isEqual(EgcNode* node) const;
 
 protected:
         EgcContainerNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)

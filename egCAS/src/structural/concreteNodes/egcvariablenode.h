@@ -78,6 +78,12 @@ public:
          * @return true if the expression is valid, false otherwise.
          */
         virtual bool valid(void);
+        /**
+         * @brief isEqual checks if this node (and its childs) is equal with the node given (and those childs)
+         * @return true if the node given is equal with this node, false otherwise.
+         */
+        virtual bool isEqual(EgcNode* node) const override;
+
 protected:
         QString m_value;          ///< the variable name used
         QString m_subscript;      ///< the subscript if any        

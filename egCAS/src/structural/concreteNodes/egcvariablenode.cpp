@@ -90,3 +90,20 @@ bool EgcVariableNode::valid(void)
         else
                 return true;
 }
+
+bool EgcVariableNode::isEqual(EgcNode* node) const
+{
+        bool retval = false;
+
+        if (!node)
+                return false;
+
+        if (node->getNodeType() == EgcNodeType::VariableNode) {
+                if (    (static_cast<EgcVariableNode*>(node)->getValue() == m_value)
+                     && ((static_cast<EgcVariableNode*>(node)->getSubscript() == m_value)))
+                        retval = true;
+        }
+
+        return retval;
+}
+

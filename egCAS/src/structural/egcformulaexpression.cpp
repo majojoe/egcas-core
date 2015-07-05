@@ -252,8 +252,7 @@ bool EgcFormulaExpression::setResult(EgcNode* result)
                 //check if result is equal with result in formula
                 EgcNode* rightChild = root->getChild(1);
                 if (rightChild) {
-#warning implement isEqual and uncomment the following
-                        //if (rightChild->isEqual(res.data()))
+                        if (rightChild->isEqual(res.data()))
                                 equal = true;
                 }
 

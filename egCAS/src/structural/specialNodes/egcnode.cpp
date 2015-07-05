@@ -85,3 +85,9 @@ bool EgcNode::isFlexNode(void) const
 {
         return false;
 }
+
+bool EgcNode::isEqual(EgcNode* node) const
+{
+        (void) node;
+        return false;
+}

@@ -159,6 +159,11 @@ public:
          * @return true if everything was fine, false otherwise
          */
         bool remove(quint32 index);
+        /**
+         * @brief isEqual checks if this node (and its childs) is equal with the node given (and those childs)
+         * @return true if the node given is equal with this node, false otherwise.
+         */
+        virtual bool isEqual(EgcNode* node) const override;
 
 protected:
         /**

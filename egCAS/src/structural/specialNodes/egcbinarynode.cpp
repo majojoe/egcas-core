@@ -239,3 +239,20 @@ bool EgcBinaryNode::getIndexOfChild(EgcNode& child, quint32& index) const
 
         return false;
 }
+
+bool EgcBinaryNode::isEqual(EgcNode* node) const
+{
+        bool retval = false;
+
+        if (!node)
+                return false;
+
+        if (node->isBinaryNode()) {
+                if (m_leftChild->isEqual(static_cast<EgcBinaryNode*>(node)->getChild(0))) {
+                     if (m_rightChild->isEqual(static_cast<EgcBinaryNode*>(node)->getChild(1)))
+                             retval = true;
+                 }
+        }
+
+        return retval;
+}

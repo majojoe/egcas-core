@@ -56,6 +56,12 @@ public:
          * @return the value of this object
          */
         QString& getValue(void);
+        /**
+         * @brief isEqual checks if this node (and its childs) is equal with the node given (and those childs)
+         * @return true if the node given is equal with this node, false otherwise.
+         */
+        virtual bool isEqual(EgcNode* node) const override;
+
 private:
         QString m_value;
 };
