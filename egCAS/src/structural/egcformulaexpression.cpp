@@ -39,8 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 quint8 EgcFormulaExpression::s_stdNrSignificantDigits = 15;
 
-EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false), m_isNumberResult(false),
-                                                                  m_numberSignificantDigits(0),
+EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_numberSignificantDigits(0),
                                                                   m_numberResultType(EgcNumberResultType::StandardType)
 {
         QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
@@ -62,8 +61,7 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_isResult(false)
         }
 }
 
-EgcFormulaExpression::EgcFormulaExpression(EgcNode& rootElement) : m_isResult(false), m_isNumberResult(false),
-                                                                   m_numberSignificantDigits(0),
+EgcFormulaExpression::EgcFormulaExpression(EgcNode& rootElement) : m_numberSignificantDigits(0),
                                                                    m_numberResultType(EgcNumberResultType::StandardType)
 {
         QScopedPointer<EgcNode> tmp(&rootElement);
@@ -86,8 +84,6 @@ EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
                 if (m_data.setChild(0, *tmp.data()))
                         (void) tmp.take();
         }
-        m_isResult = orig.m_isResult;
-        m_isNumberResult = orig.m_isNumberResult;
         m_numberSignificantDigits = orig.m_numberSignificantDigits;
         m_numberResultType = orig.m_numberResultType;
 
@@ -99,13 +95,9 @@ EgcFormulaExpression::EgcFormulaExpression(EgcFormulaExpression&& orig)
         if (originalRoot) {
                 m_data.setChild(0, *static_cast<EgcBaseNode&>(orig.getBaseElement()).takeOwnership(*originalRoot));
                 originalRoot->provideParent(&static_cast<EgcContainerNode&>(this->getBaseElement()));
-                m_isResult = orig.m_isResult;
-                m_isNumberResult = orig.m_isNumberResult;
                 m_numberSignificantDigits = orig.m_numberSignificantDigits;
                 m_numberResultType = orig.m_numberResultType;
         } else {
-                m_isResult = false;
-                m_isNumberResult = false;
                 m_numberSignificantDigits = 0;
                 m_numberResultType = EgcNumberResultType::StandardType;
         }
@@ -125,8 +117,6 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression
                         (void) tmp.take();
         }
 
-        m_isResult = rhs.m_isResult;
-        m_isNumberResult = rhs.m_isNumberResult;
         m_numberSignificantDigits = rhs.m_numberSignificantDigits;
         m_numberResultType = rhs.m_numberResultType;
 
@@ -143,13 +133,9 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(EgcFormulaExpression&& rhs
         if (rhsRoot) {
                 m_data.setChild(0, *static_cast<EgcBaseNode&>(rhs.getBaseElement()).takeOwnership(*rhsRoot));
                 rhsRoot->provideParent(&static_cast<EgcContainerNode&>(this->getBaseElement()));
-                m_isResult = rhs.m_isResult;
-                m_isNumberResult = rhs.m_isNumberResult;
                 m_numberSignificantDigits = rhs.m_numberSignificantDigits;
                 m_numberResultType = rhs.m_numberResultType;
         } else {
-                m_isResult = false;
-                m_isNumberResult = false;
                 m_numberSignificantDigits = 0;
                 m_numberResultType = EgcNumberResultType::StandardType;
         }
@@ -194,12 +180,34 @@ QString EgcFormulaExpression::getCASKernelCommand(void)
 
 bool EgcFormulaExpression::isResult(void)
 {
-        return m_isResult;
+        bool retval = false;
+
+        EgcNode* root = getRootElement();
+        if (root) {
+                if (root->getNodeType() == EgcNodeType::EqualNode)
+                        retval = true;
+        }
+
+        return retval;
 }
 
 bool EgcFormulaExpression::isNumberResult(void)
 {
-        return m_isNumberResult;
+        bool retval = false;
+
+        EgcNode* root = getRootElement();
+        if (root) {
+                if (root->getNodeType() == EgcNodeType::EqualNode) {
+                        EgcNode* rightChild = nullptr;
+                        rightChild = static_cast<EgcBinaryNode*>(root)->getChild(1);
+                        if (rightChild) {
+                                if (rightChild->getNodeType() == EgcNodeType::NumberNode)
+                                        retval = true;
+                        }
+                }
+        }
+
+        return retval;
 }
 
 void EgcFormulaExpression::setNumberOfSignificantDigits(quint8 digits)
@@ -214,7 +222,7 @@ void EgcFormulaExpression::setNumberResultType(EgcNumberResultType resultType)
 
 quint8 EgcFormulaExpression::getNumberOfSignificantDigits(void)
 {
-        if (m_isNumberResult)
+        if (isNumberResult())
                 return m_numberSignificantDigits;
         else
                 return 0;
@@ -222,7 +230,7 @@ quint8 EgcFormulaExpression::getNumberOfSignificantDigits(void)
 
 EgcNumberResultType EgcFormulaExpression::getNumberResultType()
 {
-        if (m_isNumberResult)
+        if (isNumberResult())
                 return m_numberResultType;
         else
                 return EgcNumberResultType::NotApplicable;

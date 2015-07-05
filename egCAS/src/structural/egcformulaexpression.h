@@ -156,8 +156,6 @@ public:
          */
         static void setStdNrSignificantDigis(quint8 digits);
 private:
-        bool m_isResult;                        ///< true if the equation represents a result that comes from the CAS kernel
-        bool m_isNumberResult;                  ///< true if it is a result of number type (not variable or algebraic)
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
         EgcBaseNode m_data;                     ///< holds a pointer to the root element of the formula tree
