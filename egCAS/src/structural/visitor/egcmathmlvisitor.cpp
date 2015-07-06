@@ -47,6 +47,58 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
                 else
                         str = "</mrow></mroot>";
                 break;
+        case EgcNodeType::EqualNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "<mrow>";
+                else if (m_state == EgcIteratorState::MiddleIteration)
+                        str = "<mo>=</mo>";
+                else
+                        str = "</mrow>";
+                break;
+        case EgcNodeType::DefinitionNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "<mrow>";
+                else if (m_state == EgcIteratorState::MiddleIteration)
+                        str = "<mo>:=</mo>";
+                else
+                        str = "</mrow>";
+                break;
+        case EgcNodeType::PlusNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "<mrow>";
+                else if (m_state == EgcIteratorState::MiddleIteration)
+                        str = "<mo>+</mo>";
+                else
+                        str = "</mrow>";
+                break;
+        case EgcNodeType::MinusNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "<mrow>";
+                else if (m_state == EgcIteratorState::MiddleIteration)
+                        str = "<mo>-</mo>";
+                else
+                        str = "</mrow>";
+                break;
+        case EgcNodeType::MultiplicationNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "<mrow>";
+                else if (m_state == EgcIteratorState::MiddleIteration)
+                        str = "<mo>&times;</mo>";
+                else
+                        str = "</mrow>";
+                break;
+        case EgcNodeType::DivisionNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "<mfrac>";
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = "</mfrac>";
+                break;
+        case EgcNodeType::ExponentNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "<msup>";
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = "</msup>";
+                break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", binary->getNodeType()) ;
                 break;
@@ -65,6 +117,12 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
                         str = "<mfenced open=\"(\" close=\")\" separators=\",\"><mrow>";
                 else
                         str = "</mrow></mfenced>";
+                break;
+        case EgcNodeType::UnaryMinusNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "<mrow><mo>-</mo>";
+                else
+                        str = "</mrow>";
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", unary->getNodeType()) ;
@@ -102,10 +160,13 @@ void EgcMathMlVisitor::visit(EgcNode* node)
 
         switch (node->getNodeType()) {
         case EgcNodeType::NumberNode:
-                str = "<mn>" + static_cast<EgcNumberNode*>(node)->getValue() + "</mn>";
+                str = "<mn>" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>";
                 break;
         case EgcNodeType::VariableNode:
-                str = "<mi>" + static_cast<EgcVariableNode*>(node)->getValue() + "</mi>";
+                str = "<mi>" % static_cast<EgcVariableNode*>(node)->getValue() % "</mi>";
+                break;
+        case EgcNodeType::EmptyNode:
+                str = "<mi>&#x2B1A;</mi>";
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;

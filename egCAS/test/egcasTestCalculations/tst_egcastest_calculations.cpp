@@ -103,8 +103,9 @@ void EgcasTest_Calculation::evaluateResult(QString result)
         } else if (i == 1) {
                 QVERIFY(result == "31084.819");
                 EgcFormulaExpression form_res;
-                form_res.setRootElement(getTree(result));
-                QVERIFY(form_res.getMathMlCode() == "<math><mn>31084.819</mn></math>");
+                form_res.setRootElement(getTree("y=3"));
+                QVERIFY(form_res.setResult(getTree(result)) == true);
+                QVERIFY(form_res.getMathMlCode() == "<math><mrow><mi>y</mi><mo>=</mo><mn>31084.819</mn></mrow></math>");
                 hasEnded = true;
         }
 

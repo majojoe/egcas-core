@@ -245,7 +245,7 @@ void EgcFormulaExpression::setStdNrSignificantDigis(quint8 digits)
 bool EgcFormulaExpression::setResult(EgcNode* result)
 {
         bool repaint = false;
-        bool equal = true;
+        bool equal = false;
         QScopedPointer<EgcNode> res(result);
         if (isResult()) {
                 EgcEqualNode* root = static_cast<EgcEqualNode*>(getRootElement());
@@ -261,6 +261,8 @@ bool EgcFormulaExpression::setResult(EgcNode* result)
                 if (!equal)
                         repaint = true;
         }
+
+        return repaint;
 }
 
 bool EgcFormulaExpression::resetResult(void)
