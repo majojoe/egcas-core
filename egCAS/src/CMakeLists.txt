@@ -32,6 +32,7 @@ include_directories(casKernel/parser)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(structural/specialNodes)
 include_directories(structural/concreteNodes)
+include_directories(view)
 
 set(egCAS_concrete_node_SOURCES
         structural/concreteNodes/egcnumbernode.cpp
@@ -78,6 +79,9 @@ set(egCAS_SOURCES
         casKernel/parser/egckernelparser.cpp
         ${BISON_cas_parser_OUTPUTS}
         ${FLEX_cas_scanner_OUTPUTS}
+        structural/entity_lists/egcentitylist.cpp
+        structural/egcentity.cpp
+        structural/egctextentity.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS ui/mainwindow.ui)
