@@ -26,49 +26,64 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCTEXTENTITY_H
-#define EGCTEXTENTITY_H
+#include <QFont>
+#include <QSizeF>
+#include <QByteArray>
+#include <QString>
+#include <QBuffer>
+#include "egcpixmapentity.h"
+#include "egcpixmapitem.h"
 
-#include "egcentity.h"
-
-class QPointF;
-class EgcTextItem;
-
-
-/**
- * @brief The EgcTextEntity class is a class for handling text entities
- */
-class EgcTextEntity : public EgcEntity
+EgcPixmapEntity::EgcPixmapEntity(void) : m_item(nullptr)
 {
-public:
-        /**
-         * @brief EgcTextEntity std constructor
-         */
-        EgcTextEntity(void);
-        ///std destructor
-        virtual ~EgcTextEntity();
-        /**
-         * @brief getEntityType returns the entity type of the current class, needs to be reimplemented in a subclass
-         * @return the entity type
-         */
-        virtual enum EgcEntityType getEntityType(void) const;
-        /**
-         * @brief getPositon returns the position of the current entity
-         * @return the position of the entity in the current worksheet
-         */
-        virtual QPointF getPositon(void) const;
-        /**
-         * @brief getText returns the text hold by this entity/item
-         * @return the text hold
-         */
-        QString getText(void) const;
-        /**
-         * @brief getFont returns the font used by this entity/item
-         * @return the font used
-         */
-        QFont getFont(void) const;
-private:
-        EgcTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene
-};
+}
 
-#endif // EGCTEXTENTITY_H
+EgcPixmapEntity::~EgcPixmapEntity()
+{
+}
+
+EgcEntityType EgcPixmapEntity::getEntityType(void) const
+{
+        return EgcEntityType::Text;
+}
+
+QPointF EgcPixmapEntity::getPositon(void) const
+{
+        if (m_item)
+                return m_item->pos();
+        else
+                return QPointF(0.0,0.0);
+}
+
+QString EgcPixmapEntity::getPath(void) const
+{
+        if (m_isEmbedded)
+                return nullptr;
+        else
+                return m_path;
+}
+
+QByteArray EgcPixmapEntity::getB64Encoded(void) const
+{
+        if (!m_item)
+                return QByteArray();
+
+        //write pixmap in bytes as png format
+        QByteArray bytes;
+        QBuffer buffer(&bytes);
+        buffer.open(QIODevice::WriteOnly);
+        m_item->pixmap().save(&buffer, "PNG");
+
+        return bytes.toBase64();
+}
+
+QSizeF EgcPixmapEntity::getSize(void) const
+{
+        if (!m_item)
+                return QSizeF(0.0, 0.0);
+
+        return m_item->boundingRect().size();
+}
+
+
+

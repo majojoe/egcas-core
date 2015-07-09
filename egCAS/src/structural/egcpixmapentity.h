@@ -26,27 +26,29 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCTEXTENTITY_H
-#define EGCTEXTENTITY_H
+#ifndef EGCPIXMAPENTITY_H
+#define EGCPIXMAPENTITY_H
 
 #include "egcentity.h"
 
 class QPointF;
-class EgcTextItem;
+class EgcPixmapItem;
+class QByteArray;
+class QSizeF;
 
 
 /**
- * @brief The EgcTextEntity class is a class for handling text entities
+ * @brief The EgcPixmapEntity class is a clas for maintaining pixmaps
  */
-class EgcTextEntity : public EgcEntity
+class EgcPixmapEntity : public EgcEntity
 {
 public:
         /**
-         * @brief EgcTextEntity std constructor
+         * @brief EgcPixmapEntity std constructor
          */
-        EgcTextEntity(void);
+        EgcPixmapEntity(void);
         ///std destructor
-        virtual ~EgcTextEntity();
+        virtual ~EgcPixmapEntity();
         /**
          * @brief getEntityType returns the entity type of the current class, needs to be reimplemented in a subclass
          * @return the entity type
@@ -59,16 +61,23 @@ public:
         virtual QPointF getPositon(void) const;
         /**
          * @brief getText returns the text hold by this entity/item
-         * @return the text hold
+         * @return the path to the picture, if the pixmap is embedded (m_isEmbedded == true) it returns a nullptr
          */
-        QString getText(void) const;
+        QString getPath(void) const;
         /**
-         * @brief getFont returns the font used by this entity/item
-         * @return the font used
+         * @brief getB64Encoded get the pixmap as base64 encoded text for saving in e.g. XML files
+         * @return base64 encoded pixmap binary data
          */
-        QFont getFont(void) const;
+        QByteArray getB64Encoded(void) const;
+        /**
+         * @brief getSize returns the size of the pixmap
+         * @return the size of the pixmap in the document
+         */
+        QSizeF getSize(void) const;
 private:
-        EgcTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene
+        EgcPixmapItem *m_item;                  ///< pointer to QGraphicsitem hold by scene
+        bool m_isEmbedded;                      ///< determines if pixmap is embedded in document, or load by pathname
+        QString m_path;                         ///< holds the path to the pixmap if m_isEmbedded is false
 };
 
-#endif // EGCTEXTENTITY_H
+#endif // EGCPIXMAPENTITY_H
