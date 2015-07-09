@@ -28,6 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <new>
 #include <QScopedPointer>
+#include <QPointF>
 #include "egcformulaexpression.h"
 #include "specialNodes/egcnode.h"
 #include "egcnodecreator.h"
@@ -276,4 +277,15 @@ bool EgcFormulaExpression::resetResult(void)
                         root->setChild(1, *(emptyNode.take()));
                 }
         }
+}
+
+enum EgcEntityType EgcFormulaExpression::getEntityType(void) const
+{
+        return EgcEntityType::Formula;
+}
+
+QPointF EgcFormulaExpression::getPositon(void) const
+{
+#warning implement this function
+        return QPointF(0,0);
 }

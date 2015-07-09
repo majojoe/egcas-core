@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include <QScopedPointer>
 #include "specialNodes/egcbasenode.h"
+#include "egcentity.h"
 
 class EgcNode;
 class EgcBaseNode;
@@ -53,7 +54,7 @@ enum class EgcNumberResultType
 /**
  * @brief The EgcFormulaExpression class defines a wrapper for a whole equation
  */
-class EgcFormulaExpression
+class EgcFormulaExpression : public EgcEntity
 {
 public:
         /**
@@ -168,6 +169,16 @@ public:
          * @return true if a reset was sucessful, false otherwise
          */
         bool resetResult(void);
+        /**
+         * @brief getEntityType returns the entity type of the current class
+         * @return the entity type
+         */
+        virtual enum EgcEntityType getEntityType(void) const override;
+        /**
+         * @brief getPositon returns the position of the current entity
+         * @return the position of the entity in the current worksheet
+         */
+        virtual QPointF getPositon(void) const override;
 private:
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
