@@ -113,7 +113,7 @@ bool EgcBinaryNode::valid(void)
         return false;
 }
 
-bool EgcBinaryNode::isBinaryNode(void)
+bool EgcBinaryNode::isBinaryNode(void) const
 {
         return true;
 }
@@ -252,6 +252,24 @@ bool EgcBinaryNode::isEqual(EgcNode* node) const
                      if (m_rightChild->isEqual(static_cast<EgcBinaryNode*>(node)->getChild(1)))
                              retval = true;
                  }
+        }
+
+        return retval;
+}
+
+bool EgcBinaryNode::operator==(const EgcNode& node) const
+{
+        bool retval = false;
+
+        if (node.isBinaryNode()) {
+                EgcNode* left = static_cast<const EgcBinaryNode&>(node).getChild(0);
+                EgcNode* right = static_cast<const EgcBinaryNode&>(node).getChild(1);
+                if (!m_leftChild.isNull() && !m_rightChild.isNull() && left && right ) {
+                        if (*m_leftChild == *left) {
+                                if (*m_rightChild == *right)
+                                        retval = true;
+                        }
+                }
         }
 
         return retval;

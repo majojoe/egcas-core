@@ -64,12 +64,12 @@ void EgcVariableNode::setValueRaw(const QString& varName)
         }
 }
 
-QString& EgcVariableNode::getValue(void)
+QString EgcVariableNode::getValue(void) const
 {
         return m_value;
 }
 
-QString& EgcVariableNode::getSubscript(void)
+QString EgcVariableNode::getSubscript(void) const
 {
         return m_subscript;
 }
@@ -100,10 +100,22 @@ bool EgcVariableNode::isEqual(EgcNode* node) const
 
         if (node->getNodeType() == EgcNodeType::VariableNode) {
                 if (    (static_cast<EgcVariableNode*>(node)->getValue() == m_value)
-                     && ((static_cast<EgcVariableNode*>(node)->getSubscript() == m_value)))
+                     && ((static_cast<EgcVariableNode*>(node)->getSubscript() == m_subscript)))
                         retval = true;
         }
 
         return retval;
 }
 
+bool EgcVariableNode::operator==(const EgcNode& node) const
+{
+        bool retval = false;
+
+        if (node.getNodeType() == EgcNodeType::VariableNode) {
+                if (    (static_cast<const EgcVariableNode&>(node).getValue() == m_value)
+                     && ((static_cast<const EgcVariableNode&>(node).getSubscript() == m_subscript)))
+                        retval = true;
+        }
+
+        return retval;
+}

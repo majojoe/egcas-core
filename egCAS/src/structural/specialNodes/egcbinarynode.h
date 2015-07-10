@@ -65,10 +65,10 @@ public:
          */
         virtual bool valid(void);
         /**
-         * @brief isBinaryExpression returns if the current element is a binary expression (container) or not
+         * @brief isBinaryNode returns if the current element is a binary expression (container) or not
          * @returntrue if it is a binary expression, false otherwise
          */
-        virtual bool isBinaryNode(void);
+        virtual bool isBinaryNode(void) const override;
         /**
          * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
          * @param child a pointer to the child that will be deleted soon
@@ -151,6 +151,12 @@ public:
          * @return true if the node given is equal with this node, false otherwise.
          */
         virtual bool isEqual(EgcNode* node) const override;
+        /**
+         * @brief operator== comparison operator overload
+         * @param node the node to compare against
+         * @return true if the trees are equal
+         */
+        virtual bool operator==(const EgcNode& node) const override;
 
 protected:
         /**

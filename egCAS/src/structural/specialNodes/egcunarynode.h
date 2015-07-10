@@ -66,10 +66,10 @@ public:
          */
         virtual bool valid(void);
         /**
-         * @brief isUnaryExpression returns if the current element is a unary expression (container) or not
+         * @brief isUnaryNode returns if the current element is a unary expression (container) or not
          * @return true if it is a unary expression, false otherwise
          */
-        virtual bool isUnaryNode(void);
+        virtual bool isUnaryNode(void) const override;
         /**
          * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
          * @param child a pointer to the child that will be deleted soon
@@ -152,6 +152,12 @@ public:
          * @return true if the node given is equal with this node, false otherwise.
          */
         virtual bool isEqual(EgcNode* node) const override;
+        /**
+         * @brief operator== comparison operator overload
+         * @param node the node to compare against
+         * @return true if the trees are equal
+         */
+        virtual bool operator==(const EgcNode& node) const override;
 
 protected:
         /**

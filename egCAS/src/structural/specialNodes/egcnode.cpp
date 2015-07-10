@@ -48,12 +48,12 @@ bool EgcNode::isContainer(void) const
         return false;
 }
 
-bool EgcNode::isUnaryNode(void)
+bool EgcNode::isUnaryNode(void) const
 {
         return false;
 }
 
-bool EgcNode::isBinaryNode(void)
+bool EgcNode::isBinaryNode(void) const
 {
         return false;
 }
@@ -87,6 +87,12 @@ bool EgcNode::isFlexNode(void) const
 }
 
 bool EgcNode::isEqual(EgcNode* node) const
+{
+        (void) node;
+        return false;
+}
+
+bool EgcNode::operator==(const EgcNode& node) const
 {
         (void) node;
         return false;

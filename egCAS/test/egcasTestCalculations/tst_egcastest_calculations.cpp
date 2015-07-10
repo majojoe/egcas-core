@@ -96,6 +96,11 @@ void EgcasTest_Calculation::evaluateResult(QString result)
 {
         static int i = 0;
 
+        //test equal functions
+        QScopedPointer<EgcNode> tree1(getTree("x^3+36-8*651.984+fnc1(x)"));
+        QScopedPointer<EgcNode> tree2(getTree("x^3+36-8*651.984+fnc1(x)"));
+        QVERIFY(*tree1.data() == *tree2.data());
+
         if (i == 0) {
                 QVERIFY(result == "33.1");
                 formula.setRootElement(getTree("x^3+36-8*651.984"));

@@ -99,7 +99,7 @@ bool EgcUnaryNode::valid(void)
         return false;
 }
 
-bool EgcUnaryNode::isUnaryNode(void)
+bool EgcUnaryNode::isUnaryNode(void) const
 {
         return true;
 }
@@ -217,6 +217,21 @@ bool EgcUnaryNode::isEqual(EgcNode* node) const
         if (node->isUnaryNode()) {
                 if (m_child->isEqual(static_cast<EgcUnaryNode*>(node)->getChild(0)))
                         retval = true;
+        }
+
+        return retval;
+}
+
+bool EgcUnaryNode::operator==(const EgcNode& node) const
+{
+        bool retval = false;
+
+        if (node.isUnaryNode()) {
+                EgcNode* child = static_cast<const EgcUnaryNode&>(node).getChild(0);
+                if (!m_child.isNull() && child) {
+                        if (*m_child == *child)
+                                retval = true;
+                }
         }
 
         return retval;

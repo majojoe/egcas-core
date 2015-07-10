@@ -78,12 +78,12 @@ public:
          * @brief isUnaryExpression returns if the current element is a unary expression (container) or not
          * @return true if it is a unary expression, false otherwise
          */
-        virtual bool isUnaryNode(void);
+        virtual bool isUnaryNode(void) const;
         /**
          * @brief isBinaryExpression returns if the current element is a binary expression (container) or not
          * @return true if it is a binary expression, false otherwise
          */
-        virtual bool isBinaryNode(void);
+        virtual bool isBinaryNode(void) const;
         /**
          * @brief isFlexNode returns if the current element is a flex node (container) or not
          * @return true if it is a flex node, false otherwise
@@ -121,6 +121,12 @@ public:
          * @return true if the node given is equal with this node, false otherwise.
          */
         virtual bool isEqual(EgcNode* node) const;
+        /**
+         * @brief operator== comparison operator overload
+         * @param node the node to compare against
+         * @return true if the trees are equal
+         */
+        virtual bool operator==(const EgcNode& node) const;
 
 protected:
         EgcContainerNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)

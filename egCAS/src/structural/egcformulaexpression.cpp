@@ -252,8 +252,8 @@ bool EgcFormulaExpression::setResult(EgcNode* result)
                 EgcEqualNode* root = static_cast<EgcEqualNode*>(getRootElement());
                 //check if result is equal with result in formula
                 EgcNode* rightChild = root->getChild(1);
-                if (rightChild) {
-                        if (rightChild->isEqual(res.data()))
+                if (rightChild && !res.isNull()) {
+                        if (*rightChild == *res)
                                 equal = true;
                 }
 

@@ -41,7 +41,7 @@ EgcEmptyNode::~EgcEmptyNode()
 
 }
 
-QString& EgcEmptyNode::getValue(void)
+QString EgcEmptyNode::getValue(void) const
 {
         return m_value;
 }

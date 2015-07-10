@@ -43,7 +43,7 @@ void EgcNumberNode::setValue(const QString& value)
         m_value = value;
 }
 
-QString& EgcNumberNode::getValue(void)
+QString EgcNumberNode::getValue(void) const
 {
         return m_value;
 }
@@ -57,6 +57,18 @@ bool EgcNumberNode::isEqual(EgcNode* node) const
 
         if (node->getNodeType() == EgcNodeType::NumberNode) {
                 if (static_cast<EgcNumberNode*>(node)->getValue() == m_value)
+                        retval = true;
+        }
+
+        return retval;
+}
+
+bool EgcNumberNode::operator==(const EgcNode& node) const
+{
+        bool retval = false;
+
+        if (node.getNodeType() == EgcNodeType::NumberNode) {
+                if (static_cast<const EgcNumberNode&>(node).getValue() == m_value)
                         retval = true;
         }
 

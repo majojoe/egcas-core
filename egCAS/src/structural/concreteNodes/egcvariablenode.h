@@ -60,12 +60,12 @@ public:
          * @brief getValue returns the variable name (without subscript)
          * @return the variable name
          */
-        QString& getValue(void);
+        virtual QString getValue(void) const;
         /**
          * @brief getSubscript returns the subscript of a variable name
          * @return the subscript of this variable object
          */
-        virtual QString& getSubscript(void);
+        virtual QString getSubscript(void) const;
         /**
          * @brief getStuffedVar returns the stuffed variable name (with subscript)
          * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
@@ -83,6 +83,12 @@ public:
          * @return true if the node given is equal with this node, false otherwise.
          */
         virtual bool isEqual(EgcNode* node) const override;
+        /**
+         * @brief operator== comparison operator overload
+         * @param node the node to compare against
+         * @return true if the trees are equal
+         */
+        virtual bool operator==(const EgcNode& node) const override;
 
 protected:
         QString m_value;          ///< the variable name used

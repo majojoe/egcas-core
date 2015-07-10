@@ -417,3 +417,33 @@ bool EgcFlexNode::isEqual(EgcNode* node) const
 
         return retval;
 }
+
+bool EgcFlexNode::operator==(const EgcNode& node) const
+{
+        bool retval = false;
+
+        if (node.isFlexNode()) {
+                quint32 i;
+                quint32 count = m_childs.count();
+                const EgcFlexNode& flexNode = static_cast<const EgcFlexNode&>(node);
+                if (flexNode.getNumberChildNodes() != m_childs.count())
+                        return false;
+
+                retval = true;
+                for(i = 0; i < count; i++) {
+                        EgcNode* lhs = m_childs.at(i);
+                        EgcNode* rhs = flexNode.getChild(i);
+                        if (lhs && rhs) {
+                                if (!(*lhs == *rhs)) {
+                                        retval = false;
+                                        break;
+                                }
+                        }
+                }
+
+
+        }
+
+        return retval;
+
+}

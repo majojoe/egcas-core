@@ -48,7 +48,7 @@ public:
          * @brief getValue returns the variable name (without subscript)
          * @return the variable name
          */
-        QString& getValue(void);
+        virtual QString getValue(void) const;
         /**
          * @brief valid returns true if the expression is valid and false otherwise.
          * A variable expression is valid if the value is not empty.
@@ -66,7 +66,7 @@ private:
          * @brief getSubscript returns the subscript of a variable name
          * @return the subscript of this variable object
          */
-        virtual QString& getSubscript(void) override {return EgcVariableNode::getSubscript();}
+        virtual QString getSubscript(void) const override {return EgcVariableNode::getSubscript();}
         /**
          * @brief getStuffedVar returns the stuffed variable name (with subscript)
          * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",

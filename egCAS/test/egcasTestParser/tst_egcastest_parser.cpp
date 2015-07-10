@@ -189,12 +189,12 @@ void EgcasTest_Parser::fncTreeTestParser()
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
-        QCOMPARE(static_cast<EgcVariableNode*>(nodePointer)->getValue(), QString("3"));
+        QCOMPARE(static_cast<EgcNumberNode*>(nodePointer)->getValue(), QString("3"));
 
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
-        QCOMPARE(static_cast<EgcVariableNode*>(nodePointer)->getValue(), QString("546.1"));
+        QCOMPARE(static_cast<EgcNumberNode*>(nodePointer)->getValue(), QString("546.1"));
 }
 
 void EgcasTest_Parser::fncOperations1TestParser()
@@ -240,7 +240,7 @@ void EgcasTest_Parser::fncOperations1TestParser()
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
-        QCOMPARE(static_cast<EgcVariableNode*>(nodePointer)->getValue(), QString("45"));
+        QCOMPARE(static_cast<EgcNumberNode*>(nodePointer)->getValue(), QString("45"));
 
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
@@ -254,7 +254,7 @@ void EgcasTest_Parser::fncOperations1TestParser()
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
-        QCOMPARE(static_cast<EgcVariableNode*>(nodePointer)->getValue(), QString("3"));
+        QCOMPARE(static_cast<EgcNumberNode*>(nodePointer)->getValue(), QString("3"));
 }
 
 void EgcasTest_Parser::fncOperations2TestParser()

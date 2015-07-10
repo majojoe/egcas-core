@@ -55,12 +55,18 @@ public:
          * @brief getValue returns the value saved in this class
          * @return the value of this object
          */
-        QString& getValue(void);
+        QString getValue(void) const;
         /**
          * @brief isEqual checks if this node (and its childs) is equal with the node given (and those childs)
          * @return true if the node given is equal with this node, false otherwise.
          */
         virtual bool isEqual(EgcNode* node) const override;
+        /**
+         * @brief operator== comparison operator overload
+         * @param node the node to compare against
+         * @return true if the trees are equal
+         */
+        virtual bool operator==(const EgcNode& node) const override;
 
 private:
         QString m_value;
