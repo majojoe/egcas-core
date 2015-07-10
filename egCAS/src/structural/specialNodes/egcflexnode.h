@@ -160,11 +160,6 @@ public:
          */
         bool remove(quint32 index);
         /**
-         * @brief isEqual checks if this node (and its childs) is equal with the node given (and those childs)
-         * @return true if the node given is equal with this node, false otherwise.
-         */
-        virtual bool isEqual(EgcNode* node) const override;
-        /**
          * @brief operator== comparison operator overload
          * @param node the node to compare against
          * @return true if the trees are equal

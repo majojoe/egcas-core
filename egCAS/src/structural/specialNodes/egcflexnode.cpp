@@ -390,34 +390,6 @@ bool EgcFlexNode::remove(quint32 index)
         return retval;
 }
 
-bool EgcFlexNode::isEqual(EgcNode* node) const
-{
-        bool retval = false;
-
-        if (!node)
-                return false;
-
-        if (node->isFlexNode()) {
-                quint32 i;
-                quint32 count = m_childs.count();
-                EgcFlexNode* flexNode = static_cast<EgcFlexNode*>(node);
-                if (flexNode->getNumberChildNodes() != m_childs.count())
-                        return false;
-
-                retval = true;
-                for(i = 0; i < count; i++) {
-                        if (!m_childs.at(i)->isEqual(flexNode->getChild(i))) {
-                                retval = false;
-                                break;
-                        }
-                }
-
-
-        }
-
-        return retval;
-}
-
 bool EgcFlexNode::operator==(const EgcNode& node) const
 {
         bool retval = false;

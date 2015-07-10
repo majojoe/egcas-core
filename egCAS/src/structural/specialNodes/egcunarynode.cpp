@@ -207,21 +207,6 @@ bool EgcUnaryNode::getIndexOfChild(EgcNode& child, quint32& index) const
         return false;
 }
 
-bool EgcUnaryNode::isEqual(EgcNode* node) const
-{
-        bool retval = false;
-
-        if (!node)
-                return false;
-
-        if (node->isUnaryNode()) {
-                if (m_child->isEqual(static_cast<EgcUnaryNode*>(node)->getChild(0)))
-                        retval = true;
-        }
-
-        return retval;
-}
-
 bool EgcUnaryNode::operator==(const EgcNode& node) const
 {
         bool retval = false;
