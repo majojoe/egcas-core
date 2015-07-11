@@ -32,6 +32,7 @@ include_directories(casKernel/parser)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(structural/specialNodes)
 include_directories(structural/concreteNodes)
+include_directories(structural)
 include_directories(view)
 
 set(egCAS_concrete_node_SOURCES

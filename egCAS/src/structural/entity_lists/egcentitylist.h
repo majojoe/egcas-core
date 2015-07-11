@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCENTITYLIST_H
 
 #include <QList>
+#include <memory>
 #include "egcentity.h"
 
 /**
@@ -39,9 +40,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgcEntityList
 {
 public:
+        /// std constructor
         EgcEntityList();
+        /// sort the list
+        void sort(void);
+        /**
+         * @brief addEntity add a entity (formula, text or picture) to the list. The list takes ownership of the entity
+         * @param entity a pointer to the entity to add
+         * @return true if everything worked well, false otherwise
+         */
+        bool addEntity(EgcEntity* entity);
+        /**
+         * @brief deleteEntity removes the given entity from the list and deletes it (since the list has the ownership).
+         * @param entity the entity to delete
+         * @return true if all was fine, false otherwise
+         */
+        bool deleteEntity(EgcEntity* entity);
+        /**
+         * @brief takeEntity removes the given entity from the list and returns it (the entity is not deleted). The
+         * the caller takes the ownership of the entity!!!
+         * @param entity the entiy to remove from list.
+         * @return the entity removed from the list.
+         */
+        EgcEntity* takeEntity(EgcEntity* entity);
 private:
-        QList<EgcEntity> m_list;                ///< holds a bunch of entities of a document
+        QList<std::unique_ptr<EgcEntity>> m_list;                ///< holds a bunch of entities of a document
 };
 
 #endif // EGCENTITYLIST_H

@@ -26,6 +26,7 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/specialNodes/egcflexnode.cpp
         ../../src/structural/specialNodes/egcnode.cpp
         ../../src/structural/egcnodecreator.cpp
+        ../../src/structural/egcentity.cpp
         ${tst_egcastest_structural_concrete_SOURCES}
         ../../src/structural/specialNodes/egccontainernode.cpp
         ../../src/structural/iterator/egcnodeiterator.cpp

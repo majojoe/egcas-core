@@ -33,7 +33,7 @@ EgcEntity::EgcEntity(void)
 
 }
 
-virtual EgcEntity::~EgcEntity()
+EgcEntity::~EgcEntity()
 {
 
 }

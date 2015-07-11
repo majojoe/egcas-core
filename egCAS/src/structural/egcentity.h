@@ -51,9 +51,9 @@ public:
         /**
          * @brief EgcEntity std constructor
          */
-        EgcEntity(void) {}
+        EgcEntity(void);
         ///std destructor
-        virtual ~EgcEntity() {}
+        virtual ~EgcEntity();
         /**
          * @brief getEntityType returns the entity type of the current class, needs to be reimplemented in a subclass
          * @return the entity type
