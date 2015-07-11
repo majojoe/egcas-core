@@ -30,6 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCENTITYLIST_H
 #define EGCENTITYLIST_H
 
+#include <QList>
+#include "egcentity.h"
+
 /**
  * @brief The EgcEntityList class is a list that holds formulas, text and picture items
  */
@@ -37,6 +40,8 @@ class EgcEntityList
 {
 public:
         EgcEntityList();
+private:
+        QList<EgcEntity> m_list;                ///< holds a bunch of entities of a document
 };
 
 #endif // EGCENTITYLIST_H
