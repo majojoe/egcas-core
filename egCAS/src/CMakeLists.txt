@@ -34,6 +34,7 @@ include_directories(structural/specialNodes)
 include_directories(structural/concreteNodes)
 include_directories(structural)
 include_directories(view)
+include_directories(${mmlegcas_BINARY_DIR})
 
 set(egCAS_concrete_node_SOURCES
         structural/concreteNodes/egcnumbernode.cpp
