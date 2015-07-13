@@ -29,36 +29,83 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcentitylist.h"
 
-EgcEntityList::EgcEntityList()
+EgcEntityList::EgcEntityList() : m_index(0)
 {
+}
+
+EgcEntityList::~EgcEntityList()
+{
+        foreach (EgcEntity* i, m_list) {
+                delete i;
+        }
+}
+
+EgcEntity::EgcEntity(const EgcEntity& orig)
+{
+
+}
+
+EgcEntity::EgcEntity(EgcEntity&& orig)
+{
+
+}
+
+EgcEntity& EgcEntity::operator=(const EgcEntity &rhs)
+{
+
+}
+
+EgcEntity& EgcEntity::operator=(EgcEntity&& rhs)
+{
+
 }
 
 void EgcEntityList::sort(void)
 {
-
+        qSort(m_list);
 }
 
 bool EgcEntityList::addEntity(EgcEntity* entity)
 {
-
+        m_list.append(entity);
+        sort();
 }
 
 bool EgcEntityList::deleteEntity(EgcEntity* entity)
 {
-
+        int i = m_list.indexOf(entity);
+        if (i > 0) {
+                delete m_list.takeAt(i);
+        }
 }
 
 EgcEntity* EgcEntityList::takeEntity(EgcEntity* entity)
 {
+        EgcEntity* retval = nullptr;
 
+        int i = m_list.indexOf(entity);
+        if (i > 0) {
+                retval = m_list.takeAt(i);
+        }
+
+        return retval;
 }
 
 void EgcEntityList::toStart(void)
 {
-
+        m_index = 0;
 }
 
 EgcEntity* EgcEntityList::next(void)
 {
+        EgcEntity* retval = nullptr;
 
+        if (m_index >= 0 && m_index < m_list.count()) {
+                retval = m_list.at(m_index);
+                m_index++;
+                if (m_index >= m_list.count())
+                        m_index = -1;
+        }
+
+        return retval;
 }

@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCENTITYLIST_H
 
 #include <QList>
-#include <memory>
 #include "egcentity.h"
 
 /**
@@ -42,6 +41,13 @@ class EgcEntityList
 public:
         /// std constructor
         EgcEntityList();
+        /// std destructor
+        ~EgcEntityList();
+        ///copy constructor
+        EgcEntity(const EgcEntity& orig);
+        ///move constructor
+        EgcEntity(EgcEntity&& orig);
+
         /// sort the list
         void sort(void);
         /**
@@ -74,7 +80,8 @@ public:
          */
         EgcEntity* next(void);
 private:
-        QList<std::unique_ptr<EgcEntity>> m_list;                ///< holds a bunch of entities of a document
+        QList<EgcEntity*> m_list;                ///< holds a bunch of entities of a document
+        int m_index;
 };
 
 #endif // EGCENTITYLIST_H
