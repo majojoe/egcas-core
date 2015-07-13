@@ -32,3 +32,33 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcEntityList::EgcEntityList()
 {
 }
+
+void EgcEntityList::sort(void)
+{
+
+}
+
+bool EgcEntityList::addEntity(EgcEntity* entity)
+{
+
+}
+
+bool EgcEntityList::deleteEntity(EgcEntity* entity)
+{
+
+}
+
+EgcEntity* EgcEntityList::takeEntity(EgcEntity* entity)
+{
+
+}
+
+void EgcEntityList::toStart(void)
+{
+
+}
+
+EgcEntity* EgcEntityList::next(void)
+{
+
+}

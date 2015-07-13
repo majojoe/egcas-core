@@ -63,6 +63,16 @@ public:
          * @return the entity removed from the list.
          */
         EgcEntity* takeEntity(EgcEntity* entity);
+        /**
+         * @brief toStart go to the begin of the list and start from there (when calling next)
+         */
+        void toStart(void);
+        /**
+         * @brief next returns always the next element in the list until a nullptr is returned. This marks the end of
+         * the list
+         * @return nullptr if the end is reached, otherwise the next element in the list.
+         */
+        EgcEntity* next(void);
 private:
         QList<std::unique_ptr<EgcEntity>> m_list;                ///< holds a bunch of entities of a document
 };

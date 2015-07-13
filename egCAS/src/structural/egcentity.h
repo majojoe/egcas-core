@@ -64,6 +64,13 @@ public:
          * @return the position of the entity in the current worksheet
          */
         virtual QPointF getPositon(void) const = 0;
+        /**
+         * @brief operator < overloads the "<" operator to be able to sort the entities in the order they are inserted
+         * on the document sheet
+         * @param rhs the entity to compare against
+         * @return true if condition is true, false otherwise
+         */
+        bool operator<(const EgcEntity& rhs) const;
 private:
 };
 

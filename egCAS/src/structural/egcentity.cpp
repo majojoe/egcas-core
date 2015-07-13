@@ -26,6 +26,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QPointF>
 #include "egcentity.h"
 
 EgcEntity::EgcEntity(void)
@@ -38,3 +39,21 @@ EgcEntity::~EgcEntity()
 
 }
 
+bool EgcEntity::operator<(const EgcEntity& rhs) const
+{
+        bool retval = false;
+
+        QPointF ownPos = getPositon();
+        QPointF rhsPos = rhs.getPositon();
+
+        if (ownPos.y() < rhsPos.y()) {
+                retval = true;
+        } else {
+                if (ownPos.y() == rhsPos.y()) {
+                        if (ownPos.x() < rhsPos.x())
+                                retval = true;
+                }
+        }
+
+        return retval;
+}
