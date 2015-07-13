@@ -47,6 +47,18 @@ public:
         EgcEntity(const EgcEntity& orig);
         ///move constructor
         EgcEntity(EgcEntity&& orig);
+        /**
+         * @brief operator= overloads = operator since we have dynamic elements in this class
+         * @param rhs a reference to the object to be assigned
+         * @return a reference to the object the rhs is assigned to
+         */
+        EgcEntity& operator=(const EgcEntity &rhs);
+        /**
+         * @brief operator= overloads = operator since we have dynamic elements in this class (move semantic)
+         * @param rhs a reference to the object to be assigned
+         * @return a reference to the object the rhs is assigned to
+         */
+        EgcEntity& operator=(EgcEntity&& rhs);
 
         /// sort the list
         void sort(void);
