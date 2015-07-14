@@ -27,65 +27,10 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include "egcentitylist.h"
+#include "egcasscene.h"
+#include "../entity_lists/egcentitylist.h"
+#include "egcdocument.h"
 
-EgcEntityList::EgcEntityList() : m_index(0)
+EgcDocument::EgcDocument()
 {
-}
-
-EgcEntityList::~EgcEntityList()
-{
-        foreach (EgcEntity* i, m_list) {
-                delete i;
-        }
-}
-
-void EgcEntityList::sort(void)
-{
-        qSort(m_list);
-}
-
-bool EgcEntityList::addEntity(EgcEntity* entity)
-{
-        m_list.append(entity);
-        sort();
-}
-
-bool EgcEntityList::deleteEntity(EgcEntity* entity)
-{
-        int i = m_list.indexOf(entity);
-        if (i > 0) {
-                delete m_list.takeAt(i);
-        }
-}
-
-EgcEntity* EgcEntityList::takeEntity(EgcEntity* entity)
-{
-        EgcEntity* retval = nullptr;
-
-        int i = m_list.indexOf(entity);
-        if (i > 0) {
-                retval = m_list.takeAt(i);
-        }
-
-        return retval;
-}
-
-void EgcEntityList::toStart(void)
-{
-        m_index = 0;
-}
-
-EgcEntity* EgcEntityList::next(void)
-{
-        EgcEntity* retval = nullptr;
-
-        if (m_index >= 0 && m_index < m_list.count()) {
-                retval = m_list.at(m_index);
-                m_index++;
-                if (m_index >= m_list.count())
-                        m_index = -1;
-        }
-
-        return retval;
 }

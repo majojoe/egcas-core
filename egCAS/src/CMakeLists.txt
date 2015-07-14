@@ -85,6 +85,7 @@ set(egCAS_SOURCES
         structural/egcentity.cpp
         structural/egctextentity.cpp
         structural/egcpixmapentity.cpp
+        structural/document/egcdocument.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS ui/mainwindow.ui)
