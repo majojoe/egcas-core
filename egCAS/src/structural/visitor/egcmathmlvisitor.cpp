@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../egcnodes.h"
 #include "egcmathmlvisitor.h"
 
-EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaExpression& formula) : EgcNodeVisitor(formula)
+EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(formula)
 {
 }
 

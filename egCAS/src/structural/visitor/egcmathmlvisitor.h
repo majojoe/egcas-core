@@ -44,7 +44,7 @@ public:
          * @brief EgcNodeVisitor std constructor for the visitor
          * @param formula the formula to be parsed
          */
-        EgcMathMlVisitor(EgcFormulaExpression& formula);
+        EgcMathMlVisitor(EgcFormulaEntity& formula);
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.

@@ -29,9 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QStringBuilder>
 #include "../egcnodes.h"
 #include "egcmaximavisitor.h"
-#include "../egcformulaexpression.h"
+#include "../egcformulaentity.h"
 
-EgcMaximaVisitor::EgcMaximaVisitor(EgcFormulaExpression& formula) : EgcNodeVisitor(formula)
+EgcMaximaVisitor::EgcMaximaVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(formula)
 {
 }
 
@@ -201,7 +201,7 @@ QString EgcMaximaVisitor::getResult(void)
                                 break;
                         }
                         //reset the precision again to standard type
-                        tmp += QString("ffprintprec:%1$").arg(EgcFormulaExpression::getStdNrSignificantDigis());
+                        tmp += QString("ffprintprec:%1$").arg(EgcFormulaEntity::getStdNrSignificantDigis());
                 }
         }
 

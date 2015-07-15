@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egckernelparser.h"
 #include "egcnodes.h"
 #include "egcnodeiterator.h"
-#include "egcformulaexpression.h"
+#include "egcformulaentity.h"
 #include "egcnodecreator.h"
 #include "egcnodevisitor.h"
 #include "egcmaximavisitor.h"
@@ -212,7 +212,7 @@ void EgcasTest_Parser::fncOperations1TestParser()
         EgcNodeIterator iter(base);
         EgcNode* nodePointer;
 
-        //EgcFormulaExpression formula(*base.takeOwnership(*base.getChild(0)));
+        //EgcFormulaEntity formula(*base.takeOwnership(*base.getChild(0)));
         //qDebug() << formula.getCASKernelCommand();
 
         nodePointer = &(iter.next());
@@ -270,7 +270,7 @@ void EgcasTest_Parser::fncOperations2TestParser()
         EgcBaseNode base;
         QVERIFY(base.setChild(0, *tree.take()));
 
-        EgcFormulaExpression formula(*base.takeOwnership(*base.getChild(0)));
+        EgcFormulaEntity formula(*base.takeOwnership(*base.getChild(0)));
         QVERIFY(formula.getCASKernelCommand().contains("ost:((rn)^(45.8))+((a)/(3))") == true);
 }
 

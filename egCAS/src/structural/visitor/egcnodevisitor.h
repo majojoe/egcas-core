@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../iterator/egcnodeiterator.h"
 
 
-class EgcFormulaExpression;
+class EgcFormulaEntity;
 class EgcBinaryNode;
 class EgcUnaryNode;
 class EgcFlexNode;
@@ -49,7 +49,7 @@ public:
          * @brief EgcNodeVisitor std constructor for the visitor
          * @param formula the formula to be parsed
          */
-        EgcNodeVisitor(EgcFormulaExpression& formula);
+        EgcNodeVisitor(EgcFormulaEntity& formula);
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.
@@ -81,7 +81,7 @@ public:
         virtual QString getResult(void);
 protected:
         QString m_result;                       ///< saves the result of the information extracted.
-        EgcFormulaExpression *m_formula;        ///< the formula to with the nodes to work on
+        EgcFormulaEntity *m_formula;        ///< the formula to with the nodes to work on
         EgcIteratorState m_state;               ///< the current state (helps to extract the correct information from tree)
 
 };

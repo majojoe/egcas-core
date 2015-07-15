@@ -26,8 +26,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCFORMULAEXPRESSION_H
-#define EGCFORMULAEXPRESSION_H
+#ifndef EGCFORMULAENTITY_H
+#define EGCFORMULAENTITY_H
 
 #include <QString>
 #include <QScopedPointer>
@@ -37,7 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgcNode;
 class EgcBaseNode;
 enum class EgcNodeType;
-
+class EgcFormulaItem;
 
 /**
  * @brief The EgcNumberResultType defines different types of number results
@@ -52,43 +52,43 @@ enum class EgcNumberResultType
 };
 
 /**
- * @brief The EgcFormulaExpression class defines a wrapper for a whole equation
+ * @brief The EgcFormulaEntity class defines a wrapper for a whole equation
  */
-class EgcFormulaExpression : public EgcEntity
+class EgcFormulaEntity : public EgcEntity
 {
 public:
         /**
-         * @brief EgcFormulaExpression std constructor
+         * @brief EgcFormulaEntity std constructor
          * @param type the type of the root element of the formula to generate
          */
-        EgcFormulaExpression(EgcNodeType type);
+        EgcFormulaEntity(EgcNodeType type);
         /**
-         * @brief EgcFormulaExpression std constructor
+         * @brief EgcFormulaEntity std constructor
          */
-        EgcFormulaExpression(void);
+        EgcFormulaEntity(void);
         /**
-         * @brief EgcFormulaExpression std constructor. Takes ownership of the rootElement.
+         * @brief EgcFormulaEntity std constructor. Takes ownership of the rootElement.
          * @param rootElement a reference to the rootElement of the formula to create (if the root element already exists)
          */
-        EgcFormulaExpression(EgcNode& rootElement);
+        EgcFormulaEntity(EgcNode& rootElement);
         ///copy constructor
-        EgcFormulaExpression(const EgcFormulaExpression& orig);
+        EgcFormulaEntity(const EgcFormulaEntity& orig);
         ///move constructor
-        EgcFormulaExpression(EgcFormulaExpression&& orig);
+        EgcFormulaEntity(EgcFormulaEntity&& orig);
         ///std destructor
-        virtual ~EgcFormulaExpression();
+        virtual ~EgcFormulaEntity();
         /**
          * @brief operator= overloads = operator since we have dynamic elements in this class
          * @param rhs a reference to the object to be assigned
          * @return a reference to the object the rhs is assigned to
          */
-        EgcFormulaExpression& operator=(const EgcFormulaExpression &rhs);
+        EgcFormulaEntity& operator=(const EgcFormulaEntity &rhs);
         /**
          * @brief operator= overloads = operator since we have dynamic elements in this class
          * @param rhs a reference to the object to be assigned
          * @return a reference to the object the rhs is assigned to
          */
-        EgcFormulaExpression& operator=(EgcFormulaExpression&& rhs);
+        EgcFormulaEntity& operator=(EgcFormulaEntity&& rhs);
         /**
          * @brief getBaseElement returns the base element of a formula
          * @return the root element of the formula
@@ -179,11 +179,17 @@ public:
          * @return the position of the entity in the current worksheet
          */
         virtual QPointF getPositon(void) const override;
+        /**
+         * @brief setItem set the formula item that is associated with this entity
+         * @param item the item to set (can also be a nullptr)
+         */
+        void setItem(EgcFormulaItem* item);
 private:
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
         EgcBaseNode m_data;                     ///< holds a pointer to the root element of the formula tree
         static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
+        EgcFormulaItem* m_item;                 ///< pointer to the formula item on the scene
 };
 
-#endif // EGCFORMULAEXPRESSION_H
+#endif // EGCFORMULAENTITY_H

@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "structural/egcnodes.h"
 #include "structural/iterator/egcnodeiterator.h"
-#include "structural/egcformulaexpression.h"
+#include "structural/egcformulaentity.h"
 #include "structural/egcnodecreator.h"
 #include "structural/visitor/egcnodevisitor.h"
 #include "structural/visitor/egcmaximavisitor.h"

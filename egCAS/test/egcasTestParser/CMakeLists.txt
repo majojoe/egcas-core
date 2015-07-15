@@ -49,7 +49,7 @@ set(tst_egcastest_parser_SOURCES
         ../../src/structural/specialNodes/egccontainernode.cpp
         ${tst_egcastest_parser_concrete_SOURCES}
         ../../src/structural/iterator/egcnodeiterator.cpp
-        ../../src/structural/egcformulaexpression.cpp
+        ../../src/structural/egcformulaentity.cpp
         ../../src/structural/egcentity.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp
         ../../src/structural/specialNodes/egcemptynode.cpp

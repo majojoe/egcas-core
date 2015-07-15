@@ -128,7 +128,7 @@ void EgcasTest_Structural::testTransferProperties()
                                 |---|       |---|
         */
 
-        EgcFormulaExpression formula(EgcNodeType::RootNode);
+        EgcFormulaEntity formula(EgcNodeType::RootNode);
 
         EgcRootNode* node1 = static_cast<EgcRootNode*>(formula.getRootElement());
         auto *node2 = new EgcRootNode();
@@ -196,7 +196,7 @@ void EgcasTest_Structural::testIterator()
         */
 
         //test iterator with big structure
-        EgcFormulaExpression formula3(EgcNodeType::NumberNode);
+        EgcFormulaEntity formula3(EgcNodeType::NumberNode);
         EgcIteratorState stepState;
         EgcNode* nodePointer;
 
@@ -245,7 +245,7 @@ void EgcasTest_Structural::testIterator()
                                 |---|
         */
 
-        EgcFormulaExpression formula(EgcNodeType::RootNode);
+        EgcFormulaEntity formula(EgcNodeType::RootNode);
 
         EgcNodeIterator iter(formula);
         QVERIFY(iter.hasNext() == true);
@@ -484,7 +484,7 @@ void EgcasTest_Structural::testIterator()
         */
 
         //test iterator with big structure        
-        EgcFormulaExpression formula2(EgcNodeType::RootNode);
+        EgcFormulaEntity formula2(EgcNodeType::RootNode);
 
         EgcNode* rootExpression2;
         EgcNode* node2;
@@ -1008,7 +1008,7 @@ void EgcasTest_Structural::testInsertDelete()
                                 |---|       |---|
         */
 
-        EgcFormulaExpression formula4(EgcNodeType::RootNode);
+        EgcFormulaEntity formula4(EgcNodeType::RootNode);
         EgcIteratorState state;
         EgcNode *nodePointer;
         EgcNodeIterator iter8(formula4);
@@ -1143,7 +1143,7 @@ void EgcasTest_Structural::testVisitors()
                                 |---|       |---|
         */
 
-        EgcFormulaExpression formula4(EgcNodeType::RootNode);
+        EgcFormulaEntity formula4(EgcNodeType::RootNode);
         EgcNode *nodePointer;
         EgcNodeIterator iter8(formula4);
         EgcNode *node1;
@@ -1181,7 +1181,7 @@ void EgcasTest_Structural::testVisitors()
         node4 = nodePointer;
 
         //test copy constructor of the formula expression
-        EgcFormulaExpression formula5 = EgcFormulaExpression(formula4);
+        EgcFormulaEntity formula5 = EgcFormulaEntity(formula4);
         EgcNode *node1_5 = formula5.getRootElement();
         QVERIFY(node1 != node1_5);
         nodePointer = static_cast<EgcRootNode*>(node1_5)->getChild(1);
@@ -1229,7 +1229,7 @@ void EgcasTest_Structural::testFlexNode()
                                        |---|
         */
 
-        EgcFormulaExpression formula5(EgcNodeType::RootNode);
+        EgcFormulaEntity formula5(EgcNodeType::RootNode);
         EgcNode *nodePointer;
         EgcNodeIterator iter9(formula5);
         EgcNode *node1;
@@ -1330,7 +1330,7 @@ void EgcasTest_Structural::testFlexNodeVisitors()
                                        |---|
         */
 
-        EgcFormulaExpression formula5(EgcNodeType::RootNode);
+        EgcFormulaEntity formula5(EgcNodeType::RootNode);
         EgcNode *nodePointer;
         EgcNodeIterator iter9(formula5);
         EgcNode *node1;

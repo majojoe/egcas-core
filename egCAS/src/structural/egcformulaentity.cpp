@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <new>
 #include <QScopedPointer>
 #include <QPointF>
-#include "egcformulaexpression.h"
+#include "egcformulaentity.h"
 #include "specialNodes/egcnode.h"
 #include "egcnodecreator.h"
 #include "specialNodes/egcbasenode.h"
@@ -38,9 +38,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "visitor/egcmathmlvisitor.h"
 
 
-quint8 EgcFormulaExpression::s_stdNrSignificantDigits = 15;
+quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 15;
 
-EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_numberSignificantDigits(0),
+EgcFormulaEntity::EgcFormulaEntity(EgcNodeType type) : m_numberSignificantDigits(0),
                                                                   m_numberResultType(EgcNumberResultType::StandardType)
 {
         QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
@@ -62,7 +62,7 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNodeType type) : m_numberSignifica
         }
 }
 
-EgcFormulaExpression::EgcFormulaExpression(EgcNode& rootElement) : m_numberSignificantDigits(0),
+EgcFormulaEntity::EgcFormulaEntity(EgcNode& rootElement) : m_numberSignificantDigits(0),
                                                                    m_numberResultType(EgcNumberResultType::StandardType)
 {
         QScopedPointer<EgcNode> tmp(&rootElement);
@@ -71,11 +71,11 @@ EgcFormulaExpression::EgcFormulaExpression(EgcNode& rootElement) : m_numberSigni
         }
 }
 
-EgcFormulaExpression::EgcFormulaExpression(void) : EgcFormulaExpression(EgcNodeType::EmptyNode)
+EgcFormulaEntity::EgcFormulaEntity(void) : EgcFormulaEntity(EgcNodeType::EmptyNode)
 {
 }
 
-EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
+EgcFormulaEntity::EgcFormulaEntity(const EgcFormulaEntity& orig)
 {
         QScopedPointer<EgcNode> tmp;
         EgcNode* originalRoot = orig.getRootElement();
@@ -88,7 +88,7 @@ EgcFormulaExpression::EgcFormulaExpression(const EgcFormulaExpression& orig)
 
 }
 
-EgcFormulaExpression::EgcFormulaExpression(EgcFormulaExpression&& orig)
+EgcFormulaEntity::EgcFormulaEntity(EgcFormulaEntity&& orig)
 {
         EgcNode* originalRoot = orig.getRootElement();
         if (originalRoot) {
@@ -102,7 +102,7 @@ EgcFormulaExpression::EgcFormulaExpression(EgcFormulaExpression&& orig)
         }
 }
 
-EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression &rhs)
+EgcFormulaEntity& EgcFormulaEntity::operator=(const EgcFormulaEntity &rhs)
 {
         //test if the object to be assigned to is the same as the rhs
         if (this == &rhs)
@@ -121,7 +121,7 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(const EgcFormulaExpression
         return *this;
 }
 
-EgcFormulaExpression& EgcFormulaExpression::operator=(EgcFormulaExpression&& rhs)
+EgcFormulaEntity& EgcFormulaEntity::operator=(EgcFormulaEntity&& rhs)
 {
         //test if the object to be assigned to is the same as the rhs
         if (this == &rhs)
@@ -141,21 +141,21 @@ EgcFormulaExpression& EgcFormulaExpression::operator=(EgcFormulaExpression&& rhs
         return *this;
 }
 
-EgcFormulaExpression::~EgcFormulaExpression()
+EgcFormulaEntity::~EgcFormulaEntity()
 {
 }
 
-EgcBaseNode& EgcFormulaExpression::getBaseElement(void) const
+EgcBaseNode& EgcFormulaEntity::getBaseElement(void) const
 {
         return const_cast<EgcBaseNode&>(m_data);
 }
 
-EgcNode* EgcFormulaExpression::getRootElement(void) const
+EgcNode* EgcFormulaEntity::getRootElement(void) const
 {
         return m_data.getChild(0);;
 }
 
-void EgcFormulaExpression::setRootElement(EgcNode* rootElement)
+void EgcFormulaEntity::setRootElement(EgcNode* rootElement)
 {
         QScopedPointer<EgcNode> tmp(rootElement);
         if (tmp.data()) {
@@ -163,19 +163,19 @@ void EgcFormulaExpression::setRootElement(EgcNode* rootElement)
         }
 }
 
-QString EgcFormulaExpression::getMathMlCode(void)
+QString EgcFormulaEntity::getMathMlCode(void)
 {
         EgcMathMlVisitor mathMlVisitor(*this);
         return mathMlVisitor.getResult();
 }
 
-QString EgcFormulaExpression::getCASKernelCommand(void)
+QString EgcFormulaEntity::getCASKernelCommand(void)
 {
         EgcMaximaVisitor maximaVisitor(*this);
         return maximaVisitor.getResult();
 }
 
-bool EgcFormulaExpression::isResult(void)
+bool EgcFormulaEntity::isResult(void)
 {
         bool retval = false;
 
@@ -188,7 +188,7 @@ bool EgcFormulaExpression::isResult(void)
         return retval;
 }
 
-bool EgcFormulaExpression::isNumberResult(void)
+bool EgcFormulaEntity::isNumberResult(void)
 {
         bool retval = false;
 
@@ -207,17 +207,17 @@ bool EgcFormulaExpression::isNumberResult(void)
         return retval;
 }
 
-void EgcFormulaExpression::setNumberOfSignificantDigits(quint8 digits)
+void EgcFormulaEntity::setNumberOfSignificantDigits(quint8 digits)
 {
         m_numberSignificantDigits = digits;
 }
 
-void EgcFormulaExpression::setNumberResultType(EgcNumberResultType resultType)
+void EgcFormulaEntity::setNumberResultType(EgcNumberResultType resultType)
 {
         m_numberResultType = resultType;
 }
 
-quint8 EgcFormulaExpression::getNumberOfSignificantDigits(void)
+quint8 EgcFormulaEntity::getNumberOfSignificantDigits(void)
 {
         if (isNumberResult())
                 return m_numberSignificantDigits;
@@ -225,7 +225,7 @@ quint8 EgcFormulaExpression::getNumberOfSignificantDigits(void)
                 return 0;
 }
 
-EgcNumberResultType EgcFormulaExpression::getNumberResultType()
+EgcNumberResultType EgcFormulaEntity::getNumberResultType()
 {
         if (isNumberResult())
                 return m_numberResultType;
@@ -233,17 +233,17 @@ EgcNumberResultType EgcFormulaExpression::getNumberResultType()
                 return EgcNumberResultType::NotApplicable;
 }
 
-quint8 EgcFormulaExpression::getStdNrSignificantDigis(void)
+quint8 EgcFormulaEntity::getStdNrSignificantDigis(void)
 {
         return s_stdNrSignificantDigits;
 }
 
-void EgcFormulaExpression::setStdNrSignificantDigis(quint8 digits)
+void EgcFormulaEntity::setStdNrSignificantDigis(quint8 digits)
 {
         s_stdNrSignificantDigits = digits;
 }
 
-bool EgcFormulaExpression::setResult(EgcNode* result)
+bool EgcFormulaEntity::setResult(EgcNode* result)
 {
         bool repaint = false;
         bool equal = false;
@@ -266,7 +266,7 @@ bool EgcFormulaExpression::setResult(EgcNode* result)
         return repaint;
 }
 
-bool EgcFormulaExpression::resetResult(void)
+bool EgcFormulaEntity::resetResult(void)
 {
         bool retval = false;
 
@@ -279,13 +279,18 @@ bool EgcFormulaExpression::resetResult(void)
         }
 }
 
-enum EgcEntityType EgcFormulaExpression::getEntityType(void) const
+enum EgcEntityType EgcFormulaEntity::getEntityType(void) const
 {
         return EgcEntityType::Formula;
 }
 
-QPointF EgcFormulaExpression::getPositon(void) const
+QPointF EgcFormulaEntity::getPositon(void) const
 {
 #warning implement this function
         return QPointF(0,0);
+}
+
+void EgcFormulaEntity::setItem(EgcFormulaItem* item)
+{
+        m_item = item;
 }

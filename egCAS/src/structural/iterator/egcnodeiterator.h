@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCNODEITERATOR_H
 #define EGCNODEITERATOR_H
 
-class EgcFormulaExpression;
+class EgcFormulaEntity;
 class EgcNode;
 class EgcBaseNode;
 enum class EgcNodeType;
@@ -47,7 +47,7 @@ class EgcNodeIterator
 {
 public:
         /// constructor for initialization with formula
-        EgcNodeIterator(const EgcFormulaExpression& formula);
+        EgcNodeIterator(const EgcFormulaEntity& formula);
         /// constructor for initialization with tree element
         EgcNodeIterator(const EgcNode & node);
         /// std destructor

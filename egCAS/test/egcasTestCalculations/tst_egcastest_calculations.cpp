@@ -33,13 +33,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egckernelparser.h"
 #include "egcnodes.h"
 #include "egcnodeiterator.h"
-#include "egcformulaexpression.h"
+#include "egcformulaentity.h"
 #include "egcnodecreator.h"
 #include "egcnodevisitor.h"
 #include "egcmaximavisitor.h"
 #include "egcmathmlvisitor.h"
 #include "casKernel/egcmaximaconn.h"
-#include "egcformulaexpression.h"
+#include "egcformulaentity.h"
 
 
 #include <QDebug>
@@ -58,7 +58,7 @@ private Q_SLOTS:
 private:
         EgcNode* getTree(QString formula);
         QScopedPointer<EgcMaximaConn> conn;
-        EgcFormulaExpression formula;
+        EgcFormulaEntity formula;
         EgcKernelParser parser;
         bool hasEnded;
 };
@@ -107,7 +107,7 @@ void EgcasTest_Calculation::evaluateResult(QString result)
                 conn->sendCommand(formula.getCASKernelCommand());
         } else if (i == 1) {
                 QVERIFY(result == "31084.819");
-                EgcFormulaExpression form_res;
+                EgcFormulaEntity form_res;
                 form_res.setRootElement(getTree("y=3"));
                 QVERIFY(form_res.setResult(getTree(result)) == true);
                 QVERIFY(form_res.getMathMlCode() == "<math><mrow><mi>y</mi><mo>=</mo><mn>31084.819</mn></mrow></math>");

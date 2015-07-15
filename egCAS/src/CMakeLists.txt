@@ -68,7 +68,7 @@ set(egCAS_SOURCES
         structural/egcnodecreator.cpp
         structural/visitor/egcnodevisitor.cpp 
         structural/specialNodes/egccontainernode.cpp 
-        structural/egcformulaexpression.cpp 
+        structural/egcformulaentity.cpp
         structural/iterator/egcnodeiterator.cpp
         structural/specialNodes/egcbasenode.cpp
         structural/specialNodes/egcemptynode.cpp

@@ -26,11 +26,11 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include "../egcformulaexpression.h"
+#include "../egcformulaentity.h"
 #include "egcnodevisitor.h"
 #include "../egcnodes.h"
 
-EgcNodeVisitor::EgcNodeVisitor(EgcFormulaExpression& formula) : m_formula(&formula)
+EgcNodeVisitor::EgcNodeVisitor(EgcFormulaEntity& formula) : m_formula(&formula)
 {
 }
 

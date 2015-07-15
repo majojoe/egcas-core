@@ -28,7 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QScopedPointer>
 #include "egcnodeiterator.h"
-#include "../egcformulaexpression.h"
+#include "../egcformulaentity.h"
 #include "../specialNodes/egcnode.h"
 #include "../specialNodes/egcbinarynode.h"
 #include "../specialNodes/egcunarynode.h"
@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../specialNodes/egcflexnode.h"
 #include "../egcnodecreator.h"
 
-EgcNodeIterator::EgcNodeIterator(const EgcFormulaExpression& formula) :
+EgcNodeIterator::EgcNodeIterator(const EgcFormulaEntity& formula) :
         m_next(formula.getBaseElement().getChild(0)), m_previous(&formula.getBaseElement()),
         m_baseElement(&formula.getBaseElement()), m_state(EgcIteratorState::LeftIteration), m_history(nullptr)
 {
