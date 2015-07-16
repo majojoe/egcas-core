@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCPIXMAPENTITY_H
 #define EGCPIXMAPENTITY_H
 
+#include <QString>
 #include "egcentity.h"
 
 class QPointF;
@@ -60,10 +61,20 @@ public:
          */
         virtual QPointF getPositon(void) const;
         /**
-         * @brief getText returns the text hold by this entity/item
+         * @brief setPosition set the position of a entity
+         * @param pos the position where the entity should be
+         */
+        virtual void setPosition(QPointF pos) override;
+        /**
+         * @brief getFilePath returns the filename path to the picture hold by this entity/item
          * @return the path to the picture, if the pixmap is embedded (m_isEmbedded == true) it returns a nullptr
          */
-        QString getPath(void) const;
+        QString getFilePath(void) const;
+        /**
+         * @brief setFilePath set the filename path to the picture hold by this entity. A new picture will be loaded.
+         * @param file the file path to the new picture to set.
+         */
+        void setFilePath(QString file);
         /**
          * @brief getB64Encoded get the pixmap as base64 encoded text for saving in e.g. XML files
          * @return base64 encoded pixmap binary data
@@ -74,6 +85,16 @@ public:
          * @return the size of the pixmap in the document
          */
         QSizeF getSize(void) const;
+        /**
+         * @brief setSize set the size of the pixmap entity
+         * @param size the size to be set
+         */
+        void setSize(QSizeF size);
+        /**
+         * @brief setItem set the formula item that is associated with this entity
+         * @param item the item to set (can also be a nullptr)
+         */
+        void setItem(EgcPixmapItem* item);
 private:
         EgcPixmapItem *m_item;                  ///< pointer to QGraphicsitem hold by scene
         bool m_isEmbedded;                      ///< determines if pixmap is embedded in document, or load by pathname

@@ -156,3 +156,8 @@ QPointF EgcFormulaItem::getPos( void ) const
 {
         return pos();
 }
+
+void EgcFormulaItem::setEntity(EgcFormulaEntity* entity)
+{
+        m_entity = entity;
+}

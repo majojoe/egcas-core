@@ -85,3 +85,8 @@ void EgcPixmapItem::mouseMoveEvent(QGraphicsSceneMouseEvent*event)
 
         m_resizeHandle->mouseMoveEventInfo();
 }
+
+void EgcPixmapItem::setEntity(EgcPixmapEntity* entity)
+{
+        m_entity = entity;
+}

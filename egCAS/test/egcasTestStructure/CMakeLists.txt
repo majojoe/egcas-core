@@ -16,6 +16,7 @@ endif()
 find_package(Qt5 COMPONENTS Widgets Core Test)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/../../src/")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 
 file(GLOB_RECURSE tst_egcastest_structural_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
 

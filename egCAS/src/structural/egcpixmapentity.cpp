@@ -55,7 +55,7 @@ QPointF EgcPixmapEntity::getPositon(void) const
                 return QPointF(0.0,0.0);
 }
 
-QString EgcPixmapEntity::getPath(void) const
+QString EgcPixmapEntity::getFilePath(void) const
 {
         if (m_isEmbedded)
                 return nullptr;
@@ -85,5 +85,36 @@ QSizeF EgcPixmapEntity::getSize(void) const
         return m_item->boundingRect().size();
 }
 
+void EgcPixmapEntity::setSize(QSizeF size)
+{
+        if (!m_item)
+                return;
 
+        QSizeF tmp = m_item->boundingRect().size();
+        qreal xFactor = size.width()/tmp.width();
+        qreal yFactor = size.height()/tmp.height();
+        qreal factor = qMin(xFactor, yFactor);
+        m_item->setScale(factor);
+}
 
+void EgcPixmapEntity::setItem(EgcPixmapItem* item)
+{
+        m_item = item;
+}
+
+void EgcPixmapEntity::setPosition(QPointF pos)
+{
+        if (!m_item)
+                return;
+
+        m_item->setPos(pos);
+}
+
+void EgcPixmapEntity::setFilePath(QString file)
+{
+        if (!m_item)
+                return;
+
+        m_path = file;
+        m_item->setPixmap(QPixmap(file));
+}

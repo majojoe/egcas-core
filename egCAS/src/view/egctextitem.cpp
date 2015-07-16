@@ -82,3 +82,8 @@ void EgcTextItem::focusOutEvent(QFocusEvent *event)
         setTextInteractionFlags(Qt::NoTextInteraction);
         QGraphicsItem::focusOutEvent(event);
 }
+
+void EgcTextItem::setEntity(EgcTextEntity* entity)
+{
+        m_entity = entity;
+}

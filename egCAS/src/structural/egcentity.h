@@ -65,6 +65,11 @@ public:
          */
         virtual QPointF getPositon(void) const = 0;
         /**
+         * @brief setPosition set the position of a entity
+         * @param pos the position where the entity should be
+         */
+        virtual void setPosition(QPointF pos) = 0;
+        /**
          * @brief operator < overloads the "<" operator to be able to sort the entities in the order they are inserted
          * on the document sheet
          * @param rhs the entity to compare against

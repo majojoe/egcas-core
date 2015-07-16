@@ -35,7 +35,8 @@ EgcEntityList::EgcEntityList() : m_index(0)
 
 EgcEntityList::~EgcEntityList()
 {
-        foreach (EgcEntity* i, m_list) {
+        EgcEntity* i;
+        foreach (i, m_list) {
                 delete i;
         }
 }

@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcasiteminterface.h"
 
 class EgMathMLDocument;
+class EgcFormulaEntity;
 
 /**
  * @brief The FormulaItem class implements a QGraphicsItem to be able to use a formula in a QGraphicsView
@@ -121,7 +122,11 @@ protected:
          * @return the value that has been adjusted
          */
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
+        /**
+         * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
+         * @param entity a pointer to the entity that is associated with this object
+         */
+        void setEntity(EgcFormulaEntity* entity);
 signals:
 
 public slots:
@@ -131,6 +136,7 @@ private:
         static quint8 s_baseFontSize;
         quint8 fontSize;
         QPointF startPoint;
+        EgcFormulaEntity* m_entity;                     ///< pointer to formula entity
 
         Q_DISABLE_COPY(EgcFormulaItem)
 };

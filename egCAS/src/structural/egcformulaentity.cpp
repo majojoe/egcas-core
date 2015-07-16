@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcnodes.h"
 #include "visitor/egcmaximavisitor.h"
 #include "visitor/egcmathmlvisitor.h"
+#include "egcformulaitem.h"
 
 
 quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 15;
@@ -286,11 +287,21 @@ enum EgcEntityType EgcFormulaEntity::getEntityType(void) const
 
 QPointF EgcFormulaEntity::getPositon(void) const
 {
-#warning implement this function
-        return QPointF(0,0);
+        if (!m_item)
+                return QPointF(0,0);
+        else
+                m_item->pos();
 }
 
 void EgcFormulaEntity::setItem(EgcFormulaItem* item)
 {
         m_item = item;
+}
+
+void EgcFormulaEntity::setPosition(QPointF pos)
+{
+        if (!m_item)
+                return;
+
+        m_item->setPos(pos);
 }

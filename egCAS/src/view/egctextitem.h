@@ -32,6 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QGraphicsTextItem>
 #include "egcasiteminterface.h"
 
+class EgcTextEntity;
+
 class EgcTextItem: public QGraphicsTextItem
 {
 public:
@@ -68,11 +70,18 @@ protected:
          * @param event
          */
         void focusOutEvent(QFocusEvent*event);
+        /**
+         * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
+         * @param entity a pointer to the entity that is associated with this object
+         */
+        void setEntity(EgcTextEntity* entity);
+
 signals:
 
 
 private:
         Q_DISABLE_COPY(EgcTextItem)
+        EgcTextEntity* m_entity;        ///< pointer to text entity (no ownership)
 };
 
 #endif // EGCTEXTITEM_H

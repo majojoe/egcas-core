@@ -67,3 +67,31 @@ QFont EgcTextEntity::getFont(void) const
         return m_item->font();
 }
 
+void EgcTextEntity::setItem(EgcTextItem* item)
+{
+        m_item = item;
+}
+
+void EgcTextEntity::setPosition(QPointF pos)
+{
+        if (!m_item)
+                return;
+
+        m_item->setPos(pos);
+}
+
+void EgcTextEntity::setText(QString text)
+{
+        if (!m_item)
+                return;
+
+        m_item->setPlainText(text);
+}
+
+void EgcTextEntity::setFont(QFont font)
+{
+        if (!m_item)
+                return;
+
+        m_item->setFont(font);
+}

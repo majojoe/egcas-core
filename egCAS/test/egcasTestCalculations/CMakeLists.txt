@@ -17,6 +17,7 @@ FLEX_TARGET(cas_scanner_tst ${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/pars
 ADD_FLEX_BISON_DEPENDENCY(cas_scanner_tst cas_calculations_tst)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 
 
 if(CMAKE_COMPILER_IS_GNUCXX)

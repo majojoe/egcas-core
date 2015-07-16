@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCTEXTENTITY_H
 #define EGCTEXTENTITY_H
 
+#include <QString>
 #include "egcentity.h"
 
 class QPointF;
@@ -58,15 +59,36 @@ public:
          */
         virtual QPointF getPositon(void) const;
         /**
+         * @brief setPosition set the position of a entity
+         * @param pos the position where the entity should be
+         */
+        virtual void setPosition(QPointF pos) override;
+        /**
          * @brief getText returns the text hold by this entity/item
          * @return the text hold
          */
         QString getText(void) const;
         /**
+         * @brief setText set the text of a text entity
+         * @param text the text to set
+         */
+        void setText(QString text);
+        /**
          * @brief getFont returns the font used by this entity/item
          * @return the font used
          */
         QFont getFont(void) const;
+        /**
+         * @brief setFont set the font of this entity
+         * @param font the font to set
+         */
+        void setFont(QFont font);
+        /**
+         * @brief setItem set the formula item that is associated with this entity
+         * @param item the item to set (can also be a nullptr)
+         */
+        void setItem(EgcTextItem* item);
+
 private:
         EgcTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene
 };

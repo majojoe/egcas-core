@@ -180,6 +180,11 @@ public:
          */
         virtual QPointF getPositon(void) const override;
         /**
+         * @brief setPosition set the position of a entity
+         * @param pos the position where the entity should be
+         */
+        virtual void setPosition(QPointF pos) override;
+        /**
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)
          */

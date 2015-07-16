@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcasiteminterface.h"
 
 class ResizeHandle;
+class EgcPixmapEntity;
 
 class EgcPixmapItem: public QGraphicsPixmapItem
 {
@@ -71,6 +72,11 @@ protected:
          * @param event pointer to QGraphicsSceneMouseEvent
          */
         void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        /**
+         * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
+         * @param entity a pointer to the entity that is associated with this object
+         */
+        void setEntity(EgcPixmapEntity* entity);
 
 signals:
 
@@ -80,6 +86,7 @@ private:
         QScopedPointer<ResizeHandle> m_resizeHandle;
         bool m_childSelectionState;
         bool m_resizeHandleAdded;
+        EgcPixmapEntity* m_entity;                      ///< pointer to pixmap entity
 };
 
 #endif // EgcPixmapItem_H
