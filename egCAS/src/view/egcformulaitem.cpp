@@ -49,7 +49,7 @@ EgcFormulaItem::EgcFormulaItem(const QString &formula, QPointF point, int size, 
 {
         init();
         setFormulaText(formula);
-        startPoint = point;
+        QGraphicsItem::setPos(point);
         setFontSize(size);
 }
 
@@ -59,7 +59,7 @@ EgcFormulaItem::EgcFormulaItem(const QString &formula, int size, QGraphicsItem *
         init();
         setFormulaText(formula);
         setFontSize(size);
-        startPoint = QPointF(0.0, boundingRect().height());
+        QGraphicsItem::setPos(QPointF(0.0, boundingRect().height()));
 }
 
 void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -73,7 +73,6 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
                 mathMlDoc->setBaseFontPixelSize(static_cast<qreal>(fontSize));
 
         QRectF formulaRect(QPointF(0,0), mathMlDoc->size());
-        formulaRect.moveBottomLeft(startPoint);
         mathMlDoc->paint( painter, formulaRect.topLeft() );
 
         if (isSelected()) {
@@ -86,16 +85,10 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
         }
 }
 
-void EgcFormulaItem::setStartPoint(QPointF point)
-{
-        startPoint = point;
-}
-
 QRectF EgcFormulaItem::boundingRect() const
 {
         //the start point is the bottom left point of the formula
         QRectF bounds(QPointF(0,0), mathMlDoc->size());
-        bounds.moveBottomLeft(startPoint);
 
         return bounds.adjusted(0, -1.0, +1.0, +1.0);
 }
@@ -115,7 +108,6 @@ void EgcFormulaItem::setFontSize(int size)
 {
         fontSize = size;
         mathMlDoc->setBaseFontPixelSize(size);
-        //mathMlDoc->
 }
 
 void EgcFormulaItem::mousePressEvent(QGraphicsSceneMouseEvent*event)

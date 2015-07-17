@@ -305,3 +305,31 @@ void EgcFormulaEntity::setPosition(QPointF pos)
 
         m_item->setPos(pos);
 }
+
+static void EgcFormulaEntity::setBaseFontSize(int size)
+{
+        EgcFormulaItem::setBaseFontSize(size);
+}
+
+void EgcFormulaEntity::setFontSize(int size)
+{
+        if (!m_item)
+                return;
+
+        m_item->setFontSize(size);
+}
+
+static int EgcFormulaEntity::getBaseFontSize(void)
+{
+#warning implement this
+}
+
+int EgcFormulaEntity::getFontSize(void)
+{
+#warning implement this
+}
+
+void EgcFormulaEntity::updateView(void)
+{
+#warning implement this
+}

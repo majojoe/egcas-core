@@ -68,11 +68,6 @@ public:
          */
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
         /**
-         * @brief setStartPoint set the start point from where to render the formula
-         * @param point the starting point (bottom left) point from where to render the formula
-         */
-        void setStartPoint(QPointF point);
-        /**
          * @brief boundingRect must be implemented when inheriting from QGraphicsItem
          * @return the outermost dimensions of the item created
          */
@@ -135,7 +130,6 @@ private:
         QScopedPointer<EgMathMLDocument> mathMlDoc;
         static quint8 s_baseFontSize;
         quint8 fontSize;
-        QPointF startPoint;
         EgcFormulaEntity* m_entity;                     ///< pointer to formula entity
 
         Q_DISABLE_COPY(EgcFormulaItem)
