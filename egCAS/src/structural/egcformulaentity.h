@@ -211,6 +211,10 @@ public:
          * @param item the item to set (can also be a nullptr)
          */
         void setItem(EgcFormulaItem* item);
+        /**
+         * @brief updateView update the view with the new mathml representation if anything changes
+         */
+        void updateView(void);
 private:
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
