@@ -11,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -32,14 +32,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QGraphicsItem>
 #include <QPainter>
 #include "egcasiteminterface.h"
+#include "egcabstractformulaitem.h"
 
 class EgMathMLDocument;
 class EgcFormulaEntity;
+class EgcAbstractFormulaItem;
 
 /**
  * @brief The FormulaItem class implements a QGraphicsItem to be able to use a formula in a QGraphicsView
  */
-class EgcFormulaItem : public QGraphicsItem, public EgcasItemInterface
+class EgcFormulaItem : public QGraphicsItem, public EgcAbstractFormulaItem
 {
 public:        
         ///standard constructor
@@ -88,12 +90,42 @@ public:
          * If the overall font size of all formulas should be changed, use the function setBaseFontSize.
          * @param size the font size in points
          */
-        void setFontSize(int size);
+        void setFontSize(int size) override;
         /**
-         * @brief getPos overloads the inherited get function for the position of the item
-         * @return the position of the item
+         * @brief getFontSize returns the font size of the current formula
+         * @return the font size of the current formula
          */
-        virtual QPointF getPos( void ) const;
+        virtual int getFontSize(void) override;
+        /**
+         * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
+         * @param entity a pointer to the entity that is associated with this object
+         */
+        void setEntity(EgcFormulaEntity* entity);
+        /**
+         * @brief getPosItemIface needs to be overwritten by subclasses to get the position of the item
+         * @return the Position of the item
+         */
+        virtual QPointF getPosition( void ) const override;
+        /**
+         * @brief setPosItemIface needs to be overwritten by subclasses to set the position of the item
+         * @param point the position to set.
+         */
+        virtual void setPosition( QPointF point) override;
+        /**
+         * @brief set the generic font size for all formulas (changes the overall font size of all formulas in a document).
+         * If the font size of a specific formula should be changed, use the function setFontSize.
+         * @param size the font size in points
+         */
+        virtual void setGenericFontSize(int size) override;
+        /**
+         * @brief getBaseFontSize returns the base font size of all formulas in a document
+         * @return the base font size of all formulas
+         */
+        virtual int getGenericFontSize(void) override;
+        /**
+         * @brief updateView update the view with the new mathml representation if anything changes
+         */
+        virtual void updateView(void) override;
 
 protected:
         /**
@@ -117,19 +149,14 @@ protected:
          * @return the value that has been adjusted
          */
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-        /**
-         * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
-         * @param entity a pointer to the entity that is associated with this object
-         */
-        void setEntity(EgcFormulaEntity* entity);
 signals:
 
 public slots:
 private:
         QString formulaText;
-        QScopedPointer<EgMathMLDocument> mathMlDoc;
+        QScopedPointer<EgMathMLDocument> m_mathMlDoc;
         static quint8 s_baseFontSize;
-        quint8 fontSize;
+        quint8 m_fontSize;
         EgcFormulaEntity* m_entity;                     ///< pointer to formula entity
 
         Q_DISABLE_COPY(EgcFormulaItem)

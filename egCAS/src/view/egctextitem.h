@@ -11,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class EgcTextEntity;
 
-class EgcTextItem: public QGraphicsTextItem
+class EgcTextItem: public QGraphicsTextItem, public EgcasItemInterface
 {
 public:
         ///std constructor
@@ -44,10 +44,20 @@ public:
         ///std destructor
         virtual ~EgcTextItem() { }
         /**
-         * @brief getPos overloads the inherited get function for the position of the item
-         * @return the position of the item
+         * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
+         * @param entity a pointer to the entity that is associated with this object
          */
-        virtual QPointF getPos( void ) const;
+        void setEntity(EgcTextEntity* entity);
+        /**
+         * @brief getPosItemIface needs to be overwritten by subclasses to get the position of the item
+         * @return the Position of the item
+         */
+        virtual QPointF getPosition( void ) const override;
+        /**
+         * @brief setPosItemIface needs to be overwritten by subclasses to set the position of the item
+         * @param point the position to set.
+         */
+        virtual void setPosition( QPointF point) override;
 protected:
         /**
          * @brief init initializes a new instance of this class (used in constructor)
@@ -70,11 +80,6 @@ protected:
          * @param event
          */
         void focusOutEvent(QFocusEvent*event);
-        /**
-         * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
-         * @param entity a pointer to the entity that is associated with this object
-         */
-        void setEntity(EgcTextEntity* entity);
 
 signals:
 

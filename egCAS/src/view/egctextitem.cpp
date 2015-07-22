@@ -11,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -40,10 +40,6 @@ EgcTextItem::EgcTextItem(const QString & text, QGraphicsItem * parent) : QGraphi
         init();
 }
 
-QPointF EgcTextItem::getPos( void ) const
-{
-        return pos();
-}
 
 void EgcTextItem::init()
 {
@@ -87,3 +83,14 @@ void EgcTextItem::setEntity(EgcTextEntity* entity)
 {
         m_entity = entity;
 }
+
+QPointF EgcTextItem::getPosition( void ) const
+{
+        return pos();
+}
+
+void EgcTextItem::setPosition( QPointF point)
+{
+        setPos(point);
+}
+

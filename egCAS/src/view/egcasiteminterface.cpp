@@ -11,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -32,8 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 bool EgcasItemInterface::operator< ( const EgcasItemInterface &rhs)
 {
-        QPointF op1 = getPos();
-        QPointF op2 = rhs.getPos();
+        QPointF op1 = getPosition();
+        QPointF op2 = rhs.getPosition();
 
         //first have a look at the vertical positions in a worksheet
         if ( op1.y() < op2.y() )
@@ -49,3 +49,4 @@ bool EgcasItemInterface::operator< ( const EgcasItemInterface &rhs)
 
         return true;
 }
+

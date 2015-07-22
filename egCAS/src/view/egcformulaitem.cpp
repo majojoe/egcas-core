@@ -11,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -67,13 +67,13 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
         (void) option;
         (void) widget;
 
-        if (!fontSize)
-                mathMlDoc->setBaseFontPixelSize(static_cast<qreal>(s_baseFontSize));
+        if (!m_fontSize)
+                m_mathMlDoc->setBaseFontPixelSize(static_cast<qreal>(s_baseFontSize));
         else
-                mathMlDoc->setBaseFontPixelSize(static_cast<qreal>(fontSize));
+                m_mathMlDoc->setBaseFontPixelSize(static_cast<qreal>(m_fontSize));
 
-        QRectF formulaRect(QPointF(0,0), mathMlDoc->size());
-        mathMlDoc->paint( painter, formulaRect.topLeft() );
+        QRectF formulaRect(QPointF(0,0), m_mathMlDoc->size());
+        m_mathMlDoc->paint( painter, formulaRect.topLeft() );
 
         if (isSelected()) {
                 painter->save();
@@ -88,7 +88,7 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 QRectF EgcFormulaItem::boundingRect() const
 {
         //the start point is the bottom left point of the formula
-        QRectF bounds(QPointF(0,0), mathMlDoc->size());
+        QRectF bounds(QPointF(0,0), m_mathMlDoc->size());
 
         return bounds.adjusted(0, -1.0, +1.0, +1.0);
 }
@@ -96,7 +96,7 @@ QRectF EgcFormulaItem::boundingRect() const
 void EgcFormulaItem::setFormulaText(const QString &formula)
 {
         formulaText = formula;
-        mathMlDoc->setContent(formulaText);
+        m_mathMlDoc->setContent(formulaText);
 }
 
 void EgcFormulaItem::setBaseFontSize(int size)
@@ -106,8 +106,13 @@ void EgcFormulaItem::setBaseFontSize(int size)
 
 void EgcFormulaItem::setFontSize(int size)
 {
-        fontSize = size;
-        mathMlDoc->setBaseFontPixelSize(size);
+        m_fontSize = size;
+        m_mathMlDoc->setBaseFontPixelSize(size);
+}
+
+int EgcFormulaItem::getFontSize(void)
+{
+        return m_fontSize;
 }
 
 void EgcFormulaItem::mousePressEvent(QGraphicsSceneMouseEvent*event)
@@ -125,13 +130,13 @@ void EgcFormulaItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 void EgcFormulaItem::init()
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
-        fontSize = 0;
-        mathMlDoc.reset(new EgMathMLDocument());
-        mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
+        m_fontSize = 0;
+        m_mathMlDoc.reset(new EgMathMLDocument());
+        m_mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
 }
 
 QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &value)
- {
+{
      if (change == ItemPositionChange && scene()) {
          // value is the new position.
          QPointF newPos = value.toPointF();
@@ -142,14 +147,35 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
          return newPos;
      }
      return QGraphicsItem::itemChange(change, value);
- }
-
-QPointF EgcFormulaItem::getPos( void ) const
-{
-        return pos();
 }
 
 void EgcFormulaItem::setEntity(EgcFormulaEntity* entity)
 {
         m_entity = entity;
+}
+
+QPointF EgcFormulaItem::getPosition( void ) const
+{
+        return pos();
+}
+
+void EgcFormulaItem::setPosition( QPointF point)
+{
+        setPos(point);
+}
+
+void EgcFormulaItem::setGenericFontSize(int size)
+{
+        setBaseFontSize(size);
+}
+
+int EgcFormulaItem::getGenericFontSize(void)
+{
+        return s_baseFontSize;
+}
+
+
+void EgcFormulaItem::updateView(void)
+{
+#warning implement this
 }

@@ -11,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -42,10 +42,15 @@ public:
         ///std destructor
         virtual ~EgcasItemInterface() {}
         /**
-         * @brief getPos needs to be overwritten by subclasses to get the position of the item ()
+         * @brief getPosition needs to be overwritten by subclasses to get the position of the item
          * @return the Position of the item
          */
-        virtual QPointF getPos( void ) const = 0;
+        virtual QPointF getPosition( void ) const = 0;
+        /**
+         * @brief setPosition needs to be overwritten by subclasses to set the position of the item
+         * @param point the position to set.
+         */
+        virtual void setPosition( QPointF point) = 0;
         /**
          * @brief operator< operator overload of this class to be able to sort the items according to their position
          * @param rhs the right hand side operator
