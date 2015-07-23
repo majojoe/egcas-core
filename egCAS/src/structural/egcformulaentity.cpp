@@ -11,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -36,8 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcnodes.h"
 #include "visitor/egcmaximavisitor.h"
 #include "visitor/egcmathmlvisitor.h"
-#include "egcformulaitem.h"
-
+#include "egcabstractformulaitem.h"
 
 quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 15;
 
@@ -290,10 +289,10 @@ QPointF EgcFormulaEntity::getPositon(void) const
         if (!m_item)
                 return QPointF(0,0);
         else
-                m_item->pos();
+                m_item->getPosition();
 }
 
-void EgcFormulaEntity::setItem(EgcFormulaItem* item)
+void EgcFormulaEntity::setItem(EgcAbstractFormulaItem* item)
 {
         m_item = item;
 }
@@ -303,12 +302,15 @@ void EgcFormulaEntity::setPosition(QPointF pos)
         if (!m_item)
                 return;
 
-        m_item->setPos(pos);
+        m_item->setPosition(pos);
 }
 
-static void EgcFormulaEntity::setBaseFontSize(int size)
+void EgcFormulaEntity::setGenericFontSize(int size)
 {
-        EgcFormulaItem::setBaseFontSize(size);
+        if (!m_item)
+                return;
+
+        m_item->setGenericFontSize(size);
 }
 
 void EgcFormulaEntity::setFontSize(int size)
@@ -319,17 +321,26 @@ void EgcFormulaEntity::setFontSize(int size)
         m_item->setFontSize(size);
 }
 
-static int EgcFormulaEntity::getBaseFontSize(void)
+int EgcFormulaEntity::getGenericFontSize(void)
 {
-#warning implement this
+        if (!m_item)
+                return;
+
+        return m_item->getGenericFontSize(size);
 }
 
 int EgcFormulaEntity::getFontSize(void)
 {
-#warning implement this
+        if (!m_item)
+                return;
+
+        return m_item->getFontSize(size);
 }
 
 void EgcFormulaEntity::updateView(void)
 {
-#warning implement this
+        if (!m_item)
+                return;
+
+        m_item->updateView();
 }

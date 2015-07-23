@@ -11,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -37,7 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgcNode;
 class EgcBaseNode;
 enum class EgcNodeType;
-class EgcFormulaItem;
+class EgcAbstractFormulaItem;
 
 /**
  * @brief The EgcNumberResultType defines different types of number results
@@ -189,12 +189,12 @@ public:
          * If the font size of a specific formula should be changed, use the function setFontSize.
          * @param size the font size in points
          */
-        static void setBaseFontSize(int size);
+        static void setGenericFontSize(int size);
         /**
          * @brief getBaseFontSize returns the base font size of all formulas in a document
          * @return the base font size of all formulas
          */
-        static int getBaseFontSize(void);
+        static int getGenericFontSize(void);
         /**
          * @brief set the font size for a formula (changes only the font size of this formula).
          * If the overall font size of all formulas should be changed, use the function setBaseFontSize.
@@ -210,7 +210,7 @@ public:
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)
          */
-        void setItem(EgcFormulaItem* item);
+        void setItem(EgcAbstractFormulaItem* item);
         /**
          * @brief updateView update the view with the new mathml representation if anything changes
          */
@@ -220,7 +220,7 @@ private:
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
         EgcBaseNode m_data;                     ///< holds a pointer to the root element of the formula tree
         static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
-        EgcFormulaItem* m_item;                 ///< pointer to the formula item on the scene
+        EgcAbstractFormulaItem* m_item;            ///< pointer to the formula item interface on the scene
 };
 
 #endif // EGCFORMULAENTITY_H
