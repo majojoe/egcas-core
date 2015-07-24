@@ -32,7 +32,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/specialNodes)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/concreteNodes)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 
 file(GLOB_RECURSE tst_egcastest_calculations_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
 
