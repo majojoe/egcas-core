@@ -30,8 +30,8 @@
 %{
 	#include <iostream>
 	#include <cstdlib>
-	#include "scanner.h"
-	#include "interpreter.h"
+        #include "parser/scanner.h"
+        #include "parser/interpreter.h"
 	#include "parser.hpp"
 	#include "location.hh"
 

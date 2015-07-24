@@ -30,14 +30,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QtTest>
 #include <iostream>
 #include <QScopedPointer>
-#include "egckernelparser.h"
+#include "parser/egckernelparser.h"
 #include "egcnodes.h"
-#include "egcnodeiterator.h"
+#include "iterator/egcnodeiterator.h"
 #include "entities/egcformulaentity.h"
 #include "egcnodecreator.h"
-#include "egcnodevisitor.h"
-#include "egcmaximavisitor.h"
-#include "egcmathmlvisitor.h"
+#include "visitor/egcnodevisitor.h"
+#include "visitor/egcmaximavisitor.h"
+#include "visitor/egcmathmlvisitor.h"
 #include "casKernel/egcmaximaconn.h"
 
 

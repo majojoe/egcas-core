@@ -59,9 +59,9 @@
 %code top
 {
     #include <iostream>
-    #include "scanner.h"
+    #include "parser/scanner.h"
     #include "parser.hpp"
-    #include "interpreter.h"
+    #include "parser/interpreter.h"
     #include "location.hh"
     
     // yylex() arguments are defined in parser.y

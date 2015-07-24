@@ -19,6 +19,7 @@ ADD_FLEX_BISON_DEPENDENCY(cas_scanner_tst cas_parser_tst)
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
         add_definitions(-std=c++11)
