@@ -28,7 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QScopedPointer>
 #include "egcnodeiterator.h"
-#include "../egcformulaentity.h"
+#include "../entities/egcformulaentity.h"
 #include "../specialNodes/egcnode.h"
 #include "../specialNodes/egcbinarynode.h"
 #include "../specialNodes/egcunarynode.h"

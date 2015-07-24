@@ -28,7 +28,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcasscene.h"
-#include "../entity_lists/egcentitylist.h"
+#include "../entities/egcentitylist.h"
 #include "egcdocument.h"
 
 EgcDocument::EgcDocument()

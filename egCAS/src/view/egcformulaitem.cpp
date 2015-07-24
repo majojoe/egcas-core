@@ -30,13 +30,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <libegcas/eg_mml_document.h>
 #include "egcformulaitem.h"
 #include "egcasscene.h"
+#include "entities/egcabstractformulaentity.h"
+#include "egcabstractformulaitem.h"
 
 quint8 EgcFormulaItem::s_baseFontSize = 14;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
-    QGraphicsItem(parent)
+    QGraphicsItem(parent), m_fontSize(0)
 {
         init();
+        QGraphicsItem::setPos(QPointF(0.0, boundingRect().height()));
 }
 
 EgcFormulaItem::~EgcFormulaItem()
@@ -53,12 +56,11 @@ EgcFormulaItem::EgcFormulaItem(const QString &formula, QPointF point, int size, 
         setFontSize(size);
 }
 
-EgcFormulaItem::EgcFormulaItem(const QString &formula, int size, QGraphicsItem *parent) :
-        QGraphicsItem(parent)
+EgcFormulaItem::EgcFormulaItem(const QPointF point, QGraphicsItem *parent) :
+        QGraphicsItem(parent), m_fontSize(0)
 {
         init();
-        setFormulaText(formula);
-        setFontSize(size);
+        QGraphicsItem::setPos(point);
         QGraphicsItem::setPos(QPointF(0.0, boundingRect().height()));
 }
 
@@ -95,8 +97,7 @@ QRectF EgcFormulaItem::boundingRect() const
 
 void EgcFormulaItem::setFormulaText(const QString &formula)
 {
-        formulaText = formula;
-        m_mathMlDoc->setContent(formulaText);
+        m_mathMlDoc->setContent(formula);
 }
 
 void EgcFormulaItem::setBaseFontSize(int size)
@@ -149,7 +150,7 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
      return QGraphicsItem::itemChange(change, value);
 }
 
-void EgcFormulaItem::setEntity(EgcFormulaEntity* entity)
+void EgcFormulaItem::setEntity(EgcAbstractFormulaEntity* entity)
 {
         m_entity = entity;
 }
@@ -174,8 +175,10 @@ int EgcFormulaItem::getGenericFontSize(void)
         return s_baseFontSize;
 }
 
-
 void EgcFormulaItem::updateView(void)
 {
-#warning implement this
+        if (!m_entity)
+                return;
+
+        m_mathMlDoc->setContent(m_entity->getMathMlCode());
 }

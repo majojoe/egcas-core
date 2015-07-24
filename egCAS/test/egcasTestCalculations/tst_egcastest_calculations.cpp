@@ -33,13 +33,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egckernelparser.h"
 #include "egcnodes.h"
 #include "egcnodeiterator.h"
-#include "egcformulaentity.h"
+#include "entities/egcformulaentity.h"
 #include "egcnodecreator.h"
 #include "egcnodevisitor.h"
 #include "egcmaximavisitor.h"
 #include "egcmathmlvisitor.h"
 #include "casKernel/egcmaximaconn.h"
-#include "egcformulaentity.h"
+
 
 
 #include <QDebug>

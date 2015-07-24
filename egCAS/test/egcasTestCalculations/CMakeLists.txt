@@ -52,8 +52,8 @@ set(tst_egcastest_calculations_SOURCES
         ../../src/structural/specialNodes/egccontainernode.cpp
         ${tst_egcastest_calculations_concrete_SOURCES}
         ../../src/structural/iterator/egcnodeiterator.cpp
-        ../../src/structural/egcformulaentity.cpp
-        ../../src/structural/egcentity.cpp
+        ../../src/structural/entities/egcformulaentity.cpp
+        ../../src/structural/entities/egcentity.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp
         ../../src/structural/specialNodes/egcemptynode.cpp
         ../../src/structural/visitor/egcnodevisitor.cpp

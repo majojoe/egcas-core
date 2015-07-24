@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcabstractformulaitem.h"
 
 class EgMathMLDocument;
-class EgcFormulaEntity;
+class EgcAbstractFormulaEntity;
 class EgcAbstractFormulaItem;
 
 /**
@@ -49,11 +49,10 @@ public:
         virtual ~EgcFormulaItem();
         /**
          * @brief constructor for instantiating a formula with xml representation already available
-         * @param formula the mathml representation of the formula to render
-         * @param size the font size in pixel of the formula to be rendered
+         * @param point the left bottom start point for rendering the formula
          * @param parent pointer to parent widget
          */
-        explicit EgcFormulaItem(const QString &formula, int size, QGraphicsItem *parent = 0);
+        explicit EgcFormulaItem(const QPointF point, QGraphicsItem *parent = 0);
         /**
          * @brief constructor for instantiating a formula with xml representation already available
          * @param formula the mathml representation of the formula to render
@@ -100,7 +99,7 @@ public:
          * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
          * @param entity a pointer to the entity that is associated with this object
          */
-        void setEntity(EgcFormulaEntity* entity);
+        void setEntity(EgcAbstractFormulaEntity* entity);
         /**
          * @brief getPosItemIface needs to be overwritten by subclasses to get the position of the item
          * @return the Position of the item
@@ -153,11 +152,10 @@ signals:
 
 public slots:
 private:
-        QString formulaText;
         QScopedPointer<EgMathMLDocument> m_mathMlDoc;
         static quint8 s_baseFontSize;
         quint8 m_fontSize;
-        EgcFormulaEntity* m_entity;                     ///< pointer to formula entity
+        EgcAbstractFormulaEntity* m_entity;                     ///< pointer to formula entity
 
         Q_DISABLE_COPY(EgcFormulaItem)
 };

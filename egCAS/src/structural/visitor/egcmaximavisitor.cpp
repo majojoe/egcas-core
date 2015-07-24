@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QStringBuilder>
 #include "../egcnodes.h"
 #include "egcmaximavisitor.h"
-#include "../egcformulaentity.h"
+#include "../entities/egcformulaentity.h"
 
 EgcMaximaVisitor::EgcMaximaVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(formula)
 {

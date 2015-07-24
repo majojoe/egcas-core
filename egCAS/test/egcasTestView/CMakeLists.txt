@@ -17,6 +17,7 @@ find_package(Qt5 COMPONENTS Widgets Core Test)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${mmlegcas_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 
 set(tst_egcastest_view_SOURCES
         tst_egcastest_view.cpp 

@@ -31,8 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QString>
 #include <QScopedPointer>
-#include "specialNodes/egcbasenode.h"
+#include "../specialNodes/egcbasenode.h"
 #include "egcentity.h"
+#include "egcabstractformulaentity.h"
 
 class EgcNode;
 class EgcBaseNode;
@@ -54,7 +55,7 @@ enum class EgcNumberResultType
 /**
  * @brief The EgcFormulaEntity class defines a wrapper for a whole equation
  */
-class EgcFormulaEntity : public EgcEntity
+class EgcFormulaEntity : public EgcEntity, public EgcAbstractFormulaEntity
 {
 public:
         /**
@@ -108,7 +109,7 @@ public:
          * @brief getMathMlCode returns the mathMl representation for this formula
          * @return the mathMl representation of this formula as a string
          */
-        QString getMathMlCode(void);
+        QString getMathMlCode(void) override;
         /**
          * @brief getCASKernelCommand returns the command to execute the calculation(s) needed for this formula in the
          * used CAS kernel

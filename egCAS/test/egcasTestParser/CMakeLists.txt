@@ -18,6 +18,7 @@ ADD_FLEX_BISON_DEPENDENCY(cas_scanner_tst cas_parser_tst)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
         add_definitions(-std=c++11)
@@ -50,8 +51,8 @@ set(tst_egcastest_parser_SOURCES
         ../../src/structural/specialNodes/egccontainernode.cpp
         ${tst_egcastest_parser_concrete_SOURCES}
         ../../src/structural/iterator/egcnodeiterator.cpp
-        ../../src/structural/egcformulaentity.cpp
-        ../../src/structural/egcentity.cpp
+        ../../src/structural/entities/egcformulaentity.cpp
+        ../../src/structural/entities/egcentity.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp
         ../../src/structural/specialNodes/egcemptynode.cpp
         ../../src/structural/visitor/egcnodevisitor.cpp

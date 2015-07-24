@@ -66,9 +66,10 @@ public:
          * @brief addFormula add a formula to the graphicsscene
          * @param formula the formula to be rendered
          * @param size the font size in pixel of the forumla
+         * @param point the point where (position) to add the formula on the scene
          * @return a pointer to the formula added
          */
-        EgcFormulaItem * addFormula(const QString & formula, int size);
+        EgcFormulaItem * addFormula(const QString & formula, int size, QPointF point);
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
 private:

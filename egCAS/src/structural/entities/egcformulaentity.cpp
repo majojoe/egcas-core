@@ -307,10 +307,7 @@ void EgcFormulaEntity::setPosition(QPointF pos)
 
 void EgcFormulaEntity::setGenericFontSize(int size)
 {
-        if (!m_item)
-                return;
-
-        m_item->setGenericFontSize(size);
+        setGenericFontSize(size);
 }
 
 void EgcFormulaEntity::setFontSize(int size)
@@ -323,18 +320,15 @@ void EgcFormulaEntity::setFontSize(int size)
 
 int EgcFormulaEntity::getGenericFontSize(void)
 {
-        if (!m_item)
-                return;
-
-        return m_item->getGenericFontSize(size);
+        return getGenericFontSize();
 }
 
 int EgcFormulaEntity::getFontSize(void)
 {
         if (!m_item)
-                return;
+                return 0;
 
-        return m_item->getFontSize(size);
+        return m_item->getFontSize();
 }
 
 void EgcFormulaEntity::updateView(void)

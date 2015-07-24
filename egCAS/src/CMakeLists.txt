@@ -68,7 +68,7 @@ set(egCAS_SOURCES
         structural/egcnodecreator.cpp
         structural/visitor/egcnodevisitor.cpp 
         structural/specialNodes/egccontainernode.cpp 
-        structural/egcformulaentity.cpp
+        structural/entities/egcformulaentity.cpp
         structural/iterator/egcnodeiterator.cpp
         structural/specialNodes/egcbasenode.cpp
         structural/specialNodes/egcemptynode.cpp
@@ -81,10 +81,10 @@ set(egCAS_SOURCES
         casKernel/parser/egckernelparser.cpp
         ${BISON_cas_parser_OUTPUTS}
         ${FLEX_cas_scanner_OUTPUTS}
-        structural/entity_lists/egcentitylist.cpp
-        structural/egcentity.cpp
-        structural/egctextentity.cpp
-        structural/egcpixmapentity.cpp
+        structural/entities/egcentitylist.cpp
+        structural/entities/egcentity.cpp
+        structural/entities/egctextentity.cpp
+        structural/entities/egcpixmapentity.cpp
         structural/document/egcdocument.cpp
 )
 
