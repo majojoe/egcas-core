@@ -29,5 +29,5 @@ set(tst_egcastest_view_SOURCES
 )
 
 add_executable(tst_egcastest_view ${tst_egcastest_view_SOURCES} )
-
+add_dependencies(tst_egcastest_view mmlegcas)
 target_link_libraries(tst_egcastest_view mmlegcas Qt5::Widgets Qt5::Core Qt5::Test)

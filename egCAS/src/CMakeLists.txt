@@ -102,6 +102,7 @@ add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS} )
+add_dependencies(egCAS mmlegcas)
 #only for cmake >= 3.1
 #set_property(TARGET egCAS PROPERTY CXX_STANDARD 11)
 #set_property(TARGET egCAS PROPERTY CXX_STANDARD_REQUIRED ON)
