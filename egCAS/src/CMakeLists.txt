@@ -34,6 +34,14 @@ include_directories(structural)
 include_directories(view)
 include_directories(${mmlegcas_BINARY_DIR})
 
+#this is for showing up abstract interfaces and other sources in the IDE
+add_custom_target(egCAS_other_srcs ALL SOURCES
+        structural/entities/egcabstractformulaentity.h
+        view/egcabstractformulaitem.h
+        casKernel/parser/scanner.l
+        casKernel/parser/parser.y
+)
+
 set(egCAS_concrete_node_SOURCES
         structural/concreteNodes/egcnumbernode.cpp
         structural/concreteNodes/egcparenthesisnode.cpp
