@@ -38,7 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "visitor/egcnodevisitor.h"
 #include "visitor/egcmaximavisitor.h"
 #include "visitor/egcmathmlvisitor.h"
-#include "casKernel/egcmaximaconn.h"
+#include "egcmaximaconn.h"
 
 
 

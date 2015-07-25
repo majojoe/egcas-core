@@ -31,10 +31,6 @@ find_package(Qt5 COMPONENTS Core Widgets Test)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/visitor)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/iterator)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/specialNodes)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/concreteNodes)
 
 file(GLOB_RECURSE tst_egcastest_parser_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
 

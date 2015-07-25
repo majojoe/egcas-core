@@ -15,7 +15,7 @@ endif()
 # Widgets finds its own dependencies.
 find_package(Qt5 COMPONENTS Widgets Core Test)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/../../src/")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 

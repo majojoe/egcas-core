@@ -16,8 +16,10 @@ BISON_TARGET(cas_calculations_tst ${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKerne
 FLEX_TARGET(cas_scanner_tst ${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp )
 ADD_FLEX_BISON_DEPENDENCY(cas_scanner_tst cas_calculations_tst)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
 
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -30,9 +32,6 @@ find_package(Qt5 COMPONENTS Core Widgets Test)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/specialNodes)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural/concreteNodes)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 
 file(GLOB_RECURSE tst_egcastest_calculations_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
 

@@ -30,8 +30,6 @@ find_package(Qt5 COMPONENTS Widgets Xml PrintSupport Gui Core)
 
 include_directories(casKernel)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(structural/specialNodes)
-include_directories(structural/concreteNodes)
 include_directories(structural)
 include_directories(view)
 include_directories(${mmlegcas_BINARY_DIR})

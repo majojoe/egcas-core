@@ -29,13 +29,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef TST_EGCASTEST_STRUCTURAL_H
 #define TST_EGCASTEST_STRUCTURAL_H
 
-#include "structural/egcnodes.h"
-#include "structural/iterator/egcnodeiterator.h"
-#include "structural/entities/egcformulaentity.h"
-#include "structural/egcnodecreator.h"
-#include "structural/visitor/egcnodevisitor.h"
-#include "structural/visitor/egcmaximavisitor.h"
-#include "structural/visitor/egcmathmlvisitor.h"
+#include "egcnodes.h"
+#include "iterator/egcnodeiterator.h"
+#include "entities/egcformulaentity.h"
+#include "egcnodecreator.h"
+#include "visitor/egcnodevisitor.h"
+#include "visitor/egcmaximavisitor.h"
+#include "visitor/egcmathmlvisitor.h"
 
 class EgcUnaryNodeTestChild : public EgcUnaryNode
 {
