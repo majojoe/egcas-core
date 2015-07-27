@@ -37,7 +37,12 @@ include_directories(${mmlegcas_BINARY_DIR})
 #this is for showing up abstract interfaces and other sources in the IDE
 add_custom_target(egCAS_other_srcs ALL SOURCES
         structural/entities/egcabstractformulaentity.h
+        structural/entities/egcabstracttextentity.h
+        structural/entities/egcabstractpixmapentity.h
+        structural/entities/creator/egcabstractentitycreator.h
         view/egcabstractformulaitem.h
+        view/egcabstracttextitem.h
+        view/egcabstractpixmapitem.h
         casKernel/parser/scanner.l
         casKernel/parser/parser.y
 )
@@ -92,6 +97,7 @@ set(egCAS_SOURCES
         structural/entities/egctextentity.cpp
         structural/entities/egcpixmapentity.cpp
         structural/document/egcdocument.cpp
+        structural/entities/creator/egcformulacreator.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS ui/mainwindow.ui)

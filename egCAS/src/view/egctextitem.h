@@ -30,11 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCTEXTITEM_H
 
 #include <QGraphicsTextItem>
-#include "egcasiteminterface.h"
+#include "egcabstracttextitem.h"
 
 class EgcTextEntity;
 
-class EgcTextItem: public QGraphicsTextItem, public EgcasItemInterface
+class EgcTextItem: public QGraphicsTextItem, public EgcAbstractTextItem
 {
 public:
         ///std constructor
@@ -58,6 +58,39 @@ public:
          * @param point the position to set.
          */
         virtual void setPosition( QPointF point) override;
+        /**
+         * @brief set the generic font size for all texts (changes the overall font size of all texts in a document).
+         * If the font size of a specific text should be changed, use the function setFontSize.
+         * @param size the font size in points
+         */
+        virtual void setGenericFontSize(int size) override;
+        /**
+         * @brief getBaseFontSize returns the base font size of all texts in a document
+         * @return the base font size of all texts
+         */
+        virtual int getGenericFontSize(void) override;
+        /**
+         * @brief set the font size for a text (changes only the font size of this text).
+         * If the overall font size of all texts should be changed, use the function setBaseFontSize.
+         * @param size the font size in points
+         */
+        virtual void setTextFont(QFont font) override;
+        /**
+         * @brief getFontSize returns the font size of the current text
+         * @return the font size of the current text
+         */
+        virtual QFont getFont(void) override;
+        /**
+         * @brief setText set the given text
+         * @param text the text to set
+         */
+        virtual void setText(QString text) override;
+        /**
+         * @brief getText returns the text of the associated item
+         * @return the text of this item
+         */
+        virtual QString getText(void) override;
+
 protected:
         /**
          * @brief init initializes a new instance of this class (used in constructor)

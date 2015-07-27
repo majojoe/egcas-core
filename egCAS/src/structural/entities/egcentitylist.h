@@ -33,6 +33,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QList>
 #include "egcentity.h"
 
+class EgcDocument;
+
 /**
  * @brief The EgcEntityList class is a list that holds formulas, text and picture items
  */
@@ -49,9 +51,8 @@ public:
         /**
          * @brief addEntity add a entity (formula, text or picture) to the list. The list takes ownership of the entity
          * @param entity a pointer to the entity to add
-         * @return true if everything worked well, false otherwise
          */
-        bool addEntity(EgcEntity* entity);
+        void addEntity(EgcEntity* entity);
         /**
          * @brief deleteEntity removes the given entity from the list and deletes it (since the list has the ownership).
          * @param entity the entity to delete
@@ -75,6 +76,11 @@ public:
          * @return nullptr if the end is reached, otherwise the next element in the list.
          */
         EgcEntity* next(void);
+        /**
+         * @brief getDocument returns a pointer to the document this list is in (as child or subchild)
+         * @return a pointer to the document
+         */
+        EgcDocument* getDocument(void);
 private:
         QList<EgcEntity*> m_list;                ///< holds a bunch of entities of a document
         int m_index;

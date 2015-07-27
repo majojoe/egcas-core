@@ -12,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of egCAS nor the names of its
+* Neither the name of the egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -27,71 +27,20 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include "egcentitylist.h"
+#ifndef EGCABSTRACTTEXTENTITY_H
+#define EGCABSTRACTTEXTENTITY_H
 
-EgcEntityList::EgcEntityList() : m_index(0)
+class EgcAbstractTextItem;
+
+class EgcAbstractTextEntity
 {
-}
+public:
+        virtual ~EgcAbstractTextEntity() {}
+        /**
+         * @brief setItem set the formula item that is associated with this entity
+         * @param item the item to set (can also be a nullptr)
+         */
+        virtual void setItem(EgcAbstractTextItem* item) = 0;
+};
 
-EgcEntityList::~EgcEntityList()
-{
-        EgcEntity* i;
-        foreach (i, m_list) {
-                delete i;
-        }
-}
-
-void EgcEntityList::sort(void)
-{
-        qSort(m_list);
-}
-
-void EgcEntityList::addEntity(EgcEntity* entity)
-{
-        m_list.append(entity);
-        sort();
-}
-
-bool EgcEntityList::deleteEntity(EgcEntity* entity)
-{
-        int i = m_list.indexOf(entity);
-        if (i > 0) {
-                delete m_list.takeAt(i);
-        }
-}
-
-EgcEntity* EgcEntityList::takeEntity(EgcEntity* entity)
-{
-        EgcEntity* retval = nullptr;
-
-        int i = m_list.indexOf(entity);
-        if (i > 0) {
-                retval = m_list.takeAt(i);
-        }
-
-        return retval;
-}
-
-void EgcEntityList::toStart(void)
-{
-        m_index = 0;
-}
-
-EgcEntity* EgcEntityList::next(void)
-{
-        EgcEntity* retval = nullptr;
-
-        if (m_index >= 0 && m_index < m_list.count()) {
-                retval = m_list.at(m_index);
-                m_index++;
-                if (m_index >= m_list.count())
-                        m_index = -1;
-        }
-
-        return retval;
-}
-
-EgcDocument* EgcEntityList::getDocument(void)
-{
-#warning implement this
-}
+#endif // EGCABSTRACTTEXTENTITY_H

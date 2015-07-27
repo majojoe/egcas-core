@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include <QBuffer>
 #include "egcpixmapentity.h"
-#include "egcpixmapitem.h"
+#include "egcabstractpixmapitem.h"
 
 EgcPixmapEntity::EgcPixmapEntity(void) : m_item(nullptr)
 {
@@ -50,7 +50,7 @@ EgcEntityType EgcPixmapEntity::getEntityType(void) const
 QPointF EgcPixmapEntity::getPositon(void) const
 {
         if (m_item)
-                return m_item->pos();
+                return m_item->getPosition();
         else
                 return QPointF(0.0,0.0);
 }
@@ -72,7 +72,7 @@ QByteArray EgcPixmapEntity::getB64Encoded(void) const
         QByteArray bytes;
         QBuffer buffer(&bytes);
         buffer.open(QIODevice::WriteOnly);
-        m_item->pixmap().save(&buffer, "PNG");
+        m_item->getPixmap().save(&buffer, "PNG");
 
         return bytes.toBase64();
 }
@@ -82,7 +82,7 @@ QSizeF EgcPixmapEntity::getSize(void) const
         if (!m_item)
                 return QSizeF(0.0, 0.0);
 
-        return m_item->boundingRect().size();
+        return m_item->getSize();
 }
 
 void EgcPixmapEntity::setSize(QSizeF size)
@@ -90,14 +90,14 @@ void EgcPixmapEntity::setSize(QSizeF size)
         if (!m_item)
                 return;
 
-        QSizeF tmp = m_item->boundingRect().size();
+        QSizeF tmp = m_item->getSize();
         qreal xFactor = size.width()/tmp.width();
         qreal yFactor = size.height()/tmp.height();
         qreal factor = qMin(xFactor, yFactor);
-        m_item->setScale(factor);
+        m_item->setScaleFactor(factor);
 }
 
-void EgcPixmapEntity::setItem(EgcPixmapItem* item)
+void EgcPixmapEntity::setItem(EgcAbstractPixmapItem* item)
 {
         m_item = item;
 }
@@ -107,7 +107,7 @@ void EgcPixmapEntity::setPosition(QPointF pos)
         if (!m_item)
                 return;
 
-        m_item->setPos(pos);
+        m_item->setPosition(pos);
 }
 
 void EgcPixmapEntity::setFilePath(QString file)

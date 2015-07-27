@@ -32,11 +32,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QGraphicsPixmapItem>
 #include <QScopedPointer>
 #include "egcasiteminterface.h"
+#include "egcabstractpixmapitem.h"
 
 class ResizeHandle;
 class EgcPixmapEntity;
 
-class EgcPixmapItem: public QGraphicsPixmapItem, public EgcasItemInterface
+class EgcPixmapItem: public QGraphicsPixmapItem, public EgcAbstractPixmapItem
 {
 public:
         ///std constructor
@@ -59,7 +60,28 @@ public:
          * @brief setPosItemIface needs to be overwritten by subclasses to set the position of the item
          * @param point the position to set.
          */
-        virtual void setPosition( QPointF point) override;
+        virtual void setPosition( QPointF point) override;        
+        /**
+         * @brief setScaleFactor set the scale factor of the pixmap
+         * @param scaleFactor the scale factor to set
+         */
+        virtual void setScaleFactor(qreal scaleFactor) override;
+        /**
+         * @brief getSize returns the size of the pixmap
+         * @return the size of the pixmap as QSize
+         */
+        virtual QSize getSize(void) override;
+        /**
+         * @brief setPixmap sets the pixmap to use for the item
+         * @param pixmap the pixmap to set
+         */
+        virtual void setPixmap(QPixmap pixmap) override;
+        /**
+         * @brief getPixmap returns the pixmap of the current item
+         * @return the pixmap of the current item
+         */
+        virtual QPixmap getPixmap(void) override;
+
 protected:
         /**
          * @brief init initializes a new instance of this class (used in constructor)

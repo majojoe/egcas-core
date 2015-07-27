@@ -38,7 +38,18 @@ class EgCasScene;
 class EgcDocument
 {
 public:
+        ///std constructor
         EgcDocument();
+        /**
+         * @brief getEntityList get a pointer to the top level entity list of the document
+         * @return a pointer to the Entity list
+         */
+        EgcEntityList* getEntityList(void);
+        /**
+         * @brief getScene get a pointer to the scene contained by the document
+         * @return a pointer to the scene of the document
+         */
+        EgCasScene* getScene(void);
 private:
         QScopedPointer<EgcEntityList> m_list;       ///< the list with the items to the text, pixmap and formual items
         QScopedPointer<EgCasScene> m_scene;         ///< the scene for rendering all items

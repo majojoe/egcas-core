@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCASSCENE_H
 
 #include <QGraphicsScene>
+#include "entities/egcabstractformulaentity.h"
 
 class EgcFormulaItem;
 
@@ -68,8 +69,15 @@ public:
          * @param size the font size in pixel of the forumla
          * @param point the point where (position) to add the formula on the scene
          * @return a pointer to the formula added
-         */
+         */        
         EgcFormulaItem * addFormula(const QString & formula, int size, QPointF point);
+        /**
+         * @brief addFormula  add a formula to the graphicsscene
+         * @param formula the formula entity to be rendered
+         * @param point  the point where (position) to add the formula on the scene
+         * @return a pointer to the formula added
+         */
+        EgcFormulaItem* addFormula(EgcAbstractFormulaEntity& formula, QPointF point = QPointF(0.0,0.0));
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
 private:

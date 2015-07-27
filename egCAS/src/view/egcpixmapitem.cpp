@@ -96,3 +96,22 @@ void EgcPixmapItem::setPosition( QPointF point)
         setPos(point);
 }
 
+void EgcPixmapItem::setScaleFactor(qreal scaleFactor)
+{
+        setScale(scaleFactor);
+}
+
+QSize EgcPixmapItem::getSize(void)
+{
+        boundingRect().size();
+}
+
+void EgcPixmapItem::setPixmap(QPixmap pixmap)
+{
+        setPixmap(pixmap);
+}
+
+QPixmap EgcPixmapItem::getPixmap(void)
+{
+        return pixmap();
+}

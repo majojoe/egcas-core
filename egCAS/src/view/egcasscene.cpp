@@ -123,3 +123,17 @@ EgcFormulaItem * EgCasScene::addFormula(const QString & formula, int size, QPoin
 
         return formulaItem;
 }
+
+EgcFormulaItem* EgCasScene::addFormula(EgcAbstractFormulaEntity& formula, QPointF point)
+{
+        QScopedPointer<EgcFormulaItem> formulaItem(new EgcFormulaItem(point));
+        if (formulaItem.isNull())
+                return nullptr;
+
+        formulaItem->setEntity(&formula);
+        formula.setItem(formulaItem.data());
+
+        addItem(formulaItem.data());
+
+        return formulaItem.take();
+}

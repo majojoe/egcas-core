@@ -94,3 +94,32 @@ void EgcTextItem::setPosition( QPointF point)
         setPos(point);
 }
 
+void EgcTextItem::setGenericFontSize(int size)
+{
+#warning implement this
+}
+
+int EgcTextItem::getGenericFontSize(void)
+{
+#warning implement this
+}
+
+void EgcTextItem::setTextFont(QFont font)
+{
+#warning implement this
+}
+
+QFont EgcTextItem::getFont(void)
+{
+        return font();
+}
+
+void EgcTextItem::setText(QString text)
+{
+        setPlainText(text);
+}
+
+QString EgcTextItem::getText(void)
+{
+        return toPlainText();
+}

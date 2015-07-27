@@ -30,7 +30,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcasscene.h"
 #include "../entities/egcentitylist.h"
 #include "egcdocument.h"
+#include "entities/egcentitylist.h"
+#include "view/egcasscene.h"
 
-EgcDocument::EgcDocument()
+EgcDocument::EgcDocument() : m_list(new EgcEntityList()), m_scene(new EgCasScene())
 {
+}
+
+EgcEntityList* EgcDocument::getEntityList(void)
+{
+        return m_list.data();
+}
+
+EgCasScene* EgcDocument::getScene(void)
+{
+        return m_scene.data();
 }

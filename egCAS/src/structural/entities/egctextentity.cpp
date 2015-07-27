@@ -46,7 +46,7 @@ EgcEntityType EgcTextEntity::getEntityType(void) const
 QPointF EgcTextEntity::getPositon(void) const
 {
         if (m_item)
-                return m_item->pos();
+                return m_item->getPosition();
         else
                 return QPointF(0.0,0.0);
 }
@@ -56,7 +56,7 @@ QString EgcTextEntity::getText(void) const
         if (!m_item)
                 return "";
 
-        m_item->toPlainText();
+        m_item->getText();
 }
 
 QFont EgcTextEntity::getFont(void) const
@@ -64,10 +64,10 @@ QFont EgcTextEntity::getFont(void) const
         if (!m_item)
                 return QFont();
 
-        return m_item->font();
+        return m_item->getFont();
 }
 
-void EgcTextEntity::setItem(EgcTextItem* item)
+void EgcTextEntity::setItem(EgcAbstractTextItem* item)
 {
         m_item = item;
 }
@@ -77,7 +77,7 @@ void EgcTextEntity::setPosition(QPointF pos)
         if (!m_item)
                 return;
 
-        m_item->setPos(pos);
+        m_item->setPosition(pos);
 }
 
 void EgcTextEntity::setText(QString text)
@@ -85,7 +85,7 @@ void EgcTextEntity::setText(QString text)
         if (!m_item)
                 return;
 
-        m_item->setPlainText(text);
+        m_item->setText(text);
 }
 
 void EgcTextEntity::setFont(QFont font)
@@ -93,5 +93,5 @@ void EgcTextEntity::setFont(QFont font)
         if (!m_item)
                 return;
 
-        m_item->setFont(font);
+        m_item->setTextFont(font);
 }

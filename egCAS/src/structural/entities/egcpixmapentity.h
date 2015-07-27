@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcentity.h"
 
 class QPointF;
-class EgcPixmapItem;
+class EgcAbstractPixmapItem;
 class QByteArray;
 class QSizeF;
 
@@ -94,9 +94,9 @@ public:
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)
          */
-        void setItem(EgcPixmapItem* item);
+        void setItem(EgcAbstractPixmapItem* item);
 private:
-        EgcPixmapItem *m_item;                  ///< pointer to QGraphicsitem hold by scene
+        EgcAbstractPixmapItem *m_item;          ///< pointer to QGraphicsitem hold by scene
         bool m_isEmbedded;                      ///< determines if pixmap is embedded in document, or load by pathname
         QString m_path;                         ///< holds the path to the pixmap if m_isEmbedded is false
 };

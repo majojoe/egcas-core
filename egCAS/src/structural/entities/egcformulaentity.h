@@ -211,7 +211,7 @@ public:
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)
          */
-        void setItem(EgcAbstractFormulaItem* item);
+        void setItem(EgcAbstractFormulaItem* item) override;
         /**
          * @brief updateView update the view with the new mathml representation if anything changes
          */

@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QString>
 #include "egcentity.h"
+#include "egcabstracttextitem.h"
 
 class QPointF;
 class EgcTextItem;
@@ -87,10 +88,10 @@ public:
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)
          */
-        void setItem(EgcTextItem* item);
+        void setItem(EgcAbstractTextItem* item);
 
 private:
-        EgcTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene
+        EgcAbstractTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene
 };
 
 #endif // EGCTEXTENTITY_H

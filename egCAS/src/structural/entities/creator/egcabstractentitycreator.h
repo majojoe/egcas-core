@@ -12,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of egCAS nor the names of its
+* Neither the name of the egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -27,71 +27,24 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include "egcentitylist.h"
+#ifndef EGCABSTRACTENTITYCREATOR_H
+#define EGCABSTRACTENTITYCREATOR_H
 
-EgcEntityList::EgcEntityList() : m_index(0)
+#include <QPointF>
+class EgcEntity;
+class EgcEntityList;
+
+class EgcAbstractEntityCreator
 {
-}
+public:
+        virtual ~EgcAbstractEntityCreator() {}
+        /**
+         * @brief create create a entity including all necessary setup in the scene (creating scene items etc.)
+         * @param list the list where to insert the entity
+         * @param point the point where to show the entity on the scene
+         * @return the created entity
+         */
+        virtual EgcEntity* create(EgcEntityList* list, QPointF point) = 0;
+};
 
-EgcEntityList::~EgcEntityList()
-{
-        EgcEntity* i;
-        foreach (i, m_list) {
-                delete i;
-        }
-}
-
-void EgcEntityList::sort(void)
-{
-        qSort(m_list);
-}
-
-void EgcEntityList::addEntity(EgcEntity* entity)
-{
-        m_list.append(entity);
-        sort();
-}
-
-bool EgcEntityList::deleteEntity(EgcEntity* entity)
-{
-        int i = m_list.indexOf(entity);
-        if (i > 0) {
-                delete m_list.takeAt(i);
-        }
-}
-
-EgcEntity* EgcEntityList::takeEntity(EgcEntity* entity)
-{
-        EgcEntity* retval = nullptr;
-
-        int i = m_list.indexOf(entity);
-        if (i > 0) {
-                retval = m_list.takeAt(i);
-        }
-
-        return retval;
-}
-
-void EgcEntityList::toStart(void)
-{
-        m_index = 0;
-}
-
-EgcEntity* EgcEntityList::next(void)
-{
-        EgcEntity* retval = nullptr;
-
-        if (m_index >= 0 && m_index < m_list.count()) {
-                retval = m_list.at(m_index);
-                m_index++;
-                if (m_index >= m_list.count())
-                        m_index = -1;
-        }
-
-        return retval;
-}
-
-EgcDocument* EgcEntityList::getDocument(void)
-{
-#warning implement this
-}
+#endif // EGCABSTRACTENTITYCREATOR_H

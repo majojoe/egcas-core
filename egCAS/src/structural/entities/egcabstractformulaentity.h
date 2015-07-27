@@ -31,12 +31,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCABSTRACTFORMULAENTITY_H
 
 class QString;
+class EgcAbstractFormulaItem;
 
 class EgcAbstractFormulaEntity
 {
 public:
         virtual ~EgcAbstractFormulaEntity() {}
+        /**
+         * @brief getMathMlCode returns the mathMl representation for this formula
+         * @return the mathMl representation of this formula as a string
+         */
         virtual QString getMathMlCode(void) = 0;
+        /**
+         * @brief setItem set the formula item that is associated with this entity
+         * @param item the item to set (can also be a nullptr)
+         */
+        virtual void setItem(EgcAbstractFormulaItem* item) = 0;
+
 };
 
 #endif // EGCABSTRACTFORMULAENTITY_H
