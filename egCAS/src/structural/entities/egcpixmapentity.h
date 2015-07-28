@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QString>
 #include "egcentity.h"
+#include "egcabstractpixmapentity.h"
 
 class QPointF;
 class EgcAbstractPixmapItem;
@@ -41,7 +42,7 @@ class QSizeF;
 /**
  * @brief The EgcPixmapEntity class is a clas for maintaining pixmaps
  */
-class EgcPixmapEntity : public EgcEntity
+class EgcPixmapEntity : public EgcEntity, public EgcAbstractPixmapEntity
 {
 public:
         /**

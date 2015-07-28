@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCABSTRACTTEXTITEM_H
 
 #include <QString>
+#include <QFont>
 #include "egcasiteminterface.h"
 
 class EgcAbstractTextItem : public EgcasItemInterface

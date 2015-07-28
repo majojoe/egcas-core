@@ -27,23 +27,23 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCFORMULACREATOR_H
-#define EGCFORMULACREATOR_H
+#ifndef EGCPIXMAPCREATOR_H
+#define EGCPIXMAPCREATOR_H
 
 #include "egcabstractentitycreator.h"
 
-class EgcFormulaCreator : public EgcAbstractEntityCreator
+class EgcPixmapCreator : public EgcAbstractEntityCreator
 {
 public:
-        EgcFormulaCreator();
-        virtual ~EgcFormulaCreator();
+        EgcPixmapCreator();
+        virtual ~EgcPixmapCreator();
         /**
          * @brief create create a entity including all necessary setup in the scene (creating scene items etc.)
          * @param list the list where to insert the entity
          * @param point the point where to show the entity on the scene
          * @return the created entity
          */
-        virtual EgcEntity* create(EgcEntityList* list, QPointF point);
+        virtual EgcEntity* create(EgcEntityList* list, QPointF point) override;
 };
 
-#endif // EGCFORMULACREATOR_H
+#endif // EGCPIXMAPCREATOR_H

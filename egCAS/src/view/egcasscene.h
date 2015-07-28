@@ -31,8 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QGraphicsScene>
 #include "entities/egcabstractformulaentity.h"
+#include "entities/egcabstractpixmapentity.h"
+#include "entities/egcabstracttextentity.h"
 
 class EgcFormulaItem;
+class EgcPixmapItem;
+class EgcTextItem;
 
 class EgCasScene : public QGraphicsScene
 {
@@ -58,11 +62,25 @@ public:
          */
         QGraphicsTextItem * addText(const QString & text, const QFont & font = QFont());
         /**
+         * @brief addText add a text to the graphicsscene
+         * @param text the text entity to be rendered
+         * @param point  the point where (position) to add the text on the scene
+         * @return a pointer to the text added
+         */
+        EgcTextItem* addText(EgcAbstractTextEntity& text, QPointF point = QPointF(0.0,0.0));
+        /**
          * @brief addPixmap add a pixmap to the scene (overrides the standard function and adds a egcaspixmapitem)
          * @param pixmap the pixmap to add to the scene
          * @return a pointer to the pixmap item
          */
         QGraphicsPixmapItem * addPixmap(const QPixmap & pixmap);
+        /**
+         * @brief addPixmap  add a pixmap to the graphicsscene
+         * @param pixmap the pixmap entity to be rendered
+         * @param point  the point where (position) to add the pixmap on the scene
+         * @return a pointer to the pixmap added
+         */
+        EgcPixmapItem* addPixmap(EgcAbstractPixmapEntity& pixmap, QPointF point = QPointF(0.0,0.0));
         /**
          * @brief addFormula add a formula to the graphicsscene
          * @param formula the formula to be rendered

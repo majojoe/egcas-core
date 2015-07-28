@@ -137,3 +137,13 @@ EgcFormulaItem* EgCasScene::addFormula(EgcAbstractFormulaEntity& formula, QPoint
 
         return formulaItem.take();
 }
+
+EgcTextItem* EgCasScene::addText(EgcAbstractTextEntity& text, QPointF point)
+{
+#warning implement this
+}
+
+EgcPixmapItem* EgCasScene::addPixmap(EgcAbstractPixmapEntity& pixmap, QPointF point)
+{
+#warning implement this
+}

@@ -98,6 +98,8 @@ set(egCAS_SOURCES
         structural/entities/egcpixmapentity.cpp
         structural/document/egcdocument.cpp
         structural/entities/creator/egcformulacreator.cpp
+        structural/entities/creator/egctextcreator.cpp
+        structural/entities/creator/egcpixmapcreator.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS ui/mainwindow.ui)

@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include "egcentity.h"
 #include "egcabstracttextitem.h"
+#include "egcabstracttextentity.h"
 
 class QPointF;
 class EgcTextItem;
@@ -40,7 +41,7 @@ class EgcTextItem;
 /**
  * @brief The EgcTextEntity class is a class for handling text entities
  */
-class EgcTextEntity : public EgcEntity
+class EgcTextEntity : public EgcEntity, public EgcAbstractTextEntity
 {
 public:
         /**
