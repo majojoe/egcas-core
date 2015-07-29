@@ -140,10 +140,29 @@ EgcFormulaItem* EgCasScene::addFormula(EgcAbstractFormulaEntity& formula, QPoint
 
 EgcTextItem* EgCasScene::addText(EgcAbstractTextEntity& text, QPointF point)
 {
-#warning implement this
+        QScopedPointer<EgcTextItem> item(new EgcTextItem(point));
+        if (item.isNull())
+                return nullptr;
+
+        item->setEntity(&text);
+        text.setItem(item.data());
+
+        addItem(item.data());
+        item->setFont(text.getGenericFont());
+
+        return item.take();
 }
 
 EgcPixmapItem* EgCasScene::addPixmap(EgcAbstractPixmapEntity& pixmap, QPointF point)
 {
-#warning implement this
+        QScopedPointer<EgcPixmapItem> item(new EgcPixmapItem(point));
+        if (item.isNull())
+                return nullptr;
+
+        item->setEntity(&pixmap);
+        pixmap.setItem(item.data());
+
+        addItem(item.data());
+
+        return item.take();
 }

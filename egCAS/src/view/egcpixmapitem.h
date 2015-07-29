@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcabstractpixmapitem.h"
 
 class ResizeHandle;
-class EgcPixmapEntity;
+class EgcAbstractPixmapEntity;
 
 class EgcPixmapItem: public QGraphicsPixmapItem, public EgcAbstractPixmapItem
 {
@@ -44,13 +44,15 @@ public:
         explicit EgcPixmapItem(QGraphicsItem *parent = 0);
         ///constructor for pixmap item
         EgcPixmapItem(const QPixmap & pixmap, QGraphicsItem * parent = 0);
+        /// point constructor
+        explicit EgcPixmapItem(const QPointF point, QGraphicsItem *parent = 0);
         ///std destructor
         virtual ~EgcPixmapItem();
         /**
          * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
          * @param entity a pointer to the entity that is associated with this object
          */
-        void setEntity(EgcPixmapEntity* entity);
+        void setEntity(EgcAbstractPixmapEntity* entity);
         /**
          * @brief getPosItemIface needs to be overwritten by subclasses to get the position of the item
          * @return the Position of the item
@@ -113,7 +115,7 @@ private:
         QScopedPointer<ResizeHandle> m_resizeHandle;
         bool m_childSelectionState;
         bool m_resizeHandleAdded;
-        EgcPixmapEntity* m_entity;                      ///< pointer to pixmap entity
+        EgcAbstractPixmapEntity* m_entity;                      ///< pointer to pixmap entity
 };
 
 #endif // EgcPixmapItem_H

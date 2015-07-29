@@ -40,6 +40,11 @@ EgcTextItem::EgcTextItem(const QString & text, QGraphicsItem * parent) : QGraphi
         init();
 }
 
+EgcTextItem::EgcTextItem(const QPointF point, QGraphicsItem *parent) : QGraphicsTextItem(parent)
+{
+        init();
+        setPos(point);
+}
 
 void EgcTextItem::init()
 {
@@ -79,7 +84,7 @@ void EgcTextItem::focusOutEvent(QFocusEvent *event)
         QGraphicsItem::focusOutEvent(event);
 }
 
-void EgcTextItem::setEntity(EgcTextEntity* entity)
+void EgcTextItem::setEntity(EgcAbstractTextEntity* entity)
 {
         m_entity = entity;
 }
@@ -94,22 +99,12 @@ void EgcTextItem::setPosition( QPointF point)
         setPos(point);
 }
 
-void EgcTextItem::setGenericFontSize(int size)
+void EgcTextItem::setTextFont(QFont& font)
 {
-#warning implement this
+        setFont(font);
 }
 
-int EgcTextItem::getGenericFontSize(void)
-{
-#warning implement this
-}
-
-void EgcTextItem::setTextFont(QFont font)
-{
-#warning implement this
-}
-
-QFont EgcTextItem::getFont(void)
+QFont EgcTextItem::getFont(void) const
 {
         return font();
 }

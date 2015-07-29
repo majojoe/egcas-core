@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCABSTRACTTEXTENTITY_H
 
 class EgcAbstractTextItem;
+class QFont;
 
 class EgcAbstractTextEntity
 {
@@ -41,6 +42,11 @@ public:
          * @param item the item to set (can also be a nullptr)
          */
         virtual void setItem(EgcAbstractTextItem* item) = 0;
+        /**
+         * @brief getBaseFont returns the base font of all texts in a document
+         * @return the base font of all texts
+         */
+        virtual QFont& getGenericFont(void) = 0;
 };
 
 #endif // EGCABSTRACTTEXTENTITY_H

@@ -40,6 +40,12 @@ EgcPixmapItem::EgcPixmapItem(const QPixmap&pixmap, QGraphicsItem * parent) : QGr
         init();
 }
 
+EgcPixmapItem::EgcPixmapItem(const QPointF point, QGraphicsItem *parent) : QGraphicsPixmapItem(parent)
+{
+        init();
+        setPos(point);
+}
+
 EgcPixmapItem::~EgcPixmapItem()
 {        
 }
@@ -81,7 +87,7 @@ void EgcPixmapItem::mouseMoveEvent(QGraphicsSceneMouseEvent*event)
         m_resizeHandle->mouseMoveEventInfo();
 }
 
-void EgcPixmapItem::setEntity(EgcPixmapEntity* entity)
+void EgcPixmapItem::setEntity(EgcAbstractPixmapEntity* entity)
 {
         m_entity = entity;
 }

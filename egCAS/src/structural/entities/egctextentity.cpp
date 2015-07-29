@@ -30,6 +30,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egctextentity.h"
 #include "egctextitem.h"
 
+QFont EgcTextEntity::s_genericFont = QFont();
+
 EgcTextEntity::EgcTextEntity(void) : m_item(nullptr)
 {
 }
@@ -62,7 +64,7 @@ QString EgcTextEntity::getText(void) const
 QFont EgcTextEntity::getFont(void) const
 {
         if (!m_item)
-                return QFont();
+                return s_genericFont;
 
         return m_item->getFont();
 }
@@ -88,10 +90,20 @@ void EgcTextEntity::setText(QString text)
         m_item->setText(text);
 }
 
-void EgcTextEntity::setFont(QFont font)
+void EgcTextEntity::setFont(QFont& font)
 {
         if (!m_item)
                 return;
 
         m_item->setTextFont(font);
+}
+
+void EgcTextEntity::setGenericFont(QFont& font)
+{
+        s_genericFont = font;
+}
+
+QFont& EgcTextEntity::getGenericFont(void)
+{
+        return s_genericFont;
 }

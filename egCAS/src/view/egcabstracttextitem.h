@@ -42,27 +42,16 @@ public:
          */
         virtual ~EgcAbstractTextItem() {}
         /**
-         * @brief set the generic font size for all texts (changes the overall font size of all texts in a document).
-         * If the font size of a specific text should be changed, use the function setFontSize.
-         * @param size the font size in points
-         */
-        virtual void setGenericFontSize(int size) = 0;
-        /**
-         * @brief getBaseFontSize returns the base font size of all texts in a document
-         * @return the base font size of all texts
-         */
-        virtual int getGenericFontSize(void) = 0;
-        /**
          * @brief set the font size for a text (changes only the font size of this text).
          * If the overall font size of all texts should be changed, use the function setBaseFontSize.
          * @param font the font of the text item
          */
-        virtual void setTextFont(QFont font) = 0;
+        virtual void setTextFont(QFont& font) = 0;
         /**
          * @brief getFontSize returns the font size of the current text
          * @return the font size of the current text
          */
-        virtual QFont getFont(void) = 0;
+        virtual QFont getFont(void) const = 0;
         /**
          * @brief setText set the given text
          * @param text the text to set

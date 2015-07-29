@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 quint8 EgcFormulaItem::s_baseFontSize = 14;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
-    QGraphicsItem(parent), m_fontSize(0)
+    QGraphicsItem(parent), m_mathMlDoc(new EgMathMLDocument()), m_fontSize(0)
 {
         init();
         QGraphicsItem::setPos(QPointF(0.0, boundingRect().height()));
@@ -48,7 +48,7 @@ EgcFormulaItem::~EgcFormulaItem()
 }
 
 EgcFormulaItem::EgcFormulaItem(const QString &formula, QPointF point, int size, QGraphicsItem *parent) :
-        QGraphicsItem(parent)
+        QGraphicsItem(parent), m_mathMlDoc(new EgMathMLDocument())
 {
         init();
         setFormulaText(formula);
@@ -57,11 +57,10 @@ EgcFormulaItem::EgcFormulaItem(const QString &formula, QPointF point, int size, 
 }
 
 EgcFormulaItem::EgcFormulaItem(const QPointF point, QGraphicsItem *parent) :
-        QGraphicsItem(parent), m_fontSize(0)
+        QGraphicsItem(parent), m_mathMlDoc(new EgMathMLDocument()), m_fontSize(0)
 {
         init();
         QGraphicsItem::setPos(point);
-        QGraphicsItem::setPos(QPointF(0.0, boundingRect().height()));
 }
 
 void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

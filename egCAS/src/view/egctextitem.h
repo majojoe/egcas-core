@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QGraphicsTextItem>
 #include "egcabstracttextitem.h"
 
-class EgcTextEntity;
+class EgcAbstractTextEntity;
 
 class EgcTextItem: public QGraphicsTextItem, public EgcAbstractTextItem
 {
@@ -41,13 +41,15 @@ public:
         explicit EgcTextItem(QGraphicsItem *parent = 0);
         ///constructor for text message
         EgcTextItem(const QString & text, QGraphicsItem * parent = 0);
+        /// point constructor
+        explicit EgcTextItem(const QPointF point, QGraphicsItem *parent = 0);
         ///std destructor
         virtual ~EgcTextItem() { }
         /**
          * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
          * @param entity a pointer to the entity that is associated with this object
          */
-        void setEntity(EgcTextEntity* entity);
+        void setEntity(EgcAbstractTextEntity* entity);
         /**
          * @brief getPosItemIface needs to be overwritten by subclasses to get the position of the item
          * @return the Position of the item
@@ -59,27 +61,16 @@ public:
          */
         virtual void setPosition( QPointF point) override;
         /**
-         * @brief set the generic font size for all texts (changes the overall font size of all texts in a document).
-         * If the font size of a specific text should be changed, use the function setFontSize.
-         * @param size the font size in points
-         */
-        virtual void setGenericFontSize(int size) override;
-        /**
-         * @brief getBaseFontSize returns the base font size of all texts in a document
-         * @return the base font size of all texts
-         */
-        virtual int getGenericFontSize(void) override;
-        /**
          * @brief set the font size for a text (changes only the font size of this text).
          * If the overall font size of all texts should be changed, use the function setBaseFontSize.
          * @param size the font size in points
          */
-        virtual void setTextFont(QFont font) override;
+        virtual void setTextFont(QFont& font) override;
         /**
          * @brief getFontSize returns the font size of the current text
          * @return the font size of the current text
          */
-        virtual QFont getFont(void) override;
+        virtual QFont getFont(void) const override;
         /**
          * @brief setText set the given text
          * @param text the text to set
@@ -119,7 +110,7 @@ signals:
 
 private:
         Q_DISABLE_COPY(EgcTextItem)
-        EgcTextEntity* m_entity;        ///< pointer to text entity (no ownership)
+        EgcAbstractTextEntity* m_entity;        ///< pointer to text entity (no ownership)
 };
 
 #endif // EGCTEXTITEM_H

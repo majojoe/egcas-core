@@ -84,15 +84,28 @@ public:
          * @brief setFont set the font of this entity
          * @param font the font to set
          */
-        void setFont(QFont font);
+        void setFont(QFont& font);
         /**
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)
          */
         void setItem(EgcAbstractTextItem* item);
+        /**
+         * @brief set the generic font for all texts (changes the overall font of all texts in a document).
+         * If the font size of a specific text should be changed, use the function setFont.
+         * @param size the font in points
+         */
+        virtual void setGenericFont(QFont& font);
+        /**
+         * @brief getBaseFontSize returns the base font size of all texts in a document
+         * @return the base font size of all texts
+         */
+        virtual QFont& getGenericFont(void) override;
+
 
 private:
         EgcAbstractTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene
+        static QFont s_genericFont;                     ///< the generic font to use for all text entities
 };
 
 #endif // EGCTEXTENTITY_H
