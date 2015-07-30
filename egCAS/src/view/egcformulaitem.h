@@ -138,10 +138,6 @@ protected:
          */
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
         /**
-         * @brief init initializes a new instance of this class (used in constructor)
-         */
-        void init(void);
-        /**
          * @brief itemChange reimplements change function of QGraphicsItem to be able to realize a grid
          * @param change enum that describes state changes that are notified
          * @param value the value that has changed

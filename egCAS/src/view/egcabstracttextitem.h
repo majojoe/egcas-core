@@ -46,7 +46,7 @@ public:
          * If the overall font size of all texts should be changed, use the function setBaseFontSize.
          * @param font the font of the text item
          */
-        virtual void setTextFont(QFont& font) = 0;
+        virtual void setFont(const QFont& font) = 0;
         /**
          * @brief getFontSize returns the font size of the current text
          * @return the font size of the current text

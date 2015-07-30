@@ -90,12 +90,12 @@ void EgcTextEntity::setText(QString text)
         m_item->setText(text);
 }
 
-void EgcTextEntity::setFont(QFont& font)
+void EgcTextEntity::setFont(const QFont& font)
 {
         if (!m_item)
                 return;
 
-        m_item->setTextFont(font);
+        m_item->setFont(font);
 }
 
 void EgcTextEntity::setGenericFont(QFont& font)

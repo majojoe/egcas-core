@@ -32,28 +32,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcPixmapItem::EgcPixmapItem(QGraphicsItem*parent) : QGraphicsPixmapItem(parent)
 {
-        init();
+        m_resizeHandle.reset(new ResizeHandle(this, QSizeF(8.0, 8.0)));
+        setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
 }
 
-EgcPixmapItem::EgcPixmapItem(const QPixmap&pixmap, QGraphicsItem * parent) : QGraphicsPixmapItem(pixmap, parent)
+EgcPixmapItem::EgcPixmapItem(const QPixmap&pixmap, QGraphicsItem * parent) : EgcPixmapItem{parent}
 {
-        init();
+        QGraphicsPixmapItem::setPixmap(pixmap);
 }
 
-EgcPixmapItem::EgcPixmapItem(const QPointF point, QGraphicsItem *parent) : QGraphicsPixmapItem(parent)
+EgcPixmapItem::EgcPixmapItem(const QPointF point, QGraphicsItem *parent) : EgcPixmapItem{parent}
 {
-        init();
-        setPos(point);
+        QGraphicsPixmapItem::setPos(point);
 }
 
 EgcPixmapItem::~EgcPixmapItem()
 {        
-}
-
-void EgcPixmapItem::init()
-{
-        m_resizeHandle.reset(new ResizeHandle(this, QSizeF(8.0, 8.0)));
-        setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
 }
 
 QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -114,7 +108,7 @@ QSize EgcPixmapItem::getSize(void)
 
 void EgcPixmapItem::setPixmap(QPixmap pixmap)
 {
-        setPixmap(pixmap);
+        QGraphicsPixmapItem::setPixmap(pixmap);
 }
 
 QPixmap EgcPixmapItem::getPixmap(void)

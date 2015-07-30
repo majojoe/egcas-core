@@ -36,10 +36,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 quint8 EgcFormulaItem::s_baseFontSize = 14;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
-    QGraphicsItem(parent), m_mathMlDoc(new EgMathMLDocument()), m_fontSize(0)
+    QGraphicsItem{parent}, m_fontSize{0}
 {
-        init();
-        QGraphicsItem::setPos(QPointF(0.0, boundingRect().height()));
+        setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
+        m_fontSize = 0;
+        m_mathMlDoc.reset(new EgMathMLDocument());
+        m_mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
 }
 
 EgcFormulaItem::~EgcFormulaItem()
@@ -48,18 +50,16 @@ EgcFormulaItem::~EgcFormulaItem()
 }
 
 EgcFormulaItem::EgcFormulaItem(const QString &formula, QPointF point, int size, QGraphicsItem *parent) :
-        QGraphicsItem(parent), m_mathMlDoc(new EgMathMLDocument())
+        EgcFormulaItem{parent}
 {
-        init();
         setFormulaText(formula);
         QGraphicsItem::setPos(point);
         setFontSize(size);
 }
 
 EgcFormulaItem::EgcFormulaItem(const QPointF point, QGraphicsItem *parent) :
-        QGraphicsItem(parent), m_mathMlDoc(new EgMathMLDocument()), m_fontSize(0)
+        EgcFormulaItem{parent}
 {
-        init();
         QGraphicsItem::setPos(point);
 }
 
@@ -125,14 +125,6 @@ void EgcFormulaItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 {
         //update();
         QGraphicsItem::mouseReleaseEvent(event);
-}
-
-void EgcFormulaItem::init()
-{
-        setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
-        m_fontSize = 0;
-        m_mathMlDoc.reset(new EgMathMLDocument());
-        m_mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
 }
 
 QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &value)

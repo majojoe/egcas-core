@@ -32,23 +32,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcTextItem::EgcTextItem(QGraphicsItem*parent) : QGraphicsTextItem(parent)
 {
-        init();
-}
-
-EgcTextItem::EgcTextItem(const QString & text, QGraphicsItem * parent) : QGraphicsTextItem(text, parent)
-{
-        init();
-}
-
-EgcTextItem::EgcTextItem(const QPointF point, QGraphicsItem *parent) : QGraphicsTextItem(parent)
-{
-        init();
-        setPos(point);
-}
-
-void EgcTextItem::init()
-{
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
+}
+
+EgcTextItem::EgcTextItem(const QString & text, QGraphicsItem * parent) : EgcTextItem{parent}
+{
+        QGraphicsTextItem::setPlainText(text);
+}
+
+EgcTextItem::EgcTextItem(const QPointF point, QGraphicsItem *parent) : EgcTextItem{parent}
+{
+        QGraphicsTextItem::setPos(point);
 }
 
 QVariant EgcTextItem::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -99,9 +93,9 @@ void EgcTextItem::setPosition( QPointF point)
         setPos(point);
 }
 
-void EgcTextItem::setTextFont(QFont& font)
+void EgcTextItem::setFont(const QFont& font)
 {
-        setFont(font);
+        QGraphicsTextItem::setFont(font);
 }
 
 QFont EgcTextItem::getFont(void) const

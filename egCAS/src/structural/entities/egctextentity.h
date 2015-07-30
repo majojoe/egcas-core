@@ -84,7 +84,7 @@ public:
          * @brief setFont set the font of this entity
          * @param font the font to set
          */
-        void setFont(QFont& font);
+        void setFont(const QFont& font);
         /**
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)

@@ -65,7 +65,7 @@ public:
          * If the overall font size of all texts should be changed, use the function setBaseFontSize.
          * @param size the font size in points
          */
-        virtual void setTextFont(QFont& font) override;
+        virtual void setFont(const QFont& font) override;
         /**
          * @brief getFontSize returns the font size of the current text
          * @return the font size of the current text
@@ -83,10 +83,6 @@ public:
         virtual QString getText(void) override;
 
 protected:
-        /**
-         * @brief init initializes a new instance of this class (used in constructor)
-         */
-        void init(void);
         /**
          * @brief itemChange reimplements change function of QGraphicsItem to be able to realize a grid
          * @param change enum that describes state changes that are notified
