@@ -12,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of egCAS nor the names of its
+* Neither the name of the egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -27,50 +27,31 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include "egcasscene.h"
-#include "../entities/egcentitylist.h"
-#include "egcdocument.h"
-#include "entities/egcentitylist.h"
-#include "view/egcasscene.h"
+#ifndef EGCABSTRACTENTITYLIST_H
+#define EGCABSTRACTENTITYLIST_H
 
-EgcDocument::EgcDocument() : m_list(new EgcEntityList()), m_scene(new EgCasScene())
+class EgcDocument;
+
+class EgcAbstractEntityList
 {
-}
+public:
+        virtual ~EgcAbstractEntityList() {}
+        /**
+         * @brief getParent returns the parent of the current list
+         * @return the parent
+         */
+        virtual EgcAbstractEntityList* getParent(void) = 0;
+        /**
+         * @brief getDocument returns the document that contains the current list
+         * @return the document
+         */
+        virtual EgcDocument* getDocument(void) = 0;
+};
 
-EgcEntityList* EgcDocument::getEntityList(void)
-{
-        return m_list.data();
-}
+#endif // EGCABSTRACTENTITYLIST_H
 
-EgCasScene* EgcDocument::getScene(void)
-{
-        return m_scene.data();
-}
 
-EgcAbstractEntityList* EgcDocument::getParent(void)
-{
-        return nullptr;
-}
 
-EgcDocument* EgcDocument::getDocument(void)
-{
-        return this;
-}
 
-EgcEntity* EgcDocument::createEntity(EgcEntityType type, EgcEntityList* list, QPointF point)
-{
-        EgcEntity* ptr = nullptr;
 
-        switch (type) {
-        case EgcEntityType::Text:
-                ptr = m_textCreator.create(list, point);
-                break;
-        case EgcEntityType::Picture:
-                ptr = m_pixmapCreator.create(list, point);
-                break;
-        default:
-                ptr = m_formulaCreator.create(list, point);
-        }
 
-        return ptr;
-}

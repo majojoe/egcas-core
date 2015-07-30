@@ -28,8 +28,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcentitylist.h"
+#include "document/egcdocument.h"
 
-EgcEntityList::EgcEntityList() : m_index(0)
+EgcEntityList::EgcEntityList(EgcAbstractEntityList* parent) : m_index(0), m_parent(parent)
 {
 }
 
@@ -93,5 +94,23 @@ EgcEntity* EgcEntityList::next(void)
 
 EgcDocument* EgcEntityList::getDocument(void)
 {
-#warning implement this
+        if (m_parent)
+                return m_parent->getDocument();
+        else
+                return nullptr;
+}
+
+EgcAbstractEntityList* EgcEntityList::getParent(void)
+{
+        return m_parent;
+}
+
+EgcEntity* EgcEntityList::createEntity(EgcEntityType type, QPointF point)
+{
+        EgcDocument* doc = getDocument();
+        if (doc) {
+                return doc->createEntity(type, this, point);
+        } else {
+                return nullptr;
+        }
 }

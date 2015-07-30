@@ -31,11 +31,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCDOCUMENT_H
 
 #include <QScopedPointer>
+#include <QPointF>
+#include "entities/egcentity.h"
+#include "entities/egcabstractentitylist.h"
+#include "entities/creator/egcformulacreator.h"
+#include "entities/creator/egcpixmapcreator.h"
+#include "entities/creator/egctextcreator.h"
 
 class EgcEntityList;
 class EgCasScene;
 
-class EgcDocument
+class EgcDocument : public EgcAbstractEntityList
 {
 public:
         ///std constructor
@@ -50,11 +56,33 @@ public:
          * @return a pointer to the scene of the document
          */
         EgCasScene* getScene(void);
+        /**
+         * @brief getParent returns the parent of the current list
+         * @return the parent
+         */
+        virtual EgcAbstractEntityList* getParent(void) override;
+        /**
+         * @brief getDocument returns the document that contains the current list
+         * @return the document
+         */
+        virtual EgcDocument* getDocument(void) override;
+        /**
+         * @brief createEntity create an entity for a list that is a sublist of this document. The list given takes
+         * ownership of the created entity. The user doesn't need to worry about the pointer returned.
+         * @param type the entity type to create
+         * @param list the list where to insert the entity in
+         * @param point the position inside the scene where to create the entity
+         * @return the entity created or a nullptr if the entity couldn't be created
+         */
+        EgcEntity* createEntity(EgcEntityType type, EgcEntityList* list, QPointF point);
 private:
-        QScopedPointer<EgcEntityList> m_list;       ///< the list with the items to the text, pixmap and formual items
-        QScopedPointer<EgCasScene> m_scene;         ///< the scene for rendering all items
+        QScopedPointer<EgcEntityList> m_list;           ///< the list with the items to the text, pixmap and formual items
+        QScopedPointer<EgCasScene> m_scene;             ///< the scene for rendering all items
         //QScopedPointer<EgcCalulation> m_calc;         ///< the class which holds all tools for doing calculations
-        //QScopedPointer<EgcDocWindow> m_win;         ///< holds the window where to show the items
+        //QScopedPointer<EgcDocWindow> m_win;           ///< holds the window where to show the items
+        EgcFormulaCreator m_formulaCreator;             ///< creator for formula entities
+        EgcPixmapCreator m_pixmapCreator;               ///< creator for pixmap entities
+        EgcTextCreator m_textCreator;                   ///< creator for text entities
 };
 
 #endif // EGCDOCUMENT_H

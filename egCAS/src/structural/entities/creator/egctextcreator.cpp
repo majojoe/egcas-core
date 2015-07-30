@@ -35,6 +35,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "view/egcasscene.h"
 #include "document/egcdocument.h"
 
+EgcTextCreator::EgcTextCreator()
+{
+
+}
+
+EgcTextCreator::~EgcTextCreator()
+{
+
+}
+
 EgcEntity* EgcTextCreator::create(EgcEntityList* list, QPointF point)
 {
         QScopedPointer<EgcTextEntity> entity(new EgcTextEntity());

@@ -32,17 +32,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QList>
 #include "egcentity.h"
+#include "egcabstractentitylist.h"
 
 class EgcDocument;
 
 /**
  * @brief The EgcEntityList class is a list that holds formulas, text and picture items
  */
-class EgcEntityList
+class EgcEntityList : public EgcAbstractEntityList
 {
 public:
         /// std constructor
-        EgcEntityList();
+        EgcEntityList(EgcAbstractEntityList* parent = nullptr);
         /// std destructor
         ~EgcEntityList();
 
@@ -78,12 +79,26 @@ public:
         EgcEntity* next(void);
         /**
          * @brief getDocument returns a pointer to the document this list is in (as child or subchild)
-         * @return a pointer to the document
+         * @return a pointer to the document, if nullptr is returned the list is not included in a document
          */
-        EgcDocument* getDocument(void);
+        virtual EgcDocument* getDocument(void) override;
+        /**
+         * @brief getParent returns the parent of the current list
+         * @return the parent
+         */
+        virtual EgcAbstractEntityList* getParent(void) override;
+        /**
+         * @brief createEntity creates an entity for the given list
+         * @param type the type of entity to create
+         * @param point the position at which to create the entity (on the scene)
+         * @return the entity created, or a nullptr if no entity could be created
+         */
+        EgcEntity* createEntity(EgcEntityType type, QPointF point);
+
 private:
-        QList<EgcEntity*> m_list;                ///< holds a bunch of entities of a document
+        QList<EgcEntity*> m_list;               ///< holds a bunch of entities of a document
         int m_index;
+        EgcAbstractEntityList* m_parent;        ///< pointer to the parent containing the this list
 };
 
 #endif // EGCENTITYLIST_H
