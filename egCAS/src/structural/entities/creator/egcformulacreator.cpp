@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "view/egcasiteminterface.h"
 #include "view/egcasscene.h"
 #include "document/egcdocument.h"
+#include "egcformulaitem.h"
 
 EgcFormulaCreator::EgcFormulaCreator()
 {
@@ -52,6 +53,26 @@ EgcEntity* EgcFormulaCreator::create(EgcEntityList* list, QPointF point)
         EgCasScene* scene = doc->getScene();
         if (scene->addFormula(*entity, point)) {
                 list->addEntity(entity.data());
+                return entity.take();
+        }
+
+        return nullptr;
+}
+
+EgcEntity* EgcFormulaCreator::copy(EgcEntityList* list, EgcEntity& entity2copy)
+{
+        if (entity2copy.getEntityType() != EgcEntityType::Formula)
+                return nullptr;
+        QScopedPointer<EgcFormulaEntity> entity(new EgcFormulaEntity(static_cast<EgcFormulaEntity&>(entity2copy)));
+        if (entity.isNull())
+                return nullptr;
+        EgcDocument* doc = list->getDocument();
+        EgCasScene* scene = doc->getScene();
+        EgcFormulaItem* item = scene->addFormula(*entity, entity2copy.getPositon());
+        if (item) {
+                item->setFontSize(static_cast<EgcFormulaEntity&>(entity2copy).getFontSize());
+                list->addEntity(entity.data());
+
                 return entity.take();
         }
 

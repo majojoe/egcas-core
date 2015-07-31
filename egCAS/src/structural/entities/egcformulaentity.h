@@ -221,7 +221,7 @@ private:
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
         EgcBaseNode m_data;                     ///< holds a pointer to the root element of the formula tree
         static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
-        EgcAbstractFormulaItem* m_item;            ///< pointer to the formula item interface on the scene
+        EgcAbstractFormulaItem* m_item;         ///< pointer to the formula item interface on the scene
 };
 
 #endif // EGCFORMULAENTITY_H

@@ -44,6 +44,13 @@ public:
          * @return the created entity
          */
         virtual EgcEntity* create(EgcEntityList* list, QPointF point);
+        /**
+         * @brief copy copy a given entity including all of its subsequent elements
+         * @param list the list to add the copied entity to
+         * @param entity entity to copy
+         * @return the created entity
+         */
+        virtual EgcEntity* copy(EgcEntityList* list, EgcEntity& entity2copy);
 };
 
 #endif // EGCFORMULACREATOR_H
