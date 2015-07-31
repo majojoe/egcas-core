@@ -46,7 +46,7 @@ public:
          */
         virtual EgcEntity* create(EgcEntityList* list, QPointF point) = 0;
         /**
-         * @brief copy copy a given entity including all of its subsequent elements
+         * @brief clone copy a given entity including all of its subsequent elements
          * @param list the list to add the copied entity to
          * @param entity entity to copy
          * @return the created entity

@@ -94,6 +94,12 @@ public:
          * @return the entity created, or a nullptr if no entity could be created
          */
         EgcEntity* createEntity(EgcEntityType type, QPointF point);
+        /**
+         * @brief cloneEntity copy a given entity including all of its subsequent elements
+         * @param entity entity to copy
+         * @return the created entity
+         */
+        EgcEntity* cloneEntity(EgcEntity& entity2copy);
 
 private:
         QList<EgcEntity*> m_list;               ///< holds a bunch of entities of a document

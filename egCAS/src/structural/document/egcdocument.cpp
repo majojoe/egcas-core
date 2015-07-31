@@ -57,7 +57,7 @@ EgcDocument* EgcDocument::getDocument(void)
         return this;
 }
 
-EgcEntity* EgcDocument::createEntity(EgcEntityType type, EgcEntityList* list, QPointF point)
+EgcEntity* EgcDocument::createEntity(EgcEntityType type, EgcEntityList& list, QPointF point)
 {
         EgcEntity* ptr = nullptr;
 
@@ -70,6 +70,26 @@ EgcEntity* EgcDocument::createEntity(EgcEntityType type, EgcEntityList* list, QP
                 break;
         default:
                 ptr = m_formulaCreator.create(list, point);
+        }
+
+        return ptr;
+}
+
+EgcEntity* EgcDocument::cloneEntity(EgcEntityList& list, EgcEntity& entity2copy)
+{
+        EgcEntity* ptr = nullptr;
+
+        EgcEntityType type = entity2copy.getEntityType();
+
+        switch (type) {
+        case EgcEntityType::Text:
+                ptr = m_textCreator.clone(list, entity2copy);
+                break;
+        case EgcEntityType::Picture:
+                ptr = m_pixmapCreator.clone(list, entity2copy);
+                break;
+        default:
+                ptr = m_formulaCreator.clone(list, entity2copy);
         }
 
         return ptr;

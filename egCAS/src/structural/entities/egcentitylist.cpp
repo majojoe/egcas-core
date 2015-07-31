@@ -109,7 +109,17 @@ EgcEntity* EgcEntityList::createEntity(EgcEntityType type, QPointF point)
 {
         EgcDocument* doc = getDocument();
         if (doc) {
-                return doc->createEntity(type, this, point);
+                return doc->createEntity(type, *this, point);
+        } else {
+                return nullptr;
+        }
+}
+
+EgcEntity* EgcEntityList::cloneEntity(EgcEntity& entity2copy)
+{
+        EgcDocument* doc = getDocument();
+        if (doc) {
+                return doc->cloneEntity(*this, entity2copy);
         } else {
                 return nullptr;
         }

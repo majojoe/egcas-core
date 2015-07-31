@@ -74,7 +74,15 @@ public:
          * @param point the position inside the scene where to create the entity
          * @return the entity created or a nullptr if the entity couldn't be created
          */
-        EgcEntity* createEntity(EgcEntityType type, EgcEntityList* list, QPointF point);
+        EgcEntity* createEntity(EgcEntityType type, EgcEntityList& list, QPointF point);
+        /**
+         * @brief cloneEntity clone an existing entity
+         * @param list the list where to insert the entity to be cloned
+         * @param entity2copy the entity to clone
+         * @return the cloned entity
+         */
+        EgcEntity* cloneEntity(EgcEntityList& list, EgcEntity& entity2copy);
+
 private:
         QScopedPointer<EgcEntityList> m_list;           ///< the list with the items to the text, pixmap and formual items
         QScopedPointer<EgCasScene> m_scene;             ///< the scene for rendering all items
