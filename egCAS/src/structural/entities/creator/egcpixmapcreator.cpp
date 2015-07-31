@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "view/egcasiteminterface.h"
 #include "view/egcasscene.h"
 #include "document/egcdocument.h"
+#include "egcpixmapitem.h"
 
 EgcPixmapCreator::EgcPixmapCreator()
 {
@@ -52,6 +53,27 @@ EgcEntity* EgcPixmapCreator::create(EgcEntityList* list, QPointF point)
         EgCasScene* scene = doc->getScene();
         if (scene->addPixmap(*entity, point)) {
                 list->addEntity(entity.data());
+                return entity.take();
+        }
+
+        return nullptr;
+}
+
+EgcEntity* EgcPixmapCreator::clone(EgcEntityList& list, EgcEntity& entity2copy)
+{
+        if (entity2copy.getEntityType() != EgcEntityType::Picture)
+                return nullptr;
+        EgcPixmapEntity& entityCopyRef = static_cast<EgcPixmapEntity&>(entity2copy);
+        QScopedPointer<EgcPixmapEntity> entity(new EgcPixmapEntity(entityCopyRef));
+        if (entity.isNull())
+                return nullptr;
+        EgcDocument* doc = list.getDocument();
+        EgCasScene* scene = doc->getScene();
+        if (scene->addPixmap(*entity, entity2copy.getPositon())) {
+                list.addEntity(entity.data());
+                entity->setFilePath(entityCopyRef.getFilePath());
+                entity->setSize(entityCopyRef.getSize());
+
                 return entity.take();
         }
 

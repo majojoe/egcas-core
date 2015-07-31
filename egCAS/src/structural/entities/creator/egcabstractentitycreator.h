@@ -51,7 +51,7 @@ public:
          * @param entity entity to copy
          * @return the created entity
          */
-        virtual EgcEntity* copy(EgcEntityList* list, EgcEntity& entity) = 0;
+        virtual EgcEntity* clone(EgcEntityList& list, EgcEntity& entity) = 0;
 };
 
 #endif // EGCABSTRACTENTITYCREATOR_H

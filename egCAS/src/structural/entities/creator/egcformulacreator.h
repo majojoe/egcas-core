@@ -50,7 +50,7 @@ public:
          * @param entity entity to copy
          * @return the created entity
          */
-        virtual EgcEntity* copy(EgcEntityList* list, EgcEntity& entity2copy);
+        virtual EgcEntity* clone(EgcEntityList& list, EgcEntity& entity2copy) override;
 };
 
 #endif // EGCFORMULACREATOR_H

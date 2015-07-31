@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "view/egcasiteminterface.h"
 #include "view/egcasscene.h"
 #include "document/egcdocument.h"
+#include "egctextitem.h"
 
 EgcTextCreator::EgcTextCreator()
 {
@@ -59,3 +60,26 @@ EgcEntity* EgcTextCreator::create(EgcEntityList* list, QPointF point)
 
         return nullptr;
 }
+
+EgcEntity* EgcTextCreator::clone(EgcEntityList& list, EgcEntity& entity2copy)
+{
+        if (entity2copy.getEntityType() != EgcEntityType::Text)
+                return nullptr;
+        EgcTextEntity& entityCopyRef = static_cast<EgcTextEntity&>(entity2copy);
+        QScopedPointer<EgcTextEntity> entity(new EgcTextEntity(entityCopyRef));
+        if (entity.isNull())
+                return nullptr;
+        EgcDocument* doc = list.getDocument();
+        EgCasScene* scene = doc->getScene();
+        if (scene->addText(*entity, entity2copy.getPositon())) {
+                list.addEntity(entity.data());
+                //set the item properties
+                entity->setFont(entityCopyRef.getFont());
+                entity->setText(entityCopyRef.getText());
+
+                return entity.take();
+        }
+
+        return nullptr;
+}
+
