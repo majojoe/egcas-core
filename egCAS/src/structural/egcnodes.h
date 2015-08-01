@@ -62,19 +62,19 @@ for node in nodes:
     cog.outl("#include \"concreteNodes/egc%s.h\"" % node[1].lower())
 
 ]]]*/
-#include "concreteNodes/egcparenthesisnode.h"
-#include "concreteNodes/egcvariablenode.h"
-#include "concreteNodes/egcplusnode.h"
-#include "concreteNodes/egcfunctionnode.h"
-#include "concreteNodes/egcdivisionnode.h"
-#include "concreteNodes/egcminusnode.h"
 #include "concreteNodes/egcnumbernode.h"
-#include "concreteNodes/egcrootnode.h"
 #include "concreteNodes/egcunaryminusnode.h"
-#include "concreteNodes/egcdefinitionnode.h"
-#include "concreteNodes/egcexponentnode.h"
-#include "concreteNodes/egcmultiplicationnode.h"
 #include "concreteNodes/egcequalnode.h"
+#include "concreteNodes/egcdefinitionnode.h"
+#include "concreteNodes/egcmultiplicationnode.h"
+#include "concreteNodes/egcvariablenode.h"
+#include "concreteNodes/egcrootnode.h"
+#include "concreteNodes/egcdivisionnode.h"
+#include "concreteNodes/egcexponentnode.h"
+#include "concreteNodes/egcfunctionnode.h"
+#include "concreteNodes/egcplusnode.h"
+#include "concreteNodes/egcparenthesisnode.h"
+#include "concreteNodes/egcminusnode.h"
 //[[[end]]]
 //The list is generated automatically. Do NOT change it manually.
 

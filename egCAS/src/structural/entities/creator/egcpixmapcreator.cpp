@@ -44,15 +44,15 @@ EgcPixmapCreator::~EgcPixmapCreator()
 {
 }
 
-EgcEntity* EgcPixmapCreator::create(EgcEntityList* list, QPointF point)
+EgcEntity* EgcPixmapCreator::create(EgcEntityList &list, QPointF point)
 {
         QScopedPointer<EgcPixmapEntity> entity(new EgcPixmapEntity());
         if (entity.isNull())
                 return nullptr;
-        EgcDocument* doc = list->getDocument();
+        EgcDocument* doc = list.getDocument();
         EgCasScene* scene = doc->getScene();
         if (scene->addPixmap(*entity, point)) {
-                list->addEntity(entity.data());
+                list.addEntity(entity.data());
                 return entity.take();
         }
 

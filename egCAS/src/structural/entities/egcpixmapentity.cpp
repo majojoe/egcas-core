@@ -118,3 +118,8 @@ void EgcPixmapEntity::setFilePath(QString file)
         m_path = file;
         m_item->setPixmap(QPixmap(file));
 }
+
+void EgcPixmapEntity::itemChanged(EgcItemChangeType changeType)
+{
+
+}

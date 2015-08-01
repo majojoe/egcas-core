@@ -30,10 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCABSTRACTFORMULAENTITY_H
 #define EGCABSTRACTFORMULAENTITY_H
 
+#include "egcabstractentity.h"
+
 class QString;
 class EgcAbstractFormulaItem;
 
-class EgcAbstractFormulaEntity
+class EgcAbstractFormulaEntity : public EgcAbstractEntity
 {
 public:
         virtual ~EgcAbstractFormulaEntity() {}

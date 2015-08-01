@@ -338,3 +338,8 @@ void EgcFormulaEntity::updateView(void)
 
         m_item->updateView();
 }
+
+void EgcFormulaEntity::itemChanged(EgcItemChangeType changeType)
+{
+#warning implement this -> sort entitiy list if position changes
+}

@@ -152,6 +152,7 @@ private:
         static quint8 s_baseFontSize;
         quint8 m_fontSize;
         EgcAbstractFormulaEntity* m_entity;                     ///< pointer to formula entity
+        bool m_posChanged;                            ///< helper variable indicating that the position has changed
 
         Q_DISABLE_COPY(EgcFormulaItem)
 };

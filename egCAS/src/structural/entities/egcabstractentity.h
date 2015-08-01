@@ -27,31 +27,28 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCABSTRACTENTITYCREATOR_H
-#define EGCABSTRACTENTITYCREATOR_H
 
-#include <QPointF>
-class EgcEntity;
-class EgcEntityList;
+#ifndef EGCABSTRACTENTITY_H
+#define EGCABSTRACTENTITY_H
 
-class EgcAbstractEntityCreator
+/**
+ * @brief The EgcEntityType defines different types of entities inside a egCAS (formula) document/worksheet
+ */
+enum class EgcItemChangeType
 {
-public:
-        virtual ~EgcAbstractEntityCreator() {}
-        /**
-         * @brief create create a entity including all necessary setup in the scene (creating scene items etc.)
-         * @param list the list where to insert the entity
-         * @param point the point where to show the entity on the scene
-         * @return the created entity
-         */
-        virtual EgcEntity* create(EgcEntityList& list, QPointF point) = 0;
-        /**
-         * @brief clone copy a given entity including all of its subsequent elements
-         * @param list the list to add the copied entity to
-         * @param entity entity to copy
-         * @return the created entity
-         */
-        virtual EgcEntity* clone(EgcEntityList& list, EgcEntity& entity) = 0;
+        posChanged = 0/*,*/        ///< position of the item on the scene has changed
+        //itemDeleted
 };
 
-#endif // EGCABSTRACTENTITYCREATOR_H
+
+class EgcAbstractEntity
+{
+public:
+        virtual ~EgcAbstractEntity() {}
+        /**
+         * @brief itemChanged is called when the item that is associated with the enity has changed
+         */
+        virtual void itemChanged(EgcItemChangeType changeType) = 0;
+};
+
+#endif // EGCABSTRACTENTITY_H

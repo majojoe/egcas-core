@@ -216,6 +216,11 @@ public:
          * @brief updateView update the view with the new mathml representation if anything changes
          */
         void updateView(void);
+        /**
+         * @brief itemChanged is called when the item that is associated with the enity has changed
+         */
+        virtual void itemChanged(EgcItemChangeType changeType) override;
+
 private:
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user

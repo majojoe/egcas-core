@@ -44,15 +44,15 @@ EgcFormulaCreator::~EgcFormulaCreator()
 {
 }
 
-EgcEntity* EgcFormulaCreator::create(EgcEntityList* list, QPointF point)
+EgcEntity* EgcFormulaCreator::create(EgcEntityList &list, QPointF point)
 {
         QScopedPointer<EgcFormulaEntity> entity(new EgcFormulaEntity());
         if (entity.isNull())
                 return nullptr;
-        EgcDocument* doc = list->getDocument();
+        EgcDocument* doc = list.getDocument();
         EgCasScene* scene = doc->getScene();
         if (scene->addFormula(*entity, point)) {
-                list->addEntity(entity.data());
+                list.addEntity(entity.data());
                 entity->updateView();
 
                 return entity.take();

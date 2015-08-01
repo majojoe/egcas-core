@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 quint8 EgcFormulaItem::s_baseFontSize = 14;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
-    QGraphicsItem{parent}, m_fontSize{0}
+    QGraphicsItem{parent}, m_fontSize{0}, m_posChanged{false}
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         m_fontSize = 0;
@@ -125,11 +125,18 @@ void EgcFormulaItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 {
         //update();
         QGraphicsItem::mouseReleaseEvent(event);
+        if (m_posChanged) {
+                m_posChanged = false;
+                //signal entity that item position has changed
+                m_entity->itemChanged(EgcItemChangeType::posChanged);
+        }
+
 }
 
 QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
      if (change == ItemPositionChange && scene()) {
+             m_posChanged = true;
          // value is the new position.
          QPointF newPos = value.toPointF();
          QSizeF grid = qobject_cast<EgCasScene*>(this->scene())->grid();

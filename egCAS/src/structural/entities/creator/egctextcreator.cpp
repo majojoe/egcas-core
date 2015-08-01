@@ -46,15 +46,15 @@ EgcTextCreator::~EgcTextCreator()
 
 }
 
-EgcEntity* EgcTextCreator::create(EgcEntityList* list, QPointF point)
+EgcEntity* EgcTextCreator::create(EgcEntityList& list, QPointF point)
 {
         QScopedPointer<EgcTextEntity> entity(new EgcTextEntity());
         if (entity.isNull())
                 return nullptr;
-        EgcDocument* doc = list->getDocument();
+        EgcDocument* doc = list.getDocument();
         EgCasScene* scene = doc->getScene();
         if (scene->addText(*entity, point)) {
-                list->addEntity(entity.data());
+                list.addEntity(entity.data());
                 return entity.take();
         }
 

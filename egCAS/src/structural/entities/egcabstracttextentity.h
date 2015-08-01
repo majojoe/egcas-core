@@ -30,10 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCABSTRACTTEXTENTITY_H
 #define EGCABSTRACTTEXTENTITY_H
 
+#include "egcabstractentity.h"
+
 class EgcAbstractTextItem;
 class QFont;
 
-class EgcAbstractTextEntity
+class EgcAbstractTextEntity : public EgcAbstractEntity
 {
 public:
         virtual ~EgcAbstractTextEntity() {}

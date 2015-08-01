@@ -41,6 +41,7 @@ add_custom_target(egCAS_other_srcs ALL SOURCES
         structural/entities/egcabstractpixmapentity.h
         structural/entities/creator/egcabstractentitycreator.h
         structural/entities/egcabstractentitylist.h
+        structural/entities/egcabstractentity.h
         view/egcabstractformulaitem.h
         view/egcabstracttextitem.h
         view/egcabstractpixmapitem.h

@@ -30,9 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCABSTRACTPIXMAPENTITY_H
 #define EGCABSTRACTPIXMAPENTITY_H
 
+#include "egcabstractentity.h"
+
 class EgcAbstractPixmapItem;
 
-class EgcAbstractPixmapEntity
+class EgcAbstractPixmapEntity : public EgcAbstractEntity
 {
 public:
         virtual ~EgcAbstractPixmapEntity() {}

@@ -96,6 +96,11 @@ public:
          * @param item the item to set (can also be a nullptr)
          */
         void setItem(EgcAbstractPixmapItem* item);
+        /**
+         * @brief itemChanged is called when the item that is associated with the enity has changed
+         */
+        virtual void itemChanged(EgcItemChangeType changeType) override;
+
 private:
         EgcAbstractPixmapItem *m_item;          ///< pointer to QGraphicsitem hold by scene
         bool m_isEmbedded;                      ///< determines if pixmap is embedded in document, or load by pathname

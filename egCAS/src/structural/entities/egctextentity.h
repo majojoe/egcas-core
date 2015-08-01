@@ -101,7 +101,10 @@ public:
          * @return the base font size of all texts
          */
         virtual QFont& getGenericFont(void) override;
-
+        /**
+         * @brief itemChanged is called when the item that is associated with the enity has changed
+         */
+        virtual void itemChanged(EgcItemChangeType changeType) override;
 
 private:
         EgcAbstractTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene

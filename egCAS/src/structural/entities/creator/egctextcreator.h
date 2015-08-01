@@ -43,7 +43,7 @@ public:
          * @param point the point where to show the entity on the scene
          * @return the created entity
          */
-        virtual EgcEntity* create(EgcEntityList* list, QPointF point) override;
+        virtual EgcEntity* create(EgcEntityList &list, QPointF point) override;
         /**
          * @brief clone copy a given entity including all of its subsequent elements
          * @param list the list to add the copied entity to

@@ -107,3 +107,8 @@ QFont& EgcTextEntity::getGenericFont(void)
 {
         return s_genericFont;
 }
+
+void EgcTextEntity::itemChanged(EgcItemChangeType changeType)
+{
+
+}
