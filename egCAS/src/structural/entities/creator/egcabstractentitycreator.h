@@ -31,8 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCABSTRACTENTITYCREATOR_H
 
 #include <QPointF>
+#include "entities/egcentitylist.h"
+
 class EgcEntity;
-class EgcEntityList;
 
 class EgcAbstractEntityCreator
 {

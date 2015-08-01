@@ -32,16 +32,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "view/egctextitem.h"
 #include "view/egcpixmapitem.h"
 #include "view/resizehandle.h"
+#include "document/egcdocument.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    m_ui{new Ui::MainWindow}, m_document{new EgcDocument}
 {
-    ui->setupUi(this);
+    m_ui->setupUi(this);
     scene = new EgCasScene(this);
-    ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-    ui->graphicsView->setScene(scene);
+    m_ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+    m_ui->graphicsView->setScene(scene);
     //ui->graphicsView->scale(0.5,0.5);
 
     //add some formulas
@@ -68,5 +69,4 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete ui;
 }

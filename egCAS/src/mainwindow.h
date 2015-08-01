@@ -32,11 +32,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QMainWindow>
 #include <QtCore>
 #include <QtGui>
+#include <QScopedPointer>
 #include "view/egcasscene.h"
 
 namespace Ui {
 class MainWindow;
 }
+class EgcDocument;
 
 class MainWindow : public QMainWindow
 {
@@ -47,7 +49,8 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    QScopedPointer<Ui::MainWindow> m_ui;
+    QScopedPointer<EgcDocument> m_document;
     EgCasScene *scene;
 };
 
