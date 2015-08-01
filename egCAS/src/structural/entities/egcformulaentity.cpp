@@ -37,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "visitor/egcmaximavisitor.h"
 #include "visitor/egcmathmlvisitor.h"
 #include "egcabstractformulaitem.h"
+#include "egcabstractentitylist.h"
 
 quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 15;
 
@@ -341,5 +342,8 @@ void EgcFormulaEntity::updateView(void)
 
 void EgcFormulaEntity::itemChanged(EgcItemChangeType changeType)
 {
-#warning implement this -> sort entitiy list if position changes
+        if (changeType == EgcItemChangeType::posChanged) {
+                if (m_list)
+                        m_list->sort();
+        }
 }

@@ -57,3 +57,8 @@ bool EgcEntity::operator<(const EgcEntity& rhs) const
 
         return retval;
 }
+
+void EgcEntity::setList(EgcAbstractEntityList* list)
+{
+        m_list = list;
+}

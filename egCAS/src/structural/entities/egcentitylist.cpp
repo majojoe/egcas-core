@@ -50,6 +50,7 @@ void EgcEntityList::sort(void)
 void EgcEntityList::addEntity(EgcEntity* entity)
 {
         m_list.append(entity);
+        entity->setList(this);
         sort();
 }
 
@@ -68,6 +69,7 @@ EgcEntity* EgcEntityList::takeEntity(EgcEntity* entity)
         int i = m_list.indexOf(entity);
         if (i > 0) {
                 retval = m_list.takeAt(i);
+                retval->setList(nullptr);
         }
 
         return retval;
@@ -109,7 +111,9 @@ EgcEntity* EgcEntityList::createEntity(EgcEntityType type, QPointF point)
 {
         EgcDocument* doc = getDocument();
         if (doc) {
-                return doc->createEntity(type, *this, point);
+                EgcEntity* entity = doc->createEntity(type, *this, point);
+                entity->setList(this);
+                return entity;
         } else {
                 return nullptr;
         }
@@ -119,7 +123,9 @@ EgcEntity* EgcEntityList::cloneEntity(EgcEntity& entity2copy)
 {
         EgcDocument* doc = getDocument();
         if (doc) {
-                return doc->cloneEntity(*this, entity2copy);
+                EgcEntity* entity = doc->cloneEntity(*this, entity2copy);
+                entity->setList(this);
+                return entity;
         } else {
                 return nullptr;
         }

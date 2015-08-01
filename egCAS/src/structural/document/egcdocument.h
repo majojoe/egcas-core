@@ -84,6 +84,8 @@ public:
         EgcEntity* cloneEntity(EgcEntityList& list, EgcEntity& entity2copy);
 
 private:
+        virtual void sort(void) override {}
+        
         QScopedPointer<EgcEntityList> m_list;           ///< the list with the items to the text, pixmap and formual items
         QScopedPointer<EgCasScene> m_scene;             ///< the scene for rendering all items
         //QScopedPointer<EgcCalulation> m_calc;         ///< the class which holds all tools for doing calculations

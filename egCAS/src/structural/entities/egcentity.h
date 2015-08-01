@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCENTITY_H
 
 class QPointF;
-
+class EgcAbstractEntityList;
 
 /**
  * @brief The EgcEntityType defines different types of entities inside a egCAS (formula) document/worksheet
@@ -76,7 +76,13 @@ public:
          * @return true if condition is true, false otherwise
          */
         bool operator<(const EgcEntity& rhs) const;
-private:
+        /**
+         * @brief setList set the entity list that contains this entity
+         * @param list the list make this item point to
+         */
+        void setList(EgcAbstractEntityList* list);
+protected:
+        EgcAbstractEntityList* m_list;            ///< pointer to the list containing this entity
 };
 
 #endif // EGCENTITY_H

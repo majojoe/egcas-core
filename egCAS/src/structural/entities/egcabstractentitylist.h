@@ -46,6 +46,9 @@ public:
          * @return the document
          */
         virtual EgcDocument* getDocument(void) = 0;
+        /// sort the list
+        virtual void sort(void) = 0;
+        
 };
 
 #endif // EGCABSTRACTENTITYLIST_H

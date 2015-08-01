@@ -48,7 +48,7 @@ public:
         ~EgcEntityList();
 
         /// sort the list
-        void sort(void);
+        void sort(void) override;
         /**
          * @brief addEntity add a entity (formula, text or picture) to the list. The list takes ownership of the entity
          * @param entity a pointer to the entity to add
