@@ -109,7 +109,7 @@ public:
          * @brief setPosItemIface needs to be overwritten by subclasses to set the position of the item
          * @param point the position to set.
          */
-        virtual void setPosition( QPointF point) override;
+        virtual void setPosition(const QPointF &pos) override;
         /**
          * @brief set the generic font size for all formulas (changes the overall font size of all formulas in a document).
          * If the font size of a specific formula should be changed, use the function setFontSize.
@@ -147,7 +147,14 @@ protected:
 signals:
 
 public slots:
-private:
+private:        
+        /**
+         * @brief snapPos snaps the given position to the scene grid
+         * @param pos the position to snap to the grid
+         * @return the position snapped to the grid
+         */
+        QPointF snapPos(const QPointF& pos);
+        
         QScopedPointer<EgMathMLDocument> m_mathMlDoc;
         static quint8 s_baseFontSize;
         quint8 m_fontSize;

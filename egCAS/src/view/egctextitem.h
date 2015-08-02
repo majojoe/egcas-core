@@ -59,7 +59,7 @@ public:
          * @brief setPosItemIface needs to be overwritten by subclasses to set the position of the item
          * @param point the position to set.
          */
-        virtual void setPosition( QPointF point) override;
+        virtual void setPosition(const QPointF& point) override;
         /**
          * @brief set the font size for a text (changes only the font size of this text).
          * If the overall font size of all texts should be changed, use the function setBaseFontSize.

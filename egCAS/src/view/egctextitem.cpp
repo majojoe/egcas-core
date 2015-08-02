@@ -88,7 +88,7 @@ QPointF EgcTextItem::getPosition( void ) const
         return pos();
 }
 
-void EgcTextItem::setPosition( QPointF point)
+void EgcTextItem::setPosition(const QPointF &point)
 {
         setPos(point);
 }

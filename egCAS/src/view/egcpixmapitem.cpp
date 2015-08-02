@@ -91,7 +91,7 @@ QPointF EgcPixmapItem::getPosition( void ) const
         return pos();
 }
 
-void EgcPixmapItem::setPosition( QPointF point)
+void EgcPixmapItem::setPosition(const QPointF &point)
 {
         setPos(point);
 }

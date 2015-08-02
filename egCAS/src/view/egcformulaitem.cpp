@@ -53,14 +53,14 @@ EgcFormulaItem::EgcFormulaItem(const QString &formula, QPointF point, int size, 
         EgcFormulaItem{parent}
 {
         setFormulaText(formula);
-        QGraphicsItem::setPos(point);
+        setPosition(point);
         setFontSize(size);
 }
 
 EgcFormulaItem::EgcFormulaItem(const QPointF point, QGraphicsItem *parent) :
         EgcFormulaItem{parent}
 {
-        QGraphicsItem::setPos(point);
+        setPosition(point);
 }
 
 void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -138,14 +138,10 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
 {
      if (change == ItemPositionChange && scene()) {
              m_posChanged = true;
-         // value is the new position.
-         QPointF newPos = value.toPointF();
-         QSizeF grid = qobject_cast<EgCasScene*>(this->scene())->grid();
-         newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
-         newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
-
-         return newPos;
+             // value is the new position.
+             return snapPos(value.toPointF());
      }
+     
      return QGraphicsItem::itemChange(change, value);
 }
 
@@ -159,9 +155,9 @@ QPointF EgcFormulaItem::getPosition( void ) const
         return pos();
 }
 
-void EgcFormulaItem::setPosition( QPointF point)
+void EgcFormulaItem::setPosition(const QPointF &pos)
 {
-        setPos(point);
+        QGraphicsItem::setPos(snapPos(pos));
 }
 
 void EgcFormulaItem::setGenericFontSize(int size)
@@ -180,4 +176,15 @@ void EgcFormulaItem::updateView(void)
                 return;
 
         m_mathMlDoc->setContent(m_entity->getMathMlCode());
+}
+
+QPointF EgcFormulaItem::snapPos(const QPointF& pos)
+{
+        // value is the new position.
+        QPointF newPos = pos;
+        QSizeF grid = static_cast<EgCasScene*>(this->scene())->grid();
+        newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
+        newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
+
+        return newPos;        
 }
