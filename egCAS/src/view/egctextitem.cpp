@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egctextitem.h"
 #include "egcasscene.h"
 
-EgcTextItem::EgcTextItem(QGraphicsItem*parent) : QGraphicsTextItem(parent)
+EgcTextItem::EgcTextItem(QGraphicsItem*parent) : QGraphicsTextItem{parent}, m_entity{nullptr}
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
 }

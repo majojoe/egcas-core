@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcentitylist.h"
 #include "view/egcasscene.h"
 
-EgcDocument::EgcDocument() : m_list(new EgcEntityList()), m_scene(new EgCasScene())
+EgcDocument::EgcDocument() : m_list(new EgcEntityList(this)), m_scene(new EgCasScene())
 {
 }
 

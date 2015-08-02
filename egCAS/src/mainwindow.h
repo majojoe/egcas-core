@@ -51,7 +51,6 @@ public:
 private:
     QScopedPointer<Ui::MainWindow> m_ui;
     QScopedPointer<EgcDocument> m_document;
-    EgCasScene *scene;
 };
 
 #endif // MAINWINDOW_H
