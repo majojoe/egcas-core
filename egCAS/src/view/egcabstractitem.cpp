@@ -36,7 +36,7 @@ QPointF EgcAbstractItem::snapGrid(const QPointF& pos)
         // value is the new position.
         QPointF newPos = pos;
         QSizeF grid = getGrid();
-        if (!grid.isNull() && gridActivated) {
+        if (grid.isValid() && gridActivated) {
                 newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
                 newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
         }

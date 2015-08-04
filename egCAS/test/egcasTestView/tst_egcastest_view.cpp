@@ -56,8 +56,8 @@ void EgcasTest_View::testSceneItemSorting()
         QVERIFY(!(item2 < item2));
         QVERIFY(!(item1 < item1));
 
-        item1->setPos(65665465.21565, 6516.32115610);
-        item2->setPos(65665465.21566, 6516.32115610);
+        item1->setPos(QPointF(65665465.21565, 6516.32115610));
+        item2->setPos(QPointF(65665465.21566, 6516.32115610));
         //test the bigger and smaller operator overload of the items (for x coordinates)
         QVERIFY(item1->pos().x() == 65665465.21565);
         QVERIFY(item1->pos().y() == 6516.32115610);
