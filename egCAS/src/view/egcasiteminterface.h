@@ -50,7 +50,7 @@ public:
          * @brief setPosition needs to be overwritten by subclasses to set the position of the item
          * @param point the position to set.
          */
-        virtual void setPosition(const QPointF& point) = 0;
+        virtual void setPos(const QPointF& point) = 0;
         /**
          * @brief operator< operator overload of this class to be able to sort the items according to their position
          * @param rhs the right hand side operator

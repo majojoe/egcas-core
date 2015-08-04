@@ -63,7 +63,7 @@ public:
          * @brief setPosItemIface needs to be overwritten by subclasses to set the position of the item
          * @param point the position to set.
          */
-        virtual void setPosition(const QPointF& point) override;        
+        virtual void setPos(const QPointF& point) override;        
         /**
          * @brief setScaleFactor set the scale factor of the pixmap
          * @param scaleFactor the scale factor to set

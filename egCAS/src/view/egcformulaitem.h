@@ -110,7 +110,7 @@ public:
          * @brief setPosItemIface needs to be overwritten by subclasses to set the position of the item
          * @param point the position to set.
          */
-        virtual void setPosition(const QPointF &pos) override;
+        virtual void setPos(const QPointF &pos) override;
         /**
          * @brief set the generic font size for all formulas (changes the overall font size of all formulas in a document).
          * If the font size of a specific formula should be changed, use the function setFontSize.

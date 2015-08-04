@@ -107,7 +107,7 @@ void EgcPixmapEntity::setPosition(QPointF pos)
         if (!m_item)
                 return;
 
-        m_item->setPosition(pos);
+        m_item->setPos(pos);
 }
 
 void EgcPixmapEntity::setFilePath(QString file)

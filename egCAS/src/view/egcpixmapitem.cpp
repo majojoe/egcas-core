@@ -91,7 +91,7 @@ QPointF EgcPixmapItem::getPosition( void ) const
         return pos();
 }
 
-void EgcPixmapItem::setPosition(const QPointF &point)
+void EgcPixmapItem::setPos(const QPointF &point)
 {
         QGraphicsPixmapItem::setPos(snapGrid(point));
 }

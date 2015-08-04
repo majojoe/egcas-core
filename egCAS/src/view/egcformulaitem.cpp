@@ -154,7 +154,7 @@ QPointF EgcFormulaItem::getPosition( void ) const
         return pos();
 }
 
-void EgcFormulaItem::setPosition(const QPointF &pos)
+void EgcFormulaItem::setPos(const QPointF &pos)
 {
         QGraphicsItem::setPos(snapGrid(pos));
 }

@@ -88,7 +88,7 @@ QPointF EgcTextItem::getPosition( void ) const
         return pos();
 }
 
-void EgcTextItem::setPosition(const QPointF &point)
+void EgcTextItem::setPos(const QPointF &point)
 {
         QGraphicsTextItem::setPos(snapGrid(point));
 }
