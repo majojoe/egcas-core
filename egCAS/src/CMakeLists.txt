@@ -74,6 +74,7 @@ set(egCAS_SOURCES
         view/egcpixmapitem.cpp 
         view/resizehandle.cpp 
         view/egcformulaitem.cpp 
+        view/egcabstractitem.cpp
         structural/specialNodes/egcnode.cpp
         structural/specialNodes/egcbinarynode.cpp
         structural/specialNodes/egcunarynode.cpp

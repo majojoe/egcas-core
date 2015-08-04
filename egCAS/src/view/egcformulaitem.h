@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QPainter>
 #include "egcasiteminterface.h"
 #include "egcabstractformulaitem.h"
+#include "egcabstractitem.h"
 
 class EgMathMLDocument;
 class EgcAbstractFormulaEntity;
@@ -41,7 +42,7 @@ class EgcAbstractFormulaItem;
 /**
  * @brief The FormulaItem class implements a QGraphicsItem to be able to use a formula in a QGraphicsView
  */
-class EgcFormulaItem : public QGraphicsItem, public EgcAbstractFormulaItem
+class EgcFormulaItem : public QGraphicsItem, public EgcAbstractFormulaItem, public EgcAbstractItem
 {
 public:        
         ///standard constructor
@@ -128,6 +129,12 @@ public:
 
 protected:
         /**
+         * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
+         * subclasses already inherit from it - and we don't want to make it complicated)
+         * @return the size of the grid
+         */
+        virtual QSizeF getGrid(void) override;
+        /**
          * @brief mousePressEvent overrides mousePressEvent from QGraphicsItem
          * @param event pointer to QGraphicsSceneMouseEvent
          */
@@ -147,14 +154,7 @@ protected:
 signals:
 
 public slots:
-private:        
-        /**
-         * @brief snapPos snaps the given position to the scene grid
-         * @param pos the position to snap to the grid
-         * @return the position snapped to the grid
-         */
-        QPointF snapPos(const QPointF& pos);
-        
+private:                
         QScopedPointer<EgMathMLDocument> m_mathMlDoc;
         static quint8 s_baseFontSize;
         quint8 m_fontSize;

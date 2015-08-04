@@ -39,7 +39,6 @@ EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
     QGraphicsItem{parent}, m_fontSize{0}, m_posChanged{false}, m_entity{nullptr}
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
-        m_fontSize = 0;
         m_mathMlDoc.reset(new EgMathMLDocument());
         m_mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
 }
@@ -53,14 +52,14 @@ EgcFormulaItem::EgcFormulaItem(const QString &formula, QPointF point, int size, 
         EgcFormulaItem{parent}
 {
         setFormulaText(formula);
-        setPosition(point);
+        QGraphicsItem::setPos(point);
         setFontSize(size);
 }
 
 EgcFormulaItem::EgcFormulaItem(const QPointF point, QGraphicsItem *parent) :
         EgcFormulaItem{parent}
 {
-        setPosition(point);
+        QGraphicsItem::setPos(point);
 }
 
 void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -139,7 +138,7 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
      if (change == ItemPositionChange && scene()) {
              m_posChanged = true;
              // value is the new position.
-             return snapPos(value.toPointF());
+             return snapGrid(value.toPointF());
      }
      
      return QGraphicsItem::itemChange(change, value);
@@ -157,7 +156,7 @@ QPointF EgcFormulaItem::getPosition( void ) const
 
 void EgcFormulaItem::setPosition(const QPointF &pos)
 {
-        QGraphicsItem::setPos(snapPos(pos));
+        QGraphicsItem::setPos(snapGrid(pos));
 }
 
 void EgcFormulaItem::setGenericFontSize(int size)
@@ -178,13 +177,14 @@ void EgcFormulaItem::updateView(void)
         m_mathMlDoc->setContent(m_entity->getMathMlCode());
 }
 
-QPointF EgcFormulaItem::snapPos(const QPointF& pos)
+QSizeF EgcFormulaItem::getGrid(void)
 {
-        // value is the new position.
-        QPointF newPos = pos;
-        QSizeF grid = static_cast<EgCasScene*>(this->scene())->grid();
-        newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
-        newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
+        QSizeF grid;
 
-        return newPos;        
+        QGraphicsScene *scene = this->scene();
+        if (scene) {
+                grid = static_cast<EgCasScene*>(scene)->grid();
+        }
+
+        return grid;
 }
