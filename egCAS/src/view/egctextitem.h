@@ -31,10 +31,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QGraphicsTextItem>
 #include "egcabstracttextitem.h"
+#include "egcabstractitem.h"
 
 class EgcAbstractTextEntity;
 
-class EgcTextItem: public QGraphicsTextItem, public EgcAbstractTextItem
+class EgcTextItem: public QGraphicsTextItem, public EgcAbstractTextItem, public EgcAbstractItem
 {
 public:
         ///std constructor
@@ -83,6 +84,12 @@ public:
         virtual QString getText(void) override;
 
 protected:
+        /**
+         * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
+         * subclasses already inherit from it - and we don't want to make it complicated)
+         * @return the size of the grid
+         */
+        virtual QSizeF getGrid(void) override;        
         /**
          * @brief itemChange reimplements change function of QGraphicsItem to be able to realize a grid
          * @param change enum that describes state changes that are notified

@@ -93,7 +93,7 @@ QPointF EgcPixmapItem::getPosition( void ) const
 
 void EgcPixmapItem::setPosition(const QPointF &point)
 {
-        setPos(point);
+        QGraphicsPixmapItem::setPos(snapGrid(point));
 }
 
 void EgcPixmapItem::setScaleFactor(qreal scaleFactor)
@@ -115,3 +115,16 @@ QPixmap EgcPixmapItem::getPixmap(void)
 {
         return pixmap();
 }
+
+QSizeF EgcPixmapItem::getGrid(void)
+{
+        QSizeF grid;
+
+        QGraphicsScene *scene = this->scene();
+        if (scene) {
+                grid = static_cast<EgCasScene*>(scene)->grid();
+        }
+
+        return grid;
+}
+

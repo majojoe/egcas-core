@@ -90,7 +90,7 @@ QPointF EgcTextItem::getPosition( void ) const
 
 void EgcTextItem::setPosition(const QPointF &point)
 {
-        setPos(point);
+        QGraphicsTextItem::setPos(snapGrid(point));
 }
 
 void EgcTextItem::setFont(const QFont& font)
@@ -111,4 +111,16 @@ void EgcTextItem::setText(QString text)
 QString EgcTextItem::getText(void)
 {
         return toPlainText();
+}
+
+QSizeF EgcTextItem::getGrid(void)
+{
+        QSizeF grid;
+
+        QGraphicsScene *scene = this->scene();
+        if (scene) {
+                grid = static_cast<EgCasScene*>(scene)->grid();
+        }
+
+        return grid;
 }

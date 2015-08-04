@@ -33,11 +33,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QScopedPointer>
 #include "egcasiteminterface.h"
 #include "egcabstractpixmapitem.h"
+#include "egcabstractitem.h"
 
 class ResizeHandle;
 class EgcAbstractPixmapEntity;
 
-class EgcPixmapItem: public QGraphicsPixmapItem, public EgcAbstractPixmapItem
+class EgcPixmapItem: public QGraphicsPixmapItem, public EgcAbstractPixmapItem, public EgcAbstractItem
 {
 public:
         ///std constructor
@@ -85,6 +86,12 @@ public:
         virtual QPixmap getPixmap(void) override;
 
 protected:
+        /**
+         * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
+         * subclasses already inherit from it - and we don't want to make it complicated)
+         * @return the size of the grid
+         */
+        virtual QSizeF getGrid(void) override;        
         /**
          * @brief itemChange reimplements change function of QGraphicsItem to be able to realize a grid
          * @param change enum that describes state changes that are notified
