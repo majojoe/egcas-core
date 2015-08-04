@@ -134,6 +134,7 @@ EgcFormulaItem* EgCasScene::addFormula(EgcAbstractFormulaEntity& formula, QPoint
         formula.setItem(formulaItem.data());
 
         addItem(formulaItem.data());
+        formulaItem->setPosition(point);
 
         return formulaItem.take();
 }
@@ -148,6 +149,7 @@ EgcTextItem* EgCasScene::addText(EgcAbstractTextEntity& text, QPointF point)
         text.setItem(item.data());
 
         addItem(item.data());
+        item->setPosition(point);
         item->setFont(text.getGenericFont());
 
         return item.take();
@@ -163,6 +165,7 @@ EgcPixmapItem* EgCasScene::addPixmap(EgcAbstractPixmapEntity& pixmap, QPointF po
         pixmap.setItem(item.data());
 
         addItem(item.data());
-
+        item->setPosition(point);
+        
         return item.take();
 }

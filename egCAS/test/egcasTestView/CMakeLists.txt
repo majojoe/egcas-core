@@ -26,6 +26,7 @@ set(tst_egcastest_view_SOURCES
         ../../src/view/egcpixmapitem.cpp 
         ../../src/view/egctextitem.cpp 
         ../../src/view/resizehandle.cpp 
+        ../../src/view/egcabstractitem.cpp
 )
 
 add_executable(tst_egcastest_view ${tst_egcastest_view_SOURCES} )
