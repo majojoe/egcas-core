@@ -103,6 +103,7 @@ set(egCAS_SOURCES
         structural/entities/creator/egcformulacreator.cpp
         structural/entities/creator/egctextcreator.cpp
         structural/entities/creator/egcpixmapcreator.cpp
+        formulagenerator.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS ui/mainwindow.ui)

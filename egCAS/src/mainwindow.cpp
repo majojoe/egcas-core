@@ -37,6 +37,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egctextentity.h"
 #include "entities/egcpixmapentity.h"
 
+#warning remove this after formula input via user interface is available
+#include "formulagenerator.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -55,7 +57,8 @@ MainWindow::MainWindow(QWidget *parent) :
     formula1->setFontSize(40);
     EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
-                                                                               QPointF(120.0, 200.0)));
+                                                                               QPointF(260.0, 200.0)));
+    FormulaGenerator::getFormulaTree(formula2, "(1+sqrt(5))/2");
     formula2->setFontSize(40);
     
     
@@ -64,15 +67,19 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcFormulaItem *formulaItem2 = m_document->getScene()->addFormula(QString("<math><mfrac><mrow><mn> 1 </mn><mo> + </mo><msqrt><mn> 5 </mn></msqrt></mrow><mn> 2 </mn></mfrac></math>"), 40, QPointF(100.0, 200.0));
 
     //add a text item
+    EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->getEntityList()
+                                                                ->createEntity(EgcEntityType::Text,
+                                                                               QPointF(60.0, 30.0)));
     QFont font_text(QString("Century Schoolbook L"));
     font_text.setPixelSize(50);
-    QGraphicsTextItem *text = m_document->getScene()->addText(QString("This is a test text"), font_text);
-    text->setPos(60.0, 30.0);
+    text->setFont(font_text);
+    text->setText("This is a test text");
 
     //add a pixmap item
-    QPixmap pix(":img/plane.png");
-    QGraphicsPixmapItem *pixItem = m_document->getScene()->addPixmap(pix);
-    pixItem->setPos(600.0, 30.0);
+    EgcPixmapEntity* pixmap = static_cast<EgcPixmapEntity*>(m_document->getEntityList()
+                                                                ->createEntity(EgcEntityType::Picture,
+                                                                               QPointF(600.0, 30.0)));
+    pixmap->setFilePath(":img/plane.png");
 
     QRectF rect(0,0,2100,2900);
     m_document->getScene()->setSceneRect(rect);

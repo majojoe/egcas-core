@@ -40,10 +40,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "visitor/egcmathmlvisitor.h"
 #include "egcmaximaconn.h"
 
-
-
-#include <QDebug>
-
 class EgcasTest_Calculation : public QObject
 {
         Q_OBJECT
