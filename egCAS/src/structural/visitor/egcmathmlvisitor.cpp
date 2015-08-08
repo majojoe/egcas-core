@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../egcnodes.h"
 #include "egcmathmlvisitor.h"
 
-EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(formula)
+EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{formula}, m_prettyPrint{true}
 {
 }
 
@@ -112,12 +112,25 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
         QString str;
 
         switch (unary->getNodeType()) {
-        case EgcNodeType::ParenthesisNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "<mfenced open=\"(\" close=\")\" separators=\",\"><mrow>";
-                else
-                        str = "</mrow></mfenced>";
-                break;
+        case EgcNodeType::ParenthesisNode: {
+                /*this is a hack to remove unneccesary parenthesis in case of a fraction or in case of redundant
+                nested parenthesis*/
+                EgcNodeType parentNodeType = unary->getParent()->getNodeType();
+                bool printParenthesis = true;
+                if ( m_prettyPrint
+                     && (    parentNodeType == EgcNodeType::DivisionNode
+                          || parentNodeType == EgcNodeType::ParenthesisNode)
+                     )
+                        printParenthesis = false;
+
+                if (printParenthesis) {
+                        if (m_state == EgcIteratorState::LeftIteration)
+                                str = "<mfenced open=\"(\" close=\")\" separators=\",\"><mrow>";
+                        else
+                                str = "</mrow></mfenced>";
+                }
+        }
+        break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::LeftIteration)
                         str = "<mrow><mo>-</mo>";
@@ -185,4 +198,14 @@ QString EgcMathMlVisitor::getResult(void)
         temp += "</math>";
 
         return temp;
+}
+
+void EgcMathMlVisitor::setPrettyPrint(bool prettyPrint)
+{
+        m_prettyPrint = prettyPrint;
+}
+
+bool EgcMathMlVisitor::prettyPrint(void)
+{
+        return m_prettyPrint;
 }

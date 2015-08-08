@@ -74,6 +74,21 @@ public:
          * @return the result of the traversion as string
          */
         virtual QString getResult(void) override;
+        /**
+         * @brief setPrettyPrint sets the pretty print mode. E.g. in case of fractions/Divisions any additional
+         * parenthesis will be ommitted if pretty print is activated
+         * @param prettyPrint if true (default), pretty print is activated, false otherwise
+         */
+        void setPrettyPrint(bool prettyPrint);
+        /**
+         * @brief prettyPrint returns wether pretty print is activated or not
+         * @return true if pretty print is activated, false otherwise
+         */
+        bool prettyPrint(void);
+
+private:
+        bool m_prettyPrint;             ///< activates pretty printing e.g. in case of a fraction remove the parenthesis
+
 
 };
 
