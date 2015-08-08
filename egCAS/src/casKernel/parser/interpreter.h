@@ -154,7 +154,15 @@ private:
          * @return a pointer to the changed argument list
          */
         EgcFunctionNode* addFncArgument(EgcNode* expressionToAdd, EgcFunctionNode* argumentList);
-
+        /**
+         * @brief addSqrtExpression add a square root to the tree. This is some sort of a hack, since a root node is a 
+         * binary node, but this is constructed with just one argument (unary), the second node (2) is constructed in 
+         * the background
+         * @param node0 the radicand to use
+         * @return 
+         */
+        EgcNode* addSqrtExpression(EgcNode* node0);
+        
         /**
          * @brief addDanglingNode add a dangling node to the set of dangling nodes. So it is easy to delete them later
          * in case of an error during parsing.

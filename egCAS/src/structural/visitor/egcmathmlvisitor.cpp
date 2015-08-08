@@ -36,16 +36,22 @@ EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{f
 
 void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
 {
+        if (m_suppressList.contains(binary))
+                return; 
+        
         QString str;
 
         switch (binary->getNodeType()) {
-        case EgcNodeType::RootNode:
-                if (m_state == EgcIteratorState::LeftIteration)
+        case EgcNodeType::RootNode:                
+                if (m_state == EgcIteratorState::LeftIteration) {
                         str = "<mroot><mrow>";
-                else if (m_state == EgcIteratorState::MiddleIteration)
+                        // don't show the root exponent if it is "2" (square root)
+                        suppressIfChildValue(binary, 1, EgcNodeType::NumberNode, "2");
+                } else if (m_state == EgcIteratorState::MiddleIteration) {
                         str = "</mrow><mrow>";
-                else
+                } else {
                         str = "</mrow></mroot>";
+                }
                 break;
         case EgcNodeType::EqualNode:
                 if (m_state == EgcIteratorState::LeftIteration)
@@ -109,6 +115,9 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
 
 void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
 {
+        if (m_suppressList.contains(unary))
+                return; 
+        
         QString str;
 
         switch (unary->getNodeType()) {
@@ -147,6 +156,9 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
 
 void EgcMathMlVisitor::visit(EgcFlexNode* flex)
 {
+        if (m_suppressList.contains(flex))
+                return; 
+        
         QString str;
 
         switch (flex->getNodeType()) {
@@ -169,6 +181,9 @@ void EgcMathMlVisitor::visit(EgcFlexNode* flex)
 
 void EgcMathMlVisitor::visit(EgcNode* node)
 {
+        if (m_suppressList.contains(node))
+                return; 
+        
         QString str;
 
         switch (node->getNodeType()) {
@@ -192,6 +207,8 @@ void EgcMathMlVisitor::visit(EgcNode* node)
 QString EgcMathMlVisitor::getResult(void)
 {
         QString temp;
+        //clear suppress list from last run
+        m_suppressList.clear();
 
         temp = "<math>";
         temp += EgcNodeVisitor::getResult();
@@ -208,4 +225,28 @@ void EgcMathMlVisitor::setPrettyPrint(bool prettyPrint)
 bool EgcMathMlVisitor::prettyPrint(void)
 {
         return m_prettyPrint;
+}
+
+void EgcMathMlVisitor::suppressIfChildType(const EgcNode* node, quint32 index, EgcNodeType type)
+{
+        
+}
+
+void EgcMathMlVisitor::suppressIfChildValue(const EgcNode* node, quint32 index, EgcNodeType type, QString val)
+{
+        if (!node)
+                return;
+                
+        if (!node->isContainer())
+                return;
+        
+        const EgcContainerNode* container = static_cast<const EgcContainerNode*>(node);
+        if (container->getChild(index)) {                                
+                EgcNode* chldNode = container->getChild(index);
+                if (chldNode->getNodeType() == type) {
+#warning remove need for dedicated cast here
+                        if (static_cast<EgcNumberNode*>(chldNode)->getValue() == val)
+                                m_suppressList.insert(chldNode);
+                }                                
+        }        
 }

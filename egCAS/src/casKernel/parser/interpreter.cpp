@@ -221,3 +221,11 @@ void Interpreter::deleteDanglingNodes(void)
         m_danglingNodes.clear();
 }
 
+EgcNode* Interpreter::addSqrtExpression(EgcNode* node0)
+{
+        QScopedPointer<EgcNumberNode> nExp(static_cast<EgcNumberNode*>(EgcNodeCreator::create(EgcNodeType::NumberNode)));
+        nExp->setValue("2");
+        QScopedPointer<EgcNode> sqrt(addBinaryExpression(EgcNodeType::RootNode, node0, nExp.take()));
+        
+        return sqrt.take();        
+}

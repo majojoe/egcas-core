@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCMATHMLVISITOR_H
 
 #include <QString>
+#include <QSet>
 #include "egcnodevisitor.h"
 
 /**
@@ -85,11 +86,25 @@ public:
          * @return true if pretty print is activated, false otherwise
          */
         bool prettyPrint(void);
+        /**
+         * @brief suppressIfChildType suppress rendering of child object if child has given type 
+         * @param node the current node to render (can be binary, unary or flex node)
+         * @param index the index of the child to test and suppress
+         * @param type the type of the child to test and suppress
+         */
+        void suppressIfChildType(const EgcNode* node, quint32 index, EgcNodeType type);
+        /**
+         * @brief suppressIfChildValue suppress rendering of child object if child has given type and given value
+         * @param node the current node to render (can be binary, unary or flex node)
+         * @param index the index of the child to test and suppress
+         * @param type the type of the child to test and suppress
+         * @param val the value of the child to test and supppress
+         */
+        void suppressIfChildValue(const EgcNode* node, quint32 index, EgcNodeType type, QString val);
 
 private:
         bool m_prettyPrint;             ///< activates pretty printing e.g. in case of a fraction remove the parenthesis
-
-
+        QSet<EgcNode*> m_suppressList;  ///< a list with pointers EgcNode elements that shall not be rendered
 };
 
 #endif // EGCMATHMLVISITOR_H

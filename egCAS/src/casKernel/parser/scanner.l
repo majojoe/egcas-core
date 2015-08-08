@@ -87,6 +87,7 @@ EXPONENT     ([Eeb][-+]?[0-9]+)
 ")"     { return CASParser::MaximaParser::make_RIGHTPARENTHESIS(CASParser::location()); }
 "^" |
 "**"    { return CASParser::MaximaParser::make_EXPONENT(CASParser::location()); }
+"sqrt"  { return CASParser::MaximaParser::make_SQROOT(CASParser::location()); }
 
  /*numbers*/
 [0-9]+"."[0-9]*{EXPONENT}? |
