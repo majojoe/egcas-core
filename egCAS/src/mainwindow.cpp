@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
                                                                                QPointF(260.0, 200.0)));
-    FormulaGenerator::getFormulaTree(formula2, "(1+sqrt(5))/2");
+    FormulaGenerator::getFormulaTree(formula2, "((1+sqrt(5)))/2");
     formula2->setFontSize(40);
     
     

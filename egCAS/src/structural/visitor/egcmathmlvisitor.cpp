@@ -35,10 +35,7 @@ EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{f
 }
 
 void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
-{
-        if (m_suppressList.contains(binary))
-                return; 
-        
+{       
         QString str;
 
         switch (binary->getNodeType()) {
@@ -94,10 +91,13 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
                         str = "</mrow>";
                 break;
         case EgcNodeType::DivisionNode:
-                if (m_state == EgcIteratorState::LeftIteration)
+                if (m_state == EgcIteratorState::LeftIteration) {
                         str = "<mfrac>";
-                else if (m_state == EgcIteratorState::RightIteration)
+                        suppressIfChildType(binary, 0, EgcNodeType::ParenthesisNode);
+                        suppressIfChildType(binary, 1, EgcNodeType::ParenthesisNode);
+                } else if (m_state == EgcIteratorState::RightIteration) {
                         str = "</mfrac>";
+                }
                 break;
         case EgcNodeType::ExponentNode:
                 if (m_state == EgcIteratorState::LeftIteration)
@@ -110,34 +110,23 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
                 break;
         }
 
-        m_result += str;
+        if (!m_suppressList.contains(binary))
+                m_result += str;
 }
 
 void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
 {
-        if (m_suppressList.contains(unary))
-                return; 
-        
         QString str;
 
         switch (unary->getNodeType()) {
         case EgcNodeType::ParenthesisNode: {
-                /*this is a hack to remove unneccesary parenthesis in case of a fraction or in case of redundant
-                nested parenthesis*/
-                EgcNodeType parentNodeType = unary->getParent()->getNodeType();
-                bool printParenthesis = true;
-                if ( m_prettyPrint
-                     && (    parentNodeType == EgcNodeType::DivisionNode
-                          || parentNodeType == EgcNodeType::ParenthesisNode)
-                     )
-                        printParenthesis = false;
+                /*this is to remove unneccesary parenthesis in case of redundant nested parenthesis*/
+                suppressIfChildType(unary, 0, EgcNodeType::ParenthesisNode);
 
-                if (printParenthesis) {
-                        if (m_state == EgcIteratorState::LeftIteration)
-                                str = "<mfenced open=\"(\" close=\")\" separators=\",\"><mrow>";
-                        else
-                                str = "</mrow></mfenced>";
-                }
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "<mfenced open=\"(\" close=\")\" separators=\",\"><mrow>";
+                else
+                        str = "</mrow></mfenced>";
         }
         break;
         case EgcNodeType::UnaryMinusNode:
@@ -151,7 +140,8 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
                 break;
         }
 
-        m_result += str;
+        if (!m_suppressList.contains(unary))
+                m_result += str;
 }
 
 void EgcMathMlVisitor::visit(EgcFlexNode* flex)
@@ -176,7 +166,8 @@ void EgcMathMlVisitor::visit(EgcFlexNode* flex)
                 break;
         }
 
-        m_result += str;
+        if (!m_suppressList.contains(flex))
+                m_result += str;
 }
 
 void EgcMathMlVisitor::visit(EgcNode* node)
@@ -201,7 +192,8 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                 break;
         }
 
-        m_result += str;
+        if (!m_suppressList.contains(node))
+                m_result += str;
 }
 
 QString EgcMathMlVisitor::getResult(void)
@@ -229,7 +221,22 @@ bool EgcMathMlVisitor::prettyPrint(void)
 
 void EgcMathMlVisitor::suppressIfChildType(const EgcNode* node, quint32 index, EgcNodeType type)
 {
-        
+        if (!node)
+                return;
+
+        if (!m_prettyPrint)
+                return;
+
+        if (!node->isContainer())
+                return;
+
+        const EgcContainerNode* container = static_cast<const EgcContainerNode*>(node);
+        if (container->getChild(index)) {
+                EgcNode* chldNode = container->getChild(index);
+                if (chldNode->getNodeType() == type) {
+                        m_suppressList.insert(chldNode);
+                }
+        }
 }
 
 void EgcMathMlVisitor::suppressIfChildValue(const EgcNode* node, quint32 index, EgcNodeType type, QString val)
@@ -237,15 +244,27 @@ void EgcMathMlVisitor::suppressIfChildValue(const EgcNode* node, quint32 index, 
         if (!node)
                 return;
                 
+        if (!m_prettyPrint)
+                return;
+
         if (!node->isContainer())
                 return;
         
         const EgcContainerNode* container = static_cast<const EgcContainerNode*>(node);
         if (container->getChild(index)) {                                
                 EgcNode* chldNode = container->getChild(index);
-                if (chldNode->getNodeType() == type) {
-#warning remove need for dedicated cast here
-                        if (static_cast<EgcNumberNode*>(chldNode)->getValue() == val)
+                if (chldNode->getNodeType() == type) {                        
+                        QString value;
+                        switch (type) {
+                        case EgcNodeType::NumberNode:
+                                value = static_cast<EgcNumberNode*>(chldNode)->getValue();
+                                break;
+                        case EgcNodeType::VariableNode:
+                                value = static_cast<EgcVariableNode*>(chldNode)->getValue();
+                                break;
+                        }
+
+                        if (value == val)
                                 m_suppressList.insert(chldNode);
                 }                                
         }        
