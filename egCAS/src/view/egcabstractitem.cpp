@@ -31,12 +31,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QPointF>
 #include "egcabstractitem.h"
 
+EgcAbstractItem::EgcAbstractItem() : m_gridActivated{true}
+{
+        
+}
+
 QPointF EgcAbstractItem::snapGrid(const QPointF& pos)
 {
         // value is the new position.
         QPointF newPos = pos;
         QSizeF grid = getGrid();
-        if (grid.isValid() && gridActivated) {
+        if (grid.isValid() && m_gridActivated) {
                 newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
                 newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
         }
@@ -46,10 +51,10 @@ QPointF EgcAbstractItem::snapGrid(const QPointF& pos)
 
 void EgcAbstractItem::activateGrid(bool activate)
 {
-        gridActivated = activate;
+        m_gridActivated = activate;
 }
 
 bool EgcAbstractItem::isGridActivated(void)
 {
-        return gridActivated;
+        return m_gridActivated;
 }

@@ -36,6 +36,8 @@ class QSizeF;
 class EgcAbstractItem
 {
 public:
+        ///std constructor
+        EgcAbstractItem();
         /**
          * @brief ~EgcAbstractItem virtual destructor in order to be able to delete subclasses
          */
@@ -64,7 +66,7 @@ protected:
          */
         QPointF snapGrid(const QPointF& pos);
 
-        bool gridActivated;           ///< reflects if the grid is activated
+        bool m_gridActivated;           ///< reflects if the grid is activated
 };
 
 #endif // EGCABSTRACTITEM_H
