@@ -53,19 +53,15 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcFormulaItem::setBaseFontSize(30);
     EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
-                                                                               QPointF(120.0, 350.0)));
+                                                                               QPointF(100.0, 350.0)));
+    FormulaGenerator::getFormulaTree(formula1, "(sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3)))/(_2exponentiale_3^_2pi_3)=x^_2tprime_3");
     formula1->setFontSize(40);
     EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
-                                                                               QPointF(260.0, 200.0)));
+                                                                               QPointF(100.0, 200.0)));
     FormulaGenerator::getFormulaTree(formula2, "((1+sqrt(5)))/2");
     formula2->setFontSize(40);
     
-    
-    
-    EgcFormulaItem *formulaItem = m_document->getScene()->addFormula(QString("<math  display=\"block\"><mrow><mfrac><msqrt><mn>1</mn><mo>+</mo><mroot><mrow><mn>2</mn><mo>+</mo><mroot><mrow><mn>3</mn><mo>+</mo><mroot><mrow><mn>4</mn><mo>+</mo><mroot><mrow><mn>5</mn><mo>+</mo><mroot><mrow><mn>6</mn><mo>+</mo><mroot><mrow><mn>7</mn><mo>+</mo><mroot><mi>A</mi><mn>19</mn></mroot></mrow><mn>17</mn></mroot></mrow><mn>13</mn></mroot></mrow><mn>11</mn></mroot></mrow><mn>7</mn></mroot></mrow><mn>5</mn></mroot></mrow><mn>3</mn></mroot></msqrt><msup><mi>&exponentiale;</mi><mi>&pi;</mi></msup></mfrac><mo>=</mo><msup><mi>x</mi><mo style=\"font-size: larger;\">&tprime;</mo></msup></mrow></math>"), 40, QPointF(120.0, 350.0));
-    EgcFormulaItem *formulaItem2 = m_document->getScene()->addFormula(QString("<math><mfrac><mrow><mn> 1 </mn><mo> + </mo><msqrt><mn> 5 </mn></msqrt></mrow><mn> 2 </mn></mfrac></math>"), 40, QPointF(100.0, 200.0));
-
     //add a text item
     EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Text,

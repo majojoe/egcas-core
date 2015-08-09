@@ -102,6 +102,7 @@
 %token RIGHTPARENTHESIS ")";
 %token EXPONENT "^"
 %token SQROOT "sqrt"
+%token ROOT "_root"
 
 %right "=" ":"
 %left "+" "-"
@@ -149,6 +150,7 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}
      | BUILTIN_FNCS "(" explist ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
      | "sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}
+     | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}
 ;
     
 explist: expr            {$$ = interpreter.createFncArgList($1);}

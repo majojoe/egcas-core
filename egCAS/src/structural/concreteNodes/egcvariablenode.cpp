@@ -51,8 +51,10 @@ void EgcVariableNode::setValueRaw(const QString& varName)
         QString tmp = varName;
         //handle ampersands
         tmp.replace(QRegularExpression("(.*[^_]+)_2([^_]+.*)"), "\\1&\\2");
+        tmp.replace(QRegularExpression("_2([^_]+.*)"), "&\\1"); //if the ampersand is at the beginning
         //handle ";"s
         tmp.replace(QRegularExpression("(.*[^_]+)_3([^_]+.*)"), "\\1;\\2");
+        tmp.replace(QRegularExpression("(.*[^_]+)_3"), "\\1;");  //if the ";" is at the end
 
         QRegularExpression regex = QRegularExpression("(.*[^_]+)_1([^_]+.*)");
         QRegularExpressionMatch regexMatch = regex.match(tmp);
@@ -60,7 +62,7 @@ void EgcVariableNode::setValueRaw(const QString& varName)
                 m_value = regexMatch.captured(1);
                 m_subscript = regexMatch.captured(2);
         } else {
-                m_value = varName;
+                m_value = tmp;
                 m_subscript = QString::null;
         }
 
