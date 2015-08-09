@@ -33,7 +33,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../specialNodes/egcnode.h"
 
 /**
- * @brief The EgcVariableNode class is a class that holds the leafes with variable names
+ * @brief The EgcVariableNode class is a class that holds the leafes with variable names.
+ *
+ * It is also possible to store mathml symbol codes e.g. &Alpha; inside the varible node. Following codes for ampersand
+ * '&' and ";" are used:
+ * _1  : as delimeter for value and subscript
+ * _2  : as code for the ampersand '&'
+ * _3  : as code for ";"
+ * These symbols cannot be represented by a cas kernel or have different meaning, therefore the are stuffed.
  */
 class EgcVariableNode : public EgcNode
 {
@@ -69,7 +76,7 @@ public:
         /**
          * @brief getStuffedVar returns the stuffed variable name (with subscript)
          * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
-         * and variable name and subscript is seperated via "_")
+         * and variable name and subscript is seperated via "_1").
          */
         virtual QString getStuffedVar(void);
         /**
