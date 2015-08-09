@@ -1201,9 +1201,9 @@ void EgcasTest_Structural::testVisitors()
 
         //test math ml visitor
         EgcMathMlVisitor mathMlVisitor(formula4);
-        result = mathMlVisitor.getResult();
-        QVERIFY(result == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
-        QVERIFY(formula4.getMathMlCode() == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow><mn>2</mn></mrow></mroot></math>"));
+        result = mathMlVisitor.getResult();        
+        QVERIFY(result == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow></mrow></mroot></math>"));
+        QVERIFY(formula4.getMathMlCode() == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow></mrow></mroot></math>"));
 }
 
 void EgcasTest_Structural::testFlexNode()
