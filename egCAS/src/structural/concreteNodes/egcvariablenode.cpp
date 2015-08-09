@@ -48,20 +48,24 @@ void EgcVariableNode::setValue(const QString& varName, const QString& subscript)
 
 void EgcVariableNode::setValueRaw(const QString& varName)
 {
-        QRegularExpression regex = QRegularExpression("(.*[^_]+)_([^_]+.*)");
-        QRegularExpressionMatch regexMatch = regex.match(varName);
+        QString tmp = varName;
+        //handle ampersands
+        tmp.replace(QRegularExpression("(.*[^_]+)_2([^_]+.*)"), "\\1&\\2");
+        //handle ";"s
+        tmp.replace(QRegularExpression("(.*[^_]+)_3([^_]+.*)"), "\\1;\\2");
+
+        QRegularExpression regex = QRegularExpression("(.*[^_]+)_1([^_]+.*)");
+        QRegularExpressionMatch regexMatch = regex.match(tmp);
         if (regexMatch.hasMatch()) {
-                QString tmp = regexMatch.captured(1);
-                tmp.replace("__", "_");
-                m_value = tmp;
-                tmp = regexMatch.captured(2);
-                tmp.replace("__", "_");
-                m_subscript = tmp;
+                m_value = regexMatch.captured(1);
+                m_subscript = regexMatch.captured(2);
         } else {
                 m_value = varName;
-                m_value.replace("__", "_");
                 m_subscript = QString::null;
         }
+
+        m_value.replace("__", "_");
+        m_subscript.replace("__", "_");
 }
 
 QString EgcVariableNode::getValue(void) const
@@ -80,7 +84,13 @@ QString EgcVariableNode::getStuffedVar(void)
         QString var = m_value.replace("_", "__");
         QString sub = m_subscript.replace("_", "__");
 
-        return var % "_" % sub;
+        QString tmp = var % "_1" % sub;
+        // ampersands in special symbols are replaced by "_2" for use in calculation kernel
+        tmp = tmp.replace("&", "_2");
+        // ";" in special symbols are replaced by "_3" for use in calculation kernel
+        tmp = tmp.replace(";", "_3");
+
+        return tmp;
 }
 
 bool EgcVariableNode::valid(void)
