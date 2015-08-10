@@ -27,6 +27,9 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QResource>
+#include <QFile>
+#include <QTextStream>
 #include "egclicenseinfo.h"
 #include "ui_egclicenseinfo.h"
 
@@ -35,6 +38,13 @@ EgcLicenseInfo::EgcLicenseInfo(QWidget *parent) :
         m_ui(new Ui::EgcLicenseInfo)
 {
         m_ui->setupUi(this);
+        QResource lic(":/res/LICENSE");
+        QFile licFile(lic.absoluteFilePath());
+
+        if (licFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QTextStream in(&licFile);
+                m_ui->textBrowser->setText(in.readAll());
+        }
 }
 
 EgcLicenseInfo::~EgcLicenseInfo()
