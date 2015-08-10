@@ -25,6 +25,9 @@ if(CMAKE_COMPILER_IS_GNUCXX)
         add_definitions(-std=c++11)
 endif()
 
+#copy license file to res directory
+file(COPY ${CMAKE_SOURCE_DIR}/egCAS/LICENSE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/res)
+
 # Widgets finds its own dependencies.
 find_package(Qt5 COMPONENTS Widgets Xml PrintSupport Gui Core)
 
