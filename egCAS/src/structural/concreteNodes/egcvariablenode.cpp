@@ -31,6 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QRegularExpression>
 #include "egcvariablenode.h"
 
+
+QRegularExpression EgcVariableNode::m_ampersand = QRegularExpression("(.*[^_]+)_2([^_]+.*)");
+QRegularExpression EgcVariableNode::m_ampersand_begin = QRegularExpression("_2([^_]+.*)");
+QRegularExpression EgcVariableNode::m_semi = QRegularExpression("(.*[^_]+)_3([^_]+.*)");
+QRegularExpression EgcVariableNode::m_semi_begin = QRegularExpression("(.*[^_]+)_3");
+
 EgcVariableNode::EgcVariableNode() : m_value(QString::null), m_subscript(QString::null)
 {
 }
@@ -49,12 +55,14 @@ void EgcVariableNode::setValue(const QString& varName, const QString& subscript)
 void EgcVariableNode::setValueRaw(const QString& varName)
 {
         QString tmp = varName;
+        /*the regexes are copied from static expressions since copying is cheap but we don't need to build up the
+        regexes on the stack*/
         //handle ampersands
-        tmp.replace(QRegularExpression("(.*[^_]+)_2([^_]+.*)"), "\\1&\\2");
-        tmp.replace(QRegularExpression("_2([^_]+.*)"), "&\\1"); //if the ampersand is at the beginning
+        tmp.replace(QRegularExpression(m_ampersand), "\\1&\\2");
+        tmp.replace(QRegularExpression(m_ampersand_begin), "&\\1"); //if the ampersand is at the beginning
         //handle ";"s
-        tmp.replace(QRegularExpression("(.*[^_]+)_3([^_]+.*)"), "\\1;\\2");
-        tmp.replace(QRegularExpression("(.*[^_]+)_3"), "\\1;");  //if the ";" is at the end
+        tmp.replace(QRegularExpression(m_semi), "\\1;\\2");
+        tmp.replace(QRegularExpression(m_semi_begin), "\\1;");  //if the ";" is at the end
 
         QRegularExpression regex = QRegularExpression("(.*[^_]+)_1([^_]+.*)");
         QRegularExpressionMatch regexMatch = regex.match(tmp);

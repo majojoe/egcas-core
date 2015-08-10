@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCVARIABLENODE_H
 
 #include <QString>
+#include <QRegularExpression>
 #include "../specialNodes/egcnode.h"
 
 /**
@@ -94,7 +95,11 @@ public:
 
 protected:
         QString m_value;          ///< the variable name used
-        QString m_subscript;      ///< the subscript if any        
+        QString m_subscript;      ///< the subscript if any
+        static QRegularExpression m_ampersand; ///< regex to replace ampersand
+        static QRegularExpression m_ampersand_begin; ///< regex to replace ampersand at the beginning
+        static QRegularExpression m_semi; ///< regex to replace semicolon
+        static QRegularExpression m_semi_begin; ///< regex to replace semicolon at the beginning
 };
 
 #endif // EGCVARIABLENODE_H
