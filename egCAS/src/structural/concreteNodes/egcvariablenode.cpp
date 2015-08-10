@@ -36,9 +36,18 @@ QRegularExpression EgcVariableNode::m_ampersand = QRegularExpression("(.*[^_]+)_
 QRegularExpression EgcVariableNode::m_ampersand_begin = QRegularExpression("_2([^_]+.*)");
 QRegularExpression EgcVariableNode::m_semi = QRegularExpression("(.*[^_]+)_3([^_]+.*)");
 QRegularExpression EgcVariableNode::m_semi_begin = QRegularExpression("(.*[^_]+)_3");
+bool EgcVariableNode::initializeRegex = true;
 
 EgcVariableNode::EgcVariableNode() : m_value(QString::null), m_subscript(QString::null)
 {
+        //optimize all the regexes
+        if (initializeRegex) {
+                initializeRegex = false;
+                m_ampersand.optimize();
+                m_ampersand_begin.optimize();
+                m_semi.optimize();
+                m_semi_begin.optimize();
+        }
 }
 
 EgcVariableNode::~EgcVariableNode()
