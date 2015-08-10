@@ -67,7 +67,7 @@ set(egCAS_concrete_node_SOURCES
 
 set(egCAS_SOURCES
         main.cpp
-        mainwindow.cpp 
+        menu/mainwindow.cpp
         view/egcasscene.cpp 
         view/egcasiteminterface.cpp 
         view/egctextitem.cpp 
@@ -104,10 +104,14 @@ set(egCAS_SOURCES
         structural/entities/creator/egctextcreator.cpp
         structural/entities/creator/egcpixmapcreator.cpp
         formulagenerator.cpp
+        menu/egclicenseinfo.cpp
 )
 
-qt5_wrap_ui(EGCAS_UIS ui/mainwindow.ui)
-qt5_add_resources(EGCAS_RCCS ../img/ressources.qrc)
+qt5_wrap_ui(EGCAS_UIS
+            menu/mainwindow.ui
+            menu/egclicenseinfo.ui
+)
+qt5_add_resources(EGCAS_RCCS res/ressources.qrc)
 
 #set the verbosity level of the scanner and parser
 add_definitions(-DEGC_SCANNER_DEBUG=0)

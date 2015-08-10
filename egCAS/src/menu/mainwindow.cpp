@@ -26,6 +26,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QMessageBox>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "view/egcformulaitem.h"
@@ -36,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcformulaentity.h"
 #include "entities/egctextentity.h"
 #include "entities/egcpixmapentity.h"
+#include "menu/egclicenseinfo.h"
 
 #warning remove this after formula input via user interface is available
 #include "formulagenerator.h"
@@ -45,6 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui{new Ui::MainWindow}, m_document{new EgcDocument}
 {
     m_ui->setupUi(this);
+    connect(m_ui->mnu_show_license, SIGNAL(triggered()), this, SLOT(showLicense()));
     m_ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     m_ui->graphicsView->setScene(m_document->getScene());
     //m_ui->graphicsView->scale(0.5,0.5);
@@ -75,7 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcPixmapEntity* pixmap = static_cast<EgcPixmapEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Picture,
                                                                                QPointF(600.0, 30.0)));
-    pixmap->setFilePath(":img/plane.png");
+    pixmap->setFilePath(":res/plane.png");
 
     QRectF rect(0,0,2100,2900);
     m_document->getScene()->setSceneRect(rect);
@@ -84,4 +87,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::showLicense(void)
+{
+        EgcLicenseInfo licenseInfo;
+        licenseInfo.exec();
 }

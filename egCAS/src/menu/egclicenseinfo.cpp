@@ -1,4 +1,5 @@
-/*Copyright (c) 2014, Johannes Maier <maier_jo@gmx.de>
+/*
+Copyright (c) 2015, Johannes Maier <maier_jo@gmx.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -11,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of egCAS nor the names of its
+* Neither the name of the egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -26,31 +27,16 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "egclicenseinfo.h"
+#include "ui_egclicenseinfo.h"
 
-#include <QMainWindow>
-#include <QtCore>
-#include <QtGui>
-#include <QScopedPointer>
-#include "view/egcasscene.h"
-
-namespace Ui {
-class MainWindow;
-}
-class EgcDocument;
-
-class MainWindow : public QMainWindow
+EgcLicenseInfo::EgcLicenseInfo(QWidget *parent) :
+        QDialog(parent),
+        m_ui(new Ui::EgcLicenseInfo)
 {
-    Q_OBJECT
+        m_ui->setupUi(this);
+}
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
-private:
-    QScopedPointer<Ui::MainWindow> m_ui;
-    QScopedPointer<EgcDocument> m_document;
-};
-
-#endif // MAINWINDOW_H
+EgcLicenseInfo::~EgcLicenseInfo()
+{
+}

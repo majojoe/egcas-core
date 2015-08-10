@@ -26,14 +26,33 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include "menu/mainwindow.h"
-#include <QApplication>
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+#include <QMainWindow>
+#include <QtCore>
+#include <QtGui>
+#include <QScopedPointer>
+#include "view/egcasscene.h"
 
-    return a.exec();
+namespace Ui {
+class MainWindow;
 }
+class EgcDocument;
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
+
+public slots:
+        void showLicense(void);
+private:
+    QScopedPointer<Ui::MainWindow> m_ui;
+    QScopedPointer<EgcDocument> m_document;
+};
+
+#endif // MAINWINDOW_H
