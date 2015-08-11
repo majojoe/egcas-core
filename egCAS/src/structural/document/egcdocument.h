@@ -37,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/creator/egcformulacreator.h"
 #include "entities/creator/egcpixmapcreator.h"
 #include "entities/creator/egctextcreator.h"
+#include "egccalculation.h"
 
 class EgcEntityList;
 class EgCasScene;
@@ -82,13 +83,17 @@ public:
          * @return the cloned entity
          */
         EgcEntity* cloneEntity(EgcEntityList& list, EgcEntity& entity2copy);
+        /**
+         * @brief calculate calculates the document
+         */
+        void calculate(void);
 
 private:
         virtual void sort(void) override {}
         
         QScopedPointer<EgcEntityList> m_list;           ///< the list with the items to the text, pixmap and formual items
         QScopedPointer<EgCasScene> m_scene;             ///< the scene for rendering all items
-        //QScopedPointer<EgcCalulation> m_calc;         ///< the class which holds all tools for doing calculations
+        QScopedPointer<EgcCalculation> m_calc;          ///< the class which holds all tools for doing calculations
         //QScopedPointer<EgcDocWindow> m_win;           ///< holds the window where to show the items
         EgcFormulaCreator m_formulaCreator;             ///< creator for formula entities
         EgcPixmapCreator m_pixmapCreator;               ///< creator for pixmap entities

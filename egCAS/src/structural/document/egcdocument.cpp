@@ -32,8 +32,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcdocument.h"
 #include "entities/egcentitylist.h"
 #include "view/egcasscene.h"
+#include "egccalculation.h"
 
-EgcDocument::EgcDocument() : m_list(new EgcEntityList(this)), m_scene(new EgCasScene())
+EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasScene()}, m_calc{new EgcCalculation()}
 {
 }
 
@@ -93,4 +94,9 @@ EgcEntity* EgcDocument::cloneEntity(EgcEntityList& list, EgcEntity& entity2copy)
         }
 
         return ptr;
+}
+
+void EgcDocument::calculate(void)
+{
+        m_calc->calculate(*m_list);
 }

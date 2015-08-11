@@ -108,6 +108,7 @@ set(egCAS_SOURCES
         structural/entities/creator/egcpixmapcreator.cpp
         formulagenerator.cpp
         menu/egclicenseinfo.cpp
+        structural/document/egccalculation.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS
