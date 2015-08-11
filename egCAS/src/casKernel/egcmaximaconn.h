@@ -45,7 +45,7 @@ public:
          * It waits for commands then and will bring back the results.
          * @param executeMaximaCmd the path to the maxima executable including arguments.
          */
-        EgcMaximaConn(QString executeMaximaCmd, QObject *parent = 0);
+        EgcMaximaConn(QObject *parent = 0);
         ///destructor
         ~EgcMaximaConn();
         /**

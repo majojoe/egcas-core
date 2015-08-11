@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 QString EgcMaximaConn::s_startupConfig = QString("set_display(none);display2d:false;");
 
-EgcMaximaConn::EgcMaximaConn(QString executeMaximaCmd, QObject *parent) : EgcKernelConn(executeMaximaCmd, parent)
+EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn("maxima", parent)
 {
         //information to remove from error messages of maxima
         //use the vector below to add more messages that we don't want to show to the user.

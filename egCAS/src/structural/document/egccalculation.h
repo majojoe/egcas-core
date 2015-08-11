@@ -30,19 +30,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCCALCULATION_H
 #define EGCCALCULATION_H
 
+#include <QObject>
 #include "entities/egcentitylist.h"
+#include "casKernel/egcmaximaconn.h"
 
 /**
  * @brief The EgcCalculation class handles the calculation of the document.
  */
-class EgcCalculation
+class EgcCalculation : public QObject
 {
+        Q_OBJECT
 public:
-        EgcCalculation();
+        EgcCalculation(QObject *parent = 0);
         /**
          * @brief calculate start calculation of the given list
          */
         void calculate(EgcEntityList& list);
+private slots:
+        //some slots for connecting the results of the cas kernel
+        void resultReceived(QString result);
+        void errorReceived(QString errorMsg);
+        void kernelStarted(void);
+        void kernelTerminated(void);
+        void kernelErrorOccurred(QProcess::ProcessError error);   
+private:
+        QScopedPointer<EgcKernelConn> m_conn;     ///< the connection to the cas kernel
 };
 
 #endif // EGCCALCULATION_H

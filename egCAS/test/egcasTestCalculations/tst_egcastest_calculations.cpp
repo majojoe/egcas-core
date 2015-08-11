@@ -71,7 +71,7 @@ EgcNode* EgcasTest_Calculation::getTree(QString formula)
 
 void EgcasTest_Calculation::basicTestCalculation()
 {                
-        conn.reset(new (std::nothrow) EgcMaximaConn("/usr/bin/maxima", this));
+        conn.reset(new (std::nothrow) EgcMaximaConn(this));
         connect(conn.data(), SIGNAL(resultReceived(QString)), this, SLOT(evaluateResult(QString)));
         connect(conn.data(), SIGNAL(kernelStarted()), this, SLOT(kernelStarted()));
         QVERIFY(!conn.isNull());
