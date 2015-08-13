@@ -167,9 +167,8 @@ public:
         bool setResult(EgcNode* result);
         /**
          * @brief resetResult if the content of the formula is a result, delete the result and set it empty
-         * @return true if a reset was sucessful, false otherwise
          */
-        bool resetResult(void);
+        void resetResult(void);
         /**
          * @brief getEntityType returns the entity type of the current class
          * @return the entity type

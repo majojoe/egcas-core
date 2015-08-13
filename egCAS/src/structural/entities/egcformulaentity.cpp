@@ -267,10 +267,8 @@ bool EgcFormulaEntity::setResult(EgcNode* result)
         return repaint;
 }
 
-bool EgcFormulaEntity::resetResult(void)
+void EgcFormulaEntity::resetResult(void)
 {
-        bool retval = false;
-
         if (isResult()) {
                 QScopedPointer<EgcNode> emptyNode(EgcNodeCreator::create(EgcNodeType::EmptyNode));
                 if (!emptyNode.isNull()) {

@@ -130,3 +130,10 @@ EgcEntity* EgcEntityList::cloneEntity(EgcEntity& entity2copy)
                 return nullptr;
         }
 }
+
+QListIterator<EgcEntity*> EgcEntityList::getIterator(void)
+{
+        QListIterator<EgcEntity*> i(m_list);
+
+        return i;
+}

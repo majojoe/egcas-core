@@ -100,6 +100,11 @@ public:
          * @return the created entity
          */
         EgcEntity* cloneEntity(EgcEntity& entity2copy);
+        /**
+         * @brief getIterator returns an iterator that operates on the enity list
+         * @return returns a list iterator
+         */
+        QListIterator<EgcEntity*> getIterator(void);
 
 private:
         QList<EgcEntity*> m_list;               ///< holds a bunch of entities of a document

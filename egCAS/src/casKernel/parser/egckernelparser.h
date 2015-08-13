@@ -32,6 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgcNode;
 
 #include <QString>
+#include <QScopedPointer>
+#include "interpreter.h"
 
 /**
  * @brief The EgcKernelParser class encapsulates the parsing of the cas kernel output and creates a node tree thereof.
@@ -56,6 +58,7 @@ public:
         QString getErrorMessage();
 private:
         QString m_errMessage;   /// stores a error message if an error ocurred while parsing
+        QScopedPointer<CASParser::Interpreter> m_i;        ///< stores an interpreter
 };
 
 #endif // EGCKERNELPARSER_H

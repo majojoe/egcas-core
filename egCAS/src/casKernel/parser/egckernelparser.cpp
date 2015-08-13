@@ -40,19 +40,18 @@ using namespace CASParser;
 using namespace std;
 
 
-EgcKernelParser::EgcKernelParser()
+EgcKernelParser::EgcKernelParser() : m_i{new Interpreter()}
 {
 }
 
 EgcNode* EgcKernelParser::parseKernelOutput(const QString& strToParse)
 {
-        Interpreter i;
         stringstream ss;
 
         ss << strToParse.toStdString();
-        i.switchInputStream(&ss);
+        m_i->switchInputStream(&ss);
         try {
-                if (i.parse()) {
+                if (m_i->parse()) {
                         m_errMessage = "common unspecified error while parsing input";
                         return nullptr;
                 }
@@ -68,7 +67,7 @@ EgcNode* EgcKernelParser::parseKernelOutput(const QString& strToParse)
                 return nullptr;
         }
 
-        return i.getRootNode();
+        return m_i->getRootNode();
 }
 
 QString EgcKernelParser::getErrorMessage()
