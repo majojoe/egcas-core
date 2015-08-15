@@ -27,6 +27,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QStringBuilder>
+#include <entities/egcformulaentity.h>
 #include "../egcnodes.h"
 #include "egcmathmlvisitor.h"
 
@@ -204,6 +205,15 @@ QString EgcMathMlVisitor::getResult(void)
 
         temp = "<math>";
         temp += EgcNodeVisitor::getResult();
+                
+        if (m_formula) {
+                if (!m_formula->getErrorMessage().isEmpty()) {
+                        //temp += "<mspace linebreak='newline'/>";
+                        temp += "<mtext>";
+                        temp += m_formula->getErrorMessage();
+                        temp += "</mtext>";
+                }
+        }
         temp += "</math>";
 
         return temp;

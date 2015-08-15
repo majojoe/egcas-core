@@ -219,13 +219,23 @@ public:
          * @brief itemChanged is called when the item that is associated with the enity has changed
          */
         virtual void itemChanged(EgcItemChangeType changeType) override;
-
+        /**
+         * @brief setErrorMessage set the error message of the formula, if one
+         * @param msg the message to set
+         */
+        void setErrorMessage(QString msg);
+        /**
+         * @brief getErrorMessage returns the error message of the formula, if one
+         * @return the error message
+         */
+        QString getErrorMessage(void);
 private:
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
         EgcBaseNode m_data;                     ///< holds a pointer to the root element of the formula tree
         static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
         EgcAbstractFormulaItem* m_item;         ///< pointer to the formula item interface on the scene
+        QString m_errorMsg;                     ///< the error message for this formula, if one
 };
 
 #endif // EGCFORMULAENTITY_H

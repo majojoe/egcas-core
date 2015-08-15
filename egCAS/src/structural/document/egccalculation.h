@@ -37,6 +37,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class EgcFormulaEntity;
 
+
+enum class EgcKernelErrorType {
+        kernelTerminated, timeout, rdWrError, kernelNotFound, unknown
+};
+
 /**
  * @brief The EgcCalculation class handles the calculation of the document.
  */
@@ -45,19 +50,28 @@ class EgcCalculation : public QObject
         Q_OBJECT
 public:
         EgcCalculation(QObject *parent = 0);
+        virtual ~EgcCalculation();
         /**
          * @brief calculate start calculation of the given list
          * @param list the list to use for the calculations
          * @param updateInstantly if true the view will be updated instantly after calculating. If false, the update
          * will happen after resuming the calculation.
+         * @return true if calculation could be started, false if a calculation is already running
          */
-        void calculate(EgcEntityList& list, bool updateInstantly = true);
+        bool calculate(EgcEntityList& list, bool updateInstantly = true);
 //        /**
 //         * @brief resumeCalculation calculate all remaining formulas in the list (given with calculate) until all
 //         * formulas are calculated or there is another lock on a formula.
 //         * This method is for resuming a stopped calculation that has been interrupted upon a lock on a formula.
 //         */
 //        void resumeCalculation(void);
+signals:
+        /**
+         * @brief errorOccurred during calculation an error occurred
+         * @param type the type of the error that occurred
+         * @param message the error string
+         */
+        void errorOccurred(EgcKernelErrorType type, QString message);
 private slots:
         //some slots for connecting the results of the cas kernel
         void resultReceived(QString result);
@@ -83,7 +97,8 @@ private:
         bool m_computeWhenStarted;              ///< begin with computation when the kernel has started
         bool m_updateInstantly;                 ///< when true, update the view instantly, otherwise it's updated after resuming the calculation
         EgcFormulaEntity* m_waitForResult;      ///< a pointer to the formula entity that is currently being calculated
-        EgcKernelParser m_parser;
+        EgcKernelParser m_parser;               ///< the parser used for parsing cas kernel output
+        bool m_calculationRunning;              ///< calculation is already running (no new one can be started)
 };
 
 #endif // EGCCALCULATION_H

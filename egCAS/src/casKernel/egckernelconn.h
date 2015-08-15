@@ -72,6 +72,10 @@ public:
          * @brief reset resets all variables assinged in the CAS kernel.
          */
         virtual void reset() = 0;
+        /**
+         * @brief restart restart the kernel (e.g. if the kernel process crashed)
+         */
+        virtual void restart(void);
 
 signals:
         /**
@@ -97,6 +101,7 @@ protected:
         QRegularExpression m_startRegex;                ///< regex for filtering kernel output at startup
         QRegularExpression m_errRegex;                  ///< regex for filtering kernel errors
         QRegularExpression m_regex;                     ///< regex for filtering regular kernel output
+        QString m_executeCommand;                       ///< command to execute when starting
 };
 
 #endif // EGCKERNELCONN_H

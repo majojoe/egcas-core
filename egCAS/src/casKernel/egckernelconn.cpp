@@ -30,20 +30,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcKernelConn::EgcKernelConn(QString executeCmd, QObject *parent) : QObject(parent), m_result(QString()),
                                                                           m_error(QString()),
-                                                                          m_startState(EgcKernelStart::beforeStart)
+                                                                          m_startState(EgcKernelStart::beforeStart),
+                                                                          m_executeCommand(executeCmd)
 {
-        m_casKernelProcess.reset(new QProcess());
-        m_casKernelProcess->start(executeCmd);
-
-        /* show output */
-        connect(m_casKernelProcess.data(), SIGNAL(readyReadStandardOutput()),this, SLOT(stdOutput()) );
-        connect(m_casKernelProcess.data(), SIGNAL(readyReadStandardError()), this, SLOT(errorOutput()) );
-        connect(m_casKernelProcess.data(), SIGNAL(error(QProcess::ProcessError)), this, SLOT(kernelError(QProcess::ProcessError)) );
-        connect(m_casKernelProcess.data(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(kernelTerm()) );
+        restart();
 }
 
 EgcKernelConn::~EgcKernelConn()
 {
+        
 }
 
 void EgcKernelConn::sendCommand(QString cmd)
@@ -67,3 +62,14 @@ void EgcKernelConn::kernelError(QProcess::ProcessError error)
         emit kernelErrorOccurred(error);
 }
 
+void EgcKernelConn::restart(void) 
+{
+        m_casKernelProcess.reset(new QProcess());
+        m_casKernelProcess->start(m_executeCommand);
+
+        /* show output */
+        connect(m_casKernelProcess.data(), SIGNAL(readyReadStandardOutput()),this, SLOT(stdOutput()) );
+        connect(m_casKernelProcess.data(), SIGNAL(readyReadStandardError()), this, SLOT(errorOutput()) );
+        connect(m_casKernelProcess.data(), SIGNAL(error(QProcess::ProcessError)), this, SLOT(kernelError(QProcess::ProcessError)) );
+        connect(m_casKernelProcess.data(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(kernelTerm()) );
+}

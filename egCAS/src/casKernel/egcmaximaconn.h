@@ -47,7 +47,7 @@ public:
          */
         EgcMaximaConn(QObject *parent = 0);
         ///destructor
-        ~EgcMaximaConn();
+        virtual ~EgcMaximaConn();
         /**
          * @brief sendCommand send a command to maxima
          * @param cmd command to be sent to the kernel

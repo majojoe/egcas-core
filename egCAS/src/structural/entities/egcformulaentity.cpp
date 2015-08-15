@@ -42,7 +42,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 15;
 
 EgcFormulaEntity::EgcFormulaEntity(EgcNodeType type) : m_numberSignificantDigits(0),
-                                                                  m_numberResultType(EgcNumberResultType::StandardType)
+                                                       m_numberResultType(EgcNumberResultType::StandardType),
+                                                       m_errorMsg(QString::null)
 {
         QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
         if (tmp.data()) {
@@ -172,6 +173,8 @@ QString EgcFormulaEntity::getMathMlCode(void)
 
 QString EgcFormulaEntity::getCASKernelCommand(void)
 {
+        //delete the error message in case of a recalculation
+        m_errorMsg.clear();
         EgcMaximaVisitor maximaVisitor(*this);
         return maximaVisitor.getResult();
 }
@@ -248,6 +251,10 @@ bool EgcFormulaEntity::setResult(EgcNode* result)
 {
         bool repaint = false;
         bool equal = false;
+        
+        //reset error message of the formula
+        m_errorMsg.clear();
+        
         QScopedPointer<EgcNode> res(result);
         if (isResult()) {
                 EgcEqualNode* root = static_cast<EgcEqualNode*>(getRootElement());
@@ -344,4 +351,14 @@ void EgcFormulaEntity::itemChanged(EgcItemChangeType changeType)
                 if (m_list)
                         m_list->sort();
         }
+}
+
+void EgcFormulaEntity::setErrorMessage(QString msg)
+{
+        m_errorMsg = msg;
+}
+
+QString EgcFormulaEntity::getErrorMessage(void)
+{
+        return m_errorMsg;
 }

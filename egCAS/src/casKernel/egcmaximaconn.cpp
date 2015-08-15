@@ -125,6 +125,7 @@ void EgcMaximaConn::stdOutput(void)
 void EgcMaximaConn::quit(void)
 {
         this->sendCommand("quit();");
+        m_casKernelProcess->waitForFinished(1000);
 }
 
 void EgcMaximaConn::reset(void)

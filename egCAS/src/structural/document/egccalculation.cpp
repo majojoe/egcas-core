@@ -36,7 +36,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcnodes.h"
 
 EgcCalculation::EgcCalculation(QObject *parent) : QObject{parent}, m_conn{new EgcMaximaConn()}, m_iterator{nullptr},
-        m_kernelStarted{false}, m_computeWhenStarted{false}, m_updateInstantly{true}, m_waitForResult{nullptr}
+        m_kernelStarted{false}, m_computeWhenStarted{false}, m_updateInstantly{true}, m_waitForResult{nullptr},
+        m_calculationRunning{false}
 {
         
         connect(m_conn.data(), SIGNAL(resultReceived(QString)), this, SLOT(resultReceived(QString)));
@@ -45,11 +46,17 @@ EgcCalculation::EgcCalculation(QObject *parent) : QObject{parent}, m_conn{new Eg
         connect(m_conn.data(), SIGNAL(kernelTerminated(void)), this, SLOT(kernelTerminated(void)));
         connect(m_conn.data(), SIGNAL(kernelErrorOccurred(QProcess::ProcessError)), this, 
                 SLOT(kernelErrorOccurred(QProcess::ProcessError)));
-
 }
 
-void EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly)
+EgcCalculation::~EgcCalculation()
 {
+}
+
+bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly)
+{
+        if (m_calculationRunning)
+                return false;
+                
         m_iterator.reset(new QListIterator<EgcEntity*>(list.getIterator()));
 
         m_updateInstantly = updateInstantly;
@@ -58,13 +65,16 @@ void EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly)
         } else {
                 nextCalculation();
         }
-
+        
+        return true;
 }
 
 void EgcCalculation::nextCalculation(void)
 {
+        if (!m_calculationRunning)
+                m_calculationRunning = true;
         EgcEntity* entity = nullptr;
-        //m_iterator = list.getIterator();
+        
         if (m_iterator->hasNext()) {
                 entity = m_iterator->next();
                 if (entity) {
@@ -72,7 +82,7 @@ void EgcCalculation::nextCalculation(void)
                                 handleCalculation(static_cast<EgcFormulaEntity&>(*entity));
                 }
         } else {
-#warning what to do if list is at the end? Do we need anything to do?
+                m_calculationRunning = false;
         }
 }
 
@@ -107,14 +117,24 @@ void EgcCalculation::resultReceived(QString result)
 {
         if (m_waitForResult) {
                 EgcNode* tree = m_parser.parseKernelOutput(result);
-                if (tree)
+                if (tree) {
                         m_waitForResult->setResult(tree);
+                } else {
+                        m_waitForResult->setErrorMessage(m_parser.getErrorMessage());
+                }
         }
+        
+        //go on to next calculation
+        nextCalculation();
 }
 
 void EgcCalculation::errorReceived(QString errorMsg)
 {
+        m_calculationRunning = false;
         
+        if (m_waitForResult) {
+                m_waitForResult->setErrorMessage(errorMsg);
+        }
 }
 
 void EgcCalculation::kernelStarted(void)
@@ -128,10 +148,31 @@ void EgcCalculation::kernelStarted(void)
 
 void EgcCalculation::kernelTerminated(void)
 {
+        m_calculationRunning = false;
         
+        emit errorOccurred(EgcKernelErrorType::kernelTerminated, tr("The CAS Kernel has terminated!"));
 }
 
 void EgcCalculation::kernelErrorOccurred(QProcess::ProcessError error)
 {
-        
+        m_calculationRunning = false;
+
+        switch(error) {
+        case QProcess::Crashed:
+                emit errorOccurred(EgcKernelErrorType::kernelTerminated, tr("The CAS Kernel has terminated!"));
+                break;
+        case QProcess::FailedToStart:
+                emit errorOccurred(EgcKernelErrorType::kernelNotFound, tr("The CAS Kernel failed to start, no kernel found!"));
+                break;
+        case QProcess::Timedout:
+                emit errorOccurred(EgcKernelErrorType::timeout, tr("The CAS Kernel has timed out!"));
+                break;
+        case QProcess::ReadError:
+        case QProcess::WriteError:
+                emit errorOccurred(EgcKernelErrorType::rdWrError, tr("A Read/Write error encountered in the CAS kernel!"));
+                break;
+        default:
+                emit errorOccurred(EgcKernelErrorType::unknown, tr("An unknown error encountered in the CAS kernel!"));
+                break;
+        }
 }
