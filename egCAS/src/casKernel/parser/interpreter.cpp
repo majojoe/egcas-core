@@ -229,3 +229,15 @@ EgcNode* Interpreter::addSqrtExpression(EgcNode* node0)
         
         return sqrt.take();        
 }
+
+EgcNode* Interpreter::addEmptyNode(void)
+{
+        EgcNode *node = EgcNodeCreator::create(EgcNodeType::EmptyNode);
+        if (node) {
+                addDanglingNode(node);
+        } else {
+                throw std::runtime_error("Not enough memory to complete operation!");
+        }
+
+        return node;
+}

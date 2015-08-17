@@ -208,10 +208,12 @@ QString EgcMathMlVisitor::getResult(void)
                 
         if (m_formula) {
                 if (!m_formula->getErrorMessage().isEmpty()) {
+                        temp += "<mi mathcolor='#cc0000'>";
                         //temp += "<mspace linebreak='newline'/>";
-                        temp += "<mtext>";
+                        //temp += "<mstyle scriptlevel=\"-1\">";
                         temp += m_formula->getErrorMessage();
-                        temp += "</mtext>";
+                        //temp += "</mstyle>";
+                        temp += "</mi>";
                 }
         }
         temp += "</math>";

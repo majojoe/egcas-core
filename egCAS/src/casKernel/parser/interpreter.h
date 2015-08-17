@@ -162,6 +162,12 @@ private:
          * @return 
          */
         EgcNode* addSqrtExpression(EgcNode* node0);
+
+        /**
+         * @brief addEmptyNode add an empty node. USE THIS FOR DEBUG PURPOSES ONLY.
+         * @return return a EgcNode of an emtpy node
+         */
+        EgcNode* addEmptyNode(void);
         
         /**
          * @brief addDanglingNode add a dangling node to the set of dangling nodes. So it is easy to delete them later

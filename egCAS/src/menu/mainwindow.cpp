@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //m_ui->graphicsView->scale(0.5,0.5);
 
     //add some formulas
-    EgcFormulaItem::setBaseFontSize(30);
+    EgcFormulaItem::setBaseFontSize(20);
     EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
                                                                                QPointF(100.0, 350.0)));
@@ -65,6 +65,11 @@ MainWindow::MainWindow(QWidget *parent) :
     FormulaGenerator::getFormulaTree(formula2, "((1+sqrt(5)))/2");
     formula2->setFontSize(40);
     
+    EgcFormulaEntity* formula3 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
+                                                                ->createEntity(EgcEntityType::Formula,
+                                                                               QPointF(280.0, 200.0)));
+    FormulaGenerator::getFormulaTree(formula3, "(1+38)=_empty");
+
     //add a text item
     EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Text,
@@ -82,6 +87,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QRectF rect(0,0,2100,2900);
     m_document->getScene()->setSceneRect(rect);
+
+    m_document->calculate();
 
 }
 

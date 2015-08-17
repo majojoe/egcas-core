@@ -28,6 +28,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QVector>
 #include <QMap>
+#ifdef DEBUG_MAXIMA_KERNEL
+#include <QDebug>
+#endif //DEBUG_MAXIMA_KERNEL
 #include "egcmaximaconn.h"
 
 QString EgcMaximaConn::s_startupConfig = QString("set_display(none);display2d:false;");
@@ -68,6 +71,9 @@ EgcMaximaConn::~EgcMaximaConn()
 void EgcMaximaConn::sendCommand(QString cmd)
 {
         cmd += "\n";
+#ifdef DEBUG_MAXIMA_KERNEL
+        qDebug() << cmd.toUtf8();
+#endif //DEBUG_MAXIMA_KERNEL
         m_casKernelProcess->write(cmd.toUtf8());
 }
 
@@ -96,7 +102,11 @@ void EgcMaximaConn::stdOutput(void)
         default:
                 match = m_regex.match(m_result);
                 if (match.hasMatch()) {
-                        emit resultReceived(match.captured(1).trimmed().simplified());
+                        QString result = match.captured(1).trimmed().simplified();
+#ifdef DEBUG_MAXIMA_KERNEL
+                        qDebug() << result;
+#endif //DEBUG_MAXIMA_KERNEL
+                        emit resultReceived(result);
                         m_result.clear();
                 } else {
                         match = m_errRegex.match(m_result);
@@ -111,7 +121,9 @@ void EgcMaximaConn::stdOutput(void)
                                     if (errorString.contains(i.key()))
                                             errorString.replace(i.key(), i.value());
                                 }
-
+#ifdef DEBUG_MAXIMA_KERNEL
+                                qDebug() << errorString;
+#endif //DEBUG_MAXIMA_KERNEL
                                 emit errorReceived(errorString);
                                 m_result.clear();
                         } else {  //this seems to be a normal result, but only a part of it

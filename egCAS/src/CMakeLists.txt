@@ -13,6 +13,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #set(CMAKE_BUILD_TYPE Release)
 
+option(debug_maxima_kernel "switch debugging for maxima kernel on" OFF)
+if(debug_maxima_kernel)
+        add_definitions(-DDEBUG_MAXIMA_KERNEL )
+endif()
+
 find_package(BISON)
 find_package(FLEX)
 
