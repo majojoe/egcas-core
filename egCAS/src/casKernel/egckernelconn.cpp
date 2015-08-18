@@ -26,6 +26,9 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#ifdef DEBUG_MAXIMA_KERNEL
+#include <QDebug>
+#endif //#ifdef DEBUG_MAXIMA_KERNEL
 #include "egckernelconn.h"
 
 EgcKernelConn::EgcKernelConn(QString executeCmd, QObject *parent) : QObject(parent), m_result(QString()),
@@ -49,7 +52,9 @@ void EgcKernelConn::sendCommand(QString cmd)
 void EgcKernelConn::errorOutput(void)
 {
         QByteArray temp = m_casKernelProcess->readAllStandardError();
-        qDebug("CAS kernel has thrown an error: %s\n", qPrintable(temp));
+#ifdef DEBUG_MAXIMA_KERNEL
+                        qDebug() << "CAS kernel has thrown an error: " << temp;
+#endif //DEBUG_MAXIMA_KERNEL
 }
 
 void EgcKernelConn::kernelTerm(void)
