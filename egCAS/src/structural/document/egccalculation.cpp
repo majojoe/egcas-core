@@ -122,6 +122,8 @@ void EgcCalculation::resultReceived(QString result)
                 } else {
                         m_waitForResult->setErrorMessage(m_parser.getErrorMessage());
                 }
+                if (m_updateInstantly)
+                        m_waitForResult->updateView();                
         }
         
         //go on to next calculation
@@ -134,6 +136,8 @@ void EgcCalculation::errorReceived(QString errorMsg)
         
         if (m_waitForResult) {
                 m_waitForResult->setErrorMessage(errorMsg);
+                if (m_updateInstantly)
+                        m_waitForResult->updateView();
         }
 }
 
