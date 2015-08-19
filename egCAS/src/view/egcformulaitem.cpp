@@ -175,6 +175,7 @@ void EgcFormulaItem::updateView(void)
                 return;
 
         m_mathMlDoc->setContent(m_entity->getMathMlCode());
+        update();
 }
 
 QSizeF EgcFormulaItem::getGrid(void)
