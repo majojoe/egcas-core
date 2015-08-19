@@ -80,6 +80,10 @@ void EgcCalculation::nextCalculation(void)
                 if (entity) {
                         if (entity->getEntityType() == EgcEntityType::Formula)
                                 handleCalculation(static_cast<EgcFormulaEntity&>(*entity));
+                        else
+                                triggerNextCalcualtion();
+                } else {
+                        triggerNextCalcualtion();
                 }
         } else {
                 m_calculationRunning = false;
@@ -91,7 +95,7 @@ void EgcCalculation::handleCalculation(EgcFormulaEntity& entity)
         m_waitForResult = nullptr;
         EgcNode* node = entity.getRootElement();
         if (!node) { //process next formula -> prevent recursion with event
-                QTimer::singleShot(0, this, SLOT(nextCalculation()));
+                triggerNextCalcualtion();
                 return;
         }
 
@@ -108,9 +112,14 @@ void EgcCalculation::handleCalculation(EgcFormulaEntity& entity)
                 m_conn->sendCommand(entity.getCASKernelCommand());
                 break;
         default:
-                QTimer::singleShot(0, this, SLOT(nextCalculation()));
+                triggerNextCalcualtion();
                 break;
         }
+}
+
+void EgcCalculation::triggerNextCalcualtion(void)
+{
+        QTimer::singleShot(0, this, SLOT(nextCalculation()));
 }
 
 void EgcCalculation::resultReceived(QString result)

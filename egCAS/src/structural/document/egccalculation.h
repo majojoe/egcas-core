@@ -90,6 +90,10 @@ private:
          * @param entity a reference to the formula currently computed
          */
         void handleCalculation(EgcFormulaEntity& entity);
+        /**
+         * @brief triggerNextCalcualtion triggers the next calculation
+         */
+        void triggerNextCalcualtion(void);
 
         QScopedPointer<EgcKernelConn> m_conn;   ///< the connection to the cas kernel
         QScopedPointer<QListIterator<EgcEntity*>> m_iterator;   ///< iterator that operates on the entity list we are calculating on
