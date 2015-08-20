@@ -88,10 +88,16 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                 else
                         str = ")^(";
                 break;
-        case EgcNodeType::EqualNode:
+        case EgcNodeType::EqualNode: {
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        if (binary->getParent()->getNodeType() == EgcNodeType::BaseNode)
+                                suppressCurrentIfChildType(binary, 1, EgcNodeType::EmptyNode);
+                }
+
                 if (m_state == EgcIteratorState::MiddleIteration)
-                        str = "=";
+                        str = "=";                
                 break;
+        }
         case EgcNodeType::DefinitionNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
                         str = ":";
@@ -102,7 +108,8 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                 break;
         }
 
-        m_result += str;
+        if (!m_suppressList.contains(binary))
+                m_result += str;
 }
 
 void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
@@ -127,7 +134,8 @@ void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
                 break;
         }
 
-        m_result += str;
+        if (!m_suppressList.contains(unary))
+                m_result += str;
 }
 
 void EgcMaximaVisitor::visit(EgcFlexNode* flex)
@@ -148,7 +156,8 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
                 break;
         }
 
-        m_result += str;
+        if (!m_suppressList.contains(flex))
+                m_result += str;
 }
 
 void EgcMaximaVisitor::visit(EgcNode* node)
@@ -167,11 +176,13 @@ void EgcMaximaVisitor::visit(EgcNode* node)
                 break;
         }
 
-        m_result += str;
+        if (!m_suppressList.contains(node))
+                m_result += str;
 }
 
 QString EgcMaximaVisitor::getResult(void)
 {
+        m_suppressList.clear();
         QString tmp = EgcNodeVisitor::getResult();
 
         if (m_formula) {
@@ -208,3 +219,19 @@ QString EgcMaximaVisitor::getResult(void)
         return tmp + ";\n";
 }
 
+void EgcMaximaVisitor::suppressCurrentIfChildType(const EgcNode* node, quint32 index, EgcNodeType type)
+{
+        if (!node)
+                return;
+
+        if (!node->isContainer())
+                return;
+
+        const EgcContainerNode* container = static_cast<const EgcContainerNode*>(node);
+        if (container->getChild(index)) {
+                EgcNode* chldNode = container->getChild(index);
+                if (chldNode->getNodeType() == type) {
+                        m_suppressList.insert(const_cast<EgcNode*>(node));
+                }
+        }
+}

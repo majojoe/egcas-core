@@ -147,9 +147,6 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
 
 void EgcMathMlVisitor::visit(EgcFlexNode* flex)
 {
-        if (m_suppressList.contains(flex))
-                return; 
-        
         QString str;
 
         switch (flex->getNodeType()) {
@@ -173,9 +170,6 @@ void EgcMathMlVisitor::visit(EgcFlexNode* flex)
 
 void EgcMathMlVisitor::visit(EgcNode* node)
 {
-        if (m_suppressList.contains(node))
-                return; 
-        
         QString str;
 
         switch (node->getNodeType()) {
@@ -209,6 +203,7 @@ QString EgcMathMlVisitor::getResult(void)
         if (m_formula) {
                 if (!m_formula->getErrorMessage().isEmpty()) {
                         temp += "<mi mathcolor='#cc0000'>";
+#warning replace '\n' with mathml linebreaks
                         //temp += "<mspace linebreak='newline'/>";
                         //temp += "<mstyle scriptlevel=\"-1\">";
                         temp += m_formula->getErrorMessage();
