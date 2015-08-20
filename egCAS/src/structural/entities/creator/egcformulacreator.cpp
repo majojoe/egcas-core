@@ -71,7 +71,7 @@ EgcEntity* EgcFormulaCreator::clone(EgcEntityList& list, EgcEntity& entity2copy)
                 return nullptr;
         EgcDocument* doc = list.getDocument();
         EgCasScene* scene = doc->getScene();
-        if (scene->addFormula(*entity, entity2copy.getPositon())) {
+        if (scene->addFormula(*entity, entity2copy.getPosition())) {
                 list.addEntity(entity.data());
                 //set the item properties
                 entity->setFontSize(entityCopyRef.getFontSize());

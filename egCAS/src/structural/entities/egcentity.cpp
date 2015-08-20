@@ -41,24 +41,36 @@ EgcEntity::~EgcEntity()
 
 bool EgcEntity::operator<(const EgcEntity& rhs) const
 {
-        bool retval = false;
+        QPointF op1 = getPosition();
+        QPointF op2 = rhs.getPosition();
 
-        QPointF ownPos = getPositon();
-        QPointF rhsPos = rhs.getPositon();
+        //first have a look at the vertical positions in a worksheet
+        if ( op1.y() < op2.y() )
+                return true;
+        if ( op1.y() > op2.y() )
+                return false;
 
-        if (ownPos.y() < rhsPos.y()) {
-                retval = true;
-        } else {
-                if (ownPos.y() == rhsPos.y()) {
-                        if (ownPos.x() < rhsPos.x())
-                                retval = true;
-                }
-        }
+        //if these positions are the same, then have a look at the horizontal positions in the worksheet (writing from left to right)
+        if ( op1.x() < op2.x() )
+                return true;
+        if ( op1.x() > op2.x() )
+                return false;
 
-        return retval;
+        return true;
 }
 
 void EgcEntity::setList(EgcAbstractEntityList* list)
 {
         m_list = list;
+}
+
+bool EgcEntity::lessThan(EgcEntity* o1, EgcEntity* o2)
+{
+        if (!o1 || !o2)
+                return false;
+
+        if (*o1 < *o2)
+                return true;
+        else
+                return false;
 }

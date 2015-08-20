@@ -63,7 +63,7 @@ public:
          * @brief getPositon returns the position of the current entity
          * @return the position of the entity in the current worksheet
          */
-        virtual QPointF getPositon(void) const = 0;
+        virtual QPointF getPosition(void) const = 0;
         /**
          * @brief setPosition set the position of a entity
          * @param pos the position where the entity should be
@@ -81,6 +81,13 @@ public:
          * @param list the list make this item point to
          */
         void setList(EgcAbstractEntityList* list);
+        /**
+         * @brief lessThan compares two entities with each other
+         * @param o1 entity 1 to compare to entity o2
+         * @param o2 entity 2 to compare to entity o1
+         * @return true if o1 is less than 02, false otherwise
+         */
+        static bool lessThan(EgcEntity* o1, EgcEntity* o2);
 protected:
         EgcAbstractEntityList* m_list;            ///< pointer to the list containing this entity
 };

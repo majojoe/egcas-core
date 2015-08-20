@@ -69,7 +69,7 @@ EgcEntity* EgcPixmapCreator::clone(EgcEntityList& list, EgcEntity& entity2copy)
                 return nullptr;
         EgcDocument* doc = list.getDocument();
         EgCasScene* scene = doc->getScene();
-        if (scene->addPixmap(*entity, entity2copy.getPositon())) {
+        if (scene->addPixmap(*entity, entity2copy.getPosition())) {
                 list.addEntity(entity.data());
                 entity->setFilePath(entityCopyRef.getFilePath());
                 entity->setSize(entityCopyRef.getSize());

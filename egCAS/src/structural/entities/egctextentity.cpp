@@ -45,7 +45,7 @@ EgcEntityType EgcTextEntity::getEntityType(void) const
         return EgcEntityType::Text;
 }
 
-QPointF EgcTextEntity::getPositon(void) const
+QPointF EgcTextEntity::getPosition(void) const
 {
         if (m_item)
                 return m_item->getPosition();

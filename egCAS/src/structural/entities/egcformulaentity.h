@@ -178,7 +178,7 @@ public:
          * @brief getPositon returns the position of the current entity
          * @return the position of the entity in the current worksheet
          */
-        virtual QPointF getPositon(void) const override;
+        virtual QPointF getPosition(void) const override;
         /**
          * @brief setPosition set the position of a entity
          * @param pos the position where the entity should be

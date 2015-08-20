@@ -290,7 +290,7 @@ enum EgcEntityType EgcFormulaEntity::getEntityType(void) const
         return EgcEntityType::Formula;
 }
 
-QPointF EgcFormulaEntity::getPositon(void) const
+QPointF EgcFormulaEntity::getPosition(void) const
 {
         if (!m_item)
                 return QPointF(0,0);

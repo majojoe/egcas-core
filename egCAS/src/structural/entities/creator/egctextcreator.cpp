@@ -71,7 +71,7 @@ EgcEntity* EgcTextCreator::clone(EgcEntityList& list, EgcEntity& entity2copy)
                 return nullptr;
         EgcDocument* doc = list.getDocument();
         EgCasScene* scene = doc->getScene();
-        if (scene->addText(*entity, entity2copy.getPositon())) {
+        if (scene->addText(*entity, entity2copy.getPosition())) {
                 list.addEntity(entity.data());
                 //set the item properties
                 entity->setFont(entityCopyRef.getFont());

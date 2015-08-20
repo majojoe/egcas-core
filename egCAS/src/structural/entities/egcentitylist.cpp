@@ -44,7 +44,7 @@ EgcEntityList::~EgcEntityList()
 
 void EgcEntityList::sort(void)
 {
-        qSort(m_list);
+        qSort(m_list.begin(), m_list.end(), EgcEntity::lessThan);
 }
 
 void EgcEntityList::addEntity(EgcEntity* entity)
