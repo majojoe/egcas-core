@@ -176,9 +176,14 @@ void EgcMathMlVisitor::visit(EgcNode* node)
         case EgcNodeType::NumberNode:
                 str = "<mn>" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>";
                 break;
-        case EgcNodeType::VariableNode:
-                str = "<mi>" % static_cast<EgcVariableNode*>(node)->getValue() % "</mi>";
+        case EgcNodeType::VariableNode: {
+                EgcVariableNode* varNode = static_cast<EgcVariableNode*>(node);
+                if (varNode->getSubscript().isEmpty())
+                        str = "<mi>" % varNode->getValue() % "</mi>";
+                else
+                        str = "<msub><mi>" % varNode->getValue() % "</mi><mi>" % varNode->getSubscript() %"</mi></msub>";
                 break;
+        }
         case EgcNodeType::EmptyNode:
                 str = "<mi>&#x2B1A;</mi>";
                 break;

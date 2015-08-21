@@ -165,11 +165,13 @@ void EgcMaximaVisitor::visit(EgcNode* node)
         QString str;
 
         switch (node->getNodeType()) {
+        case EgcNodeType::EmptyNode:
+                break;
         case EgcNodeType::NumberNode:
                 str = static_cast<EgcNumberNode*>(node)->getValue();
                 break;
         case EgcNodeType::VariableNode:
-                str = static_cast<EgcVariableNode*>(node)->getValue();
+                str = static_cast<EgcVariableNode*>(node)->getStuffedVar();
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", node->getNodeType()) ;

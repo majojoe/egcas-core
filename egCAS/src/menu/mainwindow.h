@@ -50,6 +50,7 @@ public:
 
 public slots:
         void showLicense(void);
+        void calculate(void);
 private:
     QScopedPointer<Ui::MainWindow> m_ui;
     QScopedPointer<EgcDocument> m_document;

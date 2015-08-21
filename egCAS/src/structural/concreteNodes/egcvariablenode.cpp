@@ -55,7 +55,7 @@ EgcVariableNode::~EgcVariableNode()
 
 }
 
-void EgcVariableNode::setValue(const QString& varName, const QString& subscript)
+void EgcVariableNode::setValue(const QString& varName, const QString& subscript = QString::null)
 {
         m_value = varName;
         m_subscript = subscript;
@@ -103,7 +103,11 @@ QString EgcVariableNode::getStuffedVar(void)
         QString var = m_value.replace("_", "__");
         QString sub = m_subscript.replace("_", "__");
 
-        QString tmp = var % "_1" % sub;
+        QString tmp;
+        if (sub.isEmpty())
+                tmp = var;
+        else
+                tmp = var % "_1" % sub;
         // ampersands in special symbols are replaced by "_2" for use in calculation kernel
         tmp = tmp.replace("&", "_2");
         // ";" in special symbols are replaced by "_3" for use in calculation kernel

@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
     connect(m_ui->mnu_show_license, SIGNAL(triggered()), this, SLOT(showLicense()));
+    connect(m_ui->mnu_calculate, SIGNAL(triggered()), this, SLOT(calculate()));
     m_ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     m_ui->graphicsView->setScene(m_document->getScene());
     //m_ui->graphicsView->scale(0.5,0.5);
@@ -58,7 +59,6 @@ MainWindow::MainWindow(QWidget *parent) :
                                                                 ->createEntity(EgcEntityType::Formula, 
                                                                                QPointF(100.0, 350.0)));
     FormulaGenerator::getFormulaTree(formula1, "(sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3)))/(_2exponentiale_3^_2pi_3)=x^_2tprime_3");
-    formula1->setFontSize(40);
     EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
                                                                                QPointF(100.0, 200.0)));
@@ -87,9 +87,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QRectF rect(0,0,2100,2900);
     m_document->getScene()->setSceneRect(rect);
-
-    m_document->calculate();
-
 }
 
 MainWindow::~MainWindow()
@@ -100,4 +97,9 @@ void MainWindow::showLicense(void)
 {
         EgcLicenseInfo licenseInfo;
         licenseInfo.exec();
+}
+
+void MainWindow::calculate(void)
+{
+        m_document->calculate();
 }
