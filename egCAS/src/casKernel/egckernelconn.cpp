@@ -55,6 +55,7 @@ void EgcKernelConn::errorOutput(void)
 #ifdef DEBUG_MAXIMA_KERNEL
                         qDebug() << "CAS kernel has thrown an error: " << temp;
 #endif //DEBUG_MAXIMA_KERNEL
+        emit errorReceived(temp);
 }
 
 void EgcKernelConn::kernelTerm(void)
