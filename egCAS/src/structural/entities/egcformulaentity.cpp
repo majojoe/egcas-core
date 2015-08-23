@@ -43,6 +43,7 @@ quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 15;
 
 EgcFormulaEntity::EgcFormulaEntity(EgcNodeType type) : m_numberSignificantDigits(0),
                                                        m_numberResultType(EgcNumberResultType::StandardType),
+                                                       m_item(nullptr),
                                                        m_errorMsg(QString::null)
 {
         QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
@@ -65,7 +66,9 @@ EgcFormulaEntity::EgcFormulaEntity(EgcNodeType type) : m_numberSignificantDigits
 }
 
 EgcFormulaEntity::EgcFormulaEntity(EgcNode& rootElement) : m_numberSignificantDigits(0),
-                                                                   m_numberResultType(EgcNumberResultType::StandardType)
+                                                           m_numberResultType(EgcNumberResultType::StandardType),
+                                                           m_item(nullptr),
+                                                           m_errorMsg(QString::null)
 {
         QScopedPointer<EgcNode> tmp(&rootElement);
         if (tmp.data()) {
@@ -73,11 +76,14 @@ EgcFormulaEntity::EgcFormulaEntity(EgcNode& rootElement) : m_numberSignificantDi
         }
 }
 
-EgcFormulaEntity::EgcFormulaEntity(void) : EgcFormulaEntity(EgcNodeType::EmptyNode)
+EgcFormulaEntity::EgcFormulaEntity(void) : EgcFormulaEntity{EgcNodeType::EmptyNode}
 {
 }
 
-EgcFormulaEntity::EgcFormulaEntity(const EgcFormulaEntity& orig)
+EgcFormulaEntity::EgcFormulaEntity(const EgcFormulaEntity& orig) : m_numberSignificantDigits(0),
+                                                                   m_numberResultType(EgcNumberResultType::StandardType),
+                                                                   m_item(nullptr),
+                                                                   m_errorMsg(QString::null)
 {
         QScopedPointer<EgcNode> tmp;
         EgcNode* originalRoot = orig.getRootElement();
@@ -90,7 +96,10 @@ EgcFormulaEntity::EgcFormulaEntity(const EgcFormulaEntity& orig)
 
 }
 
-EgcFormulaEntity::EgcFormulaEntity(EgcFormulaEntity&& orig)
+EgcFormulaEntity::EgcFormulaEntity(EgcFormulaEntity&& orig) : m_numberSignificantDigits(0),
+                                                              m_numberResultType(EgcNumberResultType::StandardType),
+                                                              m_item(nullptr),
+                                                              m_errorMsg(QString::null)
 {
         EgcNode* originalRoot = orig.getRootElement();
         if (originalRoot) {
@@ -119,6 +128,8 @@ EgcFormulaEntity& EgcFormulaEntity::operator=(const EgcFormulaEntity &rhs)
 
         m_numberSignificantDigits = rhs.m_numberSignificantDigits;
         m_numberResultType = rhs.m_numberResultType;
+        m_item = nullptr;
+        m_errorMsg = QString::null;
 
         return *this;
 }
@@ -139,6 +150,9 @@ EgcFormulaEntity& EgcFormulaEntity::operator=(EgcFormulaEntity&& rhs)
                 m_numberSignificantDigits = 0;
                 m_numberResultType = EgcNumberResultType::StandardType;
         }
+
+        m_item = nullptr;
+        m_errorMsg = QString::null;
 
         return *this;
 }
@@ -250,13 +264,14 @@ void EgcFormulaEntity::setStdNrSignificantDigis(quint8 digits)
 bool EgcFormulaEntity::setResult(EgcNode* result)
 {
         bool repaint = false;
-        bool equal = false;
         
         //reset error message of the formula
         m_errorMsg.clear();
         
         QScopedPointer<EgcNode> res(result);
         if (isResult()) {
+                bool equal = false;
+
                 EgcEqualNode* root = static_cast<EgcEqualNode*>(getRootElement());
                 //check if result is equal with result in formula
                 EgcNode* rightChild = root->getChild(1);
