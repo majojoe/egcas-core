@@ -188,37 +188,34 @@ QString EgcMaximaVisitor::getResult(void)
         QString tmp = EgcNodeVisitor::getResult();
 
         if (m_formula) {
-                if (m_formula->isNumberResult())
-                {
-                        quint8 nrDigits = m_formula->getNumberOfSignificantDigits();
-                        if (nrDigits == 1 || nrDigits > 16)
-                                nrDigits = 0;
+                quint8 nrDigits = m_formula->getNumberOfSignificantDigits();
+                if (nrDigits == 1 || nrDigits > 16)
+                        nrDigits = 0;
 
-                        QString tmpOptions = QString("fpprintprec:%1$").arg(nrDigits);
+                QString tmpOptions = QString("fpprintprec:%1$").arg(nrDigits);
 
-                        switch(m_formula->getNumberResultType()) {
-                        case EgcNumberResultType::IntegerType:
-                                tmp = tmpOptions + "round(" + tmp + ")";
-                                break;
-                        case EgcNumberResultType::ScientificType:
-                                tmp = tmpOptions + "float(" + tmp + ")";
-                                break;
-                        case EgcNumberResultType::EngineeringType:
+                switch(m_formula->getNumberResultType()) {
+                case EgcNumberResultType::IntegerType:
+                        tmp = tmpOptions + "round(" + tmp + ")";
+                        break;
+                case EgcNumberResultType::ScientificType:
+                        tmp = tmpOptions + "float(" + tmp + ")";
+                        break;
+                case EgcNumberResultType::EngineeringType:
 #ifdef EGC_PROJ_NAME
 #warning maxima function for engineering type is missing (load lisp function "engineering-format" from share/contrib/engineering-format.lisp)
 #endif //#ifdef EGC_PROJ_NAME
-                                tmp = tmpOptions + tmp;
-                                break;
-                        default:
-                                tmp = tmpOptions + tmp;
-                                break;
-                        }
-                        //reset the precision again to standard type
-                        tmp += QString("ffprintprec:%1$").arg(EgcFormulaEntity::getStdNrSignificantDigis());
+                        tmp = tmpOptions + tmp;
+                        break;
+                default:
+                        tmp = tmpOptions + tmp;
+                        break;
                 }
+                //reset the precision again to standard type
+                tmp += QString(";fpprintprec:%1$").arg(EgcFormulaEntity::getStdNrSignificantDigis());
         }
 
-        return tmp + ";\n";
+        return tmp;
 }
 
 void EgcMaximaVisitor::suppressCurrentIfChildType(const EgcNode* node, quint32 index, EgcNodeType type)

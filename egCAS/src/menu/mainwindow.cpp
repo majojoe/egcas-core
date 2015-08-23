@@ -61,9 +61,10 @@ MainWindow::MainWindow(QWidget *parent) :
     FormulaGenerator::getFormulaTree(formula1, "(sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3)))/(_2exponentiale_3^_2pi_3)=x^_2tprime_3");
     EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
-                                                                               QPointF(100.0, 200.0)));
-    FormulaGenerator::getFormulaTree(formula2, "((1+sqrt(5)))/2");
-    formula2->setFontSize(40);
+                                                                               QPointF(100.0, 230.0)));
+    FormulaGenerator::getFormulaTree(formula2, "((1+sqrt(5)))/2=_empty");
+    formula2->setNumberResultType(EgcNumberResultType::ScientificType);
+    formula2->setFontSize(25);
     
     EgcFormulaEntity* formula3 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula,
