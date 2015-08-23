@@ -295,7 +295,7 @@ QPointF EgcFormulaEntity::getPosition(void) const
         if (!m_item)
                 return QPointF(0,0);
         else
-                m_item->getPosition();
+                return m_item->getPosition();
 }
 
 void EgcFormulaEntity::setItem(EgcAbstractFormulaItem* item)
