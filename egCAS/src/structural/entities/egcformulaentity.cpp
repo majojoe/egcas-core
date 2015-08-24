@@ -237,15 +237,12 @@ void EgcFormulaEntity::setNumberResultType(EgcNumberResultType resultType)
 
 quint8 EgcFormulaEntity::getNumberOfSignificantDigits(void)
 {
-        if (isNumberResult())
-                return m_numberSignificantDigits;
-        else
-                return 0;
+        return m_numberSignificantDigits;
 }
 
 EgcNumberResultType EgcFormulaEntity::getNumberResultType()
 {
-                return m_numberResultType;
+        return m_numberResultType;
 }
 
 quint8 EgcFormulaEntity::getStdNrSignificantDigis(void)
