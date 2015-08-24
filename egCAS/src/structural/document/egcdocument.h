@@ -58,6 +58,11 @@ public:
          */
         EgCasScene* getScene(void);
         /**
+         * @brief getCalcClass returns the calculation class in order to connect to its signals
+         * @return a pointer to the EgcCalculation class
+         */
+        EgcCalculation const* getCalcClass(void);
+        /**
          * @brief getParent returns the parent of the current list
          * @return the parent
          */

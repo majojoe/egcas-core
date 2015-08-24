@@ -46,6 +46,7 @@ EgcCalculation::EgcCalculation(QObject *parent) : QObject{parent}, m_conn{new Eg
         connect(m_conn.data(), SIGNAL(kernelTerminated(void)), this, SLOT(kernelTerminated(void)));
         connect(m_conn.data(), SIGNAL(kernelErrorOccurred(QProcess::ProcessError)), this, 
                 SLOT(kernelErrorOccurred(QProcess::ProcessError)));
+        connect(m_conn.data(), SIGNAL(timeoutError(void)), this, SLOT(handleTimeout()));
 }
 
 EgcCalculation::~EgcCalculation()
@@ -188,4 +189,9 @@ void EgcCalculation::kernelErrorOccurred(QProcess::ProcessError error)
                 emit errorOccurred(EgcKernelErrorType::unknown, tr("An unknown error encountered in the CAS kernel!"));
                 break;
         }
+}
+
+void EgcCalculation::handleTimeout(void)
+{
+        emit errorOccurred(EgcKernelErrorType::timeout, tr("The CAS kernel did not respond within 30s."));
 }

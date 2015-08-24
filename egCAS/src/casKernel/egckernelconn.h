@@ -86,6 +86,7 @@ signals:
         void errorReceived(QString errorMsg);
         void kernelStarted(void);
         void kernelTerminated(void);
+        void timeoutError(void);
         void kernelErrorOccurred(QProcess::ProcessError error);
 protected slots:
         virtual void stdOutput(void) = 0;

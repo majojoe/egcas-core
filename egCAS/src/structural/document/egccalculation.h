@@ -79,6 +79,7 @@ private slots:
         void kernelStarted(void);
         void kernelTerminated(void);
         void kernelErrorOccurred(QProcess::ProcessError error);   
+        void handleTimeout(void);
         /**
          * @brief nextCalculation triggers the next calculation as long as all formulas are calculated or a formula has
          * a lock

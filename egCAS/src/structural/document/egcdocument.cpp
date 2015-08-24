@@ -100,3 +100,8 @@ void EgcDocument::calculate(void)
 {
         m_calc->calculate(*m_list);
 }
+
+EgcCalculation const* EgcDocument::getCalcClass(void)
+{
+        return m_calc.data();
+}

@@ -35,8 +35,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 QString EgcMaximaConn::s_startupConfig = QString("set_display(none);display2d:false;");
 
-EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn("maxima", parent)
+EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{"maxima", parent}, m_timer{new QTimer(this)}
 {
+        m_timer->setSingleShot(true);
+        connect(m_timer, SIGNAL(timeout()), this, SLOT(casKernelTimeoutError()));
+
         //information to remove from error messages of maxima
         //use the vector below to add more messages that we don't want to show to the user.
         QVector<QString> errorMsgFilter;
@@ -79,6 +82,10 @@ void EgcMaximaConn::sendCommand(QString cmd)
 
 void EgcMaximaConn::stdOutput(void)
 {
+        //stop timer if active
+        if (m_timer->isActive())
+                m_timer->stop();
+
         QByteArray temp = m_casKernelProcess->readAllStandardOutput();
         m_result += temp;
         QRegularExpressionMatch match;
@@ -127,7 +134,8 @@ void EgcMaximaConn::stdOutput(void)
                                 emit errorReceived(errorString);
                                 m_result.clear();
                         } else {  //this seems to be a normal result, but only a part of it
-#warning start a timer here. If the operation does not complete within a specific amount of time -> error in parsing...
+                                // if there is no complete result within 30s, anything must be wrong
+                                m_timer->start(30000);
                         }
                 }
                 break;
@@ -145,3 +153,17 @@ void EgcMaximaConn::reset(void)
         this->sendCommand("kill(all);");
 }
 
+void EgcMaximaConn::casKernelTimeoutError(void)
+{
+#ifdef DEBUG_MAXIMA_KERNEL
+                        qDebug() << m_result;
+#endif //DEBUG_MAXIMA_KERNEL
+        emit timeoutError();
+}
+
+void EgcMaximaConn::errorOutput(void)
+{
+        EgcKernelConn::errorOutput();
+        if (m_timer->isActive())
+                m_timer->stop();
+}

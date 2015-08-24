@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QProcess>
 #include <QRegularExpression>
 #include <QMap>
+#include <QTimer>
 #include "egckernelconn.h"
 
 
@@ -63,11 +64,23 @@ public:
         virtual void reset();
 
 protected slots:
+        /**
+         * @brief stdOutput some sort of output from the cas kernel received
+         */
         virtual void stdOutput(void);
+        /**
+         * @brief casKernelTimeoutError a cas kernel timeout error occurred
+         */
+        void casKernelTimeoutError(void);
+        /**
+         * @brief errorOutput overrride the error output
+         */
+        virtual void errorOutput(void) override;
 protected:
         static QString s_startupConfig;         ///< startup configuration for CAS kernel
         QRegularExpression m_errUnwantedRegex;  ///< regex for filtering kernel unwanted information from error message
         QMap<QString, QString> m_wordsToReplace;///< words that schould be replaced
+        QTimer* m_timer;                        ///< a timer to be able to fire a cas kernel reset if a error condition exists
 };
 
 #endif // EGCMAXIMACONN_H
