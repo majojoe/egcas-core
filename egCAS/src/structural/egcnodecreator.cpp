@@ -102,8 +102,14 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::PlusNode:
                 retval = new (std::nothrow) EgcPlusNode();
                 break;
+        case EgcNodeType::DifferentialNode:
+                retval = new (std::nothrow) EgcDifferentialNode();
+                break;
         case EgcNodeType::FunctionNode:
                 retval = new (std::nothrow) EgcFunctionNode();
+                break;
+        case EgcNodeType::IntegralNode:
+                retval = new (std::nothrow) EgcIntegralNode();
                 break;
         case EgcNodeType::DivisionNode:
                 retval = new (std::nothrow) EgcDivisionNode();

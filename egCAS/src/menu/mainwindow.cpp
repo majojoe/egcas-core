@@ -57,11 +57,11 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcFormulaItem::setBaseFontSize(20);
     EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
-                                                                               QPointF(100.0, 350.0)));
+                                                                               QPointF(100.0, 300.0)));
     FormulaGenerator::getFormulaTree(formula1, "(sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3)))/(_2exponentiale_3^_2pi_3)=x^_2tprime_3");
     EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
-                                                                               QPointF(100.0, 230.0)));
+                                                                               QPointF(100.0, 200.0)));
     FormulaGenerator::getFormulaTree(formula2, "((1+sqrt(5)))/2=_empty");
     formula2->setNumberResultType(EgcNumberResultType::ScientificType);
     formula2->setNumberOfSignificantDigits(4);
@@ -69,8 +69,13 @@ MainWindow::MainWindow(QWidget *parent) :
     
     EgcFormulaEntity* formula3 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula,
-                                                                               QPointF(280.0, 200.0)));
+                                                                               QPointF(280.0, 150.0)));
     FormulaGenerator::getFormulaTree(formula3, "(1+38)=_empty");
+
+    EgcFormulaEntity* formula4 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
+                                                                ->createEntity(EgcEntityType::Formula,
+                                                                               QPointF(100.0, 460.0)));
+    FormulaGenerator::getFormulaTree(formula4, "z:(x-1)/(x+5)");
 
     //add a text item
     EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->getEntityList()
