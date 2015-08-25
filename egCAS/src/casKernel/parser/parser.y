@@ -102,8 +102,12 @@
 %token RIGHTPARENTHESIS ")";
 %token EXPONENT "^"
 %token SQROOT "sqrt"
+%token INTEGRAL "integrate"
+%token DIFFERENTIAL "diff"
 %token ROOT "_root" //only for debugging purposes
 %token EMPTY "_empty" //only for debugging purposes
+
+
 
 %right "=" ":"
 %left "+" "-"
@@ -153,6 +157,8 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | "sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}
      | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}  //only for debugging purposes
      | "_empty"            {$$ = interpreter.addEmptyNode();}   //only for debug purposes
+     | INTEGRAL "(" explist ")" {$$ = interpreter.changeFlexExpressionType(EgcNodeType::IntegralNode, $3);}
+     | DIFFERENTIAL "(" explist ")" {$$ = interpreter.changeFlexExpressionType(EgcNodeType::DifferentialNode, $3);}
 ;
     
 explist: expr            {$$ = interpreter.createFncArgList($1);}

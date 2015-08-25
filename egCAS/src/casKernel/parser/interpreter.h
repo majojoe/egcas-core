@@ -141,6 +141,14 @@ private:
         EgcNode* addBuiltinFunction(const std::string& fncName, EgcFunctionNode* argList);
 
         /**
+         * @brief changeFlexExpressionType change the given argList form a function node type to the type given (move the cildren)
+         * @param type the type to change to
+         * @param argList the arg list to use
+         * @return pointer to the new type
+         */
+        EgcNode* changeFlexExpressionType(EgcNodeType type, EgcFunctionNode* argList);
+
+        /**
          * @brief createArgList creates an argument list that is integrated later on in the function where it is used in
          * @param expression the expression to add to the argument list
          * @return a pointer to the created argument list

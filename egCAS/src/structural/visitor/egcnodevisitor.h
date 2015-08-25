@@ -83,6 +83,7 @@ protected:
         QString m_result;                       ///< saves the result of the information extracted.
         EgcFormulaEntity *m_formula;            ///< the formula to with the nodes to work on
         EgcIteratorState m_state;               ///< the current state (helps to extract the correct information from tree)
+        quint32 m_childIndex;                   ///< stores the last child index
 
 };
 

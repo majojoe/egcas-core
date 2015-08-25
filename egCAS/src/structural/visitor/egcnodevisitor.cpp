@@ -30,7 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcnodevisitor.h"
 #include "../egcnodes.h"
 
-EgcNodeVisitor::EgcNodeVisitor(EgcFormulaEntity& formula) : m_formula(&formula)
+EgcNodeVisitor::EgcNodeVisitor(EgcFormulaEntity& formula) : m_result{QString::null}, m_formula{&formula},
+                                                            m_state{EgcIteratorState::LeftIteration},
+                                                            m_childIndex{0}
 {
 }
 
@@ -43,6 +45,21 @@ QString EgcNodeVisitor::getResult(void)
         while(iter.hasNext()) {
                 node = &iter.next();
                 m_state = iter.getLastState();
+//                if (node->isContainer()) {
+//                        if (m_state == EgcIteratorState::LeftIteration) {
+//                                m_childIndex = 0;
+//                        } else if (   m_state == EgcIteratorState::RightIteration) {
+//                                m_childIndex = static_cast<EgcContainerNode*>(node)->getNumberChildNodes();
+//                        } else {
+//                                quint32 ind;
+//                                if (static_cast<EgcContainerNode*>(node)->getIndexOfChild(iter.previous(), ind))
+//                                      m_childIndex = ind;
+//                                else
+//                                      m_childIndex = 0;
+//                        }
+//                } else {
+//                        m_childIndex = 0;
+//                }
                 node->accept(this);
                 result += m_result;
                 m_result = QString::null;

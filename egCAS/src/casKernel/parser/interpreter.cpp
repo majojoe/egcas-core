@@ -241,3 +241,21 @@ EgcNode* Interpreter::addEmptyNode(void)
 
         return node;
 }
+
+EgcNode* Interpreter::changeFlexExpressionType(EgcNodeType type, EgcFunctionNode* argList)
+{
+        QScopedPointer<EgcFlexNode> node(static_cast<EgcFunctionNode*>(EgcNodeCreator::create(type)));
+#warning check if the child nodes are moved, not copied, since they were dangling then...
+        assert(node->isFlexNode());
+        if (node->isFlexNode()) {
+                *node = std::move(*argList);
+                delete argList;
+                setNotDangling(argList);
+                EgcFlexNode *nodePtr = node.data();
+                addDanglingNode(node.take());
+
+                return nodePtr;
+        } else {
+                return argList;
+        }
+}

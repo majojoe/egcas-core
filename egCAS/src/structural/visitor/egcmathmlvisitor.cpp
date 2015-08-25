@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{formula}, m_prettyPrint{true}
 {
+        m_suppressList.clear();
 }
 
 void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
@@ -158,6 +159,26 @@ void EgcMathMlVisitor::visit(EgcFlexNode* flex)
                         str = "</mrow><mo>)</mo></mrow></mrow>";
                 else
                         str = "<mo>,</mo>";
+                break;
+        case EgcNodeType::IntegralNode:
+                if (flex->getNumberChildNodes() == 2) { // indefinite integral
+
+                        if (m_state == EgcIteratorState::LeftIteration)
+                                str = QString("<mrow><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>");
+                        else if (m_state == EgcIteratorState::RightIteration)
+                                str = "</mrow></mrow>";
+                        else
+                                str = "</mrow><mo>d</mo><mrow>";
+
+                } else { // integral with limits number of childs should be 4!
+
+                }
+
+// str = QString("<mrow><munderover><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>    <mi>untere_grenze</mi>   </mrow><mrow>  <mi>obere_grenze</mi>   </mrow></munderover><mrow>   <mi>integral</mi>  </mrow><mo>d</mo><mrow>  <mi>variable</mi>   </mrow></mrow>");
+
+
+                break;
+        case EgcNodeType::DifferentialNode:
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", flex->getNodeType()) ;
