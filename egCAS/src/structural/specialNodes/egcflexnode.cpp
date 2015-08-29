@@ -133,8 +133,10 @@ EgcFlexNode& EgcFlexNode::operator=(const EgcFlexNode &rhs)
                 for (i = 0; i < cntRhs; i++) {
                         child = rhs.getChild(i);
                         QScopedPointer<EgcNode> childCopy;
-                        if (child)
+                        if (child) {
                                 childCopy.reset(child->copy());
+                                child->provideParent(this);
+                        }
                         m_childs.append(childCopy.take());
                 }
         }
@@ -167,8 +169,10 @@ EgcFlexNode& EgcFlexNode::operator=(EgcFlexNode&& rhs)
                 for (i = 0; i < cntRhs; i++) {
                         child = rhs.getChild(i);
                         QScopedPointer<EgcNode> childMove;
-                        if (child)
+                        if (child) {
                                 childMove.reset(rhs.takeOwnership(*child));
+                                child->provideParent(this);
+                        }
                         m_childs.append(childMove.take());
                 }
         }
@@ -216,7 +220,7 @@ EgcNode* EgcFlexNode::takeOwnership(EgcNode &child)
         EgcNode* retval = nullptr;
 
         int ind = m_childs.indexOf(&child);
-        if (ind > 0) {
+        if (ind >= 0) {
                 m_childs[ind] = nullptr;
                 child.provideParent(nullptr);
                 retval = &child;

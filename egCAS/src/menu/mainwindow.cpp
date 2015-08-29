@@ -77,6 +77,12 @@ MainWindow::MainWindow(QWidget *parent) :
                                                                                QPointF(100.0, 460.0)));
     FormulaGenerator::getFormulaTree(formula4, "z:(x-1)/(x+5)");
 
+    EgcFormulaEntity* formula5 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
+                                                                ->createEntity(EgcEntityType::Formula,
+                                                                               QPointF(100.0, 520.0)));
+    FormulaGenerator::getFormulaTree(formula5, "integrate(z,x)=_empty");
+    
+    
     //add a text item
     EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Text,
