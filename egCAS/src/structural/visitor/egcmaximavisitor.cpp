@@ -151,6 +151,22 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
                 else
                         str = ",";
                 break;
+        case EgcNodeType::IntegralNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "integrate(";
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = ")";
+                else
+                        str = ",";
+                break;
+        case EgcNodeType::DifferentialNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        str = "diff(";
+                else if (m_state == EgcIteratorState::RightIteration)
+                        str = ")";
+                else
+                        str = ",";
+                break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", flex->getNodeType()) ;
                 break;
