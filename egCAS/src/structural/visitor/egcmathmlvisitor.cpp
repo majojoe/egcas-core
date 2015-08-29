@@ -88,7 +88,7 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
                 if (m_state == EgcIteratorState::LeftIteration)
                         str = "<mrow>";
                 else if (m_state == EgcIteratorState::MiddleIteration)
-                        str = "<mo>&times;</mo>";
+                        str = "<mo>&CenterDot;</mo>";
                 else
                         str = "</mrow>";
                 break;
