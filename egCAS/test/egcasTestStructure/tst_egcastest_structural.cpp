@@ -1190,14 +1190,14 @@ void EgcasTest_Structural::testVisitors()
         //test maxima visitor
         EgcMaximaVisitor maximaVisitor(formula4);
         QString result(maximaVisitor.getResult());
-        QVERIFY(result == QString("((30.452)^(1/3))^(1/2);\n"));
-        QVERIFY(formula4.getCASKernelCommand() == QString("((30.452)^(1/3))^(1/2);\n"));
+        QVERIFY(result == QString("fpprintprec:0$((30.452)^(1/3))^(1/2);fpprintprec:15$"));
+        QVERIFY(formula4.getCASKernelCommand() == QString("fpprintprec:0$((30.452)^(1/3))^(1/2);fpprintprec:15$"));
 
         //test maxima visitor with copied formula
         EgcMaximaVisitor maximaVisitor2(formula5);
         QString result2(maximaVisitor2.getResult());
-        QVERIFY(result2 == QString("((30.452)^(1/3))^(1/2);\n"));
-        QVERIFY(formula5.getCASKernelCommand() == QString("((30.452)^(1/3))^(1/2);\n"));
+        QVERIFY(result2 == QString("fpprintprec:0$((30.452)^(1/3))^(1/2);fpprintprec:15$"));
+        QVERIFY(formula5.getCASKernelCommand() == QString("fpprintprec:0$((30.452)^(1/3))^(1/2);fpprintprec:15$"));
 
         //test math ml visitor
         EgcMathMlVisitor mathMlVisitor(formula4);
@@ -1400,7 +1400,7 @@ void EgcasTest_Structural::testFlexNodeVisitors()
         static_cast<EgcFunctionNode*>(node2)->setName("testFunction");
 
         //test maxima visitor
-        QVERIFY(formula5.getCASKernelCommand() == QString("(testFunction(3,(5),6,7))^(1/8);\n"));
+        QVERIFY(formula5.getCASKernelCommand() == QString("fpprintprec:0$(testFunction(3,(5),6,7))^(1/8);fpprintprec:15$"));
 
         //test math ml visitor
         QVERIFY(formula5.getMathMlCode() == QString("<math><mroot><mrow><mrow><mi>testFunction</mi><mo>&ApplyFunction;"
