@@ -174,6 +174,7 @@ void EgcFormulaItem::updateView(void)
         if (!m_entity)
                 return;
 
+        prepareGeometryChange();
         m_mathMlDoc->setContent(m_entity->getMathMlCode());
         update();
 }

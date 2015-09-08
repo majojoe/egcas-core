@@ -57,6 +57,8 @@ bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly)
 {
         if (m_calculationRunning)
                 return false;
+
+        m_conn->reset();
                 
         m_iterator.reset(new QListIterator<EgcEntity*>(list.getIterator()));
 

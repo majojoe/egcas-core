@@ -150,7 +150,7 @@ void EgcMaximaConn::quit(void)
 
 void EgcMaximaConn::reset(void)
 {
-        this->sendCommand("kill(all);");
+        this->sendCommand("kill(all)$");
 }
 
 void EgcMaximaConn::casKernelTimeoutError(void)
