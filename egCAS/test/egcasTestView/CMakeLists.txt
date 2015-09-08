@@ -7,8 +7,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #set(CMAKE_BUILD_TYPE Release)
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-#        set(CMAKE_EXE_LINKER_FLAGS "-s")  ## Strip binary        
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        add_definitions(-std=c++11)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+#        set(CMAKE_EXE_LINKER_FLAGS "-s")  ## Strip binary
         add_definitions(-std=c++11)
 endif()
 

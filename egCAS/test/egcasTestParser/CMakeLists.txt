@@ -21,7 +21,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
 
-if(CMAKE_COMPILER_IS_GNUCXX)
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        add_definitions(-std=c++11)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         add_definitions(-std=c++11)
 endif()
 

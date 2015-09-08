@@ -25,10 +25,13 @@ BISON_TARGET(cas_parser casKernel/parser/parser.y ${CMAKE_CURRENT_BINARY_DIR}/pa
 FLEX_TARGET(cas_scanner casKernel/parser/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp )
 ADD_FLEX_BISON_DEPENDENCY(cas_scanner cas_parser)
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-#        set(CMAKE_EXE_LINKER_FLAGS "-s")  ## Strip binary        
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        add_definitions(-std=c++11)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+#        set(CMAKE_EXE_LINKER_FLAGS "-s")  ## Strip binary
         add_definitions(-std=c++11)
 endif()
+
 
 #copy license file to res directory
 file(COPY ${CMAKE_SOURCE_DIR}/egCAS/LICENSE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/res)
