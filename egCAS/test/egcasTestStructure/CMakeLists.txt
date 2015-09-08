@@ -37,6 +37,7 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/entities/egcformulaentity.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp
         ../../src/structural/specialNodes/egcemptynode.cpp
+        ../../src/structural/specialNodes/egcargumentsnode.cpp
         ../../src/structural/visitor/egcnodevisitor.cpp 
         ../../src/structural/visitor/egcmaximavisitor.cpp 
         ../../src/structural/visitor/egcmathmlvisitor.cpp

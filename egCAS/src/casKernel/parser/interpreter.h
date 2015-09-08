@@ -129,7 +129,7 @@ private:
          * directly into the function.
          * @return pointer to the function created
          */
-        EgcNode* addFunction(const std::string& fncName, EgcFunctionNode*argList);
+        EgcNode* addFunction(const std::string& fncName, EgcArgumentsNode* argList);
 
         /**
          * @brief addBuiltinFunction add a builtin function to the formula
@@ -138,7 +138,7 @@ private:
          * directly into the function.
          * @return pointer to the function created
          */
-        EgcNode* addBuiltinFunction(const std::string& fncName, EgcFunctionNode* argList);
+        EgcNode* addBuiltinFunction(const std::string& fncName, EgcArgumentsNode* argList);
 
         /**
          * @brief changeFlexExpressionType change the given argList form a function node type to the type given (move the cildren)
@@ -146,14 +146,14 @@ private:
          * @param argList the arg list to use
          * @return pointer to the new type
          */
-        EgcNode* changeFlexExpressionType(EgcNodeType type, EgcFunctionNode* argList);
+        EgcNode* changeFlexExpressionType(EgcNodeType type, EgcArgumentsNode* argList);
 
         /**
          * @brief createArgList creates an argument list that is integrated later on in the function where it is used in
          * @param expression the expression to add to the argument list
          * @return a pointer to the created argument list
          */
-        EgcFunctionNode* createFncArgList(EgcNode* expression);
+        EgcArgumentsNode* createArgList(EgcNode* expression);
 
         /**
          * @brief addArgument adds an argument to the argument list given
@@ -161,7 +161,7 @@ private:
          * @param argumentList the argument list to use to add the argument to
          * @return a pointer to the changed argument list
          */
-        EgcFunctionNode* addFncArgument(EgcNode* expressionToAdd, EgcFunctionNode* argumentList);
+        EgcArgumentsNode* addArgument(EgcNode* expressionToAdd, EgcArgumentsNode* argumentList);
         /**
          * @brief addSqrtExpression add a square root to the tree. This is some sort of a hack, since a root node is a 
          * binary node, but this is constructed with just one argument (unary), the second node (2) is constructed in 

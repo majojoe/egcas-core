@@ -69,7 +69,8 @@ for node in nodes:
 cog.outl("        BaseNode,")
 cog.outl("        NodeUndefined")
 ]]]*/
-EmptyNode = 0,
+ArgumentsNode = 0,
+EmptyNode,
 ParenthesisNode,
 VariableNode,
 PlusNode,

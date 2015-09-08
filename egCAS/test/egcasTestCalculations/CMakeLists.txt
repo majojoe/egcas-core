@@ -47,6 +47,7 @@ set(tst_egcastest_calculations_SOURCES
         ../../src/structural/specialNodes/egcbinarynode.cpp
         ../../src/structural/specialNodes/egcflexnode.cpp
         ../../src/structural/specialNodes/egcnode.cpp
+        ../../src/structural/specialNodes/egcargumentsnode.cpp
         ../../src/structural/egcnodecreator.cpp
         ../../src/structural/specialNodes/egccontainernode.cpp
         ${tst_egcastest_calculations_concrete_SOURCES}

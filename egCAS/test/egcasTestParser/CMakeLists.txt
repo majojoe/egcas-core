@@ -48,6 +48,7 @@ set(tst_egcastest_parser_SOURCES
         ../../src/structural/specialNodes/egcnode.cpp
         ../../src/structural/egcnodecreator.cpp
         ../../src/structural/specialNodes/egccontainernode.cpp
+        ../../src/structural/specialNodes/egcargumentsnode.cpp
         ${tst_egcastest_parser_concrete_SOURCES}
         ../../src/structural/iterator/egcnodeiterator.cpp
         ../../src/structural/entities/egcformulaentity.cpp

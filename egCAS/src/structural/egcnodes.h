@@ -6,6 +6,7 @@
 #include "specialNodes/egcbinarynode.h"
 #include "specialNodes/egcbasenode.h"
 #include "specialNodes/egcemptynode.h"
+#include "specialNodes/egcargumentsnode.h"
 
 /*[[[cog
 import cog

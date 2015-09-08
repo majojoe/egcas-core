@@ -117,7 +117,7 @@
 
 
 %type<EgcNode*> expr;
-%type<EgcFunctionNode*> explist;
+%type<EgcArgumentsNode*> explist;
 
 %start formula
 
@@ -161,8 +161,8 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.changeFlexExpressionType(EgcNodeType::DifferentialNode, $3);}
 ;
     
-explist: expr            {$$ = interpreter.createFncArgList($1);}
-     | expr "," explist    {$$ = interpreter.addFncArgument($1, $3);}
+explist: expr            {$$ = interpreter.createArgList($1);}
+     | expr "," explist    {$$ = interpreter.addArgument($1, $3);}
 ;
 
 %%

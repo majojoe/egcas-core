@@ -119,6 +119,7 @@ set(egCAS_SOURCES
         formulagenerator.cpp
         menu/egclicenseinfo.cpp
         structural/document/egccalculation.cpp
+        structural/specialNodes/egcargumentsnode.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS

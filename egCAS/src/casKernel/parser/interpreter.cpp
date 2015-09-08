@@ -157,27 +157,33 @@ EgcNode* Interpreter::getRootNode(void)
 }
 
 
-EgcNode* Interpreter::addFunction(const std::string& fncName, EgcFunctionNode* argList)
+EgcNode* Interpreter::addFunction(const std::string& fncName, EgcArgumentsNode* argList)
 {
         if (argList) {
-                argList->setName(QString::fromStdString(fncName));
+                EgcNode* node = changeFlexExpressionType(EgcNodeType::FunctionNode, argList);
+                EgcFunctionNode* function = static_cast<EgcFunctionNode*>(node);
+                function->setName(QString::fromStdString(fncName));
+                return static_cast<EgcNode*> (function);
         }
 
         return static_cast<EgcNode*> (argList);
 }
 
-EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcFunctionNode*argList)
+EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcArgumentsNode* argList)
 {
         if (argList) {
-                argList->setName(QString::fromStdString(fncName));
+                EgcNode* node = changeFlexExpressionType(EgcNodeType::FunctionNode, argList);
+                EgcFunctionNode* function = static_cast<EgcFunctionNode*>(node);
+                function->setName(QString::fromStdString(fncName));
+                return static_cast<EgcNode*> (function);
         }
 
         return static_cast<EgcNode*> (argList);
 }
 
-EgcFunctionNode* Interpreter::createFncArgList(EgcNode* expression)
+EgcArgumentsNode* Interpreter::createArgList(EgcNode* expression)
 {
-        QScopedPointer<EgcFunctionNode> node(static_cast<EgcFunctionNode*>(EgcNodeCreator::create(EgcNodeType::FunctionNode)));
+        QScopedPointer<EgcArgumentsNode> node(static_cast<EgcArgumentsNode*>(EgcNodeCreator::create(EgcNodeType::ArgumentsNode)));
         QScopedPointer<EgcNode> exprPtr(expression);
         setNotDangling(expression);
         if (!node.isNull()) {
@@ -185,13 +191,13 @@ EgcFunctionNode* Interpreter::createFncArgList(EgcNode* expression)
         } else {
                 throw std::runtime_error("Not enough memory to complete operation!");
         }
-        EgcFunctionNode *nodePtr = node.data();
+        EgcArgumentsNode *nodePtr = node.data();
         addDanglingNode(node.take());
 
         return nodePtr;
 }
 
-EgcFunctionNode* Interpreter::addFncArgument(EgcNode* expressionToAdd, EgcFunctionNode* argumentList)
+EgcArgumentsNode* Interpreter::addArgument(EgcNode* expressionToAdd, EgcArgumentsNode* argumentList)
 {
         QScopedPointer<EgcNode> exprToAdd(expressionToAdd);
         setNotDangling(expressionToAdd);
@@ -242,7 +248,7 @@ EgcNode* Interpreter::addEmptyNode(void)
         return node;
 }
 
-EgcNode* Interpreter::changeFlexExpressionType(EgcNodeType type, EgcFunctionNode* argList)
+EgcNode* Interpreter::changeFlexExpressionType(EgcNodeType type, EgcArgumentsNode* argList)
 {
         QScopedPointer<EgcFlexNode> node(static_cast<EgcFunctionNode*>(EgcNodeCreator::create(type)));
         assert(node->isFlexNode());

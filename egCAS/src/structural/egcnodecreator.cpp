@@ -90,6 +90,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
                 cog.outl("        break;")
 
         ]]]*/
+        case EgcNodeType::ArgumentsNode:
+                retval = new (std::nothrow) EgcArgumentsNode();
+                break;
         case EgcNodeType::EmptyNode:
                 retval = new (std::nothrow) EgcEmptyNode();
                 break;
