@@ -82,9 +82,6 @@ public:
          * @param type the type of the child to test and suppress
          */
         void suppressCurrentIfChildType(const EgcNode* node, quint32 index, EgcNodeType type);
-
-private:
-        QSet<EgcNode*> m_suppressList;  ///< a list with pointers EgcNode elements that shall not be rendered
 };
 
 #endif // EGCMAXIMAVISITOR_H

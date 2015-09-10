@@ -33,143 +33,92 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{formula}, m_prettyPrint{true}
 {
-        m_suppressList.clear();
 }
 
 void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
 {       
-        QString str;
-
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode:                
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        str = "<mroot><mrow>";
                         // don't show the root exponent if it is "2" (square root)
                         suppressIfChildValue(binary, 1, EgcNodeType::NumberNode, "2");
-                } else if (m_state == EgcIteratorState::MiddleIteration) {
-                        str = "</mrow><mrow>";
-                } else {
-                        str = "</mrow></mroot>";
+                } else if (m_state == EgcIteratorState::RightIteration) {
+                        assembleResult("<mroot><mrow>%1</mrow><mrow>%2</mrow></mroot>", binary);
                 }
                 break;
         case EgcNodeType::EqualNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "<mrow>";
-                else if (m_state == EgcIteratorState::MiddleIteration)
-                        str = "<mo>=</mo>";
-                else
-                        str = "</mrow>";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("<mrow>%1<mo>=</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::DefinitionNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "<mrow>";
-                else if (m_state == EgcIteratorState::MiddleIteration)
-                        str = "<mo>:=</mo>";
-                else
-                        str = "</mrow>";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("<mrow>%1<mo>:=</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::PlusNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "<mrow>";
-                else if (m_state == EgcIteratorState::MiddleIteration)
-                        str = "<mo>+</mo>";
-                else
-                        str = "</mrow>";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("<mrow>%1<mo>+</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::MinusNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "<mrow>";
-                else if (m_state == EgcIteratorState::MiddleIteration)
-                        str = "<mo>-</mo>";
-                else
-                        str = "</mrow>";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("<mrow>%1<mo>-</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::MultiplicationNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "<mrow>";
-                else if (m_state == EgcIteratorState::MiddleIteration)
-                        str = "<mo>&CenterDot;</mo>";
-                else
-                        str = "</mrow>";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("<mrow>%1<mo>&CenterDot;</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::DivisionNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        str = "<mfrac>";
                         suppressIfChildType(binary, 0, EgcNodeType::ParenthesisNode);
                         suppressIfChildType(binary, 1, EgcNodeType::ParenthesisNode);
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        str = "</mfrac>";
+                        assembleResult("<mfrac>%1 %2</mfrac>", binary);
                 }
                 break;
         case EgcNodeType::ExponentNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "<msup>";
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = "</msup>";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("<msup>%1 %2</msup>", binary);
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", binary->getNodeType()) ;
                 break;
         }
-
-        if (!m_suppressList.contains(binary))
-                m_result += str;
 }
 
 void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
 {
-        QString str;
-
         switch (unary->getNodeType()) {
         case EgcNodeType::ParenthesisNode: {
                 /*this is to remove unneccesary parenthesis in case of redundant nested parenthesis*/
                 suppressIfChildType(unary, 0, EgcNodeType::ParenthesisNode);
 
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "<mfenced open=\"(\" close=\")\" separators=\",\"><mrow>";
-                else
-                        str = "</mrow></mfenced>";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("<mfenced open=\"(\" close=\")\" separators=\",\"><mrow>%1</mrow></mfenced>", unary);
         }
         break;
         case EgcNodeType::UnaryMinusNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "<mrow><mo>-</mo>";
-                else
-                        str = "</mrow>";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("<mrow><mo>-</mo>%1</mrow>", unary);
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", unary->getNodeType()) ;
                 break;
         }
-
-        if (!m_suppressList.contains(unary))
-                m_result += str;
 }
 
 void EgcMathMlVisitor::visit(EgcFlexNode* flex)
 {
-        QString str;
-
         switch (flex->getNodeType()) {
         case EgcNodeType::FunctionNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = QString("<mrow><mi>%1</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>")
+                if (m_state == EgcIteratorState::RightIteration) {
+                        QString startStr = QString("<mrow><mi>%1</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>")
                                       .arg(static_cast<EgcFunctionNode*>(flex)->getName());
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = "</mrow><mo>)</mo></mrow></mrow>";
-                else
-                        str = "<mo>,</mo>";
+                        assembleResult(startStr, "<mo>,</mo>", "</mrow><mo>)</mo></mrow></mrow>", flex);
+                }
                 break;
         case EgcNodeType::IntegralNode:
                 if (flex->getNumberChildNodes() == 2) { // indefinite integral
-
-                        if (m_state == EgcIteratorState::LeftIteration)
-                                str = QString("<mrow><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>");
-                        else if (m_state == EgcIteratorState::RightIteration)
-                                str = "</mrow></mrow>";
-                        else
-                                str = "</mrow><mo>d</mo><mrow>";
-
+                        if (m_state == EgcIteratorState::RightIteration)
+                                assembleResult("<mrow><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>%1</mrow><mo>d</mo><mrow>%2</mrow></mrow>", flex);
                 } else { // integral with limits number of childs should be 4!
 
                 }
@@ -184,37 +133,30 @@ void EgcMathMlVisitor::visit(EgcFlexNode* flex)
                 qDebug("No visitor code for mathml defined for this type: %d", flex->getNodeType()) ;
                 break;
         }
-
-        if (!m_suppressList.contains(flex))
-                m_result += str;
 }
 
 void EgcMathMlVisitor::visit(EgcNode* node)
 {
-        QString str;
-
         switch (node->getNodeType()) {
         case EgcNodeType::NumberNode:
-                str = "<mn>" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>";
+                pushToStack("<mn>" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>", node);
                 break;
         case EgcNodeType::VariableNode: {
                 EgcVariableNode* varNode = static_cast<EgcVariableNode*>(node);
                 if (varNode->getSubscript().isEmpty())
-                        str = "<mi>" % varNode->getValue() % "</mi>";
+                        pushToStack("<mi>" % varNode->getValue() % "</mi>", node);
                 else
-                        str = "<msub><mi>" % varNode->getValue() % "</mi><mi>" % varNode->getSubscript() %"</mi></msub>";
+                        pushToStack("<msub><mi>" % varNode->getValue() % "</mi><mi>" % varNode->getSubscript()
+                                    %"</mi></msub>", node);
                 break;
         }
         case EgcNodeType::EmptyNode:
-                str = "<mi>&#x2B1A;</mi>";
+                pushToStack("<mi>&#x2B1A;</mi>", node);
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
                 break;
         }
-
-        if (!m_suppressList.contains(node))
-                m_result += str;
 }
 
 QString EgcMathMlVisitor::getResult(void)

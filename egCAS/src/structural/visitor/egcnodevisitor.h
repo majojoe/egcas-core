@@ -30,6 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCNODEVISITOR_H
 
 #include <QString>
+#include <QStack>
+#include <QSet>
+#include <QRegularExpression>
 #include "../iterator/egcnodeiterator.h"
 
 
@@ -79,12 +82,40 @@ public:
          * @return the result of the traversion as string
          */
         virtual QString getResult(void);
+        /**
+         * @brief assembleResult assemble the result string of a node
+         * @param formatString the format string that contains placeholders for result strings of the childs like
+         * QString does. E.g. "<mrow>%1<mo>&CenterDot;</mo>%2</mrow>" is an example for a mathml multiplication
+         * @param node the node we are currently operating on
+         */
+        virtual void assembleResult(QString formatString, EgcNode* node);
+        /**
+         * @brief assembleResult assemble the result string of a node. This is a convinience version of the above
+         * function. The function can be used in cases when there are many (variable) arguments, e.g. for functions.
+         * E.g. it can be used with the following mathml function:
+         * assembleResult("<mrow><mi>FNC_NAME</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>", "<mo>,</mo>",
+         * "</mrow><mo>)</mo></mrow></mrow>", node);
+         * @param startString the start string of a node (if any - give an empty string if this is not used)
+         * @param seperationString the separation string that is used as seperation of each child node
+         * @param endString the end string of the node
+         * @param node the node we are currently operating on
+         */
+        virtual void assembleResult(QString startString, QString seperationString, QString endString, EgcNode* node);
+        /**
+         * @brief pushToStack push results to the stack. This function (and not the QStack push function) must be used
+         * to push stuff onto the stack, since here also suppression conditions will be checked.
+         * @param str the string to push
+         * @param node the node we are currently operating on
+         */
+        virtual void pushToStack(QString str, EgcNode* node);
 protected:
         QString m_result;                       ///< saves the result of the information extracted.
         EgcFormulaEntity *m_formula;            ///< the formula to with the nodes to work on
         EgcIteratorState m_state;               ///< the current state (helps to extract the correct information from tree)
         quint32 m_childIndex;                   ///< stores the last child index
-
+        QStack<QString> m_stack;                ///< stores all the child results till all nodes are visited
+        QRegularExpression m_argRegex;          ///< regex that searches for argument placeholders
+        QSet<EgcNode*> m_suppressList;  ///< a list with pointers EgcNode elements that shall not be rendered
 };
 
 #endif // EGCNODEVISITOR_H

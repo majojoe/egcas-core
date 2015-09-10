@@ -30,10 +30,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcnodevisitor.h"
 #include "../egcnodes.h"
 
+
 EgcNodeVisitor::EgcNodeVisitor(EgcFormulaEntity& formula) : m_result{QString::null}, m_formula{&formula},
                                                             m_state{EgcIteratorState::LeftIteration},
                                                             m_childIndex{0}
 {
+        m_stack.clear();
+        m_argRegex = QRegularExpression("%[0-9]{1,2}");
+        m_argRegex.optimize();
+        m_suppressList.clear();
 }
 
 QString EgcNodeVisitor::getResult(void)
@@ -41,6 +46,9 @@ QString EgcNodeVisitor::getResult(void)
         EgcNodeIterator iter(*m_formula);
         EgcNode *node;
         QString result;
+
+        //clear stack
+        m_stack.clear();
 
         while(iter.hasNext()) {
                 node = &iter.next();
@@ -65,5 +73,88 @@ QString EgcNodeVisitor::getResult(void)
                 m_result = QString::null;
         };
 
+        //add the result from the stack
+        if (!m_stack.isEmpty())
+                result += m_stack.pop();
+
         return result;
+}
+
+void EgcNodeVisitor::assembleResult(QString formatString, EgcNode* node)
+{
+        QString result = formatString;
+        quint32 nrArguments;
+        int i;
+
+        if (m_suppressList.contains(node))
+                return;
+
+        if (!node->isContainer())
+                return;
+
+        nrArguments = static_cast<EgcContainerNode*>(node)->getNumberChildNodes();
+
+        if (nrArguments == 0)
+                return;
+
+        QVector<QString> args(nrArguments);
+
+        for (i = nrArguments - 1; i >= 0; i--) {
+                if (!m_stack.isEmpty())
+                        args[i] = m_stack.pop();
+        }
+
+        for (int i = 0; i < nrArguments; i++) {
+                QRegularExpressionMatch match = m_argRegex.match(result);
+                if (match.hasMatch() > 0)
+                        result = result.arg(args[i]);
+        }
+
+        m_stack.push(result);
+}
+
+void EgcNodeVisitor::assembleResult(QString startString, QString seperationString, QString endString, EgcNode* node)
+{
+        QString result = startString;
+        quint32 nrArguments;
+
+        if (m_suppressList.contains(node))
+                return;
+
+        if (!node->isContainer())
+                return;
+
+        nrArguments = static_cast<EgcContainerNode*>(node)->getNumberChildNodes();
+
+        if (nrArguments == 0)
+                return;
+
+        QVector<QString> args(nrArguments);
+
+        for (int i = nrArguments - 1; i >= 0; i--) {
+                if (!m_stack.isEmpty())
+                        args[i] = m_stack.pop();
+        }
+
+        for (int i = 0; i < nrArguments; i++) {
+                result += args[i];
+                if (i != nrArguments - 1)
+                        result += seperationString;
+                else
+                        result += endString;
+        }
+
+        if (!m_suppressList.contains(node))
+                m_stack.push(result);
+}
+
+void EgcNodeVisitor::pushToStack(QString str, EgcNode* node)
+{
+        if (str.isEmpty())
+                return;
+
+        if (m_suppressList.contains(node))
+                m_stack.push(QString(""));
+        else
+                m_stack.push(str);
 }

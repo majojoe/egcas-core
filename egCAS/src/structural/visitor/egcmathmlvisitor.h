@@ -104,7 +104,6 @@ public:
 
 private:
         bool m_prettyPrint;             ///< activates pretty printing e.g. in case of a fraction remove the parenthesis
-        QSet<EgcNode*> m_suppressList;  ///< a list with pointers EgcNode elements that shall not be rendered
 };
 
 #endif // EGCMATHMLVISITOR_H
