@@ -37,165 +37,104 @@ EgcMaximaVisitor::EgcMaximaVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(f
 
 void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
 {
-        QString str;
-
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "(";
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = ")";
-                else
-                        str = ")^(1/";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("(%1)^(1/%2)", binary);
                 break;
         case EgcNodeType::PlusNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "(";
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = ")";
-                else
-                        str = ")+(";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("(%1)+(%2)", binary);
                 break;
         case EgcNodeType::MinusNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "(";
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = ")";
-                else
-                        str = ")-(";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("(%1)-(%2)", binary);
                 break;
         case EgcNodeType::MultiplicationNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "(";
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = ")";
-                else
-                        str = ")*(";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("(%1)*(%2)", binary);
                 break;
         case EgcNodeType::DivisionNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "(";
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = ")";
-                else
-                        str = ")/(";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("(%1)/(%2)", binary);
                 break;
         case EgcNodeType::ExponentNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "(";
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = ")";
-                else
-                        str = ")^(";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("(%1)^(%2)", binary);
                 break;
         case EgcNodeType::EqualNode: {
                 if (m_state == EgcIteratorState::LeftIteration) {
                         if (binary->getParent()->getNodeType() == EgcNodeType::BaseNode)
                                 suppressCurrentIfChildType(binary, 1, EgcNodeType::EmptyNode);
+                } else if (m_state == EgcIteratorState::RightIteration) {
+                        assembleResult("%1=%2", binary);
                 }
-
-                if (m_state == EgcIteratorState::MiddleIteration)
-                        str = "=";                
                 break;
         }
         case EgcNodeType::DefinitionNode:
-                if (m_state == EgcIteratorState::MiddleIteration)
-                        str = ":";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("%1:%2", binary);
                 break;
 
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", binary->getNodeType()) ;
                 break;
         }
-
-        if (!m_suppressList.contains(binary))
-                m_result += str;
 }
 
 void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
 {
-        QString str;
-
         switch (unary->getNodeType()) {
         case EgcNodeType::ParenthesisNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "(";
-                else
-                        str = ")";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("(%1)", unary);
                 break;
         case EgcNodeType::UnaryMinusNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "-(";
-                else
-                        str = ")";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("-(%1)", unary);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", unary->getNodeType()) ;
                 break;
         }
-
-        if (!m_suppressList.contains(unary))
-                m_result += str;
 }
 
 void EgcMaximaVisitor::visit(EgcFlexNode* flex)
 {
-        QString str;
-
         switch (flex->getNodeType()) {
         case EgcNodeType::FunctionNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = static_cast<EgcFunctionNode*>(flex)->getName() % "(";
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = ")";
-                else
-                        str = ",";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult(static_cast<EgcFunctionNode*>(flex)->getName() % "(", ",", ")", flex);
                 break;
         case EgcNodeType::IntegralNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "integrate(";
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = ")";
-                else
-                        str = ",";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("integrate(", ",", ")", flex);
                 break;
         case EgcNodeType::DifferentialNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        str = "diff(";
-                else if (m_state == EgcIteratorState::RightIteration)
-                        str = ")";
-                else
-                        str = ",";
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("diff(", ",", ")", flex);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", flex->getNodeType()) ;
                 break;
         }
-
-        if (!m_suppressList.contains(flex))
-                m_result += str;
 }
 
 void EgcMaximaVisitor::visit(EgcNode* node)
 {
-        QString str;
-
         switch (node->getNodeType()) {
         case EgcNodeType::EmptyNode:
                 break;
         case EgcNodeType::NumberNode:
-                str = static_cast<EgcNumberNode*>(node)->getValue();
+                pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);
                 break;
         case EgcNodeType::VariableNode:
-                str = static_cast<EgcVariableNode*>(node)->getStuffedVar();
+                pushToStack(static_cast<EgcVariableNode*>(node)->getStuffedVar(), node);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", node->getNodeType()) ;
                 break;
         }
-
-        if (!m_suppressList.contains(node))
-                m_result += str;
 }
 
 QString EgcMaximaVisitor::getResult(void)
