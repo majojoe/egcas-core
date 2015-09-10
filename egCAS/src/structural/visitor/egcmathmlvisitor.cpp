@@ -119,15 +119,55 @@ void EgcMathMlVisitor::visit(EgcFlexNode* flex)
                 if (flex->getNumberChildNodes() == 2) { // indefinite integral
                         if (m_state == EgcIteratorState::RightIteration)
                                 assembleResult("<mrow><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>%1</mrow><mo>d</mo><mrow>%2</mrow></mrow>", flex);
-                } else { // integral with limits number of childs should be 4!
-
+                } else if (flex->getNumberChildNodes() == 4) { // integral with limits number of childs should be 4!
+                        if (m_state == EgcIteratorState::RightIteration)
+                                assembleResult("<mrow><munderover><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>%3</mrow><mrow>%4</mrow></munderover><mrow>%1</mrow><mo>d</mo><mrow>%2</mrow></mrow>", flex);
                 }
-
-// str = QString("<mrow><munderover><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>    <mi>untere_grenze</mi>   </mrow><mrow>  <mi>obere_grenze</mi>   </mrow></munderover><mrow>   <mi>integral</mi>  </mrow><mo>d</mo><mrow>  <mi>variable</mi>   </mrow></mrow>");
-
-
                 break;
         case EgcNodeType::DifferentialNode:
+                if (m_state == EgcIteratorState::RightIteration) {
+                        EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(flex);
+                        quint8 der = diff->getNrDerivative();
+                        quint32 indexD = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::differential);
+                        quint32 indexV = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::variable);
+
+                        if (    diff->getChild(indexD)->getNodeType() == EgcNodeType::VariableNode
+                             && der < 4) { // use lagrange's notation
+                                QString derivative;
+                                switch (der) {
+                                case 2:
+                                        derivative = "&Prime;";
+                                        break;
+                                case 3:
+                                        derivative = "&tprime;";
+                                        break;
+                                case 4:
+                                        derivative = "&qprime;";
+                                        break;
+                                default:
+                                        derivative = "&prime;";
+                                        break;
+                                }
+
+                                derivative = "<msup>%" % QString::number(indexD + 1) % "<mo>" % derivative
+                                             % "</mo></msup><mfenced>%" % QString::number(indexV + 1) % "</mfenced>";
+                                assembleResult(derivative, flex);
+                        } else { // use leibniz' notation
+                                QString result;
+                                if (der == 1)
+                                        result = "<mfrac><mrow><mi>d</mi><mfenced>%" % QString::number(indexD + 1)
+                                                 % "</mfenced></mrow><mrow><mi>d</mi>%" % QString::number(indexV + 1)
+                                                 % "</mrow></mfrac>";
+                                else
+                                        result = "<mfrac><mrow><msup><mi>d</mi><mn>" % QString::number(der)
+                                                 % "</mn></msup><mfenced>%" % QString::number(indexD + 1)
+                                                 % "</mfenced></mrow><msup><mrow><mi>d</mi>%"
+                                                 % QString::number(indexV + 1) % "</mrow><mn>"
+                                                 % QString::number(der) % "</mn></msup></mfrac>";
+
+                                assembleResult(result, flex);
+                        }
+                }
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", flex->getNodeType()) ;

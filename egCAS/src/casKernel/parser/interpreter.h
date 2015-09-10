@@ -163,15 +163,6 @@ private:
          */
         EgcArgumentsNode* addArgument(EgcNode* expressionToAdd, EgcArgumentsNode* argumentList);
         /**
-         * @brief addSqrtExpression add a square root to the tree. This is some sort of a hack, since a root node is a 
-         * binary node, but this is constructed with just one argument (unary), the second node (2) is constructed in 
-         * the background
-         * @param node0 the radicand to use
-         * @return 
-         */
-        EgcNode* addSqrtExpression(EgcNode* node0);
-
-        /**
          * @brief addEmptyNode add an empty node. USE THIS FOR DEBUG PURPOSES ONLY.
          * @return return a EgcNode of an emtpy node
          */
@@ -201,7 +192,27 @@ private:
     
         // Used to get last MaximaScanner location. Used in error messages.
         unsigned int location() const;
-    
+
+        /***********************************************************************************************************/
+        /*  only for debugging purposes                                                                            */
+        /***********************************************************************************************************/
+        /**
+         * @brief addSqrtExpression add a square root to the tree. This is some sort of a hack, since a root node is a
+         * binary node, but this is constructed with just one argument (unary), the second node (2) is constructed in
+         * the background
+         * @param node0 the radicand to use
+         * @return
+         */
+        EgcNode* addSqrtExpression(EgcNode* node0);
+        /**
+         * @brief addDifferentialExpression add a differential node
+         * @param argList the arg list to use
+         * @return pointer to the new type
+         */
+        EgcNode* addDifferentialExpression(EgcArgumentsNode* argList);
+
+
+
 private:
         MaximaScanner m_scanner;                        /// the scanner to use for parsing
         MaximaParser m_parser;                          /// the parser to use

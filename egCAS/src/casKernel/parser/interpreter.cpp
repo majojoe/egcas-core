@@ -264,3 +264,15 @@ EgcNode* Interpreter::changeFlexExpressionType(EgcNodeType type, EgcArgumentsNod
                 return argList;
         }
 }
+
+EgcNode* Interpreter::addDifferentialExpression(EgcArgumentsNode* argList)
+{
+        EgcNode* node = changeFlexExpressionType(EgcNodeType::DifferentialNode, argList);
+        EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(node);
+        EgcNode* derivative = diff->getChild(2);
+        if (derivative->getNodeType() == EgcNodeType::NumberNode)
+                diff->setNrDerivative(static_cast<EgcNumberNode*>(derivative)->getValue().toUInt());
+        diff->remove(2);
+
+        return node;
+}

@@ -42,9 +42,34 @@ class EgcDifferentialNode : public EgcFlexNode
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcDifferentialNode, EgcNodeType::DifferentialNode);
 public:
+        /**
+         * @brief The EgcDifferentialIndexes enum is a enum to determine the meaning of the child nodes inside the
+         * differential node
+         */
+        enum class EgcDifferentialIndexes {
+                differential = 0, variable
+        };
+
         EgcDifferentialNode();
+        /**
+         * @brief setNrDerivative set the derivative level (1st, 2nd, ...).
+         * @param derivative the level of derivative (1, 2, 3, ...)
+         */
+        void setNrDerivative(quint8 derivative);
+        /**
+         * @brief getNrDerivative returns if it is a 1st, 2nd, 3rd or 4th derivative
+         * @return the level of derivative (1, 2, 3, ...)
+         */
+        quint8 getNrDerivative(void) const;
+        /**
+         * @brief getIndexOf get the index of the given meaning
+         * @param index the meaning of the child we are searching for
+         * @return the index of the child
+         */
+        quint32 getIndexOf(EgcDifferentialIndexes index);
 
 protected:
+        quint8 m_derivative;
 
 };
 

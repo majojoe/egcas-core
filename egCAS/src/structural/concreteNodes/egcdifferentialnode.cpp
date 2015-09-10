@@ -29,8 +29,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcdifferentialnode.h"
 
-EgcDifferentialNode::EgcDifferentialNode()
+EgcDifferentialNode::EgcDifferentialNode() : m_derivative{1}
 {
 
 }
 
+void EgcDifferentialNode::setNrDerivative(quint8 derivative)
+{
+        if (derivative < 1)
+                derivative = 1;
+        m_derivative = derivative;
+}
+
+quint8 EgcDifferentialNode::getNrDerivative(void) const
+{
+        return m_derivative;
+}
+
+quint32 EgcDifferentialNode::getIndexOf(EgcDifferentialIndexes index)
+{
+        if (index == EgcDifferentialIndexes::differential)
+                return 0;
+        if (index == EgcDifferentialIndexes::variable)
+                return 1;
+}

@@ -107,12 +107,24 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
                         assembleResult(static_cast<EgcFunctionNode*>(flex)->getName() % "(", ",", ")", flex);
                 break;
         case EgcNodeType::IntegralNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("integrate(", ",", ")", flex);
+                if (flex->getNumberChildNodes() == 2) { // indefinite integral
+                        if (m_state == EgcIteratorState::RightIteration)
+                                assembleResult("integrate(", ",", ")", flex);
+                } else if (flex->getNumberChildNodes() == 4) {
+                        if (m_state == EgcIteratorState::RightIteration)
+                                assembleResult("romberg(", ",", ")", flex);
+                }
                 break;
         case EgcNodeType::DifferentialNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("diff(", ",", ")", flex);
+                if (m_state == EgcIteratorState::RightIteration) {
+                        EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(flex);
+                        quint32 indexD = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::differential);
+                        quint32 indexV = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::variable);
+
+                        QString str = "diff(%" % QString::number(indexD + 1) % ",%" % QString::number(indexV + 1)
+                                      % "," % QString::number(diff->getNrDerivative()) % ")";
+                        assembleResult(str, flex);
+                }
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", flex->getNodeType()) ;

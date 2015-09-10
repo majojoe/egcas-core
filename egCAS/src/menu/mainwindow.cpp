@@ -80,9 +80,28 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcFormulaEntity* formula5 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula,
                                                                                QPointF(100.0, 520.0)));
-    FormulaGenerator::getFormulaTree(formula5, "integrate(z,x)=_empty");
+    FormulaGenerator::getFormulaTree(formula5, "_integrate(z,x)=_empty");
     
-    
+    EgcFormulaEntity* formula6 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
+                                                                ->createEntity(EgcEntityType::Formula,
+                                                                               QPointF(500.0, 520.0)));
+    FormulaGenerator::getFormulaTree(formula6, "_integrate(z,x,0,10)=_empty");
+
+    EgcFormulaEntity* formula7 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
+                                                                ->createEntity(EgcEntityType::Formula,
+                                                                               QPointF(100.0, 610.0)));
+    FormulaGenerator::getFormulaTree(formula7, "_diff(z,x,1)=_empty");
+
+    EgcFormulaEntity* formula8 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
+                                                                ->createEntity(EgcEntityType::Formula,
+                                                                               QPointF(500.0, 610.0)));
+    FormulaGenerator::getFormulaTree(formula8, "_diff(z,x,3)=_empty");
+
+    EgcFormulaEntity* formula9 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
+                                                                ->createEntity(EgcEntityType::Formula,
+                                                                               QPointF(100.0, 680.0)));
+    FormulaGenerator::getFormulaTree(formula9, "_diff(z,x,5)=_empty");
+
     //add a text item
     EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Text,
