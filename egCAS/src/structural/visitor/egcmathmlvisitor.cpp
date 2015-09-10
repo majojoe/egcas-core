@@ -149,8 +149,9 @@ void EgcMathMlVisitor::visit(EgcFlexNode* flex)
                                         break;
                                 }
 
-                                derivative = "<msup>%" % QString::number(indexD + 1) % "<mo>" % derivative
-                                             % "</mo></msup><mfenced>%" % QString::number(indexV + 1) % "</mfenced>";
+                                derivative = "<mstyle scriptlevel=\"-1\"><mo>" % derivative % "</mo></mstyle>";
+                                derivative = "<msup>%" % QString::number(indexD + 1) % derivative
+                                             % "</msup><mfenced>%" % QString::number(indexV + 1) % "</mfenced>";
                                 assembleResult(derivative, flex);
                         } else { // use leibniz' notation
                                 QString result;
