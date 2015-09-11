@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #endif //DEBUG_MAXIMA_KERNEL
 #include "egcmaximaconn.h"
 
-QString EgcMaximaConn::s_startupConfig = QString("set_display(none);display2d:false;");
+QString EgcMaximaConn::s_startupConfig = QString("set_display(none)$display2d:false$");
 
 EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{"maxima", parent}, m_timer{new QTimer(this)}
 {
@@ -64,6 +64,12 @@ EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{"maxima", parent},
         m_errRegex = QRegularExpression("(.*)\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
         m_regex = QRegularExpression("\\(%o[0-9]+\\)(.*)\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
         m_errUnwantedRegex = QRegularExpression("(.*)(" + regexFilterStr + ").*", QRegularExpression::DotMatchesEverythingOption);
+        m_unwantedErrors = QRegularExpression("\\(%i1\\)");
+        m_startRegex.optimize();
+        m_errRegex.optimize();
+        m_regex.optimize();
+        m_errUnwantedRegex.optimize();
+        m_unwantedErrors.optimize();
 }
 
 EgcMaximaConn::~EgcMaximaConn()
@@ -119,6 +125,11 @@ void EgcMaximaConn::stdOutput(void)
                         match = m_errRegex.match(m_result);
                         if (match.hasMatch()) {
                                 QString errorString = match.captured(1).trimmed();
+                                if (m_unwantedErrors.match(m_result).hasMatch()) { // this is an unwanted error
+                                        m_result.clear();
+                                        break;
+                                }
+
                                 if (m_errUnwantedRegex.match(errorString).hasMatch())
                                         errorString = m_errUnwantedRegex.match(errorString).captured(1);
 

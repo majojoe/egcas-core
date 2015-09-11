@@ -77,6 +77,9 @@ void EgcCalculation::nextCalculation(void)
         if (!m_calculationRunning)
                 m_calculationRunning = true;
         EgcEntity* entity = nullptr;
+
+        if (!m_iterator)
+                return;
         
         if (m_iterator->hasNext()) {
                 entity = m_iterator->next();
@@ -151,6 +154,9 @@ void EgcCalculation::errorReceived(QString errorMsg)
                 if (m_updateInstantly)
                         m_waitForResult->updateView();
         }
+
+        //go on to next calculation (even after an error with the current calculation)
+        nextCalculation();
 }
 
 void EgcCalculation::kernelStarted(void)

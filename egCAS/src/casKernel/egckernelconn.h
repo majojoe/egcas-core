@@ -102,6 +102,7 @@ protected:
         QRegularExpression m_startRegex;                ///< regex for filtering kernel output at startup
         QRegularExpression m_errRegex;                  ///< regex for filtering kernel errors
         QRegularExpression m_regex;                     ///< regex for filtering regular kernel output
+        QRegularExpression m_unwantedErrors;            ///< regex for filtering errors that are not really errors
         QString m_executeCommand;                       ///< command to execute when starting
 };
 
