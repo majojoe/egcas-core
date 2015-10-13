@@ -106,7 +106,7 @@ void EgcasTest_Calculation::evaluateResult(QString result)
                 EgcFormulaEntity form_res;
                 form_res.setRootElement(getTree("y=3"));
                 QVERIFY(form_res.setResult(getTree(result)) == true);
-                QVERIFY(form_res.getMathMlCode() == "<math><mrow><mi>y</mi><mo>=</mo><mn>31084.819</mn></mrow></math>");
+                QVERIFY(form_res.getMathMlCode() == "<math><mrow id=\"3\" ><mi id=\"1\" >y</mi><mo>=</mo><mn id=\"2\" >31084.819</mn></mrow></math>");
                 hasEnded = true;
         }
 

@@ -1202,8 +1202,8 @@ void EgcasTest_Structural::testVisitors()
         //test math ml visitor
         EgcMathMlVisitor mathMlVisitor(formula4);
         result = mathMlVisitor.getResult();        
-        QVERIFY(result == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow></mrow></mroot></math>"));
-        QVERIFY(formula4.getMathMlCode() == QString("<math><mroot><mrow><mroot><mrow><mn>30.452</mn></mrow><mrow><mn>3</mn></mrow></mroot></mrow><mrow></mrow></mroot></math>"));
+        QVERIFY(result == QString("<math><mroot id=\"5\" ><mrow><mroot id=\"3\" ><mrow><mn id=\"1\" >30.452</mn></mrow><mrow><mn id=\"2\" >3</mn></mrow></mroot></mrow><mrow></mrow></mroot></math>"));
+        QVERIFY(formula4.getMathMlCode() == QString("<math><mroot id=\"5\" ><mrow><mroot id=\"3\" ><mrow><mn id=\"1\" >30.452</mn></mrow><mrow><mn id=\"2\" >3</mn></mrow></mroot></mrow><mrow></mrow></mroot></math>"));
 }
 
 void EgcasTest_Structural::testFlexNode()
@@ -1403,10 +1403,11 @@ void EgcasTest_Structural::testFlexNodeVisitors()
         QVERIFY(formula5.getCASKernelCommand() == QString("fpprintprec:0$(testFunction(3,(5),6,7))^(1/8);fpprintprec:15$"));
 
         //test math ml visitor
-        QVERIFY(formula5.getMathMlCode() == QString("<math><mroot><mrow><mrow><mi>testFunction</mi><mo>&ApplyFunction;"
-                "</mo><mrow><mo>(</mo><mrow><mn>3</mn><mo>,</mo><mfenced open=\"(\" close=\")\" separators=\",\"><mrow>"
-                "<mn>5</mn></mrow></mfenced><mo>,</mo><mn>6</mn><mo>,</mo><mn>7</mn></mrow><mo>)</mo></mrow></mrow>"
-                "</mrow><mrow><mn>8</mn></mrow></mroot></math>"));
+        QVERIFY(formula5.getMathMlCode() == QString("<math><mroot id=\"8\" ><mrow><mrow id=\"6\" ><mi>testFunction</mi>"
+                "<mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow><mn id=\"1\" >3</mn><mo>,</mo>"
+                "<mfenced  id=\"3\" open=\"(\" close=\")\" separators=\",\"><mrow><mn id=\"2\" >5</mn></mrow></mfenced>"
+                "<mo>,</mo><mn id=\"4\" >6</mn><mo>,</mo><mn id=\"5\" >7</mn></mrow><mo>)</mo></mrow></mrow></mrow>"
+                "<mrow><mn id=\"7\" >8</mn></mrow></mroot></math>"));
 
 }
 

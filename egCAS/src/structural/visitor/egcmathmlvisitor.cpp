@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcmathmlvisitor.h"
 
 EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{formula}, m_prettyPrint{true},
-                                                                m_idCounter{0}
+                                                                m_idCounter{1}
 {
         m_lookup.clear();
 }
@@ -205,7 +205,7 @@ void EgcMathMlVisitor::visit(EgcNode* node)
 QString EgcMathMlVisitor::getResult(void)
 {
         //do clean up
-        m_idCounter = 0;
+        m_idCounter = 1;
         m_lookup.clear();
 
         QString temp;
