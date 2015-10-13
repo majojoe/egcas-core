@@ -101,9 +101,22 @@ public:
          * @param val the value of the child to test and supppress
          */
         void suppressIfChildValue(const EgcNode* node, quint32 index, EgcNodeType type, QString val);
+        /**
+         * @brief getId returns the id string to be added to the mathml code to be able to identify the node later
+         * @param node the node to be identified via the id
+         * @return the mathml string with the id
+         */
+        QString getId(EgcNode* node);
+        /**
+         * @brief getIdLookup returns the id lookup for mathml
+         * @return the lookup table
+         */
+        QHash<quint32, EgcNode*> getIdLookup(void);
 
 private:
         bool m_prettyPrint;             ///< activates pretty printing e.g. in case of a fraction remove the parenthesis
+        quint32 m_idCounter;            ///< the id counter
+        QHash<quint32,EgcNode*> m_lookup;       ///< lookup for mapping id's in node pointers
 };
 
 #endif // EGCMATHMLVISITOR_H
