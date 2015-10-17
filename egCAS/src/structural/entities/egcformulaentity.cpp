@@ -182,6 +182,7 @@ void EgcFormulaEntity::setRootElement(EgcNode* rootElement)
 QString EgcFormulaEntity::getMathMlCode(void)
 {
         EgcMathMlVisitor mathMlVisitor(*this);
+        m_item->setMathmlMapping(mathMlVisitor.getMathmlMapping());
         return mathMlVisitor.getResult();
 }
 

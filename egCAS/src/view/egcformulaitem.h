@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgMathMLDocument;
 class EgcAbstractFormulaEntity;
 class EgcAbstractFormulaItem;
+class EgcScreenPos;
 
 /**
  * @brief The FormulaItem class implements a QGraphicsItem to be able to use a formula in a QGraphicsView
@@ -126,6 +127,11 @@ public:
          * @brief updateView update the view with the new mathml representation if anything changes
          */
         virtual void updateView(void) override;
+        /**
+         * @brief setLookup set the lookup table, to be able to lookup the mathml id with the formula item nodes
+         * @param lookup the lookup hash table (mathml id, EgcNode*)
+         */
+        virtual void setMathmlMapping(QHash<quint32, EgcNode*> lookup) override;
 
 protected:
         /**
@@ -158,8 +164,9 @@ private:
         QScopedPointer<EgMathMLDocument> m_mathMlDoc;
         static quint8 s_baseFontSize;
         quint8 m_fontSize;
-        EgcAbstractFormulaEntity* m_entity;                     ///< pointer to formula entity
-        bool m_posChanged;                            ///< helper variable indicating that the position has changed
+        EgcAbstractFormulaEntity* m_entity;             ///< pointer to formula entity
+        bool m_posChanged;                              ///< helper variable indicating that the position has changed
+        QScopedPointer<EgcScreenPos> m_screenPos;       ///< screen positions of the rendered formula characters
 
         Q_DISABLE_COPY(EgcFormulaItem)
 };

@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcasscene.h"
 #include "entities/egcabstractformulaentity.h"
 #include "egcabstractformulaitem.h"
+#include "egcscreenpos.h"
 
 quint8 EgcFormulaItem::s_baseFontSize = 14;
 
@@ -41,6 +42,7 @@ EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         m_mathMlDoc.reset(new EgMathMLDocument());
         m_mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
+        m_screenPos.reset(new EgcScreenPos());
 }
 
 EgcFormulaItem::~EgcFormulaItem()
@@ -189,4 +191,9 @@ QSizeF EgcFormulaItem::getGrid(void)
         }
 
         return grid;
+}
+
+void EgcFormulaItem::setMathmlMapping(QHash<quint32, EgcNode*> lookup)
+{
+
 }

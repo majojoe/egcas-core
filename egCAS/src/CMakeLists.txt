@@ -88,6 +88,7 @@ set(egCAS_SOURCES
         view/resizehandle.cpp 
         view/egcformulaitem.cpp 
         view/egcabstractitem.cpp
+        view/egcscreenpos.cpp
         structural/specialNodes/egcnode.cpp
         structural/specialNodes/egcbinarynode.cpp
         structural/specialNodes/egcunarynode.cpp

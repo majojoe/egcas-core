@@ -111,7 +111,7 @@ public:
          * @brief getIdLookup returns the id lookup for mathml
          * @return the lookup table
          */
-        QHash<quint32, EgcNode*> getIdLookup(void);
+        QHash<quint32, EgcNode*> getMathmlMapping(void);
 
 private:
         bool m_prettyPrint;             ///< activates pretty printing e.g. in case of a fraction remove the parenthesis

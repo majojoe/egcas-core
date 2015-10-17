@@ -304,7 +304,7 @@ QString EgcMathMlVisitor::getId(EgcNode* node)
         return str;
 }
 
-QHash<quint32, EgcNode*> EgcMathMlVisitor::getIdLookup(void)
+QHash<quint32, EgcNode*> EgcMathMlVisitor::getMathmlMapping(void)
 {
         return m_lookup;
 }

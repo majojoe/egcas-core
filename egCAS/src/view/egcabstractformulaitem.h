@@ -65,6 +65,11 @@ public:
          * @brief updateView update the view with the new mathml representation if anything changes
          */
         virtual void updateView(void) = 0;
+        /**
+         * @brief setLookup set the lookup table, to be able to lookup the mathml id with the formula item nodes
+         * @param lookup the lookup hash table (mathml id, EgcNode*)
+         */
+        virtual void setMathmlMapping(QHash<quint32, EgcNode*> lookup) = 0;
 };
 
 #endif // EGCABSTRACTFORMULAITEM_H
