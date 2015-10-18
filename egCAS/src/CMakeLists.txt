@@ -18,6 +18,11 @@ if(debug_maxima_kernel)
         add_definitions(-DDEBUG_MAXIMA_KERNEL )
 endif()
 
+option(debug_scene_rendering_pos "switch debugging for scene position rendering on" OFF)
+if(debug_scene_rendering_pos)
+        add_definitions(-DDEBUG_SCENE_RENDERING_POS )
+endif()
+
 find_package(BISON)
 find_package(FLEX)
 

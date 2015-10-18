@@ -76,8 +76,30 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 
         QRectF formulaRect(QPointF(0,0), m_mathMlDoc->size());
         m_mathMlDoc->paint( painter, formulaRect.topLeft() );
+        m_screenPos->setPositions(m_mathMlDoc->getRenderingPositions());
 
         if (isSelected()) {
+#ifdef DEBUG_SCENE_RENDERING_POS
+                QVector<EgRenderingPosition> renderingPosition = m_mathMlDoc->getRenderingPositions();
+
+                EgRenderingPosition position;
+                Qt::GlobalColor color = Qt::gray;
+                foreach (position, renderingPosition) {
+                        if (position.m_index == 0) {
+                                painter->setPen(Qt::darkGray);
+                                painter->drawRect(position.m_itemRect);
+                        } else {
+                                painter->setPen(color);
+                                painter->drawRect(position.m_itemRect);
+                        }
+
+                        if (color == Qt::darkYellow)
+                                color = Qt::gray;
+                        else
+                                color = static_cast<Qt::GlobalColor>(static_cast<int>(color) + 1);
+                }
+#endif //#ifdef DEBUG_SCENE_RENDERING_POS
+
                 painter->save();
                 painter->setPen( QPen(Qt::black,
                                       qreal( 1 ),
@@ -195,5 +217,5 @@ QSizeF EgcFormulaItem::getGrid(void)
 
 void EgcFormulaItem::setMathmlMapping(QHash<quint32, EgcNode*> lookup)
 {
-
+        m_screenPos->setMathmlMapping(lookup);
 }

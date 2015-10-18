@@ -30,7 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCABSTRACTFORMULAITEM_H
 #define EGCABSTRACTFORMULAITEM_H
 
+#include <QHash>
 #include "egcasiteminterface.h"
+
+class EgcNode;
 
 class EgcAbstractFormulaItem : public EgcasItemInterface
 {
