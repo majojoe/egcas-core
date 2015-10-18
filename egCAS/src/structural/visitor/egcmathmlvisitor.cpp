@@ -50,23 +50,23 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
                 break;
         case EgcNodeType::EqualNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow" % getId(binary) % ">%1<mo>=</mo>%2</mrow>", binary);
+                        assembleResult("<mrow>%1<mo" % getId(binary) % ">=</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::DefinitionNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow" % getId(binary) % ">%1<mo>:=</mo>%2</mrow>", binary);
+                        assembleResult("<mrow>%1<mo" % getId(binary) % ">:=</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow" % getId(binary) % ">%1<mo>+</mo>%2</mrow>", binary);
+                        assembleResult("<mrow>%1<mo" % getId(binary) % ">+</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::MinusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow" % getId(binary) % ">%1<mo>-</mo>%2</mrow>", binary);
+                        assembleResult("<mrow>%1<mo" % getId(binary) % ">-</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::MultiplicationNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow" % getId(binary) % ">%1<mo>&CenterDot;</mo>%2</mrow>", binary);
+                        assembleResult("<mrow>%1<mo" % getId(binary) % ">&CenterDot;</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::DivisionNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
@@ -99,7 +99,7 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
         break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow" % getId(unary) % "><mo>-</mo>%1</mrow>", unary);
+                        assembleResult("<mrow><mo" % getId(unary) % ">-</mo>%1</mrow>", unary);
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", unary->getNodeType()) ;
