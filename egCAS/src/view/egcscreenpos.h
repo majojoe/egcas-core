@@ -36,8 +36,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "libegcas/eg_mml_document.h"
 
 
+/**
+ * @brief The EgcScreenPos class holds screen positons of the formula chars that were rendered on the screen
+ */
 class EgcScreenPos
 {
+        friend class EgcScrPosIterator;
 public:
         EgcScreenPos();
         /**
@@ -65,10 +69,21 @@ public:
          * @return the node for the given mathml id, or (if not found) nullptr
          */
         EgcNode* getNode(quint32 mathMlId);
+        /**
+         * @brief isConsistent checks if the contents of the class are consistent and there are no nullptrs to nodes
+         * @return true if class is consistent, false otherwise
+         */
+        bool isConsistent(void) const;
 private:
+        /**
+         * @brief checkConsistency checks the internal contents for consistency (this operation can be expensive)
+         * @return true if the contents are consistent, false otherwise
+         */
+        bool checkConsistency(void) const;
 
         QHash<quint32, EgcNode*> m_lookup;      ///< the lookup table for looking up the node for a mathml id
         QVector<EgRenderingPosition> m_positions; ///< the rendering positions of the characters of a formula
+        bool m_consistent;   ///< checks if the object is consistent (the contents of the class are consistent)
 };
 
 #endif // EGCSCREENPOS_H

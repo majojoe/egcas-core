@@ -33,16 +33,19 @@ EgcScreenPos::EgcScreenPos()
 {
         m_lookup.clear();
         m_positions.clear();
+        m_consistent = false;
 }
 
 void EgcScreenPos::setMathmlMapping(QHash<quint32, EgcNode*> lookup)
 {
         m_lookup = lookup;
+        m_consistent = checkConsistency();
 }
 
 void EgcScreenPos::setPositions(QVector<EgRenderingPosition> positions)
 {
         m_positions = positions;
+        m_consistent = checkConsistency();
 }
 
 EgcNode* EgcScreenPos::getNode(quint32 mathMlId)
@@ -74,4 +77,29 @@ EgcNode* EgcScreenPos::getNodeAtPos(const QPointF &pos, int* subIndex)
                 return nullptr;
 
         return getNode(nodeId);
+}
+
+bool EgcScreenPos::isConsistent(void) const
+{
+        return m_consistent;
+}
+
+bool EgcScreenPos::checkConsistency(void) const
+{
+        bool retval = true;
+
+        QVectorIterator<EgRenderingPosition> i(m_positions);
+        while(i.hasNext()) {
+                quint32 id = i.next().m_nodeId;
+                if (!m_lookup.contains(id)) {
+                        retval = false;
+                        break;
+                }
+                if (m_lookup.value(id) == nullptr) {
+                        retval = false;
+                        break;
+                }
+        }
+
+        return retval;
 }

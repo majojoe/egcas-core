@@ -39,6 +39,7 @@ class EgcNode;
 class EgcBaseNode;
 enum class EgcNodeType;
 class EgcAbstractFormulaItem;
+class EgcScreenPos;
 
 /**
  * @brief The EgcNumberResultType defines different types of number results
@@ -229,6 +230,13 @@ public:
          * @return the error message
          */
         QString getErrorMessage(void);
+        /**
+         * @brief getScreenPos returns a reference to the object that manages the screen positions of the formula
+         * characters
+         * @return a reference to the screen positions
+         */
+        const EgcScreenPos& getScreenPos(void) const;
+
 private:
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user

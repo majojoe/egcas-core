@@ -374,3 +374,8 @@ QString EgcFormulaEntity::getErrorMessage(void)
 {
         return m_errorMsg;
 }
+
+const EgcScreenPos& EgcFormulaEntity::getScreenPos(void) const
+{
+        return m_item->getScreenPos();
+}

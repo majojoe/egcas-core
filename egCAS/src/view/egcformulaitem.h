@@ -157,6 +157,12 @@ protected:
          * @return the value that has been adjusted
          */
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+        /**
+         * @brief getScreenPos returns a reference to the object that manages the screen positions of the formula
+         * characters
+         * @return a reference to the screen positions
+         */
+        virtual const EgcScreenPos& getScreenPos(void) const override;
 signals:
 
 public slots:

@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcasiteminterface.h"
 
 class EgcNode;
+class EgcScreenPos;
 
 class EgcAbstractFormulaItem : public EgcasItemInterface
 {
@@ -73,6 +74,12 @@ public:
          * @param lookup the lookup hash table (mathml id, EgcNode*)
          */
         virtual void setMathmlMapping(QHash<quint32, EgcNode*> lookup) = 0;
+        /**
+         * @brief getScreenPos returns a reference to the object that manages the screen positions of the formula
+         * characters
+         * @return a reference to the screen positions
+         */
+        virtual const EgcScreenPos& getScreenPos(void) const = 0;
 };
 
 #endif // EGCABSTRACTFORMULAITEM_H

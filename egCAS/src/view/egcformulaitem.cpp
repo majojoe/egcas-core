@@ -219,3 +219,8 @@ void EgcFormulaItem::setMathmlMapping(QHash<quint32, EgcNode*> lookup)
 {
         m_screenPos->setMathmlMapping(lookup);
 }
+
+const EgcScreenPos& EgcFormulaItem::getScreenPos(void) const
+{
+        return *m_screenPos.data();
+}
