@@ -32,7 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../specialNodes/egcnode.h"
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_formula{formula},
-                                                                        m_pos{formula.getScreenPos()}
+                                                                        m_pos{formula.getScreenPos()},
+                                                                        m_history{nullptr}
 {
         m_i.reset(new QVectorIterator<EgRenderingPosition>(m_pos.m_positions));
         m_i->toBack();
@@ -60,7 +61,6 @@ bool EgcScrPosIterator::hasPrevious(void) const
 
 EgcNode & EgcScrPosIterator::next(void)
 {
-#warning history is not written when we give back the base element
         if (!m_pos.isConsistent())
                 return m_formula.getBaseElement();
 
@@ -71,7 +71,6 @@ EgcNode & EgcScrPosIterator::next(void)
 
 EgcNode & EgcScrPosIterator::previous(void)
 {
-        #warning history is not written when we give back the base element
         if (!m_pos.isConsistent())
                 return m_formula.getBaseElement();
 
@@ -112,11 +111,18 @@ void EgcScrPosIterator::toFront(void)
 
 quint32 EgcScrPosIterator::subindex(void)
 {
-        m_history->m_index;
+        if (m_history)
+                return m_history->m_index;
+        else
+                return 0;
 }
 
 const EgcNode& EgcScrPosIterator::node()
 {
-        m_pos.m_lookup.value(m_history->m_nodeId);
+        if (m_history)
+                return *m_pos.m_lookup.value(m_history->m_nodeId);
+        else
+                return m_formula.getBaseElement();
+
 }
 
