@@ -27,13 +27,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include "egcscrpositerator.h"
-#include "../entities/egcformulaentity.h"
-#include "../specialNodes/egcnode.h"
 
-EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_formula{formula},
-                                                                        m_pos{formula.getScreenPos()},
-                                                                        m_history{nullptr}
+#include "egcscrpositerator.h"
+#include "../view/egcformulaitem.h"
+#include "../specialNodes/egcnode.h"
+#include "../view/egcscreenpos.h"
+
+EgcScrPosIterator::EgcScrPosIterator(EgcFormulaItem &formula) : m_pos{formula.getScreenPos()}
 {
         m_i.reset(new QVectorIterator<EgRenderingPosition>(m_pos.m_positions));
         m_i->toBack();
@@ -45,58 +45,32 @@ EgcScrPosIterator::~EgcScrPosIterator()
 
 bool EgcScrPosIterator::hasNext(void) const
 {
-        if (!m_pos.isConsistent())
-                return false;
-
         return m_i->hasNext();
 }
 
 bool EgcScrPosIterator::hasPrevious(void) const
 {
-        if (!m_pos.isConsistent())
-                return false;
-
         return m_i->hasPrevious();
 }
 
-EgcNode & EgcScrPosIterator::next(void)
+const EgRenderingPosition & EgcScrPosIterator::next(void)
 {
-        if (!m_pos.isConsistent())
-                return m_formula.getBaseElement();
-
-        m_history = &m_i->next();
-        //direct dereferencing is allowed here since the m_pos class is consistent!
-        return *m_pos.m_lookup.value(m_history->m_nodeId);
+        return m_i->next();
 }
 
-EgcNode & EgcScrPosIterator::previous(void)
+const EgRenderingPosition &EgcScrPosIterator::previous(void)
 {
-        if (!m_pos.isConsistent())
-                return m_formula.getBaseElement();
-
-        m_history = &m_i->previous();
-        //direct dereferencing is allowed here since the m_pos class is consistent!
-        return *m_pos.m_lookup.value(m_history->m_nodeId);
+        return m_i->previous();
 }
 
-EgcNode & EgcScrPosIterator::peekNext(void) const
+const EgRenderingPosition &EgcScrPosIterator::peekNext(void) const
 {
-        if (!m_pos.isConsistent())
-                return m_formula.getBaseElement();
-
-        EgRenderingPosition pos = m_i->peekNext();
-        //direct dereferencing is allowed here since the m_pos class is consistent!
-        return *m_pos.m_lookup.value(pos.m_nodeId);
+        return m_i->peekNext();
 }
 
-EgcNode & EgcScrPosIterator::peekPrevious(void) const
+const EgRenderingPosition &EgcScrPosIterator::peekPrevious(void) const
 {
-        if (!m_pos.isConsistent())
-                return m_formula.getBaseElement();
-
-        EgRenderingPosition pos = m_i->peekPrevious();
-        //direct dereferencing is allowed here since the m_pos class is consistent!
-        return *m_pos.m_lookup.value(pos.m_nodeId);
+        return m_i->peekPrevious();
 }
 
 void EgcScrPosIterator::toBack(void)
@@ -107,22 +81,5 @@ void EgcScrPosIterator::toBack(void)
 void EgcScrPosIterator::toFront(void)
 {
         m_i->toFront();
-}
-
-quint32 EgcScrPosIterator::subindex(void)
-{
-        if (m_history)
-                return m_history->m_index;
-        else
-                return 0;
-}
-
-const EgcNode& EgcScrPosIterator::node()
-{
-        if (m_history)
-                return *m_pos.m_lookup.value(m_history->m_nodeId);
-        else
-                return m_formula.getBaseElement();
-
 }
 

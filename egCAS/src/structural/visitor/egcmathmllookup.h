@@ -27,35 +27,29 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include "egcscreenpos.h"
-#include "specialNodes/egcnode.h"
+#ifndef EGCMATHMLLOOKUP_H
+#define EGCMATHMLLOOKUP_H
 
-EgcScreenPos::EgcScreenPos()
+#include <QHash>
+
+class EgcNode;
+
+class EgcMathmlLookup
 {
-        m_positions.clear();
-}
+public:
+        EgcMathmlLookup();
+        /**
+         * @brief addId add a id <-> node pair for later lookup
+         * @param id the mathml node id to add
+         * @param node the node that is related to the also given mathml node id above
+         */
+        void addId(quint32 id, EgcNode& node);
+        /**
+         * @brief clear clears the lookup table
+         */
+        void clear(void);
+private:
+        QHash<quint32, EgcNode*> m_lookup;      ///< lookup to be able to make a relation of any mathml id to the nodes of the formula
+};
 
-void EgcScreenPos::setPositions(QVector<EgRenderingPosition> positions)
-{
-        m_positions = positions;
-}
-
-EgRenderingPosition EgcScreenPos::getMathmlIdAtPos(const QPointF &pos)
-{
-        qreal w = 1.0e+37;      //choose values that are high enough
-        qreal h = 1.0e+37;
-        EgRenderingPosition i;
-        EgRenderingPosition retval;
-
-        foreach (i, m_positions) {
-                if (i.m_itemRect.contains(pos))
-                        if ( (i.m_itemRect.width() + i.m_itemRect.height()) < (w + h) ) {
-                                w = i.m_itemRect.width();
-                                h = i.m_itemRect.height();
-                                retval = i;
-                        }
-        }
-
-        return retval;
-}
-
+#endif // EGCMATHMLLOOKUP_H

@@ -298,13 +298,14 @@ QString EgcMathMlVisitor::getId(EgcNode* node)
 {
         QString str(" id=\"%1\" ");
         str = str.arg(m_idCounter);
-        m_lookup.insert(m_idCounter, node);
+        if (node)
+                m_lookup.addId(m_idCounter, *node);
         m_idCounter++;
 
         return str;
 }
 
-QHash<quint32, EgcNode*> EgcMathMlVisitor::getMathmlMapping(void)
+EgcMathmlLookup EgcMathMlVisitor::getMathmlMapping(void)
 {
         return m_lookup;
 }

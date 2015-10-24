@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../specialNodes/egcbasenode.h"
 #include "egcentity.h"
 #include "egcabstractformulaentity.h"
+#include "../visitor/egcmathmllookup.h"
 
 class EgcNode;
 class EgcBaseNode;
@@ -230,12 +231,6 @@ public:
          * @return the error message
          */
         QString getErrorMessage(void);
-        /**
-         * @brief getScreenPos returns a reference to the object that manages the screen positions of the formula
-         * characters
-         * @return a reference to the screen positions
-         */
-        const EgcScreenPos& getScreenPos(void) const;
 
 private:
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
@@ -244,6 +239,7 @@ private:
         static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
         EgcAbstractFormulaItem* m_item;         ///< pointer to the formula item interface on the scene
         QString m_errorMsg;                     ///< the error message for this formula, if one
+        EgcMathmlLookup m_mathmlLookup;         ///< mathml id lookup table
 };
 
 #endif // EGCFORMULAENTITY_H

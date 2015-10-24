@@ -31,17 +31,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCSCRPOSITERATOR_H
 
 #include <QtGlobal>
-#include "view/egcscreenpos.h"
+#include <QScopedPointer>
+#include <QVector>
+
 
 class EgcNode;
-class EgcFormulaEntity;
+class EgcFormulaItem;
 class EgRenderingPosition;
+class EgcScreenPos;
 
 class EgcScrPosIterator
 {
 public:
         /// constructor for initialization with formula
-        EgcScrPosIterator(const EgcFormulaEntity& formula);
+        EgcScrPosIterator(EgcFormulaItem& formula);
         /// std destructor
         virtual ~EgcScrPosIterator();
         /**
@@ -58,22 +61,22 @@ public:
          * @brief next Returns the next node and increments the iterator by one.
          * @return a reference to the next item.
          */
-        virtual EgcNode & next(void);
+        virtual const EgRenderingPosition & next(void);
         /**
          * @brief previous Returns the previous node and decrements the iterator by one.
          * @return a refererence to the previous item.
          */
-        virtual EgcNode & previous(void);
+        virtual const EgRenderingPosition & previous(void);
         /**
          * @brief peekNext Returns the next node without incrementing the iterator.
          * @return a reference to the next item.
          */
-        EgcNode & peekNext(void) const;
+        const EgRenderingPosition & peekNext(void) const;
         /**
          * @brief peekPrevious Returns the previous node without decrementing the iterator.
          * @return a reference to the previous item.
          */
-        EgcNode & peekPrevious(void) const;
+        const EgRenderingPosition & peekPrevious(void) const;
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
@@ -82,22 +85,10 @@ public:
          * @brief toFront Moves the iterator to the front of the tree (before the first item).
          */
         virtual void toFront(void);
-        /**
-         * @brief subindex returns the subindex we jumped over last time
-         * @return the subindex
-         */
-        virtual quint32 subindex(void);
-        /**
-         * @brief node returns the node we jumped over last time
-         * @return the node we jumped over using a traversal function
-         */
-        virtual const EgcNode& node();
+
 private:
-        const EgcFormulaEntity& m_formula;                              ///< reference to formula we use for iteration
         const EgcScreenPos& m_pos;                                      ///< reference to position class
         QScopedPointer<QVectorIterator<EgRenderingPosition>> m_i;       ///< iterator for screen positions
-        const EgRenderingPosition* m_history;                           ///< pointer to the position we jumped over
-
 };
 
 #endif // EGCSCRPOSITERATOR_H

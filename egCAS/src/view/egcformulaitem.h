@@ -39,6 +39,7 @@ class EgMathMLDocument;
 class EgcAbstractFormulaEntity;
 class EgcAbstractFormulaItem;
 class EgcScreenPos;
+class EgcScrPosIterator;
 
 /**
  * @brief The FormulaItem class implements a QGraphicsItem to be able to use a formula in a QGraphicsView
@@ -128,10 +129,11 @@ public:
          */
         virtual void updateView(void) override;
         /**
-         * @brief setLookup set the lookup table, to be able to lookup the mathml id with the formula item nodes
-         * @param lookup the lookup hash table (mathml id, EgcNode*)
+         * @brief getScreenPos returns a reference to the object that manages the screen positions of the formula
+         * characters
+         * @return a reference to the screen positions
          */
-        virtual void setMathmlMapping(QHash<quint32, EgcNode*> lookup) override;
+        virtual const EgcScreenPos& getScreenPos(void) const;
 
 protected:
         /**
@@ -158,11 +160,15 @@ protected:
          */
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
         /**
-         * @brief getScreenPos returns a reference to the object that manages the screen positions of the formula
-         * characters
-         * @return a reference to the screen positions
+         * @brief focusInEvent overwrite focus in event to be able to work with the position iterator
+         * @param event focus event
          */
-        virtual const EgcScreenPos& getScreenPos(void) const override;
+        virtual void focusInEvent(QFocusEvent * event) override;
+        /**
+         * @brief focusOutEvent overwrite focus in event to be able to work with the position iterator
+         * @param event focus event
+         */
+        virtual void focusOutEvent(QFocusEvent * event) override;
 signals:
 
 public slots:
@@ -173,6 +179,7 @@ private:
         EgcAbstractFormulaEntity* m_entity;             ///< pointer to formula entity
         bool m_posChanged;                              ///< helper variable indicating that the position has changed
         QScopedPointer<EgcScreenPos> m_screenPos;       ///< screen positions of the rendered formula characters
+        QScopedPointer<EgcScrPosIterator> m_tmpPosIter; ///< temporary iterator to positions (this object only exists if object has focus)
 
         Q_DISABLE_COPY(EgcFormulaItem)
 };

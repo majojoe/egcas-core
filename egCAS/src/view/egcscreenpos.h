@@ -32,9 +32,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QHash>
 #include <QPointF>
-#include "specialNodes/egcnode.h"
 #include "libegcas/eg_mml_document.h"
 
+class EgcNode;
 
 /**
  * @brief The EgcScreenPos class holds screen positons of the formula chars that were rendered on the screen
@@ -45,45 +45,20 @@ class EgcScreenPos
 public:
         EgcScreenPos();
         /**
-         * @brief setLookup set the lookup table, to be able to lookup the mathml id with the formula item nodes
-         * @param lookup the lookup hash table (mathml id, EgcNode*)
-         */
-        void setMathmlMapping(QHash<quint32, EgcNode*> lookup);
-        /**
          * @brief setPositions set the positions of the characters of the formula that have been calculated during
          * rendering
          * @param positions the positions of the chars, mathml id's and subindexes within the id's
          */
         void setPositions(QVector<EgRenderingPosition> positions);
         /**
-         * @brief getNodeAtPos returns the node that fits best for the given position
+         * @brief getMathmlIdAtPos returns the mathml id that fits best for the given position
          * WARNING: This function can be expensive.
          * @param pos the position inside the formula anybody e.g. clicked on
-         * @param subIndex the subindex that is accompanied by the mathml id (EgNode*)
-         * @return the node that is picked for the given position
+         * @return the mathml id that is picked for the given position
          */
-        EgcNode* getNodeAtPos(const QPointF &pos, int* subIndex);
-        /**
-         * @brief getNode returns the node that is related with the given mathml id
-         * @param mathMlId the mathml id we search the node for
-         * @return the node for the given mathml id, or (if not found) nullptr
-         */
-        EgcNode* getNode(quint32 mathMlId);
-        /**
-         * @brief isConsistent checks if the contents of the class are consistent and there are no nullptrs to nodes
-         * @return true if class is consistent, false otherwise
-         */
-        bool isConsistent(void) const;
+        EgRenderingPosition getMathmlIdAtPos(const QPointF &pos);
 private:
-        /**
-         * @brief checkConsistency checks the internal contents for consistency (this operation can be expensive)
-         * @return true if the contents are consistent, false otherwise
-         */
-        bool checkConsistency(void) const;
-
-        QHash<quint32, EgcNode*> m_lookup;      ///< the lookup table for looking up the node for a mathml id
         QVector<EgRenderingPosition> m_positions; ///< the rendering positions of the characters of a formula
-        bool m_consistent;   ///< checks if the object is consistent (the contents of the class are consistent)
 };
 
 #endif // EGCSCREENPOS_H

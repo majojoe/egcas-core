@@ -184,7 +184,7 @@ QString EgcFormulaEntity::getMathMlCode(void)
         EgcMathMlVisitor mathMlVisitor(*this);        
         QString tmp = mathMlVisitor.getResult();
         if (m_item)
-                m_item->setMathmlMapping(mathMlVisitor.getMathmlMapping());
+                m_mathmlLookup = mathMlVisitor.getMathmlMapping();
         return tmp;
 }
 
@@ -373,9 +373,4 @@ void EgcFormulaEntity::setErrorMessage(QString msg)
 QString EgcFormulaEntity::getErrorMessage(void)
 {
         return m_errorMsg;
-}
-
-const EgcScreenPos& EgcFormulaEntity::getScreenPos(void) const
-{
-        return m_item->getScreenPos();
 }

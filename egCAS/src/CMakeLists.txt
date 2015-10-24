@@ -100,6 +100,7 @@ set(egCAS_SOURCES
         structural/specialNodes/egcflexnode.cpp
         structural/egcnodecreator.cpp
         structural/visitor/egcnodevisitor.cpp 
+        structural/visitor/egcmathmllookup.cpp
         structural/specialNodes/egccontainernode.cpp 
         structural/entities/egcformulaentity.cpp
         structural/iterator/egcnodeiterator.cpp

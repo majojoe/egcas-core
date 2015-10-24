@@ -27,35 +27,20 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include "egcscreenpos.h"
-#include "specialNodes/egcnode.h"
+#include "egcmathmllookup.h"
 
-EgcScreenPos::EgcScreenPos()
+EgcMathmlLookup::EgcMathmlLookup()
 {
-        m_positions.clear();
+
 }
 
-void EgcScreenPos::setPositions(QVector<EgRenderingPosition> positions)
+void EgcMathmlLookup::addId(quint32 id, EgcNode& node)
 {
-        m_positions = positions;
+        m_lookup.insert(id, &node);
 }
 
-EgRenderingPosition EgcScreenPos::getMathmlIdAtPos(const QPointF &pos)
+void EgcMathmlLookup::clear(void)
 {
-        qreal w = 1.0e+37;      //choose values that are high enough
-        qreal h = 1.0e+37;
-        EgRenderingPosition i;
-        EgRenderingPosition retval;
-
-        foreach (i, m_positions) {
-                if (i.m_itemRect.contains(pos))
-                        if ( (i.m_itemRect.width() + i.m_itemRect.height()) < (w + h) ) {
-                                w = i.m_itemRect.width();
-                                h = i.m_itemRect.height();
-                                retval = i;
-                        }
-        }
-
-        return retval;
+        m_lookup.clear();
 }
 

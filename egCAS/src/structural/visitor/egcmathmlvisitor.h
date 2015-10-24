@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include <QSet>
 #include "egcnodevisitor.h"
+#include "egcmathmllookup.h"
 
 /**
  * @brief The EgcMathMlVisitor class is a visitor class for parsing the tree and output expressions formatted for the
@@ -111,12 +112,12 @@ public:
          * @brief getIdLookup returns the id lookup for mathml
          * @return the lookup table
          */
-        QHash<quint32, EgcNode*> getMathmlMapping(void);
+        EgcMathmlLookup getMathmlMapping(void);
 
 private:
         bool m_prettyPrint;             ///< activates pretty printing e.g. in case of a fraction remove the parenthesis
         quint32 m_idCounter;            ///< the id counter
-        QHash<quint32,EgcNode*> m_lookup;       ///< lookup for mapping id's in node pointers
+        EgcMathmlLookup m_lookup;       ///< lookup for mapping id's in node pointers
 };
 
 #endif // EGCMATHMLVISITOR_H

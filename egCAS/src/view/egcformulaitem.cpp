@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcabstractformulaentity.h"
 #include "egcabstractformulaitem.h"
 #include "egcscreenpos.h"
+#include "iterator/egcscrpositerator.h"
 
 quint8 EgcFormulaItem::s_baseFontSize = 14;
 
@@ -43,6 +44,7 @@ EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
         m_mathMlDoc.reset(new EgMathMLDocument());
         m_mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
         m_screenPos.reset(new EgcScreenPos());
+        m_tmpPosIter.reset();
 }
 
 EgcFormulaItem::~EgcFormulaItem()
@@ -215,12 +217,18 @@ QSizeF EgcFormulaItem::getGrid(void)
         return grid;
 }
 
-void EgcFormulaItem::setMathmlMapping(QHash<quint32, EgcNode*> lookup)
-{
-        m_screenPos->setMathmlMapping(lookup);
-}
-
 const EgcScreenPos& EgcFormulaItem::getScreenPos(void) const
 {
         return *m_screenPos.data();
+}
+
+void EgcFormulaItem::focusInEvent(QFocusEvent * event)
+{
+        (void) event;
+        m_tmpPosIter.reset(new EgcScrPosIterator(*this));
+}
+
+void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
+{
+        m_tmpPosIter.reset();
 }

@@ -41,6 +41,7 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/visitor/egcnodevisitor.cpp 
         ../../src/structural/visitor/egcmaximavisitor.cpp 
         ../../src/structural/visitor/egcmathmlvisitor.cpp
+        ../../src/structural/visitor/egcmathmllookup.cpp
 )
 
 add_executable(tst_egcastest_structural ${tst_egcastest_structural_SOURCES} )
