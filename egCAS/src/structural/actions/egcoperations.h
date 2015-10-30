@@ -27,34 +27,19 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCABSTRACTFORMULAENTITY_H
-#define EGCABSTRACTFORMULAENTITY_H
+#ifndef EGCOPERATIONS_H
+#define EGCOPERATIONS_H
 
-#include "egcabstractentity.h"
-
-class QString;
-class EgcAbstractFormulaItem;
-class EgcAction;
-
-class EgcAbstractFormulaEntity : public EgcAbstractEntity
+/**
+ * @brief The EgcOperations enum These are operations that can be sent from the item classes to the entity classes to
+ * describe any sort of action to take for any specific entity
+ */
+enum class EgcOperations
 {
-public:
-        virtual ~EgcAbstractFormulaEntity() {}
-        /**
-         * @brief getMathMlCode returns the mathMl representation for this formula
-         * @return the mathMl representation of this formula as a string
-         */
-        virtual QString getMathMlCode(void) = 0;
-        /**
-         * @brief setItem set the formula item that is associated with this entity
-         * @param item the item to set (can also be a nullptr)
-         */
-        virtual void setItem(EgcAbstractFormulaItem* item) = 0;
-        /**
-         * @brief handleAction handles the given action (e.g. insert a char at the given position into the formula tree)
-         * @param action the action given
-         */
-        virtual void handleAction(const EgcAction& action) = 0;
+        addition,                       ///< multiplication
+        substraction,
+        multiplication,
+        division,
 };
 
-#endif // EGCABSTRACTFORMULAENTITY_H
+#endif // EGCOPERATIONS_H

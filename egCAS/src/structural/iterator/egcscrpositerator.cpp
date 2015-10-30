@@ -83,3 +83,19 @@ void EgcScrPosIterator::toFront(void)
         m_i->toFront();
 }
 
+bool EgcScrPosIterator::findMathMlId(quint32 mathmlId, EgRenderingPosition* var) const
+{
+        EgRenderingPosition tmp;
+        QVectorIterator<EgRenderingPosition> iter(*m_i);
+        while(iter.hasNext()) {
+                tmp = iter.next();
+                if (tmp.m_nodeId == mathmlId && tmp.m_index == 0) {
+                        if (var)
+                                *var = tmp;
+                        return true;
+                }
+        }
+
+        return false;
+}
+

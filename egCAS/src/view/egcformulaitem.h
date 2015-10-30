@@ -134,6 +134,12 @@ public:
          * @return a reference to the screen positions
          */
         virtual const EgcScreenPos& getScreenPos(void) const;
+        /**
+         * @brief paintUnderline paint the underline that marks any mathml node adressed by the mathml id, to be able
+         * to show the user the context of his operation (e.g. keystroke).
+         * @param mathmlId the mathml id for which to paint a underline
+         */
+        virtual void paintUnderline(quint32 mathmlId) override;
 
 protected:
         /**

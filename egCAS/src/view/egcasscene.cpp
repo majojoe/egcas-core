@@ -36,9 +36,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 EgCasScene::EgCasScene(QObject *parent) :
-        QGraphicsScene(parent)
+        QGraphicsScene{parent}, m_cursor{addLine(0,0,0,0,QPen(QColor(Qt::red)))},
+        m_nodeUnderline{addLine(0,0,0,0,QPen(QColor(Qt::red)))}
 {        
         m_grid = QSizeF(30.0, 30.0);
+}
+
+EgCasScene::~EgCasScene()
+{
+        m_cursor = nullptr;
+        m_nodeUnderline = nullptr;
 }
 
 QSizeF EgCasScene::grid()
@@ -168,4 +175,24 @@ EgcPixmapItem* EgCasScene::addPixmap(EgcAbstractPixmapEntity& pixmap, QPointF po
         item->setPos(point);
         
         return item.take();
+}
+
+void EgCasScene::setFormulaCursor(const QLine& line)
+{
+        m_cursor->setLine(line);
+        m_cursor->show();
+}
+
+void EgCasScene::setUnderlineCursor(const QLineF& line)
+{
+        m_nodeUnderline->setLine(line);
+        m_nodeUnderline->show();
+}
+
+void EgCasScene::hideFormulaCursors( void )
+{
+        if (m_cursor)
+                m_cursor->hide();
+        if (m_nodeUnderline)
+                m_nodeUnderline->hide();
 }

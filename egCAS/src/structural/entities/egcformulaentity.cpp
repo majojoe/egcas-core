@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "visitor/egcmathmlvisitor.h"
 #include "egcabstractformulaitem.h"
 #include "egcabstractentitylist.h"
+#include "actions/egcaction.h"
 
 quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 15;
 
@@ -373,4 +374,9 @@ void EgcFormulaEntity::setErrorMessage(QString msg)
 QString EgcFormulaEntity::getErrorMessage(void)
 {
         return m_errorMsg;
+}
+
+void EgcFormulaEntity::handleAction(const EgcAction& action)
+{
+#warning handle the actions here
 }

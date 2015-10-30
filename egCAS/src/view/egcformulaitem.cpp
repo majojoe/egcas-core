@@ -232,3 +232,13 @@ void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
 {
         m_tmpPosIter.reset();
 }
+
+void EgcFormulaItem::paintUnderline(quint32 mathmlId)
+{
+        EgRenderingPosition renderPos;
+        if (m_tmpPosIter->findMathMlId(mathmlId, &renderPos)) {
+                EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
+                if (scn)
+                        scn->setUnderlineCursor(QLineF(renderPos.m_itemRect.bottomLeft(), renderPos.m_itemRect.bottomRight()));
+        }
+}

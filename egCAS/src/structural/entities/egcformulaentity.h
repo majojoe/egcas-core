@@ -231,6 +231,11 @@ public:
          * @return the error message
          */
         QString getErrorMessage(void);
+        /**
+         * @brief handleAction handles the given action (e.g. insert a char at the given position into the formula tree)
+         * @param EgcAction the action given
+         */
+        virtual void handleAction(const EgcAction& action) override;
 
 private:
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result

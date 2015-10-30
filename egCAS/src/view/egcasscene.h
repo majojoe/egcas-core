@@ -30,6 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCASSCENE_H
 
 #include <QGraphicsScene>
+#include <QGraphicsLineItem>
+#include <QScopedPointer>
+#include <QLine>
 #include "entities/egcabstractformulaentity.h"
 #include "entities/egcabstractpixmapentity.h"
 #include "entities/egcabstracttextentity.h"
@@ -44,6 +47,7 @@ class EgCasScene : public QGraphicsScene
 public:
         ///constructor of EgCasScene
         explicit EgCasScene(QObject *parent = 0);
+        virtual ~EgCasScene();
         /**
          * @brief grid return the grid size
          * @return the grid size as QSizeF
@@ -96,10 +100,26 @@ public:
          * @return a pointer to the formula added
          */
         EgcFormulaItem* addFormula(EgcAbstractFormulaEntity& formula, QPointF point = QPointF(0.0,0.0));
+        /**
+         * @brief setFormulaCursor shows the cursor for modifying a formula at the given position
+         * @param line the position where to paint the cursor
+         */
+        void setFormulaCursor(const QLine& line);
+        /**
+         * @brief setUnderlineCursor shows the formula underline cursor at the given position
+         * @param line the position where to paint the underline cursor
+         */
+        void setUnderlineCursor(const QLineF& line);
+        /**
+         * @brief hideFormulaCursors hides all formula cursors
+         */
+        void hideFormulaCursors( void );
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
 private:
         QSizeF m_grid;
+        QGraphicsLineItem* m_cursor;             ///< formula cursor for modifying formula
+        QGraphicsLineItem* m_nodeUnderline;      ///< node cursor to show user the context of changes in a formula
 };
 
 #endif // EGCASSCENE_H

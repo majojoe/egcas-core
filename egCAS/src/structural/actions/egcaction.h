@@ -27,34 +27,22 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCABSTRACTFORMULAENTITY_H
-#define EGCABSTRACTFORMULAENTITY_H
+#ifndef EGCACTION_H
+#define EGCACTION_H
 
-#include "egcabstractentity.h"
+#include <QChar>
+#include "egcoperations.h"
 
-class QString;
-class EgcAbstractFormulaItem;
-class EgcAction;
-
-class EgcAbstractFormulaEntity : public EgcAbstractEntity
+/**
+ * @brief The EgcAction struct describes an operation to do
+ */
+struct EgcAction
 {
-public:
-        virtual ~EgcAbstractFormulaEntity() {}
-        /**
-         * @brief getMathMlCode returns the mathMl representation for this formula
-         * @return the mathMl representation of this formula as a string
-         */
-        virtual QString getMathMlCode(void) = 0;
-        /**
-         * @brief setItem set the formula item that is associated with this entity
-         * @param item the item to set (can also be a nullptr)
-         */
-        virtual void setItem(EgcAbstractFormulaItem* item) = 0;
-        /**
-         * @brief handleAction handles the given action (e.g. insert a char at the given position into the formula tree)
-         * @param action the action given
-         */
-        virtual void handleAction(const EgcAction& action) = 0;
+        EgcOperations op;               ///< the operation to do
+        QChar character;                ///< any character that comes along with this action (e.g. user pressed any key)
+        quint32 elementId;              ///< any element id. Must be interpreted by receiver class
+        quint32 subId;                  ///< additional id data. Must be interpreted by the receiver class
+        quint64 additionalData;         ///< any further additional user data. The receiver class must interpret this.
 };
 
-#endif // EGCABSTRACTFORMULAENTITY_H
+#endif // EGCACTION_H
