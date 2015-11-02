@@ -380,3 +380,8 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
 {
 #warning handle the actions here
 }
+
+void EgcFormulaEntity::setMathmlIdSequence(QVector<quint32> sequence)
+{
+        m_mathmlLookup.setMathmlIdSequence(sequence);
+}

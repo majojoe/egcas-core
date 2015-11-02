@@ -30,12 +30,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCMATHMLLOOKUP_H
 #define EGCMATHMLLOOKUP_H
 
+#include <QVector>
 #include <QHash>
 
 class EgcNode;
 
+/**
+ * @brief The EgcMathmlIdMapping struct organizes the data to pack the contents in a container
+ */
+struct EgcMathmlIdMapping
+{
+        quint32 m_mathmlId;     ///< the mathml id that identifies a mathml node
+        EgcNode* m_node;        ///< the formula element node it points to
+};
+
 class EgcMathmlLookup
 {
+        friend class EgcScrPosIterator;
 public:
         EgcMathmlLookup();
         /**
@@ -48,8 +59,14 @@ public:
          * @brief clear clears the lookup table
          */
         void clear(void);
+        /**
+         * @brief setMathmlIdSequence set the sequence in which the mathml id's follow each other
+         * @param sequence the sequence of mathml id's given from the rendering library
+         */
+        void setMathmlIdSequence(QVector<quint32> sequence);
 private:
-        QHash<quint32, EgcNode*> m_lookup;      ///< lookup to be able to make a relation of any mathml id to the nodes of the formula
+        QHash<quint32, EgcNode*> m_tmpHash;        ///< temporary hash table (unsorted)
+        QVector<EgcMathmlIdMapping> m_lookup;      ///< lookup to be able to make a relation of any mathml id to the nodes of the formula
 };
 
 #endif // EGCMATHMLLOOKUP_H

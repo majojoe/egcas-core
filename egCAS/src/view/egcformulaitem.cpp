@@ -77,7 +77,18 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 
         QRectF formulaRect(QPointF(0,0), m_mathMlDoc->size());
         m_mathMlDoc->paint( painter, formulaRect.topLeft() );
-        m_screenPos->setPositions(m_mathMlDoc->getRenderingPositions());
+        QVector<EgRenderingPosition> positions = m_mathMlDoc->getRenderingPositions();
+        m_screenPos->setPositions(positions);
+        // set the mathml id order
+        QVector<quint32> idSequence;
+        EgRenderingPosition pos;
+        foreach(pos, positions) {
+                if (    pos.m_nodeId
+                     && !pos.m_index)
+                        idSequence.append(pos.m_nodeId);
+        }
+        if (m_entity)
+                m_entity->setMathmlIdSequence(idSequence);
 
         if (isSelected()) {
 #ifdef DEBUG_SCENE_RENDERING_POS

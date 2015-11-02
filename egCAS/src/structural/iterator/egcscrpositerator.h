@@ -86,13 +86,6 @@ public:
          * @brief toFront Moves the iterator to the front of the tree (before the first item).
          */
         virtual void toFront(void);
-        /**
-         * @brief findMathMlId find the related EgRenderingPosition for a given mathml id
-         * @param mathmlId the mathml id for which we want to find the rendering position
-         * @param var pointer to the rendering position data the found position data will be written to
-         * @return true if everything was fine, false otherwise
-         */
-        bool findMathMlId(quint32 mathmlId, EgRenderingPosition* var) const;
 
 private:
         const EgcScreenPos& m_pos;                                      ///< reference to position class

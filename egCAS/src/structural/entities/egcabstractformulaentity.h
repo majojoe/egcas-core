@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCABSTRACTFORMULAENTITY_H
 #define EGCABSTRACTFORMULAENTITY_H
 
+#include <QVector>
 #include "egcabstractentity.h"
 
 class QString;
@@ -55,6 +56,11 @@ public:
          * @param action the action given
          */
         virtual void handleAction(const EgcAction& action) = 0;
+        /**
+         * @brief setMathmlIdSequence set the sequence in which the mathml id's follow each other
+         * @param sequence the sequence of mathml id's given from the rendering library
+         */
+        virtual void setMathmlIdSequence(QVector<quint32> sequence) = 0;
 };
 
 #endif // EGCABSTRACTFORMULAENTITY_H

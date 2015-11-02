@@ -36,7 +36,10 @@ EgcMathmlLookup::EgcMathmlLookup()
 
 void EgcMathmlLookup::addId(quint32 id, EgcNode& node)
 {
-        m_lookup.insert(id, &node);
+        EgcMathmlIdMapping element;
+        element.m_mathmlId = id;
+        element.m_node = &node;
+        m_lookup.append(element);
 }
 
 void EgcMathmlLookup::clear(void)
@@ -44,3 +47,18 @@ void EgcMathmlLookup::clear(void)
         m_lookup.clear();
 }
 
+void EgcMathmlLookup::setMathmlIdSequence(QVector<quint32> sequence)
+{
+        EgcMathmlIdMapping mapping;
+        quint32 id;
+        m_lookup.clear();
+        foreach(id, sequence) {
+                if (m_tmpHash.contains(id)) {
+                        mapping.m_node = m_tmpHash.value(id);
+                        mapping.m_mathmlId = id;
+                        m_lookup.append(mapping);
+                }
+        }
+        //delete the temporary hash table
+        m_tmpHash.clear();
+}

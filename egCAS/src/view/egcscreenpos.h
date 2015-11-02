@@ -41,7 +41,6 @@ class EgcNode;
  */
 class EgcScreenPos
 {
-        friend class EgcScrPosIterator;
 public:
         EgcScreenPos();
         /**
