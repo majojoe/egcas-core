@@ -39,7 +39,6 @@ class EgMathMLDocument;
 class EgcAbstractFormulaEntity;
 class EgcAbstractFormulaItem;
 class EgcScreenPos;
-class EgcScrPosIterator;
 
 /**
  * @brief The FormulaItem class implements a QGraphicsItem to be able to use a formula in a QGraphicsView
@@ -139,7 +138,19 @@ public:
          * to show the user the context of his operation (e.g. keystroke).
          * @param mathmlId the mathml id for which to paint a underline
          */
-        virtual void paintUnderline(quint32 mathmlId) override;
+        virtual void showUnderline(quint32 mathmlId) override;
+        /**
+         * @brief showLeftCursor shows the cursor on the left side of a mathml element
+         * @param mathmlId the mathml id to use for identifying the mathml element
+         * @param subindex the subindex to use for identifying the mathml element (e.g. one character of a text)
+         */
+        virtual void showLeftCursor(quint32 mathmlId, quint32 subindex) override;
+        /**
+        * @brief showRightCursor shows the cursor on the right side of a mathml element
+        * @param mathmlId the mathml id to use for identifying the mathml element
+        * @param subindex the subindex to use for identifying the mathml element (e.g. one character of a text)
+        */
+        virtual void showRightCursor(quint32 mathmlId, quint32 subindex) override;
 
 protected:
         /**
@@ -185,7 +196,6 @@ private:
         EgcAbstractFormulaEntity* m_entity;             ///< pointer to formula entity
         bool m_posChanged;                              ///< helper variable indicating that the position has changed
         QScopedPointer<EgcScreenPos> m_screenPos;       ///< screen positions of the rendered formula characters
-        QScopedPointer<EgcScrPosIterator> m_tmpPosIter; ///< temporary iterator to positions (this object only exists if object has focus)
 
         Q_DISABLE_COPY(EgcFormulaItem)
 };

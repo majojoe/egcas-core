@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcabstractformulaentity.h"
 #include "egcabstractformulaitem.h"
 #include "egcscreenpos.h"
-#include "iterator/egcscrpositerator.h"
+#include "actions/egcaction.h"
 
 quint8 EgcFormulaItem::s_baseFontSize = 14;
 
@@ -44,7 +44,6 @@ EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
         m_mathMlDoc.reset(new EgMathMLDocument());
         m_mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
         m_screenPos.reset(new EgcScreenPos());
-        m_tmpPosIter.reset();
 }
 
 EgcFormulaItem::~EgcFormulaItem()
@@ -225,20 +224,52 @@ const EgcScreenPos& EgcFormulaItem::getScreenPos(void) const
 void EgcFormulaItem::focusInEvent(QFocusEvent * event)
 {
         (void) event;
-        m_tmpPosIter.reset(new EgcScrPosIterator(*this));
+        if (!m_entity)
+                return;
+        EgcAction action;
+        action.m_op = EgcOperations::formulaActivated;
+        m_entity->handleAction(action);
 }
 
 void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
 {
-        m_tmpPosIter.reset();
+        (void) event;
+        if (!m_entity)
+                return;
+        EgcAction action;
+        action.m_op = EgcOperations::formulaDeactivated;
+        m_entity->handleAction(action);
 }
 
-void EgcFormulaItem::paintUnderline(quint32 mathmlId)
+void EgcFormulaItem::showUnderline(quint32 mathmlId)
 {
         EgRenderingPosition renderPos;
-        if (m_tmpPosIter->findMathMlId(mathmlId, &renderPos)) {
+        renderPos = m_screenPos->findRenderingData(mathmlId, 0);
+        if (renderPos.m_nodeId) {
                 EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
                 if (scn)
                         scn->setUnderlineCursor(QLineF(renderPos.m_itemRect.bottomLeft(), renderPos.m_itemRect.bottomRight()));
+        }
+}
+
+void EgcFormulaItem::showLeftCursor(quint32 mathmlId, quint32 subindex)
+{
+        EgRenderingPosition renderPos;
+        renderPos = m_screenPos->findRenderingData(mathmlId, subindex);
+        if (renderPos.m_nodeId) {
+                EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
+                if (scn)
+                        scn->setUnderlineCursor(QLineF(renderPos.m_itemRect.topLeft(), renderPos.m_itemRect.bottomLeft()));
+        }
+}
+
+void EgcFormulaItem::showRightCursor(quint32 mathmlId, quint32 subindex)
+{
+        EgRenderingPosition renderPos;
+        renderPos = m_screenPos->findRenderingData(mathmlId, subindex);
+        if (renderPos.m_nodeId) {
+                EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
+                if (scn)
+                        scn->setUnderlineCursor(QLineF(renderPos.m_itemRect.topRight(), renderPos.m_itemRect.bottomRight()));
         }
 }

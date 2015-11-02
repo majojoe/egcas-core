@@ -74,7 +74,19 @@ public:
          * to show the user the context of his operation (e.g. keystroke).
          * @param mathmlId the mathml id for which to paint a underline
          */
-        virtual void paintUnderline(quint32 mathmlId) = 0;
+        virtual void showUnderline(quint32 mathmlId) = 0;
+        /**
+         * @brief showLeftCursor shows the cursor on the left side of a mathml element
+         * @param mathmlId the mathml id to use for identifying the mathml element
+         * @param subindex the subindex to use for identifying the mathml element (e.g. one character of a text)
+         */
+        virtual void showLeftCursor(quint32 mathmlId, quint32 subindex) = 0;
+        /**
+        * @brief showRightCursor shows the cursor on the right side of a mathml element
+        * @param mathmlId the mathml id to use for identifying the mathml element
+        * @param subindex the subindex to use for identifying the mathml element (e.g. one character of a text)
+        */
+        virtual void showRightCursor(quint32 mathmlId, quint32 subindex) = 0;
 };
 
 #endif // EGCABSTRACTFORMULAITEM_H

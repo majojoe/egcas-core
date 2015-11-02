@@ -109,7 +109,7 @@ public:
          */
         QString getId(EgcNode* node);
         /**
-         * @brief getIdLookup returns the id lookup for mathml
+         * @brief getMathmlMapping returns the id lookup for mathml
          * @return the lookup table
          */
         EgcMathmlLookup getMathmlMapping(void);

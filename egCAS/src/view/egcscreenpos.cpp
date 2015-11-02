@@ -37,7 +37,13 @@ EgcScreenPos::EgcScreenPos()
 
 void EgcScreenPos::setPositions(QVector<EgRenderingPosition> positions)
 {
-        m_positions = positions;
+        m_positions.clear();
+        EgRenderingPosition pos;
+        quint64 id;
+        foreach(pos, positions) {
+                id = pos.m_nodeId | (static_cast<quint64>(pos.m_index) << 32);
+                m_positions.insert(id, pos);
+        }
 }
 
 EgRenderingPosition EgcScreenPos::getMathmlIdAtPos(const QPointF &pos)
@@ -59,3 +65,15 @@ EgRenderingPosition EgcScreenPos::getMathmlIdAtPos(const QPointF &pos)
         return retval;
 }
 
+bool EgcScreenPos::empty(void)
+{
+        m_positions.empty();
+}
+
+EgRenderingPosition EgcScreenPos::findRenderingData(quint32 mathmId, quint32 subindex = 0)
+{
+        EgRenderingPosition retval;
+        retval = m_positions.value(mathmId | (static_cast<quint64>(subindex) << 32));
+
+        return retval;
+}

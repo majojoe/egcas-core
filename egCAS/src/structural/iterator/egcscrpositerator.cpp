@@ -35,8 +35,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcScrPosIterator::EgcScrPosIterator(EgcFormulaItem &formula) : m_pos{formula.getScreenPos()}
 {
-        m_i.reset(new QVectorIterator<EgRenderingPosition>(m_pos.m_positions));
-        m_i->toBack();
+//        m_i.reset(new QVectorIterator<EgRenderingPosition>(m_pos.m_positions));
+//        m_i->toBack();
 }
 
 EgcScrPosIterator::~EgcScrPosIterator()

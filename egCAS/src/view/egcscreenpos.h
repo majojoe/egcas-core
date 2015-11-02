@@ -57,8 +57,20 @@ public:
          * @return the mathml id that is picked for the given position
          */
         EgRenderingPosition getMathmlIdAtPos(const QPointF &pos);
+        /**
+         * @brief empty checks if container is empty
+         * @return true if container is empty (no screen positions), false if there are any screen positions
+         */
+        bool empty(void);
+        /**
+         * @brief findPositionFromId finds the position data for a given mathml id (and subindex - e.g. for text glyphs)
+         * @param mathmId the mathml id we are looking for
+         * @param subindex the subindex we are looking for
+         * @return returns the position data found, or an empty rendering position object (node id 0 is invalid)
+         */
+        EgRenderingPosition findRenderingData(quint32 mathmId, quint32 subindex);
 private:
-        QVector<EgRenderingPosition> m_positions; ///< the rendering positions of the characters of a formula
+        QHash<quint64, EgRenderingPosition> m_positions; ///< the rendering positions of the characters of a formula
 };
 
 #endif // EGCSCREENPOS_H
