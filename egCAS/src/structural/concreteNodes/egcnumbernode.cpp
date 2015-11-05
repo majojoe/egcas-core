@@ -59,3 +59,8 @@ bool EgcNumberNode::operator==(const EgcNode& node) const
 
         return retval;
 }
+
+int EgcNumberNode::nrSubindexes(void) const
+{
+        return m_value.size();
+}

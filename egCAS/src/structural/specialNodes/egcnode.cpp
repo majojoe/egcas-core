@@ -91,3 +91,8 @@ bool EgcNode::operator==(const EgcNode& node) const
         (void) node;
         return false;
 }
+
+int EgcNode::nrSubindexes(void) const
+{
+        return 0;
+}

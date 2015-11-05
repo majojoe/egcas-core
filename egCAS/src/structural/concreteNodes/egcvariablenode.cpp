@@ -136,3 +136,8 @@ bool EgcVariableNode::operator==(const EgcNode& node) const
 
         return retval;
 }
+
+int EgcVariableNode::nrSubindexes(void) const
+{
+        return m_value.size() + m_subscript.size();
+}

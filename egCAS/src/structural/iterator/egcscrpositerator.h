@@ -34,18 +34,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QScopedPointer>
 #include <QVector>
 #include <QRectF>
-
+#include <visitor/egcmathmllookup.h>
 
 class EgcNode;
-class EgcFormulaItem;
-class EgRenderingPosition;
-class EgcScreenPos;
+class EgcFormulaEntity;
+
 
 class EgcScrPosIterator
 {
-public:
+public:        
         /// constructor for initialization with formula
-        EgcScrPosIterator(EgcFormulaItem& formula);
+        EgcScrPosIterator(EgcMathmlLookup& data);
         /// std destructor
         virtual ~EgcScrPosIterator();
         /**
@@ -60,24 +59,24 @@ public:
         virtual bool hasPrevious(void) const;
         /**
          * @brief next Returns the next node and increments the iterator by one.
-         * @return a reference to the next item.
+         * @return a reference to the next mathml id.
          */
-        virtual const EgRenderingPosition & next(void);
+        virtual const quint32 & next(void);
         /**
          * @brief previous Returns the previous node and decrements the iterator by one.
-         * @return a refererence to the previous item.
+         * @return a refererence to the previous mathml id.
          */
-        virtual const EgRenderingPosition & previous(void);
+        virtual const quint32 & previous(void);
         /**
          * @brief peekNext Returns the next node without incrementing the iterator.
-         * @return a reference to the next item.
+         * @return a reference to the next mathml id.
          */
-        const EgRenderingPosition & peekNext(void) const;
+        const quint32 & peekNext(void) const;
         /**
          * @brief peekPrevious Returns the previous node without decrementing the iterator.
-         * @return a reference to the previous item.
+         * @return a reference to the previous mathml id.
          */
-        const EgRenderingPosition & peekPrevious(void) const;
+        const quint32 & peekPrevious(void) const;
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
@@ -86,10 +85,47 @@ public:
          * @brief toFront Moves the iterator to the front of the tree (before the first item).
          */
         virtual void toFront(void);
+        /**
+         * @brief node returns the associated with node we last jumped over
+         * @return the node we last jumped over
+         */
+        virtual const EgcNode* node(void);
+        /**
+         * @brief rightSide true if the cursor is at the right side of the formula element, or on the left
+         * @return true if the cursor is on the right side, false if it is on the left
+         */
+        virtual bool rightSide(void);
+        /**
+         * @brief subIndex returns the subindex of the element we last jumped over
+         * @return the subindex we last jumped over
+         */
+        virtual quint32& subIndex(void);
+        /**
+         * @brief hasNextSubind checks if there is another e.g. char with a subindex in the current node
+         * @return true if there is another subindex in the current node, false otherwise
+         */
+        virtual bool hasNextSubind(void) const;
+        /**
+         * @brief hasPreviousSubind checks if there is another e.g. char with a subindex in the current node
+         * @return true if there is another subindex previous to the current position in the current node, false otherwise
+         */
+        virtual bool hasPreviousSubind(void) const;
+        /**
+         * @brief nextSubind step a subindex forward if there is another one
+         */
+        virtual void nextSubind(void);
+        /**
+         * @brief nextSubind step a subindex backward if there is a previous one
+         */
+        virtual void previousSubind(void);
+
 
 private:
-        const EgcScreenPos& m_pos;                                      ///< reference to position class
-        QScopedPointer<QVectorIterator<EgRenderingPosition>> m_i;       ///< iterator for screen positions
+        quint32 m_index;        ///< iterator positon of the subindex if any
+        bool m_rightSide;       ///< is the iterator on the right side of the returned element or on the left?
+        EgcMathmlLookup const * m_lookup;       ///< a reference to the lookup data
+        QScopedPointer<QVectorIterator<EgcMathmlIdMapping>> m_i;       ///< iterator for screen positions
+        const EgcMathmlIdMapping* m_history;   ///< the last element we jumped over
 };
 
 #endif // EGCSCRPOSITERATOR_H

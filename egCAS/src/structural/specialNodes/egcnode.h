@@ -122,6 +122,12 @@ public:
          * @return true if the trees are equal
          */
         virtual bool operator==(const EgcNode& node) const;
+        /**
+         * @brief nrSubindexes returns the number of subindexes of this node. This can be e.g. the number of characters
+         * of a number or variable
+         * @return 0 if not overwritten, since a std. node has no subindexes
+         */
+        virtual int nrSubindexes(void) const;
 
 protected:
         EgcContainerNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)
