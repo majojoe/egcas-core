@@ -41,6 +41,7 @@ class EgcBaseNode;
 enum class EgcNodeType;
 class EgcAbstractFormulaItem;
 class EgcScreenPos;
+class EgcAbstractScrPosIterator;
 
 /**
  * @brief The EgcNumberResultType defines different types of number results
@@ -251,6 +252,7 @@ private:
         EgcAbstractFormulaItem* m_item;         ///< pointer to the formula item interface on the scene
         QString m_errorMsg;                     ///< the error message for this formula, if one
         EgcMathmlLookup m_mathmlLookup;         ///< mathml id lookup table
+        QScopedPointer<EgcAbstractScrPosIterator> m_scrIter; ///< iterator for screen positions
 };
 
 #endif // EGCFORMULAENTITY_H

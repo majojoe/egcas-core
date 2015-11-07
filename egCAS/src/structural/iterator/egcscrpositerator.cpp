@@ -66,8 +66,10 @@ const quint32 & EgcScrPosIterator::next(void)
 {
         if (hasNextSubind())
                 nextSubind();
-        else if (m_i->hasNext())
+        else if (m_i->hasNext()) {
                 m_history = &m_i->next();
+                m_rightSide = true;
+        }
         return m_history->m_mathmlId;
 }
 
@@ -77,6 +79,10 @@ const quint32 &EgcScrPosIterator::previous(void)
                 previousSubind();
         else if (m_i->hasPrevious())
                 m_history = &m_i->previous();
+        
+        if (!m_i->hasPrevious())
+                m_rightSide = false;
+        
         return m_history->m_mathmlId;
 }
 

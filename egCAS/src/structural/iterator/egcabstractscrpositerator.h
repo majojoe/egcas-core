@@ -27,104 +27,95 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCSCRPOSITERATOR_H
-#define EGCSCRPOSITERATOR_H
+#ifndef EGCABSTRACTSCRPOSITERATOR_H
+#define EGCABSTRACTSCRPOSITERATOR_H
 
 #include <QtGlobal>
 #include <QScopedPointer>
 #include <QVector>
 #include <QRectF>
 #include <visitor/egcmathmllookup.h>
-#include "egcabstractscrpositerator.h"
 
 class EgcNode;
 
-class EgcScrPosIterator : public EgcAbstractScrPosIterator
+class EgcAbstractScrPosIterator
 {
 public:        
         /// constructor for initialization with formula
-        EgcScrPosIterator(EgcMathmlLookup& data);
+        EgcAbstractScrPosIterator(EgcMathmlLookup& data);
         /// std destructor
-        virtual ~EgcScrPosIterator();
+        virtual ~EgcAbstractScrPosIterator();
         /**
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
          */
-        virtual bool hasNext(void) const override;
+        virtual bool hasNext(void) const = 0;
         /**
          * @brief hasPrevious Checks if there is at most one more item before the current item.
          * @return True if an item was found, false otherwise.
          */
-        virtual bool hasPrevious(void) const override;
+        virtual bool hasPrevious(void) const = 0;
         /**
          * @brief next Returns the next node and increments the iterator by one.
          * @return a reference to the next mathml id.
          */
-        virtual const quint32 & next(void) override;
+        virtual const quint32 & next(void) = 0;
         /**
          * @brief previous Returns the previous node and decrements the iterator by one.
          * @return a refererence to the previous mathml id.
          */
-        virtual const quint32 & previous(void) override;
+        virtual const quint32 & previous(void) = 0;
         /**
          * @brief peekNext Returns the next node without incrementing the iterator.
          * @return a reference to the next mathml id.
          */
-        virtual const quint32 & peekNext(void) const override;
+        virtual const quint32 & peekNext(void) const = 0;
         /**
          * @brief peekPrevious Returns the previous node without decrementing the iterator.
          * @return a reference to the previous mathml id.
          */
-        virtual const quint32 & peekPrevious(void) const override;
+        virtual const quint32 & peekPrevious(void) const = 0;
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
-        virtual void toBack(void) override;
+        virtual void toBack(void) = 0;
         /**
          * @brief toFront Moves the iterator to the front of the tree (before the first item).
          */
-        virtual void toFront(void) override;
+        virtual void toFront(void) = 0;
         /**
          * @brief node returns the associated with node we last jumped over
          * @return the node we last jumped over
          */
-        virtual const EgcNode* node(void) override;
+        virtual const EgcNode* node(void) = 0;
         /**
          * @brief rightSide true if the cursor is at the right side of the formula element, or on the left
          * @return true if the cursor is on the right side, false if it is on the left
          */
-        virtual bool rightSide(void) override;
+        virtual bool rightSide(void) = 0;
         /**
          * @brief subIndex returns the subindex of the element we last jumped over
          * @return the subindex we last jumped over
          */
-        virtual quint32& subIndex(void) override;
+        virtual quint32& subIndex(void) = 0;
         /**
          * @brief hasNextSubind checks if there is another e.g. char with a subindex in the current node
          * @return true if there is another subindex in the current node, false otherwise
          */
-        virtual bool hasNextSubind(void) const override;
+        virtual bool hasNextSubind(void) const = 0;
         /**
          * @brief hasPreviousSubind checks if there is another e.g. char with a subindex in the current node
          * @return true if there is another subindex previous to the current position in the current node, false otherwise
          */
-        virtual bool hasPreviousSubind(void) const override;
+        virtual bool hasPreviousSubind(void) const = 0;
         /**
          * @brief nextSubind step a subindex forward if there is another one
          */
-        virtual void nextSubind(void) override;
+        virtual void nextSubind(void) = 0;
         /**
          * @brief nextSubind step a subindex backward if there is a previous one
          */
-        virtual void previousSubind(void) override;
-
-
-private:
-        quint32 m_index;        ///< iterator positon of the subindex if any
-        bool m_rightSide;       ///< is the iterator on the right side of the returned element or on the left?
-        EgcMathmlLookup const * m_lookup;       ///< a reference to the lookup data
-        QScopedPointer<QVectorIterator<EgcMathmlIdMapping>> m_i;       ///< iterator for screen positions
-        const EgcMathmlIdMapping* m_history;   ///< the last element we jumped over
+        virtual void previousSubind(void) = 0;
 };
 
-#endif // EGCSCRPOSITERATOR_H
+#endif // EGCABSTRACTSCRPOSITERATOR_H

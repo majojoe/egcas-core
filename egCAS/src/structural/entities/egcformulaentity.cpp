@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcabstractformulaitem.h"
 #include "egcabstractentitylist.h"
 #include "actions/egcaction.h"
+#include "iterator/egcscrpositerator.h"
 
 quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 15;
 
@@ -379,6 +380,14 @@ QString EgcFormulaEntity::getErrorMessage(void)
 void EgcFormulaEntity::handleAction(const EgcAction& action)
 {
 #warning handle the actions here
+        switch (action.m_op) {
+        case EgcOperations::formulaActivated:
+                m_scrIter.reset(new EgcScrPosIterator(m_mathmlLookup));
+                break;
+        case EgcOperations::formulaDeactivated:
+                m_scrIter.reset();
+                break;
+        }
 }
 
 void EgcFormulaEntity::setMathmlIdSequence(QVector<quint32> sequence)
