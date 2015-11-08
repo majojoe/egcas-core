@@ -250,6 +250,9 @@ void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
         EgcAction action;
         action.m_op = EgcOperations::formulaDeactivated;
         m_entity->handleAction(action);
+        EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
+        if (scn)
+                scn->hideFormulaCursors();
 }
 
 void EgcFormulaItem::showUnderline(quint32 mathmlId)

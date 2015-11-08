@@ -55,12 +55,18 @@ EgcScrPosIterator::~EgcScrPosIterator()
 
 bool EgcScrPosIterator::hasNext(void) const
 {
-        return m_i->hasNext();
+        if (m_i->hasNext() || hasNextSubind())
+                return true;
+        else
+                return false;
 }
 
 bool EgcScrPosIterator::hasPrevious(void) const
 {
-        return m_i->hasPrevious();
+        if (m_i->hasPrevious() || hasPreviousSubind())
+                return true;
+        else
+                return false;
 }
 
 const quint32 & EgcScrPosIterator::next(void)
@@ -71,6 +77,9 @@ const quint32 & EgcScrPosIterator::next(void)
                 m_history = &m_i->next();
                 m_rightSide = true;
         }
+        if (!m_history)
+                return m_index; //the content is undefined per definition (content will be wrong)
+
         return m_history->m_mathmlId;
 }
 
@@ -83,7 +92,10 @@ const quint32 &EgcScrPosIterator::previous(void)
         
         if (!m_i->hasPrevious())
                 m_rightSide = false;
-        
+
+        if (!m_history)
+                return m_index; //the content is undefined per definition (content will be wrong)
+
         return m_history->m_mathmlId;
 }
 
@@ -122,6 +134,9 @@ void EgcScrPosIterator::toFront(void)
 
 const EgcNode* EgcScrPosIterator::node(void)
 {
+        if (!m_history)
+                return nullptr;
+
         return m_history->m_node;
 }
 

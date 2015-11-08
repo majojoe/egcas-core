@@ -44,6 +44,8 @@ enum class EgcOperations
         // view based operations (e.g. s.th. happened on the view)
         formulaActivated,               ///< formula was activated (e.g. got focus on screen)
         formulaDeactivated,             ///< formula was deactivated (e.g. lost focus on screen)
+        cursorForward,                  ///< user wants to iterate forward in a formula
+        cursorBackward,                 ///< user wants to iterate backward in a formula
 };
 
 #endif // EGCOPERATIONS_H

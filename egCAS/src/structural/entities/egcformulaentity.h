@@ -245,6 +245,13 @@ public:
 
 
 private:
+        /**
+         * @brief moveCursor move the screen formula cursor back- or forward
+         * @param forward true if the user wants to move the cursor forward, false if he wants to move it backward
+         */
+        void moveCursor(bool forward);
+
+
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
         EgcBaseNode m_data;                     ///< holds a pointer to the root element of the formula tree

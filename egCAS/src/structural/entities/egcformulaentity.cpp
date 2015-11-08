@@ -386,7 +386,43 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         case EgcOperations::formulaDeactivated:
                 m_scrIter.reset();
                 break;
+        case EgcOperations::cursorForward:
+                moveCursor(true);
+                break;
+        case EgcOperations::cursorBackward:
+                moveCursor(false);
+                break;
         }
+}
+
+void EgcFormulaEntity::moveCursor(bool forward)
+{
+        quint32 id;
+        quint32 ind;
+        bool rightSide;
+
+        if (!m_scrIter)
+                return;
+        if (!m_item)
+                return;
+        if (forward) {
+                if (m_scrIter->hasNext()) {
+                        id = m_scrIter->next();
+                        ind = m_scrIter->subIndex();
+                        rightSide = m_scrIter->rightSide();
+                }
+        } else {
+                if (m_scrIter->hasPrevious()) {
+                        id = m_scrIter->previous();
+                        ind = m_scrIter->subIndex();
+                        rightSide = m_scrIter->rightSide();
+                }
+        }
+
+        if (rightSide)
+                m_item->showRightCursor(id, ind);
+        else
+                m_item->showLeftCursor(id, ind);
 }
 
 void EgcFormulaEntity::setMathmlIdSequence(QVector<quint32> sequence)
