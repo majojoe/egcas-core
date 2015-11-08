@@ -186,6 +186,16 @@ protected:
          * @param event focus event
          */
         virtual void focusOutEvent(QFocusEvent * event) override;
+        /**
+         * @brief keyPressEvent overrides key press event from QGraphicsItem
+         * @param event contains the key pressed
+         */
+        void keyPressEvent(QKeyEvent * event) override;
+        /**
+         * @brief keyReleaseEvent overrides key release event from QGraphicsItem
+         * @param event contains the key released
+         */
+        void keyReleaseEvent(QKeyEvent * event) override;
 signals:
 
 public slots:

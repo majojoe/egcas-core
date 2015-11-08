@@ -27,6 +27,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
 #include <libegcas/eg_mml_document.h>
 #include "egcformulaitem.h"
 #include "egcasscene.h"
@@ -253,6 +254,33 @@ void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
         EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
         if (scn)
                 scn->hideFormulaCursors();
+}
+
+void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
+{
+        int key = event->key();
+        EgcAction action;
+
+        if (!m_entity)
+                return;
+
+        switch (key) {
+        case Qt::Key_Right:
+                action.m_op = EgcOperations::cursorForward;
+                m_entity->handleAction(action);
+                break;
+        case Qt::Key_Left:
+                action.m_op = EgcOperations::cursorBackward;
+                m_entity->handleAction(action);
+                break;
+        default:
+                break;
+        }
+}
+
+void EgcFormulaItem::keyReleaseEvent(QKeyEvent * event)
+{
+
 }
 
 void EgcFormulaItem::showUnderline(quint32 mathmlId)
