@@ -34,6 +34,7 @@ set(tst_egcastest_structural_SOURCES
         ${tst_egcastest_structural_concrete_SOURCES}
         ../../src/structural/specialNodes/egccontainernode.cpp
         ../../src/structural/iterator/egcnodeiterator.cpp
+        ../../src/structural/iterator/egcscrpositerator.cpp
         ../../src/structural/entities/egcformulaentity.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp
         ../../src/structural/specialNodes/egcemptynode.cpp

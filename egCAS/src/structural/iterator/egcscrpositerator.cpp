@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../structural/concreteNodes/egcnumbernode.h"
 #include "../structural/concreteNodes/egcvariablenode.h"
 
+
 EgcScrPosIterator::EgcScrPosIterator(EgcMathmlLookup& data) : m_index{0}, m_rightSide{false}, m_lookup{&data},
                                                               m_history{nullptr}
 {
@@ -136,6 +137,9 @@ quint32& EgcScrPosIterator::subIndex(void)
 
 bool EgcScrPosIterator::hasNextSubind(void) const
 {
+        if (!m_history)
+                return false;
+
         if (m_history->m_node) {
                 int size = m_history->m_node->nrSubindexes();
                 if (m_index < size)

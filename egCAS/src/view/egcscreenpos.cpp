@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcscreenpos.h"
 #include "specialNodes/egcnode.h"
+#include <libegcas/eg_mml_document.h>
 
 EgcScreenPos::EgcScreenPos()
 {

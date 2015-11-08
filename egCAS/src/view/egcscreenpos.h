@@ -32,9 +32,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QHash>
 #include <QPointF>
-#include "libegcas/eg_mml_document.h"
 
 class EgcNode;
+class EgRenderingPosition;
 
 /**
  * @brief The EgcScreenPos class holds screen positons of the formula chars that were rendered on the screen

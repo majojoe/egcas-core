@@ -379,7 +379,6 @@ QString EgcFormulaEntity::getErrorMessage(void)
 
 void EgcFormulaEntity::handleAction(const EgcAction& action)
 {
-#warning handle the actions here
         switch (action.m_op) {
         case EgcOperations::formulaActivated:
                 m_scrIter.reset(new EgcScrPosIterator(m_mathmlLookup));
