@@ -36,10 +36,7 @@ EgcMathmlLookup::EgcMathmlLookup()
 
 void EgcMathmlLookup::addId(quint32 id, EgcNode& node)
 {
-        EgcMathmlIdMapping element;
-        element.m_mathmlId = id;
-        element.m_node = &node;
-        m_lookup.append(element);
+        m_tmpHash.insert(id, &node);
 }
 
 void EgcMathmlLookup::clear(void)

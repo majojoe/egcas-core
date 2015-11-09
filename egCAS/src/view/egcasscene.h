@@ -104,7 +104,7 @@ public:
          * @brief setFormulaCursor shows the cursor for modifying a formula at the given position
          * @param line the position where to paint the cursor
          */
-        void setFormulaCursor(const QLine& line);
+        void setFormulaCursor(const QLineF& line);
         /**
          * @brief setUnderlineCursor shows the formula underline cursor at the given position
          * @param line the position where to paint the underline cursor

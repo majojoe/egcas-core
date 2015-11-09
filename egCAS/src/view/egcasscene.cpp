@@ -40,6 +40,8 @@ EgCasScene::EgCasScene(QObject *parent) :
         m_nodeUnderline{addLine(0,0,0,0,QPen(QColor(Qt::red)))}
 {        
         m_grid = QSizeF(30.0, 30.0);
+        m_cursor->setPen(QPen(QBrush(QColor(Qt::red)), 2.0));
+        m_nodeUnderline->setPen(QPen(QBrush(QColor(Qt::red)), 2.0));
 }
 
 EgCasScene::~EgCasScene()
@@ -177,7 +179,7 @@ EgcPixmapItem* EgCasScene::addPixmap(EgcAbstractPixmapEntity& pixmap, QPointF po
         return item.take();
 }
 
-void EgCasScene::setFormulaCursor(const QLine& line)
+void EgCasScene::setFormulaCursor(const QLineF& line)
 {
         m_cursor->setLine(line);
         m_cursor->show();

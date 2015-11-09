@@ -290,7 +290,8 @@ void EgcFormulaItem::showUnderline(quint32 mathmlId)
         if (renderPos.m_nodeId) {
                 EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
                 if (scn)
-                        scn->setUnderlineCursor(QLineF(renderPos.m_itemRect.bottomLeft(), renderPos.m_itemRect.bottomRight()));
+                        scn->setUnderlineCursor(QLineF(mapToScene(renderPos.m_itemRect.bottomLeft()),
+                                                       mapToScene(renderPos.m_itemRect.bottomRight())));
         }
 }
 
@@ -301,7 +302,8 @@ void EgcFormulaItem::showLeftCursor(quint32 mathmlId, quint32 subindex)
         if (renderPos.m_nodeId) {
                 EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
                 if (scn)
-                        scn->setUnderlineCursor(QLineF(renderPos.m_itemRect.topLeft(), renderPos.m_itemRect.bottomLeft()));
+                        scn->setFormulaCursor(QLineF(mapToScene(renderPos.m_itemRect.topLeft()),
+                                                       mapToScene(renderPos.m_itemRect.bottomLeft())));
         }
 }
 
@@ -312,6 +314,7 @@ void EgcFormulaItem::showRightCursor(quint32 mathmlId, quint32 subindex)
         if (renderPos.m_nodeId) {
                 EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
                 if (scn)
-                        scn->setUnderlineCursor(QLineF(renderPos.m_itemRect.topRight(), renderPos.m_itemRect.bottomRight()));
+                        scn->setFormulaCursor(QLineF(mapToScene(renderPos.m_itemRect.topRight()),
+                                                       mapToScene(renderPos.m_itemRect.bottomRight())));
         }
 }
