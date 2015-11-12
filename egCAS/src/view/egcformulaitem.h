@@ -151,6 +151,10 @@ public:
         * @param subindex the subindex to use for identifying the mathml element (e.g. one character of a text)
         */
         virtual void showRightCursor(quint32 mathmlId, quint32 subindex) override;
+        /**
+         * @brief hideCursors hide the cursors e.g. in case the element is moved
+         */
+        virtual void hideCursors(void);
 
 protected:
         /**

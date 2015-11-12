@@ -364,6 +364,7 @@ void EgcFormulaEntity::itemChanged(EgcItemChangeType changeType)
         if (changeType == EgcItemChangeType::posChanged) {
                 if (m_list)
                         m_list->sort();
+                showCurrentCursor();
         }
 }
 
@@ -382,6 +383,7 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         switch (action.m_op) {
         case EgcOperations::formulaActivated:
                 m_scrIter.reset(new EgcScrPosIterator(m_mathmlLookup));
+                showCurrentCursor();
                 break;
         case EgcOperations::formulaDeactivated:
                 m_scrIter.reset();
@@ -397,6 +399,30 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
 
 void EgcFormulaEntity::moveCursor(bool forward)
 {
+        if (!m_scrIter)
+                return;
+        if (!m_item)
+                return;
+        if (forward) {
+                if (m_scrIter->hasNext()) {
+                        (void) m_scrIter->next();
+                }
+        } else {
+                if (m_scrIter->hasPrevious()) {
+                        (void) m_scrIter->previous();
+                }
+        }
+
+        showCurrentCursor();
+}
+
+void EgcFormulaEntity::setMathmlIdSequence(QVector<quint32> sequence)
+{
+        m_mathmlLookup.setMathmlIdSequence(sequence);
+}
+
+void EgcFormulaEntity::showCurrentCursor(void)
+{
         quint32 id;
         quint32 ind;
         bool rightSide;
@@ -405,27 +431,13 @@ void EgcFormulaEntity::moveCursor(bool forward)
                 return;
         if (!m_item)
                 return;
-        if (forward) {
-                if (m_scrIter->hasNext()) {
-                        id = m_scrIter->next();
-                        ind = m_scrIter->subIndex();
-                        rightSide = m_scrIter->rightSide();
-                }
-        } else {
-                if (m_scrIter->hasPrevious()) {
-                        id = m_scrIter->previous();
-                        ind = m_scrIter->subIndex();
-                        rightSide = m_scrIter->rightSide();
-                }
-        }
+
+        id = m_scrIter->lastId();
+        ind = m_scrIter->subIndex();
+        rightSide = m_scrIter->rightSide();
 
         if (rightSide)
                 m_item->showRightCursor(id, ind);
         else
                 m_item->showLeftCursor(id, ind);
-}
-
-void EgcFormulaEntity::setMathmlIdSequence(QVector<quint32> sequence)
-{
-        m_mathmlLookup.setMathmlIdSequence(sequence);
 }

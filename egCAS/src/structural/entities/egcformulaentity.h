@@ -250,6 +250,10 @@ private:
          * @param forward true if the user wants to move the cursor forward, false if he wants to move it backward
          */
         void moveCursor(bool forward);
+        /**
+         * @brief showCurrentCursor shows the current cursor the iterator points to
+         */
+        void showCurrentCursor(void);
 
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result

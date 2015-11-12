@@ -172,13 +172,15 @@ void EgcFormulaItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 
 QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-     if (change == ItemPositionChange && scene()) {
-             m_posChanged = true;
-             // value is the new position.
-             return snapGrid(value.toPointF());
-     }
-     
-     return QGraphicsItem::itemChange(change, value);
+        if (change == ItemPositionChange && scene()) {
+                // hide the cursors
+                hideCursors();
+                m_posChanged = true;
+                // value is the new position.
+                return snapGrid(value.toPointF());
+        }
+
+        return QGraphicsItem::itemChange(change, value);
 }
 
 void EgcFormulaItem::setEntity(EgcAbstractFormulaEntity* entity)
@@ -317,4 +319,11 @@ void EgcFormulaItem::showRightCursor(quint32 mathmlId, quint32 subindex)
                         scn->setFormulaCursor(QLineF(mapToScene(renderPos.m_itemRect.topRight()),
                                                        mapToScene(renderPos.m_itemRect.bottomRight())));
         }
+}
+
+void EgcFormulaItem::hideCursors(void)
+{
+        EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
+        if (scn)
+                scn->hideFormulaCursors();
 }

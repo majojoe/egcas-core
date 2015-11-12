@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     FormulaGenerator::getFormulaTree(formula2, "((1+sqrt(5)))/2=_empty");
     formula2->setNumberResultType(EgcNumberResultType::ScientificType);
     formula2->setNumberOfSignificantDigits(4);
-    formula2->setFontSize(25);
+    formula2->setFontSize(50);
     
     EgcFormulaEntity* formula3 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula,

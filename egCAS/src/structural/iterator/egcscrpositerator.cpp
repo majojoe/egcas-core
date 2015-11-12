@@ -41,6 +41,7 @@ EgcScrPosIterator::EgcScrPosIterator(EgcMathmlLookup& data) : m_index{0}, m_righ
 {
         m_i.reset(new QVectorIterator<EgcMathmlIdMapping>(m_lookup->m_lookup));
         m_i->toBack();
+        m_rightSide = true;
         while (hasNextSubind()) {
                 nextSubind();
         }
@@ -71,9 +72,10 @@ bool EgcScrPosIterator::hasPrevious(void) const
 
 const quint32 & EgcScrPosIterator::next(void)
 {
-        if (hasNextSubind())
+        if (hasNextSubind()) {
                 nextSubind();
-        else if (m_i->hasNext()) {
+                m_rightSide = true;
+        } else if (m_i->hasNext()) {
                 m_history = &m_i->next();
                 m_rightSide = true;
         }
@@ -92,6 +94,8 @@ const quint32 &EgcScrPosIterator::previous(void)
         
         if (!m_i->hasPrevious())
                 m_rightSide = false;
+        else
+                m_rightSide = true;
 
         if (!m_history)
                 return m_index; //the content is undefined per definition (content will be wrong)
@@ -187,4 +191,12 @@ void EgcScrPosIterator::previousSubind(void)
 
         if (m_index == 0)
                 m_rightSide = false;
+}
+
+const quint32& EgcScrPosIterator::lastId(void)
+{
+        if (m_history)
+                return m_history->m_mathmlId;
+        else
+                return m_index; // this is not a valid id , but a valid reference
 }

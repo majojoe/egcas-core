@@ -84,7 +84,7 @@ public:
          */
         virtual void toFront(void);
         /**
-         * @brief node returns the associated with node we last jumped over
+         * @brief node returns the associated node we last jumped over
          * @return the node we last jumped over
          */
         virtual const EgcNode* node(void);
@@ -116,6 +116,12 @@ public:
          * @brief nextSubind step a subindex backward if there is a previous one
          */
         virtual void previousSubind(void);
+        /**
+         * @brief lastId returns the last id we jumped over. The result is only valid if there is any mapping the
+         * iterator can operate on.
+         * @return the id we jumped over lastly.
+         */
+        virtual const quint32& lastId(void);
 
 
 private:

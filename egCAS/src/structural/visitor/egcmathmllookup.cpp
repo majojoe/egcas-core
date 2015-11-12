@@ -46,9 +46,11 @@ void EgcMathmlLookup::clear(void)
 
 void EgcMathmlLookup::setMathmlIdSequence(QVector<quint32> sequence)
 {
+        if (!m_lookup.empty())
+                return;
+
         EgcMathmlIdMapping mapping;
-        quint32 id;
-        m_lookup.clear();
+        quint32 id;        
         foreach(id, sequence) {
                 if (m_tmpHash.contains(id)) {
                         mapping.m_node = m_tmpHash.value(id);
