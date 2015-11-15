@@ -42,7 +42,7 @@ void EgcScreenPos::setPositions(QVector<EgRenderingPosition> positions)
         EgRenderingPosition pos;
         quint64 id;
         foreach(pos, positions) {
-                id = pos.m_nodeId | (static_cast<quint64>(pos.m_index) << 32);
+                id = pos.m_nodeId | (static_cast<quint64>(pos.m_subPos) << 32);
                 m_positions.insert(id, pos);
         }
 }

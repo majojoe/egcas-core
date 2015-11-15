@@ -85,7 +85,7 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
         EgRenderingPosition pos;
         foreach(pos, positions) {
                 if (    pos.m_nodeId
-                     && !pos.m_index)
+                     && !pos.m_subPos)
                         idSequence.append(pos.m_nodeId);
         }
         if (m_entity)
@@ -98,7 +98,7 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
                 EgRenderingPosition position;
                 Qt::GlobalColor color = Qt::gray;
                 foreach (position, renderingPosition) {
-                        if (position.m_index == 0) {
+                        if (position.m_subPos == 0) {
                                 painter->setPen(Qt::darkGray);
                                 painter->drawRect(position.m_itemRect);
                         } else {
