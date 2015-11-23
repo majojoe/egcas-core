@@ -237,7 +237,8 @@ const EgcScreenPos& EgcFormulaItem::getScreenPos(void) const
 
 void EgcFormulaItem::focusInEvent(QFocusEvent * event)
 {
-        (void) event;
+        if (event->reason() == Qt::ActiveWindowFocusReason)
+                return;
         if (!m_entity)
                 return;
         EgcAction action;
@@ -247,7 +248,8 @@ void EgcFormulaItem::focusInEvent(QFocusEvent * event)
 
 void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
 {
-        (void) event;
+        if (event->reason() == Qt::ActiveWindowFocusReason)
+                return;
         if (!m_entity)
                 return;
         EgcAction action;

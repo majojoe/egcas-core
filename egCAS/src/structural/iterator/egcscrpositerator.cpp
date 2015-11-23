@@ -36,12 +36,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../structural/concreteNodes/egcvariablenode.h"
 
 
-EgcScrPosIterator::EgcScrPosIterator(EgcMathmlLookup& data) : m_index{0}, m_rightSide{false}, m_lookup{&data},
-                                                              m_history{nullptr}
+EgcScrPosIterator::EgcScrPosIterator(EgcMathmlLookup& data) : m_prevSubind{-1}, m_nextSubind{0}, m_subindHist{-1},
+                                                              m_rightSide{true}, m_lookup{&data}, m_history{nullptr}
 {
         m_i.reset(new QVectorIterator<EgcMathmlIdMapping>(m_lookup->m_lookup));
         m_i->toBack();
-        m_rightSide = true;
         while (hasNextSubind()) {
                 nextSubind();
         }
@@ -56,7 +55,7 @@ EgcScrPosIterator::~EgcScrPosIterator()
 
 bool EgcScrPosIterator::hasNext(void) const
 {
-        if (m_i->hasNext() || hasNextSubind())
+        if (m_i->hasNext() || hasNextSubind() || m_rightSide == false)
                 return true;
         else
                 return false;
@@ -64,7 +63,7 @@ bool EgcScrPosIterator::hasNext(void) const
 
 bool EgcScrPosIterator::hasPrevious(void) const
 {
-        if (m_i->hasPrevious() || hasPreviousSubind())
+        if (m_i->hasPrevious() || hasPreviousSubind() || m_rightSide == true)
                 return true;
         else
                 return false;
@@ -74,31 +73,31 @@ const quint32 & EgcScrPosIterator::next(void)
 {
         if (hasNextSubind()) {
                 nextSubind();
+        } else if (m_rightSide == false) {
                 m_rightSide = true;
         } else if (m_i->hasNext()) {
                 m_history = &m_i->next();
-                m_rightSide = true;
+                m_rightSide = false;
         }
         if (!m_history)
-                return m_index; //the content is undefined per definition (content will be wrong)
+                return m_pseudoRef; //the content is undefined per definition (content will be wrong)
 
         return m_history->m_mathmlId;
 }
 
 const quint32 &EgcScrPosIterator::previous(void)
 {
-        if (hasPreviousSubind())
+        if (hasPreviousSubind()) {
                 previousSubind();
-        else if (m_i->hasPrevious())
-                m_history = &m_i->previous();
-        
-        if (!m_i->hasPrevious())
+        } else if (m_rightSide == true) {
                 m_rightSide = false;
-        else
+        } else if (m_i->hasPrevious()) {
+                m_history = &m_i->previous();
                 m_rightSide = true;
-
+        }
+        
         if (!m_history)
-                return m_index; //the content is undefined per definition (content will be wrong)
+                return m_pseudoRef; //the content is undefined per definition (content will be wrong)
 
         return m_history->m_mathmlId;
 }
@@ -116,11 +115,12 @@ const quint32& EgcScrPosIterator::peekPrevious(void) const
 void EgcScrPosIterator::toBack(void)
 {
         m_i->toBack();
-        m_index = 0;
+        m_prevSubind = -1;
+        m_nextSubind = 0;
+        m_history = nullptr;
         while (hasNextSubind()) {
                 nextSubind();
         }
-        m_rightSide = true;
         if (m_i->hasPrevious()) {
                 m_history = &m_i->peekPrevious();
         }
@@ -129,10 +129,11 @@ void EgcScrPosIterator::toBack(void)
 void EgcScrPosIterator::toFront(void)
 {
         m_i->toFront();
-        m_rightSide = false;
-        m_index = 0;
+        m_prevSubind = -1;
+        m_nextSubind = 0;
+        m_history = nullptr;
         if (m_i->hasPrevious()) {
-                m_history = &m_i->peekPrevious();
+                m_history = &m_i->peekNext();
         }
 }
 
@@ -149,48 +150,54 @@ bool EgcScrPosIterator::rightSide(void)
         return m_rightSide;
 }
 
-quint32& EgcScrPosIterator::subIndex(void)
+qint32& EgcScrPosIterator::subIndex(void)
 {
-        return m_index;
+        return m_subindHist;
 }
 
 bool EgcScrPosIterator::hasNextSubind(void) const
 {
-        if (!m_history)
-                return false;
-
-        if (m_history->m_node) {
-                int size = m_history->m_node->nrSubindexes();
-                if (m_index < size)
+        if (!m_history) { //we are at the beginning
+                if (!m_i->hasNext())
+                        return false;
+                if (m_i->peekNext().m_node->nrSubindexes())
                         return true;
+                else
+                        return false;
         }
 
-        return false;
+        if (m_nextSubind < m_history->m_node->nrSubindexes())
+                return true;
+        else
+                return false;
 }
 
 bool EgcScrPosIterator::hasPreviousSubind(void) const
 {
-        if (m_index > 0)
+        if (m_prevSubind > -1)
                 return true;
-
-        return false;
+        else
+                return false;
 }
 
 void EgcScrPosIterator::nextSubind(void)
 {
         if (hasNextSubind()) {
-                m_index++;
+                m_subindHist = m_nextSubind;
+                m_prevSubind++;
+                m_nextSubind++;
                 m_rightSide = true;
         }
 }
 
 void EgcScrPosIterator::previousSubind(void)
 {
-        if (hasPreviousSubind())
-                m_index--;
-
-        if (m_index == 0)
+        if (hasPreviousSubind()) {
+                m_subindHist = m_prevSubind;
+                m_prevSubind--;
+                m_nextSubind--;
                 m_rightSide = false;
+        }
 }
 
 const quint32& EgcScrPosIterator::lastId(void)
@@ -198,5 +205,5 @@ const quint32& EgcScrPosIterator::lastId(void)
         if (m_history)
                 return m_history->m_mathmlId;
         else
-                return m_index; // this is not a valid id , but a valid reference
+                return m_pseudoRef; // this is not a valid id , but a valid reference
 }

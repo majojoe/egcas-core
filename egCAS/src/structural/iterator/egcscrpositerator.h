@@ -94,10 +94,12 @@ public:
          */
         virtual bool rightSide(void);
         /**
-         * @brief subIndex returns the subindex of the element we last jumped over
+         * @brief subIndex returns the subindex of the element we last jumped over. Note: index is not position!
+         * index = position-1. Therefore this is different to the m_subPos value of the rendering position data struct.
+         * The index -1 means that there is no subindex or it is invalid (points to beginning or end of some subdata).
          * @return the subindex we last jumped over
          */
-        virtual quint32& subIndex(void);
+        virtual qint32& subIndex(void);
         /**
          * @brief hasNextSubind checks if there is another e.g. char with a subindex in the current node
          * @return true if there is another subindex in the current node, false otherwise
@@ -125,8 +127,11 @@ public:
 
 
 private:
-        quint32 m_index;        ///< iterator positon of the subindex if any
-        bool m_rightSide;       ///< is the iterator on the right side of the returned element or on the left?
+        const quint32 m_pseudoRef = 0; ///< a pseudo reference to to point to, if there is no other reference available
+        qint32 m_prevSubind;     ///< points to the previous subindex
+        qint32 m_nextSubind;     ///< points to the next subindex
+        qint32 m_subindHist;     ///< points to the last subindex we jumped over
+        bool m_rightSide;        ///< saves the last direction we were moving (backward or foreward)
         EgcMathmlLookup const * m_lookup;       ///< a reference to the lookup data
         QScopedPointer<QVectorIterator<EgcMathmlIdMapping>> m_i;       ///< iterator for screen positions
         const EgcMathmlIdMapping* m_history;   ///< the last element we jumped over

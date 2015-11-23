@@ -424,7 +424,7 @@ void EgcFormulaEntity::setMathmlIdSequence(QVector<quint32> sequence)
 void EgcFormulaEntity::showCurrentCursor(void)
 {
         quint32 id;
-        quint32 ind;
+        qint32 ind;
         bool rightSide;
 
         if (!m_scrIter)
@@ -437,7 +437,7 @@ void EgcFormulaEntity::showCurrentCursor(void)
         rightSide = m_scrIter->rightSide();
 
         if (rightSide)
-                m_item->showRightCursor(id, ind);
+                m_item->showRightCursor(id, ind + 1);
         else
-                m_item->showLeftCursor(id, ind);
+                m_item->showLeftCursor(id, ind + 1);
 }
