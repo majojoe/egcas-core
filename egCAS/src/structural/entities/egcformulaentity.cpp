@@ -416,11 +416,6 @@ void EgcFormulaEntity::moveCursor(bool forward)
         showCurrentCursor();
 }
 
-void EgcFormulaEntity::setMathmlIdSequence(QVector<quint32> sequence)
-{
-        m_mathmlLookup.setMathmlIdSequence(sequence);
-}
-
 void EgcFormulaEntity::showCurrentCursor(void)
 {
         quint32 id;

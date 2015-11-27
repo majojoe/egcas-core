@@ -45,40 +45,48 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
                         // don't show the root exponent if it is "2" (square root)
                         suppressIfChildValue(binary, 1, EgcNodeType::NumberNode, "2");
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        assembleResult("<mroot" % getId(binary) % "><mrow>%1</mrow><mrow>%2</mrow></mroot>", binary);
+                        assembleResult("<mroot" % getId(binary, EgcScrPosPosition::BetweenNodes)
+                                       % "><mrow>%1</mrow><mrow>%2</mrow></mroot>", binary);
                 }
                 break;
         case EgcNodeType::EqualNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow>%1<mo" % getId(binary) % ">=</mo>%2</mrow>", binary);
+                        assembleResult("<mrow>%1<mo" % getId(binary, EgcScrPosPosition::BetweenNodes)
+                                       % ">=</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::DefinitionNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow>%1<mo" % getId(binary) % ">:=</mo>%2</mrow>", binary);
+                        assembleResult("<mrow>%1<mo" % getId(binary, EgcScrPosPosition::BetweenNodes)
+                                       % ">:=</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow>%1<mo" % getId(binary) % ">+</mo>%2</mrow>", binary);
+                        assembleResult("<mrow>%1<mo" % getId(binary, EgcScrPosPosition::BetweenNodes)
+                                       % ">+</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::MinusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow>%1<mo" % getId(binary) % ">-</mo>%2</mrow>", binary);
+                        assembleResult("<mrow>%1<mo" % getId(binary, EgcScrPosPosition::BetweenNodes)
+                                       % ">-</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::MultiplicationNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow>%1<mo" % getId(binary) % ">&CenterDot;</mo>%2</mrow>", binary);
+                        assembleResult("<mrow>%1<mo" % getId(binary, EgcScrPosPosition::BetweenNodes)
+                                       % ">&CenterDot;</mo>%2</mrow>", binary);
                 break;
         case EgcNodeType::DivisionNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         suppressIfChildType(binary, 0, EgcNodeType::ParenthesisNode);
                         suppressIfChildType(binary, 1, EgcNodeType::ParenthesisNode);
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        assembleResult("<mfrac" % getId(binary) % ">%1 %2</mfrac>", binary);
+                        assembleResult("<mfrac" % getId(binary, EgcScrPosPosition::BetweenNodes)
+                                       % ">%1 %2</mfrac>", binary);
                 }
                 break;
         case EgcNodeType::ExponentNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<msup" % getId(binary) % ">%1 %2</msup>", binary);
+                        assembleResult("<msup" % getId(binary, EgcScrPosPosition::NotVisible)
+                                       % ">%1 %2</msup>", binary);
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", binary->getNodeType()) ;
@@ -94,12 +102,13 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
                 suppressIfChildType(unary, 0, EgcNodeType::ParenthesisNode);
 
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mfenced " % getId(unary) % "open=\"(\" close=\")\" separators=\",\"><mrow>%1</mrow></mfenced>", unary);
+                        assembleResult("<mfenced " % getId(unary, EgcScrPosPosition::LeftAndRight)
+                                       % "open=\"(\" close=\")\" separators=\",\"><mrow>%1</mrow></mfenced>", unary);
         }
         break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow><mo" % getId(unary) % ">-</mo>%1</mrow>", unary);
+                        assembleResult("<mrow><mo" % getId(unary, EgcScrPosPosition::Left) % ">-</mo>%1</mrow>", unary);
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", unary->getNodeType()) ;
@@ -230,6 +239,12 @@ QString EgcMathMlVisitor::getResult(void)
         }
         temp += "</math>";
 
+        //remove suppressed nodes from lookup for cursor iteration
+        EgcNode* node;
+        foreach (node, m_suppressList) {
+                m_lookup.remove(node);
+        }
+
         return temp;
 }
 
@@ -294,12 +309,12 @@ void EgcMathMlVisitor::suppressIfChildValue(const EgcNode* node, quint32 index, 
         }        
 }
 
-QString EgcMathMlVisitor::getId(EgcNode* node)
+QString EgcMathMlVisitor::getId(EgcNode* node, EgcScrPosPosition visibility)
 {
         QString str(" id=\"%1\" ");
         str = str.arg(m_idCounter);
         if (node)
-                m_lookup.addId(m_idCounter, *node);
+                m_lookup.addId(*node, m_idCounter, visibility);
         m_idCounter++;
 
         return str;

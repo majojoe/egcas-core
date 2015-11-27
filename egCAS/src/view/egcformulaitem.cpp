@@ -88,8 +88,6 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
                      && !pos.m_subPos)
                         idSequence.append(pos.m_nodeId);
         }
-        if (m_entity)
-                m_entity->setMathmlIdSequence(idSequence);
 
         if (isSelected()) {
 #ifdef DEBUG_SCENE_RENDERING_POS

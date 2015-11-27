@@ -34,10 +34,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QScopedPointer>
 #include <QVector>
 #include <QRectF>
-#include <visitor/egcmathmllookup.h>
 
 class EgcNode;
+class EgcMathmlLookup;
 
+/**
+ * @brief The EgcScrPosVisibility enum decribes the visibility of a formula element. A formula element can have visible
+ * elements on the left and right side (e.g. parenthesis) or between two nodes.
+ * The enums can be ORed.
+ */
+enum class EgcScrPosPosition {NotVisible = 0, Left = 1, Right = 2, LeftAndRight = 3, BetweenNodes = 4};
+
+/**
+ * @brief The EgcScrPosIterator class is a iterator for navigating between the formula glyphs
+ */
 class EgcScrPosIterator
 {
 public:        
@@ -133,8 +143,8 @@ private:
         qint32 m_subindHist;     ///< points to the last subindex we jumped over
         bool m_rightSide;        ///< saves the last direction we were moving (backward or foreward)
         EgcMathmlLookup const * m_lookup;       ///< a reference to the lookup data
-        QScopedPointer<QVectorIterator<EgcMathmlIdMapping>> m_i;       ///< iterator for screen positions
-        const EgcMathmlIdMapping* m_history;   ///< the last element we jumped over
+        //QScopedPointer<QVectorIterator<EgcMathmlIdMapping>> m_i;       ///< iterator for screen positions
+        //const EgcMathmlIdMapping* m_history;   ///< the last element we jumped over
 };
 
 #endif // EGCSCRPOSITERATOR_H

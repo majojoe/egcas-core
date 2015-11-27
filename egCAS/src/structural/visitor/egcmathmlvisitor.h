@@ -105,9 +105,10 @@ public:
         /**
          * @brief getId returns the id string to be added to the mathml code to be able to identify the node later
          * @param node the node to be identified via the id
+         * @param visibility if and where a node has visible elements
          * @return the mathml string with the id
          */
-        QString getId(EgcNode* node);
+        QString getId(EgcNode* node, EgcScrPosPosition visibility);
         /**
          * @brief getMathmlMapping returns the id lookup for mathml
          * @return the lookup table

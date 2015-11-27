@@ -32,16 +32,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QVector>
 #include <QHash>
+#include "iterator/egcscrpositerator.h"
 
 class EgcNode;
 
 /**
- * @brief The EgcMathmlIdMapping struct organizes the data to pack the contents in a container
+ * @brief The EgcScrPosIds struct organizes the data to be able to lookup the mathml id's in a hash table
  */
-struct EgcMathmlIdMapping
+struct EgcScrPosIds
 {
-        quint32 m_mathmlId;     ///< the mathml id that identifies a mathml node
-        EgcNode* m_node;        ///< the formula element node it points to
+        quint32 m_mathmlId;                     ///< the mathml id that identifies a mathml node
+        EgcScrPosPosition m_visibility;       ///< where the mathml id has visible elements
 };
 
 class EgcMathmlLookup
@@ -53,20 +54,34 @@ public:
          * @brief addId add a id <-> node pair for later lookup
          * @param id the mathml node id to add
          * @param node the node that is related to the also given mathml node id above
+         * @param visibility if and where a node has visible elements
          */
-        void addId(quint32 id, EgcNode& node);
+        void addId(EgcNode& node, quint32 id, EgcScrPosPosition visibility);
         /**
          * @brief clear clears the lookup table
          */
         void clear(void);
         /**
-         * @brief setMathmlIdSequence set the sequence in which the mathml id's follow each other
-         * @param sequence the sequence of mathml id's given from the rendering library
+         * @brief getId get the mathml id for the given node
+         * @param node the node to lookup the id for
+         * @return the mathml id that is associated with the node given, or 0 if not found
          */
-        void setMathmlIdSequence(QVector<quint32> sequence);
+        quint32 getId(const EgcNode& node);
+        /**
+         * @brief isVisible checks if the node is visible at the given position (left, right, left and right, ...)
+         * @param node the node to lookup the visibility for
+         * @param position the visibility at the given position will be returned
+         * @return true if the node has visible parts (or is manipulable at the given position), false if not
+         */
+        bool isVisible(const EgcNode& node, EgcScrPosPosition position);
+        /**
+         * @brief remove removes the given node from the lookup if stored
+         * @param node the node to remove
+         */
+        void remove(EgcNode* node);
+
 private:
-        QHash<quint32, EgcNode*> m_tmpHash;        ///< temporary hash table (unsorted)
-        QVector<EgcMathmlIdMapping> m_lookup;      ///< lookup to be able to make a relation of any mathml id to the nodes of the formula
+        QHash<const EgcNode*, EgcScrPosIds> m_hash;   ///< hash table for lookup if and where a node has visible elements
 };
 
 #endif // EGCMATHMLLOOKUP_H

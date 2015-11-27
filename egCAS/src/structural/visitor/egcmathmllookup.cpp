@@ -34,30 +34,45 @@ EgcMathmlLookup::EgcMathmlLookup()
 
 }
 
-void EgcMathmlLookup::addId(quint32 id, EgcNode& node)
+void EgcMathmlLookup::addId(EgcNode& node, quint32 id, EgcScrPosPosition visibility)
 {
-        m_tmpHash.insert(id, &node);
+        EgcScrPosIds idStr;
+        idStr.m_mathmlId = id;
+        idStr.m_visibility = visibility;
+        m_hash.insert(&node, idStr);
 }
 
 void EgcMathmlLookup::clear(void)
 {
-        m_lookup.clear();
+        m_hash.clear();
 }
 
-void EgcMathmlLookup::setMathmlIdSequence(QVector<quint32> sequence)
+quint32 EgcMathmlLookup::getId(const EgcNode& node)
 {
-        if (!m_lookup.empty())
-                return;
+        quint32 retval = 0;
 
-        EgcMathmlIdMapping mapping;
-        quint32 id;        
-        foreach(id, sequence) {
-                if (m_tmpHash.contains(id)) {
-                        mapping.m_node = m_tmpHash.value(id);
-                        mapping.m_mathmlId = id;
-                        m_lookup.append(mapping);
-                }
+        if (m_hash.contains(&node))
+                retval = m_hash.value(&node).m_mathmlId;
+
+        return retval;
+}
+
+bool EgcMathmlLookup::isVisible(const EgcNode& node, EgcScrPosPosition position)
+{
+        bool retval = false;
+        EgcScrPosPosition pos;
+
+        if (m_hash.contains(&node)) {
+                pos = m_hash.value(&node).m_visibility;
+                if (static_cast<int>(pos) & static_cast<int>(position))
+                        retval = true;
         }
-        //delete the temporary hash table
-        m_tmpHash.clear();
+
+        return retval;
+}
+
+void EgcMathmlLookup::remove(EgcNode* node)
+{
+        if (m_hash.contains(node))
+                m_hash.remove(node);
 }
