@@ -30,24 +30,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCMATHMLLOOKUP_H
 #define EGCMATHMLLOOKUP_H
 
-#include <QVector>
-#include <QHash>
-#include "iterator/egcscrpositerator.h"
+#include <QMultiHash>
 
 class EgcNode;
 
-/**
- * @brief The EgcScrPosIds struct organizes the data to be able to lookup the mathml id's in a hash table
- */
-struct EgcScrPosIds
-{
-        quint32 m_mathmlId;                     ///< the mathml id that identifies a mathml node
-        EgcScrPosPosition m_visibility;       ///< where the mathml id has visible elements
-};
 
 class EgcMathmlLookup
 {
-        friend class EgcScrPosIterator;
 public:
         EgcMathmlLookup();
         /**
@@ -56,32 +45,43 @@ public:
          * @param node the node that is related to the also given mathml node id above
          * @param visibility if and where a node has visible elements
          */
-        void addId(EgcNode& node, quint32 id, EgcScrPosPosition visibility);
+        void addId(EgcNode& node, quint32 id);
         /**
          * @brief clear clears the lookup table
          */
         void clear(void);
         /**
-         * @brief getId get the mathml id for the given node
-         * @param node the node to lookup the id for
-         * @return the mathml id that is associated with the node given, or 0 if not found
+         * @brief getIdFrame returns the id of the frame of an mathml element
+         * @param node the node we want the id of the frame for
+         * @return the id associated with the frame of the given element or 0 if no id was found for the given node
          */
-        quint32 getId(const EgcNode& node);
+        quint32 getIdFrame(EgcNode& node);
         /**
-         * @brief isVisible checks if the node is visible at the given position (left, right, left and right, ...)
-         * @param node the node to lookup the visibility for
-         * @param position the visibility at the given position will be returned
-         * @return true if the node has visible parts (or is manipulable at the given position), false if not
+         * @brief getIds returns a list with all mathml id's of the given node
+         * @param node the node we want the id's for
+         * @return a list with the id's associated with the given node. The list can be empty.
          */
-        bool isVisible(const EgcNode& node, EgcScrPosPosition position);
+        QList<quint32> getIds(EgcNode& node);
         /**
-         * @brief remove removes the given node from the lookup if stored
-         * @param node the node to remove
+         * @brief getIdsNonFrame returns a list with all mathml id's associated with the given node without the frame id.
+         * @param node is the node we want the id's for
+         * @return a list with the id's without the frame id of the mathml element. The list can be empty.
          */
-        void remove(EgcNode* node);
-
+        QList<quint32> getIdsNonFrame(EgcNode& node);
+        /**
+         * @brief getIdCount returns the count of id's that are saved for the given node
+         * @param node the node we want to know the number of id's for
+         * @return the number of id's for the given node
+         */
+        int getIdCount(EgcNode& node);
+        /**
+         * @brief findNode returns the node for the given id. Warning: This function can be slow!
+         * @param id the mathml id we want the node for
+         * @return the node found for the given id, or nullptr in case when the node has not been found
+         */
+        EgcNode* findNode(quint32 id);
 private:
-        QHash<const EgcNode*, EgcScrPosIds> m_hash;   ///< hash table for lookup if and where a node has visible elements
+        QMultiHash<EgcNode*, quint32> m_lookup;      ///< lookup to be able to make a relation of any mathml id to the nodes of the formula
 };
 
 #endif // EGCMATHMLLOOKUP_H

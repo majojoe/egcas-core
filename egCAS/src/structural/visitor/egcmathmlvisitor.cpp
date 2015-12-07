@@ -37,107 +37,109 @@ EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{f
         m_lookup.clear();
 }
 
-void EgcMathMlVisitor::visit(EgcBinaryNode* binary)
-{       
-        switch (binary->getNodeType()) {
+void EgcMathMlVisitor::visit(EgcBinaryNode* node)
+{
+        /*the id for the outer bounds of the operation (the id that characterizes the outer bounds must always be the
+         * lowest one - in order execution of the id generation)*/
+        QString id = getId(node);
+        switch (node->getNodeType()) {
         case EgcNodeType::RootNode:                
                 if (m_state == EgcIteratorState::LeftIteration) {
                         // don't show the root exponent if it is "2" (square root)
-                        suppressIfChildValue(binary, 1, EgcNodeType::NumberNode, "2");
+                        suppressIfChildValue(node, 1, EgcNodeType::NumberNode, "2");
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        assembleResult("<mroot" % getId(binary, EgcScrPosPosition::BetweenNodes)
-                                       % "><mrow>%1</mrow><mrow>%2</mrow></mroot>", binary);
+                        assembleResult("<mroot" %id%"><mrow>%1</mrow><mrow>%2</mrow></mroot>", node);
                 }
                 break;
         case EgcNodeType::EqualNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow>%1<mo" % getId(binary, EgcScrPosPosition::BetweenNodes)
-                                       % ">=</mo>%2</mrow>", binary);
+                        assembleResult("<mrow "%id%">%1<mo" % getId(node) % ">=</mo>%2</mrow>", node);
                 break;
         case EgcNodeType::DefinitionNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow>%1<mo" % getId(binary, EgcScrPosPosition::BetweenNodes)
-                                       % ">:=</mo>%2</mrow>", binary);
+                        assembleResult("<mrow "%id%">%1<mo" % getId(node) % ">:=</mo>%2</mrow>", node);
                 break;
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow>%1<mo" % getId(binary, EgcScrPosPosition::BetweenNodes)
-                                       % ">+</mo>%2</mrow>", binary);
+                        assembleResult("<mrow "%id%">%1<mo" % getId(node) % ">+</mo>%2</mrow>", node);
                 break;
         case EgcNodeType::MinusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow>%1<mo" % getId(binary, EgcScrPosPosition::BetweenNodes)
-                                       % ">-</mo>%2</mrow>", binary);
+                        assembleResult("<mrow "%id%">%1<mo" % getId(node) % ">-</mo>%2</mrow>", node);
                 break;
         case EgcNodeType::MultiplicationNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow>%1<mo" % getId(binary, EgcScrPosPosition::BetweenNodes)
-                                       % ">&CenterDot;</mo>%2</mrow>", binary);
+                        assembleResult("<mrow "%id%">%1<mo" % getId(node) % ">&CenterDot;</mo>%2</mrow>", node);
                 break;
         case EgcNodeType::DivisionNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        suppressIfChildType(binary, 0, EgcNodeType::ParenthesisNode);
-                        suppressIfChildType(binary, 1, EgcNodeType::ParenthesisNode);
+                        suppressIfChildType(node, 0, EgcNodeType::ParenthesisNode);
+                        suppressIfChildType(node, 1, EgcNodeType::ParenthesisNode);
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        assembleResult("<mfrac" % getId(binary, EgcScrPosPosition::BetweenNodes)
-                                       % ">%1 %2</mfrac>", binary);
+                        assembleResult("<mfrac "%id%">%1 %2</mfrac>", node);
                 }
                 break;
         case EgcNodeType::ExponentNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<msup" % getId(binary, EgcScrPosPosition::NotVisible)
-                                       % ">%1 %2</msup>", binary);
+                        assembleResult("<msup "%id%">%1 %2</msup>", node);
                 break;
         default:
-                qDebug("No visitor code for mathml defined for this type: %d", binary->getNodeType()) ;
+                qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
                 break;
         }
 }
 
-void EgcMathMlVisitor::visit(EgcUnaryNode* unary)
+void EgcMathMlVisitor::visit(EgcUnaryNode* node)
 {
-        switch (unary->getNodeType()) {
+        /*the id for the outer bounds of the operation (the id that characterizes the outer bounds must always be the
+         * lowest one - in order execution of the id generation)*/
+        QString id = getId(node);
+
+        switch (node->getNodeType()) {
         case EgcNodeType::ParenthesisNode: {
                 /*this is to remove unneccesary parenthesis in case of redundant nested parenthesis*/
-                suppressIfChildType(unary, 0, EgcNodeType::ParenthesisNode);
+                suppressIfChildType(node, 0, EgcNodeType::ParenthesisNode);
 
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mfenced " % getId(unary, EgcScrPosPosition::LeftAndRight)
-                                       % "open=\"(\" close=\")\" separators=\",\"><mrow>%1</mrow></mfenced>", unary);
+                        assembleResult("<mfenced "%id%" open=\"(\" close=\")\" separators=\",\"><mrow>%1</mrow></mfenced>", node);
         }
         break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("<mrow><mo" % getId(unary, EgcScrPosPosition::Left) % ">-</mo>%1</mrow>", unary);
+                        assembleResult("<mrow "%id%"><mo" % getId(node) % ">-</mo>%1</mrow>", node);
                 break;
         default:
-                qDebug("No visitor code for mathml defined for this type: %d", unary->getNodeType()) ;
+                qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
                 break;
         }
 }
 
-void EgcMathMlVisitor::visit(EgcFlexNode* flex)
+void EgcMathMlVisitor::visit(EgcFlexNode* node)
 {
-        switch (flex->getNodeType()) {
+        /*the id for the outer bounds of the operation (the id that characterizes the outer bounds must always be the
+         * lowest one - in order execution of the id generation)*/
+        QString id = getId(node);
+
+        switch (node->getNodeType()) {
         case EgcNodeType::FunctionNode:
                 if (m_state == EgcIteratorState::RightIteration) {
-                        QString startStr = QString("<mrow" % getId(flex) % "><mi>%1</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>")
-                                      .arg(static_cast<EgcFunctionNode*>(flex)->getName());
-                        assembleResult(startStr, "<mo>,</mo>", "</mrow><mo>)</mo></mrow></mrow>", flex);
+                        QString startStr = QString("<mrow "%id%"><mi>%1</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>")
+                                      .arg(static_cast<EgcFunctionNode*>(node)->getName());
+                        assembleResult(startStr, "<mo>,</mo>", "</mrow><mo>)</mo></mrow></mrow>", node);
                 }
                 break;
         case EgcNodeType::IntegralNode:
-                if (flex->getNumberChildNodes() == 2) { // indefinite integral
+                if (node->getNumberChildNodes() == 2) { // indefinite integral
                         if (m_state == EgcIteratorState::RightIteration)
-                                assembleResult("<mrow" % getId(flex) % "><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>%1</mrow><mo>d</mo><mrow>%2</mrow></mrow>", flex);
-                } else if (flex->getNumberChildNodes() == 4) { // integral with limits number of childs should be 4!
+                                assembleResult("<mrow "%id%"><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>%1</mrow><mo>d</mo><mrow>%2</mrow></mrow>", node);
+                } else if (node->getNumberChildNodes() == 4) { // integral with limits number of childs should be 4!
                         if (m_state == EgcIteratorState::RightIteration)
-                                assembleResult("<mrow" % getId(flex) % "><munderover><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>%3</mrow><mrow>%4</mrow></munderover><mrow>%1</mrow><mo>d</mo><mrow>%2</mrow></mrow>", flex);
+                                assembleResult("<mrow "%id%"><munderover><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>%3</mrow><mrow>%4</mrow></munderover><mrow>%1</mrow><mo>d</mo><mrow>%2</mrow></mrow>", node);
                 }
                 break;
         case EgcNodeType::DifferentialNode:
                 if (m_state == EgcIteratorState::RightIteration) {
-                        EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(flex);
+                        EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(node);
                         quint8 der = diff->getNrDerivative();
                         quint32 indexD = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::differential);
                         quint32 indexV = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::variable);
@@ -161,49 +163,53 @@ void EgcMathMlVisitor::visit(EgcFlexNode* flex)
                                 }
 
                                 derivative = "<mstyle scriptlevel=\"-1\"><mo>" % derivative % "</mo></mstyle>";
-                                derivative = "<mrow" % getId(flex) % "><msup>%" % QString::number(indexD + 1) % derivative
+                                derivative = "<mrow "%id%"><msup>%" % QString::number(indexD + 1) % derivative
                                              % "</msup><mfenced>%" % QString::number(indexV + 1) % "</mfenced></mrow>";
-                                assembleResult(derivative, flex);
+                                assembleResult(derivative, node);
                         } else { // use leibniz' notation
                                 QString result;
                                 if (der == 1)
-                                        result = "<mfrac" % getId(flex) % "><mrow><mi>d</mi><mfenced>%" % QString::number(indexD + 1)
+                                        result = "<mfrac "%id%"><mrow><mi>d</mi><mfenced>%" % QString::number(indexD + 1)
                                                  % "</mfenced></mrow><mrow><mi>d</mi>%" % QString::number(indexV + 1)
                                                  % "</mrow></mfrac>";
                                 else
-                                        result = "<mfrac" % getId(flex) % "><mrow><msup><mi>d</mi><mn>" % QString::number(der)
+                                        result = "<mfrac "%id%"><mrow><msup><mi>d</mi><mn>" % QString::number(der)
                                                  % "</mn></msup><mfenced>%" % QString::number(indexD + 1)
                                                  % "</mfenced></mrow><msup><mrow><mi>d</mi>%"
                                                  % QString::number(indexV + 1) % "</mrow><mn>"
                                                  % QString::number(der) % "</mn></msup></mfrac>";
 
-                                assembleResult(result, flex);
+                                assembleResult(result, node);
                         }
                 }
                 break;
         default:
-                qDebug("No visitor code for mathml defined for this type: %d", flex->getNodeType()) ;
+                qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
                 break;
         }
 }
 
 void EgcMathMlVisitor::visit(EgcNode* node)
 {
+        /*the id for the outer bounds of the operation (the id that characterizes the outer bounds must always be the
+         * lowest one - in order execution of the id generation)*/
+        QString id = getId(node);
+
         switch (node->getNodeType()) {
         case EgcNodeType::NumberNode:
-                pushToStack("<mn" % getId(node) % ">" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>", node);
+                pushToStack("<mn" %id%">" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>", node);
                 break;
         case EgcNodeType::VariableNode: {
                 EgcVariableNode* varNode = static_cast<EgcVariableNode*>(node);
                 if (varNode->getSubscript().isEmpty())
-                        pushToStack("<mi" % getId(node) % ">" % varNode->getValue() % "</mi>", node);
+                        pushToStack("<mi" %id%">" % varNode->getValue() % "</mi>", node);
                 else
-                        pushToStack("<msub" % getId(node) % "><mi>" % varNode->getValue() % "</mi><mi>" % varNode->getSubscript()
+                        pushToStack("<msub" %id%"><mi>" % varNode->getValue() % "</mi><mi>" % varNode->getSubscript()
                                     %"</mi></msub>", node);
                 break;
         }
         case EgcNodeType::EmptyNode:
-                pushToStack("<mi" % getId(node) % ">&#x2B1A;</mi>", node);
+                pushToStack("<mi" %id%">&#x2B1A;</mi>", node);
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
@@ -238,12 +244,6 @@ QString EgcMathMlVisitor::getResult(void)
                 }
         }
         temp += "</math>";
-
-        //remove suppressed nodes from lookup for cursor iteration
-        EgcNode* node;
-        foreach (node, m_suppressList) {
-                m_lookup.remove(node);
-        }
 
         return temp;
 }
@@ -309,12 +309,12 @@ void EgcMathMlVisitor::suppressIfChildValue(const EgcNode* node, quint32 index, 
         }        
 }
 
-QString EgcMathMlVisitor::getId(EgcNode* node, EgcScrPosPosition visibility)
+QString EgcMathMlVisitor::getId(EgcNode* node)
 {
         QString str(" id=\"%1\" ");
         str = str.arg(m_idCounter);
         if (node)
-                m_lookup.addId(*node, m_idCounter, visibility);
+                m_lookup.addId(*node, m_idCounter);
         m_idCounter++;
 
         return str;

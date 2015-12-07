@@ -27,6 +27,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <specialNodes/egcnode.h>
 #include "egcmathmllookup.h"
 
 EgcMathmlLookup::EgcMathmlLookup()
@@ -34,45 +35,85 @@ EgcMathmlLookup::EgcMathmlLookup()
 
 }
 
-void EgcMathmlLookup::addId(EgcNode& node, quint32 id, EgcScrPosPosition visibility)
+void EgcMathmlLookup::addId(EgcNode& node, quint32 id)
 {
-        EgcScrPosIds idStr;
-        idStr.m_mathmlId = id;
-        idStr.m_visibility = visibility;
-        m_hash.insert(&node, idStr);
+        m_lookup.insert(&node, id);
 }
 
 void EgcMathmlLookup::clear(void)
 {
-        m_hash.clear();
+        m_lookup.clear();
 }
 
-quint32 EgcMathmlLookup::getId(const EgcNode& node)
+quint32 EgcMathmlLookup::getIdFrame(EgcNode& node)
 {
         quint32 retval = 0;
 
-        if (m_hash.contains(&node))
-                retval = m_hash.value(&node).m_mathmlId;
-
-        return retval;
-}
-
-bool EgcMathmlLookup::isVisible(const EgcNode& node, EgcScrPosPosition position)
-{
-        bool retval = false;
-        EgcScrPosPosition pos;
-
-        if (m_hash.contains(&node)) {
-                pos = m_hash.value(&node).m_visibility;
-                if (static_cast<int>(pos) & static_cast<int>(position))
-                        retval = true;
+        QMultiHash<EgcNode*, quint32>::const_iterator i = m_lookup.find(&node);
+        while (i != m_lookup.end() && i.key() == &node) {
+                quint32 tmp = i.value();
+                if (retval != 0)
+                        retval = qMin(retval, tmp);
+                else
+                        retval = tmp;
+                ++i;
         }
 
         return retval;
 }
 
-void EgcMathmlLookup::remove(EgcNode* node)
+QList<quint32> EgcMathmlLookup::getIds(EgcNode& node)
 {
-        if (m_hash.contains(node))
-                m_hash.remove(node);
+        return m_lookup.values(&node);
+}
+
+QList<quint32> EgcMathmlLookup::getIdsNonFrame(EgcNode& node)
+{
+        quint32 id = 0;
+        QList<quint32> list;
+
+        QMultiHash<EgcNode*, quint32>::const_iterator i = m_lookup.find(&node);
+        while (i != m_lookup.end() && i.key() == &node) {
+                quint32 tmp = i.value();
+                if (id != 0)
+                        id = qMin(id, tmp);
+                else
+                        id = tmp;
+                list.append(id);
+                ++i;
+        }
+
+        if (!list.empty() && id != 0)
+                list.removeAll(id);
+
+        return list;
+}
+
+int EgcMathmlLookup::getIdCount(EgcNode& node)
+{
+        return m_lookup.values(&node).size();
+}
+
+EgcNode* EgcMathmlLookup::findNode(quint32 id)
+{
+#warning remove comment if code works
+//        QHashIterator<EgcNode&, quint32> iter( m_lookup );
+//        while( iter.hasNext() )
+//        {
+//                QList<quint32> list = m_lookup.values( iter.next().key() );
+//                foreach( quint32 val, list )
+//                {
+//                        if (val == id)
+//                                return &iter.key();
+//                }
+//        }
+
+        QMultiHash<EgcNode*, quint32>::const_iterator i = m_lookup.begin();
+        while (i != m_lookup.end()) {
+            if (i.value() == id)
+                    return i.key();
+            ++i;
+        }
+
+        return nullptr;
 }
