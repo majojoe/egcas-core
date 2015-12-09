@@ -32,9 +32,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcmathmlvisitor.h"
 
 EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{formula}, m_prettyPrint{true},
-                                                                m_idCounter{1}
+                                                                m_idCounter{1},
+                                                                m_lookup(formula.getMathmlMappingRef()) //gcc bug
 {
-        m_lookup.clear();
 }
 
 void EgcMathMlVisitor::visit(EgcBinaryNode* node)
@@ -318,9 +318,4 @@ QString EgcMathMlVisitor::getId(EgcNode* node)
         m_idCounter++;
 
         return str;
-}
-
-EgcMathmlLookup EgcMathMlVisitor::getMathmlMapping(void)
-{
-        return m_lookup;
 }

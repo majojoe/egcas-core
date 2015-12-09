@@ -185,8 +185,7 @@ QString EgcFormulaEntity::getMathMlCode(void)
 {
         EgcMathMlVisitor mathMlVisitor(*this);        
         QString tmp = mathMlVisitor.getResult();
-        if (m_item)
-                m_mathmlLookup = mathMlVisitor.getMathmlMapping();
+
         return tmp;
 }
 
@@ -382,7 +381,7 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
 {
         switch (action.m_op) {
         case EgcOperations::formulaActivated:
-                m_scrIter.reset(new EgcScrPosIterator(m_mathmlLookup));
+                m_scrIter.reset(new EgcScrPosIterator(const_cast<EgcFormulaEntity const&>(*this)));
                 showCurrentCursor();
                 break;
         case EgcOperations::formulaDeactivated:
@@ -435,4 +434,14 @@ void EgcFormulaEntity::showCurrentCursor(void)
                 m_item->showRightCursor(id, ind + 1);
         else
                 m_item->showLeftCursor(id, ind + 1);
+}
+
+EgcMathmlLookup& EgcFormulaEntity::getMathmlMappingRef(void)
+{
+        return m_mathmlLookup;
+}
+
+const EgcMathmlLookup& EgcFormulaEntity::getMathmlMappingCRef(void) const
+{
+        return m_mathmlLookup;
 }

@@ -237,6 +237,16 @@ public:
          * @param EgcAction the action given
          */
         virtual void handleAction(const EgcAction& action) override;
+        /**
+         * @brief getMathmlMapping returns a reference to the internal mathml id lookup table
+         * @return the lookup table
+         */
+        EgcMathmlLookup& getMathmlMappingRef(void);
+        /**
+         * @brief getMathmlMapping returns a const reference to the internal mathml id lookup table
+         * @return the lookup table
+         */
+        const EgcMathmlLookup& getMathmlMappingCRef(void) const;
 
 private:
         /**

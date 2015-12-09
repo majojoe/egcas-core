@@ -108,16 +108,11 @@ public:
          * @return the mathml string with the id
          */
         QString getId(EgcNode* node);
-        /**
-         * @brief getMathmlMapping returns the id lookup for mathml
-         * @return the lookup table
-         */
-        EgcMathmlLookup getMathmlMapping(void);
 
 private:
         bool m_prettyPrint;             ///< activates pretty printing e.g. in case of a fraction remove the parenthesis
         quint32 m_idCounter;            ///< the id counter
-        EgcMathmlLookup m_lookup;       ///< lookup for mapping id's in node pointers
+        EgcMathmlLookup& m_lookup;       ///< lookup for mapping id's in node pointers
 };
 
 #endif // EGCMATHMLVISITOR_H

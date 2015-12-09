@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QRectF>
 
 class EgcNode;
+class EgcFormulaEntity;
 class EgcMathmlLookup;
 
 /**
@@ -52,7 +53,7 @@ class EgcScrPosIterator
 {
 public:        
         /// constructor for initialization with formula
-        EgcScrPosIterator(EgcMathmlLookup& data);
+        EgcScrPosIterator(const EgcFormulaEntity& formula);
         /// std destructor
         virtual ~EgcScrPosIterator();
         /**
@@ -135,16 +136,13 @@ public:
          */
         virtual const quint32& lastId(void);
 
-
 private:
         const quint32 m_pseudoRef = 0; ///< a pseudo reference to to point to, if there is no other reference available
         qint32 m_prevSubind;     ///< points to the previous subindex
         qint32 m_nextSubind;     ///< points to the next subindex
         qint32 m_subindHist;     ///< points to the last subindex we jumped over
         bool m_rightSide;        ///< saves the last direction we were moving (backward or foreward)
-        EgcMathmlLookup const * m_lookup;       ///< a reference to the lookup data
-        //QScopedPointer<QVectorIterator<EgcMathmlIdMapping>> m_i;       ///< iterator for screen positions
-        //const EgcMathmlIdMapping* m_history;   ///< the last element we jumped over
+        const EgcMathmlLookup& m_lookup;       ///< a reference to the lookup data
 };
 
 #endif // EGCSCRPOSITERATOR_H
