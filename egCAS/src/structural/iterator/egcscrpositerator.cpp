@@ -34,11 +34,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../view/egcscreenpos.h"
 #include "../structural/concreteNodes/egcnumbernode.h"
 #include "../structural/concreteNodes/egcvariablenode.h"
+#include "egcnodeiterator.h"
 
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_prevSubind{-1}, m_nextSubind{0}, m_subindHist{-1},
-                                                              m_rightSide{true},
-                                                              m_lookup{formula.getMathmlMappingCRef()}
+                                                              m_lookup{formula.getMathmlMappingCRef()},
+                                                              m_nodeIter{new EgcNodeIterator(formula)}
 {
 }
 
@@ -193,7 +194,7 @@ void EgcScrPosIterator::previousSubind(void)
 //        }
 }
 
-const quint32& EgcScrPosIterator::lastId(void)
+const quint32& EgcScrPosIterator::id(void)
 {
 //        if (m_history)
 //                return m_history->m_mathmlId;

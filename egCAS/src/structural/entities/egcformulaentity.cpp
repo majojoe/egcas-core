@@ -426,7 +426,7 @@ void EgcFormulaEntity::showCurrentCursor(void)
         if (!m_item)
                 return;
 
-        id = m_scrIter->lastId();
+        id = m_scrIter->id();
         ind = m_scrIter->subIndex();
         rightSide = m_scrIter->rightSide();
 

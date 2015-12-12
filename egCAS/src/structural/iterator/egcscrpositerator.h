@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgcNode;
 class EgcFormulaEntity;
 class EgcMathmlLookup;
+class EgcNodeIterator;
 
 /**
  * @brief The EgcScrPosVisibility enum decribes the visibility of a formula element. A formula element can have visible
@@ -105,12 +106,20 @@ public:
          */
         virtual bool rightSide(void);
         /**
+         * @brief lastId returns the last id we jumped over. The result is only valid if there is any mapping the
+         * iterator can operate on.
+         * @return the id we jumped over lastly.
+         */
+        virtual const quint32& id(void);
+        /**
          * @brief subIndex returns the subindex of the element we last jumped over. Note: index is not position!
          * index = position-1. Therefore this is different to the m_subPos value of the rendering position data struct.
          * The index -1 means that there is no subindex or it is invalid (points to beginning or end of some subdata).
          * @return the subindex we last jumped over
          */
         virtual qint32& subIndex(void);
+
+private:
         /**
          * @brief hasNextSubind checks if there is another e.g. char with a subindex in the current node
          * @return true if there is another subindex in the current node, false otherwise
@@ -129,20 +138,13 @@ public:
          * @brief nextSubind step a subindex backward if there is a previous one
          */
         virtual void previousSubind(void);
-        /**
-         * @brief lastId returns the last id we jumped over. The result is only valid if there is any mapping the
-         * iterator can operate on.
-         * @return the id we jumped over lastly.
-         */
-        virtual const quint32& lastId(void);
 
-private:
         const quint32 m_pseudoRef = 0; ///< a pseudo reference to to point to, if there is no other reference available
         qint32 m_prevSubind;     ///< points to the previous subindex
         qint32 m_nextSubind;     ///< points to the next subindex
         qint32 m_subindHist;     ///< points to the last subindex we jumped over
-        bool m_rightSide;        ///< saves the last direction we were moving (backward or foreward)
-        const EgcMathmlLookup& m_lookup;       ///< a reference to the lookup data
+        const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
+        QScopedPointer<EgcNodeIterator> m_nodeIter;     ///< the node iterator to iterate over the formula nodes
 };
 
 #endif // EGCSCRPOSITERATOR_H
