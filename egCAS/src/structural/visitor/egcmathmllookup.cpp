@@ -45,7 +45,7 @@ void EgcMathmlLookup::clear(void)
         m_lookup.clear();
 }
 
-quint32 EgcMathmlLookup::getIdFrame(EgcNode& node)
+quint32 EgcMathmlLookup::getIdFrame(EgcNode& node) const
 {
         quint32 retval = 0;
 
@@ -62,12 +62,12 @@ quint32 EgcMathmlLookup::getIdFrame(EgcNode& node)
         return retval;
 }
 
-QList<quint32> EgcMathmlLookup::getIds(EgcNode& node)
+QList<quint32> EgcMathmlLookup::getIds(EgcNode& node) const
 {
         return m_lookup.values(&node);
 }
 
-QList<quint32> EgcMathmlLookup::getIdsNonFrame(EgcNode& node)
+QList<quint32> EgcMathmlLookup::getIdsNonFrame(EgcNode& node) const
 {
         quint32 id = 0;
         QList<quint32> list;
@@ -89,12 +89,12 @@ QList<quint32> EgcMathmlLookup::getIdsNonFrame(EgcNode& node)
         return list;
 }
 
-int EgcMathmlLookup::getIdCount(EgcNode& node)
+int EgcMathmlLookup::getIdCount(EgcNode& node) const
 {
         return m_lookup.values(&node).size();
 }
 
-EgcNode* EgcMathmlLookup::findNode(quint32 id)
+EgcNode* EgcMathmlLookup::findNode(quint32 id) const
 {
 #warning remove comment if code works
 //        QHashIterator<EgcNode&, quint32> iter( m_lookup );

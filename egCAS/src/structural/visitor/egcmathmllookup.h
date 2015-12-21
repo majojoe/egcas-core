@@ -55,31 +55,31 @@ public:
          * @param node the node we want the id of the frame for
          * @return the id associated with the frame of the given element or 0 if no id was found for the given node
          */
-        quint32 getIdFrame(EgcNode& node);
+        quint32 getIdFrame(EgcNode& node) const;
         /**
          * @brief getIds returns a list with all mathml id's of the given node
          * @param node the node we want the id's for
          * @return a list with the id's associated with the given node. The list can be empty.
          */
-        QList<quint32> getIds(EgcNode& node);
+        QList<quint32> getIds(EgcNode& node) const;
         /**
          * @brief getIdsNonFrame returns a list with all mathml id's associated with the given node without the frame id.
          * @param node is the node we want the id's for
          * @return a list with the id's without the frame id of the mathml element. The list can be empty.
          */
-        QList<quint32> getIdsNonFrame(EgcNode& node);
+        QList<quint32> getIdsNonFrame(EgcNode& node) const;
         /**
          * @brief getIdCount returns the count of id's that are saved for the given node
          * @param node the node we want to know the number of id's for
          * @return the number of id's for the given node
          */
-        int getIdCount(EgcNode& node);
+        int getIdCount(EgcNode& node) const;
         /**
          * @brief findNode returns the node for the given id. Warning: This function can be slow!
          * @param id the mathml id we want the node for
          * @return the node found for the given id, or nullptr in case when the node has not been found
          */
-        EgcNode* findNode(quint32 id);
+        EgcNode* findNode(quint32 id) const;
 private:
         QMultiHash<EgcNode*, quint32> m_lookup;      ///< lookup to be able to make a relation of any mathml id to the nodes of the formula
 };

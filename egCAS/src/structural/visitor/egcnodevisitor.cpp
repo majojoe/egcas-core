@@ -45,12 +45,14 @@ QString EgcNodeVisitor::getResult(void)
 {
         EgcNodeIterator iter(*m_formula);
         EgcNode *node;
+        EgcNode *previousChildNode;
         QString result;
 
         //clear stack
         m_stack.clear();
 
         while(iter.hasNext()) {
+                previousChildNode = &iter.peekPrevious();
                 node = &iter.next();
                 m_state = iter.getLastState();
                 if (node->isContainer()) {
@@ -60,7 +62,7 @@ QString EgcNodeVisitor::getResult(void)
                                 m_childIndex = static_cast<EgcContainerNode*>(node)->getNumberChildNodes();
                         } else {
                                 quint32 ind;
-                                if (static_cast<EgcContainerNode*>(node)->getIndexOfChild(iter.peekPrevious(), ind))
+                                if (static_cast<EgcContainerNode*>(node)->getIndexOfChild(*previousChildNode, ind))
                                       m_childIndex = ind;
                                 else
                                       m_childIndex = 0;
