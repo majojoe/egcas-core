@@ -107,6 +107,7 @@ set(egCAS_SOURCES
         structural/entities/egcformulaentity.cpp
         structural/iterator/egcnodeiterator.cpp
         structural/iterator/egcscrpositerator.cpp
+        structural/iterator/screenHelpers/egcidnodeiter.cpp
         structural/specialNodes/egcbasenode.cpp
         structural/specialNodes/egcemptynode.cpp
         structural/visitor/egcmaximavisitor.cpp 

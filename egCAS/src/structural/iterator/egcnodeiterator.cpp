@@ -509,6 +509,51 @@ EgcIteratorState EgcNodeIterator::determineFollowingState(EgcNode &previous, Egc
         return localState;
 }
 
+EgcIteratorState EgcNodeIterator::getStateNextNode(void) const
+{
+        EgcNode* next = m_next;
+        EgcNode* previous = m_previous;
+
+        //if the base element has no child
+        if (!m_baseElement->getChild(0)) {
+                return EgcIteratorState::LeftIteration;
+        }
+
+        //if we are at the end and do a next
+        if (m_next == m_baseElement) {
+                next = m_baseElement->getChild(0);
+                previous = m_baseElement;
+        }
+
+        if (previous == nullptr || next == nullptr)
+                return EgcIteratorState::LeftIteration;
+
+        return determineFollowingState(*previous, *next, true);
+}
+
+EgcIteratorState EgcNodeIterator::getStatePreviousNode(void) const
+{
+        EgcNode* next = m_next;
+        EgcNode* previous = m_previous;
+
+        //if the base element has no child
+        if (!m_baseElement->getChild(0)) {
+                return EgcIteratorState::RightIteration;
+        }
+
+        //if we are at the beginning and do a previous
+        if (m_previous == m_baseElement) {
+                next = m_baseElement;
+                previous = m_baseElement->getChild(0);
+        }
+
+        if (previous == nullptr || next == nullptr)
+                return EgcIteratorState::RightIteration;
+
+        return determineFollowingState(*previous, *next, false);
+}
+
+
 bool EgcNodeIterator::insertChildSpace(void)
 {
         EgcFlexNode* node = nullptr;

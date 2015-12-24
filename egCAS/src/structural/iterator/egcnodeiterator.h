@@ -99,6 +99,16 @@ public:
          */
         EgcNode & peekPrevious(void) const;
         /**
+         * @brief getStateNextNode get the state of the next node (where m_next is pointing to)
+         * @return the state of the next node
+         */
+        EgcIteratorState getStateNextNode(void) const;
+        /**
+         * @brief getStatePreviousNode get the state of the previous node (where m_previous is pointing to)
+         * @return the state of the previous node
+         */
+        EgcIteratorState getStatePreviousNode(void) const;
+        /**
          * @brief previous Returns the previous node and decrements the iterator by one.
          * @return a refererence to the previous item.
          */
