@@ -31,6 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCMATHMLLOOKUP_H
 
 #include <QMultiHash>
+#include <QList>
+#include <QPair>
 
 class EgcNode;
 
@@ -80,6 +82,11 @@ public:
          * @return the node found for the given id, or nullptr in case when the node has not been found
          */
         EgcNode* findNode(quint32 id) const;
+        /**
+         * @brief getList returns a list with all Id's listed, along with the node's.
+         * @return a list with
+         */
+        QList<QPair<EgcNode*, quint32> > getList(void) const;
 private:
         QMultiHash<EgcNode*, quint32> m_lookup;      ///< lookup to be able to make a relation of any mathml id to the nodes of the formula
 };

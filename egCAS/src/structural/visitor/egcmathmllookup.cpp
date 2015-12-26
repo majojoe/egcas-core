@@ -117,3 +117,19 @@ EgcNode* EgcMathmlLookup::findNode(quint32 id) const
 
         return nullptr;
 }
+
+QList<QPair<EgcNode*, quint32>> EgcMathmlLookup::getList (void) const
+{
+        QList<QPair<EgcNode*, quint32>> list;
+
+        QMultiHash<EgcNode*, quint32>::const_iterator i = m_lookup.begin();
+        while (i != m_lookup.end()) {
+                QPair<EgcNode*, quint32> pair;
+                pair.first = i.key();
+                pair.second = i.value();
+                list.append(pair);
+                ++i;
+        }
+
+        return list;
+}
