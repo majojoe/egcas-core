@@ -41,7 +41,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcIdNodeIter::EgcIdNodeIter(const EgcFormulaEntity& formula) : m_nodeIterNext{new EgcNodeIterator(formula)},
                                                                 m_nodeIterPrev{new EgcNodeIterator(formula)},
                                                                 m_histState{EgcIteratorState::LeftIteration},
-                                                                m_lookup{formula.getMathmlMappingCRef()}
+                                                                m_lookup{formula.getMathmlMappingCRef()},
+                                                                m_histId{0}
 {
         toBack();
 }
@@ -110,16 +111,7 @@ void EgcIdNodeIter::toFront(void)
 
 const quint32& EgcIdNodeIter::id(void)
 {
-//        if (m_history)
-//                return m_history->m_mathmlId;
-//        else
-//                return m_pseudoRef; // this is not a valid id , but a valid reference
-}
-
-
-bool EgcIdNodeIter::childIndex(quint32* childIndex)
-{
-
+        return m_histId;
 }
 
 EgcIteratorState EgcIdNodeIter::getLastState(void) const
@@ -178,30 +170,48 @@ EgcNode& EgcIdNodeIter::prevNodeWithId(void)
 {
         EgcNode* prevNode;
         EgcNode* retval;
+        EgcNode* node;
+        EgcNode* next;
+        bool firstRun = true;
 
         do {
+                if (firstRun)
+                        next = &m_nodeIterPrev->peekNext();
                 retval = &m_nodeIterPrev->previous();
-                m_histState = m_nodeIterPrev->getLastState();
+                if (firstRun) {
+                        retval = node;
+                        m_histState = m_nodeIterPrev->getLastState();
+                        m_histId = getMathmlId(node, m_histState, nullptr, next);
+                }
                 prevNode = &m_nodeIterPrev->peekPrevious();
 
-        } while (    !mathmlIdExisting(prevNode, m_nodeIterPrev->getStatePreviousNode(), nullptr, retval)
+        } while (    !mathmlIdExisting(prevNode, m_nodeIterPrev->getStatePreviousNode(), nullptr, node)
                   && m_nodeIterPrev->hasPrevious());
 
         return *retval;
-
 }
 
 EgcNode& EgcIdNodeIter::nextNodeWithId(void)
 {
         EgcNode* nextNode;
         EgcNode* retval;
+        EgcNode* node;
+        EgcNode* prev;
+        bool firstRun = true;
 
         do {
-                retval = &m_nodeIterNext->next();
-                m_histState = m_nodeIterNext->getLastState();
+                if (firstRun)
+                     prev = &m_nodeIterNext->peekPrevious();
+                node = &m_nodeIterNext->next();
+                if (firstRun) {
+                        retval = node;
+                        m_histState = m_nodeIterNext->getLastState();
+                        m_histId = getMathmlId(node, m_histState, prev, nullptr);
+                        firstRun = false;
+                }
                 nextNode = &m_nodeIterNext->peekNext();
 
-        } while (    !mathmlIdExisting(nextNode, m_nodeIterNext->getStateNextNode(), retval, nullptr)
+        } while (    !mathmlIdExisting(nextNode, m_nodeIterNext->getStateNextNode(), node, nullptr)
                   && m_nodeIterNext->hasNext());
 
         return *retval;

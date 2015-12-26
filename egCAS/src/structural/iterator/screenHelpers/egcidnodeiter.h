@@ -96,12 +96,6 @@ public:
          */
         virtual const quint32& id(void);
         /**
-         * @brief childIndex get the child index if we jumped over a container lastly.
-         * @param childIndex a pointer where the index will be written to, if the returnvalue is positive.
-         * @return true if the last formula item we jumped over was a container, was a middle iteration.
-         */
-        bool childIndex(quint32* childIndex);
-        /**
          * @brief getState retruns the state of the last traversion
          * @return state the state of the node we jumped over
          */
@@ -142,6 +136,7 @@ private:
         QScopedPointer<EgcNodeIterator> m_nodeIterPrev;     ///< the node iterator that points to the previous node with a mathml id
         EgcIteratorState m_histState;                       ///< last state of the node we jumped over
         const EgcMathmlLookup& m_lookup;                    ///< a reference to the lookup data
+        quint32 m_histId;                                   ///< the mathml id of the last node we jumped over
 };
 
 #endif // EGCIDNODEITER_H
