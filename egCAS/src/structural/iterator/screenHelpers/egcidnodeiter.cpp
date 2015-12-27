@@ -100,13 +100,17 @@ EgcNode& EgcIdNodeIter::peekPrevious(void) const
 void EgcIdNodeIter::toBack(void)
 {
         m_nodeIterNext->toBack();
-        prevNodeWithId();
+        m_nodeIterPrev->toBack();
+        if (!mathmlIdExisting(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext()))
+                prevNodeWithId();
 }
 
 void EgcIdNodeIter::toFront(void)
 {
+        m_nodeIterNext->toFront();
         m_nodeIterPrev->toFront();
-        nextNodeWithId();
+        if (!mathmlIdExisting(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode(), &m_nodeIterNext->peekPrevious(), nullptr))
+                nextNodeWithId();
 }
 
 const quint32& EgcIdNodeIter::id(void)
@@ -153,14 +157,12 @@ quint32 EgcIdNodeIter::getMathmlId(EgcNode* node, EgcIteratorState state, EgcNod
                                                 childIndex--;
                                 }
                         }
-                } else {
-                        childIndex = 0;
+                        if (list.size() > childIndex) {
+                                id = list.at(childIndex);
+                        }
+                } else { // is not a container, so it has no further frames
+                        id = m_lookup.getIdFrame(*node);
                 }
-                
-                if (list.size() > childIndex) {
-                        id = list.at(childIndex);
-                }
-                
         }
 
         return id;
