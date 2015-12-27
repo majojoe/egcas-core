@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "visitor/egcmaximavisitor.h"
 #include "visitor/egcmathmlvisitor.h"
 #include "egcmaximaconn.h"
+#include "iterator/screenHelpers/egcidnodeiter.h"
 
 class EgcasTest_ScrIters : public QObject
 {
@@ -77,6 +78,15 @@ void EgcasTest_ScrIters::testIdNodeIter(void)
         foreach(pair, lookup.getList()) {
                 qDebug() << "Node: " << pair.first << "Id: " << pair.second;
         }
+
+        EgcIdNodeIter iter(formula);
+        iter.toFront();
+
+        while (iter.hasNext()) {
+                EgcNode* node = &iter.next();
+                qDebug() << "Node: " << node << "id: " << iter.id() << "state: " << static_cast<int>(iter.getLastState());
+        }
+
 }
 
 

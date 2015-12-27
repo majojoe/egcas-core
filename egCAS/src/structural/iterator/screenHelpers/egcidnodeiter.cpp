@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcIdNodeIter::EgcIdNodeIter(const EgcFormulaEntity& formula) : m_nodeIterNext{new EgcNodeIterator(formula)},
                                                                 m_nodeIterPrev{new EgcNodeIterator(formula)},
                                                                 m_histState{EgcIteratorState::LeftIteration},
-                                                                m_lookup{formula.getMathmlMappingCRef()},
+                                                                m_lookup(formula.getMathmlMappingCRef()), //gcc bug
                                                                 m_histId{0}
 {
         toBack();
@@ -177,7 +177,7 @@ EgcNode& EgcIdNodeIter::prevNodeWithId(void)
         do {
                 if (firstRun)
                         next = &m_nodeIterPrev->peekNext();
-                retval = &m_nodeIterPrev->previous();
+                node = &m_nodeIterPrev->previous();
                 if (firstRun) {
                         retval = node;
                         m_histState = m_nodeIterPrev->getLastState();

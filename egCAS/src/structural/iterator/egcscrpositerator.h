@@ -40,12 +40,12 @@ class EgcFormulaEntity;
 class EgcMathmlLookup;
 class EgcNodeIterator;
 
-/**
- * @brief The EgcScrPosVisibility enum decribes the visibility of a formula element. A formula element can have visible
- * elements on the left and right side (e.g. parenthesis) or between two nodes.
- * The enums can be ORed.
- */
-enum class EgcScrPosPosition {NotVisible = 0, Left = 1, Right = 2, LeftAndRight = 3, BetweenNodes = 4};
+// /**
+// * @brief The EgcScrPosVisibility enum decribes the visibility of a formula element. A formula element can have visible
+// * elements on the left and right side (e.g. parenthesis) or between two nodes.
+// * The enums can be ORed.
+// */
+//enum class EgcScrPosPosition {NotVisible = 0, Left = 1, Right = 2, LeftAndRight = 3, BetweenNodes = 4};
 
 /**
  * @brief The EgcScrPosIterator class is a iterator for navigating between the formula glyphs
@@ -71,22 +71,22 @@ public:
          * @brief next Returns the next node and increments the iterator by one.
          * @return a reference to the next mathml id.
          */
-        virtual const quint32 & next(void);
+        virtual const quint32 next(void);
         /**
          * @brief previous Returns the previous node and decrements the iterator by one.
          * @return a refererence to the previous mathml id.
          */
-        virtual const quint32 & previous(void);
+        virtual const quint32 previous(void);
         /**
          * @brief peekNext Returns the next node without incrementing the iterator.
          * @return a reference to the next mathml id.
          */
-        virtual const quint32 & peekNext(void) const;
+        virtual const quint32 peekNext(void) const;
         /**
          * @brief peekPrevious Returns the previous node without decrementing the iterator.
          * @return a reference to the previous mathml id.
          */
-        virtual const quint32 & peekPrevious(void) const;
+        virtual const quint32 peekPrevious(void) const;
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
@@ -121,6 +121,22 @@ public:
 
 private:
         /**
+         * @brief mathmlIdExisting checks if a mathml id for the current node is existing.
+         * @param node the node to check for existence of a mathml id
+         * @return true if a id is existing, false otherwise
+         */
+        bool mathmlIdExisting(EgcNode* node) const;
+        /**
+         * @brief prevNodeWithId iterates the node iterator to the prevoius node that has a valid mathml id and sets the
+         * internal node pointer accordingly
+         */
+        void prevNodeWithId(void);
+        /**
+         * @brief nextNodeWithId iterates the node iterator to the next node that has a valid mathml id and sets the
+         * internal node pointer accordingly
+         */
+        void nextNodeWithId(void);
+        /**
          * @brief hasNextSubind checks if there is another e.g. char with a subindex in the current node
          * @return true if there is another subindex in the current node, false otherwise
          */
@@ -140,9 +156,11 @@ private:
         virtual void previousSubind(void);
 
         const quint32 m_pseudoRef = 0; ///< a pseudo reference to to point to, if there is no other reference available
-        qint32 m_prevSubind;     ///< points to the previous subindex
-        qint32 m_nextSubind;     ///< points to the next subindex
-        qint32 m_subindHist;     ///< points to the last subindex we jumped over
+        EgcNode* m_prevNode;    ///< points to the previous Node that is used for cursor data on the screen
+        EgcNode* m_nextNode;    ///< points to the next Node that is used for cursor data on the screen
+        qint32 m_prevSubind;    ///< points to the previous subindex
+        qint32 m_nextSubind;    ///< points to the next subindex
+        qint32 m_subindHist;    ///< points to the last subindex we jumped over
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcNodeIterator> m_nodeIter;     ///< the node iterator to iterate over the formula nodes
 };

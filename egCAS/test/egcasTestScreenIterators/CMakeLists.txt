@@ -34,6 +34,7 @@ find_package(Qt5 COMPONENTS Core Widgets Test)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/)
 
 file(GLOB_RECURSE tst_egcastest_scriters_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
 
@@ -53,6 +54,7 @@ set(tst_egcastest_scriters_SOURCES
         ${tst_egcastest_scriters_concrete_SOURCES}
         ../../src/structural/iterator/egcnodeiterator.cpp
         ../../src/structural/iterator/egcscrpositerator.cpp
+        ../../src/structural/iterator/screenHelpers/egcidnodeiter.cpp
         ../../src/structural/entities/egcformulaentity.cpp
         ../../src/structural/entities/egcentity.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp

@@ -49,7 +49,7 @@ quint32 EgcMathmlLookup::getIdFrame(EgcNode& node) const
 {
         quint32 retval = 0;
 
-        QMultiHash<EgcNode*, quint32>::const_iterator i = m_lookup.find(&node);
+        QHash<EgcNode*, quint32>::const_iterator i = m_lookup.find(&node);
         while (i != m_lookup.end() && i.key() == &node) {
                 quint32 tmp = i.value();
                 if (retval != 0)
@@ -72,7 +72,7 @@ QList<quint32> EgcMathmlLookup::getIdsNonFrame(EgcNode& node) const
         quint32 id = 0;
         QList<quint32> list;
 
-        QMultiHash<EgcNode*, quint32>::const_iterator i = m_lookup.find(&node);
+        QHash<EgcNode*, quint32>::const_iterator i = m_lookup.find(&node);
         while (i != m_lookup.end() && i.key() == &node) {
                 quint32 tmp = i.value();
                 if (id != 0)
@@ -108,7 +108,7 @@ EgcNode* EgcMathmlLookup::findNode(quint32 id) const
 //                }
 //        }
 
-        QMultiHash<EgcNode*, quint32>::const_iterator i = m_lookup.begin();
+        QHash<EgcNode*, quint32>::const_iterator i = m_lookup.begin();
         while (i != m_lookup.end()) {
             if (i.value() == id)
                     return i.key();
@@ -122,7 +122,7 @@ QList<QPair<EgcNode*, quint32>> EgcMathmlLookup::getList (void) const
 {
         QList<QPair<EgcNode*, quint32>> list;
 
-        QMultiHash<EgcNode*, quint32>::const_iterator i = m_lookup.begin();
+        QHash<EgcNode*, quint32>::const_iterator i = m_lookup.begin();
         while (i != m_lookup.end()) {
                 QPair<EgcNode*, quint32> pair;
                 pair.first = i.key();
