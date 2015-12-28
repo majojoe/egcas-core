@@ -110,6 +110,11 @@ public:
         QString getId(EgcNode* node);
 
 private:
+        /**
+         * @brief cleanMathmlLookupTable clean the mathml lookup table from entries that are suppressed (shall not be rendered)
+         */
+        void cleanMathmlLookupTable(void);
+
         bool m_prettyPrint;             ///< activates pretty printing e.g. in case of a fraction remove the parenthesis
         quint32 m_idCounter;            ///< the id counter
         EgcMathmlLookup& m_lookup;       ///< lookup for mapping id's in node pointers

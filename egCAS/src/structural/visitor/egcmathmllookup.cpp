@@ -96,18 +96,6 @@ int EgcMathmlLookup::getIdCount(EgcNode& node) const
 
 EgcNode* EgcMathmlLookup::findNode(quint32 id) const
 {
-#warning remove comment if code works
-//        QHashIterator<EgcNode&, quint32> iter( m_lookup );
-//        while( iter.hasNext() )
-//        {
-//                QList<quint32> list = m_lookup.values( iter.next().key() );
-//                foreach( quint32 val, list )
-//                {
-//                        if (val == id)
-//                                return &iter.key();
-//                }
-//        }
-
         QHash<EgcNode*, quint32>::const_iterator i = m_lookup.begin();
         while (i != m_lookup.end()) {
             if (i.value() == id)
@@ -132,4 +120,9 @@ QList<QPair<EgcNode*, quint32>> EgcMathmlLookup::getList (void) const
         }
 
         return list;
+}
+
+void EgcMathmlLookup::removeId(EgcNode* node)
+{
+        m_lookup.remove(node);
 }

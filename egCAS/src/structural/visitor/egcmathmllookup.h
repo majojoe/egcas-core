@@ -53,6 +53,11 @@ public:
          */
         void clear(void);
         /**
+         * @brief removeId remove nodes from the lookup table that shall not be rendered
+         * @param node the node to remove
+         */
+        void removeId(EgcNode* node);
+        /**
          * @brief getIdFrame returns the id of the frame of an mathml element
          * @param node the node we want the id of the frame for
          * @return the id associated with the frame of the given element or 0 if no id was found for the given node

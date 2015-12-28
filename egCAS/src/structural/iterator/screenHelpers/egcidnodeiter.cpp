@@ -184,6 +184,7 @@ EgcNode& EgcIdNodeIter::prevNodeWithId(void)
                         retval = node;
                         m_histState = m_nodeIterPrev->getLastState();
                         m_histId = getMathmlId(node, m_histState, nullptr, next);
+                        firstRun = false;
                 }
                 prevNode = &m_nodeIterPrev->peekPrevious();
 

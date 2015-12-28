@@ -245,6 +245,9 @@ QString EgcMathMlVisitor::getResult(void)
         }
         temp += "</math>";
 
+        //remove entries from lookup table that shall not be rendered
+        cleanMathmlLookupTable();
+
         return temp;
 }
 
@@ -318,4 +321,11 @@ QString EgcMathMlVisitor::getId(EgcNode* node)
         m_idCounter++;
 
         return str;
+}
+
+void EgcMathMlVisitor::cleanMathmlLookupTable(void)
+{
+        QSetIterator<EgcNode*> i(m_suppressList);
+        while (i.hasNext())
+                m_lookup.removeId(i.next());
 }
