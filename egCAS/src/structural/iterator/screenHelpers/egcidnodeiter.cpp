@@ -197,7 +197,7 @@ EgcNode& EgcIdNodeIter::prevNodeWithId(void)
                         rollover = true;
 
         } while (    (   !mathmlIdExisting(prevNode, m_nodeIterPrev->getStatePreviousNode(), nullptr, node)
-                      || omitFollowingNode(node, prevNode)
+                      || omitFollowingNode(prevNode, m_nodeIterPrev->getStatePreviousNode())
                       || firstRun
                       || rollover)
                   && m_nodeIterPrev->hasPrevious());
@@ -234,7 +234,7 @@ EgcNode& EgcIdNodeIter::nextNodeWithId(void)
                         rollover = true;
 
         } while (    (    !mathmlIdExisting(nextNode, m_nodeIterNext->getStateNextNode(), node, nullptr)
-                       || omitFollowingNode(node, nextNode)
+                       || omitFollowingNode(nextNode, m_nodeIterNext->getStateNextNode())
                        || firstRun
                        || rollover )
                   && m_nodeIterNext->hasNext());
@@ -242,7 +242,46 @@ EgcNode& EgcIdNodeIter::nextNodeWithId(void)
         return *retval;
 }
 
-bool EgcIdNodeIter::omitFollowingNode(EgcNode* currentNode, EgcNode* followingNode)
+bool EgcIdNodeIter::omitFollowingNode(EgcNode* followingNode, EgcIteratorState followingState)
 {
-        return false;
+        bool retval = true;
+
+        //leafes are always considered as valid nodes
+        if (!followingNode->isContainer())
+                return false;
+
+        switch (followingNode->getNodeType()) {
+        case EgcNodeType::DivisionNode:
+                if (    followingState == EgcIteratorState::LeftIteration
+                     || followingState == EgcIteratorState::RightIteration)
+                        retval = false;
+                break;
+        case EgcNodeType::RootNode:
+                if (    followingState == EgcIteratorState::LeftIteration
+                     || followingState == EgcIteratorState::RightIteration)
+                        retval = false;
+                break;
+        case EgcNodeType::ParenthesisNode:
+                        retval = false;
+                break;
+        case EgcNodeType::ExponentNode:
+                if (    followingState == EgcIteratorState::LeftIteration
+                     || followingState == EgcIteratorState::RightIteration)
+                        retval = false;
+                break;
+        case EgcNodeType::IntegralNode:
+                if (    followingState == EgcIteratorState::LeftIteration
+                     || followingState == EgcIteratorState::RightIteration)
+                        retval = false;
+                break;
+        case EgcNodeType::DifferentialNode:
+                if (    followingState == EgcIteratorState::LeftIteration
+                     || followingState == EgcIteratorState::RightIteration)
+                        retval = false;
+                break;
+        default:
+                break;
+        }
+
+        return retval;
 }
