@@ -130,6 +130,13 @@ private:
          * internal node pointer accordingly
          */
         EgcNode& nextNodeWithId(void);
+        /**
+         * @brief omitNode check if a node must be omitted
+         * @param currentNode the current node
+         * @param followingNode the node that follows the current node, eigther in forward or backward direction
+         * @return true if the current node shall be omitted, false otherwise
+         */
+        bool omitFollowingNode(EgcNode* currentNode, EgcNode* followingNode);
 
 
         QScopedPointer<EgcNodeIterator> m_nodeIterNext;     ///< the node iterator that points to the next node with a mathml id

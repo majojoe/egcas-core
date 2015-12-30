@@ -175,8 +175,10 @@ EgcNode& EgcIdNodeIter::prevNodeWithId(void)
         EgcNode* node;
         EgcNode* next;
         bool firstRun = true;
+        bool rollover;
 
         do {
+                rollover = false;
                 if (firstRun)
                         next = &m_nodeIterPrev->peekNext();
                 node = &m_nodeIterPrev->previous();
@@ -188,7 +190,16 @@ EgcNode& EgcIdNodeIter::prevNodeWithId(void)
                 }
                 prevNode = &m_nodeIterPrev->peekPrevious();
 
-        } while (    !mathmlIdExisting(prevNode, m_nodeIterPrev->getStatePreviousNode(), nullptr, node)
+                //if a child is not visible, omit that middle iteration before the invisible child
+                if (retval == prevNode && m_histState == EgcIteratorState::MiddleIteration)
+                        firstRun = true;
+                if (retval == prevNode && m_nodeIterPrev->getLastState() == EgcIteratorState::MiddleIteration)
+                        rollover = true;
+
+        } while (    (   !mathmlIdExisting(prevNode, m_nodeIterPrev->getStatePreviousNode(), nullptr, node)
+                      || omitFollowingNode(node, prevNode)
+                      || firstRun
+                      || rollover)
                   && m_nodeIterPrev->hasPrevious());
 
         return *retval;
@@ -201,10 +212,12 @@ EgcNode& EgcIdNodeIter::nextNodeWithId(void)
         EgcNode* node;
         EgcNode* prev;
         bool firstRun = true;
+        bool rollover;
 
         do {
+                rollover = false;
                 if (firstRun)
-                     prev = &m_nodeIterNext->peekPrevious();
+                        prev = &m_nodeIterNext->peekPrevious();
                 node = &m_nodeIterNext->next();
                 if (firstRun) {
                         retval = node;
@@ -214,8 +227,22 @@ EgcNode& EgcIdNodeIter::nextNodeWithId(void)
                 }
                 nextNode = &m_nodeIterNext->peekNext();
 
-        } while (    !mathmlIdExisting(nextNode, m_nodeIterNext->getStateNextNode(), node, nullptr)
+                //if a child is not visible, omit that middle iteration before the invisible child
+                if (retval == nextNode && m_histState == EgcIteratorState::MiddleIteration)
+                        firstRun = true;
+                if (retval == nextNode && m_nodeIterNext->getLastState() == EgcIteratorState::MiddleIteration)
+                        rollover = true;
+
+        } while (    (    !mathmlIdExisting(nextNode, m_nodeIterNext->getStateNextNode(), node, nullptr)
+                       || omitFollowingNode(node, nextNode)
+                       || firstRun
+                       || rollover )
                   && m_nodeIterNext->hasNext());
 
         return *retval;
+}
+
+bool EgcIdNodeIter::omitFollowingNode(EgcNode* currentNode, EgcNode* followingNode)
+{
+        return false;
 }

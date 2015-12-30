@@ -150,12 +150,6 @@ void EgcasTest_ScrIters::testIdNodeIter(void)
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::RootNode);
-        QCOMPARE(static_cast<int>(iter.id()), 12);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
-
-        if (iter.hasNext())
-                node = &iter.next();
-        QCOMPARE(node->getNodeType(), EgcNodeType::RootNode);
         QCOMPARE(static_cast<int>(iter.id()), 8);
         QCOMPARE(iter.getLastState(), EgcIteratorState::RightIteration);
 
@@ -266,12 +260,6 @@ void EgcasTest_ScrIters::testIdNodeIter(void)
         QCOMPARE(node->getNodeType(), EgcNodeType::RootNode);
         QCOMPARE(static_cast<int>(iter.id()), 8);
         QCOMPARE(iter.getLastState(), EgcIteratorState::RightIteration);
-
-        if (iter.hasPrevious())
-                node = &iter.previous();
-        QCOMPARE(node->getNodeType(), EgcNodeType::RootNode);
-        QCOMPARE(static_cast<int>(iter.id()), 12);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasPrevious())
                 node = &iter.previous();
