@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 #include "egcsubidnodeiter.h"
-#include "structural/specialNodes/egcnode.h"
+#include "specialNodes/egcnode.h"
 
 EgcSubidNodeIter::EgcSubidNodeIter(EgcNode& node) : m_node(node), m_nextId{-1}, m_prevId{-1}
 {

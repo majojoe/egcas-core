@@ -32,18 +32,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../entities/egcformulaentity.h"
 #include "../specialNodes/egcnode.h"
 #include "../view/egcscreenpos.h"
-#include "../structural/concreteNodes/egcnumbernode.h"
-#include "../structural/concreteNodes/egcvariablenode.h"
-#include "../specialNodes/egcflexnode.h"
-#include "egcnodeiterator.h"
+#include "iterator/screenHelpers/egcidnodeiter.h"
+#include "iterator/screenHelpers/egcsubidnodeiter.h"
 
-
-EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_prevNode{nullptr}, m_nextNode{nullptr},
-                                                              m_prevSubind{-1}, m_nextSubind{0}, m_subindHist{-1},
-                                                              m_lookup{formula.getMathmlMappingCRef()},
-                                                              m_nodeIter{new EgcNodeIterator(formula)}
+EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup{formula.getMathmlMappingCRef()},
+                                                                        m_nodeIter{new EgcIdNodeIter(formula)},
+                                                                        m_subIdIter{new EgcSubidNodeIter(m_nodeIter->previous())}
 {
-        m_nodeIter->toBack();
 
 }
 
@@ -53,93 +48,38 @@ EgcScrPosIterator::~EgcScrPosIterator()
 
 bool EgcScrPosIterator::hasNext(void) const
 {
-        if (m_nodeIter->hasNext() || hasNextSubind())
-                return true;
-        else
-                return false;
 }
 
 bool EgcScrPosIterator::hasPrevious(void) const
 {
-        if (m_nodeIter->hasPrevious() || hasPreviousSubind())
-                return true;
-        else
-                return false;
 }
 
 const quint32 EgcScrPosIterator::next(void)
 {
-//        quint32 retval;
-
-//        if (hasNextSubind()) {
-//                nextSubind();
-//        } else if (m_nodeIter->hasNext()) {
-//                retval = m_lookup.getIdFrame(m_nodeIter->next());
-//        }
-//        if (retval == 0)
-//                return m_pseudoRef; //the content is undefined per definition (content will be wrong)
-
-//        return retval;
 }
 
 const quint32 EgcScrPosIterator::previous(void)
 {
-//        if (hasPreviousSubind()) {
-//                previousSubind();
-//        } else if (m_rightSide == true) {
-//                m_rightSide = false;
-//        } else if (m_i->hasPrevious()) {
-//                m_history = &m_i->previous();
-//                m_rightSide = true;
-//        }
-        
-//        if (!m_history)
-//                return m_pseudoRef; //the content is undefined per definition (content will be wrong)
-
-//        return m_history->m_mathmlId;
 }
 
 const quint32 EgcScrPosIterator::peekNext(void) const
 {
-//        return m_i->peekNext().m_mathmlId;
 }
 
 const quint32 EgcScrPosIterator::peekPrevious(void) const
 {
-//        return m_i->peekPrevious().m_mathmlId;
 }
 
 void EgcScrPosIterator::toBack(void)
 {
-//        m_i->toBack();
-//        m_prevSubind = -1;
-//        m_nextSubind = 0;
-//        m_history = nullptr;
-//        while (hasNextSubind()) {
-//                nextSubind();
-//        }
-//        if (m_i->hasPrevious()) {
-//                m_history = &m_i->peekPrevious();
-//        }
 }
 
 void EgcScrPosIterator::toFront(void)
 {
-//        m_i->toFront();
-//        m_prevSubind = -1;
-//        m_nextSubind = 0;
-//        m_history = nullptr;
-//        if (m_i->hasPrevious()) {
-//                m_history = &m_i->peekNext();
-//        }
 }
 
 const EgcNode* EgcScrPosIterator::node(void)
 {
-//        if (!m_history)
-//                return nullptr;
-
-//        return m_history->m_node;
 }
 
 bool EgcScrPosIterator::rightSide(void)
@@ -147,62 +87,13 @@ bool EgcScrPosIterator::rightSide(void)
 //        return m_rightSide;
 }
 
-qint32& EgcScrPosIterator::subIndex(void)
+quint32 EgcScrPosIterator::subIndex(void)
 {
-//        return m_subindHist;
 }
 
-bool EgcScrPosIterator::hasNextSubind(void) const
+quint32 EgcScrPosIterator::id(void)
 {
-//        if (!m_history) { //we are at the beginning
-//                if (!m_i->hasNext())
-//                        return false;
-//                if (m_i->peekNext().m_node->nrSubindexes())
-//                        return true;
-//                else
-//                        return false;
-//        }
 
-//        if (m_nextSubind < m_history->m_node->nrSubindexes())
-//                return true;
-//        else
-//                return false;
-}
-
-bool EgcScrPosIterator::hasPreviousSubind(void) const
-{
-//        if (m_prevSubind > -1)
-//                return true;
-//        else
-//                return false;
-}
-
-void EgcScrPosIterator::nextSubind(void)
-{
-//        if (hasNextSubind()) {
-//                m_subindHist = m_nextSubind;
-//                m_prevSubind++;
-//                m_nextSubind++;
-//                m_rightSide = true;
-//        }
-}
-
-void EgcScrPosIterator::previousSubind(void)
-{
-//        if (hasPreviousSubind()) {
-//                m_subindHist = m_prevSubind;
-//                m_prevSubind--;
-//                m_nextSubind--;
-//                m_rightSide = false;
-//        }
-}
-
-const quint32& EgcScrPosIterator::id(void)
-{
-//        if (m_history)
-//                return m_history->m_mathmlId;
-//        else
-//                return m_pseudoRef; // this is not a valid id , but a valid reference
 }
 
 bool EgcScrPosIterator::mathmlIdExisting(EgcNode* node) const
@@ -247,24 +138,3 @@ bool EgcScrPosIterator::mathmlIdExisting(EgcNode* node) const
 //        return false;
 }
 
-void EgcScrPosIterator::prevNodeWithId(void)
-{
-
-}
-
-void EgcScrPosIterator::nextNodeWithId(void)
-{
-        EgcNode* nextNode;
-        EgcIteratorState lastState;
-        EgcIteratorState newState;
-
-        do {
-                lastState = m_nodeIter->getLastState();
-                nextNode = &(m_nodeIter->next());
-                newState = m_nodeIter->getLastState();
-
-        } while (    mathmlIdExisting(nextNode)
-                  && !(lastState == newState && nextNode == m_nextNode));
-
-        m_nextNode = nextNode;
-}

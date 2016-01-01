@@ -29,13 +29,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 #include "egcidnodeiter.h"
-#include "structural/entities/egcformulaentity.h"
-#include "structural/specialNodes/egcnode.h"
-#include "view/egcscreenpos.h"
-#include "structural/concreteNodes/egcnumbernode.h"
-#include "structural/concreteNodes/egcvariablenode.h"
-#include "structural/specialNodes/egcflexnode.h"
-#include "structural/iterator/egcnodeiterator.h"
+#include "entities/egcformulaentity.h"
+#include "specialNodes/egcnode.h"
+#include "egcscreenpos.h"
+#include "concreteNodes/egcnumbernode.h"
+#include "concreteNodes/egcvariablenode.h"
+#include "specialNodes/egcflexnode.h"
+#include "iterator/egcnodeiterator.h"
 
 
 EgcIdNodeIter::EgcIdNodeIter(const EgcFormulaEntity& formula) : m_nodeIterNext{new EgcNodeIterator(formula)},
