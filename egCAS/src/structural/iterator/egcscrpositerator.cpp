@@ -126,7 +126,16 @@ const EgcNode* EgcScrPosIterator::node(void)
 
 bool EgcScrPosIterator::rightSide(void)
 {
+        bool right = true;
 
+        if (m_subind == m_subIdIter->peekNext())
+                right = false;
+        else if (m_subind == m_subIdIter->peekPrevious())
+                right = true;
+        else if (m_subind == -1 && m_subIdIter->peekNext() == 0)
+                right = false;
+
+        return right;
 }
 
 int EgcScrPosIterator::subIndex(void)
