@@ -38,59 +38,70 @@ class EgcNode;
 /**
  * @brief The EgcSubidNodeIter class is a iterator for navigating between the formula glyphs
  */
-class EgcSubidNodeIter
+class EgcSubindNodeIter
 {
 public:        
-        /// constructor for initialization with formula
-        EgcSubidNodeIter(EgcNode& node);
+        /// constructor for initialization with formula, after initialization the iterator points to the beginning of
+        /// the node.
+        EgcSubindNodeIter(EgcNode& node);
         /// std destructor
-        virtual ~EgcSubidNodeIter();
+        virtual ~EgcSubindNodeIter();
+        /**
+         * @brief setNode assign a new node to the iterator to work on.
+         * @param node a reference to the node to set
+         */
+        void setNode(EgcNode& node);
         /**
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
          */
-        virtual bool hasNext(void) const;
+        bool hasNext(void) const;
         /**
          * @brief hasPrevious Checks if there is at most one more item before the current item.
          * @return True if an item was found, false otherwise.
          */
-        virtual bool hasPrevious(void) const;
+        bool hasPrevious(void) const;
         /**
          * @brief next Returns the next subid of a node and increments the iterator by one. Result is only valid, if
          * tested with hasNext() before.
          * @return a the next subid of a node.
          */
-        virtual int next(void);
+        int next(void);
         /**
          * @brief previous Returns the previous subid of a node and decrements the iterator by one.Result is only valid,
          * if tested with hasPrevious() before.
          * @return the previous subid of a node.
          */
-        virtual int previous(void);
+        int previous(void);
         /**
          * @brief peekNext Returns the next subid of a node without incrementing the iterator.
          * @return the next subid of a node.
          */
-        virtual int peekNext(void) const;
+        int peekNext(void) const;
         /**
          * @brief peekPrevious Returns the previous subid of a node without decrementing the iterator.
          * @return the previous subid of a node.
          */
-        virtual int peekPrevious(void) const;
+        int peekPrevious(void) const;
         /**
          * @brief toBack Moves the iterator to the back of the node (after the last item).
          */
-        virtual void toBack(void);
+        void toBack(void);
         /**
          * @brief toFront Moves the iterator to the front of the node (before the first item).
          */
-        virtual void toFront(void);
+        void toFront(void);
+        /**
+         * @brief lastSubind returns the last subindex we jumped over
+         * @return the last subindex we jumped over
+         */
+        int lastSubind(void);
 
 private:
-
         EgcNode& m_node;                ///< reference to node the iterator has been initialized with
         int m_nextId;                   ///< points to the next subid
         int m_prevId;                   ///< points to the previous subid
+        int m_histId;                   ///< the last subind we jumped over
 
 };
 

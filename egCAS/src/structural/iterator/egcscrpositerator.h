@@ -39,7 +39,7 @@ class EgcNode;
 class EgcFormulaEntity;
 class EgcMathmlLookup;
 class EgcIdNodeIter;
-class EgcSubidNodeIter;
+class EgcSubindNodeIter;
 
 // /**
 // * @brief The EgcScrPosVisibility enum decribes the visibility of a formula element. A formula element can have visible
@@ -112,7 +112,7 @@ public:
          * The index -1 means that there is no subindex or it is invalid (points to beginning or end of some subdata).
          * @return the subindex we last jumped over
          */
-        quint32 subIndex(void);
+        int subIndex(void);
         /**
          * @brief lastId returns the last id we jumped over. The result is only valid if there is any mapping the
          * iterator can operate on.
@@ -121,16 +121,12 @@ public:
         quint32 id(void);
 
 private:
-        /**
-         * @brief mathmlIdExisting checks if a mathml id for the current node is existing.
-         * @param node the node to check for existence of a mathml id
-         * @return true if a id is existing, false otherwise
-         */
-        bool mathmlIdExisting(EgcNode* node) const;
-
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes
-        QScopedPointer<EgcSubidNodeIter> m_subIdIter;   ///< iterator for the subindexes of a node
+        EgcNode* m_node;                                ///< the last node we jumped over
+        quint32 m_id;                                   ///< the last mathml id we jumped over
+        int m_subind;                                   ///< the last subindex we used
+        QScopedPointer<EgcSubindNodeIter> m_subIdIter;  ///< iterator for the subindexes of a node
 };
 
 #endif // EGCSCRPOSITERATOR_H

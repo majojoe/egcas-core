@@ -31,18 +31,28 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcsubidnodeiter.h"
 #include "specialNodes/egcnode.h"
 
-EgcSubidNodeIter::EgcSubidNodeIter(EgcNode& node) : m_node(node), m_nextId{-1}, m_prevId{-1}
+EgcSubindNodeIter::EgcSubindNodeIter(EgcNode& node) : m_node(node)
 {
+        setNode(node);
+}
+
+EgcSubindNodeIter::~EgcSubindNodeIter()
+{
+
+}
+
+void EgcSubindNodeIter::setNode(EgcNode& node)
+{
+        m_node = node;
+        m_nextId = -1;
+        m_prevId = -1;
+        m_histId = -1;
+
         if (m_node.nrSubindexes())
                 m_nextId = 0;
 }
 
-EgcSubidNodeIter::~EgcSubidNodeIter()
-{
-
-}
-
-bool EgcSubidNodeIter::hasNext(void) const
+bool EgcSubindNodeIter::hasNext(void) const
 {
         if (m_nextId != -1)
                 return true;
@@ -50,7 +60,7 @@ bool EgcSubidNodeIter::hasNext(void) const
                 return false;
 }
 
-bool EgcSubidNodeIter::hasPrevious(void) const
+bool EgcSubindNodeIter::hasPrevious(void) const
 {
         if (m_nextId != -1)
                 return true;
@@ -58,9 +68,10 @@ bool EgcSubidNodeIter::hasPrevious(void) const
                 return false;
 }
 
-int EgcSubidNodeIter::next(void)
+int EgcSubindNodeIter::next(void)
 {
         int retval = m_nextId;
+        m_histId = retval;
 
         m_nextId++;
 
@@ -70,9 +81,10 @@ int EgcSubidNodeIter::next(void)
         return retval;
 }
 
-int EgcSubidNodeIter::previous(void)
+int EgcSubindNodeIter::previous(void)
 {
         int retval = m_prevId;
+        m_histId = retval;
 
         m_prevId--;
 
@@ -82,18 +94,19 @@ int EgcSubidNodeIter::previous(void)
         return retval;
 }
 
-int EgcSubidNodeIter::peekNext(void) const
+int EgcSubindNodeIter::peekNext(void) const
 {
         return m_nextId;
 }
 
-int EgcSubidNodeIter::peekPrevious(void) const
+int EgcSubindNodeIter::peekPrevious(void) const
 {
         return m_prevId;
 }
 
-void EgcSubidNodeIter::toBack(void)
+void EgcSubindNodeIter::toBack(void)
 {
+        m_histId = -1;
         int indexes = m_node.nrSubindexes();
 
         m_prevId = indexes - 1;
@@ -103,8 +116,9 @@ void EgcSubidNodeIter::toBack(void)
                 m_prevId = -1;
 }
 
-void EgcSubidNodeIter::toFront(void)
+void EgcSubindNodeIter::toFront(void)
 {
+        m_histId = -1;
         int indexes = m_node.nrSubindexes();
 
         m_prevId = -1;
@@ -112,4 +126,9 @@ void EgcSubidNodeIter::toFront(void)
 
         if (indexes <= 0)
                 m_prevId = -1;
+}
+
+int EgcSubindNodeIter::lastSubind(void)
+{
+        return m_histId;
 }

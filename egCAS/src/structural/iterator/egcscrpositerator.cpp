@@ -29,17 +29,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 #include "egcscrpositerator.h"
-#include "../entities/egcformulaentity.h"
-#include "../specialNodes/egcnode.h"
-#include "../view/egcscreenpos.h"
+#include "entities/egcformulaentity.h"
+#include "specialNodes/egcnode.h"
+#include "egcscreenpos.h"
 #include "iterator/screenHelpers/egcidnodeiter.h"
 #include "iterator/screenHelpers/egcsubidnodeiter.h"
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup{formula.getMathmlMappingCRef()},
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
-                                                                        m_subIdIter{new EgcSubidNodeIter(m_nodeIter->previous())}
+                                                                        m_subind{-1}
 {
 
+        m_node = &m_nodeIter->previous();
+        m_subIdIter.reset(new EgcSubindNodeIter(*m_node));
+        // the subid iterator is at the beginning, so position it at the end.
+        m_subIdIter->toBack();
 }
 
 EgcScrPosIterator::~EgcScrPosIterator()
@@ -48,93 +52,89 @@ EgcScrPosIterator::~EgcScrPosIterator()
 
 bool EgcScrPosIterator::hasNext(void) const
 {
+        if (m_nodeIter->hasNext() || m_subIdIter->hasNext())
+                return true;
+        else
+                return false;
 }
 
 bool EgcScrPosIterator::hasPrevious(void) const
 {
+        if (m_nodeIter->hasPrevious() || m_subIdIter->hasPrevious())
+                return true;
+        else
+                return false;
 }
 
 const quint32 EgcScrPosIterator::next(void)
 {
+        if (m_subIdIter->hasNext()) {
+                m_subind = m_subIdIter->next();
+        } else if (m_nodeIter->hasNext()) {
+                m_node = &m_nodeIter->next();
+                m_subIdIter->setNode(*m_node);
+        }
+
+        return m_nodeIter->id();
 }
 
 const quint32 EgcScrPosIterator::previous(void)
 {
+        if (m_subIdIter->hasPrevious()) {
+                m_subind = m_subIdIter->previous();
+        } else if (m_nodeIter->hasPrevious()) {
+                m_node = &m_nodeIter->previous();
+                m_subIdIter->setNode(*m_node);
+                m_subIdIter->toBack();
+        }
+
+        return m_nodeIter->id();
 }
 
 const quint32 EgcScrPosIterator::peekNext(void) const
 {
+        m_nodeIter->peekNextId();
 }
 
 const quint32 EgcScrPosIterator::peekPrevious(void) const
 {
+        m_nodeIter->peekPreviousId();
 }
 
 void EgcScrPosIterator::toBack(void)
 {
+        m_subind = -1;
+        m_nodeIter->toBack();
+        m_node = &m_nodeIter->previous();
+        m_subIdIter->setNode(*m_node);
+        m_subIdIter->toBack();
 }
 
 void EgcScrPosIterator::toFront(void)
 {
+        m_subind = -1;
+        m_nodeIter->toFront();
+        m_node = &m_nodeIter->next();
+        m_subIdIter->setNode(*m_node);
+        m_subIdIter->toFront();
 }
 
 const EgcNode* EgcScrPosIterator::node(void)
 {
+        return m_node;
 }
 
 bool EgcScrPosIterator::rightSide(void)
 {
-//        return m_rightSide;
+
 }
 
-quint32 EgcScrPosIterator::subIndex(void)
+int EgcScrPosIterator::subIndex(void)
 {
+        return m_subind;
 }
 
 quint32 EgcScrPosIterator::id(void)
 {
-
+        return m_nodeIter->id();
 }
-
-bool EgcScrPosIterator::mathmlIdExisting(EgcNode* node) const
-{
-//        if (!node)
-//                return false;
-
-//        EgcIteratorState state = m_nodeIter->getLastState();
-
-//        if (    state == EgcIteratorState::LeftIteration
-//             || state == EgcIteratorState::RightIteration) {
-//                if (m_lookup.getIdFrame(*node) == 0)
-//                        return false;
-//                else
-//                        return true;
-//        } else {  //EgcIteratorState::MiddleIteration
-//                QList<quint32> list = m_lookup.getIdsNonFrame(*node);
-//                quint32 childIndex = 0;
-
-//                if (    node->isBinaryNode()
-//                     || node->isFlexNode()) {
-//                        if (node->isContainer()) {
-//                                if (state == EgcIteratorState::LeftIteration) {
-//                                        childIndex = 0;
-//                                } else if ( state == EgcIteratorState::RightIteration) {
-//                                        childIndex = static_cast<EgcContainerNode*>(node)->getNumberChildNodes();
-//                                } else {
-//                                        if (!static_cast<EgcContainerNode*>(node)->getIndexOfChild(m_nodeIter->peekPrevious(), childIndex))
-//                                              childIndex = 0;
-//                                }
-//                        } else {
-//                                childIndex = 0;
-//                        }
-
-//                        if (list.size() > childIndex) {
-//                                if (list.at(childIndex) != 0)
-//                                        return true;
-//                        }
-//                }
-//        }
-
-//        return false;
-}
-

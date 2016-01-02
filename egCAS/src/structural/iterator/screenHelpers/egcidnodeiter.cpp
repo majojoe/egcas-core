@@ -285,3 +285,12 @@ bool EgcIdNodeIter::omitFollowingNode(EgcNode* followingNode, EgcIteratorState f
 
         return retval;
 }
+
+quint32 EgcIdNodeIter::peekNextId(void) const
+{
+        return getMathmlId(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode(), &m_nodeIterNext->peekPrevious(), nullptr);
+}
+quint32 EgcIdNodeIter::peekPreviousId(void) const
+{
+        return getMathmlId(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext());
+}

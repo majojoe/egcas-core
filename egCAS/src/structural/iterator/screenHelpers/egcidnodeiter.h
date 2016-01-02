@@ -48,7 +48,8 @@ enum class EgcIteratorState;
 class EgcIdNodeIter
 {
 public:        
-        /// constructor for initialization with formula
+        /// constructor for initialization with formula. After the initialization the iterator points to the end of the
+        /// formula.
         EgcIdNodeIter(const EgcFormulaEntity& formula);
         /// std destructor
         virtual ~EgcIdNodeIter();
@@ -56,50 +57,60 @@ public:
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
          */
-        virtual bool hasNext(void) const;
+        bool hasNext(void) const;
         /**
          * @brief hasPrevious Checks if there is at most one more item before the current item.
          * @return True if an item was found, false otherwise.
          */
-        virtual bool hasPrevious(void) const;
+        bool hasPrevious(void) const;
         /**
          * @brief next Returns the next node and increments the iterator by one.
          * @return a reference to the next mathml id.
          */
-        virtual EgcNode &  next(void);
+        EgcNode &  next(void);
         /**
          * @brief previous Returns the previous node and decrements the iterator by one.
          * @return a refererence to the previous mathml id.
          */
-        virtual EgcNode &  previous(void);
+        EgcNode &  previous(void);
         /**
          * @brief peekNext Returns the next node without incrementing the iterator.
-         * @return a reference to the next mathml id.
+         * @return a reference to the next node.
          */
-        virtual EgcNode& peekNext(void) const;
+        EgcNode& peekNext(void) const;
         /**
          * @brief peekPrevious Returns the previous node without decrementing the iterator.
-         * @return a reference to the previous mathml id.
+         * @return a reference to the previous node.
          */
-        virtual EgcNode& peekPrevious(void) const;
+        EgcNode& peekPrevious(void) const;
+        /**
+         * @brief peekNext Returns the next mathml id without incrementing the iterator.
+         * @return the next mathml id.
+         */
+        quint32 peekNextId(void) const;
+        /**
+         * @brief peekPrevious Returns the previous mathml id without decrementing the iterator.
+         * @return the previous mathml id.
+         */
+        quint32 peekPreviousId(void) const;
         /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
-        virtual void toBack(void);
+        void toBack(void);
         /**
          * @brief toFront Moves the iterator to the front of the tree (before the first item).
          */
-        virtual void toFront(void);
+        void toFront(void);
         /**
          * @brief lastId returns the last id we jumped over.
          * @return the id we jumped over lastly.
          */
-        virtual const quint32& id(void);
+        const quint32& id(void);
         /**
          * @brief getState retruns the state of the last traversion
          * @return state the state of the node we jumped over
          */
-        virtual EgcIteratorState getLastState(void) const;
+        EgcIteratorState getLastState(void) const;
 
 private:
         /**
