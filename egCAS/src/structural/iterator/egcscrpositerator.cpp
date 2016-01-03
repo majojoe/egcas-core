@@ -123,10 +123,10 @@ const EgcNode* EgcScrPosIterator::node(void)
 
 bool EgcScrPosIterator::rightSide(void)
 {
-        bool right = false;
+        bool right = true;
 
-        if (m_subIdIter->peekNext() == -1)
-                right = true;
+        if (m_subIdIter->peekPrevious() == -1)
+                right = false;
 
         return right;
 }
@@ -135,9 +135,9 @@ int EgcScrPosIterator::subIndex(void)
 {
         int ind;
 
-        ind = m_subIdIter->peekNext();
+        ind = m_subIdIter->peekPrevious();
         if (ind == -1)
-                ind = m_subIdIter->peekPrevious();
+                ind = m_subIdIter->peekNext();
 
         return ind;
 }

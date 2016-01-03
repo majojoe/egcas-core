@@ -62,7 +62,7 @@ bool EgcSubindNodeIter::hasNext(void) const
 
 bool EgcSubindNodeIter::hasPrevious(void) const
 {
-        if (m_nextId != -1)
+        if (m_prevId != -1)
                 return true;
         else
                 return false;
@@ -73,6 +73,7 @@ int EgcSubindNodeIter::next(void)
         int retval = m_nextId;
         m_histId = retval;
 
+        m_prevId = m_nextId;
         m_nextId++;
 
         if (m_nextId >= m_node.nrSubindexes())
@@ -86,6 +87,7 @@ int EgcSubindNodeIter::previous(void)
         int retval = m_prevId;
         m_histId = retval;
 
+        m_nextId = m_prevId;
         m_prevId--;
 
         if (m_prevId < 0)
