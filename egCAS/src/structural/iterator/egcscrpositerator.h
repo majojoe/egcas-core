@@ -125,7 +125,6 @@ private:
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes
         EgcNode* m_node;                                ///< the last node we jumped over
         quint32 m_id;                                   ///< the last mathml id we jumped over
-        int m_subind;                                   ///< the last subindex we used
         QScopedPointer<EgcSubindNodeIter> m_subIdIter;  ///< iterator for the subindexes of a node
 };
 

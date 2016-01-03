@@ -36,8 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "iterator/screenHelpers/egcsubidnodeiter.h"
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup{formula.getMathmlMappingCRef()},
-                                                                        m_nodeIter{new EgcIdNodeIter(formula)},
-                                                                        m_subind{-1}
+                                                                        m_nodeIter{new EgcIdNodeIter(formula)}
 {
 
         m_node = &m_nodeIter->previous();
@@ -69,7 +68,7 @@ bool EgcScrPosIterator::hasPrevious(void) const
 const quint32 EgcScrPosIterator::next(void)
 {
         if (m_subIdIter->hasNext()) {
-                m_subind = m_subIdIter->next();
+                (void) m_subIdIter->next();
         } else if (m_nodeIter->hasNext()) {
                 m_node = &m_nodeIter->next();
                 m_subIdIter->setNode(*m_node);
@@ -81,7 +80,7 @@ const quint32 EgcScrPosIterator::next(void)
 const quint32 EgcScrPosIterator::previous(void)
 {
         if (m_subIdIter->hasPrevious()) {
-                m_subind = m_subIdIter->previous();
+                (void) m_subIdIter->previous();
         } else if (m_nodeIter->hasPrevious()) {
                 m_node = &m_nodeIter->previous();
                 m_subIdIter->setNode(*m_node);
@@ -103,7 +102,6 @@ const quint32 EgcScrPosIterator::peekPrevious(void) const
 
 void EgcScrPosIterator::toBack(void)
 {
-        m_subind = -1;
         m_nodeIter->toBack();
         m_node = &m_nodeIter->previous();
         m_subIdIter->setNode(*m_node);
@@ -112,7 +110,6 @@ void EgcScrPosIterator::toBack(void)
 
 void EgcScrPosIterator::toFront(void)
 {
-        m_subind = -1;
         m_nodeIter->toFront();
         m_node = &m_nodeIter->next();
         m_subIdIter->setNode(*m_node);
@@ -126,21 +123,23 @@ const EgcNode* EgcScrPosIterator::node(void)
 
 bool EgcScrPosIterator::rightSide(void)
 {
-        bool right = true;
+        bool right = false;
 
-        if (m_subind == m_subIdIter->peekNext())
-                right = false;
-        else if (m_subind == m_subIdIter->peekPrevious())
+        if (m_subIdIter->peekNext() == -1)
                 right = true;
-        else if (m_subind == -1 && m_subIdIter->peekNext() == 0)
-                right = false;
 
         return right;
 }
 
 int EgcScrPosIterator::subIndex(void)
 {
-        return m_subind;
+        int ind;
+
+        ind = m_subIdIter->peekNext();
+        if (ind == -1)
+                ind = m_subIdIter->peekPrevious();
+
+        return ind;
 }
 
 quint32 EgcScrPosIterator::id(void)

@@ -101,7 +101,8 @@ void EgcIdNodeIter::toBack(void)
 {
         m_nodeIterNext->toBack();
         m_nodeIterPrev->toBack();
-        if (!mathmlIdExisting(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext()))
+        if (    !mathmlIdExisting(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext())
+             || omitFollowingNode(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode()))
                 prevNodeWithId();
 }
 
@@ -109,7 +110,8 @@ void EgcIdNodeIter::toFront(void)
 {
         m_nodeIterNext->toFront();
         m_nodeIterPrev->toFront();
-        if (!mathmlIdExisting(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode(), &m_nodeIterNext->peekPrevious(), nullptr))
+        if (    !mathmlIdExisting(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode(), &m_nodeIterNext->peekPrevious(), nullptr)
+             || omitFollowingNode(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode()))
                 nextNodeWithId();
 }
 
