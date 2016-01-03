@@ -126,6 +126,7 @@ private:
         EgcNode* m_node;                                ///< the last node we jumped over
         quint32 m_id;                                   ///< the last mathml id we jumped over
         QScopedPointer<EgcSubindNodeIter> m_subIdIter;  ///< iterator for the subindexes of a node
+        bool m_forward;                                 ///< the last direction of a traversal
 };
 
 #endif // EGCSCRPOSITERATOR_H

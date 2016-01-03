@@ -36,7 +36,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "iterator/screenHelpers/egcsubidnodeiter.h"
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup{formula.getMathmlMappingCRef()},
-                                                                        m_nodeIter{new EgcIdNodeIter(formula)}
+                                                                        m_nodeIter{new EgcIdNodeIter(formula)},
+                                                                        m_forward{true}
 {
 
         m_node = &m_nodeIter->previous();
@@ -70,6 +71,9 @@ const quint32 EgcScrPosIterator::next(void)
         if (m_subIdIter->hasNext()) {
                 (void) m_subIdIter->next();
         } else if (m_nodeIter->hasNext()) {
+                if (!m_forward)
+                        m_node = &m_nodeIter->next();
+                m_forward = true;
                 m_node = &m_nodeIter->next();
                 m_subIdIter->setNode(*m_node);
         }
@@ -82,6 +86,9 @@ const quint32 EgcScrPosIterator::previous(void)
         if (m_subIdIter->hasPrevious()) {
                 (void) m_subIdIter->previous();
         } else if (m_nodeIter->hasPrevious()) {
+                if (m_forward)
+                        m_node = &m_nodeIter->previous();
+                m_forward = false;
                 m_node = &m_nodeIter->previous();
                 m_subIdIter->setNode(*m_node);
                 m_subIdIter->toBack();
@@ -106,6 +113,7 @@ void EgcScrPosIterator::toBack(void)
         m_node = &m_nodeIter->previous();
         m_subIdIter->setNode(*m_node);
         m_subIdIter->toBack();
+        m_forward = true;
 }
 
 void EgcScrPosIterator::toFront(void)
@@ -114,6 +122,7 @@ void EgcScrPosIterator::toFront(void)
         m_node = &m_nodeIter->next();
         m_subIdIter->setNode(*m_node);
         m_subIdIter->toFront();
+        m_forward = false;
 }
 
 const EgcNode* EgcScrPosIterator::node(void)
