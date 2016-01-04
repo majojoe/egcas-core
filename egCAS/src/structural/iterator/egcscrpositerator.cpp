@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcscreenpos.h"
 #include "iterator/screenHelpers/egcidnodeiter.h"
 #include "iterator/screenHelpers/egcsubidnodeiter.h"
+#include "iterator/egcnodeiterator.h"
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup{formula.getMathmlMappingCRef()},
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
@@ -44,6 +45,7 @@ EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup
         m_subIdIter.reset(new EgcSubindNodeIter(*m_node));
         // the subid iterator is at the beginning, so position it at the end.
         m_subIdIter->toBack();
+        m_forward = false;
 }
 
 EgcScrPosIterator::~EgcScrPosIterator()
@@ -109,20 +111,20 @@ const quint32 EgcScrPosIterator::peekPrevious(void) const
 
 void EgcScrPosIterator::toBack(void)
 {
+        m_forward = true;
         m_nodeIter->toBack();
         m_node = &m_nodeIter->previous();
         m_subIdIter->setNode(*m_node);
-        m_subIdIter->toBack();
-        m_forward = true;
+        m_subIdIter->toBack();        
 }
 
 void EgcScrPosIterator::toFront(void)
 {
+        m_forward = false;
         m_nodeIter->toFront();
         m_node = &m_nodeIter->next();
         m_subIdIter->setNode(*m_node);
         m_subIdIter->toFront();
-        m_forward = false;
 }
 
 const EgcNode* EgcScrPosIterator::node(void)
@@ -134,8 +136,13 @@ bool EgcScrPosIterator::rightSide(void)
 {
         bool right = true;
 
-        if (m_subIdIter->peekPrevious() == -1)
-                right = false;
+        if (m_node->isContainer()) {
+                if (m_nodeIter->getLastState() == EgcIteratorState::LeftIteration)
+                        right = false;
+        } else {
+                if (m_subIdIter->peekPrevious() == -1)
+                        right = false;
+        }
 
         return right;
 }

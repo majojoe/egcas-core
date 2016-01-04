@@ -428,12 +428,17 @@ void EgcFormulaEntity::showCurrentCursor(void)
 
         id = m_scrIter->id();
         ind = m_scrIter->subIndex();
+        if (ind < 0) { //this is a container
+                ind = 0;
+        } else { //this is a glyph
+                ind++;
+        }
         rightSide = m_scrIter->rightSide();
 
         if (rightSide)
-                m_item->showRightCursor(id, ind + 1);
+                m_item->showRightCursor(id, ind);
         else
-                m_item->showLeftCursor(id, ind + 1);
+                m_item->showLeftCursor(id, ind);
 }
 
 EgcMathmlLookup& EgcFormulaEntity::getMathmlMappingRef(void)

@@ -98,7 +98,7 @@ public:
         int lastSubind(void);
 
 private:
-        EgcNode& m_node;                ///< reference to node the iterator has been initialized with
+        EgcNode* m_node;                ///< reference to node the iterator has been initialized with
         int m_nextId;                   ///< points to the next subid
         int m_prevId;                   ///< points to the previous subid
         int m_histId;                   ///< the last subind we jumped over

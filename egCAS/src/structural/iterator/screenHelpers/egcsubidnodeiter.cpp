@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcsubidnodeiter.h"
 #include "specialNodes/egcnode.h"
 
-EgcSubindNodeIter::EgcSubindNodeIter(EgcNode& node) : m_node(node)
+EgcSubindNodeIter::EgcSubindNodeIter(EgcNode& node) : m_node(&node)
 {
         setNode(node);
 }
@@ -43,12 +43,12 @@ EgcSubindNodeIter::~EgcSubindNodeIter()
 
 void EgcSubindNodeIter::setNode(EgcNode& node)
 {
-        m_node = node;
+        m_node = &node;
         m_nextId = -1;
         m_prevId = -1;
         m_histId = -1;
 
-        if (m_node.nrSubindexes())
+        if (m_node->nrSubindexes())
                 m_nextId = 0;
 }
 
@@ -76,7 +76,7 @@ int EgcSubindNodeIter::next(void)
         m_prevId = m_nextId;
         m_nextId++;
 
-        if (m_nextId >= m_node.nrSubindexes())
+        if (m_nextId >= m_node->nrSubindexes())
                 m_nextId = -1;
 
         return retval;
@@ -109,7 +109,7 @@ int EgcSubindNodeIter::peekPrevious(void) const
 void EgcSubindNodeIter::toBack(void)
 {
         m_histId = -1;
-        int indexes = m_node.nrSubindexes();
+        int indexes = m_node->nrSubindexes();
 
         m_prevId = indexes - 1;
         m_nextId = -1;
@@ -121,7 +121,7 @@ void EgcSubindNodeIter::toBack(void)
 void EgcSubindNodeIter::toFront(void)
 {
         m_histId = -1;
-        int indexes = m_node.nrSubindexes();
+        int indexes = m_node->nrSubindexes();
 
         m_prevId = -1;
         m_prevId = 0;
