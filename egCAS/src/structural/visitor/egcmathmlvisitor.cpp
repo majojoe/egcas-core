@@ -107,13 +107,10 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* node)
 {
         /*the id for the outer bounds of the operation (the id that characterizes the outer bounds must always be the
          * lowest one - in order execution of the id generation)*/
-        QString id = getId(node);
+        QString id;
 
         switch (node->getNodeType()) {
         case EgcNodeType::ParenthesisNode: {
-                /*this is to remove unneccesary parenthesis in case of redundant nested parenthesis*/
-                suppressIfChildType(node, 0, EgcNodeType::ParenthesisNode);
-
                 if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
                         assembleResult("<mfenced "%id%" open=\"(\" close=\")\" separators=\",\"><mrow>%1</mrow></mfenced>", node);
