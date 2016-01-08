@@ -49,6 +49,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(structural)
 include_directories(view)
 include_directories(${mmlegcas_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #this is for showing up abstract interfaces and other sources in the IDE
 add_custom_target(egCAS_other_srcs ALL SOURCES
@@ -132,6 +133,7 @@ set(egCAS_SOURCES
         menu/egclicenseinfo.cpp
         structural/document/egccalculation.cpp
         structural/specialNodes/egcargumentsnode.cpp
+        utils/egcutfcodepoint.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS

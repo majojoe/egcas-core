@@ -32,6 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcvariablenode.h"
 
 
+//ATTENTION: as of now egCAS and even Qt does not support non bmp characters (unicode caracters > 0xFFFF)
+
 QRegularExpression EgcVariableNode::m_ampersand = QRegularExpression("(.*[^_]+)_2([^_]+.*)");
 QRegularExpression EgcVariableNode::m_ampersand_begin = QRegularExpression("_2([^_]+.*)");
 QRegularExpression EgcVariableNode::m_semi = QRegularExpression("(.*[^_]+)_3([^_]+.*)");
