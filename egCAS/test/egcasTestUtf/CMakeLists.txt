@@ -23,12 +23,10 @@ endif()
 # Widgets finds its own dependencies.
 find_package(Qt5 COMPONENTS Core Widgets Test)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/)
-
 
 set(tst_egcastest_utf_encoding_SOURCES
         tst_egcastest_utf_encoding.cpp 
+        ../../src/utils/egcutfcodepoint.cpp
 )
 
 add_executable(tst_egcastest_utf_encoding ${tst_egcastest_utf_encoding_SOURCES} )

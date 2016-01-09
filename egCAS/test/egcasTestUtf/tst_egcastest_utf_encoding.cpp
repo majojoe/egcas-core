@@ -49,13 +49,13 @@ void EgcasTest_UtfEnc::testUtfEncoding(void)
         //β : 946 (dec)
         QString test("abgΩxr79βL");
         
-        QCOMPARE(encodeToXml(test), "abg&#937;xr79&#946;L");
+        QCOMPARE(EgcUtfCodepoint::encodeToXml(test), QString("abg&#937;xr79&#946;L"));
 }
 
 void EgcasTest_UtfEnc::testUtfDecoding(void)
 {
         QString test("abg&#937;xr79&#x3B2;L");
-        QCOMPARE(decodeToUtf(test), "abgΩxr79βL");
+        QCOMPARE(EgcUtfCodepoint::decodeToUtf(test), QString("abgΩxr79βL"));
 }
 
 QTEST_MAIN(EgcasTest_UtfEnc)
