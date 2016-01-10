@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
                                                                                QPointF(100.0, 300.0)));
-    FormulaGenerator::getFormulaTree(formula1, "(sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3)))/(_2exponentiale_3^_2pi_3)=x^_2tprime_3");
+    FormulaGenerator::getFormulaTree(formula1, "(sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3)))/(_2x02147_3^_2960_3)=x^_2x2034_3");
     EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
                                                                                QPointF(100.0, 200.0)));

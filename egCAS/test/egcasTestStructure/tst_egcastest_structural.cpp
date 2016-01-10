@@ -1408,9 +1408,6 @@ void EgcasTest_Structural::testFlexNodeVisitors()
                 "open=\"(\" close=\")\" separators=\",\"><mrow><mn id=\"4\" >5</mn></mrow></mfenced><mo>,</mo>"
                 "<mn id=\"7\" >6</mn><mo>,</mo><mn id=\"9\" >7</mn></mrow><mo>)</mo></mrow></mrow></mrow><mrow>"
                 "<mn id=\"12\" >8</mn></mrow></mroot></math>"));
-
-
-
 }
 
 EgcNode*EgcasTest_Structural::addChild(EgcNode& parent, EgcNodeType type, QString number)

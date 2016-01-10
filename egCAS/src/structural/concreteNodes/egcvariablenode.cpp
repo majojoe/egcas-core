@@ -74,8 +74,8 @@ void EgcVariableNode::setValueRaw(const QString& varName)
         /*the regexes are copied from static expressions since copying is cheap but we don't need to build up the
         regexes on the stack*/
         //handle ampersands
-        tmp.replace(QRegularExpression(s_ampersand), "\\1&\\2");
-        tmp.replace(QRegularExpression(s_ampersandBegin), "&\\1"); //if the ampersand is at the beginning
+        tmp.replace(QRegularExpression(s_ampersand), "\\1&#\\2");
+        tmp.replace(QRegularExpression(s_ampersandBegin), "&#\\1"); //if the ampersand is at the beginning
         //handle ";"s
         tmp.replace(QRegularExpression(s_semi), "\\1;\\2");
         tmp.replace(QRegularExpression(s_semiBegin), "\\1;");  //if the ";" is at the end
@@ -117,8 +117,8 @@ QString EgcVariableNode::getStuffedVar(void)
                 tmp = var;
         else
                 tmp = var % "_1" % sub;
-        // ampersands in special symbols are replaced by "_2" for use in calculation kernel
-        tmp = tmp.replace("&", "_2");
+        // ampersands and followning '#' in special symbols are replaced by "_2" for use in calculation kernel
+        tmp = tmp.replace("&#", "_2");
         // ";" in special symbols are replaced by "_3" for use in calculation kernel
         tmp = tmp.replace(";", "_3");
 
