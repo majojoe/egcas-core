@@ -82,8 +82,8 @@ void EgcasTest_Parser::treeTestParser()
 {
         EgcKernelParser parser;
         QScopedPointer<EgcNode> tree;
-        //variable n_j&int;5 (integral encoding) decoded as n__j_2int_35
-        tree.reset(parser.parseKernelOutput("(45+a)-n__j_2int_35_1lm__3+kl__9-js_1z"));
+        //variable n_j&int;5 (integral encoding) decoded as n__j_2x222B_35
+        tree.reset(parser.parseKernelOutput("(45+a)-n__j_2x222B_35_1lm__3+kl__9-js_1z"));
         if (tree.isNull()) {
                 std::cout << parser.getErrorMessage().toStdString();               
         }
@@ -123,7 +123,7 @@ void EgcasTest_Parser::treeTestParser()
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
-        QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getValue() == QString("n_j&int;5"));
+        QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getValue() == QString("n_j&#8747;5"));
         QVERIFY(static_cast<EgcVariableNode*>(nodePointer)->getSubscript() == QString("lm_3"));
 
         nodePointer = &(iter.next());
