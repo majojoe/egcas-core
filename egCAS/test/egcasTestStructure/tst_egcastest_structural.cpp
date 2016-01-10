@@ -1403,11 +1403,11 @@ void EgcasTest_Structural::testFlexNodeVisitors()
         QVERIFY(formula5.getCASKernelCommand() == QString("fpprintprec:0$(testFunction(3,(5),6,7))^(1/8);fpprintprec:15$"));
 
         //test math ml visitor
-        QVERIFY(formula5.getMathMlCode() == QString("<math><mroot id=\"15\" ><mrow><mrow  id=\"13\" ><mi>testFunction"
-                "</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow><mn id=\"2\" >3</mn><mo>,</mo><mfenced  id=\"7\"  "
-                "open=\"(\" close=\")\" separators=\",\"><mrow><mn id=\"5\" >5</mn></mrow></mfenced><mo>,</mo><mn "
-                "id=\"9\" >6</mn><mo>,</mo><mn id=\"11\" >7</mn></mrow><mo>)</mo></mrow></mrow></mrow><mrow>"
-                "<mn id=\"14\" >8</mn></mrow></mroot></math>"));
+        QVERIFY(formula5.getMathMlCode() == QString("<math><mroot id=\"13\" ><mrow><mrow  id=\"11\" ><mi>testFunction"
+                "</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow><mn id=\"2\" >3</mn><mo>,</mo><mfenced  id=\"5\"  "
+                "open=\"(\" close=\")\" separators=\",\"><mrow><mn id=\"4\" >5</mn></mrow></mfenced><mo>,</mo>"
+                "<mn id=\"7\" >6</mn><mo>,</mo><mn id=\"9\" >7</mn></mrow><mo>)</mo></mrow></mrow></mrow><mrow>"
+                "<mn id=\"12\" >8</mn></mrow></mroot></math>"));
 
 
 
