@@ -32,6 +32,7 @@ endif()
 find_package(Qt5 COMPONENTS Core Widgets Test)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 
@@ -65,6 +66,7 @@ set(tst_egcastest_calculations_SOURCES
         ../../src/structural/visitor/egcmathmllookup.cpp
         ../../src/casKernel/egcmaximaconn.cpp
         ../../src/casKernel/egckernelconn.cpp
+        ../../src/utils/egcutfcodepoint.cpp
 )
 
 #set the verbosity level of the scanner and parser

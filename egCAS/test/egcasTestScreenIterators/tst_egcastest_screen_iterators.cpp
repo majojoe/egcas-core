@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcmaximaconn.h"
 #include "iterator/screenHelpers/egcidnodeiter.h"
 
-#define PRINT_DBG_DATA
+//#define PRINT_DBG_DATA
 
 class EgcasTest_ScrIters : public QObject
 {

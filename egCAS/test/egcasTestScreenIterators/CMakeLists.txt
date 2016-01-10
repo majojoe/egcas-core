@@ -20,7 +20,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
-
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         add_definitions(-std=c++11)
@@ -34,7 +34,6 @@ find_package(Qt5 COMPONENTS Core Widgets Test)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/)
 
 file(GLOB_RECURSE tst_egcastest_scriters_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
 
@@ -64,6 +63,7 @@ set(tst_egcastest_scriters_SOURCES
         ../../src/structural/visitor/egcmaximavisitor.cpp
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
+        ../../src/utils/egcutfcodepoint.cpp
 )
 
 #set the verbosity level of the scanner and parser

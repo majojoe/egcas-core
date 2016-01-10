@@ -18,6 +18,7 @@ endif()
 find_package(Qt5 COMPONENTS Widgets Core Test)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 
@@ -45,6 +46,7 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/visitor/egcmaximavisitor.cpp 
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
+        ../../src/utils/egcutfcodepoint.cpp
 )
 
 add_executable(tst_egcastest_structural ${tst_egcastest_structural_SOURCES} )

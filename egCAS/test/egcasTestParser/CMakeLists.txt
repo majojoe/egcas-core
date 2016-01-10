@@ -20,6 +20,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         add_definitions(-std=c++11)
@@ -62,6 +63,7 @@ set(tst_egcastest_parser_SOURCES
         ../../src/structural/visitor/egcmaximavisitor.cpp
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
+        ../../src/utils/egcutfcodepoint.cpp
 )
 
 #set the verbosity level of the scanner and parser

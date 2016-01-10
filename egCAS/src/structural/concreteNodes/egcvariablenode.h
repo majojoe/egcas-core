@@ -102,11 +102,12 @@ public:
 protected:
         QString m_value;          ///< the variable name used
         QString m_subscript;      ///< the subscript if any
-        static QRegularExpression m_ampersand; ///< regex to replace ampersand
-        static QRegularExpression m_ampersand_begin; ///< regex to replace ampersand at the beginning
-        static QRegularExpression m_semi; ///< regex to replace semicolon
-        static QRegularExpression m_semi_begin; ///< regex to replace semicolon at the beginning
-        static bool initializeRegex;    ///< initialize regex?
+        static QRegularExpression s_ampersand; ///< regex to replace ampersand
+        static QRegularExpression s_ampersandBegin; ///< regex to replace ampersand at the beginning
+        static QRegularExpression s_semi; ///< regex to replace semicolon
+        static QRegularExpression s_semiBegin; ///< regex to replace semicolon at the beginning
+        static QRegularExpression s_varSubSeparator; ///< regex for separating variable and subscript
+        static bool s_initializeRegex;    ///< initialize regex?
 };
 
 #endif // EGCVARIABLENODE_H
