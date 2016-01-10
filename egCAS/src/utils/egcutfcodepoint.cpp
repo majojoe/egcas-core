@@ -35,7 +35,7 @@
 
 
 QRegularExpression EgcUtfCodepoint::s_replaceDec = QRegularExpression("&#([0-9]+);");
-QRegularExpression EgcUtfCodepoint::s_replaceHex = QRegularExpression("&#x([0-9]+);");
+QRegularExpression EgcUtfCodepoint::s_replaceHex = QRegularExpression("&#x([0-9a-fA-F]+);");
 bool EgcUtfCodepoint::s_regexInitalized = false;
 
 
@@ -75,7 +75,7 @@ QString EgcUtfCodepoint::decodeToUtf(const QString &str)
         //for dec values
         int pos = 0;
         while( (match =  s_replaceDec.match(retval, pos)).hasMatch() ) {
-                retval =  retval.replace( match.capturedStart(1), match.capturedLength(1),
+                retval =  retval.replace( match.capturedStart(0), match.capturedLength(0),
                                           QChar( match.captured(1).toInt(0,10)));
                 pos +=  match.capturedLength();
         }
@@ -83,7 +83,7 @@ QString EgcUtfCodepoint::decodeToUtf(const QString &str)
         //for hex values
         pos = 0;
         while( (match =  s_replaceHex.match(retval, pos)).hasMatch() ) {
-                retval =  retval.replace( match.capturedStart(1), match.capturedLength(1),
+                retval =  retval.replace( match.capturedStart(0), match.capturedLength(0),
                                           QChar( match.captured(1).toInt(0,16)));
                 pos +=  match.capturedLength();
         }
