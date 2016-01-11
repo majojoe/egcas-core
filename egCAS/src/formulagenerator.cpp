@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "parser/egckernelparser.h"
 #include "entities/egcformulaentity.h"
 #include "formulagenerator.h"
+#include "utils/egcutfcodepoint.h"
 
 FormulaGenerator::FormulaGenerator()
 {
@@ -42,10 +43,16 @@ FormulaGenerator::FormulaGenerator()
 
 bool FormulaGenerator::getFormulaTree(EgcFormulaEntity* formula, QString formulaText)
 {
+        QString tmp = EgcUtfCodepoint::encodeToXml(formulaText);
+
+        // ampersands and followning '#' in special symbols are replaced by "_2" for use in calculation kernel
+        tmp = tmp.replace("&#", "_2");
+        // ";" in special symbols are replaced by "_3" for use in calculation kernel
+        tmp = tmp.replace(";", "_3");
 
         EgcKernelParser parser;
 
-        QScopedPointer<EgcNode> tree(parser.parseKernelOutput(formulaText));
+        QScopedPointer<EgcNode> tree(parser.parseKernelOutput(tmp));
         if (tree.isNull()) {
                 std::cout << parser.getErrorMessage().toStdString();
                 return false;
