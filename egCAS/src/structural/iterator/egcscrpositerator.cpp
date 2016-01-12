@@ -168,17 +168,26 @@ quint32 EgcScrPosIterator::id(void)
 
 EgcNode* EgcScrPosIterator::getNextVisibleParent(void)
 {
-#error parent must be visible
-        if (!m_lastParentNode) {
-                m_lastParentNode = m_node;
-                m_originNode = m_node;
-        } else {
-                EgcNode* parent = m_node->getParent();
-                if (parent)
-                        m_lastParentNode = parent;
-                else
-                        m_lastParentNode = m_originNode;
-        }
+        int loops = 0;
+        quint32 id = 0;
 
+        do {
+                if (!m_lastParentNode) {
+                        m_lastParentNode = m_node;
+                        m_originNode = m_node;
+                } else {
+                        EgcNode* parent = m_lastParentNode->getParent();
+                        if (parent) {
+                                m_lastParentNode = parent;
+                                loops++;
+                        } else {
+                                m_lastParentNode = m_originNode;
+                        }
+                }
+                if (m_lastParentNode)
+                        id = m_lookup.getIdFrame(*m_lastParentNode);
+        } while (    (!id)
+                  || ((m_lastParentNode == m_originNode) && loops > 0));
+                
         return m_lastParentNode;
 }
