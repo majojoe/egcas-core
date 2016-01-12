@@ -38,7 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup{formula.getMathmlMappingCRef()},
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
-                                                                        m_forward{true}
+                                                                        m_forward{true}, m_lastParentNode{nullptr},
+                                                                        m_originNode{nullptr}
 {
 
         m_node = &m_nodeIter->previous();
@@ -78,6 +79,7 @@ const quint32 EgcScrPosIterator::next(void)
                 m_forward = true;
                 m_node = &m_nodeIter->next();
                 m_subIdIter->setNode(*m_node);
+                m_lastParentNode = nullptr;
         }
 
         return m_nodeIter->id();
@@ -94,6 +96,7 @@ const quint32 EgcScrPosIterator::previous(void)
                 m_node = &m_nodeIter->previous();
                 m_subIdIter->setNode(*m_node);
                 m_subIdIter->toBack();
+                m_lastParentNode = nullptr;
         }
 
         return m_nodeIter->id();
@@ -161,4 +164,21 @@ int EgcScrPosIterator::subIndex(void)
 quint32 EgcScrPosIterator::id(void)
 {
         return m_nodeIter->id();
+}
+
+EgcNode* EgcScrPosIterator::getNextVisibleParent(void)
+{
+#error parent must be visible
+        if (!m_lastParentNode) {
+                m_lastParentNode = m_node;
+                m_originNode = m_node;
+        } else {
+                EgcNode* parent = m_node->getParent();
+                if (parent)
+                        m_lastParentNode = parent;
+                else
+                        m_lastParentNode = m_originNode;
+        }
+
+        return m_lastParentNode;
 }

@@ -119,7 +119,11 @@ public:
          * @return the id we jumped over lastly.
          */
         quint32 id(void);
-
+        /**
+         * @brief getNextVisibleParent returns the next visible parent in the formula
+         * @return returns the next visible parent node of the current node
+         */
+        EgcNode* getNextVisibleParent(void);
 private:
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes
@@ -127,6 +131,8 @@ private:
         quint32 m_id;                                   ///< the last mathml id we jumped over
         QScopedPointer<EgcSubindNodeIter> m_subIdIter;  ///< iterator for the subindexes of a node
         bool m_forward;                                 ///< the last direction of a traversal
+        EgcNode* m_lastParentNode;                      ///< the last visible parent node that was given back
+        EgcNode* m_originNode;                          ///< the node that was the origin of looking up a visible parent
 };
 
 #endif // EGCSCRPOSITERATOR_H
