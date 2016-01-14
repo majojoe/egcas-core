@@ -121,10 +121,16 @@ public:
         quint32 id(void);
         /**
          * @brief getNextVisibleParent returns the next visible parent in the formula
+         * @return returns the next id of the parent node of the current node that is visible
+         */
+        quint32 getNextVisibleParent(void);
+private:
+        /**
+         * @brief getNextVisibleParentNode returns the next visible parent in the formula
          * @return returns the next visible parent node of the current node
          */
-        EgcNode* getNextVisibleParent(void);
-private:
+        EgcNode& getNextVisibleParentNode(void);
+
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes
         EgcNode* m_node;                                ///< the last node we jumped over

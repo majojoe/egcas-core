@@ -267,6 +267,10 @@ void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
                 action.m_op = EgcOperations::cursorBackward;
                 m_entity->handleAction(action);
                 break;
+        case Qt::Key_Space:
+                action.m_op = EgcOperations::spacePressed;
+                m_entity->handleAction(action);
+                break;
         default:
                 break;
         }

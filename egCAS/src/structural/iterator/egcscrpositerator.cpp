@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "iterator/screenHelpers/egcsubidnodeiter.h"
 #include "iterator/egcnodeiterator.h"
 
-EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup{formula.getMathmlMappingCRef()},
+EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup(formula.getMathmlMappingCRef()), //gcc bug
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
                                                                         m_forward{true}, m_lastParentNode{nullptr},
                                                                         m_originNode{nullptr}
@@ -166,7 +166,7 @@ quint32 EgcScrPosIterator::id(void)
         return m_nodeIter->id();
 }
 
-EgcNode* EgcScrPosIterator::getNextVisibleParent(void)
+EgcNode& EgcScrPosIterator::getNextVisibleParentNode(void)
 {
         int loops = 0;
         quint32 id = 0;
@@ -189,5 +189,30 @@ EgcNode* EgcScrPosIterator::getNextVisibleParent(void)
         } while (    (!id)
                   || ((m_lastParentNode == m_originNode) && loops > 0));
                 
-        return m_lastParentNode;
+        return *m_lastParentNode;
+}
+
+quint32 EgcScrPosIterator::getNextVisibleParent(void)
+{
+        bool r_side = rightSide();
+
+        EgcNode* parent = &getNextVisibleParentNode();
+
+        m_nodeIter->setAtNode(*parent, r_side);
+
+        if (r_side)
+                m_node = &m_nodeIter->peekPrevious();
+        else
+                m_node = &m_nodeIter->peekNext();
+
+        m_subIdIter->setNode(*m_node);
+        if (r_side) {
+                m_subIdIter->toBack();
+                m_forward = true;
+        } else {
+                m_subIdIter->toFront();
+                m_forward = false;
+        }
+
+        return m_lookup.getIdFrame(*parent);
 }

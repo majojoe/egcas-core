@@ -57,8 +57,9 @@ EgcNodeIterator::EgcNodeIterator(const EgcNode & node)
         m_state = EgcIteratorState::LeftIteration;
         EgcNode *nextNode = m_baseElement;
 
-        while (nextNode != &node) {
-                *nextNode = next();
+        while (   nextNode != &node
+                & hasNext()) {
+                nextNode = &next();
         }
 }
 

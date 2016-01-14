@@ -48,7 +48,7 @@ class EgcNodeIterator
 public:
         /// constructor for initialization with formula
         EgcNodeIterator(const EgcFormulaEntity& formula);
-        /// constructor for initialization with tree element
+        /// constructor for initialization with tree element, the iterator will have the given node as next element.
         EgcNodeIterator(const EgcNode & node);
         /// std destructor
         virtual ~EgcNodeIterator();

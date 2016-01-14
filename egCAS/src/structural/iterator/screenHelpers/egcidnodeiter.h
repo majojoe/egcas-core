@@ -54,6 +54,13 @@ public:
         /// std destructor
         virtual ~EgcIdNodeIter();
         /**
+         * @brief setAtNode set the iterator to a position on the right or left side of the given Node.
+         * ATTENTION: the given node must be an element of the formula.
+         * @param node the node where to position the iterator (at the left or at the right side of the node)
+         * @param atRightSide true if the iterator shall be positioned at the right side (default), false otherwise
+         */
+        void setAtNode(EgcNode& node, bool atRightSide);
+        /**
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
          */

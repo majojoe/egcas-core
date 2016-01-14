@@ -51,6 +51,55 @@ EgcIdNodeIter::~EgcIdNodeIter()
 {
 }
 
+void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide = true)
+{
+        EgcNodeIterator iter(node);
+
+        //iter has state EgcIteratorState::RightIteration or EgcIteratorState::MiddleIteration now
+
+        EgcIteratorState state;
+
+        if (!atRightSide) {
+                if (node.isContainer())
+                        state = EgcIteratorState::LeftIteration;
+                else
+                        state = EgcIteratorState::MiddleIteration;
+
+                //if we want the right side of the node, we need to iterate to the right side
+                while(    iter.hasPrevious() && !(iter.getLastState() == state && &iter.peekNext() == &node)) {
+                        iter.previous();
+                };
+        }
+
+        *m_nodeIterNext = iter;
+        *m_nodeIterPrev = iter;
+
+        if (atRightSide) {
+                if (    !mathmlIdExisting(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext())
+                     || omitFollowingNode(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode()))
+                        prevNodeWithId();
+        } else {
+                if (    !mathmlIdExisting(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode(), &m_nodeIterNext->peekPrevious(), nullptr)
+                     || omitFollowingNode(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode()))
+                        nextNodeWithId();
+        }
+
+        //set histId and histState
+        if (atRightSide) {
+                if (m_nodeIterPrev->peekPrevious().isContainer())
+                        m_histState = EgcIteratorState::RightIteration;
+                else
+                        m_histState = EgcIteratorState::MiddleIteration;
+                m_histId = getMathmlId(&node, m_histState, nullptr, &m_nodeIterPrev->peekNext());
+        } else {
+                if (m_nodeIterPrev->peekNext().isContainer())
+                        m_histState = EgcIteratorState::LeftIteration;
+                else
+                        m_histState = EgcIteratorState::MiddleIteration;
+                m_histId = getMathmlId(&node, m_histState, &m_nodeIterNext->peekPrevious(), nullptr);
+        }
+}
+
 bool EgcIdNodeIter::hasNext(void) const
 {
         return m_nodeIterNext->hasNext();

@@ -258,6 +258,10 @@ private:
          * @brief showCurrentCursor shows the current cursor the iterator points to
          */
         void showCurrentCursor(void);
+        /**
+         * @brief markParent highlight the next parent upwards in the tree and move the cursor to that position.
+         */
+        void markParent(void);
 
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result

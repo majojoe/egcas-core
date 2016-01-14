@@ -393,6 +393,9 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         case EgcOperations::cursorBackward:
                 moveCursor(false);
                 break;
+        case EgcOperations::spacePressed:
+                markParent();
+                break;
         }
 }
 
@@ -449,4 +452,32 @@ EgcMathmlLookup& EgcFormulaEntity::getMathmlMappingRef(void)
 const EgcMathmlLookup& EgcFormulaEntity::getMathmlMappingCRef(void) const
 {
         return m_mathmlLookup;
+}
+
+void EgcFormulaEntity::markParent(void)
+{
+        quint32 id;
+        qint32 ind;
+        bool rightSide;
+
+        if (!m_scrIter)
+                return;
+        if (!m_item)
+                return;
+
+        rightSide = m_scrIter->rightSide();
+
+        id = m_scrIter->getNextVisibleParent();
+        ind = m_scrIter->subIndex();
+        if (ind < 0) { //this is a container
+                ind = 0;
+        } else { //this is a glyph
+                ind++;
+        }
+        if (rightSide)
+                m_item->showRightCursor(id, ind);
+        else
+                m_item->showLeftCursor(id, ind);
+
+        m_item->showUnderline(id);
 }
