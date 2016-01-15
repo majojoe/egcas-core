@@ -154,7 +154,7 @@ public:
         /**
          * @brief hideCursors hide the cursors e.g. in case the element is moved
          */
-        virtual void hideCursors(void);
+        virtual void hideCursors(void) override;
 
 protected:
         /**

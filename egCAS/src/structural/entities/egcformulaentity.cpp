@@ -438,6 +438,8 @@ void EgcFormulaEntity::showCurrentCursor(void)
         }
         rightSide = m_scrIter->rightSide();
 
+        m_item->hideCursors();
+
         if (rightSide)
                 m_item->showRightCursor(id, ind);
         else

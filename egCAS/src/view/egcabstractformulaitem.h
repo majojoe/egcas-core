@@ -87,6 +87,10 @@ public:
         * @param subindex the subindex to use for identifying the mathml element (e.g. one character of a text)
         */
         virtual void showRightCursor(quint32 mathmlId, quint32 subindex) = 0;
+        /**
+         * @brief hideCursors hide the cursors e.g. in case the element is moved
+         */
+        virtual void hideCursors(void) = 0;
 };
 
 #endif // EGCABSTRACTFORMULAITEM_H
