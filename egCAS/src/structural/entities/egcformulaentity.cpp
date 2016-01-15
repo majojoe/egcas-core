@@ -262,6 +262,9 @@ void EgcFormulaEntity::setStdNrSignificantDigis(quint8 digits)
 bool EgcFormulaEntity::setResult(EgcNode* result)
 {
         bool repaint = false;
+
+        if (m_scrIter)
+                return false;
         
         //reset error message of the formula
         m_errorMsg.clear();
@@ -290,6 +293,10 @@ bool EgcFormulaEntity::setResult(EgcNode* result)
 void EgcFormulaEntity::resetResult(void)
 {
         if (isResult()) {
+                //don't do anything if the formula is modified at the moment
+                if (m_scrIter)
+                        return;
+
                 QScopedPointer<EgcNode> emptyNode(EgcNodeCreator::create(EgcNodeType::EmptyNode));
                 if (!emptyNode.isNull()) {
                         EgcEqualNode *root = static_cast<EgcEqualNode*>(getRootElement());
