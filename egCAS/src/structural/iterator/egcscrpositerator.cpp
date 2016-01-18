@@ -179,7 +179,8 @@ EgcNode& EgcScrPosIterator::getNextVisibleParentNode(void)
                         EgcNode* parent = m_lastParentNode->getParent();
                         if (parent) {
                                 m_lastParentNode = parent;
-                                loops++;
+                                if (m_lastParentNode == m_originNode)
+                                        loops++;
                         } else {
                                 m_lastParentNode = m_originNode;
                         }
@@ -187,7 +188,7 @@ EgcNode& EgcScrPosIterator::getNextVisibleParentNode(void)
                 if (m_lastParentNode)
                         id = m_lookup.getIdFrame(*m_lastParentNode);
         } while (    (!id)
-                  || ((m_lastParentNode == m_originNode) && loops > 0));
+                  || ( loops > 0));
                 
         return *m_lastParentNode;
 }
