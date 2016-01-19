@@ -217,3 +217,18 @@ quint32 EgcScrPosIterator::getNextVisibleParent(void)
 
         return m_lookup.getIdFrame(*parent);
 }
+
+bool EgcScrPosIterator::insert(QChar character)
+{
+        return m_subIdIter->insert(character);
+}
+
+bool EgcScrPosIterator::remove(void)
+{
+#warning implement this
+}
+
+bool EgcScrPosIterator::backspace(void)
+{
+#warning implement this        
+}

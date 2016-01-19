@@ -134,3 +134,8 @@ int EgcSubindNodeIter::lastSubind(void)
 {
         return m_histId;
 }
+
+bool EgcSubindNodeIter::insert(QChar character)
+{
+#warning implement this        
+}

@@ -124,6 +124,22 @@ public:
          * @return returns the next id of the parent node of the current node that is visible
          */
         quint32 getNextVisibleParent(void);
+        /**
+         * @brief insert insert a character at the subIdIter's current position
+         * @param character the character to insert
+         * @return true if the operation was successful, false otherwise
+         */
+        bool insert(QChar character);
+        /**
+         * @brief remove removes the element that is next to the current iterator position (forward direction)
+         * @return true if the operation was successful, false otherwise
+         */
+        bool remove(void);
+        /**
+         * @brief backspace removes the element that is previous to the current iterator position (backward direction)
+         * @return true if the operation was successful, false otherwise
+         */
+        bool backspace(void);
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula

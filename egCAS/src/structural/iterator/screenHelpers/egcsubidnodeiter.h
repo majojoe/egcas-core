@@ -96,6 +96,12 @@ public:
          * @return the last subindex we jumped over
          */
         int lastSubind(void);
+        /**
+         * @brief insert insert a character at the subIdIter's current position
+         * @param character the character to insert
+         * @return true if the operation was successful, false otherwise
+         */
+        bool insert(QChar character);
 
 private:
         EgcNode* m_node;                ///< reference to node the iterator has been initialized with
