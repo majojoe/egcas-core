@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 class EgcNode;
+class QChar;
 
 /**
  * @brief The EgcSubidNodeIter class is a iterator for navigating between the formula glyphs
