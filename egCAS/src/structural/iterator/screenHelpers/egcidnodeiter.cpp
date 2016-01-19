@@ -56,6 +56,10 @@ void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide = true)
         EgcNodeIterator iter(node);
 
         //iter has state EgcIteratorState::LeftIteration or EgcIteratorState::MiddleIteration now
+        //iter has jumped over the first the searched element already, but on the left side of the container
+        //so we must jump back
+        if (iter.hasPrevious())
+                (void) iter.previous();
 
         EgcIteratorState state;
 
@@ -232,7 +236,8 @@ EgcNode& EgcIdNodeIter::prevNodeWithId(void)
                 rollover = false;
                 if (firstRun)
                         next = &m_nodeIterPrev->peekNext();
-                node = &m_nodeIterPrev->previous();
+                if (m_nodeIterPrev->hasPrevious())
+                        node = &m_nodeIterPrev->previous();
                 if (firstRun) {
                         retval = node;
                         m_histState = m_nodeIterPrev->getLastState();
@@ -269,7 +274,8 @@ EgcNode& EgcIdNodeIter::nextNodeWithId(void)
                 rollover = false;
                 if (firstRun)
                         prev = &m_nodeIterNext->peekPrevious();
-                node = &m_nodeIterNext->next();
+                if (m_nodeIterNext->hasNext())
+                        node = &m_nodeIterNext->next();
                 if (firstRun) {
                         retval = node;
                         m_histState = m_nodeIterNext->getLastState();
