@@ -419,19 +419,28 @@ void EgcFormulaEntity::insertCharacter(QChar character)
 {
         if (!m_scrIter)
                 return;
+        if (!m_item)
+                return;
 
         m_scrIter->insert(character);
+        m_item->updateView();
+        showCurrentCursor();
 }
 
 void EgcFormulaEntity::removeCharacter(bool before)
 {
         if (!m_scrIter)
                 return;
+        if (!m_item)
+                return;
 
         if (before)
                 m_scrIter->backspace();
         else
                 m_scrIter->remove();
+
+        m_item->updateView();
+        showCurrentCursor();
 }
 
 void EgcFormulaEntity::moveCursor(bool forward)
