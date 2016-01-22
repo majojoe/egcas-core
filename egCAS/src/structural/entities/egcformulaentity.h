@@ -262,7 +262,16 @@ private:
          * @brief markParent highlight the next parent upwards in the tree and move the cursor to that position.
          */
         void markParent(void);
-
+        /**
+         * @brief insertCharacter insert a character at the current cursor position
+         * @param character the character to insert
+         */
+        void insertCharacter(QChar character);
+        /**
+         * @brief removeCharacter remove a character at the current cursor position
+         * @param before if true the character before the current cursor position is remove, if false the character behind
+         */
+        void removeCharacter(bool before);
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user

@@ -403,7 +403,35 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         case EgcOperations::spacePressed:
                 markParent();
                 break;
+        case EgcOperations::alnumKeyPressed:
+                insertCharacter(action.m_character);
+                break;
+        case EgcOperations::backspacePressed:
+                removeCharacter(true);
+                break;
+        case EgcOperations::delPressed:
+                removeCharacter(false);
+                break;
         }
+}
+
+void EgcFormulaEntity::insertCharacter(QChar character)
+{
+        if (!m_scrIter)
+                return;
+
+        m_scrIter->insert(character);
+}
+
+void EgcFormulaEntity::removeCharacter(bool before)
+{
+        if (!m_scrIter)
+                return;
+
+        if (before)
+                m_scrIter->backspace();
+        else
+                m_scrIter->remove();
 }
 
 void EgcFormulaEntity::moveCursor(bool forward)

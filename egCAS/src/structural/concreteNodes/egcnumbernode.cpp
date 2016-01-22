@@ -26,11 +26,20 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QRegularExpression>
 #include "egcnumbernode.h"
+
+
+QRegularExpression EgcNumberNode::s_validator = QRegularExpression("[-+.0-9]+");
+bool EgcNumberNode::s_regexInitialized = false;
 
 
 EgcNumberNode::EgcNumberNode() : m_value("0.0")
 {
+        if (!s_regexInitialized) {
+                s_regexInitialized = true;
+                s_validator.optimize();
+        }
 }
 
 EgcNumberNode::~EgcNumberNode()
@@ -63,4 +72,30 @@ bool EgcNumberNode::operator==(const EgcNode& node) const
 int EgcNumberNode::nrSubindexes(void) const
 {
         return m_value.size();
+}
+
+bool EgcNumberNode::insert(QChar character, int position)
+{
+        bool retval = false;
+
+        if (s_validator.match(character).hasMatch()) {
+                if (position <= m_value.size() && position >= 0) {
+                        m_value.insert(position, character);
+                        retval = true;
+                }
+        }
+
+        return retval;
+}
+
+bool EgcNumberNode::remove(int position)
+{
+        bool retval = false;
+
+        if (position >= 0 && position < m_value.size()) {
+                retval = true;
+                m_value.remove(position, 1);
+        }
+
+        return retval;
 }

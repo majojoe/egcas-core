@@ -225,10 +225,10 @@ bool EgcScrPosIterator::insert(QChar character)
 
 bool EgcScrPosIterator::remove(void)
 {
-#warning implement this
+        return m_subIdIter->remove(false);
 }
 
 bool EgcScrPosIterator::backspace(void)
 {
-#warning implement this        
+        return m_subIdIter->remove(true);
 }

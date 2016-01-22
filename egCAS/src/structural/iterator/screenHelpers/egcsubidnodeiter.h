@@ -103,6 +103,12 @@ public:
          * @return true if the operation was successful, false otherwise
          */
         bool insert(QChar character);
+        /**
+         * @brief remove a character before or behind the current position
+         * @param before if true, remove the character before the current position, if false, remove the character behind
+         * @return true if a character has been removed, false otherwise.
+         */
+        bool remove(bool before);
 
 private:
         EgcNode* m_node;                ///< reference to node the iterator has been initialized with

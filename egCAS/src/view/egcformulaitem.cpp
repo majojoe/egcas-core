@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 #include <libegcas/eg_mml_document.h>
+#include <QRegularExpression>
 #include "egcformulaitem.h"
 #include "egcasscene.h"
 #include "entities/egcabstractformulaentity.h"
@@ -37,6 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "actions/egcaction.h"
 
 quint8 EgcFormulaItem::s_baseFontSize = 14;
+QRegularExpression EgcFormulaItem::s_alnumKeyFilter = QRegularExpression("[._0-9a-zA-Z]+");
+bool EgcFormulaItem::s_regexInitialized = false;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
     QGraphicsItem{parent}, m_fontSize{0}, m_posChanged{false}, m_entity{nullptr}
@@ -45,6 +48,10 @@ EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
         m_mathMlDoc.reset(new EgMathMLDocument());
         m_mathMlDoc->setBaseFontPixelSize(s_baseFontSize);
         m_screenPos.reset(new EgcScreenPos());
+        if (!s_regexInitialized) {
+                s_regexInitialized = true;
+                s_alnumKeyFilter.optimize();
+        }
 }
 
 EgcFormulaItem::~EgcFormulaItem()
@@ -271,7 +278,22 @@ void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
                 action.m_op = EgcOperations::spacePressed;
                 m_entity->handleAction(action);
                 break;
+        case Qt::Key_Backspace:
+                action.m_op = EgcOperations::backspacePressed;
+                m_entity->handleAction(action);
+                break;
+        case Qt::Key_Delete:
+                action.m_op = EgcOperations::delPressed;
+                m_entity->handleAction(action);
+                break;
         default:
+                QString chr(event->text()[0]);
+                if (chr.contains(s_alnumKeyFilter)) {
+                        action.m_op = EgcOperations::alnumKeyPressed;
+                        action.m_character = chr[0];
+                        m_entity->handleAction(action);
+                }
+
                 break;
         }
 }

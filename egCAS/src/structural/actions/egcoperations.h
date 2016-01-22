@@ -47,6 +47,9 @@ enum class EgcOperations
         cursorForward,                  ///< user wants to iterate forward in a formula
         cursorBackward,                 ///< user wants to iterate backward in a formula
         spacePressed,                   ///< user pressed space (wants to highlight parent element)
+        backspacePressed,               ///< user pressed backspace (wants to delete the element before the cursor)
+        delPressed,                     ///< user pressed space (wants to delete the element behind the cursor)
+        alnumKeyPressed,                ///< user pressed any digit or letter key
 };
 
 #endif // EGCOPERATIONS_H

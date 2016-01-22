@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QtGlobal>
 #include <QString>
+#include <QRegularExpression>
 #include "../specialNodes/egcnode.h"
 
 /**
@@ -68,9 +69,24 @@ public:
          * @return 0 if not overwritten, since a std. node has no subindexes
          */
         virtual int nrSubindexes(void) const override;
+        /**
+         * @brief insert insert a character at the given position
+         * @param character the character to insert
+         * @param position the position where to insert the given character
+         * @return true if the operation was successful, false otherwise
+         */
+        virtual bool insert(QChar character, int position);
+        /**
+         * @brief remove a charcter at the given position
+         * @param position the position at which to remove a character
+         * @return true if the operation was successful, false otherwise
+         */
+        virtual bool remove(int position);
 
 private:
-        QString m_value;
+        QString m_value;                                ///< the value of the number
+        static QRegularExpression s_validator;          ///< a validator for character inputs
+        static bool s_regexInitialized;                 ///< is the regex already initialized
 };
 
 #endif // EGCNUMBERNODE_H
