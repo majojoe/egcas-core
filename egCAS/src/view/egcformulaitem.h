@@ -209,6 +209,7 @@ private:
         quint8 m_fontSize;
         EgcAbstractFormulaEntity* m_entity;             ///< pointer to formula entity
         bool m_posChanged;                              ///< helper variable indicating that the position has changed
+        bool m_contentChanged;                          ///< helper variable indicating that the content of the formula has changed
         QScopedPointer<EgcScreenPos> m_screenPos;       ///< screen positions of the rendered formula characters
         static QRegularExpression s_alnumKeyFilter;     ///< regex for checking if a key is an alnum key
         static bool s_regexInitialized;                 ///< check if regex is already initialized

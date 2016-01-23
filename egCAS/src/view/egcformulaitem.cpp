@@ -42,7 +42,7 @@ QRegularExpression EgcFormulaItem::s_alnumKeyFilter = QRegularExpression("[._0-9
 bool EgcFormulaItem::s_regexInitialized = false;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
-    QGraphicsItem{parent}, m_fontSize{0}, m_posChanged{false}, m_entity{nullptr}
+    QGraphicsItem{parent}, m_fontSize{0}, m_posChanged{false}, m_contentChanged{false}, m_entity{nullptr}
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         m_mathMlDoc.reset(new EgMathMLDocument());
@@ -118,8 +118,12 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
                 painter->restore();
                 
                 //if the formula is selected, send a notification change
-                if (m_entity)
-                        m_entity->itemChanged(EgcItemChangeType::contentChanged);                
+                if (m_entity) {
+                        if (m_contentChanged) {
+                                m_contentChanged = false;
+                                m_entity->itemChanged(EgcItemChangeType::contentChanged);                
+                        }
+                }
         }
 }
 
@@ -213,8 +217,9 @@ void EgcFormulaItem::updateView(void)
 {
         if (!m_entity)
                 return;
-
+        
         prepareGeometryChange();
+        m_contentChanged = true;
         m_mathMlDoc->setContent(m_entity->getMathMlCode());
         update();
 }
