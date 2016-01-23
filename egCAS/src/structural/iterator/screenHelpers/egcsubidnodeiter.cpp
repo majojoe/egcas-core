@@ -151,8 +151,10 @@ bool EgcSubindNodeIter::remove(bool before)
         }
 
         if (retval) {
-                if (hasPrevious())
-                        previous();
+                if (before) {
+                        if (hasPrevious())
+                                previous();
+                }
         }
 
         return retval;
@@ -175,6 +177,8 @@ bool EgcSubindNodeIter::insert(QChar character)
         if (retval) {
                 if (hasNext())
                         next();
+                else
+                        toBack();
         }
 
         return retval;
