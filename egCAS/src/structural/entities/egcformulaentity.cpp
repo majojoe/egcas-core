@@ -372,6 +372,10 @@ void EgcFormulaEntity::itemChanged(EgcItemChangeType changeType)
                         m_list->sort();
                 showCurrentCursor();
         }
+
+        if (changeType == EgcItemChangeType::contentChanged) {
+                showCurrentCursor();
+        }
 }
 
 void EgcFormulaEntity::setErrorMessage(QString msg)
@@ -423,8 +427,8 @@ void EgcFormulaEntity::insertCharacter(QChar character)
                 return;
 
         m_scrIter->insert(character);
-        m_item->updateView();
-        showCurrentCursor();
+        m_item->hideCursors();
+        m_item->updateView();        
 }
 
 void EgcFormulaEntity::removeCharacter(bool before)
@@ -440,6 +444,7 @@ void EgcFormulaEntity::removeCharacter(bool before)
                 m_scrIter->remove();
 
         m_item->updateView();
+        m_item->hideCursors();
         showCurrentCursor();
 }
 

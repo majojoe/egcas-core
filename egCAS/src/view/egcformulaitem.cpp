@@ -116,6 +116,10 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
                                       Qt::PenStyle( Qt::DashLine ) ) );
                 painter->drawRect( formulaRect );
                 painter->restore();
+                
+                //if the formula is selected, send a notification change
+                if (m_entity)
+                        m_entity->itemChanged(EgcItemChangeType::contentChanged);                
         }
 }
 

@@ -36,7 +36,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
  */
 enum class EgcItemChangeType
 {
-        posChanged = 0/*,*/        ///< position of the item on the scene has changed
+        posChanged = 0,        ///< position of the item on the scene has changed
+        contentChanged = 1,    ///< content of the item has changed
         //itemDeleted
 };
 
