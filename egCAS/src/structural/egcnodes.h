@@ -66,6 +66,7 @@ for node in nodes:
 #include "concreteNodes/egcparenthesisnode.h"
 #include "concreteNodes/egcvariablenode.h"
 #include "concreteNodes/egcplusnode.h"
+#include "concreteNodes/egcalnumnode.h"
 #include "concreteNodes/egcdifferentialnode.h"
 #include "concreteNodes/egcfunctionnode.h"
 #include "concreteNodes/egcintegralnode.h"

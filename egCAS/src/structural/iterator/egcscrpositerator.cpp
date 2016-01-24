@@ -77,7 +77,8 @@ const quint32 EgcScrPosIterator::next(void)
                 if (!m_forward)
                         m_node = &m_nodeIter->next();
                 m_forward = true;
-                m_node = &m_nodeIter->next();
+                if (m_nodeIter->hasNext())
+                        m_node = &m_nodeIter->next();
                 m_subIdIter->setNode(*m_node);
                 m_lastParentNode = nullptr;
         }
@@ -93,7 +94,8 @@ const quint32 EgcScrPosIterator::previous(void)
                 if (m_forward)
                         m_node = &m_nodeIter->previous();
                 m_forward = false;
-                m_node = &m_nodeIter->previous();
+                if (m_nodeIter->hasPrevious())
+                        m_node = &m_nodeIter->previous();
                 m_subIdIter->setNode(*m_node);
                 m_subIdIter->toBack();
                 m_lastParentNode = nullptr;

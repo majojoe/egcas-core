@@ -227,7 +227,7 @@ EgcNode& EgcIdNodeIter::prevNodeWithId(void)
 {
         EgcNode* prevNode;
         EgcNode* retval;
-        EgcNode* node;
+        EgcNode* node = nullptr;
         EgcNode* next;
         bool firstRun = true;
         bool rollover;
@@ -258,6 +258,9 @@ EgcNode& EgcIdNodeIter::prevNodeWithId(void)
                       || rollover)
                   && m_nodeIterPrev->hasPrevious());
 
+        if (!retval)
+                retval = &m_nodeIterPrev->peekPrevious();
+
         return *retval;
 }
 
@@ -265,7 +268,7 @@ EgcNode& EgcIdNodeIter::nextNodeWithId(void)
 {
         EgcNode* nextNode;
         EgcNode* retval;
-        EgcNode* node;
+        EgcNode* node = nullptr;
         EgcNode* prev;
         bool firstRun = true;
         bool rollover;
@@ -296,12 +299,18 @@ EgcNode& EgcIdNodeIter::nextNodeWithId(void)
                        || rollover )
                   && m_nodeIterNext->hasNext());
 
+        if (!retval)
+                retval = &m_nodeIterNext->peekNext();
+
         return *retval;
 }
 
 bool EgcIdNodeIter::omitFollowingNode(EgcNode* followingNode, EgcIteratorState followingState)
 {
         bool retval = true;
+
+        if (!followingNode)
+                return true;
 
         //leafes are always considered as valid nodes
         if (!followingNode->isContainer())
@@ -351,3 +360,17 @@ quint32 EgcIdNodeIter::peekPreviousId(void) const
 {
         return getMathmlId(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext());
 }
+
+//check if the given node is a result node (activate this if insert and remove have been defined)
+//bool EgcIdNodeIter::isResultNode(EgcNode& node)
+//{
+//        //if the current node is a result, the result shall not be able to be changed
+//        if (node.getParent()->getNodeType() == EgcNodeType::EqualNode) {
+//                quint32 index;
+//                (void) node.getParent()->getIndexOfChild(node, index);
+//                if (index == 1)
+//                        return true;
+//        }
+//
+//        return false;
+//}
