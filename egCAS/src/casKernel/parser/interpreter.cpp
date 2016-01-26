@@ -129,7 +129,7 @@ EgcNode* Interpreter::addStringNode(EgcNodeType type, const std::string& value)
                 }
                 case EgcNodeType::VariableNode: {
                         EgcVariableNode* tmp = static_cast<EgcVariableNode*>(node.data());
-                        tmp->setStuffedValue(QString::fromStdString(value));
+                        tmp->setStuffedVar(QString::fromStdString(value));
                         break;
                 }
                 default: /*do nothing*/
