@@ -63,7 +63,7 @@ public:
          * @brief setValue set the raw variable name (value) maybe including stuffed subscript
          * @param varName the variable name as a string. This can include the stuffed subscript
          */
-        virtual void setValueRaw(const QString& varName);
+        virtual void setStuffedValue(const QString& varName);
         /**
          * @brief getValue returns the variable name (without subscript)
          * @return the variable name
@@ -75,11 +75,11 @@ public:
          */
         virtual QString getSubscript(void) const;
         /**
-         * @brief getStuffedVar returns the stuffed variable name (with subscript)
+         * @brief getStuffedValue returns the stuffed variable name (with subscript)
          * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
          * and variable name and subscript is seperated via "_1").
          */
-        virtual QString getStuffedVar(void);
+        virtual QString getStuffedValue(void);
         /**
          * @brief valid returns true if the expression is valid and false otherwise.
          * A variable expression is valid if the value is not empty.

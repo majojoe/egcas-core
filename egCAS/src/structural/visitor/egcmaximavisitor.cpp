@@ -141,7 +141,7 @@ void EgcMaximaVisitor::visit(EgcNode* node)
                 pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);
                 break;
         case EgcNodeType::VariableNode:
-                pushToStack(static_cast<EgcVariableNode*>(node)->getStuffedVar(), node);
+                pushToStack(static_cast<EgcVariableNode*>(node)->getStuffedValue(), node);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", node->getNodeType()) ;

@@ -66,7 +66,7 @@ void EgcVariableNode::setValue(const QString& varName, const QString& subscript 
         m_subscript = subscript;
 }
 
-void EgcVariableNode::setValueRaw(const QString& varName)
+void EgcVariableNode::setStuffedValue(const QString& varName)
 {
         QString tmp = varName;
         QString value;
@@ -106,7 +106,7 @@ QString EgcVariableNode::getSubscript(void) const
         return EgcUtfCodepoint::encodeToXml(m_subscript);
 }
 
-QString EgcVariableNode::getStuffedVar(void)
+QString EgcVariableNode::getStuffedValue(void)
 {
         //replace (stuffing) of "_" with "__" since "_" is used to concatenate variable name and subscript
         QString var = EgcUtfCodepoint::encodeToXml(m_value).replace("_", "__");

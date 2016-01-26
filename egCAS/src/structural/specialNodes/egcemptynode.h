@@ -72,7 +72,7 @@ private:
          * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
          * and variable name and subscript is seperated via "_")
          */
-        virtual QString getStuffedVar(void) override {return QString::null;}
+        virtual QString getStuffedValue(void) override {return QString::null;}
 };
 
 
