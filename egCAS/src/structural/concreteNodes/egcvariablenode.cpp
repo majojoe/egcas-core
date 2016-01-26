@@ -29,30 +29,30 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include <QStringBuilder>
 #include <QRegularExpression>
+#include "egcalnumnode.h"
 #include "egcvariablenode.h"
 #include "utils/egcutfcodepoint.h"
 
 
 //ATTENTION: as of now egCAS and even Qt does not support non bmp characters (unicode caracters > 0xFFFF)
 
-QRegularExpression EgcVariableNode::s_ampersand = QRegularExpression("(.*[^_]+)_2([^_]+.*)");
-QRegularExpression EgcVariableNode::s_ampersandBegin = QRegularExpression("_2([^_]+.*)");
-QRegularExpression EgcVariableNode::s_semi = QRegularExpression("(.*[^_]+)_3([^_]+.*)");
-QRegularExpression EgcVariableNode::s_semiBegin = QRegularExpression("(.*[^_]+)_3");
 QRegularExpression EgcVariableNode::s_varSubSeparator = QRegularExpression("(.*[^_]+)_1([^_]+.*)");
 bool EgcVariableNode::s_initializeRegex = true;
 
-EgcVariableNode::EgcVariableNode() : m_value(QString::null), m_subscript(QString::null)
+EgcVariableNode::EgcVariableNode() 
 {
         //optimize all the regexes
         if (s_initializeRegex) {
                 s_initializeRegex = false;
-                s_ampersand.optimize();
-                s_ampersandBegin.optimize();
-                s_semi.optimize();
-                s_semiBegin.optimize();
                 s_varSubSeparator.optimize();
         }
+        
+        m_leftChild.reset(new EgcAlnumNode());
+        m_rightChild.reset(new EgcAlnumNode());
+        EgcAlnumNode* alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+        alnum->setValue(QString::null);
+        alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
+        alnum->setValue(QString::null);
 }
 
 EgcVariableNode::~EgcVariableNode()

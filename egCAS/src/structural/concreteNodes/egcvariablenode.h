@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include <QRegularExpression>
 #include "../specialNodes/egcnode.h"
+#include "structural/specialNodes/egcbinarynode.h"
 
 /**
  * @brief The EgcVariableNode class is a class that holds the leafes with variable names.
@@ -43,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
  * _3  : as code for ";"
  * These symbols cannot be represented by a cas kernel or have different meaning, therefore the are stuffed.
  */
-class EgcVariableNode : public EgcNode
+class EgcVariableNode : public EgcBinaryNode
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcVariableNode, EgcNodeType::VariableNode);
@@ -100,12 +101,6 @@ public:
         virtual int nrSubindexes(void) const override;
 
 protected:
-        QString m_value;          ///< the variable name used
-        QString m_subscript;      ///< the subscript if any
-        static QRegularExpression s_ampersand; ///< regex to replace ampersand
-        static QRegularExpression s_ampersandBegin; ///< regex to replace ampersand at the beginning
-        static QRegularExpression s_semi; ///< regex to replace semicolon
-        static QRegularExpression s_semiBegin; ///< regex to replace semicolon at the beginning
         static QRegularExpression s_varSubSeparator; ///< regex for separating variable and subscript
         static bool s_initializeRegex;    ///< initialize regex?
 };
