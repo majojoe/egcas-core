@@ -157,6 +157,11 @@ void EgcIdNodeIter::toBack(void)
         if (    !mathmlIdExisting(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext())
              || omitFollowingNode(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode()))
                 prevNodeWithId();
+        if (m_nodeIterPrev->peekPrevious().isContainer())
+                m_histState = EgcIteratorState::RightIteration;
+        else
+                m_histState = EgcIteratorState::MiddleIteration;
+        m_histId = getMathmlId(&m_nodeIterPrev->peekPrevious(), m_histState, nullptr, &m_nodeIterPrev->peekNext());
 }
 
 void EgcIdNodeIter::toFront(void)
@@ -166,6 +171,11 @@ void EgcIdNodeIter::toFront(void)
         if (    !mathmlIdExisting(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode(), &m_nodeIterNext->peekPrevious(), nullptr)
              || omitFollowingNode(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode()))
                 nextNodeWithId();
+        if (m_nodeIterNext->peekNext().isContainer())
+                m_histState = EgcIteratorState::LeftIteration;
+        else
+                m_histState = EgcIteratorState::MiddleIteration;
+        m_histId = getMathmlId(&m_nodeIterNext->peekNext(), m_histState, &m_nodeIterNext->peekPrevious(), nullptr);
 }
 
 const quint32& EgcIdNodeIter::id(void)

@@ -46,7 +46,7 @@ EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup
         m_subIdIter.reset(new EgcSubindNodeIter(*m_node));
         // the subid iterator is at the beginning, so position it at the end.
         m_subIdIter->toBack();
-        m_forward = false;
+        m_forward = true;
 }
 
 EgcScrPosIterator::~EgcScrPosIterator()
@@ -118,7 +118,7 @@ void EgcScrPosIterator::toBack(void)
 {
         m_forward = true;
         m_nodeIter->toBack();
-        m_node = &m_nodeIter->previous();
+        m_node = &m_nodeIter->peekPrevious();
         m_subIdIter->setNode(*m_node);
         m_subIdIter->toBack();        
 }
@@ -127,7 +127,7 @@ void EgcScrPosIterator::toFront(void)
 {
         m_forward = false;
         m_nodeIter->toFront();
-        m_node = &m_nodeIter->next();
+        m_node = &m_nodeIter->peekNext();
         m_subIdIter->setNode(*m_node);
         m_subIdIter->toFront();
 }

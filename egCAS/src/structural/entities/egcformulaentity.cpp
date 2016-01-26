@@ -457,13 +457,9 @@ void EgcFormulaEntity::moveCursor(bool forward)
         if (forward) {
                 if (m_scrIter->hasNext())
                         (void) m_scrIter->next();
-                else
-                        m_scrIter->toBack();
         } else {
                 if (m_scrIter->hasPrevious())
                         (void) m_scrIter->previous();
-                else
-                        m_scrIter->toFront();
         }
 
         showCurrentCursor();
