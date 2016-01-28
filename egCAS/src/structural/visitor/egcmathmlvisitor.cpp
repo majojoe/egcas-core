@@ -28,6 +28,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QStringBuilder>
 #include <entities/egcformulaentity.h>
+#ifdef DEBUG_MATHML_GENERATION
+#include <QDebug>
+#endif //#ifdef DEBUG_MATHML_GENERATION
 #include "../egcnodes.h"
 #include "egcmathmlvisitor.h"
 
@@ -46,7 +49,7 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
         case EgcNodeType::RootNode:                
                 if (m_state == EgcIteratorState::LeftIteration) {
                         // don't show the root exponent if it is "2" (square root)
-                        suppressIfChildValue(node, 1, EgcNodeType::NumberNode, "2");
+                        suppressChildIfChildValue(node, 1, EgcNodeType::NumberNode, "2");
                 } else if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
                         assembleResult("<mroot" %id%"><mrow>%1</mrow><mrow>%2</mrow></mroot>", node);
@@ -84,8 +87,8 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
                 break;
         case EgcNodeType::DivisionNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        suppressIfChildType(node, 0, EgcNodeType::ParenthesisNode);
-                        suppressIfChildType(node, 1, EgcNodeType::ParenthesisNode);
+                        suppressChildIfChildType(node, 0, EgcNodeType::ParenthesisNode);
+                        suppressChildIfChildType(node, 1, EgcNodeType::ParenthesisNode);
                 } else if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
                         assembleResult("<mfrac "%id%">%1 %2</mfrac>", node);
@@ -97,6 +100,19 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
                         assembleResult("<msup "%id%">%1 %2</msup>", node);
                 }
                 break;
+        case EgcNodeType::VariableNode: {
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        if (static_cast<EgcVariableNode*>(node)->getSubscript().isEmpty())
+                                suppressChild(node, 1);
+                } else if (m_state == EgcIteratorState::RightIteration) {
+                        id = getId(node);
+                        if (static_cast<EgcVariableNode*>(node)->getSubscript().isEmpty())
+                                assembleResult("<mrow "%id%">%1 %2</mrow>", node); //there is just the first EgcAlnumNode, the second is empty
+                        else
+                                assembleResult("<mrow "%id%"><msub>%1 %2</msub></mrow>", node);
+                }
+                break;
+        }
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
                 break;
@@ -221,15 +237,9 @@ void EgcMathMlVisitor::visit(EgcNode* node)
         case EgcNodeType::NumberNode:
                 pushToStack("<mn" %id%">" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>", node);
                 break;
-        case EgcNodeType::VariableNode: {
-                EgcVariableNode* varNode = static_cast<EgcVariableNode*>(node);
-                if (varNode->getSubscript().isEmpty())
-                        pushToStack("<mi" %id%">" % varNode->getValue() % "</mi>", node);
-                else
-                        pushToStack("<msub" %id%"><mi>" % varNode->getValue() % "</mi><mi>" % varNode->getSubscript()
-                                    %"</mi></msub>", node);
+        case EgcNodeType::AlnumNode:
+                pushToStack("<mi" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue() % "</mi>", node);
                 break;
-        }
         case EgcNodeType::EmptyNode:
                 pushToStack("<mi" %id%">&#x2B1A;</mi>", node);
                 break;
@@ -270,6 +280,10 @@ QString EgcMathMlVisitor::getResult(void)
         //remove entries from lookup table that shall not be rendered
         cleanMathmlLookupTable();
 
+#ifdef DEBUG_MATHML_GENERATION
+        qDebug() << "mathml output of visitor: " << temp;
+#endif //#ifdef DEBUG_MATHML_GENERATION
+
         return temp;
 }
 
@@ -283,40 +297,28 @@ bool EgcMathMlVisitor::prettyPrint(void)
         return m_prettyPrint;
 }
 
-void EgcMathMlVisitor::suppressIfChildType(const EgcNode* node, quint32 index, EgcNodeType type)
+void EgcMathMlVisitor::suppressChild(const EgcNode* node, quint32 index)
 {
-        if (!node)
-                return;
+        EgcNode* chldNode = getChildToSuppress(node, index);
+        if (chldNode) {
+                m_suppressList.insert(chldNode);
+        }
+}
 
-        if (!m_prettyPrint)
-                return;
-
-        if (!node->isContainer())
-                return;
-
-        const EgcContainerNode* container = static_cast<const EgcContainerNode*>(node);
-        if (container->getChild(index)) {
-                EgcNode* chldNode = container->getChild(index);
+void EgcMathMlVisitor::suppressChildIfChildType(const EgcNode* node, quint32 index, EgcNodeType type)
+{
+        EgcNode* chldNode = getChildToSuppress(node, index);
+        if (chldNode) {
                 if (chldNode->getNodeType() == type) {
                         m_suppressList.insert(chldNode);
                 }
         }
 }
 
-void EgcMathMlVisitor::suppressIfChildValue(const EgcNode* node, quint32 index, EgcNodeType type, QString val)
+void EgcMathMlVisitor::suppressChildIfChildValue(const EgcNode* node, quint32 index, EgcNodeType type, QString val)
 {
-        if (!node)
-                return;
-                
-        if (!m_prettyPrint)
-                return;
-
-        if (!node->isContainer())
-                return;
-        
-        const EgcContainerNode* container = static_cast<const EgcContainerNode*>(node);
-        if (container->getChild(index)) {                                
-                EgcNode* chldNode = container->getChild(index);
+        EgcNode* chldNode = getChildToSuppress(node, index);
+        if (chldNode) {
                 if (chldNode->getNodeType() == type) {                        
                         QString value;
                         switch (type) {
@@ -326,12 +328,36 @@ void EgcMathMlVisitor::suppressIfChildValue(const EgcNode* node, quint32 index, 
                         case EgcNodeType::VariableNode:
                                 value = static_cast<EgcVariableNode*>(chldNode)->getValue();
                                 break;
+                        case EgcNodeType::AlnumNode:
+                                value = static_cast<EgcAlnumNode*>(chldNode)->getValue();
+                                break;
                         }
 
                         if (value == val)
                                 m_suppressList.insert(chldNode);
                 }                                
         }        
+}
+
+EgcNode* EgcMathMlVisitor::getChildToSuppress(const EgcNode* node, quint32 index)
+{
+        EgcNode* chldNode = nullptr;
+
+        if (!node)
+                return chldNode;
+
+        if (!m_prettyPrint)
+                return chldNode;
+
+        if (!node->isContainer())
+                return chldNode;
+
+        const EgcContainerNode* container = static_cast<const EgcContainerNode*>(node);
+        if (container->getChild(index)) {
+                chldNode = container->getChild(index);
+        }
+
+        return chldNode;
 }
 
 QString EgcMathMlVisitor::getId(EgcNode* node)

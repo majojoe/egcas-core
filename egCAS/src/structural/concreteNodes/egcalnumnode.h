@@ -57,12 +57,12 @@ public:
          * @brief setValue set the value of this leaf
          * @param value the number value to be set
          */
-        void setValue(const QString& value);
+        virtual void setValue(const QString& value);
         /**
          * @brief getValue returns the value saved in this class
          * @return the value of this object
          */
-        QString getValue(void) const;
+        virtual QString getValue(void) const;
         /**
          * @brief operator== comparison operator overload
          * @param node the node to compare against

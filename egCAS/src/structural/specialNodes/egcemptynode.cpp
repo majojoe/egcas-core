@@ -32,8 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcEmptyNode::EgcEmptyNode()
 {
-        m_value = QChar(0x2B1A);
-        m_subscript = QString::null;
+        EgcAlnumNode::setValue(QChar(0x2B1A));
 }
 
 EgcEmptyNode::~EgcEmptyNode()
@@ -43,7 +42,7 @@ EgcEmptyNode::~EgcEmptyNode()
 
 QString EgcEmptyNode::getValue(void) const
 {
-        return m_value;
+        return EgcAlnumNode::getValue();
 }
 
 bool EgcEmptyNode::valid(void)

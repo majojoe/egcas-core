@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QRegularExpression>
 #include "egcalnumnode.h"
 #include "egcvariablenode.h"
+#include "structural/specialNodes/egcemptynode.h"
 #include "utils/egcutfcodepoint.h"
 
 
@@ -47,8 +48,10 @@ EgcVariableNode::EgcVariableNode()
                 s_varSubSeparator.optimize();
         }
         
-        m_leftChild.reset(new EgcAlnumNode());
-        m_rightChild.reset(new EgcAlnumNode());
+        QScopedPointer<EgcAlnumNode> val(new EgcAlnumNode());
+        setChild(0, *val.take());
+        QScopedPointer<EgcAlnumNode> sub(new EgcAlnumNode());
+        setChild(1, *sub.take());
         EgcAlnumNode* alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
         alnum->setValue(QString::null);
         alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
@@ -62,8 +65,16 @@ EgcVariableNode::~EgcVariableNode()
 
 void EgcVariableNode::setValue(const QString& varName, const QString& subscript = QString::null)
 {
-        m_value = varName;
-        m_subscript = subscript;
+        EgcAlnumNode *alnum;
+        if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+                alnum->setValue(varName);
+        }
+
+        if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
+                alnum->setValue(subscript);
+        }
 }
 
 void EgcVariableNode::setStuffedVar(const QString& varName)
@@ -71,63 +82,100 @@ void EgcVariableNode::setStuffedVar(const QString& varName)
         QString tmp = varName;
         QString value;
         QString subscript;
+
         /*the regexes are copied from static expressions since copying is cheap but we don't need to build up the
         regexes on the stack*/
-        //handle ampersands
-        tmp.replace(QRegularExpression(s_ampersand), "\\1&#\\2");
-        tmp.replace(QRegularExpression(s_ampersandBegin), "&#\\1"); //if the ampersand is at the beginning
-        //handle ";"s
-        tmp.replace(QRegularExpression(s_semi), "\\1;\\2");
-        tmp.replace(QRegularExpression(s_semiBegin), "\\1;");  //if the ";" is at the end
-
         QRegularExpressionMatch regexMatch = s_varSubSeparator.match(tmp);
         if (regexMatch.hasMatch()) {
                 value = regexMatch.captured(1);
                 subscript = regexMatch.captured(2);
+
+                EgcAlnumNode *alnum;
+                if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
+                        alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+                        alnum->setStuffedValue(varName);
+                }
+
+                if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
+                        alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
+                        alnum->setStuffedValue(subscript);
+                }
         } else {
-                value = tmp;
-                subscript = QString::null;
+                EgcAlnumNode *alnum;
+                if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
+                        alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+                        alnum->setStuffedValue(tmp);
+                }
+
+                if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
+                        alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
+                        alnum->setStuffedValue(QString::null);
+                }
         }
-
-        value.replace("__", "_");
-        subscript.replace("__", "_");
-
-        m_value = EgcUtfCodepoint::decodeToUtf(value);
-        m_subscript = EgcUtfCodepoint::decodeToUtf(subscript);
 }
 
 QString EgcVariableNode::getValue(void) const
 {
-        return EgcUtfCodepoint::encodeToXml(m_value);
+        QString retval = QString::null;
+
+        EgcAlnumNode *alnum;
+        if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+                retval = alnum->getValue();
+        }
+
+        return retval;
 }
 
 QString EgcVariableNode::getSubscript(void) const
 {
-        return EgcUtfCodepoint::encodeToXml(m_subscript);
+        QString retval = QString::null;
+
+        EgcAlnumNode *alnum;
+        if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
+                retval = alnum->getValue();
+        }
+
+        return retval;
 }
 
 QString EgcVariableNode::getStuffedVar(void)
 {
-        //replace (stuffing) of "_" with "__" since "_" is used to concatenate variable name and subscript
-        QString var = EgcUtfCodepoint::encodeToXml(m_value).replace("_", "__");
-        QString sub = EgcUtfCodepoint::encodeToXml(m_subscript).replace("_", "__");
+        QString var;
+        QString sub;
+
+        EgcAlnumNode *alnum;
+        if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+                var = alnum->getValue();
+        }
+
+        if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
+                sub = alnum->getValue();
+        }
 
         QString tmp;
         if (sub.isEmpty())
                 tmp = var;
         else
                 tmp = var % "_1" % sub;
-        // ampersands and followning '#' in special symbols are replaced by "_2" for use in calculation kernel
-        tmp = tmp.replace("&#", "_2");
-        // ";" in special symbols are replaced by "_3" for use in calculation kernel
-        tmp = tmp.replace(";", "_3");
 
         return tmp;
 }
 
 bool EgcVariableNode::valid(void)
 {
-        if (m_value.isEmpty())
+        QString val;
+        EgcAlnumNode *alnum;
+
+        if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+                val = alnum->getValue();
+        }
+
+        if (val.isEmpty())
                 return false;
         else
                 return true;
@@ -136,17 +184,48 @@ bool EgcVariableNode::valid(void)
 bool EgcVariableNode::operator==(const EgcNode& node) const
 {
         bool retval = false;
+        QString val;
+        QString sub;
+        QString nodeVal;
+        QString nodeSub;
 
         if (node.getNodeType() == EgcNodeType::VariableNode) {
-                if (    (static_cast<const EgcVariableNode&>(node).getValue() == m_value)
-                     && ((static_cast<const EgcVariableNode&>(node).getSubscript() == m_subscript)))
+                if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode)
+                        val = static_cast<EgcAlnumNode*>(m_leftChild.data())->getValue();
+
+                if (m_leftChild->getNodeType() == EgcNodeType::EmptyNode)
+                        val = static_cast<EgcEmptyNode*>(m_leftChild.data())->getValue();
+
+                if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode)
+                        val = static_cast<EgcAlnumNode*>(m_rightChild.data())->getValue();
+
+                if (m_rightChild->getNodeType() == EgcNodeType::EmptyNode)
+                        val = static_cast<EgcEmptyNode*>(m_rightChild.data())->getValue();
+
+                const EgcVariableNode& node = static_cast<const EgcVariableNode&>(node);
+                EgcNode* nodeLeft = node.getChild(0);
+                EgcNode* nodeRight = node.getChild(1);
+
+                if (nodeLeft) {
+                        if (nodeLeft->getNodeType() == EgcNodeType::AlnumNode)
+                                val = static_cast<EgcAlnumNode*>(nodeLeft)->getValue();
+
+                        if (nodeLeft->getNodeType() == EgcNodeType::EmptyNode)
+                                val = static_cast<EgcEmptyNode*>(nodeLeft)->getValue();
+                }
+
+                if (nodeRight) {
+                        if (nodeRight->getNodeType() == EgcNodeType::AlnumNode)
+                                val = static_cast<EgcAlnumNode*>(nodeRight)->getValue();
+
+                        if (nodeRight->getNodeType() == EgcNodeType::EmptyNode)
+                                val = static_cast<EgcEmptyNode*>(nodeRight)->getValue();
+                }
+
+                if (    (val == nodeVal)
+                     && (sub == nodeSub))
                         retval = true;
         }
 
         return retval;
-}
-
-int EgcVariableNode::nrSubindexes(void) const
-{
-        return m_value.size() + m_subscript.size();
 }

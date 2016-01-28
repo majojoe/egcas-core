@@ -75,6 +75,11 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("%1:%2", binary);
                 break;
+        case EgcNodeType::VariableNode:
+                if (m_state == EgcIteratorState::RightIteration) //there are no subsequent nodes but the Alnum nodes -> so push to stack
+                        pushToStack(static_cast<EgcVariableNode*>(binary)->getStuffedVar(), binary);
+                break;
+
 
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", binary->getNodeType()) ;
@@ -137,11 +142,10 @@ void EgcMaximaVisitor::visit(EgcNode* node)
         switch (node->getNodeType()) {
         case EgcNodeType::EmptyNode:
                 break;
+        case EgcNodeType::AlnumNode:  // normally we extract the AlnumNode's via their container classes
+                break;
         case EgcNodeType::NumberNode:
                 pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);
-                break;
-        case EgcNodeType::VariableNode:
-                pushToStack(static_cast<EgcVariableNode*>(node)->getStuffedVar(), node);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", node->getNodeType()) ;

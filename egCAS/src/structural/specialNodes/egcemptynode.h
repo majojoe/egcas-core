@@ -29,12 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCEMPTYNODE_H
 #define EGCEMPTYNODE_H
 
-#include "../concreteNodes/egcvariablenode.h"
+#include "structural/concreteNodes/egcalnumnode.h"
 
 /**
  * @brief The EgcEmptyNode class is a class that holds the leafes that are empty until now
  */
-class EgcEmptyNode : public EgcVariableNode
+class EgcEmptyNode : public EgcAlnumNode
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcEmptyNode, EgcNodeType::EmptyNode);
@@ -61,18 +61,21 @@ private:
          * @param varName the variable name as a string
          * @param subscript the subscript of the variable if any
          */
-        virtual void setValue(const QString& varName, const QString& subscript) override {(void) varName; (void) subscript;}
+        virtual void setValue(const QString& varName) override {(void) varName;}
         /**
-         * @brief getSubscript returns the subscript of a variable name
-         * @return the subscript of this variable object
-         */
-        virtual QString getSubscript(void) const override {return EgcVariableNode::getSubscript();}
-        /**
-         * @brief getStuffedVar returns the stuffed variable name (with subscript)
+         * @brief getStuffedValue returns the stuffed variable name (with subscript)
          * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
          * and variable name and subscript is seperated via "_")
          */
-        virtual QString getStuffedVar(void) override {return QString::null;}
+        virtual QString getStuffedValue(void) override {return QString::null;}
+        /**
+         * @brief setValue set the stuffed variable name (value)
+         * @param varName the variable name as a string. This can include the stuffed special signs (a "_" in the
+         * variable name is stuffed into "__", and special signs are encoded with html escapes where 'ampersand'&'
+         * and ';' are again encoded with '_2' and '_3'. As a result all characters will be ASCII conform then and can
+         * be used by the calc kernel).
+         */
+        virtual void setStuffedValue(const QString& varName) override {(void) varName;}
 };
 
 

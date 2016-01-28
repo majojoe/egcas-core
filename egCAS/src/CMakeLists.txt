@@ -18,6 +18,11 @@ if(debug_maxima_kernel)
         add_definitions(-DDEBUG_MAXIMA_KERNEL )
 endif()
 
+option(debug_mathml_generation "switch debugging for mathml generation (mathml visitor) on" OFF)
+if(debug_mathml_generation)
+        add_definitions(-DDEBUG_MATHML_GENERATION )
+endif()
+
 option(debug_scene_rendering_pos "switch debugging for scene position rendering on" OFF)
 if(debug_scene_rendering_pos)
         add_definitions(-DDEBUG_SCENE_RENDERING_POS )

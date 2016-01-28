@@ -89,19 +89,25 @@ public:
         bool prettyPrint(void);
         /**
          * @brief suppressIfChildType suppress rendering of child object if child has given type 
-         * @param node the current node to render (can be binary, unary or flex node)
+         * @param node the current node to render
          * @param index the index of the child to test and suppress
          * @param type the type of the child to test and suppress
          */
-        void suppressIfChildType(const EgcNode* node, quint32 index, EgcNodeType type);
+        void suppressChildIfChildType(const EgcNode* node, quint32 index, EgcNodeType type);
         /**
          * @brief suppressIfChildValue suppress rendering of child object if child has given type and given value
-         * @param node the current node to render (can be binary, unary or flex node)
+         * @param node the current node to render
          * @param index the index of the child to test and suppress
          * @param type the type of the child to test and suppress
          * @param val the value of the child to test and supppress
          */
-        void suppressIfChildValue(const EgcNode* node, quint32 index, EgcNodeType type, QString val);
+        void suppressChildIfChildValue(const EgcNode* node, quint32 index, EgcNodeType type, QString val);
+        /**
+         * @brief suppressChild supress the child at the index specified
+         * @param node the parent node we of the childs we want to supress
+         * @param index the index of the child we want to suppress
+         */
+        void suppressChild(const EgcNode* node, quint32 index);
         /**
          * @brief getId returns the id string to be added to the mathml code to be able to identify the node later
          * @param node the node to be identified via the id
@@ -110,6 +116,13 @@ public:
         QString getId(EgcNode* node);
 
 private:
+        /**
+         * @brief getChildToSuppress returns a pointer to the child to suppress
+         * @param node a pointer to the parent node we want the child to supress
+         * @param index the index at which to supress the child
+         * @return a pointer to the child to supress, or a nullpointer if there is no child to supress
+         */
+        EgcNode* getChildToSuppress(const EgcNode* node, quint32 index);
         /**
          * @brief cleanMathmlLookupTable clean the mathml lookup table from entries that are suppressed (shall not be rendered)
          */
