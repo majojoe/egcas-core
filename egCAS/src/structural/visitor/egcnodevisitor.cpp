@@ -150,13 +150,46 @@ void EgcNodeVisitor::assembleResult(QString startString, QString seperationStrin
                 m_stack.push(result);
 }
 
+void EgcNodeVisitor::deleteFromStack(int nrStackObjects)
+{
+        int i;
+
+        for (i = 0; i < nrStackObjects; i++) {
+                if (!m_stack.isEmpty())
+                        (void) m_stack.pop();
+        }
+}
+
 void EgcNodeVisitor::pushToStack(QString str, EgcNode* node)
 {
-        if (str.isEmpty())
-                return;
-
         if (m_suppressList.contains(node))
                 m_stack.push(QString(""));
         else
                 m_stack.push(str);
+}
+
+void EgcNodeVisitor::suppressChild(const EgcNode* node, quint32 index)
+{
+        EgcNode* chldNode = getChildToSuppress(node, index);
+        if (chldNode) {
+                m_suppressList.insert(chldNode);
+        }
+}
+
+EgcNode* EgcNodeVisitor::getChildToSuppress(const EgcNode* node, quint32 index)
+{
+        EgcNode* chldNode = nullptr;
+
+        if (!node)
+                return chldNode;
+
+        if (!node->isContainer())
+                return chldNode;
+
+        const EgcContainerNode* container = static_cast<const EgcContainerNode*>(node);
+        if (container->getChild(index)) {
+                chldNode = container->getChild(index);
+        }
+
+        return chldNode;
 }

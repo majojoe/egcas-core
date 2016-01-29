@@ -23,6 +23,11 @@ if(debug_mathml_generation)
         add_definitions(-DDEBUG_MATHML_GENERATION )
 endif()
 
+option(debug_kernel_command_generation "switch debugging for kernel command generation (maxima visitor) on" OFF)
+if(debug_kernel_command_generation)
+        add_definitions(-DDEBUG_KERNEL_COMMAND_GENERATION )
+endif()
+
 option(debug_scene_rendering_pos "switch debugging for scene position rendering on" OFF)
 if(debug_scene_rendering_pos)
         add_definitions(-DDEBUG_SCENE_RENDERING_POS )

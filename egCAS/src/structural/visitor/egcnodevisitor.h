@@ -108,7 +108,27 @@ public:
          * @param node the node we are currently operating on
          */
         virtual void pushToStack(QString str, EgcNode* node);
+        /**
+         * @brief suppressChild supress the child at the index specified
+         * @param node the parent node we of the childs we want to supress
+         * @param index the index of the child we want to suppress
+         */
+        void suppressChild(const EgcNode* node, quint32 index);
 protected:
+        /**
+         * @brief getChildToSuppress returns a pointer to the child to suppress
+         * @param node a pointer to the parent node we want the child to supress
+         * @param index the index at which to supress the child
+         * @return a pointer to the child to supress, or a nullpointer if there is no child to supress
+         */
+        virtual EgcNode* getChildToSuppress(const EgcNode* node, quint32 index);
+        /**
+         * @brief deleteFromStack delete stack objects from stack. This can make sense when a parent has full access to
+         * its child values
+         * @param nrStackObjects the number of stack objects to remove from stack
+         */
+        void deleteFromStack(int nrStackObjects);
+
         QString m_result;                       ///< saves the result of the information extracted.
         EgcFormulaEntity *m_formula;            ///< the formula to with the nodes to work on
         EgcIteratorState m_state;               ///< the current state (helps to extract the correct information from tree)

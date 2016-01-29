@@ -297,14 +297,6 @@ bool EgcMathMlVisitor::prettyPrint(void)
         return m_prettyPrint;
 }
 
-void EgcMathMlVisitor::suppressChild(const EgcNode* node, quint32 index)
-{
-        EgcNode* chldNode = getChildToSuppress(node, index);
-        if (chldNode) {
-                m_suppressList.insert(chldNode);
-        }
-}
-
 void EgcMathMlVisitor::suppressChildIfChildType(const EgcNode* node, quint32 index, EgcNodeType type)
 {
         EgcNode* chldNode = getChildToSuppress(node, index);
@@ -339,27 +331,6 @@ void EgcMathMlVisitor::suppressChildIfChildValue(const EgcNode* node, quint32 in
         }        
 }
 
-EgcNode* EgcMathMlVisitor::getChildToSuppress(const EgcNode* node, quint32 index)
-{
-        EgcNode* chldNode = nullptr;
-
-        if (!node)
-                return chldNode;
-
-        if (!m_prettyPrint)
-                return chldNode;
-
-        if (!node->isContainer())
-                return chldNode;
-
-        const EgcContainerNode* container = static_cast<const EgcContainerNode*>(node);
-        if (container->getChild(index)) {
-                chldNode = container->getChild(index);
-        }
-
-        return chldNode;
-}
-
 QString EgcMathMlVisitor::getId(EgcNode* node)
 {
         QString str(" id=\"%1\" ");
@@ -376,4 +347,12 @@ void EgcMathMlVisitor::cleanMathmlLookupTable(void)
         QSetIterator<EgcNode*> i(m_suppressList);
         while (i.hasNext())
                 m_lookup.removeId(i.next());
+}
+
+EgcNode* EgcMathMlVisitor::getChildToSuppress(const EgcNode* node, quint32 index)
+{
+        if (!m_prettyPrint)
+                return nullptr;
+
+        return EgcNodeVisitor::getChildToSuppress(node, index);
 }

@@ -103,12 +103,6 @@ public:
          */
         void suppressChildIfChildValue(const EgcNode* node, quint32 index, EgcNodeType type, QString val);
         /**
-         * @brief suppressChild supress the child at the index specified
-         * @param node the parent node we of the childs we want to supress
-         * @param index the index of the child we want to suppress
-         */
-        void suppressChild(const EgcNode* node, quint32 index);
-        /**
          * @brief getId returns the id string to be added to the mathml code to be able to identify the node later
          * @param node the node to be identified via the id
          * @return the mathml string with the id
@@ -122,7 +116,8 @@ private:
          * @param index the index at which to supress the child
          * @return a pointer to the child to supress, or a nullpointer if there is no child to supress
          */
-        EgcNode* getChildToSuppress(const EgcNode* node, quint32 index);
+        virtual EgcNode* getChildToSuppress(const EgcNode* node, quint32 index) override;
+
         /**
          * @brief cleanMathmlLookupTable clean the mathml lookup table from entries that are suppressed (shall not be rendered)
          */

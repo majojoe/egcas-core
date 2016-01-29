@@ -27,6 +27,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QStringBuilder>
+#ifdef DEBUG_KERNEL_COMMAND_GENERATION
+#include <QDebug>
+#endif //#ifdef DEBUG_KERNEL_COMMAND_GENERATION
 #include "../egcnodes.h"
 #include "egcmaximavisitor.h"
 #include "../entities/egcformulaentity.h"
@@ -76,8 +79,10 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                         assembleResult("%1:%2", binary);
                 break;
         case EgcNodeType::VariableNode:
-                if (m_state == EgcIteratorState::RightIteration) //there are no subsequent nodes but the Alnum nodes -> so push to stack
+                if (m_state == EgcIteratorState::RightIteration) { //there are no subsequent nodes but the Alnum nodes -> so push to stack
+                        deleteFromStack(2);
                         pushToStack(static_cast<EgcVariableNode*>(binary)->getStuffedVar(), binary);
+                }
                 break;
 
 
@@ -141,8 +146,10 @@ void EgcMaximaVisitor::visit(EgcNode* node)
 {
         switch (node->getNodeType()) {
         case EgcNodeType::EmptyNode:
+#warning even for an empty node the stack should be balanced
                 break;
         case EgcNodeType::AlnumNode:  // normally we extract the AlnumNode's via their container classes
+                pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);
                 break;
         case EgcNodeType::NumberNode:
                 pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);
@@ -185,6 +192,10 @@ QString EgcMaximaVisitor::getResult(void)
                 //reset the precision again to standard type
                 tmp += QString(";fpprintprec:%1$").arg(EgcFormulaEntity::getStdNrSignificantDigis());
         }
+
+#ifdef DEBUG_KERNEL_COMMAND_GENERATION
+        qDebug() << "kernel command output of visitor: " << tmp;
+#endif //#ifdef DEBUG_KERNEL_COMMAND_GENERATION
 
         return tmp;
 }
