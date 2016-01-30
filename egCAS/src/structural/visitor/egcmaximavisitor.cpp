@@ -143,7 +143,6 @@ void EgcMaximaVisitor::visit(EgcNode* node)
 {
         switch (node->getNodeType()) {
         case EgcNodeType::EmptyNode:
-#warning even for an empty node the stack should be balanced
                 pushToStack(QString::null, node);
                 break;
         case EgcNodeType::AlnumNode:  // normally we extract the AlnumNode's via their container classes

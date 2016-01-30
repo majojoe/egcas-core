@@ -128,13 +128,20 @@ protected:
          * @param nrStackObjects the number of stack objects to remove from stack
          */
         void deleteFromStack(int nrStackObjects);
+        /**
+         * @brief getAssembleArguments get the arguments for the node to assemble the result
+         * @param node the node for witch to find the arguments to assemble
+         * @return a vector with all the arguments
+         */
+        QVector<QString> getAssembleArguments(EgcNode* node);
 
         QString m_result;                       ///< saves the result of the information extracted.
         EgcFormulaEntity *m_formula;            ///< the formula to with the nodes to work on
         EgcIteratorState m_state;               ///< the current state (helps to extract the correct information from tree)
         quint32 m_childIndex;                   ///< stores the last child index
         QStack<QString> m_stack;                ///< stores all the child results till all nodes are visited
-        QRegularExpression m_argRegex;          ///< regex that searches for argument placeholders
+        static QRegularExpression s_argRegex;   ///< regex that searches for argument placeholders
+        static bool s_regexInitalized;          ///< initialize regex?
         QSet<EgcNode*> m_suppressList;  ///< a list with pointers EgcNode elements that shall not be rendered
 };
 
