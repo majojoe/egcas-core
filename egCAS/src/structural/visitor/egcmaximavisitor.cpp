@@ -66,11 +66,8 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                         assembleResult("(%1)^(%2)", binary);
                 break;
         case EgcNodeType::EqualNode: {
-                if (m_state == EgcIteratorState::LeftIteration) {
-                        if (binary->getParent()->getNodeType() == EgcNodeType::BaseNode)
-                                suppressCurrentIfChildType(binary, 1, EgcNodeType::EmptyNode);
-                } else if (m_state == EgcIteratorState::RightIteration) {
-                        assembleResult("%1=%2", binary);
+                if (m_state == EgcIteratorState::RightIteration) {
+                        assembleResult("%1", binary);
                 }
                 break;
         }
@@ -147,6 +144,7 @@ void EgcMaximaVisitor::visit(EgcNode* node)
         switch (node->getNodeType()) {
         case EgcNodeType::EmptyNode:
 #warning even for an empty node the stack should be balanced
+                pushToStack(QString::null, node);
                 break;
         case EgcNodeType::AlnumNode:  // normally we extract the AlnumNode's via their container classes
                 pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);

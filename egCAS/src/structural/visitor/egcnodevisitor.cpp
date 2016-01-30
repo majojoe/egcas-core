@@ -88,9 +88,9 @@ void EgcNodeVisitor::assembleResult(QString formatString, EgcNode* node)
         quint32 nrArguments;
         int i;
 
-        if (m_suppressList.contains(node))
+        if (!node)
                 return;
-
+                
         if (!node->isContainer())
                 return;
 
@@ -98,6 +98,17 @@ void EgcNodeVisitor::assembleResult(QString formatString, EgcNode* node)
 
         if (nrArguments == 0)
                 return;
+
+        if (m_suppressList.contains(node)) {
+                if (nrArguments) {
+                        if (    node->isUnaryNode() 
+                             || (node->isFlexNode() && nrArguments == 1))
+                                deleteFromStack(nrArguments - 1);
+                        else
+                                deleteFromStack(nrArguments);
+                }
+                return;
+        }
 
         QVector<QString> args(nrArguments);
 
@@ -120,9 +131,9 @@ void EgcNodeVisitor::assembleResult(QString startString, QString seperationStrin
         QString result = startString;
         quint32 nrArguments;
 
-        if (m_suppressList.contains(node))
+        if (!node)
                 return;
-
+                
         if (!node->isContainer())
                 return;
 
@@ -130,6 +141,17 @@ void EgcNodeVisitor::assembleResult(QString startString, QString seperationStrin
 
         if (nrArguments == 0)
                 return;
+
+        if (m_suppressList.contains(node)) {
+                if (nrArguments) {
+                        if (    node->isUnaryNode() 
+                             || (node->isFlexNode() && nrArguments == 1))
+                                deleteFromStack(nrArguments - 1);
+                        else
+                                deleteFromStack(nrArguments);
+                }
+                return;
+        }
 
         QVector<QString> args(nrArguments);
 
