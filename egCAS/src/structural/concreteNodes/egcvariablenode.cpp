@@ -148,12 +148,12 @@ QString EgcVariableNode::getStuffedVar(void)
         EgcAlnumNode *alnum;
         if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
                 alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
-                var = alnum->getValue();
+                var = alnum->getStuffedValue();
         }
 
         if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
                 alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
-                sub = alnum->getValue();
+                sub = alnum->getStuffedValue();
         }
 
         QString tmp;
