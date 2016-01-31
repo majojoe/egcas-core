@@ -149,7 +149,7 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
 {
         /*the id for the outer bounds of the operation (the id that characterizes the outer bounds must always be the
          * lowest one - in order execution of the id generation)*/
-        QString id = getId(node);
+        QString id;
 
         switch (node->getNodeType()) {
         case EgcNodeType::FunctionNode:

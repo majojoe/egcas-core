@@ -355,6 +355,11 @@ bool EgcIdNodeIter::omitFollowingNode(EgcNode* followingNode, EgcIteratorState f
                      || followingState == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
+        case EgcNodeType::FunctionNode:
+                if (    followingState == EgcIteratorState::LeftIteration
+                     || followingState == EgcIteratorState::RightIteration)
+                        retval = false;
+                break;
         default:
                 break;
         }
