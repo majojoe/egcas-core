@@ -42,7 +42,7 @@ QRegularExpression EgcAlnumNode::s_semiBegin = QRegularExpression("(.*[^_]+)_3")
 QRegularExpression EgcAlnumNode::s_validator = QRegularExpression("[_0-9a-zA-ZΆ-ώ]+");
 bool EgcAlnumNode::s_regexInitialized = false;
 
-EgcAlnumNode::EgcAlnumNode() : m_value(QString::null)
+EgcAlnumNode::EgcAlnumNode() : m_value(QString::null), m_firstCharMightBeNumber{false}
 {
         //optimize all the regexes
         if (!s_regexInitialized) {
@@ -52,6 +52,12 @@ EgcAlnumNode::EgcAlnumNode() : m_value(QString::null)
                 s_semi.optimize();
                 s_semiBegin.optimize();
         }
+}
+
+EgcAlnumNode::EgcAlnumNode(bool firstCharMightBeNumber) : EgcAlnumNode {}
+{
+        if (firstCharMightBeNumber)
+                m_firstCharMightBeNumber = true;
 }
 
 EgcAlnumNode::~EgcAlnumNode()
@@ -128,9 +134,11 @@ bool EgcAlnumNode::insert(QChar character, int position)
 {
         bool retval = false;
 
-        //it's not allowed for a alphanumeric name to begin with a number
-        if (position == 0 && character.isDigit())
-                return false;
+        if (!m_firstCharMightBeNumber) {
+                //it's not allowed for a alphanumeric name to begin with a number
+                if (position == 0 && character.isDigit())
+                        return false;
+        }
 
         if (s_validator.match(character).hasMatch()) {
                 if (position <= m_value.size() && position >= 0) {
@@ -148,6 +156,9 @@ bool EgcAlnumNode::remove(int position)
 
         if (position >= 0 && position < m_value.size()) {
                 if (!(position == 0 && m_value[1].isDigit())) { //it's not allowed that the first character of a name is a digit
+                        retval = true;
+                        m_value.remove(position, 1);
+                } else if (m_firstCharMightBeNumber) { // if it's allowed that the first char can be a number
                         retval = true;
                         m_value.remove(position, 1);
                 }

@@ -50,7 +50,7 @@ EgcVariableNode::EgcVariableNode()
         
         QScopedPointer<EgcAlnumNode> val(new EgcAlnumNode());
         setChild(0, *val.take());
-        QScopedPointer<EgcAlnumNode> sub(new EgcAlnumNode());
+        QScopedPointer<EgcAlnumNode> sub(new EgcAlnumNode(true));
         setChild(1, *sub.take());
         EgcAlnumNode* alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
         alnum->setValue(QString::null);

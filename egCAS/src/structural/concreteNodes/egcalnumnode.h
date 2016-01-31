@@ -51,6 +51,11 @@ class EgcAlnumNode : public EgcNode
 public:
         ///std constructor
         EgcAlnumNode();
+        /**
+         * @brief EgcAlnumNode alternative constructor
+         * @param firstCharMightBeNumber if true the insert method will allow that the first char can be a number
+         */
+        EgcAlnumNode(bool firstCharMightBeNumber);
         ///destructor
         virtual ~EgcAlnumNode();
         /**
@@ -112,6 +117,7 @@ public:
 
 private:
         QString m_value;                                ///< the value of the number
+        bool m_firstCharMightBeNumber;                  ///< if true, first char can also be a number
         static QRegularExpression s_validator;          ///< a validator for character inputs
         static QRegularExpression s_ampersand;          ///< regex to replace ampersand
         static QRegularExpression s_ampersandBegin;     ///< regex to replace ampersand at the beginning
