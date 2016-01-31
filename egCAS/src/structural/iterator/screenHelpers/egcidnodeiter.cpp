@@ -341,8 +341,7 @@ bool EgcIdNodeIter::omitFollowingNode(EgcNode* followingNode, EgcIteratorState f
                         retval = false;
                 break;
         case EgcNodeType::ExponentNode:
-                if (    followingState == EgcIteratorState::LeftIteration
-                     || followingState == EgcIteratorState::RightIteration)
+                if (followingState == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::IntegralNode:
