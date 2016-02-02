@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcsubidnodeiter.h"
 #include "specialNodes/egcnode.h"
 #include "concreteNodes/egcnumbernode.h"
+#include "concreteNodes/egcalnumnode.h"
 
 EgcSubindNodeIter::EgcSubindNodeIter(EgcNode& node) : m_node(&node)
 {
@@ -140,14 +141,22 @@ bool EgcSubindNodeIter::remove(bool before)
 {
         bool retval = false;
 
-        if (m_node->getNodeType() == EgcNodeType::NumberNode) {
-                int pos = -1;
-                if (before)
-                        pos = m_prevId;
-                else
-                        pos = m_nextId;
-                if (retval != -1)
-                        retval = static_cast<EgcNumberNode*>(m_node)->remove(pos);
+        int pos = -1;
+        if (before)
+                pos = m_prevId;
+        else
+                pos = m_nextId;
+        if (retval != -1) {
+                switch(m_node->getNodeType()) {
+                        case EgcNodeType::NumberNode:
+                                retval = static_cast<EgcNumberNode*>(m_node)->remove(pos);
+                                break;
+                case EgcNodeType::AlnumNode:
+                        retval = static_cast<EgcAlnumNode*>(m_node)->remove(pos);
+                        break;
+                default:
+                        break;
+                }
         }
 
         if (retval) {
@@ -164,14 +173,22 @@ bool EgcSubindNodeIter::insert(QChar character)
 {
         bool retval = false;
 
-        if (m_node->getNodeType() == EgcNodeType::NumberNode) {
-                int pos = -1;
-                if (m_nextId != -1)
-                        pos = m_nextId;
-                else if (m_prevId != -1)
-                        pos = m_prevId + 1;
-                if (pos != -1)
-                        retval = static_cast<EgcNumberNode*>(m_node)->insert(character, pos);
+        int pos = -1;
+        if (m_nextId != -1)
+                pos = m_nextId;
+        else if (m_prevId != -1)
+                pos = m_prevId + 1;
+        if (pos != -1) {
+                switch (m_node->getNodeType()) {
+                        case EgcNodeType::NumberNode:
+                                retval = static_cast<EgcNumberNode*>(m_node)->insert(character, pos);
+                                break;
+                        case EgcNodeType::AlnumNode:
+                                retval = static_cast<EgcAlnumNode*>(m_node)->insert(character, pos);
+                                break;
+                        default:
+                                break;
+                }
         }
 
         if (retval) {
