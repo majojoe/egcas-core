@@ -90,17 +90,17 @@ void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide = true)
 
         //set histId and histState
         if (atRightSide) {
-                if (m_nodeIterPrev->peekNext().isContainer())
+                if (node.isContainer())
                         m_histState = EgcIteratorState::RightIteration;
                 else
                         m_histState = EgcIteratorState::MiddleIteration;
-                m_histId = getMathmlId(&node, m_histState, &m_nodeIterNext->peekPrevious(), nullptr);
+                m_histId = getMathmlId(&node, m_histState, nullptr, &m_nodeIterPrev->peekNext());
         } else {
-                if (m_nodeIterPrev->peekPrevious().isContainer())
+                if (node.isContainer())
                         m_histState = EgcIteratorState::LeftIteration;
                 else
                         m_histState = EgcIteratorState::MiddleIteration;
-                m_histId = getMathmlId(&node, m_histState, nullptr, &m_nodeIterPrev->peekNext());
+                m_histId = getMathmlId(&node, m_histState, &m_nodeIterNext->peekPrevious(), nullptr);
         }
 }
 

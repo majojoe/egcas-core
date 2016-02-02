@@ -126,10 +126,10 @@ void EgcSubindNodeIter::toFront(void)
         int indexes = m_node->nrSubindexes();
 
         m_prevId = -1;
-        m_prevId = 0;
+        m_nextId = 0;
 
         if (indexes <= 0)
-                m_prevId = -1;
+                m_nextId = -1;
 }
 
 int EgcSubindNodeIter::lastSubind(void)

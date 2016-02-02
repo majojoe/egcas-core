@@ -71,6 +71,11 @@ bool EgcScrPosIterator::hasPrevious(void) const
 
 const quint32 EgcScrPosIterator::next(void)
 {
+        if (m_lastParentNode && !rightSide()) {
+                switchParentSide();
+                return m_id;
+        }
+
         if (m_subIdIter->hasNext()) {
                 (void) m_subIdIter->next();
         } else if (m_nodeIter->hasNext()) {
@@ -88,6 +93,11 @@ const quint32 EgcScrPosIterator::next(void)
 
 const quint32 EgcScrPosIterator::previous(void)
 {
+        if (m_lastParentNode && rightSide()) {
+                switchParentSide();
+                return m_id;
+        }
+
         if (m_subIdIter->hasPrevious()) {
                 (void) m_subIdIter->previous();
         } else if (m_nodeIter->hasPrevious()) {
@@ -218,6 +228,35 @@ quint32 EgcScrPosIterator::getNextVisibleParent(void)
         }
 
         return m_lookup.getIdFrame(*parent);
+}
+
+void EgcScrPosIterator::switchParentSide(void)
+{
+        bool r_side = rightSide();
+
+        if (!m_lastParentNode)
+                return;
+
+        r_side = !r_side;
+        m_nodeIter->setAtNode(*m_lastParentNode, r_side);
+
+        if (r_side)
+                m_node = &m_nodeIter->peekPrevious();
+        else
+                m_node = &m_nodeIter->peekNext();
+
+        m_subIdIter->setNode(*m_node);
+        if (r_side) {
+                m_subIdIter->toBack();
+                m_forward = true;
+        } else {
+                m_subIdIter->toFront();
+                m_forward = false;
+        }
+
+        m_id = m_lookup.getIdFrame(*m_lastParentNode);
+
+        return;
 }
 
 bool EgcScrPosIterator::insert(QChar character)

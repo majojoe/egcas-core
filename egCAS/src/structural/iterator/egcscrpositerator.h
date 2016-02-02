@@ -140,6 +140,10 @@ public:
          * @return true if the operation was successful, false otherwise
          */
         bool backspace(void);
+        /**
+         * @brief switchParentSide if a parent is marked, and the cursor position is at one side, switch to the other
+         */
+        void switchParentSide(void);
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula
