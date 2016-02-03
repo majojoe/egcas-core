@@ -38,7 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup(formula.getMathmlMappingCRef()), //gcc bug
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
-                                                                        m_forward{true}, m_lastParentNode{nullptr},
+                                                                        m_forward{true}, m_lastUnderlinedNode{nullptr},
                                                                         m_originNode{nullptr}
 {
 
@@ -71,8 +71,8 @@ bool EgcScrPosIterator::hasPrevious(void) const
 
 const quint32 EgcScrPosIterator::next(void)
 {
-        if (m_lastParentNode && !rightSide()) {
-                switchParentSide();
+        if (m_lastUnderlinedNode && !rightSide()) {
+                switchSideUnderlinedNode();
                 return m_id;
         }
 
@@ -85,7 +85,7 @@ const quint32 EgcScrPosIterator::next(void)
                 if (m_nodeIter->hasNext())
                         m_node = &m_nodeIter->next();
                 m_subIdIter->setNode(*m_node);
-                m_lastParentNode = nullptr;
+                m_lastUnderlinedNode = nullptr;
         }
 
         return m_nodeIter->id();
@@ -93,8 +93,8 @@ const quint32 EgcScrPosIterator::next(void)
 
 const quint32 EgcScrPosIterator::previous(void)
 {
-        if (m_lastParentNode && rightSide()) {
-                switchParentSide();
+        if (m_lastUnderlinedNode && rightSide()) {
+                switchSideUnderlinedNode();
                 return m_id;
         }
 
@@ -108,7 +108,7 @@ const quint32 EgcScrPosIterator::previous(void)
                         m_node = &m_nodeIter->previous();
                 m_subIdIter->setNode(*m_node);
                 m_subIdIter->toBack();
-                m_lastParentNode = nullptr;
+                m_lastUnderlinedNode = nullptr;
         }
 
         return m_nodeIter->id();
@@ -184,25 +184,25 @@ EgcNode& EgcScrPosIterator::getNextVisibleParentNode(void)
         quint32 id = 0;
 
         do {
-                if (!m_lastParentNode) {
-                        m_lastParentNode = m_node;
+                if (!m_lastUnderlinedNode) {
+                        m_lastUnderlinedNode = m_node;
                         m_originNode = m_node;
                 } else {
-                        EgcNode* parent = m_lastParentNode->getParent();
+                        EgcNode* parent = m_lastUnderlinedNode->getParent();
                         if (parent) {
-                                m_lastParentNode = parent;
-                                if (m_lastParentNode == m_originNode)
+                                m_lastUnderlinedNode = parent;
+                                if (m_lastUnderlinedNode == m_originNode)
                                         loops++;
                         } else {
-                                m_lastParentNode = m_originNode;
+                                m_lastUnderlinedNode = m_originNode;
                         }
                 }
-                if (m_lastParentNode)
-                        id = m_lookup.getIdFrame(*m_lastParentNode);
+                if (m_lastUnderlinedNode)
+                        id = m_lookup.getIdFrame(*m_lastUnderlinedNode);
         } while (    (!id)
                   || ( loops > 0));
                 
-        return *m_lastParentNode;
+        return *m_lastUnderlinedNode;
 }
 
 quint32 EgcScrPosIterator::getNextVisibleParent(void)
@@ -230,15 +230,15 @@ quint32 EgcScrPosIterator::getNextVisibleParent(void)
         return m_lookup.getIdFrame(*parent);
 }
 
-void EgcScrPosIterator::switchParentSide(void)
+void EgcScrPosIterator::switchSideUnderlinedNode(void)
 {
         bool r_side = rightSide();
 
-        if (!m_lastParentNode)
+        if (!m_lastUnderlinedNode)
                 return;
 
         r_side = !r_side;
-        m_nodeIter->setAtNode(*m_lastParentNode, r_side);
+        m_nodeIter->setAtNode(*m_lastUnderlinedNode, r_side);
 
         if (r_side)
                 m_node = &m_nodeIter->peekPrevious();
@@ -254,7 +254,7 @@ void EgcScrPosIterator::switchParentSide(void)
                 m_forward = false;
         }
 
-        m_id = m_lookup.getIdFrame(*m_lastParentNode);
+        m_id = m_lookup.getIdFrame(*m_lastUnderlinedNode);
 
         return;
 }
@@ -272,4 +272,17 @@ bool EgcScrPosIterator::remove(void)
 bool EgcScrPosIterator::backspace(void)
 {
         return m_subIdIter->remove(true);
+}
+
+void EgcScrPosIterator::resetUnderline(void)
+{
+        m_lastUnderlinedNode = nullptr;
+}
+
+bool EgcScrPosIterator::isUnderlineActive(void)
+{
+        if (m_lastUnderlinedNode)
+                return true;
+        else
+                return false;
 }

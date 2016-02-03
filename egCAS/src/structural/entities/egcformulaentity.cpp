@@ -457,12 +457,19 @@ void EgcFormulaEntity::moveCursor(bool forward)
         if (forward) {
                 if (m_scrIter->hasNext())
                         (void) m_scrIter->next();
+                else
+                        m_scrIter->resetUnderline();
         } else {
                 if (m_scrIter->hasPrevious())
                         (void) m_scrIter->previous();
+                else
+                        m_scrIter->resetUnderline();
         }
 
         showCurrentCursor();
+        if (m_scrIter->isUnderlineActive())
+                m_item->showUnderline(m_scrIter->id());
+
 }
 
 void EgcFormulaEntity::showCurrentCursor(void)

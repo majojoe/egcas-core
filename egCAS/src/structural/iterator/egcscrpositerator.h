@@ -143,7 +143,16 @@ public:
         /**
          * @brief switchParentSide if a parent is marked, and the cursor position is at one side, switch to the other
          */
-        void switchParentSide(void);
+        void switchSideUnderlinedNode(void);
+        /**
+         * @brief resetUnderline reset the underline status (underline will not be shown anymore)
+         */
+        void resetUnderline(void);
+        /**
+         * @brief isUnderlineActive checks if the underline is currently visible
+         * @return true if underline is visible, false otherwise
+         */
+        bool isUnderlineActive(void);
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula
@@ -157,7 +166,7 @@ private:
         quint32 m_id;                                   ///< the last mathml id we jumped over
         QScopedPointer<EgcSubindNodeIter> m_subIdIter;  ///< iterator for the subindexes of a node
         bool m_forward;                                 ///< the last direction of a traversal
-        EgcNode* m_lastParentNode;                      ///< the last visible parent node that was given back
+        EgcNode* m_lastUnderlinedNode;                      ///< the last visible parent node that was given back
         EgcNode* m_originNode;                          ///< the node that was the origin of looking up a visible parent
 };
 
