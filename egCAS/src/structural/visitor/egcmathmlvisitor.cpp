@@ -205,7 +205,6 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                                 assembleResult(derivative, node);
                         } else { // use leibniz' notation
                                 QString result;
-                                id = getId(node);
                                 if (der == 1)
                                         result = "<mfrac "%id%"><mrow><mi>d</mi><mfenced>%" % QString::number(indexD + 1)
                                                  % "</mfenced></mrow><mrow><mi>d</mi>%" % QString::number(indexV + 1)
