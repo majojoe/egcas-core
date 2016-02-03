@@ -118,6 +118,13 @@ public:
          * @return state the state of the node we jumped over
          */
         EgcIteratorState getLastState(void) const;
+        /**
+         * @brief getOriginNodeToMark finds from the given node the next node that can be marked and used as origin node
+         * to mark. This can also be the given node.
+         * @param node the node where to start the search
+         * @return the node that can serve as a origin node where to start marking.
+         */
+        EgcNode& getOriginNodeToMark(const EgcNode& node);
 
 private:
         /**

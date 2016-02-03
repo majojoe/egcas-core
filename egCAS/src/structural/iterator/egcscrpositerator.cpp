@@ -183,10 +183,13 @@ EgcNode& EgcScrPosIterator::getNextVisibleParentNode(void)
         int loops = 0;
         quint32 id = 0;
 
+        if (!m_node)
+                return m_nodeIter->peekPrevious();
+
         do {
                 if (!m_lastUnderlinedNode) {
-                        m_lastUnderlinedNode = m_node;
-                        m_originNode = m_node;
+                        m_lastUnderlinedNode = &m_nodeIter->getOriginNodeToMark(*m_node);
+                        m_originNode = m_lastUnderlinedNode;
                 } else {
                         EgcNode* parent = m_lastUnderlinedNode->getParent();
                         if (parent) {

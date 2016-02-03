@@ -375,6 +375,16 @@ quint32 EgcIdNodeIter::peekPreviousId(void) const
         return getMathmlId(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext());
 }
 
+EgcNode& EgcIdNodeIter::getOriginNodeToMark(const EgcNode& node)
+{
+        EgcNode* nd = node.getParent();
+
+        if (nd->getNodeType() == EgcNodeType::VariableNode)
+                return *nd;
+
+        return const_cast<EgcNode&>(node);
+}
+
 //check if the given node is a result node (activate this if insert and remove have been defined)
 //bool EgcIdNodeIter::isResultNode(EgcNode& node)
 //{

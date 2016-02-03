@@ -58,7 +58,7 @@ bool EgcNode::isBinaryNode(void) const
         return false;
 }
 
-EgcContainerNode *EgcNode::getParent(void)
+EgcContainerNode *EgcNode::getParent(void) const
 {
         return m_parent;
 }
