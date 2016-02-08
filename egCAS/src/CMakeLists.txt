@@ -121,6 +121,7 @@ set(egCAS_SOURCES
         structural/iterator/egcscrpositerator.cpp
         structural/iterator/screenHelpers/egcidnodeiter.cpp
         structural/iterator/screenHelpers/egcsubidnodeiter.cpp
+        structural/iterator/screenHelpers/egcoperatorprecedence.cpp
         structural/specialNodes/egcbasenode.cpp
         structural/specialNodes/egcemptynode.cpp
         structural/visitor/egcmaximavisitor.cpp 
