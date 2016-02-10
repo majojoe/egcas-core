@@ -27,24 +27,24 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCOPERATORPRECEDENCE_H
-#define EGCOPERATORPRECEDENCE_H
+#ifndef EGCOPPREC_H
+#define EGCOPPREC_H
 
 
 #include <QHash>
 
 enum class EgcNodeType;
 
-class EgcOperatorPrecedence
+class EgcOprPrec
 {
 public:
-        EgcOperatorPrecedence(EgcNodeType type);
-        bool operator<(const EgcOperatorPrecedence& rhs) const;
-        bool operator>(const EgcOperatorPrecedence& rhs) const;
-        bool operator==(const EgcOperatorPrecedence& node) const;
+        EgcOprPrec(EgcNodeType type);
+        bool operator<(const EgcOprPrec& rhs) const;
+        bool operator>(const EgcOprPrec& rhs) const;
+        bool operator==(const EgcOprPrec& node) const;
 private:
         static bool s_alreadyInitialized;       ///< is the static content already initialized?
         static QHash<EgcNodeType, quint32> s_precedence; ///< precedence hash table
 };
 
-#endif // EGCOPERATORPRECEDENCE_H
+#endif // EGCOPPREC_H
