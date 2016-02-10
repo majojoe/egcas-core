@@ -30,9 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcoperatorprecedence.h"
 #include "structural/specialNodes/egcnode_gen.h"
 
-bool EgcOperatorPrecedence::s_alreadyInitialized = false;
+bool EgcOprPrec::s_alreadyInitialized = false;
 
-EgcOperatorPrecedence::EgcOperatorPrecedence(EgcNodeType type)
+EgcOprPrec::EgcOprPrec(EgcNodeType type)
 {
 //        if (!s_alreadyInitialized) {
 //                s_alreadyInitialized = true;
