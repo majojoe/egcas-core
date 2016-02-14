@@ -127,6 +127,16 @@ public:
          * empty.
          */
         bool transferProperties(EgcContainerNode &from);
+        /**
+         * @brief isOperation checks if the node is a operation. There are also nodes that are containers, but no operations
+         * @return true if the node is an operation, false otherwise
+         */
+        virtual bool isOperation(void) const override;
+        /**
+         * @brief isRightAssociative check if current node is right associative.
+         * @return true if node is right associative, false otherwise. Only a container can have a associativity.
+         */
+        virtual bool isRightAssociative(void) const;
 
 protected:
         /**

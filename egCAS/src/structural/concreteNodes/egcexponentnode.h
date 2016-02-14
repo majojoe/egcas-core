@@ -40,6 +40,11 @@ class EgcExponentNode : public EgcBinaryNode
         EGC_SET_EXPRESSION_TYPE(EgcExponentNode, EgcNodeType::ExponentNode);
 public:
         EgcExponentNode();
+        /**
+         * @brief isRightAssociative check if current node is right associative.
+         * @return true if node is right associative, false otherwise. Only a container can have a associativity.
+         */
+        virtual bool isRightAssociative(void) const override;
 };
 
 #endif // EGCEXPONENTNODE_H

@@ -127,3 +127,13 @@ bool EgcContainerNode::transferProperties(EgcContainerNode &from)
 
         return retval;
 }
+
+bool EgcContainerNode::isOperation(void) const
+{
+        return true;
+}
+
+bool EgcContainerNode::isRightAssociative(void) const
+{
+        return false;
+}

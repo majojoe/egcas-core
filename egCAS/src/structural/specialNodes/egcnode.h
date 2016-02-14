@@ -128,6 +128,11 @@ public:
          * @return 0 if not overwritten, since a std. node has no subindexes
          */
         virtual int nrSubindexes(void) const;
+        /**
+         * @brief isOperation checks if the node is a operation. There are also nodes that are containers, but no operations
+         * @return true if the node is an operation, false otherwise
+         */
+        virtual bool isOperation(void) const;
 
 protected:
         EgcContainerNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)
