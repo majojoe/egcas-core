@@ -27,55 +27,82 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include "egcoperatorprecedence.h"
+#include "egcopprec.h"
 #include "structural/specialNodes/egcnode_gen.h"
+#include "structural/specialNodes/egcnode.h"
 
-bool EgcOprPrec::s_alreadyInitialized = false;
+bool EgcOpPrec::s_alreadyInitialized = false;
+QHash<int, quint32> EgcOpPrec::s_bindingPower;
 
-EgcOprPrec::EgcOprPrec(EgcNodeType type)
+EgcOpPrec::EgcOpPrec(EgcNode& node) : m_type{EgcNodeType::NodeUndefined}
 {
-//        if (!s_alreadyInitialized) {
-//                s_alreadyInitialized = true;
-//                s_precedence.insert(EgcNodeType::MultiplicationNode, 10);
-//                s_precedence.insert(EgcNodeType::DivisionNode, 10);
-//                s_precedence.insert(EgcNodeType::MinusNode, 20);
-//                s_precedence.insert(EgcNodeType::PlusNode, 20);
+        if (!s_alreadyInitialized) {
+                s_alreadyInitialized = true;
 
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::ParenthesisNode), 70);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::RootNode), 60);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::ExponentNode), 60);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::UnaryMinusNode), 50);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::MultiplicationNode), 30);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::DivisionNode), 30);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::MinusNode), 20);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::PlusNode), 20);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::DefinitionNode), 2);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::EqualNode), 1);
+                // the following have no binding power, since these operations are always top level (breakout not possible)
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::DifferentialNode), 0);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::FunctionNode), 0);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::IntegralNode), 0);
+                s_bindingPower.insert(static_cast<int>(EgcNodeType::BaseNode), 0);
+        }
 
+        if (node.isOperation()) {
+                m_type = node.getNodeType();
+        }
 
-//                s_precedence.insert(EgcNodeType::, 20);
-
-//        }
 }
 
-//bool EgcEntity::operator<(const EgcEntity& rhs) const
-//{
-//        QPointF op1 = getPosition();
-//        QPointF op2 = rhs.getPosition();
+bool EgcOpPrec::operator<(const EgcOpPrec& rhs) const
+{
+        EgcNodeType type1 = getType();
+        EgcNodeType type2 = rhs.getType();
+        quint32 bp1 = 0;
+        quint32 bp2 = 0;
 
-//        //first have a look at the vertical positions in a worksheet
-//        if ( op1.y() < op2.y() )
-//                return true;
-//        if ( op1.y() > op2.y() )
-//                return false;
+        if (s_bindingPower.contains(static_cast<int>(type1)))
+                bp1 = s_bindingPower.value(static_cast<int>(type1));
 
-//        //if these positions are the same, then have a look at the horizontal positions in the worksheet (writing from left to right)
-//        if ( op1.x() < op2.x() )
-//                return true;
-//        if ( op1.x() > op2.x() )
-//                return false;
+        if (s_bindingPower.contains(static_cast<int>(type2)))
+                bp2 = s_bindingPower.value(static_cast<int>(type2));
 
-//        return true;
-//}
+        if (bp1 < bp2)
+                return true;
+        else
+                return false;
+}
 
-//bool EgcAlnumNode::operator==(const EgcNode& node) const
-//{
-//        bool retval = false;
+bool EgcOpPrec::operator>(const EgcOpPrec& rhs) const
+{
+        if (*this == rhs)
+                return false;
 
-//        if (node.getNodeType() == EgcNodeType::VariableNode) {
-//                if (static_cast<const EgcAlnumNode&>(node).getValue() == m_value)
-//                        retval = true;
-//        }
+        if (*this < rhs)
+                return false;
 
-//        return retval;
-//}
+        return true;
+}
+
+bool EgcOpPrec::operator==(const EgcOpPrec& opPrec) const
+{
+        bool retval = false;
+
+        if (opPrec.getType() == m_type)
+                retval = true;
+
+        return retval;
+}
+
+EgcNodeType EgcOpPrec::getType(void) const
+{
+        return m_type;
+}

@@ -96,3 +96,8 @@ int EgcNode::nrSubindexes(void) const
 {
         return 0;
 }
+
+bool EgcNode::isOperation(void) const
+{
+        return false;
+}

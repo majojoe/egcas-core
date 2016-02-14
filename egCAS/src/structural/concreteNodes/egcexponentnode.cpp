@@ -31,3 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcExponentNode::EgcExponentNode()
 {
 }
+
+bool EgcExponentNode::isRightAssociative(void) const
+{
+        return true;
+}

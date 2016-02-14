@@ -229,3 +229,8 @@ bool EgcVariableNode::operator==(const EgcNode& node) const
 
         return retval;
 }
+
+bool EgcVariableNode::isOperation(void) const
+{
+        return false;
+}
