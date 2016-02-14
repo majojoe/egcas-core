@@ -34,17 +34,28 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QHash>
 
 enum class EgcNodeType;
+class EgcNode;
 
-class EgcOprPrec
+/**
+ * @brief The EgcOprPrec class determines operator precedence of all used operators to be able to insert operations in
+ * the formula tree
+ */
+class EgcOpPrec
 {
 public:
-        EgcOprPrec(EgcNodeType type);
-        bool operator<(const EgcOprPrec& rhs) const;
-        bool operator>(const EgcOprPrec& rhs) const;
-        bool operator==(const EgcOprPrec& node) const;
+        EgcOpPrec(EgcNode& node);
+        bool operator<(const EgcOpPrec& rhs) const;
+        bool operator>(const EgcOpPrec& rhs) const;
+        bool operator==(const EgcOpPrec& node) const;
+        /**
+         * @brief getType returns the saved node type
+         * @return the node type of the operator precedence object
+         */
+        EgcNodeType getType(void) const;
 private:
         static bool s_alreadyInitialized;       ///< is the static content already initialized?
-        static QHash<EgcNodeType, quint32> s_precedence; ///< precedence hash table
+        static QHash<int, quint32> s_bindingPower; ///< binding power hash table for precedence of operations
+        EgcNodeType m_type;             ///< the node type saved in this object
 };
 
 #endif // EGCOPPREC_H

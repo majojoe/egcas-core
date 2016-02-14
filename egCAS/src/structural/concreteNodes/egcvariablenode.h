@@ -93,6 +93,11 @@ public:
          * @return true if the trees are equal
          */
         virtual bool operator==(const EgcNode& node) const override;
+        /**
+         * @brief isOperation checks if the node is a operation. There are also nodes that are containers, but no operations
+         * @return true if the node is an operation, false otherwise
+         */
+        virtual bool isOperation(void) const override;
 
 protected:
         static QRegularExpression s_varSubSeparator; ///< regex for separating variable and subscript
