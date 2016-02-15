@@ -479,6 +479,16 @@ bool EgcIdNodeIter::rightSide(EgcNodeIterator& iter, EgcNode& node) const
                 return false;
 }
 
+EgcIteratorState EgcIdNodeIter::getStateNextNode(void) const
+{
+        return m_nodeIterNext->getStateNextNode();
+}
+
+EgcIteratorState EgcIdNodeIter::getStatePreviousNode(void) const
+{
+        return m_nodeIterPrev->getStatePreviousNode();
+}
+
 //check if the given node is a result node (activate this if insert and remove have been defined)
 //bool EgcIdNodeIter::isResultNode(EgcNode& node)
 //{

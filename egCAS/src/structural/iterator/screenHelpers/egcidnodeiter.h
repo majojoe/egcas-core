@@ -116,6 +116,16 @@ public:
          * @return true if cursor is at the right side, false otherwise
          */
         bool rightSide(void) const;
+        /**
+         * @brief getStateNextNode get the state of the next node (where m_nodeIterNext->peekNext() is pointing to)
+         * @return the state of the next node
+         */
+        EgcIteratorState getStateNextNode(void) const;
+        /**
+         * @brief getStatePreviousNode get the state of the previous node (where m_nodeIterPrevious-peekPrevious() is pointing to)
+         * @return the state of the previous node
+         */
+        EgcIteratorState getStatePreviousNode(void) const;
 
 private:
         /**
