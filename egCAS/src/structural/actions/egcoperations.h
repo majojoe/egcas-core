@@ -41,6 +41,8 @@ enum class EgcOperations
         substraction,
         multiplication,
         division,
+        parenthesisRight,
+        parenthesisLeft,
         // view based operations (e.g. s.th. happened on the view)
         formulaActivated,               ///< formula was activated (e.g. got focus on screen)
         formulaDeactivated,             ///< formula was deactivated (e.g. lost focus on screen)

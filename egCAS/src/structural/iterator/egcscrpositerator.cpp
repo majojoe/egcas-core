@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "iterator/screenHelpers/egcidnodeiter.h"
 #include "iterator/screenHelpers/egcsubidnodeiter.h"
 #include "iterator/egcnodeiterator.h"
+#include "structural/actions/egcoperations.h"
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup(formula.getMathmlMappingCRef()), //gcc bug
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
@@ -288,4 +289,21 @@ bool EgcScrPosIterator::isUnderlineActive(void)
                 return true;
         else
                 return false;
+}
+
+bool EgcScrPosIterator::insert(EgcOperations operations)
+{
+        bool retval = false;
+
+        if (    operations == EgcOperations::parenthesisLeft
+             || operations == EgcOperations::parenthesisRight) {
+                if (    operations == EgcOperations::parenthesisLeft
+                     && m_nodeIter->getStateNextNode() == EgcIteratorState::LeftIteration)
+                        return insertUnaryOp(EgcNodeType::ParenthesisNode, m_nodeIter->peekNext());
+                if (    operations == EgcOperations::parenthesisRight
+                     && m_nodeIter->getStatePreviousNode() == EgcIteratorState::RightIteration)
+                        return insertUnaryOp(EgcNodeType::ParenthesisNode, m_nodeIter->peekPrevious());
+        }
+
+        return retval;
 }

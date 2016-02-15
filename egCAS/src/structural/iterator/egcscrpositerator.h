@@ -40,6 +40,7 @@ class EgcFormulaEntity;
 class EgcMathmlLookup;
 class EgcIdNodeIter;
 class EgcSubindNodeIter;
+enum class EgcOperations;
 
 // /**
 // * @brief The EgcScrPosVisibility enum decribes the visibility of a formula element. A formula element can have visible
@@ -130,6 +131,12 @@ public:
          * @return true if the operation was successful, false otherwise
          */
         bool insert(QChar character);
+        /**
+         * @brief insert insert any operation at current position of the iterator
+         * @param operations the operation to insert
+         * @return true if the insert operation was successful, false otherwise
+         */
+        bool insert(EgcOperations operations);
         /**
          * @brief remove removes the element that is next to the current iterator position (forward direction)
          * @return true if the operation was successful, false otherwise

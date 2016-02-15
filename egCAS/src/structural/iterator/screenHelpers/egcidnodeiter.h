@@ -125,6 +125,16 @@ public:
          * @return the node that can serve as a origin node where to start marking.
          */
         EgcNode& getOriginNodeToMark(const EgcNode& node);
+        /**
+         * @brief getStateNextNode get the state of the next node (where m_nodeIterNext->peekNext() is pointing to)
+         * @return the state of the next node
+         */
+        EgcIteratorState getStateNextNode(void) const;
+        /**
+         * @brief getStatePreviousNode get the state of the previous node (where m_nodeIterPrevious-peekPrevious() is pointing to)
+         * @return the state of the previous node
+         */
+        EgcIteratorState getStatePreviousNode(void) const;
 
 private:
         /**
