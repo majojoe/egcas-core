@@ -40,6 +40,7 @@ class EgcFormulaEntity;
 class EgcMathmlLookup;
 class EgcNodeIterator;
 enum class EgcIteratorState;
+enum class EgcNodeType;
 
 
 /**
@@ -135,6 +136,13 @@ public:
          * @return the state of the previous node
          */
         EgcIteratorState getStatePreviousNode(void) const;
+        /**
+         * @brief insert insert a node at the current position of the next or previous pointer
+         * @param type the type of the node to insert
+         * @param next if true insert at the position of the next pointer, if false at the position of the previous pointer
+         * @return true if everything went well, false otherwise
+         */
+        bool insert(EgcNodeType type, bool next);
 
 private:
         /**

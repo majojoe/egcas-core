@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "concreteNodes/egcvariablenode.h"
 #include "specialNodes/egcflexnode.h"
 #include "iterator/egcnodeiterator.h"
-
+#include "structural/specialNodes/egcnode_gen.h"
 
 EgcIdNodeIter::EgcIdNodeIter(const EgcFormulaEntity& formula) : m_nodeIterNext{new EgcNodeIterator(formula)},
                                                                 m_nodeIterPrev{new EgcNodeIterator(formula)},
@@ -397,6 +397,14 @@ EgcIteratorState EgcIdNodeIter::getStateNextNode(void) const
 EgcIteratorState EgcIdNodeIter::getStatePreviousNode(void) const
 {
         return m_nodeIterPrev->getStatePreviousNode();
+}
+
+bool EgcIdNodeIter::insert(EgcNodeType type, bool next)
+{
+        if (next)
+                return m_nodeIterNext->insert(type);
+        else
+                return m_nodeIterPrev->insert(type);
 }
 
 //check if the given node is a result node (activate this if insert and remove have been defined)
