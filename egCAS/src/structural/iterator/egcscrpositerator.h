@@ -41,6 +41,7 @@ class EgcMathmlLookup;
 class EgcIdNodeIter;
 class EgcSubindNodeIter;
 enum class EgcOperations;
+enum class EgcNodeType;
 
 // /**
 // * @brief The EgcScrPosVisibility enum decribes the visibility of a formula element. A formula element can have visible
@@ -156,6 +157,13 @@ private:
          * @return returns the next visible parent node of the current node
          */
         EgcNode& getNextVisibleParentNode(void);
+        /**
+         * @brief insertUnaryOp insert a unary node in the tree above the given node (position)
+         * @param type the node type to insert 
+         * @param nextNode if true the iterator in forward direction will be used, if false the iterator in backward direction
+         * @return true if everything worked well, false otherwise.
+         */
+        bool insertUnaryOp(EgcNodeType type, bool nextNode);        
 
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes

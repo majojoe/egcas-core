@@ -36,6 +36,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "iterator/screenHelpers/egcsubidnodeiter.h"
 #include "iterator/egcnodeiterator.h"
 #include "structural/actions/egcoperations.h"
+#include "structural/egcnodecreator.h"
+#include "structural/specialNodes/egcnode_gen.h"
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup(formula.getMathmlMappingCRef()), //gcc bug
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
@@ -259,11 +261,25 @@ bool EgcScrPosIterator::insert(EgcOperations operations)
              || operations == EgcOperations::parenthesisRight) {
                 if (    operations == EgcOperations::parenthesisLeft
                      && m_nodeIter->getStateNextNode() == EgcIteratorState::LeftIteration)
-                        return insertUnaryOp(EgcNodeType::ParenthesisNode, m_nodeIter->peekNext());
+                        return insertUnaryOp(EgcNodeType::ParenthesisNode, true);
                 if (    operations == EgcOperations::parenthesisRight
                      && m_nodeIter->getStatePreviousNode() == EgcIteratorState::RightIteration)
-                        return insertUnaryOp(EgcNodeType::ParenthesisNode, m_nodeIter->peekPrevious());
+                        return insertUnaryOp(EgcNodeType::ParenthesisNode, false);
         }
 
         return retval;
+}
+
+bool EgcScrPosIterator::insertUnaryOp(EgcNodeType type, bool nextNode)
+{
+        if (type == EgcNodeType::BaseNode)
+                return false;
+        
+        QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
+        if (!tmp->isUnaryNode())
+                return false;
+
+        m_nodeIter->insert(type, nextNode);
+        
+        return true;
 }
