@@ -416,7 +416,22 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         case EgcOperations::delPressed:
                 removeCharacter(false);
                 break;
+        case EgcOperations::parenthesisLeft:
+                insertOperation(action.m_op);
+                break;
         }
+}
+
+void EgcFormulaEntity::insertOperation(EgcOperations operation)
+{
+        if (!m_scrIter)
+                return;
+        if (!m_item)
+                return;
+
+        m_scrIter->insert(operation);
+        m_item->hideCursors();
+        m_item->updateView();
 }
 
 void EgcFormulaEntity::insertCharacter(QChar character)

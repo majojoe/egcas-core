@@ -301,16 +301,16 @@ bool EgcScrPosIterator::insert(EgcOperations operations)
              || operations == EgcOperations::parenthesisRight) {
                 if (    operations == EgcOperations::parenthesisLeft
                      && m_nodeIter->getStateNextNode() == EgcIteratorState::LeftIteration)
-                        return insertUnaryOp(EgcNodeType::ParenthesisNode, true);
+                        return insertUnaryOp(EgcNodeType::ParenthesisNode);
                 if (    operations == EgcOperations::parenthesisRight
                      && m_nodeIter->getStatePreviousNode() == EgcIteratorState::RightIteration)
-                        return insertUnaryOp(EgcNodeType::ParenthesisNode, false);
+                        return insertUnaryOp(EgcNodeType::ParenthesisNode);
         }
 
         return retval;
 }
 
-bool EgcScrPosIterator::insertUnaryOp(EgcNodeType type, bool nextNode)
+bool EgcScrPosIterator::insertUnaryOp(EgcNodeType type)
 {
         if (type == EgcNodeType::BaseNode)
                 return false;
@@ -319,7 +319,7 @@ bool EgcScrPosIterator::insertUnaryOp(EgcNodeType type, bool nextNode)
         if (!tmp->isUnaryNode())
                 return false;
 
-        m_nodeIter->insert(type, nextNode);
+        m_nodeIter->insert(type);
         
         return true;
 }

@@ -42,6 +42,7 @@ enum class EgcNodeType;
 class EgcAbstractFormulaItem;
 class EgcScreenPos;
 class EgcScrPosIterator;
+enum class EgcOperations;
 
 /**
  * @brief The EgcNumberResultType defines different types of number results
@@ -267,6 +268,11 @@ private:
          * @param character the character to insert
          */
         void insertCharacter(QChar character);
+        /**
+         * @brief insertOperation insert a operation into the tree
+         * @param operations the operation to insert
+         */
+        void insertOperation(EgcOperations operation);
         /**
          * @brief removeCharacter remove a character at the current cursor position
          * @param before if true the character before the current cursor position is remove, if false the character behind

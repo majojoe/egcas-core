@@ -399,12 +399,14 @@ EgcIteratorState EgcIdNodeIter::getStatePreviousNode(void) const
         return m_nodeIterPrev->getStatePreviousNode();
 }
 
-bool EgcIdNodeIter::insert(EgcNodeType type, bool next)
+bool EgcIdNodeIter::insert(EgcNodeType type)
 {
-        if (next)
-                return m_nodeIterNext->insert(type);
-        else
-                return m_nodeIterPrev->insert(type);
+        bool retval;
+
+        retval = m_nodeIterNext->insert(type);
+        setAtNode(m_nodeIterNext->peekPrevious(), true);
+
+        return retval;
 }
 
 //check if the given node is a result node (activate this if insert and remove have been defined)
