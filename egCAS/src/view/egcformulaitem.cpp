@@ -295,6 +295,14 @@ void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
                 action.m_op = EgcOperations::delPressed;
                 m_entity->handleAction(action);
                 break;
+        case Qt::Key_ParenLeft:
+                action.m_op = EgcOperations::parenthesisLeft;
+                m_entity->handleAction(action);
+                break;
+        case Qt::Key_ParenRight:
+                action.m_op = EgcOperations::parenthesisRight;
+                m_entity->handleAction(action);
+                break;
         default:
                 QString chr(event->text()[0]);
                 if (chr.contains(s_alnumKeyFilter)) {
