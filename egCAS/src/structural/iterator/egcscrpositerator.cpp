@@ -260,10 +260,12 @@ bool EgcScrPosIterator::insert(EgcOperations operations)
         if (    operations == EgcOperations::parenthesisLeft
              || operations == EgcOperations::parenthesisRight) {
                 if (    operations == EgcOperations::parenthesisLeft
-                     && m_nodeIter->getStateNextNode() == EgcIteratorState::LeftIteration)
+                     && (    m_nodeIter->getStateNextNode() == EgcIteratorState::LeftIteration)
+                          || m_nodeIter->getStateNextNode() == EgcIteratorState::MiddleIteration)
                         return insertUnaryOp(EgcNodeType::ParenthesisNode);
                 if (    operations == EgcOperations::parenthesisRight
-                     && m_nodeIter->getStatePreviousNode() == EgcIteratorState::RightIteration)
+                     && (    m_nodeIter->getStatePreviousNode() == EgcIteratorState::RightIteration
+                          || m_nodeIter->getStatePreviousNode() == EgcIteratorState::MiddleIteration))
                         return insertUnaryOp(EgcNodeType::ParenthesisNode);
         }
 
