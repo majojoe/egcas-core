@@ -419,6 +419,9 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         case EgcOperations::parenthesisLeft:
                 insertOperation(action.m_op);
                 break;
+        case EgcOperations::parenthesisRight:
+                insertOperation(action.m_op);
+                break;
         }
 }
 
