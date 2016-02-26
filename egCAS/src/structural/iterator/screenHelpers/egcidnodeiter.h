@@ -139,9 +139,11 @@ public:
         /**
          * @brief insert insert a node at the current position of the next or previous pointer
          * @param type the type of the node to insert
+         * @param atNextPosition if true the node will be inserted at the position of the next iterator, if false at the
+         * position of the previous iterator
          * @return true if everything went well, false otherwise
          */
-        bool insert(EgcNodeType type);
+        bool insert(EgcNodeType type, bool atNextPosition);
 
 private:
         /**

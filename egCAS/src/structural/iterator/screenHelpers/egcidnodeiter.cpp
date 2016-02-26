@@ -399,13 +399,39 @@ EgcIteratorState EgcIdNodeIter::getStatePreviousNode(void) const
         return m_nodeIterPrev->getStatePreviousNode();
 }
 
-bool EgcIdNodeIter::insert(EgcNodeType type)
+bool EgcIdNodeIter::insert(EgcNodeType type, bool atNextPosition)
 {
         bool retval;
+        EgcNode* leftNode;
+        EgcNode* rightNode;
 
-        retval = m_nodeIterNext->insert(type);
-        setAtNode(m_nodeIterNext->peekPrevious(), true);
-
+        if (atNextPosition) {
+                leftNode = &m_nodeIterNext->peekPrevious();
+                retval = m_nodeIterNext->insert(type);
+                rightNode = &m_nodeIterNext->peekPrevious();
+        } else {
+                leftNode = &m_nodeIterPrev->peekPrevious();
+                retval = m_nodeIterPrev->insert(type);
+                rightNode = &m_nodeIterPrev->peekPrevious();
+                if (hasPrevious())
+                        previous();
+        }
+        
+        //make the iterators valid again
+        toFront();        
+        while(hasNext()) {
+                if (atNextPosition) {
+                        if (    &m_nodeIterNext->peekPrevious() == leftNode
+                             && &m_nodeIterNext->peekPrevious() == rightNode)
+                                break;
+                } else {
+                        if (    &m_nodeIterPrev->peekPrevious() == leftNode
+                             && &m_nodeIterPrev->peekPrevious() == rightNode)
+                                break;                        
+                }
+                next();
+        }
+                
         return retval;
 }
 

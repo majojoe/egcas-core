@@ -139,6 +139,11 @@ public:
          */
         bool insert(EgcOperations operations);
         /**
+         * @brief finishInsertOperation finish insertiation of a operation (Has to be called after EgcMathmlLookup object of the
+         * formula has been updated). This is not neccessary for insertiation of characters.
+         */
+        void finishInsertOperation(void);
+        /**
          * @brief remove removes the element that is next to the current iterator position (forward direction)
          * @return true if the operation was successful, false otherwise
          */
@@ -170,18 +175,20 @@ private:
         /**
          * @brief insertUnaryOp insert a unary node in the tree above the given node (position)
          * @param type the node type to insert 
+         * @param node the node where to insert the operation
          * @return true if everything worked well, false otherwise.
          */
-        bool insertUnaryOp(EgcNodeType type);
+        bool insertUnaryOp(EgcNodeType type, EgcNode* node);
 
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes
-        EgcNode* m_node;                                ///< the last node we jumped over
-        quint32 m_id;                                   ///< the last mathml id we jumped over
+        EgcNode* m_node;                                ///< the last node we jumped over (node currently active)
+        quint32 m_id;                                   ///< the last mathml id we jumped over (only valid if underlined parents are marked)
         QScopedPointer<EgcSubindNodeIter> m_subIdIter;  ///< iterator for the subindexes of a node
         bool m_forward;                                 ///< the last direction of a traversal
-        EgcNode* m_lastUnderlinedNode;                      ///< the last visible parent node that was given back
+        EgcNode* m_lastUnderlinedNode;                  ///< the last visible parent node that was given back
         EgcNode* m_originNode;                          ///< the node that was the origin of looking up a visible parent
+        bool m_finishInsertNext;                        ///< holds where to finish the insert operation (right or left iterator)
 };
 
 #endif // EGCSCRPOSITERATOR_H
