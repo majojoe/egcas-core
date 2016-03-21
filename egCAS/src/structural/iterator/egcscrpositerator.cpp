@@ -101,17 +101,17 @@ const quint32 EgcScrPosIterator::previous(void)
         if (m_subIdIter->hasPrevious()) {
                 (void) m_subIdIter->previous();
         } else if (m_nodeIter->hasPrevious()) {
-                if (m_forward)
-                        m_node = &m_nodeIter->previous();
-                m_forward = false;
-                if (m_nodeIter->hasPrevious())
-                        m_node = &m_nodeIter->previous();
+                bool right = rightSide();
+
+                if (rightSide() || m_node == &m_nodeIter->peekPrevious())
+                        (void) m_nodeIter->previous();
+                m_node = &m_nodeIter->peekPrevious();
                 m_subIdIter->setNode(*m_node);
                 m_subIdIter->toBack();
                 m_lastUnderlinedNode = nullptr;
         }
 
-        return m_nodeIter->id();
+        return m_lookup.getIdFrame(*m_node);
 }
 
 const quint32 EgcScrPosIterator::peekNext(void) const
@@ -175,7 +175,7 @@ int EgcScrPosIterator::subIndex(void)
 
 quint32 EgcScrPosIterator::id(void)
 {
-        return m_nodeIter->id();
+        return m_lookup.getIdFrame(*m_node);
 }
 
 EgcNode& EgcScrPosIterator::getNextVisibleParentNode(void)

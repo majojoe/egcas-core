@@ -38,11 +38,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "iterator/egcnodeiterator.h"
 
 
-EgcIdNodeIter::EgcIdNodeIter(const EgcFormulaEntity& formula) : m_nodeIterNext{new EgcNodeIterator(formula)},
-                                                                m_nodeIterPrev{new EgcNodeIterator(formula)},
-                                                                m_histState{EgcIteratorState::LeftIteration},
+EgcIdNodeIter::EgcIdNodeIter(const EgcFormulaEntity& formula) : m_nodeIter{new EgcNodeIterator(formula)},                                                                
                                                                 m_lookup(formula.getMathmlMappingCRef()), //gcc bug
-                                                                m_histId{0}
+                                                                m_node{nullptr}
 {
         toBack();
 }
@@ -75,125 +73,152 @@ void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide = true)
                 };
         }
 
-        *m_nodeIterNext = iter;
-        *m_nodeIterPrev = iter;
+        EgcNode* visible_node;
 
-        if (atRightSide) {
-                if (    !mathmlIdExisting(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode(), &m_nodeIterNext->peekPrevious(), nullptr)
-                     || omitFollowingNode(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode()))
-                        nextNodeWithId();
-        } else {
-                if (    !mathmlIdExisting(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext())
-                     || omitFollowingNode(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode()))
-                        prevNodeWithId();
-        }
+        if (atRightSide)
+                visible_node = gotoNodeWithId(true, &iter);
+         else
+                visible_node = gotoNodeWithId(false, &iter);
 
-        //set histId and histState
-        if (atRightSide) {
-                if (node.isContainer())
-                        m_histState = EgcIteratorState::RightIteration;
-                else
-                        m_histState = EgcIteratorState::MiddleIteration;
-                m_histId = getMathmlId(&node, m_histState, nullptr, &m_nodeIterPrev->peekNext());
-        } else {
-                if (node.isContainer())
-                        m_histState = EgcIteratorState::LeftIteration;
-                else
-                        m_histState = EgcIteratorState::MiddleIteration;
-                m_histId = getMathmlId(&node, m_histState, &m_nodeIterNext->peekPrevious(), nullptr);
+        if (visible_node) {
+                m_node = visible_node;
+                *m_nodeIter = iter;
         }
 }
 
 bool EgcIdNodeIter::hasNext(void) const
 {
-        return m_nodeIterNext->hasNext();
+        EgcNodeIterator tempIter = *m_nodeIter;
+        EgcNode* prev;
+
+        prev = gotoNodeWithId(true, &tempIter, true);
+
+        if (prev)
+                return true;
+        return false;
 }
 
 bool EgcIdNodeIter::hasPrevious(void) const
 {
-        return m_nodeIterPrev->hasPrevious();
+        EgcNodeIterator tempIter = *m_nodeIter;
+        EgcNode* next;
+
+        next = gotoNodeWithId(false, &tempIter, true);
+
+        if (next)
+                return true;
+        return false;
 }
 
 EgcNode &  EgcIdNodeIter::next(void)
 {
+        EgcNode* old;
         EgcNode* next;
-        EgcNodeIterator tempIter = *m_nodeIterNext;
+        EgcNodeIterator tempIter = *m_nodeIter;
 
-        next = &nextNodeWithId();
-        *m_nodeIterPrev = tempIter;
-        if (m_nodeIterPrev->hasNext())
-                m_nodeIterPrev->next();
+        old = m_node;
+        if (m_node == &m_nodeIter->peekPrevious()) {
+                m_node = &m_nodeIter->peekNext();
+                next = gotoNodeWithId(true, &tempIter);
+        } else {
+                if (m_nodeIter->hasNext()) {
+                        m_nodeIter->next();
+                        next = gotoNodeWithId(true, &tempIter);
+                }
+        }
 
-        return *next;
+        if (next) {
+                m_node = next;
+                *m_nodeIter = tempIter;
+        } else {
+                m_node = old;
+        }
+
+        return *m_node;
 }
 
 EgcNode & EgcIdNodeIter::previous(void)
 {
-        EgcNode* prev;
-        EgcNodeIterator tempIter = *m_nodeIterPrev;
+        EgcNode* old;
+        EgcNode* previous;
+        EgcNodeIterator tempIter = *m_nodeIter;
 
-        prev = &prevNodeWithId();
-        *m_nodeIterNext = tempIter;
-        if (m_nodeIterNext->hasPrevious())
-                m_nodeIterNext->previous();
+        old = m_node;
+        if (m_node == &m_nodeIter->peekNext()) {
+                m_node = &m_nodeIter->peekPrevious();
+                previous = gotoNodeWithId(false, &tempIter);
+        } else {
+                if (m_nodeIter->hasPrevious()) {
+                        m_nodeIter->previous();
+                        previous = gotoNodeWithId(false, &tempIter);
+                }
+        }
 
-        return *prev;
-}
+        if (previous) {
+                m_node = previous;
+                *m_nodeIter = tempIter;
+        } else {
+                m_node = old;
+        }
 
-EgcNode& EgcIdNodeIter::peekNext(void) const
-{
-        return m_nodeIterNext->peekNext();
-}
-
-EgcNode& EgcIdNodeIter::peekPrevious(void) const
-{
-        return m_nodeIterPrev->peekPrevious();
+        return *m_node;
 }
 
 void EgcIdNodeIter::toBack(void)
 {
-        m_nodeIterNext->toBack();
-        m_nodeIterPrev->toBack();
-        if (    !mathmlIdExisting(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext())
-             || omitFollowingNode(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode()))
-                prevNodeWithId();
-        if (m_nodeIterPrev->peekPrevious().isContainer())
-                m_histState = EgcIteratorState::RightIteration;
-        else
-                m_histState = EgcIteratorState::MiddleIteration;
-        m_histId = getMathmlId(&m_nodeIterPrev->peekPrevious(), m_histState, nullptr, &m_nodeIterPrev->peekNext());
+        m_nodeIter->toBack();
+        EgcNodeIterator iter = *m_nodeIter;
+        EgcNode* node;
+
+        node = gotoNodeWithId(false, &iter);
+
+        if (node) {
+                m_node = node;
+                *m_nodeIter = iter;
+        }
 }
 
 void EgcIdNodeIter::toFront(void)
 {
-        m_nodeIterNext->toFront();
-        m_nodeIterPrev->toFront();
-        if (    !mathmlIdExisting(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode(), &m_nodeIterNext->peekPrevious(), nullptr)
-             || omitFollowingNode(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode()))
-                nextNodeWithId();
-        if (m_nodeIterNext->peekNext().isContainer())
-                m_histState = EgcIteratorState::LeftIteration;
+        m_nodeIter->toFront();
+        EgcNodeIterator iter = *m_nodeIter;
+        EgcNode* node;
+
+        node = gotoNodeWithId(true, &iter);
+
+        if (node) {
+                m_node = node;
+                *m_nodeIter = iter;
+        }
+}
+
+quint32 EgcIdNodeIter::id(void) const
+{
+        if (m_node == &m_nodeIter->peekNext())
+                return getMathmlId(m_node, getState(), &m_nodeIter->peekPrevious(), nullptr);
         else
-                m_histState = EgcIteratorState::MiddleIteration;
-        m_histId = getMathmlId(&m_nodeIterNext->peekNext(), m_histState, &m_nodeIterNext->peekPrevious(), nullptr);
+                return getMathmlId(m_node, getState(), nullptr, &m_nodeIter->peekNext());
 }
 
-const quint32& EgcIdNodeIter::id(void)
+EgcIteratorState EgcIdNodeIter::getState(void) const
 {
-        return m_histId;
-}
-
-EgcIteratorState EgcIdNodeIter::getLastState(void) const
-{
-        return m_histState;
-}
-
-bool EgcIdNodeIter::mathmlIdExisting(EgcNode* node, EgcIteratorState state, EgcNode* previousNode, EgcNode* nextNode) const
-{
-        if (getMathmlId(node, state, previousNode, nextNode))
-                return true;
+        if (&m_nodeIter->peekNext() == m_node)
+                return m_nodeIter->getStateNextNode();
         else
-                return false;
+                return m_nodeIter->getStatePreviousNode();
+}
+
+bool EgcIdNodeIter::mathmlIdExisting(EgcNode* node, EgcIteratorState state, EgcNode* otherNode, bool nextNode) const
+{
+        if (nextNode) {
+                if (getMathmlId(node, state, nullptr, otherNode))
+                        return true;
+        } else {
+                if (getMathmlId(node, state, otherNode, nullptr))
+                        return true;
+        }
+
+        return false;
 }
 
 quint32 EgcIdNodeIter::getMathmlId(EgcNode* node, EgcIteratorState state, EgcNode* previousNode, EgcNode* nextNode) const
@@ -233,89 +258,126 @@ quint32 EgcIdNodeIter::getMathmlId(EgcNode* node, EgcIteratorState state, EgcNod
         return id;
 }
 
-EgcNode& EgcIdNodeIter::prevNodeWithId(void)
+EgcNode* EgcIdNodeIter::nextNodeWithId(bool testForNextNode, EgcNodeIterator* tempIter) const
 {
-        EgcNode* prevNode;
         EgcNode* retval;
-        EgcNode* node = nullptr;
-        EgcNode* next;
-        bool firstRun = true;
-        bool rollover;
+        EgcNodeIterator iter = *tempIter;
+        bool visible;
 
-        do {
-                rollover = false;
-                if (firstRun)
-                        next = &m_nodeIterPrev->peekNext();
-                if (m_nodeIterPrev->hasPrevious())
-                        node = &m_nodeIterPrev->previous();
-                if (firstRun) {
-                        retval = node;
-                        m_histState = m_nodeIterPrev->getLastState();
-                        m_histId = getMathmlId(node, m_histState, nullptr, next);
-                        firstRun = false;
+        while (!(visible = nodeStateVisible(iter, testForNextNode)) && m_nodeIter->hasNext()) {
+                if (testForNextNode) {
+                        iter.next();
+                        testForNextNode = false;
+                } else {
+                        testForNextNode = true;
                 }
-                prevNode = &m_nodeIterPrev->peekPrevious();
+        };
 
-                //if a child is not visible, omit that middle iteration before the invisible child
-                if (retval == prevNode && m_histState == EgcIteratorState::MiddleIteration)
-                        firstRun = true;
-                if (retval == prevNode && m_nodeIterPrev->getLastState() == EgcIteratorState::MiddleIteration)
-                        rollover = true;
+        if (visible) {
+                *tempIter = iter;
+                if (testForNextNode) {
+                        retval = &iter.peekNext();
+                } else {
+                        retval = &iter.peekPrevious();
+                }
+        } else {
+                retval = nullptr;
+        }
 
-        } while (    (   !mathmlIdExisting(prevNode, m_nodeIterPrev->getStatePreviousNode(), nullptr, node)
-                      || omitFollowingNode(prevNode, m_nodeIterPrev->getStatePreviousNode())
-                      || firstRun
-                      || rollover)
-                  && m_nodeIterPrev->hasPrevious());
-
-        if (!retval)
-                retval = &m_nodeIterPrev->peekPrevious();
-
-        return *retval;
+        return retval;
 }
 
-EgcNode& EgcIdNodeIter::nextNodeWithId(void)
+EgcNode* EgcIdNodeIter::prevNodeWithId(bool testForPrevNode, EgcNodeIterator* tempIter) const
 {
-        EgcNode* nextNode;
         EgcNode* retval;
-        EgcNode* node = nullptr;
-        EgcNode* prev;
-        bool firstRun = true;
-        bool rollover;
+        EgcNodeIterator iter = *tempIter;
+        bool visible;
 
-        do {
-                rollover = false;
-                if (firstRun)
-                        prev = &m_nodeIterNext->peekPrevious();
-                if (m_nodeIterNext->hasNext())
-                        node = &m_nodeIterNext->next();
-                if (firstRun) {
-                        retval = node;
-                        m_histState = m_nodeIterNext->getLastState();
-                        m_histId = getMathmlId(node, m_histState, prev, nullptr);
-                        firstRun = false;
+        while (!(visible = nodeStateVisible(iter, testForPrevNode)) && m_nodeIter->hasPrevious()) {
+                if (testForPrevNode) {
+                        iter.previous();
+                        testForPrevNode = false;
+                } else {
+                        testForPrevNode = true;
                 }
-                nextNode = &m_nodeIterNext->peekNext();
+        };
 
-                //if a child is not visible, omit that middle iteration before the invisible child
-                if (retval == nextNode && m_histState == EgcIteratorState::MiddleIteration)
-                        firstRun = true;
-                if (retval == nextNode && m_nodeIterNext->getLastState() == EgcIteratorState::MiddleIteration)
-                        rollover = true;
+        if (visible) {
+                *tempIter = iter;
+                if (testForPrevNode) {
+                        retval = &iter.peekPrevious();
+                } else {
+                        retval = &iter.peekNext();
+                }
+        } else {
+                retval = nullptr;
+        }
 
-        } while (    (    !mathmlIdExisting(nextNode, m_nodeIterNext->getStateNextNode(), node, nullptr)
-                       || omitFollowingNode(nextNode, m_nodeIterNext->getStateNextNode())
-                       || firstRun
-                       || rollover )
-                  && m_nodeIterNext->hasNext());
-
-        if (!retval)
-                retval = &m_nodeIterNext->peekNext();
-
-        return *retval;
+        return retval;
 }
 
-bool EgcIdNodeIter::omitFollowingNode(EgcNode* followingNode, EgcIteratorState followingState)
+EgcNode* EgcIdNodeIter::gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, bool checkFollowing) const
+{
+        EgcNode* retval = nullptr;
+        EgcNode* curr = m_node;
+        bool test = false;
+
+        if (!tempIter)
+                return nullptr;
+
+        *tempIter = *m_nodeIter;
+
+        if (forward) {
+                if (curr == &m_nodeIter->peekNext())
+                        test = true;
+                if (checkFollowing) {
+                        if (test && m_nodeIter->hasNext())
+                                (void) m_nodeIter->next();
+                        else
+                                test = true;
+                }
+
+                retval = nextNodeWithId(test, tempIter);
+        } else {
+                if (curr == &m_nodeIter->peekPrevious())
+                        test = true;
+                if (checkFollowing) {
+                        if (test && m_nodeIter->hasPrevious())
+                                (void) m_nodeIter->previous();
+                        else
+                                test = true;
+                }
+                retval = prevNodeWithId(test, tempIter);
+        }
+
+        return retval;
+}
+
+bool EgcIdNodeIter::nodeStateVisible(const EgcNodeIterator &iter, bool forwardDirection) const
+{
+        EgcNode* node;
+        EgcNode* otherNode;
+        EgcIteratorState state;
+
+        if (forwardDirection) {
+                node = &iter.peekNext();
+                otherNode = &iter.peekPrevious();
+                state = iter.getStateNextNode();
+        } else {
+                node = &iter.peekPrevious();
+                otherNode = &iter.peekNext();
+                state = iter.getStatePreviousNode();
+        }
+
+        if (!mathmlIdExisting(node, state, otherNode, forwardDirection))
+                return false;
+        if (omitFollowingNode(node, state))
+                return false;
+
+        return true;
+}
+
+bool EgcIdNodeIter::omitFollowingNode(EgcNode* followingNode, EgcIteratorState followingState) const
 {
         bool retval = true;
 
@@ -368,15 +430,6 @@ bool EgcIdNodeIter::omitFollowingNode(EgcNode* followingNode, EgcIteratorState f
         }
 
         return retval;
-}
-
-quint32 EgcIdNodeIter::peekNextId(void) const
-{
-        return getMathmlId(&m_nodeIterNext->peekNext(), m_nodeIterNext->getStateNextNode(), &m_nodeIterNext->peekPrevious(), nullptr);
-}
-quint32 EgcIdNodeIter::peekPreviousId(void) const
-{
-        return getMathmlId(&m_nodeIterPrev->peekPrevious(), m_nodeIterPrev->getStatePreviousNode(), nullptr, &m_nodeIterPrev->peekNext());
 }
 
 EgcNode& EgcIdNodeIter::getOriginNodeToMark(const EgcNode& node)
