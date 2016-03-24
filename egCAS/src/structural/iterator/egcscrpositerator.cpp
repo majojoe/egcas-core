@@ -38,15 +38,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup(formula.getMathmlMappingCRef()), //gcc bug
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
-                                                                        m_forward{true}, m_lastUnderlinedNode{nullptr},
+                                                                        m_lastUnderlinedNode{nullptr},
                                                                         m_originNode{nullptr}
 {
 
-        m_node = &m_nodeIter->peekPrevious();
-        m_subIdIter.reset(new EgcSubindNodeIter(*m_node));
+        m_subIdIter.reset(new EgcSubindNodeIter(m_nodeIter->getNode()));
         // the subid iterator is at the beginning, so position it at the end.
         m_subIdIter->toBack();
-        m_forward = true;
 }
 
 EgcScrPosIterator::~EgcScrPosIterator()
@@ -73,18 +71,17 @@ const quint32 EgcScrPosIterator::next(void)
 {
         if (m_lastUnderlinedNode && !rightSide()) {
                 switchSideUnderlinedNode();
-                return m_id;
+                return m_nodeIter->id();
         }
 
         if (m_subIdIter->hasNext()) {
                 (void) m_subIdIter->next();
+                //switch from left side to right side, if we are on the half way to the end of the node
+                if (m_subIdIter->lastSubind() == (m_nodeIter->getNode().nrSubindexes() - 1) / 2)
+                        m_nodeIter->next();
         } else if (m_nodeIter->hasNext()) {
-                if (!m_forward)
-                        m_node = &m_nodeIter->next();
-                m_forward = true;
-                if (m_nodeIter->hasNext())
-                        m_node = &m_nodeIter->next();
-                m_subIdIter->setNode(*m_node);
+                m_nodeIter->next();
+                m_subIdIter->setNode(m_nodeIter->getNode());
                 m_lastUnderlinedNode = nullptr;
         }
 
@@ -95,71 +92,45 @@ const quint32 EgcScrPosIterator::previous(void)
 {
         if (m_lastUnderlinedNode && rightSide()) {
                 switchSideUnderlinedNode();
-                return m_id;
+                return m_nodeIter->id();
         }
 
         if (m_subIdIter->hasPrevious()) {
                 (void) m_subIdIter->previous();
+                //switch from right side to left side, if we are on the half way to the front of the node
+                if (m_subIdIter->lastSubind() == (m_nodeIter->getNode().nrSubindexes() - 1) / 2)
+                        m_nodeIter->previous();
         } else if (m_nodeIter->hasPrevious()) {
-                bool right = rightSide();
-
-                if (rightSide() || m_node == &m_nodeIter->peekPrevious())
-                        (void) m_nodeIter->previous();
-                m_node = &m_nodeIter->peekPrevious();
-                m_subIdIter->setNode(*m_node);
-                m_subIdIter->toBack();
+                m_nodeIter->previous();
+                m_subIdIter->setNode(m_nodeIter->getNode());
                 m_lastUnderlinedNode = nullptr;
         }
 
-        return m_lookup.getIdFrame(*m_node);
-}
-
-const quint32 EgcScrPosIterator::peekNext(void) const
-{
-        m_nodeIter->peekNextId();
-}
-
-const quint32 EgcScrPosIterator::peekPrevious(void) const
-{
-        m_nodeIter->peekPreviousId();
+        return m_nodeIter->id();
 }
 
 void EgcScrPosIterator::toBack(void)
 {
-        m_forward = true;
         m_nodeIter->toBack();
-        m_node = &m_nodeIter->peekPrevious();
-        m_subIdIter->setNode(*m_node);
+        m_subIdIter->setNode(m_nodeIter->getNode());
         m_subIdIter->toBack();        
 }
 
 void EgcScrPosIterator::toFront(void)
 {
-        m_forward = false;
         m_nodeIter->toFront();
-        m_node = &m_nodeIter->peekNext();
-        m_subIdIter->setNode(*m_node);
+        m_subIdIter->setNode(m_nodeIter->getNode());
         m_subIdIter->toFront();
 }
 
 const EgcNode* EgcScrPosIterator::node(void)
 {
-        return m_node;
+        return &m_nodeIter->getNode();
 }
 
 bool EgcScrPosIterator::rightSide(void)
 {
-        bool right = true;
-
-        if (m_node->isContainer()) {
-                if (m_nodeIter->getLastState() == EgcIteratorState::LeftIteration)
-                        right = false;
-        } else {
-                if (m_subIdIter->peekPrevious() == -1)
-                        right = false;
-        }
-
-        return right;
+        return m_nodeIter->rightSide();
 }
 
 int EgcScrPosIterator::subIndex(void)
@@ -175,7 +146,7 @@ int EgcScrPosIterator::subIndex(void)
 
 quint32 EgcScrPosIterator::id(void)
 {
-        return m_lookup.getIdFrame(*m_node);
+        return m_lookup.getIdFrame(m_nodeIter->getNode());
 }
 
 EgcNode& EgcScrPosIterator::getNextVisibleParentNode(void)
@@ -183,12 +154,9 @@ EgcNode& EgcScrPosIterator::getNextVisibleParentNode(void)
         int loops = 0;
         quint32 id = 0;
 
-        if (!m_node)
-                return m_nodeIter->peekPrevious();
-
         do {
                 if (!m_lastUnderlinedNode) {
-                        m_lastUnderlinedNode = &m_nodeIter->getOriginNodeToMark(*m_node);
+                        m_lastUnderlinedNode = &m_nodeIter->getOriginNodeToMark(m_nodeIter->getNode());
                         m_originNode = m_lastUnderlinedNode;
                 } else {
                         EgcNode* parent = m_lastUnderlinedNode->getParent();
@@ -216,18 +184,11 @@ quint32 EgcScrPosIterator::getNextVisibleParent(void)
 
         m_nodeIter->setAtNode(*parent, r_side);
 
-        if (r_side)
-                m_node = &m_nodeIter->peekPrevious();
-        else
-                m_node = &m_nodeIter->peekNext();
-
-        m_subIdIter->setNode(*m_node);
+        m_subIdIter->setNode(m_nodeIter->getNode());
         if (r_side) {
                 m_subIdIter->toBack();
-                m_forward = true;
         } else {
                 m_subIdIter->toFront();
-                m_forward = false;
         }
 
         return m_lookup.getIdFrame(*parent);
@@ -243,21 +204,12 @@ void EgcScrPosIterator::switchSideUnderlinedNode(void)
         r_side = !r_side;
         m_nodeIter->setAtNode(*m_lastUnderlinedNode, r_side);
 
-        if (r_side)
-                m_node = &m_nodeIter->peekPrevious();
-        else
-                m_node = &m_nodeIter->peekNext();
-
-        m_subIdIter->setNode(*m_node);
+        m_subIdIter->setNode(m_nodeIter->getNode());
         if (r_side) {
                 m_subIdIter->toBack();
-                m_forward = true;
         } else {
                 m_subIdIter->toFront();
-                m_forward = false;
         }
-
-        m_id = m_lookup.getIdFrame(*m_lastUnderlinedNode);
 
         return;
 }

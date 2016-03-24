@@ -89,6 +89,11 @@ public:
          */
         void toFront(void);
         /**
+         * @brief getNode returns the current node
+         * @return the current node that is currently marked
+         */
+        EgcNode& getNode(void);
+        /**
          * @brief lastId returns the last id we jumped over.
          * @return the id we jumped over lastly.
          */
@@ -104,7 +109,12 @@ public:
          * @param node the node where to start the search
          * @return the node that can serve as a origin node where to start marking.
          */
-        EgcNode& getOriginNodeToMark(const EgcNode& node);
+        EgcNode& getOriginNodeToMark(const EgcNode& node) const;
+        /**
+         * @brief rightSide checks if current cursor is at the right side of the node or not
+         * @return true if cursor is at the right side, false otherwise
+         */
+        bool rightSide(void);
 
 private:
         /**

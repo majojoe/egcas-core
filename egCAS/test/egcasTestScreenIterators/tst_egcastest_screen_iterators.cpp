@@ -99,7 +99,7 @@ void EgcasTest_ScrIters::testIdNodeIter(void)
         while (iter.hasNext()) {
                 EgcNode* node = &iter.next();
 #ifdef PRINT_DBG_DATA
-                qDebug() << "Node: " << node << "id: " << iter.id() << "state: " << static_cast<int>(iter.getLastState());
+                qDebug() << "Node: " << node << "id: " << iter.id() << "state: " << static_cast<int>(iter.getState());
 #endif //#ifdef PRINT_DBG_DATA
         }
 
@@ -109,49 +109,49 @@ void EgcasTest_ScrIters::testIdNodeIter(void)
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::DivisionNode);
         QCOMPARE(static_cast<int>(iter.id()), 9);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::LeftIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::LeftIteration);
 
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode); //value 1
         QCOMPARE(static_cast<int>(iter.id()), 1);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::RootNode);
         QCOMPARE(static_cast<int>(iter.id()), 4);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::LeftIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::LeftIteration);
 
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode); //value 5
         QCOMPARE(static_cast<int>(iter.id()), 2);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::RootNode);
         QCOMPARE(static_cast<int>(iter.id()), 4);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::RightIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::RightIteration);
 
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode); //value 2
         QCOMPARE(static_cast<int>(iter.id()), 8);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::DivisionNode);
         QCOMPARE(static_cast<int>(iter.id()), 9);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::RightIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::RightIteration);
 
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode); //value 1.618
         QCOMPARE(static_cast<int>(iter.id()), 10);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         // we iterate over the formula now from the end to the beginning
         //"((1+sqrt(5)))/2=1.618"
@@ -165,7 +165,7 @@ void EgcasTest_ScrIters::testIdNodeIter(void)
         while (iter.hasPrevious()) {
                 node = &iter.previous();
 #ifdef PRINT_DBG_DATA
-                qDebug() << "Node: " << node << "id: " << iter.id() << "state: " << static_cast<int>(iter.getLastState());
+                qDebug() << "Node: " << node << "id: " << iter.id() << "state: " << static_cast<int>(iter.getState());
 #endif //#ifdef PRINT_DBG_DATA
         }
 
@@ -175,49 +175,49 @@ void EgcasTest_ScrIters::testIdNodeIter(void)
                 node = &iter.previous();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode); //value 1.618
         QCOMPARE(static_cast<int>(iter.id()), 10);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasPrevious())
                 node = &iter.previous();
         QCOMPARE(node->getNodeType(), EgcNodeType::DivisionNode);
         QCOMPARE(static_cast<int>(iter.id()), 9);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::RightIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::RightIteration);
 
         if (iter.hasPrevious())
                 node = &iter.previous();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode); //value 2
         QCOMPARE(static_cast<int>(iter.id()), 8);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasPrevious())
                 node = &iter.previous();
         QCOMPARE(node->getNodeType(), EgcNodeType::RootNode);
         QCOMPARE(static_cast<int>(iter.id()), 4);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::RightIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::RightIteration);
 
         if (iter.hasPrevious())
                 node = &iter.previous();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode); //value 5
         QCOMPARE(static_cast<int>(iter.id()), 2);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasPrevious())
                 node = &iter.previous();
         QCOMPARE(node->getNodeType(), EgcNodeType::RootNode);
         QCOMPARE(static_cast<int>(iter.id()), 4);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::LeftIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::LeftIteration);
 
         if (iter.hasPrevious())
                 node = &iter.previous();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode); //value 1
         QCOMPARE(static_cast<int>(iter.id()), 1);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasPrevious())
                 node = &iter.previous();
         QCOMPARE(node->getNodeType(), EgcNodeType::DivisionNode);
         QCOMPARE(static_cast<int>(iter.id()), 9);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::LeftIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::LeftIteration);
 }
 
 void EgcasTest_ScrIters::testIdNodeIterFW(void)
@@ -237,13 +237,13 @@ void EgcasTest_ScrIters::testIdNodeIterFW(void)
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::DivisionNode);
         QCOMPARE(static_cast<int>(iter.id()), 9);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::LeftIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::LeftIteration);
 
         if (iter.hasPrevious())
                 node = &iter.previous();
         QCOMPARE(node->getNodeType(), EgcNodeType::DivisionNode);
         QCOMPARE(static_cast<int>(iter.id()), 9);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::LeftIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::LeftIteration);
 
         //iterate 3 steps forward, 2 steps backwards and 4 steps forward
         iter.toFront();
@@ -251,31 +251,31 @@ void EgcasTest_ScrIters::testIdNodeIterFW(void)
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::DivisionNode);
         QCOMPARE(static_cast<int>(iter.id()), 9);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::LeftIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::LeftIteration);
 
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode);
         QCOMPARE(static_cast<int>(iter.id()), 1);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasPrevious())
                 node = &iter.previous();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode);
         QCOMPARE(static_cast<int>(iter.id()), 1);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::NumberNode);
         QCOMPARE(static_cast<int>(iter.id()), 1);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::MiddleIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::MiddleIteration);
 
         if (iter.hasNext())
                 node = &iter.next();
         QCOMPARE(node->getNodeType(), EgcNodeType::RootNode);
         QCOMPARE(static_cast<int>(iter.id()), 4);
-        QCOMPARE(iter.getLastState(), EgcIteratorState::LeftIteration);
+        QCOMPARE(iter.getState(), EgcIteratorState::LeftIteration);
 }
 
 QTEST_MAIN(EgcasTest_ScrIters)

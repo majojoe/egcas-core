@@ -79,16 +79,6 @@ public:
          */
         const quint32 previous(void);
         /**
-         * @brief peekNext Returns the next node without incrementing the iterator.
-         * @return a reference to the next mathml id.
-         */
-        const quint32 peekNext(void) const;
-        /**
-         * @brief peekPrevious Returns the previous node without decrementing the iterator.
-         * @return a reference to the previous mathml id.
-         */
-        const quint32 peekPrevious(void) const;
-        /**
          * @brief toBack Moves the iterator to the back of the tree (after the last item).
          */
         void toBack(void);
@@ -162,10 +152,7 @@ private:
 
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes
-        EgcNode* m_node;                                ///< the last node we jumped over
-        quint32 m_id;                                   ///< the last mathml id we jumped over
         QScopedPointer<EgcSubindNodeIter> m_subIdIter;  ///< iterator for the subindexes of a node
-        bool m_forward;                                 ///< the last direction of a traversal
         EgcNode* m_lastUnderlinedNode;                      ///< the last visible parent node that was given back
         EgcNode* m_originNode;                          ///< the node that was the origin of looking up a visible parent
 };

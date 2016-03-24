@@ -40,7 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcIdNodeIter::EgcIdNodeIter(const EgcFormulaEntity& formula) : m_nodeIter{new EgcNodeIterator(formula)},                                                                
                                                                 m_lookup(formula.getMathmlMappingCRef()), //gcc bug
-                                                                m_node{nullptr}
+                                                                m_node{&formula.getBaseElement()}
 {
         toBack();
 }
@@ -190,6 +190,11 @@ void EgcIdNodeIter::toFront(void)
                 m_node = node;
                 *m_nodeIter = iter;
         }
+}
+
+EgcNode& EgcIdNodeIter::getNode(void)
+{
+        return *m_node;
 }
 
 quint32 EgcIdNodeIter::id(void) const
@@ -432,7 +437,7 @@ bool EgcIdNodeIter::omitFollowingNode(EgcNode* followingNode, EgcIteratorState f
         return retval;
 }
 
-EgcNode& EgcIdNodeIter::getOriginNodeToMark(const EgcNode& node)
+EgcNode& EgcIdNodeIter::getOriginNodeToMark(const EgcNode& node) const
 {
         EgcNode* nd = node.getParent();
 
@@ -440,6 +445,14 @@ EgcNode& EgcIdNodeIter::getOriginNodeToMark(const EgcNode& node)
                 return *nd;
 
         return const_cast<EgcNode&>(node);
+}
+
+bool EgcIdNodeIter::rightSide(void)
+{
+        if (m_node == &m_nodeIter->peekPrevious())
+                return false;
+        else
+                return true;
 }
 
 //check if the given node is a result node (activate this if insert and remove have been defined)
