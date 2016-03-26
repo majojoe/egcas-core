@@ -138,21 +138,19 @@ private:
         /**
          * @brief prevNodeWithId iterates the given iterator to the previous node that has a valid mathml id and sets the
          * given iterator accordingly
-         * @param testForPrevNode if true starts with the test at the next node the iterator points to, if false start
-         * at the previous node
+         * @param currNode the node that is currently active
          * @param tempIter the iterator given to operate with
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
-        EgcNode* prevNodeWithId(bool testForPrevNode, EgcNodeIterator* tempIter) const;
+        EgcNode* prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter) const;
         /**
          * @brief nextNodeWithId iterates the given iterator to the next node that has a valid mathml id and sets the
          * given iterator accordingly
-         * @param testForNextNode if true starts with the test at the next node the iterator points to, if false start
-         * at the previous node
-         * @param tempIter the iterator given to operate with
+         * @param currNode the node that is currently active
+         * @param tempIter the iterator given to operate with (must point at the currNode given)
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
-        EgcNode* nextNodeWithId(bool testForNextNode, EgcNodeIterator* tempIter) const;
+        EgcNode* nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter) const;
         /**
          * @brief omitNode check if a node must be omitted
          * @param followingNode the node that follows the current node, eigther in forward or backward direction
@@ -163,10 +161,10 @@ private:
         /**
          * @brief nodeStateVisible checks if the following node is visible when iterating over it
          * @param iter the current iterator in the tree
-         * @param forwardDirection is true if we want to iterate forward in the tree, false otherwise
+         * @param nodeToTest node to test for visibility
          * @return true if the node state in direction is visible, false otherwise
          */
-        bool nodeStateVisible(const EgcNodeIterator& iter, bool forwardDirection) const;
+        bool nodeStateVisible(const EgcNodeIterator& iter, EgcNode& nodeToTest) const;
         /**
          * @brief nextNodeWithId iterates the given iterator to the next or previous node that has a valid mathml id
          * and sets the given iterator accordingly

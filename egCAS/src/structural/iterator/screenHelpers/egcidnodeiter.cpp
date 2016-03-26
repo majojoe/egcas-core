@@ -167,6 +167,7 @@ EgcNode & EgcIdNodeIter::previous(void)
 void EgcIdNodeIter::toBack(void)
 {
         m_nodeIter->toBack();
+        m_node = &m_nodeIter->peekPrevious();
         EgcNodeIterator iter = *m_nodeIter;
         EgcNode* node;
 
@@ -181,6 +182,7 @@ void EgcIdNodeIter::toBack(void)
 void EgcIdNodeIter::toFront(void)
 {
         m_nodeIter->toFront();
+        m_node = &m_nodeIter->peekNext();
         EgcNodeIterator iter = *m_nodeIter;
         EgcNode* node;
 
@@ -263,28 +265,27 @@ quint32 EgcIdNodeIter::getMathmlId(EgcNode* node, EgcIteratorState state, EgcNod
         return id;
 }
 
-EgcNode* EgcIdNodeIter::nextNodeWithId(bool testForNextNode, EgcNodeIterator* tempIter) const
+EgcNode* EgcIdNodeIter::nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter) const
 {
-        EgcNode* retval;
+        EgcNode* retval = &currNode;
         EgcNodeIterator iter = *tempIter;
-        bool visible;
+        bool visible;        
+        EgcNode* nextNode = &iter.peekNext();
+        EgcNode* prevNode = &iter.peekPrevious();
 
-        while (!(visible = nodeStateVisible(iter, testForNextNode)) && m_nodeIter->hasNext()) {
-                if (testForNextNode) {
+        if (    &currNode != nextNode
+             && &currNode != prevNode)
+                return nullptr;
+
+        while (!(visible = nodeStateVisible(iter, *retval)) && iter.hasNext()) {
+                if (retval == &iter.peekNext())
                         iter.next();
-                        testForNextNode = false;
-                } else {
-                        testForNextNode = true;
-                }
+                else
+                        retval = &iter.peekNext();
         };
 
         if (visible) {
                 *tempIter = iter;
-                if (testForNextNode) {
-                        retval = &iter.peekNext();
-                } else {
-                        retval = &iter.peekPrevious();
-                }
         } else {
                 retval = nullptr;
         }
@@ -292,28 +293,27 @@ EgcNode* EgcIdNodeIter::nextNodeWithId(bool testForNextNode, EgcNodeIterator* te
         return retval;
 }
 
-EgcNode* EgcIdNodeIter::prevNodeWithId(bool testForPrevNode, EgcNodeIterator* tempIter) const
+EgcNode* EgcIdNodeIter::prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter) const
 {
-        EgcNode* retval;
+        EgcNode* retval = &currNode;
         EgcNodeIterator iter = *tempIter;
         bool visible;
+        EgcNode* nextNode = &iter.peekNext();
+        EgcNode* prevNode = &iter.peekPrevious();
 
-        while (!(visible = nodeStateVisible(iter, testForPrevNode)) && m_nodeIter->hasPrevious()) {
-                if (testForPrevNode) {
+        if (    &currNode != nextNode
+             && &currNode != prevNode)
+                return nullptr;
+
+        while (!(visible = nodeStateVisible(iter, *retval)) && iter.hasPrevious()) {
+                if (retval == &iter.peekPrevious())
                         iter.previous();
-                        testForPrevNode = false;
-                } else {
-                        testForPrevNode = true;
-                }
+                else
+                        retval = &iter.peekPrevious();
         };
 
         if (visible) {
                 *tempIter = iter;
-                if (testForPrevNode) {
-                        retval = &iter.peekPrevious();
-                } else {
-                        retval = &iter.peekNext();
-                }
         } else {
                 retval = nullptr;
         }
@@ -323,58 +323,61 @@ EgcNode* EgcIdNodeIter::prevNodeWithId(bool testForPrevNode, EgcNodeIterator* te
 
 EgcNode* EgcIdNodeIter::gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, bool checkFollowing) const
 {
-        EgcNode* retval = nullptr;
         EgcNode* curr = m_node;
-        bool test = false;
+        EgcNode* retval = curr;
 
         if (!tempIter)
+                return nullptr;
+
+        if (!m_node)
                 return nullptr;
 
         *tempIter = *m_nodeIter;
 
         if (forward) {
-                if (curr == &m_nodeIter->peekNext())
-                        test = true;
                 if (checkFollowing) {
-                        if (test && m_nodeIter->hasNext())
-                                (void) m_nodeIter->next();
-                        else
-                                test = true;
+                        if (curr == &tempIter->peekNext() && tempIter->hasNext())
+                                retval = &tempIter->next();
                 }
 
-                retval = nextNodeWithId(test, tempIter);
+                retval = nextNodeWithId(*retval, tempIter);
         } else {
-                if (curr == &m_nodeIter->peekPrevious())
-                        test = true;
                 if (checkFollowing) {
-                        if (test && m_nodeIter->hasPrevious())
-                                (void) m_nodeIter->previous();
-                        else
-                                test = true;
+                        if (curr == &tempIter->peekPrevious() && tempIter->hasPrevious())
+                                retval = &tempIter->previous();
                 }
-                retval = prevNodeWithId(test, tempIter);
+                retval = prevNodeWithId(*retval, tempIter);
         }
 
         return retval;
 }
 
-bool EgcIdNodeIter::nodeStateVisible(const EgcNodeIterator &iter, bool forwardDirection) const
+bool EgcIdNodeIter::nodeStateVisible(const EgcNodeIterator &iter, EgcNode& nodeToTest) const
 {
+        EgcNode* nextNode = &iter.peekNext();
+        EgcNode* prevNode = &iter.peekPrevious();
         EgcNode* node;
         EgcNode* otherNode;
         EgcIteratorState state;
+        bool checkNext;
 
-        if (forwardDirection) {
-                node = &iter.peekNext();
-                otherNode = &iter.peekPrevious();
+        if (    nextNode != &nodeToTest
+             && prevNode != &nodeToTest)
+                return false;
+
+        if (nextNode == &nodeToTest) {
+                node = nextNode;
+                otherNode = prevNode;
                 state = iter.getStateNextNode();
+                checkNext = true;
         } else {
-                node = &iter.peekPrevious();
-                otherNode = &iter.peekNext();
+                node = prevNode;
+                otherNode = nextNode;
                 state = iter.getStatePreviousNode();
+                checkNext = false;
         }
 
-        if (!mathmlIdExisting(node, state, otherNode, forwardDirection))
+        if (!mathmlIdExisting(node, state, otherNode, checkNext))
                 return false;
         if (omitFollowingNode(node, state))
                 return false;
@@ -450,9 +453,9 @@ EgcNode& EgcIdNodeIter::getOriginNodeToMark(const EgcNode& node) const
 bool EgcIdNodeIter::rightSide(void)
 {
         if (m_node == &m_nodeIter->peekPrevious())
-                return false;
-        else
                 return true;
+        else
+                return false;
 }
 
 //check if the given node is a result node (activate this if insert and remove have been defined)
