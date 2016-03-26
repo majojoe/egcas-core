@@ -114,7 +114,7 @@ public:
          * @brief rightSide checks if current cursor is at the right side of the node or not
          * @return true if cursor is at the right side, false otherwise
          */
-        bool rightSide(void);
+        bool rightSide(void) const;
 
 private:
         /**
@@ -153,11 +153,12 @@ private:
         EgcNode* nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter) const;
         /**
          * @brief omitNode check if a node must be omitted
-         * @param followingNode the node that follows the current node, eigther in forward or backward direction
-         * @param followingState the state of the following node
+         * @param node the node that follows the current node, eigther in forward or backward direction
+         * @param stateToTest the state of the node to check
+         * @param atRightSide if the cursor is at the right side of an operator
          * @return true if the current node shall be omitted, false otherwise
          */
-        bool omitFollowingNode(EgcNode* followingNode, EgcIteratorState followingState) const;
+        bool omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide) const;
         /**
          * @brief nodeStateVisible checks if the following node is visible when iterating over it
          * @param iter the current iterator in the tree
@@ -174,6 +175,14 @@ private:
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
         EgcNode* gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, bool checkFollowing = false) const;
+        /**
+         * @brief rightSide checks if current cursor is at the right side of the node or not
+         * @param iter the iterator that shall be used to check on which side we are
+         * @param node the current node to check on which side of the operator iterating over we are (must be the prev
+         * or next node of the given iterator)
+         * @return true if cursor is at the right side, false otherwise
+         */
+        bool rightSide(EgcNodeIterator& iter, EgcNode& node) const;
 
         QScopedPointer<EgcNodeIterator> m_nodeIter;         ///< the node iterator that points to the current node with a mathml id
         const EgcMathmlLookup& m_lookup;                    ///< a reference to the lookup data

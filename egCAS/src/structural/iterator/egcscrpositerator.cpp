@@ -103,6 +103,7 @@ const quint32 EgcScrPosIterator::previous(void)
         } else if (m_nodeIter->hasPrevious()) {
                 m_nodeIter->previous();
                 m_subIdIter->setNode(m_nodeIter->getNode());
+                m_subIdIter->toBack();
                 m_lastUnderlinedNode = nullptr;
         }
 
@@ -130,7 +131,14 @@ const EgcNode* EgcScrPosIterator::node(void)
 
 bool EgcScrPosIterator::rightSide(void)
 {
-        return m_nodeIter->rightSide();
+        if (!m_nodeIter->getNode().isContainer()) {
+                if (m_subIdIter->peekPrevious() == -1)
+                        return false;
+                else
+                        return true;
+        } else {
+                return m_nodeIter->rightSide();
+        }
 }
 
 int EgcScrPosIterator::subIndex(void)

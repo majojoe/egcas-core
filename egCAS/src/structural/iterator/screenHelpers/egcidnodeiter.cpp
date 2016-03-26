@@ -338,6 +338,8 @@ EgcNode* EgcIdNodeIter::gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, 
                 if (checkFollowing) {
                         if (curr == &tempIter->peekNext() && tempIter->hasNext())
                                 retval = &tempIter->next();
+                        else
+                                retval = &tempIter->peekNext();
                 }
 
                 retval = nextNodeWithId(*retval, tempIter);
@@ -345,6 +347,8 @@ EgcNode* EgcIdNodeIter::gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, 
                 if (checkFollowing) {
                         if (curr == &tempIter->peekPrevious() && tempIter->hasPrevious())
                                 retval = &tempIter->previous();
+                        else
+                                retval = &tempIter->peekPrevious();
                 }
                 retval = prevNodeWithId(*retval, tempIter);
         }
@@ -379,58 +383,66 @@ bool EgcIdNodeIter::nodeStateVisible(const EgcNodeIterator &iter, EgcNode& nodeT
 
         if (!mathmlIdExisting(node, state, otherNode, checkNext))
                 return false;
-        if (omitFollowingNode(node, state))
+        if (omitFollowingNode(node, state, rightSide(const_cast<EgcNodeIterator&>(iter), *node)))
                 return false;
 
         return true;
 }
 
-bool EgcIdNodeIter::omitFollowingNode(EgcNode* followingNode, EgcIteratorState followingState) const
+bool EgcIdNodeIter::omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide) const
 {
         bool retval = true;
 
-        if (!followingNode)
+        if (!node)
                 return true;
 
         //leafes are always considered as valid nodes
-        if (!followingNode->isContainer())
+        if (!node->isContainer())
                 return false;
 
-        switch (followingNode->getNodeType()) {
+        //normally this state/side combination is not needed
+        if (stateToTest == EgcIteratorState::LeftIteration && atRightSide)
+                return true;
+
+        //normally this state/side combination is not needed
+        if (stateToTest == EgcIteratorState::RightIteration && !atRightSide)
+                return true;
+
+        switch (node->getNodeType()) {
         case EgcNodeType::DivisionNode:
-                if (    followingState == EgcIteratorState::LeftIteration
-                     || followingState == EgcIteratorState::RightIteration)
+                if (    stateToTest == EgcIteratorState::LeftIteration
+                     || stateToTest == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::RootNode:
-                if (    followingState == EgcIteratorState::LeftIteration
-                     || followingState == EgcIteratorState::RightIteration)
+                if (    stateToTest == EgcIteratorState::LeftIteration
+                     || stateToTest == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::ParenthesisNode:
                         retval = false;
                 break;
         case EgcNodeType::ExponentNode:
-                if (followingState == EgcIteratorState::RightIteration)
+                if (stateToTest == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::IntegralNode:
-                if (    followingState == EgcIteratorState::LeftIteration
-                     || followingState == EgcIteratorState::RightIteration)
+                if (    stateToTest == EgcIteratorState::LeftIteration
+                     || stateToTest == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::DifferentialNode:
-                if (    followingState == EgcIteratorState::LeftIteration
-                     || followingState == EgcIteratorState::RightIteration)
+                if (    stateToTest == EgcIteratorState::LeftIteration
+                     || stateToTest == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::FunctionNode:
-                if (    followingState == EgcIteratorState::LeftIteration
-                     || followingState == EgcIteratorState::RightIteration)
+                if (    stateToTest == EgcIteratorState::LeftIteration
+                     || stateToTest == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::UnaryMinusNode:
-                if (    followingState == EgcIteratorState::LeftIteration)
+                if (    stateToTest == EgcIteratorState::LeftIteration)
                         retval = false;
                 break;
         default:
@@ -450,9 +462,14 @@ EgcNode& EgcIdNodeIter::getOriginNodeToMark(const EgcNode& node) const
         return const_cast<EgcNode&>(node);
 }
 
-bool EgcIdNodeIter::rightSide(void)
+bool EgcIdNodeIter::rightSide(void) const
 {
-        if (m_node == &m_nodeIter->peekPrevious())
+        return rightSide(*m_nodeIter, *m_node);
+}
+
+bool EgcIdNodeIter::rightSide(EgcNodeIterator& iter, EgcNode& node) const
+{
+        if (&node == &iter.peekPrevious())
                 return true;
         else
                 return false;
