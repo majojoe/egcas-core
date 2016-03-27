@@ -76,9 +76,9 @@ void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide = true)
         EgcNode* visible_node;
 
         if (atRightSide)
-                visible_node = gotoNodeWithId(true, &iter);
+                visible_node = gotoNodeWithId(true, &iter, node);
          else
-                visible_node = gotoNodeWithId(false, &iter);
+                visible_node = gotoNodeWithId(false, &iter, node);
 
         if (visible_node) {
                 m_node = visible_node;
@@ -91,7 +91,7 @@ bool EgcIdNodeIter::hasNext(void) const
         EgcNodeIterator tempIter = *m_nodeIter;
         EgcNode* prev;
 
-        prev = gotoNodeWithId(true, &tempIter, true);
+        prev = gotoNodeWithId(true, &tempIter, *m_node, true);
 
         if (prev)
                 return true;
@@ -103,7 +103,7 @@ bool EgcIdNodeIter::hasPrevious(void) const
         EgcNodeIterator tempIter = *m_nodeIter;
         EgcNode* next;
 
-        next = gotoNodeWithId(false, &tempIter, true);
+        next = gotoNodeWithId(false, &tempIter, *m_node, true);
 
         if (next)
                 return true;
@@ -119,11 +119,11 @@ EgcNode &  EgcIdNodeIter::next(void)
         old = m_node;
         if (m_node == &m_nodeIter->peekPrevious()) {
                 m_node = &m_nodeIter->peekNext();
-                next = gotoNodeWithId(true, &tempIter);
+                next = gotoNodeWithId(true, &tempIter, *m_node);
         } else {
                 if (m_nodeIter->hasNext()) {
                         m_nodeIter->next();
-                        next = gotoNodeWithId(true, &tempIter);
+                        next = gotoNodeWithId(true, &tempIter, *m_node);
                 }
         }
 
@@ -146,11 +146,11 @@ EgcNode & EgcIdNodeIter::previous(void)
         old = m_node;
         if (m_node == &m_nodeIter->peekNext()) {
                 m_node = &m_nodeIter->peekPrevious();
-                previous = gotoNodeWithId(false, &tempIter);
+                previous = gotoNodeWithId(false, &tempIter, *m_node);
         } else {
                 if (m_nodeIter->hasPrevious()) {
                         m_nodeIter->previous();
-                        previous = gotoNodeWithId(false, &tempIter);
+                        previous = gotoNodeWithId(false, &tempIter, *m_node);
                 }
         }
 
@@ -171,7 +171,7 @@ void EgcIdNodeIter::toBack(void)
         EgcNodeIterator iter = *m_nodeIter;
         EgcNode* node;
 
-        node = gotoNodeWithId(false, &iter);
+        node = gotoNodeWithId(false, &iter, *m_node);
 
         if (node) {
                 m_node = node;
@@ -186,7 +186,7 @@ void EgcIdNodeIter::toFront(void)
         EgcNodeIterator iter = *m_nodeIter;
         EgcNode* node;
 
-        node = gotoNodeWithId(true, &iter);
+        node = gotoNodeWithId(true, &iter, *m_node);
 
         if (node) {
                 m_node = node;
@@ -321,9 +321,9 @@ EgcNode* EgcIdNodeIter::prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempI
         return retval;
 }
 
-EgcNode* EgcIdNodeIter::gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, bool checkFollowing) const
+EgcNode* EgcIdNodeIter::gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, const EgcNode& node, bool checkFollowing) const
 {
-        EgcNode* curr = m_node;
+        EgcNode* curr = const_cast<EgcNode*>(&node);
         EgcNode* retval = curr;
 
         if (!tempIter)

@@ -171,10 +171,11 @@ private:
          * and sets the given iterator accordingly
          * @param forward if true we test in forward direction, if false in backward
          * @param tempIter the iterator given to operate with
+         * @param node the node where to start the testing
          * @param checkFollowing iterate one over to the following node and start testing there.
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
-        EgcNode* gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, bool checkFollowing = false) const;
+        EgcNode* gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, const EgcNode& node, bool checkFollowing = false) const;
         /**
          * @brief rightSide checks if current cursor is at the right side of the node or not
          * @param iter the iterator that shall be used to check on which side we are
