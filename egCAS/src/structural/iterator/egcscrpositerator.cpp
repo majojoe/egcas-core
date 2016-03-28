@@ -210,7 +210,7 @@ void EgcScrPosIterator::switchSideUnderlinedNode(void)
                 return;
 
         r_side = !r_side;
-        m_nodeIter->setAtNode(*m_lastUnderlinedNode, r_side);
+        m_nodeIter->setAtNode(*m_lastUnderlinedNode, r_side, true);
 
         m_subIdIter->setNode(m_nodeIter->getNode());
         if (r_side) {

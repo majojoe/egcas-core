@@ -58,8 +58,9 @@ public:
          * ATTENTION: the given node must be an element of the formula.
          * @param node the node where to position the iterator (at the left or at the right side of the node)
          * @param atRightSide true if the iterator shall be positioned at the right side (default), false otherwise
+         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
          */
-        void setAtNode(EgcNode& node, bool atRightSide);
+        void setAtNode(EgcNode& node, bool atRightSide = true, bool snapAtOmittedPositions = false);
         /**
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
@@ -140,32 +141,36 @@ private:
          * given iterator accordingly
          * @param currNode the node that is currently active
          * @param tempIter the iterator given to operate with
+         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
-        EgcNode* prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter) const;
+        EgcNode* prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter, bool snapAtOmittedPositions = false) const;
         /**
          * @brief nextNodeWithId iterates the given iterator to the next node that has a valid mathml id and sets the
          * given iterator accordingly
          * @param currNode the node that is currently active
          * @param tempIter the iterator given to operate with (must point at the currNode given)
+         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
-        EgcNode* nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter) const;
+        EgcNode* nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter, bool snapAtOmittedPositions = false) const;
         /**
          * @brief omitNode check if a node must be omitted
          * @param node the node that follows the current node, eigther in forward or backward direction
          * @param stateToTest the state of the node to check
          * @param atRightSide if the cursor is at the right side of an operator
+         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
          * @return true if the current node shall be omitted, false otherwise
          */
-        bool omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide) const;
+        bool omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide, bool snapAtOmittedPositions = false) const;
         /**
          * @brief nodeStateVisible checks if the following node is visible when iterating over it
          * @param iter the current iterator in the tree
          * @param nodeToTest node to test for visibility
+         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
          * @return true if the node state in direction is visible, false otherwise
          */
-        bool nodeStateVisible(const EgcNodeIterator& iter, EgcNode& nodeToTest) const;
+        bool nodeStateVisible(const EgcNodeIterator& iter, EgcNode& nodeToTest, bool snapAtOmittedPositions = false) const;
         /**
          * @brief nextNodeWithId iterates the given iterator to the next or previous node that has a valid mathml id
          * and sets the given iterator accordingly
@@ -173,9 +178,10 @@ private:
          * @param tempIter the iterator given to operate with
          * @param node the node where to start the testing
          * @param checkFollowing iterate one over to the following node and start testing there.
+         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
-        EgcNode* gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, const EgcNode& node, bool checkFollowing = false) const;
+        EgcNode* gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, const EgcNode& node, bool checkFollowing = false, bool snapAtOmittedPositions = false) const;
         /**
          * @brief rightSide checks if current cursor is at the right side of the node or not
          * @param iter the iterator that shall be used to check on which side we are
