@@ -51,10 +51,8 @@ void EgcasTest_View::testSceneItemSorting()
         EgcFormulaItem *item1 = new EgcFormulaItem(dummy, QPointF(120.001, 2000.00003), 20);
         EgcFormulaItem *item2 = new EgcFormulaItem(dummy, QPointF(120.001, 2000.00004), 20);
         //test the bigger and smaller operator overload of the items (for y coordinates)
-        QVERIFY(item1 < item2);
-        QVERIFY(!(item2 < item1));
-        QVERIFY(!(item2 < item2));
-        QVERIFY(!(item1 < item1));
+        QVERIFY(*item1 < *item2);
+        QVERIFY(!(*item2 < *item1));
 
         item1->setPos(QPointF(65665465.21565, 6516.32115610));
         item2->setPos(QPointF(65665465.21566, 6516.32115610));
@@ -64,10 +62,8 @@ void EgcasTest_View::testSceneItemSorting()
         QVERIFY(item2->pos().x() == 65665465.21566);
         QVERIFY(item2->pos().y() == 6516.32115610);
 
-        QVERIFY(item1 < item2);
-        QVERIFY(!(item2 < item1));
-        QVERIFY(!(item2 < item2));
-        QVERIFY(!(item1 < item1));
+        QVERIFY(*item1 < *item2);
+        QVERIFY(!(*item2 < *item1));
 
         delete(item1);
         delete(item2);
