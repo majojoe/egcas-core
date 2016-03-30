@@ -42,7 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup(formula.getMathmlMappingCRef()), //gcc bug
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
                                                                         m_lastUnderlinedNode{nullptr},
-                                                                        m_originNode{nullptr}, m_finishInsertNext{true}
+                                                                        m_originNode{nullptr}
 {
 
         m_subIdIter.reset(new EgcSubindNodeIter(m_nodeIter->getNode()));
@@ -260,13 +260,11 @@ bool EgcScrPosIterator::insert(EgcOperations operations)
         if (    operations == EgcOperations::parenthesisLeft
              || operations == EgcOperations::parenthesisRight) {
                 if (    operations == EgcOperations::parenthesisLeft
-                     && (    m_nodeIter->getLastState() == EgcIteratorState::LeftIteration)
-                          || (m_nodeIter->getLastState() == EgcIteratorState::MiddleIteration))
-                        return insertUnaryOp(EgcNodeType::ParenthesisNode, m_node);
+                     && (    !rightSide() ))
+                        return insertUnaryOp(EgcNodeType::ParenthesisNode, &m_nodeIter->getNode());
                 if (    operations == EgcOperations::parenthesisRight
-                     && (    m_nodeIter->getLastState() == EgcIteratorState::RightIteration
-                          || (m_nodeIter->getLastState() == EgcIteratorState::MiddleIteration)) )
-                        return insertUnaryOp(EgcNodeType::ParenthesisNode, m_node);
+                     && (    rightSide()) )
+                        return insertUnaryOp(EgcNodeType::ParenthesisNode, &m_nodeIter->getNode());
         }
 
         return retval;
@@ -289,13 +287,7 @@ bool EgcScrPosIterator::insertUnaryOp(EgcNodeType type, EgcNode* node)
         if (!tmp->isUnaryNode())
                 return false;
 
-        if (&m_nodeIter->peekNext() == m_node) {
-                m_finishInsertNext = true;
-                m_nodeIter->insert(type, true);
-        } else if (&m_nodeIter->peekPrevious() == m_node) {
-                m_finishInsertNext = false;
-                m_nodeIter->insert(type, false);
-        }
+        m_nodeIter->insert(type);
         
         return true;
 }

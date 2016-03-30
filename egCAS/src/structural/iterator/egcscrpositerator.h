@@ -175,7 +175,6 @@ private:
         QScopedPointer<EgcSubindNodeIter> m_subIdIter;  ///< iterator for the subindexes of a node
         EgcNode* m_lastUnderlinedNode;                      ///< the last visible parent node that was given back
         EgcNode* m_originNode;                          ///< the node that was the origin of looking up a visible parent
-        bool m_finishInsertNext;                        ///< holds where to finish the insert operation (right or left iterator)
 };
 
 #endif // EGCSCRPOSITERATOR_H
