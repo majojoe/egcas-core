@@ -202,9 +202,9 @@ bool EgcVariableNode::operator==(const EgcNode& node) const
                 if (m_rightChild->getNodeType() == EgcNodeType::EmptyNode)
                         val = static_cast<EgcEmptyNode*>(m_rightChild.data())->getValue();
 
-                const EgcVariableNode& node = static_cast<const EgcVariableNode&>(node);
-                EgcNode* nodeLeft = node.getChild(0);
-                EgcNode* nodeRight = node.getChild(1);
+                const EgcVariableNode& var_node = static_cast<const EgcVariableNode&>(node);
+                EgcNode* nodeLeft = var_node.getChild(0);
+                EgcNode* nodeRight = var_node.getChild(1);
 
                 if (nodeLeft) {
                         if (nodeLeft->getNodeType() == EgcNodeType::AlnumNode)
