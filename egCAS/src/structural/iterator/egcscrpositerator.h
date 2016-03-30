@@ -129,11 +129,6 @@ public:
          */
         bool insert(EgcOperations operations);
         /**
-         * @brief finishInsertOperation finish insertiation of a operation (Has to be called after EgcMathmlLookup object of the
-         * formula has been updated). This is not neccessary for insertiation of characters.
-         */
-        void finishInsertOperation(void);
-        /**
          * @brief remove removes the element that is next to the current iterator position (forward direction)
          * @return true if the operation was successful, false otherwise
          */
@@ -156,6 +151,10 @@ public:
          * @return true if underline is visible, false otherwise
          */
         bool isUnderlineActive(void);
+        /**
+         * @brief finishFormulaChange finalize any started changes of the formula (inserts, removes, ...)
+         */
+        void finishFormulaChange(void);
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula

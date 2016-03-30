@@ -123,6 +123,12 @@ public:
          * @return true if everything went well, false otherwise
          */
         bool insert(EgcNodeType type);
+        /**
+         * @brief finishModOperation finish any started operation that modifies the tree. Some operations (like inserts
+         * and deletes) can only be finished if mathml lookup table had been updated. So correction of cursor positions
+         * can only be done then.
+         */
+        void finishModOperation(void);
 
 private:
         /**
@@ -201,6 +207,8 @@ private:
         QScopedPointer<EgcNodeIterator> m_nodeIter;         ///< the node iterator that points to the current node with a mathml id
         const EgcMathmlLookup& m_lookup;                    ///< a reference to the lookup data
         EgcNode* m_node;                                    ///< currently active node (where the cursor is currently)
+        EgcNode* m_iterPosAfterUpdate;                      ///< iterator should be at this position after mathml lookup table update
+        bool m_atRightSideAfterUpdate;                      ///< if cursor should be at the right side of m_iterPosAfterUpdate after update
 };
 
 #endif // EGCIDNODEITER_H
