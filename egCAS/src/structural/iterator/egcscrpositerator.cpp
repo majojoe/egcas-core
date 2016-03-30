@@ -193,7 +193,7 @@ quint32 EgcScrPosIterator::getNextVisibleParent(void)
 
         EgcNode* parent = &getNextVisibleParentNode();
 
-        m_nodeIter->setAtNode(*parent, r_side);
+        m_nodeIter->setAtNode(*parent, r_side, true);
 
         m_subIdIter->setNode(m_nodeIter->getNode());
         if (r_side) {
