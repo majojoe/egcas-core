@@ -118,23 +118,11 @@ public:
          */
         bool rightSide(void) const;
         /**
-         * @brief getStateNextNode get the state of the next node (where m_nodeIterNext->peekNext() is pointing to)
-         * @return the state of the next node
-         */
-        EgcIteratorState getStateNextNode(void) const;
-        /**
-         * @brief getStatePreviousNode get the state of the previous node (where m_nodeIterPrevious-peekPrevious() is pointing to)
-         * @return the state of the previous node
-         */
-        EgcIteratorState getStatePreviousNode(void) const;
-        /**
          * @brief insert insert a node at the current position of the next or previous pointer
          * @param type the type of the node to insert
-         * @param atNextPosition if true the node will be inserted at the position of the next iterator, if false at the
-         * position of the previous iterator
          * @return true if everything went well, false otherwise
          */
-        bool insert(EgcNodeType type, bool atNextPosition);
+        bool insert(EgcNodeType type);
 
 private:
         /**

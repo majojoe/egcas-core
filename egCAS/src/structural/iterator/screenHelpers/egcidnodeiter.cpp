@@ -479,50 +479,22 @@ bool EgcIdNodeIter::rightSide(EgcNodeIterator& iter, EgcNode& node) const
                 return false;
 }
 
-EgcIteratorState EgcIdNodeIter::getStateNextNode(void) const
+bool EgcIdNodeIter::insert(EgcNodeType type)
 {
-        return m_nodeIterNext->getStateNextNode();
-}
+        EgcNode* node;
+        bool right = rightSide();
 
-EgcIteratorState EgcIdNodeIter::getStatePreviousNode(void) const
-{
-        return m_nodeIterPrev->getStatePreviousNode();
-}
-
-bool EgcIdNodeIter::insert(EgcNodeType type, bool atNextPosition)
-{
-        bool retval;
-        EgcNode* leftNode;
-        EgcNode* rightNode;
-
-        if (atNextPosition) {
-                leftNode = &m_nodeIterNext->peekPrevious();
-                retval = m_nodeIterNext->insert(type);
-                rightNode = &m_nodeIterNext->peekPrevious();
-        } else {
-                leftNode = &m_nodeIterPrev->peekPrevious();
-                retval = m_nodeIterPrev->insert(type);
-                rightNode = &m_nodeIterPrev->peekPrevious();
-                if (hasPrevious())
-                        previous();
-        }
+        if(!m_nodeIter->insert(type))
+                return false;
         
         //make the iterators valid again
-        toFront();        
-        while(hasNext()) {
-                if (atNextPosition) {
-                        if (    &m_nodeIterNext->peekPrevious() == leftNode
-                             && &m_nodeIterNext->peekPrevious() == rightNode)
-                                break;
-                } else {
-                        if (    &m_nodeIterPrev->peekPrevious() == leftNode
-                             && &m_nodeIterPrev->peekPrevious() == rightNode)
-                                break;                        
-                }
-                next();
-        }
+        if (right)
+                node = &m_nodeIter->peekPrevious();
+        else
+                node = &m_nodeIter->peekNext();
+        setAtNode(*node, right);
                 
-        return retval;
+        return true;
 }
 
 //check if the given node is a result node (activate this if insert and remove have been defined)
