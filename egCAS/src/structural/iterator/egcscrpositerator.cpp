@@ -292,7 +292,8 @@ bool EgcScrPosIterator::insertUnaryOp(EgcNodeType type, EgcNode* node)
         return true;
 }
 
-void EgcScrPosIterator::finishInsertOperation(void)
+void EgcScrPosIterator::finishFormulaChange(void)
 {
-
+        m_nodeIter->finishModOperation();
+        m_lastUnderlinedNode = nullptr;
 }

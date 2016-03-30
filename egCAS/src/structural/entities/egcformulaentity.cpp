@@ -186,6 +186,10 @@ QString EgcFormulaEntity::getMathMlCode(void)
         EgcMathMlVisitor mathMlVisitor(*this);        
         QString tmp = mathMlVisitor.getResult();
 
+        // any started formula change must be finalized when the mathml lookup table has been populated, so do this
+        if (m_scrIter)
+                m_scrIter->finishFormulaChange();
+
         return tmp;
 }
 

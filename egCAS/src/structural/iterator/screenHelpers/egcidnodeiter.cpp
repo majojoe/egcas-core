@@ -40,7 +40,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcIdNodeIter::EgcIdNodeIter(const EgcFormulaEntity& formula) : m_nodeIter{new EgcNodeIterator(formula)},                                                                
                                                                 m_lookup(formula.getMathmlMappingCRef()), //gcc bug
-                                                                m_node{&formula.getBaseElement()}
+                                                                m_node{&formula.getBaseElement()},
+                                                                m_iterPosAfterUpdate{nullptr},
+                                                                m_atRightSideAfterUpdate{false}
 {
         toBack();
 }
@@ -492,9 +494,18 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
                 node = &m_nodeIter->peekPrevious();
         else
                 node = &m_nodeIter->peekNext();
-        setAtNode(*node, right);
+
+        m_iterPosAfterUpdate = node;
+        m_atRightSideAfterUpdate = right;
                 
         return true;
+}
+
+void EgcIdNodeIter::finishModOperation(void)
+{
+        if (m_iterPosAfterUpdate)
+                setAtNode(*m_iterPosAfterUpdate, m_atRightSideAfterUpdate);
+        m_iterPosAfterUpdate = nullptr;
 }
 
 //check if the given node is a result node (activate this if insert and remove have been defined)
