@@ -294,6 +294,13 @@ bool EgcScrPosIterator::insertUnaryOp(EgcNodeType type, EgcNode* node)
 
 void EgcScrPosIterator::finishFormulaChange(void)
 {
-        m_nodeIter->finishModOperation();
+        bool doStep;
+
         m_lastUnderlinedNode = nullptr;
+        doStep = m_nodeIter->finishModOperation();
+        m_subIdIter->setNode(m_nodeIter->getNode());
+        if (!m_nodeIter->getNode().isContainer())
+                m_subIdIter->toBack();
+        if (hasNext() && doStep)
+                next();
 }

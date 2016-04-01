@@ -490,10 +490,8 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
                 return false;
         
         //make the iterators valid again
-        if (right)
-                node = &m_nodeIter->peekPrevious();
-        else
-                node = &m_nodeIter->peekNext();
+        //it doesn't matter if we are at the right or left, we must always peek the previous node
+        node = &m_nodeIter->peekPrevious();
 
         m_iterPosAfterUpdate = node;
         m_atRightSideAfterUpdate = right;
@@ -501,11 +499,17 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
         return true;
 }
 
-void EgcIdNodeIter::finishModOperation(void)
+bool EgcIdNodeIter::finishModOperation(void)
 {
-        if (m_iterPosAfterUpdate)
+        if (m_iterPosAfterUpdate) {
                 setAtNode(*m_iterPosAfterUpdate, m_atRightSideAfterUpdate);
-        m_iterPosAfterUpdate = nullptr;
+                m_iterPosAfterUpdate = nullptr;
+        }
+
+        if (m_atRightSideAfterUpdate)
+                return false;
+        else
+                return true;
 }
 
 //check if the given node is a result node (activate this if insert and remove have been defined)
