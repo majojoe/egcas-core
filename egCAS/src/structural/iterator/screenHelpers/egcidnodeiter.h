@@ -127,8 +127,9 @@ public:
          * @brief finishModOperation finish any started operation that modifies the tree. Some operations (like inserts
          * and deletes) can only be finished if mathml lookup table had been updated. So correction of cursor positions
          * can only be done then.
+         * @return true if the screen iterator needs to step forward, false if not
          */
-        void finishModOperation(void);
+        bool finishModOperation(void);
 
 private:
         /**
