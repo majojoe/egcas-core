@@ -127,7 +127,7 @@ public:
          * @param operations the operation to insert
          * @return true if the insert operation was successful, false otherwise
          */
-        bool insert(EgcOperations operations);
+        bool insertOp(QChar operations);
         /**
          * @brief remove removes the element that is next to the current iterator position (forward direction)
          * @return true if the operation was successful, false otherwise

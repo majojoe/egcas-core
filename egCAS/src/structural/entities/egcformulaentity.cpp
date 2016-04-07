@@ -420,23 +420,20 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         case EgcOperations::delPressed:
                 removeCharacter(false);
                 break;
-        case EgcOperations::parenthesisLeft:
-                insertOperation(action.m_op);
-                break;
-        case EgcOperations::parenthesisRight:
-                insertOperation(action.m_op);
+        case EgcOperations::mathOperator:
+                insertOperation(action.m_character);
                 break;
         }
 }
 
-void EgcFormulaEntity::insertOperation(EgcOperations operation)
+void EgcFormulaEntity::insertOperation(QChar operation)
 {
         if (!m_scrIter)
                 return;
         if (!m_item)
                 return;
 
-        m_scrIter->insert(operation);
+        m_scrIter->insertOp(operation);
         m_item->hideCursors();
         m_item->updateView();
 }

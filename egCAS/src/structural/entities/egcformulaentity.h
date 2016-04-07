@@ -272,7 +272,7 @@ private:
          * @brief insertOperation insert a operation into the tree
          * @param operations the operation to insert
          */
-        void insertOperation(EgcOperations operation);
+        void insertOperation(QChar operation);
         /**
          * @brief removeCharacter remove a character at the current cursor position
          * @param before if true the character before the current cursor position is remove, if false the character behind
