@@ -130,6 +130,17 @@ public:
          * @return true if the screen iterator needs to step forward, false if not
          */
         bool finishModOperation(void);
+        /**
+         * @brief remove the node in the direction given
+         * @param before if true remove the item in backward direction, if false the item in forward direction
+         */
+        void remove(bool before);
+        /**
+         * @brief deleteTree delete the node tree before or after the current cursor position
+         * @param before if true, the tree before the current cusrsor position will be deleted, otherwise the tree after
+         * the current position.
+         */
+        void deleteTree(bool before);
 
 private:
         /**
