@@ -263,16 +263,16 @@ bool EgcScrPosIterator::isUnderlineActive(void)
                 return false;
 }
 
-bool EgcScrPosIterator::insert(EgcOperations operations)
+bool EgcScrPosIterator::insertOp(QChar operations)
 {
         bool retval = false;
 
-        if (    operations == EgcOperations::parenthesisLeft
-             || operations == EgcOperations::parenthesisRight) {
-                if (    operations == EgcOperations::parenthesisLeft
+        if (    operations == '('
+             || operations == ')') {
+                if (    operations == '('
                      && (    !rightSide() ))
                         return insertUnaryOp(EgcNodeType::ParenthesisNode, &m_nodeIter->getNode());
-                if (    operations == EgcOperations::parenthesisRight
+                if (    operations == ')'
                      && (    rightSide()) )
                         return insertUnaryOp(EgcNodeType::ParenthesisNode, &m_nodeIter->getNode());
         }

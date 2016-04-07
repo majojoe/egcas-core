@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcasiteminterface.h"
 #include "egcabstractformulaitem.h"
 #include "egcabstractitem.h"
+#include "actions/egcaction.h"
 
 class EgMathMLDocument;
 class EgcAbstractFormulaEntity;
@@ -200,6 +201,13 @@ protected:
          * @param event contains the key released
          */
         void keyReleaseEvent(QKeyEvent * event) override;
+        /**
+         * @brief getActionObject return the action object for the given mathematical operator
+         * @param op the given operator
+         * @return the action object with the operation provided
+         */
+        EgcAction getActionObject(QChar op) const;
+
 signals:
 
 public slots:

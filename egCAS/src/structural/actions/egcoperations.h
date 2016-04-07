@@ -36,14 +36,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
  */
 enum class EgcOperations
 {
-        // mathematical input operations (e.g. user entered s.th. via keyboard)
-        addition,                       ///< multiplication
-        substraction,
-        multiplication,
-        division,
-        parenthesisRight,
-        parenthesisLeft,
         // view based operations (e.g. s.th. happened on the view)
+        mathOperator,
         formulaActivated,               ///< formula was activated (e.g. got focus on screen)
         formulaDeactivated,             ///< formula was deactivated (e.g. lost focus on screen)
         cursorForward,                  ///< user wants to iterate forward in a formula

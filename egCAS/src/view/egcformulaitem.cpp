@@ -35,7 +35,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcabstractformulaentity.h"
 #include "egcabstractformulaitem.h"
 #include "egcscreenpos.h"
-#include "actions/egcaction.h"
 
 quint8 EgcFormulaItem::s_baseFontSize = 14;
 QRegularExpression EgcFormulaItem::s_alnumKeyFilter = QRegularExpression("[._0-9a-zA-ZΆ-ώ]+");
@@ -296,12 +295,10 @@ void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
                 m_entity->handleAction(action);
                 break;
         case Qt::Key_ParenLeft:
-                action.m_op = EgcOperations::parenthesisLeft;
-                m_entity->handleAction(action);
+                m_entity->handleAction(getActionObject('('));
                 break;
         case Qt::Key_ParenRight:
-                action.m_op = EgcOperations::parenthesisRight;
-                m_entity->handleAction(action);
+                m_entity->handleAction(getActionObject(')'));
                 break;
         default:
                 QString chr(event->text()[0]);
@@ -361,4 +358,14 @@ void EgcFormulaItem::hideCursors(void)
         EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
         if (scn)
                 scn->hideFormulaCursors();
+}
+
+EgcAction EgcFormulaItem::getActionObject(QChar op) const
+{
+        EgcAction action;
+
+        action.m_op = EgcOperations::mathOperator;
+        action.m_character = op;
+
+        return action;
 }
