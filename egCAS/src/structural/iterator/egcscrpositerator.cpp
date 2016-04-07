@@ -232,12 +232,22 @@ bool EgcScrPosIterator::insert(QChar character)
 
 bool EgcScrPosIterator::remove(void)
 {
-        return m_subIdIter->remove(false);
+        if (!m_subIdIter->hasNext()) {
+                if (m_lastUnderlinedNode)
+                        m_nodeIter->deleteTree(false);
+        } else {
+                return m_subIdIter->remove(false);
+        }
 }
 
 bool EgcScrPosIterator::backspace(void)
 {
-        return m_subIdIter->remove(true);
+        if (!m_subIdIter->hasPrevious()) {
+                if (m_lastUnderlinedNode)
+                        m_nodeIter->deleteTree(true);
+        } else {
+                return m_subIdIter->remove(true);
+        }
 }
 
 void EgcScrPosIterator::resetUnderline(void)

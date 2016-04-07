@@ -499,6 +499,35 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
         return true;
 }
 
+void EgcIdNodeIter::remove(bool before)
+{
+#warning implement this
+}
+
+void EgcIdNodeIter::deleteTree(bool before)
+{
+        EgcNode* posAfterUpdate;
+        EgcNode* nodeToDelete;
+        bool atRightSide;
+
+        if (before) {
+                posAfterUpdate = &m_nodeIter->peekNext();
+                nodeToDelete = &m_nodeIter->peekPrevious();
+                atRightSide = true;
+        } else {
+                posAfterUpdate = &m_nodeIter->peekPrevious();
+                nodeToDelete = &m_nodeIter->peekNext();
+                atRightSide = false;
+        }
+        if (nodeToDelete && posAfterUpdate && nodeToDelete->getNodeType() != EgcNodeType::BaseNode) {
+                setAtNode(*nodeToDelete, true, true);
+                m_nodeIter->remove();
+                m_iterPosAfterUpdate = &m_nodeIter->peekPrevious();
+                m_atRightSideAfterUpdate = atRightSide;
+        }
+}
+
+
 bool EgcIdNodeIter::finishModOperation(void)
 {
         if (m_iterPosAfterUpdate) {
