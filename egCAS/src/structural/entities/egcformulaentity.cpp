@@ -555,3 +555,68 @@ void EgcFormulaEntity::markParent(void)
 
         m_item->showUnderline(id);
 }
+
+EgcNode* EgcFormulaEntity::copy(EgcNode& node)
+{
+        if (!isNodeThisFormula(node))
+                return nullptr;
+
+        QScopedPointer<EgcNode> copiedTree(node.copy());
+
+        return copiedTree.take();
+}
+
+EgcNode* EgcFormulaEntity::cut(EgcNode& node)
+{
+        if (!isNodeThisFormula(node))
+                return nullptr;
+
+        QScopedPointer<EgcNode> cutTree;
+
+        EgcNode* parent = node.getParent();
+        if (!parent)
+                return nullptr;
+
+        EgcContainerNode* cParent = static_cast<EgcContainerNode*>(parent);
+        quint32 index;
+        bool isChild = cParent->getIndexOfChild(node, index);
+        if (!isChild)
+                return nullptr;
+
+        QScopedPointer<EgcNode> emtpyNode(new EgcEmptyNode());
+        if (emtpyNode.isNull())
+                return nullptr;
+
+        //replace all references to node with the references to emptyNode in this class and its subclasses
+#error implement this here
+
+        cutTree.reset(cParent->takeOwnership(node));
+
+        cParent->setChild(index, *emtpyNode.take());
+        emtpyNode->provideParent(cParent);
+
+        return cutTree.take();
+}
+
+bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode* whereToPaste)
+{
+
+}
+
+bool EgcFormulaEntity::isNodeThisFormula(EgcNode& node)
+{
+        EgcNode* tmpNode = &node;
+        EgcNode* parent;
+
+        do {
+                parent = tmpNode->getParent();
+                if (parent) {
+                        tmpNode = parent;
+                } else {
+                        if(parent == &getBaseElement())
+                                return true;
+                        else
+                                return false;
+                }
+        } while (parent);
+}
