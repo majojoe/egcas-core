@@ -248,6 +248,26 @@ public:
          * @return the lookup table
          */
         const EgcMathmlLookup& getMathmlMappingCRef(void) const;
+        /**
+         * @brief copy copies the tree downwards from the given node position and returns a pointer to the copied
+         * tree. Caller needs to handle ownership of the returned tree.
+         * @return the copied tree
+         */
+        EgcNode* copy(EgcNode& node);
+        /**
+         * @brief cut the tree downwards from the given node position and inserts an empty node at the place of
+         * the cut out node. Caller needs to handle ownership of the returned tree.
+         * @return the tree that was cut off.
+         */
+        EgcNode* cut(EgcNode& node);
+        /**
+         * @brief paste the given tree (given with the root node) at the position of the given second node.
+         * @param treeToPaste the tree that will be pasted at the current iterator position.
+         * @param whereToPaste the tree treeToPaste will be inserted here. The node (maybe) including the tree downwards
+         * will be deleted.
+         * @return true if the paste was successful, false otherwise.
+         */
+        bool paste(EgcNode& treeToPaste, EgcNode* whereToPaste);
 
 private:
         /**
@@ -278,6 +298,12 @@ private:
          * @param before if true the character before the current cursor position is remove, if false the character behind
          */
         void removeCharacter(bool before);
+        /**
+         * @brief isNodeThisFormula checks if the given node is a node of this formula
+         * @param node the node to check
+         * @return true if the given node is a node of this formula, false otherwise
+         */
+        bool isNodeThisFormula(EgcNode& node);
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
