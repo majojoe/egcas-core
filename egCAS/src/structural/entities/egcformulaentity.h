@@ -299,11 +299,20 @@ private:
          */
         void removeCharacter(bool before);
         /**
-         * @brief isNodeThisFormula checks if the given node is a node of this formula
+         * @brief isNodeInFormula checks if the given node is a node of this formula
          * @param node the node to check
          * @return true if the given node is a node of this formula, false otherwise
          */
-        bool isNodeThisFormula(EgcNode& node);
+        bool isNodeInFormula(EgcNode& node);
+        /**
+         * @brief isScreenIterInSubtree check if screen iterator is in the given subtree.
+         * @param tree subtree to check if screen iterator is anywhere below.
+         * @param rightSide if screen iterator is in given subtree, return the side that is nearer. True if right is 
+         * nearer, false if left side is nearer
+         * @return true if screen iterator is in subtree, false otherwise
+         */
+        bool isScreenIterInSubtree(EgcNode& tree, bool &rightSide) const;
+        
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user

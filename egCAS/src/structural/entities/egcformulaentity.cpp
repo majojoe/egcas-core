@@ -558,7 +558,7 @@ void EgcFormulaEntity::markParent(void)
 
 EgcNode* EgcFormulaEntity::copy(EgcNode& node)
 {
-        if (!isNodeThisFormula(node))
+        if (!isNodeInFormula(node))
                 return nullptr;
 
         QScopedPointer<EgcNode> copiedTree(node.copy());
@@ -568,7 +568,7 @@ EgcNode* EgcFormulaEntity::copy(EgcNode& node)
 
 EgcNode* EgcFormulaEntity::cut(EgcNode& node)
 {
-        if (!isNodeThisFormula(node))
+        if (!isNodeInFormula(node))
                 return nullptr;
 
         QScopedPointer<EgcNode> cutTree;
@@ -603,7 +603,7 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode* whereToPaste)
 
 }
 
-bool EgcFormulaEntity::isNodeThisFormula(EgcNode& node)
+bool EgcFormulaEntity::isNodeInFormula(EgcNode& node)
 {
         EgcNode* tmpNode = &node;
         EgcNode* parent;
@@ -613,10 +613,43 @@ bool EgcFormulaEntity::isNodeThisFormula(EgcNode& node)
                 if (parent) {
                         tmpNode = parent;
                 } else {
-                        if(parent == &getBaseElement())
+                        if(tmpNode == &getBaseElement())
                                 return true;
                         else
                                 return false;
                 }
         } while (parent);
+}
+
+bool EgcFormulaEntity::isScreenIterInSubtree(EgcNode& tree, bool &rightSide) const
+{
+        EgcNode* node = nullptr;
+        EgcNode* parent;
+        
+        if (!m_scrIter.isNull())
+                node = const_cast<EgcNode*>(m_scrIter->node());
+        else
+                return false;
+        
+        rightSide = m_scrIter->rightSide();
+        
+        while (node != &tree) {
+                parent = node->getParent();
+                if (parent) {
+                        quint32 ind;
+                        if (parent->isBinaryNode() || parent->isFlexNode()) {
+                                const EgcContainerNode* container = static_cast<const EgcContainerNode*>(parent);
+                                (void) container->getIndexOfChild(*node, ind);
+                                if ((container->getNumberChildNodes() / 2) >= ind)
+                                        rightSide = true;
+                                else
+                                        rightSide = false;
+                        }
+                        node = parent;
+                } else {
+                        return false;
+                }
+        }
+        
+        return true;
 }
