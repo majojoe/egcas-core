@@ -267,7 +267,7 @@ public:
          * will be deleted.
          * @return true if the paste was successful, false otherwise.
          */
-        bool paste(EgcNode& treeToPaste, EgcNode* whereToPaste);
+        bool paste(EgcNode& treeToPaste, EgcNode& whereToPaste);
 
 private:
         /**

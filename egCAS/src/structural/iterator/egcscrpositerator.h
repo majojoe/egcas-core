@@ -89,12 +89,13 @@ public:
          */
         void toFront(void);
         /**
-         * @brief node returns the associated node we last jumped over
-         * @return the node we last jumped over
+         * @brief node returns the currently active node
+         * @return the node that is currently active (where the cursor is)
          */
         const EgcNode* node(void);
         /**
-         * @brief rightSide true if the cursor is at the right side of the formula element, or on the left
+         * @brief rightSide true if the cursor is at the right side of the currently active formula element, or on the
+         * left
          * @return true if the cursor is on the right side, false if it is on the left
          */
         bool rightSide(void);
@@ -155,6 +156,13 @@ public:
          * @brief finishFormulaChange finalize any started changes of the formula (inserts, removes, ...)
          */
         void finishFormulaChange(void);
+        /**
+         * @brief updatePointer updates the giben old node pointer with the given new one.
+         * @param oldPointer the old pointer that needs to be updated with the new one below.
+         * @param newPointer the new pointer the replaces the old one.
+         * @param right if new screen iterator is at the right side or not.
+         */
+        void updatePointer(EgcNode* oldPointer, EgcNode* newPointer, bool right);
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula

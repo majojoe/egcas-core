@@ -63,6 +63,14 @@ public:
          */
         void setAtNode(EgcNode& node, bool atRightSide = true, bool snapAtOmittedPositions = false);
         /**
+         * @brief setAtNode set the iterator to a position on the right or left side of the given Node. Same as above,
+         * but at a later time when the mathml lookup has been updated.
+         * ATTENTION: the given node must be an element of the formula.
+         * @param node the node where to position the iterator (at the left or at the right side of the node)
+         * @param atRightSide true if the iterator shall be positioned at the right side (default), false otherwise
+         */
+        void setAtNodeDelayed(EgcNode& node, bool atRightSide = true);
+        /**
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
          */
