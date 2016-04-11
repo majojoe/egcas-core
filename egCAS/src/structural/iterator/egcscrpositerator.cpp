@@ -314,3 +314,19 @@ void EgcScrPosIterator::finishFormulaChange(void)
         if (hasNext() && doStep)
                 next();
 }
+
+void EgcScrPosIterator::updatePointer(EgcNode* oldPointer, EgcNode* newPointer, bool right)
+{
+        m_lastUnderlinedNode = nullptr;
+        m_originNode = nullptr;
+
+        if (!newPointer)
+                return;
+
+        m_nodeIter->setAtNodeDelayed(*newPointer, right);
+        if (oldPointer != newPointer) {
+                m_subIdIter->setNode(*newPointer);
+                if (right)
+                        m_subIdIter->toBack();
+        }
+}

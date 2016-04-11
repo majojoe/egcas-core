@@ -573,6 +573,9 @@ EgcNode* EgcFormulaEntity::cut(EgcNode& node)
 
         QScopedPointer<EgcNode> cutTree;
 
+        if (node.getNodeType() == EgcNodeType::BaseNode)
+                return nullptr;
+
         EgcNode* parent = node.getParent();
         if (!parent)
                 return nullptr;
@@ -588,19 +591,67 @@ EgcNode* EgcFormulaEntity::cut(EgcNode& node)
                 return nullptr;
 
         //replace all references to node with the references to emptyNode in this class and its subclasses
-#error implement this here
+        bool rightSide;
+        EgcNode* newCursorPos;
+        if (isScreenIterInSubtree(node, rightSide)) {
+                newCursorPos = emtpyNode.data();
+        } else {
+                newCursorPos = const_cast<EgcNode*>(m_scrIter->node());
+                rightSide = m_scrIter->rightSide();
+        }
 
         cutTree.reset(cParent->takeOwnership(node));
 
-        cParent->setChild(index, *emtpyNode.take());
+        if (!cParent->setChild(index, *emtpyNode.take()))
+                return nullptr;
         emtpyNode->provideParent(cParent);
+
+        m_scrIter->updatePointer(&node, newCursorPos, rightSide);
 
         return cutTree.take();
 }
 
-bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode* whereToPaste)
+bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
 {
+        if (isNodeInFormula(treeToPaste))
+                return false;
 
+        if (whereToPaste.getNodeType() == EgcNodeType::BaseNode)
+                return false;
+        if (treeToPaste.getNodeType() == EgcNodeType::BaseNode)
+                return false;
+
+        EgcNode* parent = whereToPaste.getParent();
+        if (!parent)
+                return false;
+
+        EgcContainerNode* cParent = static_cast<EgcContainerNode*>(parent);
+        quint32 index;
+        bool isChild = cParent->getIndexOfChild(whereToPaste, index);
+        if (!isChild)
+                return false;
+
+        //replace all references to node with the references to emptyNode in this class and its subclasses
+        bool rightSide;
+        EgcNode* newCursorPos;
+        if (isScreenIterInSubtree(whereToPaste, rightSide)) {
+                newCursorPos = &treeToPaste;
+        } else {
+                newCursorPos = const_cast<EgcNode*>(m_scrIter->node());
+                rightSide = m_scrIter->rightSide();
+        }
+
+        QScopedPointer<EgcNode> cutTree;
+        cutTree.reset(cParent->takeOwnership(whereToPaste));
+        cutTree.reset();
+
+        if (!cParent->setChild(index, treeToPaste))
+                        return false;
+        treeToPaste.provideParent(cParent);
+
+        m_scrIter->updatePointer(&whereToPaste, newCursorPos, rightSide);
+
+        return true;
 }
 
 bool EgcFormulaEntity::isNodeInFormula(EgcNode& node)

@@ -541,6 +541,12 @@ bool EgcIdNodeIter::finishModOperation(void)
                 return true;
 }
 
+void EgcIdNodeIter::setAtNodeDelayed(EgcNode& node, bool atRightSide)
+{
+        m_iterPosAfterUpdate = &node;
+        m_atRightSideAfterUpdate = atRightSide;
+}
+
 //check if the given node is a result node (activate this if insert and remove have been defined)
 //bool EgcIdNodeIter::isResultNode(EgcNode& node)
 //{
