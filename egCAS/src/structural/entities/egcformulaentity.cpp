@@ -595,7 +595,7 @@ EgcNode* EgcFormulaEntity::cut(EgcNode& node)
         EgcNode* newCursorPos;
         if (isScreenIterInSubtree(node, rightSide)) {
                 newCursorPos = emtpyNode.data();
-        } else {
+        } else if (!m_scrIter.isNull()) {
                 newCursorPos = const_cast<EgcNode*>(m_scrIter->node());
                 rightSide = m_scrIter->rightSide();
         }
@@ -606,7 +606,8 @@ EgcNode* EgcFormulaEntity::cut(EgcNode& node)
                 return nullptr;
         emtpyNode->provideParent(cParent);
 
-        m_scrIter->updatePointer(&node, newCursorPos, rightSide);
+        if (!m_scrIter.isNull())
+                m_scrIter->updatePointer(&node, newCursorPos, rightSide);
 
         return cutTree.take();
 }
@@ -636,7 +637,7 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
         EgcNode* newCursorPos;
         if (isScreenIterInSubtree(whereToPaste, rightSide)) {
                 newCursorPos = &treeToPaste;
-        } else {
+        } else if (!m_scrIter.isNull()) {
                 newCursorPos = const_cast<EgcNode*>(m_scrIter->node());
                 rightSide = m_scrIter->rightSide();
         }
@@ -649,7 +650,8 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
                         return false;
         treeToPaste.provideParent(cParent);
 
-        m_scrIter->updatePointer(&whereToPaste, newCursorPos, rightSide);
+        if (!m_scrIter.isNull())
+                m_scrIter->updatePointer(&whereToPaste, newCursorPos, rightSide);
 
         return true;
 }
