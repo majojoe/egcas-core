@@ -48,6 +48,7 @@ public:
 
 private Q_SLOTS:
         void copyTreeTest();
+        void cutTreeTest();
 private:
 };
 
@@ -75,6 +76,28 @@ void EgcasTest_AdvancedTreeOps::copyTreeTest()
         QVERIFY(rootNode->getChild(0)->getNodeType() == EgcNodeType::FunctionNode);
 }
 
+void EgcasTest_AdvancedTreeOps::cutTreeTest()
+{
+        EgcKernelParser parser;
+        QScopedPointer<EgcNode> tree;
+        tree.reset(parser.parseKernelOutput("1+fnc(2+3,4,5,(6))"));
+        if (tree.isNull()) {
+                std::cout << parser.getErrorMessage().toStdString();
+        }
+        QVERIFY(!tree.isNull());
+
+        EgcFormulaEntity formula(*tree.take());
+
+        EgcNode *cutTree;
+
+        EgcBinaryNode* rootNode = static_cast<EgcBinaryNode*>(formula.getBaseElement().getChild(0));
+        cutTree = formula.cut(*rootNode->getChild(1));
+        QVERIFY(cutTree);
+        QVERIFY(cutTree->getNodeType() == EgcNodeType::FunctionNode);
+
+        QVERIFY(formula.paste(*cutTree, *rootNode->getChild(0)));
+        QVERIFY(rootNode->getChild(0)->getNodeType() == EgcNodeType::FunctionNode);
+}
 
 QTEST_MAIN(EgcasTest_AdvancedTreeOps)
 
