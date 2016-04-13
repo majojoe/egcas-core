@@ -604,7 +604,7 @@ EgcNode* EgcFormulaEntity::cut(EgcNode& node)
 
         if (!cParent->setChild(index, *emtpyNode.take()))
                 return nullptr;
-        emtpyNode->provideParent(cParent);
+        cParent->getChild(index)->provideParent(cParent);
 
         if (!m_scrIter.isNull())
                 m_scrIter->updatePointer(&node, newCursorPos, rightSide);
