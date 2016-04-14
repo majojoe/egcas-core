@@ -61,6 +61,9 @@ enum class EgcNumberResultType
  */
 class EgcFormulaEntity : public EgcEntity, public EgcAbstractFormulaEntity
 {
+        //for testing the class
+        friend class EgcasTest_AdvancedTreeOps;
+
 public:
         /**
          * @brief EgcFormulaEntity std constructor
