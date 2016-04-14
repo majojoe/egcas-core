@@ -34,6 +34,7 @@ find_package(Qt5 COMPONENTS Core Widgets Test)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
+include_directories(${mmlegcas_BINARY_DIR})
 
 file(GLOB_RECURSE tst_egcas_advanced_tree_ops_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
 
@@ -64,6 +65,14 @@ set(tst_egcas_advanced_tree_ops_SOURCES
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
         ../../src/utils/egcutfcodepoint.cpp
+        ../../src/view/egcformulaitem.cpp
+        ../../src/view/egcasscene.cpp
+        ../../src/view/egcpixmapitem.cpp
+        ../../src/view/egctextitem.cpp
+        ../../src/view/resizehandle.cpp
+        ../../src/view/egcabstractitem.cpp
+        ../../src/view/egcscreenpos.cpp
+        ../../src/view/egcasiteminterface.cpp
 )
 
 #set the verbosity level of the scanner and parser
@@ -71,7 +80,7 @@ add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(tst_egcas_advanced_tree_ops ${tst_egcas_advanced_tree_ops_SOURCES} )
-add_dependencies(tst_egcas_advanced_tree_ops egCAS)
-target_link_libraries(tst_egcas_advanced_tree_ops Qt5::Widgets Qt5::Core Qt5::Test)
+add_dependencies(tst_egcas_advanced_tree_ops mmlegcas egCAS)
+target_link_libraries(tst_egcas_advanced_tree_ops mmlegcas Qt5::Widgets Qt5::Core Qt5::Test)
 
 
