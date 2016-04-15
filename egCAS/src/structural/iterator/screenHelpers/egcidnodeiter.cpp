@@ -42,7 +42,8 @@ EgcIdNodeIter::EgcIdNodeIter(const EgcFormulaEntity& formula) : m_nodeIter{new E
                                                                 m_lookup(formula.getMathmlMappingCRef()), //gcc bug
                                                                 m_node{&formula.getBaseElement()},
                                                                 m_iterPosAfterUpdate{nullptr},
-                                                                m_atRightSideAfterUpdate{false}
+                                                                m_atRightSideAfterUpdate{false},
+                                                                m_isInsert{false}
 {
         toBack();
 }
@@ -495,6 +496,7 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
 
         m_iterPosAfterUpdate = node;
         m_atRightSideAfterUpdate = right;
+        m_isInsert = true;
                 
         return true;
 }
@@ -535,10 +537,12 @@ bool EgcIdNodeIter::finishModOperation(void)
                 m_iterPosAfterUpdate = nullptr;
         }
 
-        if (m_atRightSideAfterUpdate)
-                return false;
-        else
+        if (!m_atRightSideAfterUpdate && m_isInsert) {
+                m_isInsert = false;
                 return true;
+        } else {
+                return false;
+        }
 }
 
 void EgcIdNodeIter::setAtNodeDelayed(EgcNode& node, bool atRightSide)
