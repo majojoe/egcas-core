@@ -229,6 +229,7 @@ private:
         EgcNode* m_node;                                    ///< currently active node (where the cursor is currently)
         EgcNode* m_iterPosAfterUpdate;                      ///< iterator should be at this position after mathml lookup table update
         bool m_atRightSideAfterUpdate;                      ///< if cursor should be at the right side of m_iterPosAfterUpdate after update
+        bool m_isInsert;                                    ///< true if after an insert operation the iterator shall be incremented (that cursor is after inserted element)
 };
 
 #endif // EGCIDNODEITER_H

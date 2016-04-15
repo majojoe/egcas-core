@@ -53,6 +53,7 @@ private Q_SLOTS:
         void copyTreeTest();
         void cutTreeTest();
         void pasteTreeCursorTest();
+        void pasteTreeCursorTest2();
 private:
 };
 
@@ -148,6 +149,47 @@ void EgcasTest_AdvancedTreeOps::pasteTreeCursorTest()
         QVERIFY(formula.m_scrIter->rightSide());
 }
 
+void EgcasTest_AdvancedTreeOps::pasteTreeCursorTest2()
+{
+        EgcKernelParser parser;
+        EgcFormulaItem item;
+        QScopedPointer<EgcNode> tree;
+        tree.reset(parser.parseKernelOutput("1+fnc(2+3,4,5,(6))"));
+        if (tree.isNull()) {
+                std::cout << parser.getErrorMessage().toStdString();
+        }
+        QVERIFY(!tree.isNull());
+
+        EgcFormulaEntity formula(*tree.take());
+
+        formula.setItem(&item);
+
+        //update mathml table
+        (void) formula.getMathMlCode();
+
+        EgcNode *copiedTree;
+
+        EgcBinaryNode* rootNode = static_cast<EgcBinaryNode*>(formula.getBaseElement().getChild(0));
+        copiedTree = formula.copy(*rootNode->getChild(1));
+        QVERIFY(copiedTree);
+        QVERIFY(copiedTree->getNodeType() == EgcNodeType::FunctionNode);
+        EgcAction action;
+        action.m_op = EgcOperations::formulaActivated;
+        formula.handleAction(action);
+        action.m_op = EgcOperations::cursorBackward;
+        for(int i = 0; i <= 100; i++) {
+                formula.handleAction(action);
+        }
+        QCOMPARE(formula.m_scrIter->node(), rootNode->getChild(0));
+        QVERIFY(!formula.m_scrIter->rightSide());
+
+        QVERIFY(formula.paste(*copiedTree, *rootNode->getChild(0)));
+        QVERIFY(rootNode->getChild(0)->getNodeType() == EgcNodeType::FunctionNode);
+        //update mathml table
+        (void) formula.getMathMlCode();
+        QCOMPARE(formula.m_scrIter->node(), rootNode->getChild(0));
+        QVERIFY(!formula.m_scrIter->rightSide());
+}
 
 QTEST_MAIN(EgcasTest_AdvancedTreeOps)
 
