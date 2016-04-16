@@ -80,8 +80,7 @@ const quint32 EgcScrPosIterator::next(void)
         if (m_subIdIter->hasNext()) {
                 (void) m_subIdIter->next();
                 //switch from left side to right side, if we are on the half way to the end of the node
-                if (m_subIdIter->lastSubind() == (m_nodeIter->getNode().nrSubindexes() - 1) / 2)
-                        m_nodeIter->next();
+                balanceNodeIter();
         } else if (m_nodeIter->hasNext()) {
                 m_nodeIter->next();
                 m_subIdIter->setNode(m_nodeIter->getNode());
@@ -101,8 +100,7 @@ const quint32 EgcScrPosIterator::previous(void)
         if (m_subIdIter->hasPrevious()) {
                 (void) m_subIdIter->previous();
                 //switch from right side to left side, if we are on the half way to the front of the node
-                if (m_subIdIter->lastSubind() == (m_nodeIter->getNode().nrSubindexes() - 1) / 2)
-                        m_nodeIter->previous();
+                balanceNodeIter();
         } else if (m_nodeIter->hasPrevious()) {
                 m_nodeIter->previous();
                 m_subIdIter->setNode(m_nodeIter->getNode());
@@ -227,7 +225,9 @@ void EgcScrPosIterator::switchSideUnderlinedNode(void)
 
 bool EgcScrPosIterator::insert(QChar character)
 {
-        return m_subIdIter->insert(character);
+        bool retval = m_subIdIter->insert(character);
+        balanceNodeIter();
+        return retval;
 }
 
 bool EgcScrPosIterator::remove(void)
@@ -236,7 +236,9 @@ bool EgcScrPosIterator::remove(void)
                 if (m_lastUnderlinedNode)
                         m_nodeIter->deleteTree(false);
         } else {
-                return m_subIdIter->remove(false);
+                bool retval = m_subIdIter->remove(false);
+                balanceNodeIter();
+                return retval;
         }
 }
 
@@ -331,4 +333,16 @@ void EgcScrPosIterator::updatePointer(EgcNode* oldPointer, EgcNode* newPointer, 
                 if (right)
                         m_subIdIter->toBack();
         }
+}
+
+void EgcScrPosIterator::balanceNodeIter(void)
+{
+        if (    (m_subIdIter->lastSubind() > (m_nodeIter->getNode().nrSubindexes() - 1) / 2)
+             || !m_subIdIter->hasNext()) {
+                if (!m_nodeIter->rightSide())
+                        m_nodeIter->next();
+        } else {
+                if (m_nodeIter->rightSide())
+                        m_nodeIter->previous();
+        }        
 }

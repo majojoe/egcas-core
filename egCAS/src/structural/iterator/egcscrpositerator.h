@@ -176,6 +176,12 @@ private:
          * @return true if everything worked well, false otherwise.
          */
         bool insertUnaryOp(EgcNodeType type, EgcNode* node);
+        /**
+         * @brief balanceNodeIter iterate the node iterator to the right side or to the left if modifying the subiter.
+         * If this function is always called when modifying the subiter, the nodeIter is always on the correct side 
+         * (left or right always that one that is nearest).
+         */
+        void balanceNodeIter(void);
 
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes
