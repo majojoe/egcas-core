@@ -513,18 +513,27 @@ void EgcIdNodeIter::deleteTree(bool before)
         bool atRightSide;
 
         if (before) {
-                posAfterUpdate = &m_nodeIter->peekNext();
                 nodeToDelete = &m_nodeIter->peekPrevious();
                 atRightSide = true;
         } else {
-                posAfterUpdate = &m_nodeIter->peekPrevious();
                 nodeToDelete = &m_nodeIter->peekNext();
                 atRightSide = false;
         }
-        if (nodeToDelete && posAfterUpdate && nodeToDelete->getNodeType() != EgcNodeType::BaseNode) {
+        if (nodeToDelete && posAfterUpdate && nodeToDelete->getNodeType() != EgcNodeType::BaseNode) {                
+                EgcNode* parent = nodeToDelete->getParent();
+                if (!parent)
+                        return;
+        
+                EgcContainerNode* cParent = static_cast<EgcContainerNode*>(parent);
+                quint32 index;
+                bool isChild = cParent->getIndexOfChild(*nodeToDelete, index);
+                if (!isChild)
+                        return;
+                
                 setAtNode(*nodeToDelete, true, true);
                 m_nodeIter->remove();
-                m_iterPosAfterUpdate = &m_nodeIter->peekPrevious();
+                
+                m_iterPosAfterUpdate = cParent->getChild(index);
                 m_atRightSideAfterUpdate = atRightSide;
         }
 }

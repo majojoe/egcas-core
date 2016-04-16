@@ -308,9 +308,11 @@ void EgcScrPosIterator::finishFormulaChange(void)
 
         m_lastUnderlinedNode = nullptr;
         doStep = m_nodeIter->finishModOperation();
-        m_subIdIter->setNode(m_nodeIter->getNode());
-        if (!m_nodeIter->getNode().isContainer())
-                m_subIdIter->toBack();
+        if (m_subIdIter->node() != &m_nodeIter->getNode()) {
+                m_subIdIter->setNode(m_nodeIter->getNode());        
+                if (!m_nodeIter->getNode().isContainer() && m_nodeIter->rightSide())
+                        m_subIdIter->toBack();
+        }
         if (hasNext() && doStep)
                 next();
 }
