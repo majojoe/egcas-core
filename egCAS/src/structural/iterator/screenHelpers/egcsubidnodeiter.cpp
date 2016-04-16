@@ -200,3 +200,8 @@ bool EgcSubindNodeIter::insert(QChar character)
 
         return retval;
 }
+
+const EgcNode* EgcSubindNodeIter::node(void)
+{
+        return m_node;
+}

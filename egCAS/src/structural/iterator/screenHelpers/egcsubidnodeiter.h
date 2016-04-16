@@ -53,6 +53,11 @@ public:
          */
         void setNode(EgcNode& node);
         /**
+         * @brief node returns the currently active node
+         * @return the node that is currently active (where the cursor is)
+         */
+        const EgcNode* node(void);        
+        /**
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
          */
