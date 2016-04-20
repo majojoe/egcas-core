@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "structural/egcnodecreator.h"
 #include "structural/specialNodes/egcnode_gen.h"
 
-EgcScrPosIterator::EgcScrPosIterator(const EgcFormulaEntity& formula) : m_lookup(formula.getMathmlMappingCRef()), //gcc bug
+EgcScrPosIterator::EgcScrPosIterator(EgcFormulaEntity& formula) : m_lookup(formula.getMathmlMappingCRef()), //gcc bug
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
                                                                         m_lastUnderlinedNode{nullptr},
                                                                         m_originNode{nullptr}

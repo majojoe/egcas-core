@@ -57,7 +57,7 @@ class EgcScrPosIterator
 {
 public:        
         /// constructor for initialization with formula
-        EgcScrPosIterator(const EgcFormulaEntity& formula);
+        EgcScrPosIterator(EgcFormulaEntity& formula);
         /// std destructor
         virtual ~EgcScrPosIterator();
         /**

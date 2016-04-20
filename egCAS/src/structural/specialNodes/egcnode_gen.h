@@ -87,6 +87,7 @@ DefinitionNode,
 ExponentNode,
 MultiplicationNode,
 EqualNode,
+BinEmptyNode,
 BaseNode,
 NodeUndefined
 //[[[end]]]

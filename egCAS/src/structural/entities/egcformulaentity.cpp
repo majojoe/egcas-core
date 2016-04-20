@@ -396,7 +396,7 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
 {
         switch (action.m_op) {
         case EgcOperations::formulaActivated:
-                m_scrIter.reset(new EgcScrPosIterator(const_cast<EgcFormulaEntity const&>(*this)));
+                m_scrIter.reset(new EgcScrPosIterator(*this));
                 showCurrentCursor();
                 break;
         case EgcOperations::formulaDeactivated:

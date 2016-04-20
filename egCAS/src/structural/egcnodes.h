@@ -79,6 +79,7 @@ for node in nodes:
 #include "concreteNodes/egcexponentnode.h"
 #include "concreteNodes/egcmultiplicationnode.h"
 #include "concreteNodes/egcequalnode.h"
+#include "concreteNodes/egcbinemptynode.h"
 //[[[end]]]
 //The list is generated automatically. Do NOT change it manually.
 

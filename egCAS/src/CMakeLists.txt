@@ -95,6 +95,7 @@ set(egCAS_concrete_node_SOURCES
         structural/concreteNodes/egcintegralnode.cpp
         structural/concreteNodes/egcdifferentialnode.cpp
         structural/concreteNodes/egcalnumnode.cpp
+        structural/concreteNodes/egcbinemptynode.cpp
 )
 
 set(egCAS_SOURCES
