@@ -81,6 +81,10 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                         pushToStack(static_cast<EgcVariableNode*>(binary)->getStuffedVar(), binary);
                 }
                 break;
+        case EgcNodeType::BinEmptyNode:
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("(%1)()(%2)", binary);
+                break;
 
 
         default:

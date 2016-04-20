@@ -85,6 +85,12 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
                         assembleResult("<mrow "%id%">%1<mo" % getId(node) % ">&CenterDot;</mo>%2</mrow>", node);
                 }
                 break;
+        case EgcNodeType::BinEmptyNode:
+                if (m_state == EgcIteratorState::RightIteration) {
+                        id = getId(node);
+                        assembleResult("<mrow "%id%">%1<mo" % getId(node) % ">&compfn;</mo>%2</mrow>", node);
+                }
+                break;
         case EgcNodeType::DivisionNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         suppressChildIfChildType(node, 0, EgcNodeType::ParenthesisNode);

@@ -27,7 +27,6 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-
 #include "egcidnodeiter.h"
 #include "entities/egcformulaentity.h"
 #include "specialNodes/egcnode.h"
@@ -38,12 +37,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "iterator/egcnodeiterator.h"
 #include "structural/specialNodes/egcnode_gen.h"
 
-EgcIdNodeIter::EgcIdNodeIter(const EgcFormulaEntity& formula) : m_nodeIter{new EgcNodeIterator(formula)},                                                                
-                                                                m_lookup(formula.getMathmlMappingCRef()), //gcc bug
+EgcIdNodeIter::EgcIdNodeIter(EgcFormulaEntity& formula) : m_nodeIter{new EgcNodeIterator(formula)},
                                                                 m_node{&formula.getBaseElement()},
                                                                 m_iterPosAfterUpdate{nullptr},
                                                                 m_atRightSideAfterUpdate{false},
-                                                                m_isInsert{false}
+                                                                m_isInsert{false},
+                                                                m_formula(formula)
 {
         toBack();
 }
@@ -242,9 +241,9 @@ quint32 EgcIdNodeIter::getMathmlId(EgcNode* node, EgcIteratorState state, EgcNod
         
         if (    state == EgcIteratorState::LeftIteration
              || state == EgcIteratorState::RightIteration) {
-                return m_lookup.getIdFrame(*node);
+                return m_formula.getMathmlMappingCRef().getIdFrame(*node);
         } else {  //EgcIteratorState::MiddleIteration
-                QList<quint32> list = m_lookup.getIdsNonFrame(*node);
+                QList<quint32> list = m_formula.getMathmlMappingCRef().getIdsNonFrame(*node);
                 quint32 childIndex = 0;
 
                 if (node->isContainer()) {
@@ -263,7 +262,7 @@ quint32 EgcIdNodeIter::getMathmlId(EgcNode* node, EgcIteratorState state, EgcNod
                                 id = list.at(childIndex);
                         }
                 } else { // is not a container, so it has no further frames
-                        id = m_lookup.getIdFrame(*node);
+                        id = m_formula.getMathmlMappingCRef().getIdFrame(*node);
                 }
         }
 
@@ -503,7 +502,150 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
 
 void EgcIdNodeIter::remove(bool before)
 {
-#warning implement this
+        bool deleteChild;
+        quint32 childIndex;
+        EgcNode* cursorAfterDel = nullptr;
+        bool rsideAfterDel;
+
+        EgcNode* node = nodeToDelete(before, deleteChild, childIndex);
+
+        if (!node)
+                return;
+
+        if (!node->getParent())
+                return;
+
+        if (deleteChild && node->isContainer()) {
+                if (node->isBinaryNode()) {
+                        EgcContainerNode* contToDel = static_cast<EgcContainerNode*>(node);
+                        EgcNode* child = contToDel->getChild(childIndex);
+                        QScopedPointer<EgcNode> cldDel;
+                        if (child)
+                                cldDel.reset(m_formula.cut(*child));
+
+                        if (child == m_node) {
+                                cursorAfterDel = contToDel->getChild(!childIndex);
+                                rsideAfterDel = true;
+                        }
+
+                        if (cursorAfterDel) {
+                                QScopedPointer<EgcNode> cldCpy;
+                                cldCpy.reset(m_formula.cut(*cursorAfterDel));
+                                m_formula.paste(*cldCpy.take(), *node->getParent());
+                        }
+                }
+
+                if (node->isFlexNode()) {
+                        EgcContainerNode* contToDel = static_cast<EgcContainerNode*>(node);
+                        EgcNode* child = contToDel->getChild(childIndex);
+
+                        if (child == m_node) {
+                                if (childIndex >= contToDel->getNumberChildNodes() ) 
+                                        childIndex = 0; 
+                                
+                                rsideAfterDel = before;
+                                cursorAfterDel = contToDel->getChild(childIndex);
+                        }
+
+                        static_cast<EgcFlexNode*>(contToDel)->remove(childIndex);
+                }
+        } else if (!deleteChild && node->isContainer()) {
+
+        } else { //a leaf
+
+        }
+
+
+
+
+
+        if (cursorAfterDel) {
+                cursorAfterDel = m_iterPosAfterUpdate;
+                rsideAfterDel = m_atRightSideAfterUpdate;
+        }
+
+
+
+}
+
+EgcNode* EgcIdNodeIter::nodeToDelete(bool before, bool& deleteChild, quint32& chldIndex)
+{
+        EgcNode* nodeToDelete = nullptr;
+        EgcNodeIterator iter = *m_nodeIter;
+        EgcIteratorState state = EgcIteratorState::LeftIteration;
+        bool deleteChildNode = false;
+
+        if (before) {
+                if (rightSide())
+                        nodeToDelete = m_node;
+                else
+                        nodeToDelete = prevNodeWithId(*m_node, &iter, true);
+        } else {
+                if (!rightSide())
+                        nodeToDelete = m_node;
+                else
+                        nodeToDelete = nextNodeWithId(*m_node, &iter, true);
+        }
+
+        if (&iter.peekNext() == nodeToDelete)
+                state = iter.getStateNextNode();
+        if (&iter.peekPrevious() == nodeToDelete)
+                state = iter.getStatePreviousNode();
+
+        if (nodeToDelete->isBinaryNode() && state == EgcIteratorState::MiddleIteration)
+                deleteChildNode = true;
+        if (nodeToDelete->isFlexNode() && state == EgcIteratorState::MiddleIteration)
+                deleteChildNode = true;
+
+
+        quint32 index = 0;
+        EgcNode* tmpNode = m_node;
+        EgcContainerNode* parent = nullptr;
+
+        //search for the index of the child tree of the nodeToDelete we are currently in
+        if (tmpNode && nodeToDelete && deleteChildNode) {
+                while (parent && tmpNode != nodeToDelete) {
+                        parent = tmpNode->getParent();
+                        if (parent) {
+                                if (parent == nodeToDelete)
+                                        break;
+                                else
+                                        tmpNode = parent;
+                        } else {
+                                if(tmpNode == &m_formula.getBaseElement())
+                                        nodeToDelete = nullptr;
+                        }
+                }
+
+                if (parent)
+                        deleteChildNode = parent->getIndexOfChild(*tmpNode, index);
+        }
+
+        //correct indexes
+        if (nodeToDelete->isBinaryNode()) {                
+                if (before)
+                        index = 0;
+                else
+                        index = 1;
+                deleteChild = false;
+                if (nodeToDelete->getNodeType() == EgcNodeType::BinEmptyNode)
+                        deleteChild = true;
+        }
+        if (nodeToDelete->isFlexNode() && !before) {
+                quint32 nrChilds = static_cast<EgcFlexNode*>(nodeToDelete)->getNumberChildNodes();
+                if (nrChilds < index + 1)
+                        index++;
+                else
+                        index = nrChilds - 1;
+
+                if (nrChilds == 1)
+                        deleteChildNode = false;
+        }
+
+        deleteChild = deleteChildNode;
+        chldIndex = index;
+
+        return nodeToDelete;
 }
 
 void EgcIdNodeIter::deleteTree(bool before)

@@ -26,42 +26,20 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCFUNCTIONNODE_H
-#define EGCFUNCTIONNODE_H
+#ifndef EGCBINEMPTYNODE_H
+#define EGCBINEMPTYNODE_H
 
-#include <QString>
-#include "../specialNodes/egcflexnode.h"
+#include "../specialNodes/egcbinarynode.h"
 
 /**
- * @brief The EgcFuntionNode class is a class to model function calls. This manages e.g. something like calculation1(10, x + 3, 9.8234).
+ * @brief The EgcBinEmptyNode class is a class for plus operations. 
  */
-class EgcFunctionNode : public EgcFlexNode
+class EgcBinEmptyNode : public EgcBinaryNode
 {
         //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcFunctionNode, EgcNodeType::FunctionNode);
+        EGC_SET_EXPRESSION_TYPE(EgcBinEmptyNode, EgcNodeType::BinEmptyNode);
 public:
-        EgcFunctionNode();
-        /**
-         * @brief setName set the function name
-         * @param fncName the variable name as a string
-         */
-        virtual void setName(const QString& fncName);
-        /**
-         * @brief getName returns the function name
-         * @return the function name
-         */
-        QString& getName(void);
-
-protected:
-        /**
-         * @brief childsDeleteable returns wether childs are deleteable or not (sometimes subclasses of this class
-         * shall not be able to delete childs, since that makes no sense in some cases, e.g. for integral nodes (fix
-         * number of childs))
-         * @return true if childs are deleteable, false otherwise
-         */
-        virtual bool childsDeleteable(void) override;
-
-        QString m_name;
+        EgcBinEmptyNode();
 };
 
-#endif // EGCFUNCTIONNODE_H
+#endif // EGCBINEMPTYNODE_H

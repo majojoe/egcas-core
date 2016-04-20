@@ -41,3 +41,8 @@ QString& EgcFunctionNode::getName(void)
 {
         return m_name;
 }
+
+bool EgcFunctionNode::childsDeleteable(void)
+{
+        return true;
+}

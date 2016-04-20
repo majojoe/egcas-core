@@ -381,17 +381,18 @@ bool EgcFlexNode::insert(quint32 index, EgcNode& node)
 
 bool EgcFlexNode::remove(quint32 index)
 {
-        bool retval = true;
+        if (!childsDeleteable())
+                return false;
 
         if (index < m_childs.count()) {
                 delete m_childs.at(index);
                 m_childs[index] = nullptr;
                 m_childs.remove(index);
         } else {
-                retval = false;
+                return false;
         }
 
-        return retval;
+        return true;
 }
 
 bool EgcFlexNode::operator==(const EgcNode& node) const
@@ -422,4 +423,9 @@ bool EgcFlexNode::operator==(const EgcNode& node) const
 
         return retval;
 
+}
+
+bool EgcFlexNode::childsDeleteable(void)
+{
+        return false;
 }

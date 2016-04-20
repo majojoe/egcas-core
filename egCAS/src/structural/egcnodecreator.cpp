@@ -144,6 +144,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::EqualNode:
                 retval = new (std::nothrow) EgcEqualNode();
                 break;
+        case EgcNodeType::BinEmptyNode:
+                retval = new (std::nothrow) EgcBinEmptyNode();
+                break;
         //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.
 

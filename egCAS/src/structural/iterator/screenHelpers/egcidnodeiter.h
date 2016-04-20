@@ -51,7 +51,7 @@ class EgcIdNodeIter
 public:        
         /// constructor for initialization with formula. After the initialization the iterator points to the end of the
         /// formula.
-        EgcIdNodeIter(const EgcFormulaEntity& formula);
+        EgcIdNodeIter(EgcFormulaEntity& formula);
         /// std destructor
         virtual ~EgcIdNodeIter();
         /**
@@ -223,13 +223,24 @@ private:
          * @return true if cursor is at the right side, false otherwise
          */
         bool rightSide(EgcNodeIterator& iter, EgcNode& node) const;
+        /**
+         * @brief nodeToDelete returns the node to delete or the parent from which to remove childs.
+         * @param before if true the node before the current iterator shall be deleted, if false the node after it.
+         * @param deleteChild if this is true, child trees shall be removed. Which child tree to remove is given with the
+         * chldIndex parameter below. If The return value of nodeToDelete is a binary node type and deleteChild is true,
+         * the node returned by nodeToDelete and the second child shall be removed. In all other cases the return
+         * value of nodeToDelete shall only be deleted, if the number of child nodes is just 1.
+         * @param chldIndex the index of the child tree to delete
+         * @return the node to delete or child trees to remove.
+         */
+        EgcNode* nodeToDelete(bool before, bool& deleteChild, quint32& chldIndex);
 
         QScopedPointer<EgcNodeIterator> m_nodeIter;         ///< the node iterator that points to the current node with a mathml id
-        const EgcMathmlLookup& m_lookup;                    ///< a reference to the lookup data
         EgcNode* m_node;                                    ///< currently active node (where the cursor is currently)
         EgcNode* m_iterPosAfterUpdate;                      ///< iterator should be at this position after mathml lookup table update
         bool m_atRightSideAfterUpdate;                      ///< if cursor should be at the right side of m_iterPosAfterUpdate after update
         bool m_isInsert;                                    ///< true if after an insert operation the iterator shall be incremented (that cursor is after inserted element)
+        EgcFormulaEntity &m_formula;                        ///< reference to formula associated with
 };
 
 #endif // EGCIDNODEITER_H
