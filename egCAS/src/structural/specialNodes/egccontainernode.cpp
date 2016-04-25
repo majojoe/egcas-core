@@ -137,3 +137,24 @@ bool EgcContainerNode::isRightAssociative(void) const
 {
         return false;
 }
+
+bool EgcContainerNode::hasSubNode(const EgcNode& node, quint32 &index) const
+{
+        EgcNode* parent = nullptr;
+        EgcNode* node_l = const_cast<EgcNode*>(&node);
+
+        while (parent != this) {
+                parent = node_l->getParent();
+                if (parent) {
+                        if (parent != this)
+                                node_l = parent;
+                } else {
+                        return false;
+                }
+        }
+
+        const EgcContainerNode* container = static_cast<const EgcContainerNode*>(parent);
+        (void) container->getIndexOfChild(*node_l, index);
+
+        return true;
+}

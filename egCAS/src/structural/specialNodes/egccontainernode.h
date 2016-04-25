@@ -137,7 +137,14 @@ public:
          * @return true if node is right associative, false otherwise. Only a container can have a associativity.
          */
         virtual bool isRightAssociative(void) const;
-
+        /**
+         * @brief hasSubNode checks if node is a subnode (any child, grandchild, ...) of this container node
+         * @param node the node to check if it is a subnode of this container node
+         * @param index the index of this container where the given subchild is in
+         * @return true if given node is a subchild of this container, false if not. If the given node is the current
+         * containter node, the result will also be false.
+         */
+        bool hasSubNode(const EgcNode& node, quint32 &index) const;
 protected:
         /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
