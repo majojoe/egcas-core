@@ -165,6 +165,13 @@ public:
          * @return true if the trees are equal
          */
         virtual bool operator==(const EgcNode& node) const override;
+        /**
+         * @brief childsDeleteable returns wether childs are deleteable or not (sometimes subclasses of this class
+         * shall not be able to delete childs, since that makes no sense in some cases, e.g. for integral nodes (fix
+         * number of childs))
+         * @return true if childs are deleteable, false otherwise
+         */
+        virtual bool childsDeleteable(void);
 
 protected:
         /**
@@ -176,13 +183,6 @@ protected:
          * @param new_child child pointers of the current object will be adjusted to this child object.
          */
         virtual void adjustChildPointers(EgcNode &old_child, EgcNode &new_child) override;
-        /**
-         * @brief childsDeleteable returns wether childs are deleteable or not (sometimes subclasses of this class
-         * shall not be able to delete childs, since that makes no sense in some cases, e.g. for integral nodes (fix
-         * number of childs))
-         * @return true if childs are deleteable, false otherwise
-         */
-        virtual bool childsDeleteable(void);
 
         QVector<EgcNode*> m_childs;              //a vector that holds all childs of the FlexNode
 };

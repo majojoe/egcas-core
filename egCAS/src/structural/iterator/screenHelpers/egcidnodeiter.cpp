@@ -500,20 +500,123 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
         return true;
 }
 
-void EgcIdNodeIter::remove(bool before)
+bool EgcIdNodeIter::remove(bool before)
+{
+        bool retval = false;
+        EgcIteratorState state;
+        EgcNode* node;
+
+        node = getNodeToModify(before, state);
+        if (!node)
+                return false;
+
+        if (!node->getParent())
+                return false;
+
+        if (node->isBinaryNode()) {
+                retval = removeBinary(before, *node, state);
+        } else if (node->isFlexNode()) {
+                retval = removeFlex(before, *node, state);
+        } else if (node->isUnaryNode()) {
+                retval = removeUnary(before, *node, state);
+        } else {
+                retval = removeLeaf(before, *node, state);
+        }
+
+        return retval;
+}
+
+bool EgcIdNodeIter::removeBinary(bool before, EgcNode &node, EgcIteratorState state)
+{
+}
+
+bool EgcIdNodeIter::removeFlex(bool before, EgcNode &node, EgcIteratorState state)
+{
+        bool deleteChild = false;
+        bool deleteAll = false;
+        bool deleteContainer = false;
+        quint32 nrChilds = node.nrSubindexes();
+        EgcFlexNode& flex = static_cast<EgcFlexNode&>(node);
+        quint32 index = 0;
+
+        if (!node.getParent())
+                return false;
+
+        if (    (state == EgcIteratorState::LeftIteration || state == EgcIteratorState::RightIteration)
+             && nrChilds == 1)
+                deleteContainer = true;
+        else if (    (state == EgcIteratorState::LeftIteration || state == EgcIteratorState::RightIteration)
+                     && nrChilds != 1)
+                deleteAll = true;
+        else if (state == EgcIteratorState::MiddleIteration && flex.childsDeleteable())
+                deleteChild = true;
+        else
+                return false;
+
+        //search for the index of the child tree of the nodeToDelete we are currently in
+        if (deleteAll) {
+                setAtNodeDelayed(*node.getParent(), before);
+                QScopedPointer<EgcNode> container(m_formula.cut(node));
+        } else if (deleteContainer) {
+                if (!m_node)
+                        return false;
+                if (!flex.hasSubNode(*m_node, index))
+                        return false;
+                if (!flex.getChild(0))
+                        return false;
+                QScopedPointer<EgcNode> child0(m_formula.cut(*flex.getChild(0)));
+                m_formula.paste(*child0, node);
+                setAtNodeDelayed(*child0, before);
+        } else if(deleteChild) {
+                if (!m_node)
+                        return false;
+                if (!flex.hasSubNode(*m_node, index))
+                        return false;
+                if (!flex.getChild(index))
+                        return false;
+
+                flex.remove(index);
+                EgcNode* child;
+                //correct child indexes
+                if (before) {
+                        index--;
+                        if (index >= nrChilds)
+                                index = 0;
+                }
+                child = flex.getChild(index);
+                if (!child)
+                        child = &flex;
+
+                setAtNodeDelayed(*child, before);
+
+        } else {
+                return false;
+        }
+
+        return true;
+}
+
+bool EgcIdNodeIter::removeUnary(bool before, EgcNode& node, EgcIteratorState state)
+{
+
+}
+
+bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState state)
 {
         bool deleteChild;
         quint32 childIndex;
         EgcNode* cursorAfterDel = nullptr;
         bool rsideAfterDel;
+        bool retval;
+
 
         EgcNode* node = nodeToDelete(before, deleteChild, childIndex);
 
         if (!node)
-                return;
+                return false;
 
         if (!node->getParent())
-                return;
+                return false;
 
         if (deleteChild && node->isContainer()) {
                 if (node->isBinaryNode()) {
@@ -540,9 +643,9 @@ void EgcIdNodeIter::remove(bool before)
                         EgcNode* child = contToDel->getChild(childIndex);
 
                         if (child == m_node) {
-                                if (childIndex >= contToDel->getNumberChildNodes() ) 
-                                        childIndex = 0; 
-                                
+                                if (childIndex >= contToDel->getNumberChildNodes() )
+                                        childIndex = 0;
+
                                 rsideAfterDel = before;
                                 cursorAfterDel = contToDel->getChild(childIndex);
                         }
@@ -550,23 +653,68 @@ void EgcIdNodeIter::remove(bool before)
                         static_cast<EgcFlexNode*>(contToDel)->remove(childIndex);
                 }
         } else if (!deleteChild && node->isContainer()) {
+                if (node->isBinaryNode()) {
+                        // we will replace the binary operation with type EgcNodeType::BinEmtpyNode
 
+
+
+
+                } else {
+                        // if it is a flex or unary node, we now have just 1 child, so just delete it
+                        EgcContainerNode* contToDel = static_cast<EgcContainerNode*>(node);
+                        QScopedPointer<EgcNode> child;
+                        EgcNode *cld = contToDel->getChild(0);
+                        if (cld) {
+                                child.reset(m_formula.cut(*cld));
+                                if (m_formula.paste(*child.take(), *node->getParent())) {
+                                        cursorAfterDel = cld;
+                                        rsideAfterDel = !before;
+                                }
+                        }
+                }
         } else { //a leaf
-
+                cursorAfterDel = node->getParent();
+                rsideAfterDel = !before;
+                QScopedPointer<EgcNode> ptr;
+                ptr.reset(m_formula.cut(*node));
         }
-
 
 
 
 
         if (cursorAfterDel) {
-                cursorAfterDel = m_iterPosAfterUpdate;
-                rsideAfterDel = m_atRightSideAfterUpdate;
+                setAtNodeDelayed(*cursorAfterDel, rsideAfterDel);
         }
 
-
+        return true;
 
 }
+
+EgcNode* EgcIdNodeIter::getNodeToModify(bool before, EgcIteratorState &state)
+{
+        EgcNode* nodeToModify = nullptr;
+        EgcNodeIterator iter = *m_nodeIter;
+
+        if (before) {
+                if (rightSide())
+                        nodeToModify = m_node;
+                else
+                        nodeToModify = prevNodeWithId(*m_node, &iter, true);
+        } else {
+                if (!rightSide())
+                        nodeToModify = m_node;
+                else
+                        nodeToModify = nextNodeWithId(*m_node, &iter, true);
+        }
+
+        if (&iter.peekNext() == nodeToDelete)
+                state = iter.getStateNextNode();
+        if (&iter.peekPrevious() == nodeToDelete)
+                state = iter.getStatePreviousNode();
+
+        return nodeToModify;
+}
+
 
 EgcNode* EgcIdNodeIter::nodeToDelete(bool before, bool& deleteChild, quint32& chldIndex)
 {

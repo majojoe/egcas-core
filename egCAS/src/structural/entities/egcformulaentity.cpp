@@ -658,51 +658,43 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
 
 bool EgcFormulaEntity::isNodeInFormula(EgcNode& node)
 {
-        EgcNode* tmpNode = &node;
-        EgcNode* parent;
+        quint32 index;
 
-        do {
-                parent = tmpNode->getParent();
-                if (parent) {
-                        tmpNode = parent;
-                } else {
-                        if(tmpNode == &getBaseElement())
-                                return true;
-                        else
-                                return false;
-                }
-        } while (parent);
+        if (m_data.hasSubNode(node, index))
+                return true;
+
+        return false;
 }
 
 bool EgcFormulaEntity::isScreenIterInSubtree(EgcNode& tree, bool &rightSide) const
 {
         EgcNode* node = nullptr;
-        EgcNode* parent;
         
         if (!m_scrIter.isNull())
                 node = const_cast<EgcNode*>(m_scrIter->node());
         else
                 return false;
-        
+
+        if (!node)
+                return false;
+
         rightSide = m_scrIter->rightSide();
-        
-        while (node != &tree) {
-                parent = node->getParent();
-                if (parent) {
-                        quint32 ind;
-                        if (parent->isBinaryNode() || parent->isFlexNode()) {
-                                const EgcContainerNode* container = static_cast<const EgcContainerNode*>(parent);
-                                (void) container->getIndexOfChild(*node, ind);
-                                if ((container->getNumberChildNodes() / 2) >= ind)
-                                        rightSide = true;
-                                else
-                                        rightSide = false;
-                        }
-                        node = parent;
-                } else {
-                        return false;
+
+        if (node == &tree)
+                return true;
+
+        if (tree.isContainer()) {
+                quint32 index;
+                EgcContainerNode* container = static_cast<EgcContainerNode*>(&tree);
+                if (container->hasSubNode(*node, index)) {
+                        if ((container->getNumberChildNodes() / 2) >= index)
+                                rightSide = true;
+                        else
+                                rightSide = false;
+
+                        return true;
                 }
         }
-        
-        return true;
+
+        return false;
 }

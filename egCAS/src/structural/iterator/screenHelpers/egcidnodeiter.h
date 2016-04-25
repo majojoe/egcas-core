@@ -141,8 +141,9 @@ public:
         /**
          * @brief remove the node in the direction given
          * @param before if true remove the item in backward direction, if false the item in forward direction
+         * @return if true the operation was successful, if false not
          */
-        void remove(bool before);
+        bool remove(bool before);
         /**
          * @brief deleteTree delete the node tree before or after the current cursor position
          * @param before if true, the tree before the current cusrsor position will be deleted, otherwise the tree after
@@ -224,16 +225,46 @@ private:
          */
         bool rightSide(EgcNodeIterator& iter, EgcNode& node) const;
         /**
-         * @brief nodeToDelete returns the node to delete or the parent from which to remove childs.
-         * @param before if true the node before the current iterator shall be deleted, if false the node after it.
-         * @param deleteChild if this is true, child trees shall be removed. Which child tree to remove is given with the
-         * chldIndex parameter below. If The return value of nodeToDelete is a binary node type and deleteChild is true,
-         * the node returned by nodeToDelete and the second child shall be removed. In all other cases the return
-         * value of nodeToDelete shall only be deleted, if the number of child nodes is just 1.
-         * @param chldIndex the index of the child tree to delete
-         * @return the node to delete or child trees to remove.
+         * @brief removeBinary remove a binary node
+         * @param before true if the node before the current cursor shall be removed, false otherwise
+         * @param the node to delete/modify
+         * @param state the state of the node to delete/modify
+         * @return true if removing the binary node succeeded, false otherwise.
          */
-        EgcNode* nodeToDelete(bool before, bool& deleteChild, quint32& chldIndex);
+        bool removeBinary(bool before, EgcNode& node, EgcIteratorState state);
+        /**
+         * @brief removeBinary remove a flex node
+         * @param before true if the node before the current cursor shall be removed, false otherwise
+         * @param the node to delete/modify
+         * @param state the state of the node to delete/modify
+         * @return true if removing the binary node succeeded, false otherwise.
+         */
+        bool removeFlex(bool before, EgcNode& node, EgcIteratorState state);
+        /**
+         * @brief removeBinary remove a unary node
+         * @param before true if the node before the current cursor shall be removed, false otherwise
+         * @param the node to delete/modify
+         * @param state the state of the node to delete/modify
+         * @return true if removing the binary node succeeded, false otherwise.
+         */
+        bool removeUnary(bool before, EgcNode& node, EgcIteratorState state);
+        /**
+         * @brief removeBinary remove a leaf node
+         * @param before true if the node before the current cursor shall be removed, false otherwise
+         * @param the node to delete/modify
+         * @param state the state of the node to delete/modify
+         * @return true if removing the binary node succeeded, false otherwise.
+         */
+        bool removeLeaf(bool before, EgcNode& node, EgcIteratorState state);
+        /**
+         * @brief getNodeToModify return the node that will be modified if the cursor is at current position and the
+         * node before or after shall be modified.
+         * @param before true if the node before the current cursor shall be modified, otherwise the node after
+         * @param state the state of the node returned
+         * @return the node that shall be modified
+         */
+        EgcNode* getNodeToModify(bool before, EgcIteratorState &state);
+
 
         QScopedPointer<EgcNodeIterator> m_nodeIter;         ///< the node iterator that points to the current node with a mathml id
         EgcNode* m_node;                                    ///< currently active node (where the cursor is currently)

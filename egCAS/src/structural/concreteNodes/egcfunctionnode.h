@@ -51,8 +51,6 @@ public:
          * @return the function name
          */
         QString& getName(void);
-
-protected:
         /**
          * @brief childsDeleteable returns wether childs are deleteable or not (sometimes subclasses of this class
          * shall not be able to delete childs, since that makes no sense in some cases, e.g. for integral nodes (fix
@@ -60,6 +58,8 @@ protected:
          * @return true if childs are deleteable, false otherwise
          */
         virtual bool childsDeleteable(void) override;
+
+protected:
 
         QString m_name;
 };
