@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "concreteNodes/egcnumbernode.h"
 #include "concreteNodes/egcvariablenode.h"
 #include "specialNodes/egcflexnode.h"
+#include "concreteNodes/egcbinemptynode.h"
 #include "iterator/egcnodeiterator.h"
 #include "structural/specialNodes/egcnode_gen.h"
 
@@ -528,6 +529,58 @@ bool EgcIdNodeIter::remove(bool before)
 
 bool EgcIdNodeIter::removeBinary(bool before, EgcNode &node, EgcIteratorState state)
 {
+        bool deleteChild = false;
+        bool deleteAll = false;
+        bool removeType = false;
+        EgcBinaryNode& bin = static_cast<EgcBinaryNode&>(node);
+        quint32 index = 0;
+
+        if (!node.getParent())
+                return false;
+
+        if (state == EgcIteratorState::LeftIteration || state == EgcIteratorState::RightIteration)
+                deleteAll = true;
+        else if (state == EgcIteratorState::MiddleIteration && node.getNodeType() != EgcNodeType::BinEmptyNode)
+                removeType = true;
+        else    //BinEmptyNode
+                deleteChild = true;
+
+        //search for the index of the child tree of the nodeToDelete we are currently in
+        if (deleteAll) {
+                setAtNodeDelayed(*node.getParent(), before);
+                QScopedPointer<EgcNode> container(m_formula.cut(node));
+        } else if (removeType) {
+                QScopedPointer<EgcBinaryNode> orig(&bin);
+                QScopedPointer<EgcBinEmptyNode> empty(new EgcBinEmptyNode);
+                if (empty.isNull())
+                        return false;
+                if (empty->transferProperties(*orig))
+                        (void) empty.take();
+                else
+                        (void) orig.take();
+        } else if(deleteChild) {
+                if (!m_node)
+                        return false;
+                if (!bin.getChild(0))
+                        return false;
+                if (!bin.getChild(1))
+                        return false;
+                if (before)
+                        index = 1;
+                else
+                        index = 0;
+
+                EgcNode* tmpChild = bin.getChild(index);
+                QScopedPointer<EgcNode> child(m_formula.cut(*tmpChild));
+                m_formula.paste(*child.take(), node);
+
+                setAtNodeDelayed(*tmpChild, !before);
+
+        } else {
+                return false;
+        }
+
+        return true;
 }
 
 bool EgcIdNodeIter::removeFlex(bool before, EgcNode &node, EgcIteratorState state)
@@ -707,93 +760,12 @@ EgcNode* EgcIdNodeIter::getNodeToModify(bool before, EgcIteratorState &state)
                         nodeToModify = nextNodeWithId(*m_node, &iter, true);
         }
 
-        if (&iter.peekNext() == nodeToDelete)
+        if (&iter.peekNext() == nodeToModify)
                 state = iter.getStateNextNode();
-        if (&iter.peekPrevious() == nodeToDelete)
+        if (&iter.peekPrevious() == nodeToModify)
                 state = iter.getStatePreviousNode();
 
         return nodeToModify;
-}
-
-
-EgcNode* EgcIdNodeIter::nodeToDelete(bool before, bool& deleteChild, quint32& chldIndex)
-{
-        EgcNode* nodeToDelete = nullptr;
-        EgcNodeIterator iter = *m_nodeIter;
-        EgcIteratorState state = EgcIteratorState::LeftIteration;
-        bool deleteChildNode = false;
-
-        if (before) {
-                if (rightSide())
-                        nodeToDelete = m_node;
-                else
-                        nodeToDelete = prevNodeWithId(*m_node, &iter, true);
-        } else {
-                if (!rightSide())
-                        nodeToDelete = m_node;
-                else
-                        nodeToDelete = nextNodeWithId(*m_node, &iter, true);
-        }
-
-        if (&iter.peekNext() == nodeToDelete)
-                state = iter.getStateNextNode();
-        if (&iter.peekPrevious() == nodeToDelete)
-                state = iter.getStatePreviousNode();
-
-        if (nodeToDelete->isBinaryNode() && state == EgcIteratorState::MiddleIteration)
-                deleteChildNode = true;
-        if (nodeToDelete->isFlexNode() && state == EgcIteratorState::MiddleIteration)
-                deleteChildNode = true;
-
-
-        quint32 index = 0;
-        EgcNode* tmpNode = m_node;
-        EgcContainerNode* parent = nullptr;
-
-        //search for the index of the child tree of the nodeToDelete we are currently in
-        if (tmpNode && nodeToDelete && deleteChildNode) {
-                while (parent && tmpNode != nodeToDelete) {
-                        parent = tmpNode->getParent();
-                        if (parent) {
-                                if (parent == nodeToDelete)
-                                        break;
-                                else
-                                        tmpNode = parent;
-                        } else {
-                                if(tmpNode == &m_formula.getBaseElement())
-                                        nodeToDelete = nullptr;
-                        }
-                }
-
-                if (parent)
-                        deleteChildNode = parent->getIndexOfChild(*tmpNode, index);
-        }
-
-        //correct indexes
-        if (nodeToDelete->isBinaryNode()) {                
-                if (before)
-                        index = 0;
-                else
-                        index = 1;
-                deleteChild = false;
-                if (nodeToDelete->getNodeType() == EgcNodeType::BinEmptyNode)
-                        deleteChild = true;
-        }
-        if (nodeToDelete->isFlexNode() && !before) {
-                quint32 nrChilds = static_cast<EgcFlexNode*>(nodeToDelete)->getNumberChildNodes();
-                if (nrChilds < index + 1)
-                        index++;
-                else
-                        index = nrChilds - 1;
-
-                if (nrChilds == 1)
-                        deleteChildNode = false;
-        }
-
-        deleteChild = deleteChildNode;
-        chldIndex = index;
-
-        return nodeToDelete;
 }
 
 void EgcIdNodeIter::deleteTree(bool before)
