@@ -234,7 +234,7 @@ bool EgcScrPosIterator::remove(void)
 {
         if (!m_subIdIter->hasNext()) {
                 if (m_lastUnderlinedNode)
-                        m_nodeIter->deleteTree(false);
+                        return m_nodeIter->deleteTree(false);
         } else {
                 bool retval = m_subIdIter->remove(false);
                 balanceNodeIter();
@@ -246,7 +246,7 @@ bool EgcScrPosIterator::backspace(void)
 {
         if (!m_subIdIter->hasPrevious()) {
                 if (m_lastUnderlinedNode)
-                        m_nodeIter->deleteTree(true);
+                        return m_nodeIter->deleteTree(true);
         } else {
                 return m_subIdIter->remove(true);
         }
