@@ -148,8 +148,9 @@ public:
          * @brief deleteTree delete the node tree before or after the current cursor position
          * @param before if true, the tree before the current cusrsor position will be deleted, otherwise the tree after
          * the current position.
+         * @return true if deleting worked, false otherwise
          */
-        void deleteTree(bool before);
+        bool deleteTree(bool before);
 
 private:
         /**
