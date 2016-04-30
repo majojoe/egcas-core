@@ -669,7 +669,7 @@ bool EgcIdNodeIter::removeUnary(bool before, EgcNode& node, EgcIteratorState sta
         QScopedPointer<EgcNode> child(m_formula.cut(*unary.getChild(0)));
         if (child.isNull())
                 return false;
-        m_formula.paste(*child, node);
+        m_formula.paste(*child.take(), node);
         setAtNodeDelayed(*tmpChild, before);
 
         return true;
