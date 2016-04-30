@@ -756,6 +756,13 @@ bool EgcIdNodeIter::finishModOperation(void)
 {
         if (m_iterPosAfterUpdate) {
                 setAtNode(*m_iterPosAfterUpdate, m_atRightSideAfterUpdate);
+                //correct cursor for remove operations
+                if (!m_isInsert && m_iterPosAfterUpdate != m_node) {
+                        if (m_atRightSideAfterUpdate)
+                                previous();
+                        else
+                                next();
+                }
                 m_iterPosAfterUpdate = nullptr;
         }
 
