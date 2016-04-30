@@ -625,6 +625,10 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
         EgcNode* parent = whereToPaste.getParent();
         if (!parent)
                 return false;
+        if(treeToPaste.getParent())
+                return false;
+        if(&treeToPaste == &whereToPaste)
+                return false;
 
         EgcContainerNode* cParent = static_cast<EgcContainerNode*>(parent);
         quint32 index;
