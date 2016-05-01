@@ -560,6 +560,7 @@ bool EgcIdNodeIter::removeBinary(bool before, EgcNode &node, EgcIteratorState st
                         (void) empty.take();
                 else
                         (void) orig.take();
+                setAtNodeDelayed(*m_node, !before);
         } else if(deleteChild) {
                 if (!m_node)
                         return false;
