@@ -702,12 +702,12 @@ EgcNode* EgcIdNodeIter::getNodeToModify(bool before, EgcIteratorState &state)
                 if (rightSide())
                         nodeToModify = m_node;
                 else
-                        nodeToModify = prevNodeWithId(*m_node, &iter, true);
+                        nodeToModify = gotoNodeWithId(false, &iter, *m_node, true, true);
         } else {
                 if (!rightSide())
                         nodeToModify = m_node;
                 else
-                        nodeToModify = nextNodeWithId(*m_node, &iter, true);
+                        nodeToModify = gotoNodeWithId(true, &iter, *m_node, true, true);
         }
 
         if (&iter.peekNext() == nodeToModify)
