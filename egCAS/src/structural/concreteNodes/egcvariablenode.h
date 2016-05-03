@@ -98,6 +98,11 @@ public:
          * @return true if the node is an operation, false otherwise
          */
         virtual bool isOperation(void) const override;
+        /**
+         * @brief isLeafContainer if a container contains only leafes and no operations
+         * @return true if container is a container that holds leafes and is only intended to hold such leafes.
+         */
+        virtual bool isLeafContainer(void) const override;
 
 protected:
         static QRegularExpression s_varSubSeparator; ///< regex for separating variable and subscript

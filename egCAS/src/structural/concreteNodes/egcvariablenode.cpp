@@ -234,3 +234,8 @@ bool EgcVariableNode::isOperation(void) const
 {
         return false;
 }
+
+bool EgcVariableNode::isLeafContainer(void) const
+{
+        return true;
+}

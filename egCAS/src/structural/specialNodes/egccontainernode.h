@@ -145,6 +145,12 @@ public:
          * containter node, the result will also be false.
          */
         bool hasSubNode(const EgcNode& node, quint32 &index) const;
+        /**
+         * @brief isLeafContainer if a container contains only leafes and no operations
+         * @return true if container is a container that holds leafes and is only intended to hold such leafes.
+         */
+        virtual bool isLeafContainer(void) const;
+
 protected:
         /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.

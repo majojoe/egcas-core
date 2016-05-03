@@ -52,7 +52,7 @@ EgcIdNodeIter::~EgcIdNodeIter()
 {
 }
 
-void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide, bool snapAtOmittedPositions)
+void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide, EgcSnapProperty snapProperty)
 {
         EgcNodeIterator iter(node);
 
@@ -79,9 +79,9 @@ void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide, bool snapAtOmitte
         EgcNode* visible_node;
 
         if (atRightSide)
-                visible_node = gotoNodeWithId(true, &iter, node, false, snapAtOmittedPositions);
+                visible_node = gotoNodeWithId(true, &iter, node, false, snapProperty);
         else
-                visible_node = gotoNodeWithId(false, &iter, node, false, snapAtOmittedPositions);
+                visible_node = gotoNodeWithId(false, &iter, node, false, snapProperty);
 
         if (visible_node) {
                 m_node = visible_node;
@@ -270,7 +270,7 @@ quint32 EgcIdNodeIter::getMathmlId(EgcNode* node, EgcIteratorState state, EgcNod
         return id;
 }
 
-EgcNode* EgcIdNodeIter::nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter, bool snapAtOmittedPositions) const
+EgcNode* EgcIdNodeIter::nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter, EgcSnapProperty snapProperty) const
 {
         EgcNode* retval = &currNode;
         EgcNodeIterator iter = *tempIter;
@@ -282,7 +282,7 @@ EgcNode* EgcIdNodeIter::nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempI
              && &currNode != prevNode)
                 return nullptr;
 
-        while (!(visible = nodeStateVisible(iter, *retval, snapAtOmittedPositions)) && iter.hasNext()) {
+        while (!(visible = nodeStateVisible(iter, *retval, snapProperty)) && iter.hasNext()) {
                 if (retval == &iter.peekNext())
                         iter.next();
                 else
@@ -298,7 +298,7 @@ EgcNode* EgcIdNodeIter::nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempI
         return retval;
 }
 
-EgcNode* EgcIdNodeIter::prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter, bool snapAtOmittedPositions) const
+EgcNode* EgcIdNodeIter::prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter, EgcSnapProperty snapProperty) const
 {
         EgcNode* retval = &currNode;
         EgcNodeIterator iter = *tempIter;
@@ -310,7 +310,7 @@ EgcNode* EgcIdNodeIter::prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempI
              && &currNode != prevNode)
                 return nullptr;
 
-        while (!(visible = nodeStateVisible(iter, *retval, snapAtOmittedPositions)) && iter.hasPrevious()) {
+        while (!(visible = nodeStateVisible(iter, *retval, snapProperty)) && iter.hasPrevious()) {
                 if (retval == &iter.peekPrevious())
                         iter.previous();
                 else
@@ -326,7 +326,8 @@ EgcNode* EgcIdNodeIter::prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempI
         return retval;
 }
 
-EgcNode* EgcIdNodeIter::gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, const EgcNode& node, bool checkFollowing, bool snapAtOmittedPositions) const
+EgcNode* EgcIdNodeIter::gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, const EgcNode& node, bool checkFollowing,
+                                       EgcSnapProperty snapProperty) const
 {
         EgcNode* curr = const_cast<EgcNode*>(&node);
         EgcNode* retval = curr;
@@ -345,7 +346,7 @@ EgcNode* EgcIdNodeIter::gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, 
                                 retval = &tempIter->peekNext();
                 }
 
-                retval = nextNodeWithId(*retval, tempIter, snapAtOmittedPositions);
+                retval = nextNodeWithId(*retval, tempIter, snapProperty);
         } else {
                 if (checkFollowing) {
                         if (curr == &tempIter->peekPrevious() && tempIter->hasPrevious())
@@ -353,13 +354,13 @@ EgcNode* EgcIdNodeIter::gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, 
                         else
                                 retval = &tempIter->peekPrevious();
                 }
-                retval = prevNodeWithId(*retval, tempIter, snapAtOmittedPositions);
+                retval = prevNodeWithId(*retval, tempIter, snapProperty);
         }
 
         return retval;
 }
 
-bool EgcIdNodeIter::nodeStateVisible(const EgcNodeIterator &iter, EgcNode& nodeToTest, bool snapAtOmittedPositions) const
+bool EgcIdNodeIter::nodeStateVisible(const EgcNodeIterator &iter, EgcNode& nodeToTest, EgcSnapProperty snapProperty) const
 {
         EgcNode* nextNode = &iter.peekNext();
         EgcNode* prevNode = &iter.peekPrevious();
@@ -386,16 +387,14 @@ bool EgcIdNodeIter::nodeStateVisible(const EgcNodeIterator &iter, EgcNode& nodeT
 
         if (!mathmlIdExisting(node, state, otherNode, checkNext))
                 return false;
-        if (omitFollowingNode(node, state, rightSide(const_cast<EgcNodeIterator&>(iter), *node), snapAtOmittedPositions))
+        if (omitFollowingNode(node, state, rightSide(const_cast<EgcNodeIterator&>(iter), *node), snapProperty))
                 return false;
 
         return true;
 }
 
-bool EgcIdNodeIter::omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide, bool snapAtOmittedPositions) const
+bool EgcIdNodeIter::omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide, EgcSnapProperty snapProperty) const
 {
-        bool retval = true;
-
         if (!node)
                 return true;
 
@@ -412,44 +411,51 @@ bool EgcIdNodeIter::omitFollowingNode(EgcNode* node, EgcIteratorState stateToTes
                 return true;
 
         //while normal stepping several states and nodes must be omitted, but e.g. when marking parents, this is not desired
-        if (snapAtOmittedPositions)
+        if (snapProperty == EgcSnapProperty::SnapAll)
                 return false;
 
-        switch (node->getNodeType()) {
+        return nodeVisibility(*node, stateToTest);
+}
+
+bool EgcIdNodeIter::nodeVisibility(EgcNode& node, EgcIteratorState state) const
+{
+        bool retval = true;
+
+        switch (node.getNodeType()) {
         case EgcNodeType::DivisionNode:
-                if (    stateToTest == EgcIteratorState::LeftIteration
-                     || stateToTest == EgcIteratorState::RightIteration)
+                if (    state == EgcIteratorState::LeftIteration
+                     || state == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::RootNode:
-                if (    stateToTest == EgcIteratorState::LeftIteration
-                     || stateToTest == EgcIteratorState::RightIteration)
+                if (    state == EgcIteratorState::LeftIteration
+                     || state == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::ParenthesisNode:
                         retval = false;
                 break;
         case EgcNodeType::ExponentNode:
-                if (stateToTest == EgcIteratorState::RightIteration)
+                if (state == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::IntegralNode:
-                if (    stateToTest == EgcIteratorState::LeftIteration
-                     || stateToTest == EgcIteratorState::RightIteration)
+                if (    state == EgcIteratorState::LeftIteration
+                     || state == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::DifferentialNode:
-                if (    stateToTest == EgcIteratorState::LeftIteration
-                     || stateToTest == EgcIteratorState::RightIteration)
+                if (    state == EgcIteratorState::LeftIteration
+                     || state == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::FunctionNode:
-                if (    stateToTest == EgcIteratorState::LeftIteration
-                     || stateToTest == EgcIteratorState::RightIteration)
+                if (    state == EgcIteratorState::LeftIteration
+                     || state == EgcIteratorState::RightIteration)
                         retval = false;
                 break;
         case EgcNodeType::UnaryMinusNode:
-                if (    stateToTest == EgcIteratorState::LeftIteration)
+                if (    state == EgcIteratorState::LeftIteration)
                         retval = false;
                 break;
         default:
@@ -703,12 +709,14 @@ EgcNode* EgcIdNodeIter::getNodeToModify(bool before, EgcIteratorState &state)
                 if (rightSide())
                         nodeToModify = m_node;
                 else
-                        nodeToModify = gotoNodeWithId(false, &iter, *m_node, true, true);
+                        nodeToModify = gotoNodeWithId(false, &iter, *m_node, true,
+                                                      EgcSnapProperty::SnapAll & ~EgcSnapProperty::SnapAtLeafContainer);
         } else {
                 if (!rightSide())
                         nodeToModify = m_node;
                 else
-                        nodeToModify = gotoNodeWithId(true, &iter, *m_node, true, true);
+                        nodeToModify = gotoNodeWithId(true, &iter, *m_node, true,
+                                                      EgcSnapProperty::SnapAll & ~EgcSnapProperty::SnapAtLeafContainer);
         }
 
         if (&iter.peekNext() == nodeToModify)
