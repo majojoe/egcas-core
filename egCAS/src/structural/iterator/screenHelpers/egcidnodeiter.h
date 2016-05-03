@@ -42,6 +42,18 @@ class EgcNodeIterator;
 enum class EgcIteratorState;
 enum class EgcNodeType;
 
+/**
+ * @brief The EgcSnapProperty enum snapping property of e.g. several cursor moving functions. These properties can be
+ * combined via OR operator ( EgcSnapProperty::SnapOnlyVisible | EgcSnapProperty::SnapAtLeafContainer )
+ */
+enum class EgcSnapProperty
+{
+        SnapAll = 0x7FFFFFFF,           ///< snap at all leafes, containers and structures that are anywhere in the hierarchy
+        SnapOnlyVisible = 0x1,          ///< snap at visible node positions only e.g. not at any positons not visually visible to the user
+        SnapAtLeafContainer = 0x2,      ///< leaf container are not visible to the user (they are just containers)
+        SnapNormal = 0x03,              ///< the normally used snapping behaviour
+        SnapAllButLeafCont = 0x7FFFFFFD,///< snaps at all positions, but on leaf containers
+};
 
 /**
  * @brief The EgcIdNodeIter class is a iterator for navigating between the formula glyphs
@@ -59,9 +71,9 @@ public:
          * ATTENTION: the given node must be an element of the formula.
          * @param node the node where to position the iterator (at the left or at the right side of the node)
          * @param atRightSide true if the iterator shall be positioned at the right side (default), false otherwise
-         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
+         * @param snapProperty the snap property to use
          */
-        void setAtNode(EgcNode& node, bool atRightSide = true, bool snapAtOmittedPositions = false);
+        void setAtNode(EgcNode& node, bool atRightSide = true, EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal);
         /**
          * @brief setAtNode set the iterator to a position on the right or left side of the given Node. Same as above,
          * but at a later time when the mathml lookup has been updated.
@@ -176,36 +188,47 @@ private:
          * given iterator accordingly
          * @param currNode the node that is currently active
          * @param tempIter the iterator given to operate with
-         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
+         * @param snapProperty the snap property to use
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
-        EgcNode* prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter, bool snapAtOmittedPositions = false) const;
+        EgcNode* prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter,
+                                EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal) const;
         /**
          * @brief nextNodeWithId iterates the given iterator to the next node that has a valid mathml id and sets the
          * given iterator accordingly
          * @param currNode the node that is currently active
          * @param tempIter the iterator given to operate with (must point at the currNode given)
-         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
+         * @param snapProperty the snap property to use
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
-        EgcNode* nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter, bool snapAtOmittedPositions = false) const;
+        EgcNode* nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter,
+                                EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal) const;
         /**
          * @brief omitNode check if a node must be omitted
          * @param node the node that follows the current node, eigther in forward or backward direction
          * @param stateToTest the state of the node to check
          * @param atRightSide if the cursor is at the right side of an operator
-         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
+         * @param snapProperty the snap property to use
          * @return true if the current node shall be omitted, false otherwise
          */
-        bool omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide, bool snapAtOmittedPositions = false) const;
+        bool omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide,
+                               EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal) const;
         /**
          * @brief nodeStateVisible checks if the following node is visible when iterating over it
          * @param iter the current iterator in the tree
          * @param nodeToTest node to test for visibility
-         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
+         * @param snapProperty the snap property to use
          * @return true if the node state in direction is visible, false otherwise
          */
-        bool nodeStateVisible(const EgcNodeIterator& iter, EgcNode& nodeToTest, bool snapAtOmittedPositions = false) const;
+        bool nodeStateVisible(const EgcNodeIterator& iter, EgcNode& nodeToTest,
+                              EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal) const;
+        /**
+         * @brief nodeVisibility returns the visibility of a node type
+         * @param node the node to test for visibility
+         * @param state the state in which the node currently is
+         * @return if the current state of the node is visible then the returnvalue is true, otherwise false
+         */
+        bool nodeVisibility(EgcNode& node, EgcIteratorState state) const;
         /**
          * @brief nextNodeWithId iterates the given iterator to the next or previous node that has a valid mathml id
          * and sets the given iterator accordingly
@@ -213,10 +236,11 @@ private:
          * @param tempIter the iterator given to operate with
          * @param node the node where to start the testing
          * @param checkFollowing iterate one over to the following node and start testing there.
-         * @param snapAtOmittedPositions if true iterator will stop at positions normally omitted while stepping
+         * @param snapProperty the snap property to use
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
-        EgcNode* gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, const EgcNode& node, bool checkFollowing = false, bool snapAtOmittedPositions = false) const;
+        EgcNode* gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, const EgcNode& node, bool checkFollowing = false,
+                                EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal) const;
         /**
          * @brief rightSide checks if current cursor is at the right side of the node or not
          * @param iter the iterator that shall be used to check on which side we are
