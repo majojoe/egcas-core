@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include <QRegularExpression>
 #include "../specialNodes/egcnode.h"
-#include "structural/specialNodes/egcbinarynode.h"
+#include "structural/specialNodes/egcflexnode.h"
 
 /**
  * @brief The EgcVariableNode class is a class that holds the leafes with variable names.
@@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
  * _3  : as code for ";"
  * These symbols cannot be represented by a cas kernel or have different meaning, therefore the are stuffed.
  */
-class EgcVariableNode : public EgcBinaryNode
+class EgcVariableNode : public EgcFlexNode
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcVariableNode, EgcNodeType::VariableNode);
@@ -59,7 +59,7 @@ public:
          * @param varName the variable name as a string
          * @param subscript the subscript of the variable if any
          */
-        virtual void setValue(const QString& varName, const QString& subscript);
+        virtual void setValue(const QString& varName, const QString& subscript = QString::null);
         /**
          * @brief setStuffedVar set the raw variable name (value) maybe including stuffed subscript
          * @param varName the variable name as a string. This can include the stuffed subscript
@@ -103,6 +103,10 @@ public:
          * @return true if container is a container that holds leafes and is only intended to hold such leafes.
          */
         virtual bool isLeafContainer(void) const override;
+        /**
+         * @brief insertSubscript inserts a empty subscript (EgcEmptyNode)
+         */
+        virtual void insertSubscript(void);
 
 protected:
         static QRegularExpression s_varSubSeparator; ///< regex for separating variable and subscript
