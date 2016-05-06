@@ -50,11 +50,7 @@ EgcVariableNode::EgcVariableNode()
         
         QScopedPointer<EgcAlnumNode> val(new EgcAlnumNode());
         setChild(0, *val.take());
-        QScopedPointer<EgcAlnumNode> sub(new EgcAlnumNode(true));
-        setChild(1, *sub.take());
-        EgcAlnumNode* alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
-        alnum->setValue(QString::null);
-        alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
+        EgcAlnumNode* alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
         alnum->setValue(QString::null);
 }
 
@@ -63,18 +59,52 @@ EgcVariableNode::~EgcVariableNode()
 
 }
 
-void EgcVariableNode::setValue(const QString& varName, const QString& subscript = QString::null)
+void EgcVariableNode::setValue(const QString& varName, const QString& subscript)
 {
+        if (m_childs.size() == 0)
+                return;
+        if (!m_childs.at(0))
+                return;
+
         EgcAlnumNode *alnum;
-        if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
-                alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+        if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
                 alnum->setValue(varName);
         }
 
-        if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
-                alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
+        if (subscript.isNull() && this->nrSubindexes() > 1)
+                this->remove(1);
+        if (!subscript.isNull() && this->nrSubindexes() > 1) {
+                if (m_childs.at(1)) {
+                        if (m_childs.at(1)->getNodeType() == EgcNodeType::EmptyNode)
+                                this->remove(1);
+                }
+        }
+        if (!subscript.isNull() && this->nrSubindexes() <= 1) {
+                QScopedPointer<EgcAlnumNode> sub(new (std::nothrow) EgcAlnumNode(true));
+                if (!sub.isNull())
+                        this->insert(1, *sub.take());
+        }
+
+        if (m_childs.size() <= 1)
+                return; //nothing any more to do
+        if (!m_childs.at(1))
+                return; //nothing any more to do
+
+        if (m_childs.at(1)->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_childs.at(1));
                 alnum->setValue(subscript);
         }
+}
+
+void EgcVariableNode::insertSubscript(void)
+{
+        if (m_childs.size() != 1)
+                return;
+
+        QScopedPointer<EgcAlnumNode> sub(new (std::nothrow) EgcEmptyNode());
+        if (!sub.isNull())
+                this->insert(1, *sub.take());
 }
 
 void EgcVariableNode::setStuffedVar(const QString& varName)
