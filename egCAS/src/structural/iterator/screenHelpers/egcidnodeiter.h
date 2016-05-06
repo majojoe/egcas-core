@@ -49,10 +49,7 @@ enum class EgcNodeType;
 enum class EgcSnapProperty
 {
         SnapAll = 0x7FFFFFFF,           ///< snap at all leafes, containers and structures that are anywhere in the hierarchy
-        SnapOnlyVisible = 0x1,          ///< snap at visible node positions only e.g. not at any positons not visually visible to the user
-        SnapAtLeafContainer = 0x2,      ///< leaf container are not visible to the user (they are just containers)
-        SnapNormal = 0x03,              ///< the normally used snapping behaviour
-        SnapAllButLeafCont = 0x7FFFFFFD,///< snaps at all positions, but on leaf containers
+        SnapVisibleCursor = 0x1,        ///< snap at visible cursor positions only e.g. not at any positons
 };
 
 /**
@@ -73,7 +70,7 @@ public:
          * @param atRightSide true if the iterator shall be positioned at the right side (default), false otherwise
          * @param snapProperty the snap property to use
          */
-        void setAtNode(EgcNode& node, bool atRightSide = true, EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal);
+        void setAtNode(EgcNode& node, bool atRightSide = true, EgcSnapProperty snapProperty = EgcSnapProperty::SnapVisibleCursor);
         /**
          * @brief setAtNode set the iterator to a position on the right or left side of the given Node. Same as above,
          * but at a later time when the mathml lookup has been updated.
@@ -192,7 +189,7 @@ private:
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
         EgcNode* prevNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter,
-                                EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal) const;
+                                EgcSnapProperty snapProperty = EgcSnapProperty::SnapVisibleCursor) const;
         /**
          * @brief nextNodeWithId iterates the given iterator to the next node that has a valid mathml id and sets the
          * given iterator accordingly
@@ -202,7 +199,7 @@ private:
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
         EgcNode* nextNodeWithId(EgcNode& currNode, EgcNodeIterator* tempIter,
-                                EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal) const;
+                                EgcSnapProperty snapProperty = EgcSnapProperty::SnapVisibleCursor) const;
         /**
          * @brief omitNode check if a node must be omitted
          * @param node the node that follows the current node, eigther in forward or backward direction
@@ -212,7 +209,7 @@ private:
          * @return true if the current node shall be omitted, false otherwise
          */
         bool omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide,
-                               EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal) const;
+                               EgcSnapProperty snapProperty = EgcSnapProperty::SnapVisibleCursor) const;
         /**
          * @brief nodeStateVisible checks if the following node is visible when iterating over it
          * @param iter the current iterator in the tree
@@ -221,14 +218,14 @@ private:
          * @return true if the node state in direction is visible, false otherwise
          */
         bool nodeStateVisible(const EgcNodeIterator& iter, EgcNode& nodeToTest,
-                              EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal) const;
+                              EgcSnapProperty snapProperty = EgcSnapProperty::SnapVisibleCursor) const;
         /**
          * @brief nodeVisibility returns the visibility of a node type
          * @param node the node to test for visibility
          * @param state the state in which the node currently is
          * @return if the current state of the node is visible then the returnvalue is true, otherwise false
          */
-        bool nodeVisibility(EgcNode& node, EgcIteratorState state) const;
+        bool cursorVisible(EgcNode& node, EgcIteratorState state) const;
         /**
          * @brief nextNodeWithId iterates the given iterator to the next or previous node that has a valid mathml id
          * and sets the given iterator accordingly
@@ -240,7 +237,7 @@ private:
          * @return a pointer to the next valid active node found, nullptr if there is no valid node anymore
          */
         EgcNode* gotoNodeWithId(bool forward, EgcNodeIterator* tempIter, const EgcNode& node, bool checkFollowing = false,
-                                EgcSnapProperty snapProperty = EgcSnapProperty::SnapNormal) const;
+                                EgcSnapProperty snapProperty = EgcSnapProperty::SnapVisibleCursor) const;
         /**
          * @brief rightSide checks if current cursor is at the right side of the node or not
          * @param iter the iterator that shall be used to check on which side we are
@@ -286,9 +283,11 @@ private:
          * node before or after shall be modified.
          * @param before true if the node before the current cursor shall be modified, otherwise the node after
          * @param state the state of the node returned
+         * @param goOn if true, the values from the previous run will be used. So if the container from the 1st run was
+         * not appropriate, a second run can be started.
          * @return the node that shall be modified
          */
-        EgcNode* getNodeToModify(bool before, EgcIteratorState &state);
+        EgcNode* getNodeToModify(bool before, EgcIteratorState &state, bool goOn = false);
 
 
         QScopedPointer<EgcNodeIterator> m_nodeIter;         ///< the node iterator that points to the current node with a mathml id
