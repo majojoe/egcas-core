@@ -395,6 +395,8 @@ bool EgcIdNodeIter::nodeStateVisible(const EgcNodeIterator &iter, EgcNode& nodeT
 
 bool EgcIdNodeIter::omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide, EgcSnapProperty snapProperty) const
 {
+        int property = static_cast<int>(snapProperty);
+
         if (!node)
                 return true;
 
@@ -414,49 +416,49 @@ bool EgcIdNodeIter::omitFollowingNode(EgcNode* node, EgcIteratorState stateToTes
         if (snapProperty == EgcSnapProperty::SnapAll)
                 return false;
 
-        return nodeVisibility(*node, stateToTest);
+        return !cursorVisible(*node, stateToTest);
 }
 
-bool EgcIdNodeIter::nodeVisibility(EgcNode& node, EgcIteratorState state) const
+bool EgcIdNodeIter::cursorVisible(EgcNode& node, EgcIteratorState state) const
 {
-        bool retval = true;
+        bool retval = false;
 
         switch (node.getNodeType()) {
         case EgcNodeType::DivisionNode:
                 if (    state == EgcIteratorState::LeftIteration
                      || state == EgcIteratorState::RightIteration)
-                        retval = false;
+                        retval = true;
                 break;
         case EgcNodeType::RootNode:
                 if (    state == EgcIteratorState::LeftIteration
                      || state == EgcIteratorState::RightIteration)
-                        retval = false;
+                        retval = true;
                 break;
         case EgcNodeType::ParenthesisNode:
-                        retval = false;
+                        retval = true;
                 break;
         case EgcNodeType::ExponentNode:
                 if (state == EgcIteratorState::RightIteration)
-                        retval = false;
+                        retval = true;
                 break;
         case EgcNodeType::IntegralNode:
                 if (    state == EgcIteratorState::LeftIteration
                      || state == EgcIteratorState::RightIteration)
-                        retval = false;
+                        retval = true;
                 break;
         case EgcNodeType::DifferentialNode:
                 if (    state == EgcIteratorState::LeftIteration
                      || state == EgcIteratorState::RightIteration)
-                        retval = false;
+                        retval = true;
                 break;
         case EgcNodeType::FunctionNode:
                 if (    state == EgcIteratorState::LeftIteration
                      || state == EgcIteratorState::RightIteration)
-                        retval = false;
+                        retval = true;
                 break;
         case EgcNodeType::UnaryMinusNode:
                 if (    state == EgcIteratorState::LeftIteration)
-                        retval = false;
+                        retval = true;
                 break;
         default:
                 break;
@@ -514,10 +516,26 @@ bool EgcIdNodeIter::remove(bool before)
         EgcNode* node;
 
         node = getNodeToModify(before, state);
+        if (!node) return false;
+
+        if (node->isContainer()) {
+
+                if (!node->getParent()) return false;
+                EgcContainerNode* container = static_cast<EgcContainerNode*>(node);
+
+                //correct node to remove if returned node is a leaf container
+                if (container->isLeafContainer()) {
+                        if (container->getChild(0) == m_node && !rightSide())
+                                node = getNodeToModify(before, state, true);
+                        if (container->getChild(container->getNumberChildNodes() - 1) == m_node && rightSide())
+                                node = getNodeToModify(before, state, true);
+                }
+        }
         if (!node)
                 return false;
-
         if (!node->getParent())
+                return false;
+        if (node->getNodeType() == EgcNodeType::BaseNode)
                 return false;
 
         if (node->isBinaryNode()) {
@@ -688,6 +706,12 @@ bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState stat
         if (!parent)
                 return false;
 
+        if (parent->isLeafContainer()) {
+                //leaf containers shall be removed as a whole
+                setAtNode(*parent, true, EgcSnapProperty::SnapAll);
+                return deleteTree(true);
+        }
+
         quint32 index;
         if (!parent->hasSubNode(node, index))
                 return false;
@@ -700,23 +724,29 @@ bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState stat
         return true;
 }
 
-EgcNode* EgcIdNodeIter::getNodeToModify(bool before, EgcIteratorState &state)
+EgcNode* EgcIdNodeIter::getNodeToModify(bool before, EgcIteratorState &state, bool goOn)
 {
         EgcNode* nodeToModify = nullptr;
-        EgcNodeIterator iter = *m_nodeIter;
+        static EgcNodeIterator iter = *m_nodeIter;
+        static EgcNode* node;
+
+        if (!goOn) {
+                iter = *m_nodeIter;
+                node = m_node;
+        }
 
         if (before) {
                 if (rightSide())
-                        nodeToModify = m_node;
+                        nodeToModify = node;
                 else
-                        nodeToModify = gotoNodeWithId(false, &iter, *m_node, true,
-                                                      EgcSnapProperty::SnapAll & ~EgcSnapProperty::SnapAtLeafContainer);
+                        nodeToModify = gotoNodeWithId(false, &iter, *node, true,
+                                                      EgcSnapProperty::SnapAll);
         } else {
                 if (!rightSide())
-                        nodeToModify = m_node;
+                        nodeToModify = node;
                 else
-                        nodeToModify = gotoNodeWithId(true, &iter, *m_node, true,
-                                                      EgcSnapProperty::SnapAll & ~EgcSnapProperty::SnapAtLeafContainer);
+                        nodeToModify = gotoNodeWithId(true, &iter, *node, true,
+                                                      EgcSnapProperty::SnapAll);
         }
 
         if (&iter.peekNext() == nodeToModify)
@@ -751,7 +781,7 @@ bool EgcIdNodeIter::deleteTree(bool before)
                 if (!isChild)
                         return false;
                 
-                setAtNode(*nodeToDelete, true, true);
+                setAtNode(*nodeToDelete, true, EgcSnapProperty::SnapAll);
                 m_nodeIter->remove();
                 
                 setAtNodeDelayed(*cParent->getChild(index), atRightSide);
