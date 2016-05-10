@@ -106,19 +106,6 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
                         assembleResult("<msup "%id%">%1 %2</msup>", node);
                 }
                 break;
-        case EgcNodeType::VariableNode: {
-                if (m_state == EgcIteratorState::LeftIteration) {
-                        if (static_cast<EgcVariableNode*>(node)->getSubscript().isEmpty())
-                                suppressChild(node, 1);
-                } else if (m_state == EgcIteratorState::RightIteration) {
-                        id = getId(node);
-                        if (static_cast<EgcVariableNode*>(node)->getSubscript().isEmpty())
-                                assembleResult("<mrow "%id%">%1 %2</mrow>", node); //there is just the first EgcAlnumNode, the second is empty
-                        else
-                                assembleResult("<mrow "%id%"><msub>%1 %2</msub></mrow>", node);
-                }
-                break;
-        }
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
                 break;
@@ -226,6 +213,19 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                         }
                 }
                 break;
+        case EgcNodeType::VariableNode: {
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        if (static_cast<EgcVariableNode*>(node)->getSubscript().isEmpty())
+                                suppressChild(node, 1);
+                } else if (m_state == EgcIteratorState::RightIteration) {
+                        id = getId(node);
+                        if (static_cast<EgcVariableNode*>(node)->getSubscript().isEmpty())
+                                assembleResult("<mrow "%id%">%1 %2</mrow>", node); //there is just the first EgcAlnumNode, the second is empty
+                        else
+                                assembleResult("<mrow "%id%"><msub>%1 %2</msub></mrow>", node);
+                }
+                break;
+        }
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
                 break;
