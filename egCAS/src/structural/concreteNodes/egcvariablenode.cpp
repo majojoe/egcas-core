@@ -121,26 +121,42 @@ void EgcVariableNode::setStuffedVar(const QString& varName)
                 subscript = regexMatch.captured(2);
 
                 EgcAlnumNode *alnum;
-                if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
-                        alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
-                        alnum->setStuffedValue(value);
+                if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
+                        alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
+                        alnum->setValue(value);
                 }
 
-                if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
-                        alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
+                if (this->nrSubindexes() > 1) {
+                        if (m_childs.at(1)) {
+                                if (m_childs.at(1)->getNodeType() == EgcNodeType::EmptyNode)
+                                        this->remove(1);
+                        }
+                }
+
+                if (this->nrSubindexes() <= 1) {
+                        QScopedPointer<EgcAlnumNode> sub(new (std::nothrow) EgcAlnumNode(true));
+                        if (!sub.isNull())
+                                this->insert(1, *sub.take());
+                }
+
+                if (m_childs.size() <= 1)
+                        return; //nothing any more to do
+                if (!m_childs.at(1))
+                        return; //nothing any more to do
+
+                if (m_childs.at(1)->getNodeType() == EgcNodeType::AlnumNode) {
+                        alnum = static_cast<EgcAlnumNode*>(m_childs.at(1));
                         alnum->setStuffedValue(subscript);
                 }
         } else {
                 EgcAlnumNode *alnum;
-                if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
-                        alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+                if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
+                        alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
                         alnum->setStuffedValue(tmp);
                 }
 
-                if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
-                        alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
-                        alnum->setStuffedValue(QString::null);
-                }
+                if (this->nrSubindexes() > 1)
+                        this->remove(1);
         }
 }
 
@@ -149,8 +165,8 @@ QString EgcVariableNode::getValue(void) const
         QString retval = QString::null;
 
         EgcAlnumNode *alnum;
-        if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
-                alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+        if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
                 retval = alnum->getValue();
         }
 
@@ -161,9 +177,14 @@ QString EgcVariableNode::getSubscript(void) const
 {
         QString retval = QString::null;
 
+        if (m_childs.size() <= 1)
+                return retval; //nothing any more to do
+        if (!m_childs.at(1))
+                return retval; //nothing any more to do
+
         EgcAlnumNode *alnum;
-        if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
-                alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
+        if (m_childs.at(1)->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_childs.at(1));
                 retval = alnum->getValue();
         }
 
@@ -176,14 +197,18 @@ QString EgcVariableNode::getStuffedVar(void)
         QString sub;
 
         EgcAlnumNode *alnum;
-        if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
-                alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+        if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
                 var = alnum->getStuffedValue();
         }
 
-        if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode) {
-                alnum = static_cast<EgcAlnumNode*>(m_rightChild.data());
-                sub = alnum->getStuffedValue();
+        if (m_childs.size() > 1) {
+                if (m_childs.at(1)) {
+                        if (m_childs.at(1)->getNodeType() == EgcNodeType::AlnumNode) {
+                                alnum = static_cast<EgcAlnumNode*>(m_childs.at(1));
+                                sub = alnum->getStuffedValue();
+                        }
+                }
         }
 
         QString tmp;
@@ -200,8 +225,8 @@ bool EgcVariableNode::valid(void)
         QString val;
         EgcAlnumNode *alnum;
 
-        if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode) {
-                alnum = static_cast<EgcAlnumNode*>(m_leftChild.data());
+        if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
+                alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
                 val = alnum->getValue();
         }
 
@@ -214,42 +239,41 @@ bool EgcVariableNode::valid(void)
 bool EgcVariableNode::operator==(const EgcNode& node) const
 {
         bool retval = false;
-        QString val;
-        QString sub;
-        QString nodeVal;
-        QString nodeSub;
+        QString val = QString::null;
+        QString sub = QString::null;
+        QString nodeVal = QString::null;
+        QString nodeSub = QString::null;
 
         if (node.getNodeType() == EgcNodeType::VariableNode) {
-                if (m_leftChild->getNodeType() == EgcNodeType::AlnumNode)
-                        val = static_cast<EgcAlnumNode*>(m_leftChild.data())->getValue();
+                if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode)
+                        val = static_cast<EgcAlnumNode*>(m_childs.at(0))->getValue();
 
-                if (m_leftChild->getNodeType() == EgcNodeType::EmptyNode)
-                        val = static_cast<EgcEmptyNode*>(m_leftChild.data())->getValue();
+                if (m_childs.size() > 1) {
+                        if (m_childs.at(1)) {
+                                if (m_childs.at(1)->getNodeType() == EgcNodeType::AlnumNode)
+                                        val = static_cast<EgcAlnumNode*>(m_childs.at(1))->getValue();
+                        }
+                }
 
-                if (m_rightChild->getNodeType() == EgcNodeType::AlnumNode)
-                        val = static_cast<EgcAlnumNode*>(m_rightChild.data())->getValue();
-
-                if (m_rightChild->getNodeType() == EgcNodeType::EmptyNode)
-                        val = static_cast<EgcEmptyNode*>(m_rightChild.data())->getValue();
+                if (node.getNodeType() != getNodeType())
+                        return false;
 
                 const EgcVariableNode& var_node = static_cast<const EgcVariableNode&>(node);
                 EgcNode* nodeLeft = var_node.getChild(0);
+
+                if (var_node.nrSubindexes() != nrSubindexes())
+                        return false;
+
                 EgcNode* nodeRight = var_node.getChild(1);
 
                 if (nodeLeft) {
                         if (nodeLeft->getNodeType() == EgcNodeType::AlnumNode)
                                 val = static_cast<EgcAlnumNode*>(nodeLeft)->getValue();
-
-                        if (nodeLeft->getNodeType() == EgcNodeType::EmptyNode)
-                                val = static_cast<EgcEmptyNode*>(nodeLeft)->getValue();
                 }
 
                 if (nodeRight) {
                         if (nodeRight->getNodeType() == EgcNodeType::AlnumNode)
                                 val = static_cast<EgcAlnumNode*>(nodeRight)->getValue();
-
-                        if (nodeRight->getNodeType() == EgcNodeType::EmptyNode)
-                                val = static_cast<EgcEmptyNode*>(nodeRight)->getValue();
                 }
 
                 if (    (val == nodeVal)
