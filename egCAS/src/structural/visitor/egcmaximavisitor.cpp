@@ -75,12 +75,6 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("%1:%2", binary);
                 break;
-        case EgcNodeType::VariableNode:
-                if (m_state == EgcIteratorState::RightIteration) { //there are no subsequent nodes but the Alnum nodes -> so push to stack
-                        deleteFromStack(2);
-                        pushToStack(static_cast<EgcVariableNode*>(binary)->getStuffedVar(), binary);
-                }
-                break;
         case EgcNodeType::BinEmptyNode:
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("(%1)()(%2)", binary);
@@ -135,6 +129,12 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
                         QString str = "diff(%" % QString::number(indexD + 1) % ",%" % QString::number(indexV + 1)
                                       % "," % QString::number(diff->getNrDerivative()) % ")";
                         assembleResult(str, flex);
+                }
+                break;
+        case EgcNodeType::VariableNode:
+                if (m_state == EgcIteratorState::RightIteration) { //there are no subsequent nodes but the Alnum nodes -> so push to stack
+                        deleteFromStack(flex->nrSubindexes());
+                        pushToStack(static_cast<EgcVariableNode*>(flex)->getStuffedVar(), flex);
                 }
                 break;
         default:
