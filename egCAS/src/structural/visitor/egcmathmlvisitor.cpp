@@ -214,13 +214,10 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                 }
                 break;
         case EgcNodeType::VariableNode: {
-                if (m_state == EgcIteratorState::LeftIteration) {
-                        if (static_cast<EgcVariableNode*>(node)->getSubscript().isEmpty())
-                                suppressChild(node, 1);
-                } else if (m_state == EgcIteratorState::RightIteration) {
+                if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
-                        if (static_cast<EgcVariableNode*>(node)->getSubscript().isEmpty())
-                                assembleResult("<mrow "%id%">%1 %2</mrow>", node); //there is just the first EgcAlnumNode, the second is empty
+                        if (static_cast<EgcVariableNode*>(node)->getNumberChildNodes() == 1)
+                                assembleResult("<mrow "%id%">%1</mrow>", node); //there is just the first EgcAlnumNode, the second is empty
                         else
                                 assembleResult("<mrow "%id%"><msub>%1 %2</msub></mrow>", node);
                 }

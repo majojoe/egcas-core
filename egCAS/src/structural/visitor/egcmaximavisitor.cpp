@@ -79,8 +79,6 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("(%1)()(%2)", binary);
                 break;
-
-
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", binary->getNodeType()) ;
                 break;
@@ -133,7 +131,7 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
                 break;
         case EgcNodeType::VariableNode:
                 if (m_state == EgcIteratorState::RightIteration) { //there are no subsequent nodes but the Alnum nodes -> so push to stack
-                        deleteFromStack(flex->nrSubindexes());
+                        deleteFromStack(flex->getNumberChildNodes());
                         pushToStack(static_cast<EgcVariableNode*>(flex)->getStuffedVar(), flex);
                 }
                 break;
