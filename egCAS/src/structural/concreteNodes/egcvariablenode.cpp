@@ -251,7 +251,7 @@ bool EgcVariableNode::operator==(const EgcNode& node) const
                 if (m_childs.size() > 1) {
                         if (m_childs.at(1)) {
                                 if (m_childs.at(1)->getNodeType() == EgcNodeType::AlnumNode)
-                                        val = static_cast<EgcAlnumNode*>(m_childs.at(1))->getValue();
+                                        sub = static_cast<EgcAlnumNode*>(m_childs.at(1))->getValue();
                         }
                 }
 
@@ -268,12 +268,12 @@ bool EgcVariableNode::operator==(const EgcNode& node) const
 
                 if (nodeLeft) {
                         if (nodeLeft->getNodeType() == EgcNodeType::AlnumNode)
-                                val = static_cast<EgcAlnumNode*>(nodeLeft)->getValue();
+                                nodeVal = static_cast<EgcAlnumNode*>(nodeLeft)->getValue();
                 }
 
                 if (nodeRight) {
                         if (nodeRight->getNodeType() == EgcNodeType::AlnumNode)
-                                val = static_cast<EgcAlnumNode*>(nodeRight)->getValue();
+                                nodeSub = static_cast<EgcAlnumNode*>(nodeRight)->getValue();
                 }
 
                 if (    (val == nodeVal)
