@@ -101,3 +101,17 @@ bool EgcNode::isOperation(void) const
 {
         return false;
 }
+
+bool EgcNode::cursorSnaps(EgcNodeSide side) const
+{
+        (void) side;
+        
+        return false;
+}
+
+bool EgcNode::visibleSigns(EgcNodeSide side) const
+{
+        (void) side;
+        
+        return false;        
+}

@@ -429,3 +429,21 @@ bool EgcFlexNode::childsDeleteable(void)
 {
         return false;
 }
+
+bool EgcFlexNode::cursorSnaps(EgcNodeSide side) const
+{
+        if (   side == EgcNodeSide::left 
+            || side == EgcNodeSide::right)
+                return true;
+        
+        return true;
+}
+
+bool EgcFlexNode::visibleSigns(EgcNodeSide side) const
+{
+        if (   side == EgcNodeSide::left 
+            || side == EgcNodeSide::right)
+                return true;
+        
+        return false;        
+}

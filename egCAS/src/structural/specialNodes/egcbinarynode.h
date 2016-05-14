@@ -152,6 +152,14 @@ public:
          * @return true if the trees are equal
          */
         virtual bool operator==(const EgcNode& node) const override;
+        /**
+         * @brief visibleSigns find out where the node has visible signs (e.g. a division node has visible signs in the 
+         * middle of the container)
+         * @param side the side to test for visible signs
+         * @return true if the given side of the node has visible signs.
+         */
+        virtual bool visibleSigns(EgcNodeSide side) const override;
+        
 
 protected:
         /**
