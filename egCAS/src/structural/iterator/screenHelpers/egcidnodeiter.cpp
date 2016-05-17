@@ -422,47 +422,18 @@ bool EgcIdNodeIter::omitFollowingNode(EgcNode* node, EgcIteratorState stateToTes
 bool EgcIdNodeIter::cursorVisible(EgcNode& node, EgcIteratorState state) const
 {
         bool retval = false;
+        EgcNodeSide side;
 
-        switch (node.getNodeType()) {
-        case EgcNodeType::DivisionNode:
-                if (    state == EgcIteratorState::LeftIteration
-                     || state == EgcIteratorState::RightIteration)
-                        retval = true;
+        switch (state) {
+        case EgcIteratorState::LeftIteration:
+                side = EgcNodeSide::left;
                 break;
-        case EgcNodeType::RootNode:
-                if (    state == EgcIteratorState::LeftIteration
-                     || state == EgcIteratorState::RightIteration)
-                        retval = true;
-                break;
-        case EgcNodeType::ParenthesisNode:
-                        retval = true;
-                break;
-        case EgcNodeType::ExponentNode:
-                if (state == EgcIteratorState::RightIteration)
-                        retval = true;
-                break;
-        case EgcNodeType::IntegralNode:
-                if (    state == EgcIteratorState::LeftIteration
-                     || state == EgcIteratorState::RightIteration)
-                        retval = true;
-                break;
-        case EgcNodeType::DifferentialNode:
-                if (    state == EgcIteratorState::LeftIteration
-                     || state == EgcIteratorState::RightIteration)
-                        retval = true;
-                break;
-        case EgcNodeType::FunctionNode:
-                if (    state == EgcIteratorState::LeftIteration
-                     || state == EgcIteratorState::RightIteration)
-                        retval = true;
-                break;
-        case EgcNodeType::UnaryMinusNode:
-                if (    state == EgcIteratorState::LeftIteration)
-                        retval = true;
-                break;
+        case EgcIteratorState::MiddleIteration:
+                side = EgcNodeSide::middle;
         default:
-                break;
+                side = EgcNodeSide::right;
         }
+        return node.cursorSnaps(side);
 
         return retval;
 }

@@ -31,3 +31,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcUnaryMinusNode::EgcUnaryMinusNode()
 {
 }
+
+bool EgcUnaryMinusNode::cursorSnaps(EgcNodeSide side) const
+{
+        if (side == EgcNodeSide::left)
+                return true;
+
+        return false;
+}

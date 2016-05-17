@@ -36,3 +36,11 @@ bool EgcExponentNode::isRightAssociative(void) const
 {
         return true;
 }
+
+bool EgcExponentNode::cursorSnaps(EgcNodeSide side) const
+{
+        if (side == EgcNodeSide::right)
+                return true;
+
+        return false;
+}

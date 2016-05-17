@@ -67,6 +67,13 @@ public:
          * @return the index of the child
          */
         quint32 getIndexOf(EgcDifferentialIndexes index);
+        /**
+         * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
+         * left side of the container)
+         * @param side the side to test for cursor snap.
+         * @return true if the cursor will snap in at the given side, false otherwise
+         */
+        virtual bool cursorSnaps(EgcNodeSide side) const override;
 
 protected:
         quint8 m_derivative;
