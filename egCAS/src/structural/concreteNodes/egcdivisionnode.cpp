@@ -31,3 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcDivisionNode::EgcDivisionNode()
 {
 }
+
+bool EgcDivisionNode::cursorSnaps(EgcNodeSide side) const
+{
+        if (   side == EgcNodeSide::left
+            || side == EgcNodeSide::right)
+                return true;
+
+        return false;
+}

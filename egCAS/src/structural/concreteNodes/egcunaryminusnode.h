@@ -40,6 +40,13 @@ class EgcUnaryMinusNode : public EgcUnaryNode
         EGC_SET_EXPRESSION_TYPE(EgcUnaryMinusNode, EgcNodeType::UnaryMinusNode);
 public:
         EgcUnaryMinusNode();
+        /**
+         * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
+         * left side of the container)
+         * @param side the side to test for cursor snap.
+         * @return true if the cursor will snap in at the given side, false otherwise
+         */
+        virtual bool cursorSnaps(EgcNodeSide side) const override;
 };
 
 #endif // EGCUNARYMINUSNODE_H

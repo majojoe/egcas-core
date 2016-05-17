@@ -46,3 +46,12 @@ bool EgcFunctionNode::childsDeleteable(void)
 {
         return true;
 }
+
+bool EgcFunctionNode::cursorSnaps(EgcNodeSide side) const
+{
+        if (   side == EgcNodeSide::left
+            || side == EgcNodeSide::right)
+                return true;
+
+        return false;
+}

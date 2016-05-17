@@ -53,3 +53,12 @@ quint32 EgcDifferentialNode::getIndexOf(EgcDifferentialIndexes index)
         if (index == EgcDifferentialIndexes::variable)
                 return 1;
 }
+
+bool EgcDifferentialNode::cursorSnaps(EgcNodeSide side) const
+{
+        if (   side == EgcNodeSide::left
+            || side == EgcNodeSide::right)
+                return true;
+
+        return false;
+}

@@ -293,3 +293,8 @@ bool EgcVariableNode::isLeafContainer(void) const
 {
         return true;
 }
+
+bool EgcVariableNode::cursorSnaps(EgcNodeSide side) const
+{
+        return false;
+}
