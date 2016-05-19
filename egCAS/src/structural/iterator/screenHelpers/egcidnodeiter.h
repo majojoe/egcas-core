@@ -50,6 +50,8 @@ enum class EgcSnapProperty
 {
         SnapAll = 0x7FFFFFFF,           ///< snap at all leafes, containers and structures that are anywhere in the hierarchy
         SnapVisibleCursor = 0x1,        ///< snap at visible cursor positions only e.g. not at any positons
+        SnapVisibleSigns = 0x2,         ///< snap at nodes (and states) that have visible signs
+        SnapModifyable = 0x4,           ///< snap at nodes (and states) that has modifyable elements
 };
 
 /**
@@ -220,12 +222,28 @@ private:
         bool nodeStateVisible(const EgcNodeIterator& iter, EgcNode& nodeToTest,
                               EgcSnapProperty snapProperty = EgcSnapProperty::SnapVisibleCursor) const;
         /**
-         * @brief nodeVisibility returns the visibility of a node type
+         * @brief cursorVisible returns the visibility of a node type
          * @param node the node to test for visibility
          * @param state the state in which the node currently is
-         * @return if the current state of the node is visible then the returnvalue is true, otherwise false
+         * @return if the current state of the node is a visible cursor position then the returnvalue is true, otherwise
+         * false
          */
         bool cursorVisible(EgcNode& node, EgcIteratorState state) const;
+        /**
+         * @brief visibleSign returns the visibility of a node type
+         * @param node the node to test for visibility
+         * @param state the state in which the node currently is
+         * @return if the current state of the node has visible signs then the returnvalue is true, otherwise false
+         */
+        bool visibleSign(EgcNode& node, EgcIteratorState state) const;
+        /**
+         * @brief modifyableElement returns the visibility of a node type
+         * @param node the node to test for visibility
+         * @param state the state in which the node currently is
+         * @return if the current state of the node has modifyable elements then the returnvalue is true, otherwise
+         * false
+         */
+        bool modifyableElement(EgcNode& node, EgcIteratorState state) const;
         /**
          * @brief nextNodeWithId iterates the given iterator to the next or previous node that has a valid mathml id
          * and sets the given iterator accordingly

@@ -31,8 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcformulaentity.h"
 #include "specialNodes/egcnode.h"
 #include "egcscreenpos.h"
-#include "concreteNodes/egcnumbernode.h"
-#include "concreteNodes/egcvariablenode.h"
 #include "specialNodes/egcflexnode.h"
 #include "concreteNodes/egcbinemptynode.h"
 #include "iterator/egcnodeiterator.h"
@@ -249,15 +247,15 @@ quint32 EgcIdNodeIter::getMathmlId(EgcNode* node, EgcIteratorState state, EgcNod
 
                 if (node->isContainer()) {
                         if (previousNode) {
-                                if (!static_cast<EgcContainerNode*>(node)->getIndexOfChild(*previousNode, childIndex))
-                                        childIndex = 0;
-                        } else if (nextNode) {
-                                if (!static_cast<EgcContainerNode*>(node)->getIndexOfChild(*nextNode, childIndex)) {
+                                if (!static_cast<EgcContainerNode*>(node)->getIndexOfChild(*previousNode, childIndex)) {
                                         childIndex = 0;
                                 } else {
                                         if (childIndex)
                                                 childIndex--;
                                 }
+                        } else if (nextNode) {
+                                if (!static_cast<EgcContainerNode*>(node)->getIndexOfChild(*nextNode, childIndex))
+                                        childIndex = 0;
                         }
                         if (list.size() > childIndex) {
                                 id = list.at(childIndex);
@@ -385,8 +383,13 @@ bool EgcIdNodeIter::nodeStateVisible(const EgcNodeIterator &iter, EgcNode& nodeT
                 checkNext = false;
         }
 
-        if (!mathmlIdExisting(node, state, otherNode, checkNext))
-                return false;
+        if (snapProperty == EgcSnapProperty::SnapVisibleCursor) {
+                // only visible cursor positions shall be taken into account,
+                // but unvisible operators for example shall be taken into account when a operator
+                // shall be modified. Therefore only check for a visible cursor.
+                if (!mathmlIdExisting(node, state, otherNode, checkNext))
+                        return false;
+        }
         if (omitFollowingNode(node, state, rightSide(const_cast<EgcNodeIterator&>(iter), *node), snapProperty))
                 return false;
 
@@ -395,8 +398,6 @@ bool EgcIdNodeIter::nodeStateVisible(const EgcNodeIterator &iter, EgcNode& nodeT
 
 bool EgcIdNodeIter::omitFollowingNode(EgcNode* node, EgcIteratorState stateToTest, bool atRightSide, EgcSnapProperty snapProperty) const
 {
-        int property = static_cast<int>(snapProperty);
-
         if (!node)
                 return true;
 
@@ -416,7 +417,14 @@ bool EgcIdNodeIter::omitFollowingNode(EgcNode* node, EgcIteratorState stateToTes
         if (snapProperty == EgcSnapProperty::SnapAll)
                 return false;
 
-        return !cursorVisible(*node, stateToTest);
+        if (snapProperty == EgcSnapProperty::SnapVisibleCursor)
+                return !cursorVisible(*node, stateToTest);
+        else if (snapProperty == EgcSnapProperty::SnapVisibleSigns)
+                return !visibleSign(*node, stateToTest);
+        else if (snapProperty == EgcSnapProperty::SnapModifyable)
+                return !modifyableElement(*node, stateToTest);
+
+        return true;
 }
 
 bool EgcIdNodeIter::cursorVisible(EgcNode& node, EgcIteratorState state) const
@@ -430,10 +438,57 @@ bool EgcIdNodeIter::cursorVisible(EgcNode& node, EgcIteratorState state) const
                 break;
         case EgcIteratorState::MiddleIteration:
                 side = EgcNodeSide::middle;
+                break;
         default:
                 side = EgcNodeSide::right;
+                break;
         }
         return node.cursorSnaps(side);
+
+        return retval;
+}
+
+bool EgcIdNodeIter::visibleSign(EgcNode& node, EgcIteratorState state) const
+{
+        bool retval = false;
+        EgcNodeSide side;
+
+        switch (state) {
+        case EgcIteratorState::LeftIteration:
+                side = EgcNodeSide::left;
+                break;
+        case EgcIteratorState::MiddleIteration:
+                side = EgcNodeSide::middle;
+                break;
+        default:
+                side = EgcNodeSide::right;
+                break;
+        }
+
+        return node.visibleSigns(side);
+
+        return retval;
+}
+
+bool EgcIdNodeIter::modifyableElement(EgcNode& node, EgcIteratorState state) const
+{
+        bool retval = false;
+        EgcNodeSide side;
+        EgcNodeType type = node.getNodeType();
+
+        switch (state) {
+        case EgcIteratorState::LeftIteration:
+                side = EgcNodeSide::left;
+                break;
+        case EgcIteratorState::MiddleIteration:
+                side = EgcNodeSide::middle;
+                break;
+        default:
+                side = EgcNodeSide::right;
+                break;
+        }
+
+        return node.modifyableElement(side);
 
         return retval;
 }
@@ -711,13 +766,13 @@ EgcNode* EgcIdNodeIter::getNodeToModify(bool before, EgcIteratorState &state, bo
                         nodeToModify = node;
                 else
                         nodeToModify = gotoNodeWithId(false, &iter, *node, true,
-                                                      EgcSnapProperty::SnapAll);
+                                                      EgcSnapProperty::SnapModifyable);
         } else {
                 if (!rightSide())
                         nodeToModify = node;
                 else
                         nodeToModify = gotoNodeWithId(true, &iter, *node, true,
-                                                      EgcSnapProperty::SnapAll);
+                                                      EgcSnapProperty::SnapModifyable);
         }
 
         if (&iter.peekNext() == nodeToModify)

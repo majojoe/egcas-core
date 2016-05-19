@@ -115,3 +115,8 @@ bool EgcNode::visibleSigns(EgcNodeSide side) const
         
         return false;        
 }
+
+bool EgcNode::modifyableElement(EgcNodeSide side) const
+{
+        return this->visibleSigns(side);
+}

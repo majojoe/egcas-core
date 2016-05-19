@@ -156,6 +156,13 @@ public:
          * @return true if the given side of the node has visible signs.
          */
         virtual bool visibleSigns(EgcNodeSide side) const;
+        /**
+         * @brief modifyableElement find out where the node has modifyable elements (e.g. a exponent node has a
+         * modifyable operator in the middle, but it is not visible)
+         * @param side the side to test for visible signs
+         * @return true if the given side of the node has modifyable elements.
+         */
+        virtual bool modifyableElement(EgcNodeSide side) const;
 
 protected:
         EgcContainerNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)
