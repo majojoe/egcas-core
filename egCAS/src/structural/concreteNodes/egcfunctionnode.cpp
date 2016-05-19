@@ -55,3 +55,10 @@ bool EgcFunctionNode::cursorSnaps(EgcNodeSide side) const
 
         return false;
 }
+
+bool EgcFunctionNode::visibleSigns(EgcNodeSide side) const
+{
+        (void) side;
+
+        return true;
+}
