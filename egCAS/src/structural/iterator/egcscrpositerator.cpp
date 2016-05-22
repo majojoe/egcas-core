@@ -240,6 +240,11 @@ bool EgcScrPosIterator::remove(void)
         } else {
                 bool retval = m_subIdIter->remove(false);
                 balanceNodeIter();
+                if (m_nodeIter->getNode().nrSubindexes() == 0) {
+                        if (!m_nodeIter->replaceByEmtpy())
+                                retval = false;
+                }
+
                 return retval;
         }
 }
@@ -252,7 +257,14 @@ bool EgcScrPosIterator::backspace(void)
                 else
                         return m_nodeIter->remove(true);
         } else {
-                return m_subIdIter->remove(true);
+                bool retval;
+                retval =  m_subIdIter->remove(true);
+                if (m_nodeIter->getNode().nrSubindexes() == 0) {
+                        if (m_nodeIter->replaceByEmtpy())
+                                retval = false;
+                }
+
+                return retval;
         }
 }
 
