@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "concreteNodes/egcbinemptynode.h"
 #include "iterator/egcnodeiterator.h"
 #include "structural/specialNodes/egcnode_gen.h"
+#include "structural/egcnodecreator.h"
 
 EgcIdNodeIter::EgcIdNodeIter(EgcFormulaEntity& formula) : m_nodeIter{new EgcNodeIterator(formula)},
                                                                 m_node{&formula.getBaseElement()},
@@ -746,6 +747,24 @@ bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState stat
         EgcNode* child = parent->getChild(index);
         if (child)
                 setAtNodeDelayed(*child, before);
+
+        return true;
+}
+
+bool EgcIdNodeIter::replaceByEmtpy(void)
+{
+        if (!m_node)
+                return false;
+        if (!m_node->getParent())
+                return false;
+
+
+        QScopedPointer<EgcNode> empty(EgcNodeCreator::create(EgcNodeType::EmptyNode));
+        if (empty.isNull())
+                return false;
+        EgcNode* tmp = empty.data();
+        m_formula.paste(*empty.take(), *m_node);
+        setAtNodeDelayed(*tmp, false);
 
         return true;
 }

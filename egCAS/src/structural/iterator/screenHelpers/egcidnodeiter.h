@@ -162,6 +162,11 @@ public:
          * @return true if deleting worked, false otherwise
          */
         bool deleteTree(bool before);
+        /**
+         * @brief replaceByEmtpy replaces current node by empty node
+         * @return true if everything went well, false otherwise
+         */
+        bool replaceByEmtpy(void);
 
 private:
         /**
