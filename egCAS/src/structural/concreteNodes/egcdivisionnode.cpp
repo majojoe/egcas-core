@@ -27,9 +27,21 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcdivisionnode.h"
+#include "structural/egcnodecreator.h"
+#include "structural/concreteNodes/egcparenthesisnode.h"
 
 EgcDivisionNode::EgcDivisionNode()
 {
+        QScopedPointer<EgcNode> parenthesis(EgcNodeCreator::create(EgcNodeType::ParenthesisNode));
+        if (!parenthesis.isNull()) {
+                static_cast<EgcParenthesisNode*>(parenthesis.data())->setVisible(false);
+                EgcBinaryNode::setChild(0, static_cast<EgcParenthesisNode&>(*parenthesis.take()));
+        }
+        parenthesis.reset(EgcNodeCreator::create(EgcNodeType::ParenthesisNode));
+        if (!parenthesis.isNull()) {
+                static_cast<EgcParenthesisNode*>(parenthesis.data())->setVisible(false);
+                EgcBinaryNode::setChild(1, static_cast<EgcParenthesisNode&>(*parenthesis.take()));
+        }
 }
 
 bool EgcDivisionNode::cursorSnaps(EgcNodeSide side) const
@@ -39,4 +51,34 @@ bool EgcDivisionNode::cursorSnaps(EgcNodeSide side) const
                 return true;
 
         return false;
+}
+
+bool EgcDivisionNode::setChild(quint32 index, const EgcNode& expression)
+{
+        bool retval = false;
+
+        QScopedPointer<const EgcNode> expr(&expression);
+
+        if (!m_leftChild.isNull() && !m_rightChild.isNull()) {
+                if (    m_leftChild->getNodeType() == EgcNodeType::ParenthesisNode
+                     && m_rightChild->getNodeType() == EgcNodeType::ParenthesisNode) {
+                        if (    !static_cast<EgcParenthesisNode*>(m_leftChild.data())->isVisible()
+                             && !static_cast<EgcParenthesisNode*>(m_rightChild.data())->isVisible())
+                                retval = true;
+                }
+        }
+
+        if (!retval)
+                return EgcBinaryNode::setChild(index, expression);
+
+
+        if (index == 0) {
+                static_cast<EgcParenthesisNode*>(m_leftChild.data())->setChild(0, *expr.take());
+        } else if (index == 1) {
+                static_cast<EgcParenthesisNode*>(m_rightChild.data())->setChild(0, *expr.take());
+        } else {
+                retval = false;
+        }
+
+        return retval;
 }

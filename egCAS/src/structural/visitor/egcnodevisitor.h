@@ -114,6 +114,11 @@ public:
          * @param index the index of the child we want to suppress
          */
         void suppressChild(const EgcNode* node, quint32 index);
+        /**
+         * @brief suppressThis supress the current node given
+         * @param node the node we want to supress
+         */
+        void suppressThis(const EgcNode* node);
 protected:
         /**
          * @brief getChildToSuppress returns a pointer to the child to suppress

@@ -210,6 +210,13 @@ private:
          * @return pointer to the new type
          */
         EgcNode* addDifferentialExpression(EgcArgumentsNode* argList);
+        /**
+         * @brief addUnaryStructParenth just remove the parenthesis in the formula stream that the formulagenerator
+         * needs to build up the structure. When just entering the formulas over the UI this is not needed.
+         * @param node the node to forward to the parser (removing the parenthesis of type "_( and _)" )
+         * @return the node that has been forwarded (*node)
+         */
+        EgcNode* addUnaryStructParenth(EgcNode* node);
 
 
 

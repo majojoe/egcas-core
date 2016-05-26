@@ -236,6 +236,11 @@ EgcNode* Interpreter::addSqrtExpression(EgcNode* node0)
         return sqrt.take();        
 }
 
+EgcNode* Interpreter::addUnaryStructParenth(EgcNode* node)
+{
+        return node;
+}
+
 EgcNode* Interpreter::addEmptyNode(void)
 {
         EgcNode *node = EgcNodeCreator::create(EgcNodeType::EmptyNode);

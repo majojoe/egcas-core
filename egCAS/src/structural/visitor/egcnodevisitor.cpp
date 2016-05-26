@@ -190,6 +190,12 @@ void EgcNodeVisitor::suppressChild(const EgcNode* node, quint32 index)
         }
 }
 
+void EgcNodeVisitor::suppressThis(const EgcNode* node)
+{
+        if (node)
+                m_suppressList.insert(const_cast<EgcNode*>(node));
+}
+
 EgcNode* EgcNodeVisitor::getChildToSuppress(const EgcNode* node, quint32 index)
 {
         EgcNode* chldNode = nullptr;
