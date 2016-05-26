@@ -99,7 +99,9 @@
 %token DEFINE ":"
 %token COMMA ",";
 %token LEFTPARENTESIS "(";
+%token LEFTPARENTESISDBG "{";
 %token RIGHTPARENTHESIS ")";
+%token RIGHTPARENTHESISDBG "}";
 %token EXPONENT "^"
 %token SQROOT "sqrt"
 %token INTEGRAL "_integrate"
@@ -155,10 +157,11 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}
      | BUILTIN_FNCS "(" explist ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
      | "sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}
-     | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}  //only for debugging purposes
-     | "_empty"            {$$ = interpreter.addEmptyNode();}   //only for debug purposes
      | INTEGRAL "(" explist ")" {$$ = interpreter.changeFlexExpressionType(EgcNodeType::IntegralNode, $3);}
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}
+     | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}  //only for debugging purposes
+     | "_empty"            {$$ = interpreter.addEmptyNode();}   //only for debug purposes
+     | "{" expr "}"      {$$ = interpreter.addUnaryStructParenth($2);}
 ;
     
 explist: expr            {$$ = interpreter.createArgList($1);}
