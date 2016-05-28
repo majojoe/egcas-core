@@ -59,3 +59,13 @@ bool EgcExponentNode::modifyableElement(EgcNodeSide side) const
 
         return false;
 }
+
+bool EgcExponentNode::reorderingProtected(quint32 index) const
+{
+        (void) index;
+
+        if (index == 1)
+                return true;
+
+        return false;
+}

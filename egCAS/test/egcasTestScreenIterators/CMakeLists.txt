@@ -48,6 +48,7 @@ set(tst_egcastest_scriters_SOURCES
         ../../src/structural/specialNodes/egcflexnode.cpp
         ../../src/structural/specialNodes/egcnode.cpp
         ../../src/structural/specialNodes/egcargumentsnode.cpp
+        ../../src/structural/specialNodes/egcbinaryoperator.cpp
         ../../src/structural/egcnodecreator.cpp
         ../../src/structural/specialNodes/egccontainernode.cpp
         ${tst_egcastest_scriters_concrete_SOURCES}

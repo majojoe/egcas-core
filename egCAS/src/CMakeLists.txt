@@ -146,6 +146,7 @@ set(egCAS_SOURCES
         menu/egclicenseinfo.cpp
         structural/document/egccalculation.cpp
         structural/specialNodes/egcargumentsnode.cpp
+        structural/specialNodes/egcbinaryoperator.cpp
         utils/egcutfcodepoint.cpp
 )
 
