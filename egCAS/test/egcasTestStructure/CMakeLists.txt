@@ -30,6 +30,7 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/specialNodes/egcbinarynode.cpp
         ../../src/structural/specialNodes/egcflexnode.cpp
         ../../src/structural/specialNodes/egcnode.cpp
+        ../../src/structural/specialNodes/egcbinaryoperator.cpp
         ../../src/structural/egcnodecreator.cpp
         ../../src/structural/entities/egcentity.cpp
         ${tst_egcastest_structural_concrete_SOURCES}

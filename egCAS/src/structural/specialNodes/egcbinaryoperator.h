@@ -26,46 +26,32 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCEXPONENTNODE_H
-#define EGCEXPONENTNODE_H
+#ifndef EGCBINARYOPERATOR_H
+#define EGCBINARYOPERATOR_H
 
-#include "../specialNodes/egcbinaryoperator.h"
+#include "egcbinarynode.h"
+
 
 /**
- * @brief The EgcExponentNode class is a class for exponent operations. 
+ * @brief The EgcBinaryOperator class is a base class for operations that takes two arguments (binary) as subexpressions.
+ * This can be e.g. a multiplication or substraction.
  */
-class EgcExponentNode : public EgcBinaryOperator
+class EgcBinaryOperator : public EgcBinaryNode
 {
-        //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcExponentNode, EgcNodeType::ExponentNode);
 public:
-        EgcExponentNode();
+        ///std contructor
+        EgcBinaryOperator();
         /**
-         * @brief isRightAssociative check if current node is right associative.
-         * @return true if node is right associative, false otherwise. Only a container can have a associativity.
+         * @brief setChild set the given expression as a child at position index. Takes ownership of the node given,
+         * even if setting the child failed (the given node will be deleted in this case).
+         * @param index the position at which the child should be inserted. E.g. 0 will set the left child of a binary
+         * expression.
+         * @param expression the expression to set as child.
+         * @return true if everything went well, false if index is > getNumberChildNodes() - 1
          */
-        virtual bool isRightAssociative(void) const override;
-        /**
-         * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
-         * left side of the container)
-         * @param side the side to test for cursor snap.
-         * @return true if the cursor will snap in at the given side, false otherwise
-         */
-        virtual bool cursorSnaps(EgcNodeSide side) const override;
-        /**
-         * @brief visibleSigns find out where the node has visible signs (e.g. a division node has visible signs in the
-         * middle of the container)
-         * @param side the side to test for visible signs
-         * @return true if the given side of the node has visible signs.
-         */
-        virtual bool visibleSigns(EgcNodeSide side) const override;
-        /**
-         * @brief modifyableElement find out where the node has modifyable elements (e.g. a exponent node has a
-         * modifyable operator in the middle, but it is not visible)
-         * @param side the side to test for visible signs
-         * @return true if the given side of the node has modifyable elements.
-         */
-        virtual bool modifyableElement(EgcNodeSide side) const override;
+        virtual bool setChild(quint32 index, const EgcNode& expression) override;
+
+protected:
         /**
          * @brief reorderingProtected determines if the given child is protected against reordering. This is the case
          * when a node implies invisible parenthesis. This is e.g. the case with Division Nodes. When reordering
@@ -76,8 +62,7 @@ public:
          * @param index the child index to check for
          * @return true if protected against ordering (having invisible parenthesis), false otherwise.
          */
-        virtual bool reorderingProtected(quint32 index) const override;
-
+        virtual bool reorderingProtected(quint32 index) const;
 };
 
-#endif // EGCEXPONENTNODE_H
+#endif // #ifndef EGCBINARYOPERATOR_H
