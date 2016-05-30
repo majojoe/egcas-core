@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCEXPONENTNODE_H
 #define EGCEXPONENTNODE_H
 
-#include "../specialNodes/egcbinaryoperator.h"
+#include "structural/specialNodes/egcbinaryoperator.h"
 
 /**
  * @brief The EgcExponentNode class is a class for exponent operations. 
@@ -66,18 +66,6 @@ public:
          * @return true if the given side of the node has modifyable elements.
          */
         virtual bool modifyableElement(EgcNodeSide side) const override;
-        /**
-         * @brief reorderingProtected determines if the given child is protected against reordering. This is the case
-         * when a node implies invisible parenthesis. This is e.g. the case with Division Nodes. When reordering
-         * operations The childs of a division may contain suboperations such as Additions. These may not be put outside
-         * of the division operation (lower binding power) during reordering when the user typed them e.g. on the
-         * fraction sign. If reordering would be allowed for them, they would appear beside the fraction sign after
-         * reordering.
-         * @param index the child index to check for
-         * @return true if protected against ordering (having invisible parenthesis), false otherwise.
-         */
-        virtual bool reorderingProtected(quint32 index) const override;
-
 };
 
 #endif // EGCEXPONENTNODE_H

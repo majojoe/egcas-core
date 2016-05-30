@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcExponentNode::EgcExponentNode()
 {
+        allocReorderingProtector(false, true);
 }
 
 bool EgcExponentNode::isRightAssociative(void) const
@@ -55,16 +56,6 @@ bool EgcExponentNode::visibleSigns(EgcNodeSide side) const
 bool EgcExponentNode::modifyableElement(EgcNodeSide side) const
 {
         if (side == EgcNodeSide::middle)
-                return true;
-
-        return false;
-}
-
-bool EgcExponentNode::reorderingProtected(quint32 index) const
-{
-        (void) index;
-
-        if (index == 1)
                 return true;
 
         return false;
