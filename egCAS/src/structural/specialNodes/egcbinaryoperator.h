@@ -53,16 +53,16 @@ public:
 
 protected:
         /**
-         * @brief reorderingProtected determines if the given child is protected against reordering. This is the case
-         * when a node implies invisible parenthesis. This is e.g. the case with Division Nodes. When reordering
-         * operations The childs of a division may contain suboperations such as Additions. These may not be put outside
-         * of the division operation (lower binding power) during reordering when the user typed them e.g. on the
-         * fraction sign. If reordering would be allowed for them, they would appear beside the fraction sign after
-         * reordering.
-         * @param index the child index to check for
-         * @return true if protected against ordering (having invisible parenthesis), false otherwise.
+         * @brief allocReorderingProtector allocates invisible parenthesis for left and/or right childs. This is e.g.
+         * the case with Division Nodes. When reordering operations The childs of a division may contain suboperations
+         * such as Additions. These may not be put outside of the division operation (lower binding power) during
+         * reordering when the user typed them e.g. on the fraction sign. If reordering would be allowed for them, they
+         * would appear beside the fraction sign after reordering.
+         * @param left true if invisible parenthesis shall be constructed
+         * @param right true if invisible parenthesis shall be constructed
+         * @return true if everything went well, false otherwise
          */
-        virtual bool reorderingProtected(quint32 index) const;
+        bool allocReorderingProtector(bool left = false, bool right = false);
 };
 
 #endif // #ifndef EGCBINARYOPERATOR_H

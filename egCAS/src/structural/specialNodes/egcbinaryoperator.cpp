@@ -33,34 +33,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcBinaryOperator::EgcBinaryOperator()
 {
-        if (this->reorderingProtected(0)) {
-                QScopedPointer<EgcNode> parenthesis(EgcNodeCreator::create(EgcNodeType::ParenthesisNode));
-                if (!parenthesis.isNull()) {
-                        static_cast<EgcParenthesisNode*>(parenthesis.data())->setVisible(false);
-                        EgcBinaryNode::setChild(0, static_cast<EgcParenthesisNode&>(*parenthesis.take()));
-                }
-        }
-        if (this->reorderingProtected(1)) {
-                QScopedPointer<EgcNode> parenthesis(EgcNodeCreator::create(EgcNodeType::ParenthesisNode));
-                if (!parenthesis.isNull()) {
-                        static_cast<EgcParenthesisNode*>(parenthesis.data())->setVisible(false);
-                        EgcBinaryNode::setChild(1, static_cast<EgcParenthesisNode&>(*parenthesis.take()));
-                }
-        }
 }
 
 bool EgcBinaryOperator::setChild(quint32 index, const EgcNode& expression)
 {
         bool retval = false;
 
-        QScopedPointer<const EgcNode> expr(&expression);
-
         if (index == 0) {
                 if (!m_leftChild.isNull()) {
                         if (m_leftChild->getNodeType() == EgcNodeType::ParenthesisNode) {
                                 if (!static_cast<EgcParenthesisNode*>(m_leftChild.data())->isVisible()) {
                                         retval = true;
-                                        static_cast<EgcParenthesisNode*>(m_leftChild.data())->setChild(0, *expr.take());
+                                        static_cast<EgcParenthesisNode*>(m_leftChild.data())->setChild(0, expression);
                                 }
                         }
                 }
@@ -69,7 +53,7 @@ bool EgcBinaryOperator::setChild(quint32 index, const EgcNode& expression)
                         if (m_rightChild->getNodeType() == EgcNodeType::ParenthesisNode) {
                                 if (!static_cast<EgcParenthesisNode*>(m_rightChild.data())->isVisible()) {
                                         retval = true;
-                                        static_cast<EgcParenthesisNode*>(m_rightChild.data())->setChild(1, *expr.take());
+                                        static_cast<EgcParenthesisNode*>(m_rightChild.data())->setChild(0, expression);
                                 }
                         }
                 }
@@ -81,9 +65,20 @@ bool EgcBinaryOperator::setChild(quint32 index, const EgcNode& expression)
         return retval;
 }
 
-bool EgcBinaryOperator::reorderingProtected(quint32 index) const
+bool EgcBinaryOperator::allocReorderingProtector(bool left, bool right)
 {
-        (void) index;
-
-        return false;
+        if (left) {
+                QScopedPointer<EgcNode> parenthesis(EgcNodeCreator::create(EgcNodeType::ParenthesisNode));
+                if (!parenthesis.isNull()) {
+                        static_cast<EgcParenthesisNode*>(parenthesis.data())->setVisible(false);
+                        EgcBinaryNode::setChild(0, static_cast<EgcParenthesisNode&>(*parenthesis.take()));
+                }
+        }
+        if (right) {
+                QScopedPointer<EgcNode> parenthesis(EgcNodeCreator::create(EgcNodeType::ParenthesisNode));
+                if (!parenthesis.isNull()) {
+                        static_cast<EgcParenthesisNode*>(parenthesis.data())->setVisible(false);
+                        EgcBinaryNode::setChild(1, static_cast<EgcParenthesisNode&>(*parenthesis.take()));
+                }
+        }
 }
