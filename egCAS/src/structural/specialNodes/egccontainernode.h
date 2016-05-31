@@ -73,7 +73,7 @@ public:
          * @param child the expression to set as child.
          * @return true if everything went well, false if index is > getNumberChildNodes() - 1
          */
-        virtual bool setChild(quint32 index, const EgcNode& child) = 0;
+        virtual bool setChild(quint32 index, EgcNode& child) = 0;
         /**
          * @brief getNumberChildNodes returns the number of child nodes a container can have. Even the childs that are
          * null are counted in this context. Only the possibility to hold a number of childs counts. E.g. a binary

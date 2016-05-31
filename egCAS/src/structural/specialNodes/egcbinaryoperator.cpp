@@ -35,7 +35,7 @@ EgcBinaryOperator::EgcBinaryOperator()
 {
 }
 
-bool EgcBinaryOperator::setChild(quint32 index, const EgcNode& expression)
+bool EgcBinaryOperator::setChild(quint32 index, EgcNode& expression)
 {
         bool retval = false;
 
@@ -59,8 +59,12 @@ bool EgcBinaryOperator::setChild(quint32 index, const EgcNode& expression)
                 }
         }
 
-        if (!retval)
+        if (retval) { //if there is a reordering protector, make a parenthesis child invisible, too
+                if (expression.getNodeType() == EgcNodeType::ParenthesisNode)
+                        static_cast<EgcParenthesisNode&>(expression).setVisible(false);
+        } else {
                 return EgcBinaryNode::setChild(index, expression);
+        }
 
         return retval;
 }

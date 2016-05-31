@@ -167,7 +167,7 @@ EgcNode* EgcBinaryNode::getChild(quint32 index) const
                 return nullptr;
 }
 
-bool EgcBinaryNode::setChild(quint32 index, const EgcNode& expression)
+bool EgcBinaryNode::setChild(quint32 index, EgcNode& expression)
 {
         bool retval = true;
 

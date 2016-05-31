@@ -246,7 +246,7 @@ EgcNode* EgcFlexNode::getChild(quint32 index) const
         }
 }
 
-bool EgcFlexNode::setChild(quint32 index, const EgcNode& expression)
+bool EgcFlexNode::setChild(quint32 index, EgcNode& expression)
 {
         quint32 i;
 
