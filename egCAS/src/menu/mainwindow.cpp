@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcFormulaItem::setBaseFontSize(20);
     EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 
-                                                                               QPointF(100.0, 300.0)));
+                                                                               QPointF(100.0, 330.0)));
     FormulaGenerator::getFormulaTree(formula1, "{sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3))}/{ⅇ^π}=x^‴");
     EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->getEntityList()
                                                                 ->createEntity(EgcEntityType::Formula, 

@@ -143,7 +143,7 @@ EgcNode* EgcUnaryNode::getChild(quint32 index) const
                 return nullptr;
 }
 
-bool EgcUnaryNode::setChild(quint32 index, const EgcNode& expression)
+bool EgcUnaryNode::setChild(quint32 index, EgcNode& expression)
 {
         bool retval = true;
 

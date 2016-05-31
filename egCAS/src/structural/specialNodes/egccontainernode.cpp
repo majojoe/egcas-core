@@ -60,7 +60,7 @@ EgcNode* EgcContainerNode::getChild(quint32 index) const
         return nullptr;
 }
 
-bool EgcContainerNode::setChild(quint32 index, const EgcNode& expression)
+bool EgcContainerNode::setChild(quint32 index, EgcNode& expression)
 {
         (void) index;
         (void) expression;

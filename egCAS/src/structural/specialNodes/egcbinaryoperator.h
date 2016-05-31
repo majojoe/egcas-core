@@ -49,7 +49,7 @@ public:
          * @param expression the expression to set as child.
          * @return true if everything went well, false if index is > getNumberChildNodes() - 1
          */
-        virtual bool setChild(quint32 index, const EgcNode& expression) override;
+        virtual bool setChild(quint32 index, EgcNode& expression) override;
 
 protected:
         /**
