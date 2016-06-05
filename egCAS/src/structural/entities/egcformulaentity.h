@@ -271,6 +271,12 @@ public:
          * @return true if the paste was successful, false otherwise.
          */
         bool paste(EgcNode& treeToPaste, EgcNode& whereToPaste);
+        /**
+         * @brief isResultNode check if the given node is part of a result from the calculation kernel
+         * @param node the node to check for if it is a part of a result
+         * @return true if it is a result node, false otherwise
+         */
+        static bool isResultNode(const EgcNode& node);
 
 private:
         /**

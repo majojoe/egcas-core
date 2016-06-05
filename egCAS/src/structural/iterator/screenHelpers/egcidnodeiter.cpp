@@ -864,16 +864,3 @@ void EgcIdNodeIter::setAtNodeDelayed(EgcNode& node, bool atRightSide)
         m_atRightSideAfterUpdate = atRightSide;
 }
 
-//check if the given node is a result node (activate this if insert and remove have been defined)
-//bool EgcIdNodeIter::isResultNode(EgcNode& node)
-//{
-//        //if the current node is a result, the result shall not be able to be changed
-//        if (node.getParent()->getNodeType() == EgcNodeType::EqualNode) {
-//                quint32 index;
-//                (void) node.getParent()->getIndexOfChild(node, index);
-//                if (index == 1)
-//                        return true;
-//        }
-//
-//        return false;
-//}

@@ -50,6 +50,13 @@ public:
          * @return true if everything went well, false if index is > getNumberChildNodes() - 1
          */
         virtual bool setChild(quint32 index, EgcNode& expression) override;
+        /**
+         * @brief hasReorderingProtector checks if this binary operator has a reordering protector (invisible
+         * parenthesis) to protect against operator reordering e.g. for Divisor of a division operation
+         * @param index the child index to test left = 0, right = 1
+         * @return true if reordering protector is there, false otherwise
+         */
+        virtual bool hasReorderingProtector(quint32 index) const override;
 
 protected:
         /**
