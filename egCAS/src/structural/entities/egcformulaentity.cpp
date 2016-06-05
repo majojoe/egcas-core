@@ -702,3 +702,35 @@ bool EgcFormulaEntity::isScreenIterInSubtree(EgcNode& tree, bool &rightSide) con
 
         return false;
 }
+
+//check if the given node is a result node (activate this if insert and remove have been defined)
+bool EgcFormulaEntity::isResultNode(const EgcNode& node) 
+{
+        bool retval = false;
+        EgcNode* child = const_cast<EgcNode*>(&node);
+        EgcNode* parent = node.getParent();
+
+        EgcNodeType type = child->getNodeType();
+
+        if (type == EgcNodeType::EqualNode)
+                return true;
+                
+        while(    type != EgcNodeType::EqualNode
+               && type != EgcNodeType::BaseNode
+               && parent) {
+                type = parent->getNodeType();
+
+                if (type == EgcNodeType::EqualNode) {
+                        quint32 ind;
+                        static_cast<EgcEqualNode*>(parent)->getIndexOfChild(*child, ind);
+                        if (ind == 1) {
+                                retval = true;
+                                break;
+                        }
+                }
+                child = parent;
+                parent = parent->getParent();
+        }
+
+        return retval;
+}

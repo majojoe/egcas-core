@@ -29,12 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCROOTNODE_H
 #define EGCROOTNODE_H
 
-#include "../specialNodes/egcbinarynode.h"
+#include "../specialNodes/egcbinaryoperator.h"
 
 /**
  * @brief The EgcRootNode class is a class for root operations. This manages e.g. something like sqrt(10).
  */
-class EgcRootNode : public EgcBinaryNode
+class EgcRootNode : public EgcBinaryOperator
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcRootNode, EgcNodeType::RootNode);

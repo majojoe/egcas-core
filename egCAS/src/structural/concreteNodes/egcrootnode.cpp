@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcRootNode::EgcRootNode()
 {
+        allocReorderingProtector(true, false);
 }
 
 bool EgcRootNode::cursorSnaps(EgcNodeSide side) const
