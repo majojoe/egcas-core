@@ -29,17 +29,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCMULTIPLICATIONNODE_H
 #define EGCMULTIPLICATIONNODE_H
 
-#include "../specialNodes/egcbinarynode.h"
+#include "../specialNodes/egcbinaryoperator.h"
 
 /**
  * @brief The EgcMultiplicationNode class is a class for multiplication operations. 
  */
-class EgcMultiplicationNode : public EgcBinaryNode
+class EgcMultiplicationNode : public EgcBinaryOperator
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcMultiplicationNode, EgcNodeType::MultiplicationNode);
 public:
         EgcMultiplicationNode();
+protected:
+        /**
+         * @brief bindingPower returns the binding power of the this operation. Needs to be overridden by the user if
+         * this is an operation.
+         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
+         * the operation (number >= 0).
+         */
+        virtual qint32 getBindingPower(void) const override;
+
 };
 
 #endif // EGCMULTIPLICATIONNODE_H

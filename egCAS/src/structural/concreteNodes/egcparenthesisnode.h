@@ -65,6 +65,14 @@ public:
          * @return true if the given side of the node has visible signs.
          */
         virtual bool visibleSigns(EgcNodeSide side) const override;
+protected:
+        /**
+         * @brief bindingPower returns the binding power of the this operation. Needs to be overridden by the user if
+         * this is an operation.
+         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
+         * the operation (number >= 0).
+         */
+        virtual qint32 getBindingPower(void) const override;
 
 private:
         bool m_visible;         ///< determines if the parenthesis are visible or not

@@ -41,3 +41,8 @@ bool EgcRootNode::cursorSnaps(EgcNodeSide side) const
 
         return false;
 }
+
+qint32 EgcRootNode::getBindingPower(void) const
+{
+        return 60;
+}

@@ -29,12 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCBINEMPTYNODE_H
 #define EGCBINEMPTYNODE_H
 
-#include "../specialNodes/egcbinarynode.h"
+#include "../specialNodes/egcbinaryoperator.h"
 
 /**
  * @brief The EgcBinEmptyNode class is a class for plus operations. 
  */
-class EgcBinEmptyNode : public EgcBinaryNode
+class EgcBinEmptyNode : public EgcBinaryOperator
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcBinEmptyNode, EgcNodeType::BinEmptyNode);

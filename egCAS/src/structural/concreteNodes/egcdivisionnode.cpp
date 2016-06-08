@@ -43,3 +43,8 @@ bool EgcDivisionNode::cursorSnaps(EgcNodeSide side) const
 
         return false;
 }
+
+qint32 EgcDivisionNode::getBindingPower(void) const
+{
+        return 30;
+}

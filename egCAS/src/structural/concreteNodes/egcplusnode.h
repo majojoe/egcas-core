@@ -29,17 +29,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCPLUSNODE_H
 #define EGCPLUSNODE_H
 
-#include "../specialNodes/egcbinarynode.h"
+#include "../specialNodes/egcbinaryoperator.h"
 
 /**
  * @brief The EgcPlusNode class is a class for plus operations. 
  */
-class EgcPlusNode : public EgcBinaryNode
+class EgcPlusNode : public EgcBinaryOperator
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcPlusNode, EgcNodeType::PlusNode);
 public:
         EgcPlusNode();
+protected:
+        /**
+         * @brief bindingPower returns the binding power of the this operation. Needs to be overridden by the user if
+         * this is an operation.
+         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
+         * the operation (number >= 0).
+         */
+        virtual qint32 getBindingPower(void) const override;
+
 };
 
 #endif // EGCPLUSNODE_H

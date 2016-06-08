@@ -29,17 +29,33 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCDEFINITIONNODE_H
 #define EGCDEFINITIONNODE_H
 
-#include "../specialNodes/egcbinarynode.h"
+#include "../specialNodes/egcbinaryoperator.h"
 
 /**
  * @brief The EgcDefinitionNode class is a class for definition operations. 
  */
-class EgcDefinitionNode : public EgcBinaryNode
+class EgcDefinitionNode : public EgcBinaryOperator
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcDefinitionNode, EgcNodeType::DefinitionNode);
 public:
         EgcDefinitionNode();
+        /**
+         * @brief isLeftAssociative returns wether the operation is left or right associative. This is only applicable
+         * if it is an operation.
+         * @return returns true if the operation is left associative, false if it is right associative.
+         */
+        virtual bool isLeftAssociative(void) const;
+
+protected:
+        /**
+         * @brief bindingPower returns the binding power of the this operation. Needs to be overridden by the user if
+         * this is an operation.
+         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
+         * the operation (number >= 0).
+         */
+        virtual qint32 getBindingPower(void) const override;
+
 };
 
 #endif // EGCDEFINITIONNODE_H

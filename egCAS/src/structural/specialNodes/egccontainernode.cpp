@@ -163,3 +163,20 @@ bool EgcContainerNode::isLeafContainer(void) const
 {
         return false;
 }
+
+qint32 EgcContainerNode::bindingPower(void) const
+{
+        if (isOperation()) {
+                qint32 power = getBindingPower();
+                if (power == -1)
+                        qDebug("no binding power defined for this operation, please define one.");
+                return power;
+        } else {
+                return -1;
+        }
+}
+
+qint32 EgcContainerNode::getBindingPower(void) const
+{
+        return -1;
+}

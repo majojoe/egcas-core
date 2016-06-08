@@ -109,3 +109,8 @@ bool EgcBinaryOperator::hasReorderingProtector(quint32 index) const
 
         return retval;
 }
+
+bool EgcBinaryOperator::isLeftAssociative(void) const
+{
+        return true;
+}

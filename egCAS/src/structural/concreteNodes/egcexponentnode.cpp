@@ -60,3 +60,13 @@ bool EgcExponentNode::modifyableElement(EgcNodeSide side) const
 
         return false;
 }
+
+qint32 EgcExponentNode::getBindingPower(void) const
+{
+        return 60;
+}
+
+bool EgcExponentNode::isLeftAssociative(void) const
+{
+        return false;
+}

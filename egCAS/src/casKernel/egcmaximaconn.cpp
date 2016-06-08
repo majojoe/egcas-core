@@ -47,8 +47,8 @@ EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{"maxima", parent},
         errorMsgFilter.append("Maxima ");
 
         //there are some words That should be replaced in error messages
-        m_wordsToReplace.insert("Maxima", "The CAS kernel");
-        m_wordsToReplace.insert("maxima", "the CAS kernel");
+        m_wordsToReplace.insert("Maxima", "CAS kernel");
+        m_wordsToReplace.insert("maxima", "CAS kernel");
 
 
         QString regexFilterStr;

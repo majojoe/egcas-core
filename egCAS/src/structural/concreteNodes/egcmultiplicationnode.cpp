@@ -31,3 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcMultiplicationNode::EgcMultiplicationNode()
 {
 }
+
+qint32 EgcMultiplicationNode::getBindingPower(void) const
+{
+        return 30;
+}

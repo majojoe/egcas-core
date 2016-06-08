@@ -29,17 +29,32 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCEQUALNODE_H
 #define EGCEQUALNODE_H
 
-#include "../specialNodes/egcbinarynode.h"
+#include "../specialNodes/egcbinaryoperator.h"
 
 /**
  * @brief The EgcEqualNode class is a class for equal operations. 
  */
-class EgcEqualNode : public EgcBinaryNode
+class EgcEqualNode : public EgcBinaryOperator
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcEqualNode, EgcNodeType::EqualNode);
 public:
         EgcEqualNode();
+        /**
+         * @brief isLeftAssociative returns wether the operation is left or right associative. This is only applicable
+         * if it is an operation.
+         * @return returns true if the operation is left associative, false if it is right associative.
+         */
+        virtual bool isLeftAssociative(void) const;
+
+protected:
+        /**
+         * @brief bindingPower returns the binding power of the this operation. Needs to be overridden by the user if
+         * this is an operation.
+         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
+         * the operation (number >= 0).
+         */
+        virtual qint32 getBindingPower(void) const override;
 };
 
 #endif // EGCEQUALNODE_H
