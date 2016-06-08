@@ -447,3 +447,8 @@ bool EgcFlexNode::visibleSigns(EgcNodeSide side) const
         
         return false;        
 }
+
+qint32 EgcFlexNode::getBindingPower(void) const
+{
+        return 0;
+}

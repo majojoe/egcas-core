@@ -29,17 +29,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCMINUSNODE_H
 #define EGCMINUSNODE_H
 
-#include "../specialNodes/egcbinarynode.h"
+#include "../specialNodes/egcbinaryoperator.h"
 
 /**
  * @brief The EgcMinusNode class is a class for minus operations. 
  */
-class EgcMinusNode : public EgcBinaryNode
+class EgcMinusNode : public EgcBinaryOperator
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcMinusNode, EgcNodeType::MinusNode);
 public:
         EgcMinusNode();
+protected:
+        /**
+         * @brief bindingPower returns the binding power of the this operation. Needs to be overridden by the user if
+         * this is an operation.
+         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
+         * the operation (number >= 0).
+         */
+        virtual qint32 getBindingPower(void) const override;
+
 };
 
 #endif // EGCMINUSNODE_H
