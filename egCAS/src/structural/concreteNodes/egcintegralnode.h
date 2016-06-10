@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCINTEGRALNODE_H
 
 #include <QString>
-#include "specialNodes/egcflexnode.h"
+#include "structural/specialNodes/egcflexnode.h"
 
 
 /**
