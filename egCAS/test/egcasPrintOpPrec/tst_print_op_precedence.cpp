@@ -28,10 +28,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QString>
 #include <QtTest>
-#include <iostream>
 #include <QMap>
+#include <iostream>
+#include <iomanip>
 #include "structural/egcnodes.h"
 #include "structural/specialNodes/egccontainernode.h"
+
+
+using namespace std;
 
 class EgcasPrintOpPrec : public QObject
 {
@@ -103,85 +107,85 @@ void EgcasPrintOpPrec::createList(void)
             if node[1] != "NodeUndefined":
                 cog.outl("obj = new (std::nothrow) %s();" % node[0])
                 cog.outl("if (obj->isContainer())")
-                cog.outl("        m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), \"%s\");" % node[1])
+                cog.outl("        m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), \"%s\");" % node[1])
                 cog.outl("delete(obj);")
 
         ]]]*/
         obj = new (std::nothrow) EgcArgumentsNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ArgumentsNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ArgumentsNode");
         delete(obj);
         obj = new (std::nothrow) EgcEmptyNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "EmptyNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "EmptyNode");
         delete(obj);
         obj = new (std::nothrow) EgcParenthesisNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ParenthesisNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ParenthesisNode");
         delete(obj);
         obj = new (std::nothrow) EgcVariableNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "VariableNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "VariableNode");
         delete(obj);
         obj = new (std::nothrow) EgcPlusNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "PlusNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "PlusNode");
         delete(obj);
         obj = new (std::nothrow) EgcAlnumNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "AlnumNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "AlnumNode");
         delete(obj);
         obj = new (std::nothrow) EgcDifferentialNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "DifferentialNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "DifferentialNode");
         delete(obj);
         obj = new (std::nothrow) EgcFunctionNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "FunctionNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "FunctionNode");
         delete(obj);
         obj = new (std::nothrow) EgcIntegralNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "IntegralNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "IntegralNode");
         delete(obj);
         obj = new (std::nothrow) EgcDivisionNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "DivisionNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "DivisionNode");
         delete(obj);
         obj = new (std::nothrow) EgcMinusNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "MinusNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "MinusNode");
         delete(obj);
         obj = new (std::nothrow) EgcNumberNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "NumberNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "NumberNode");
         delete(obj);
         obj = new (std::nothrow) EgcRootNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "RootNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "RootNode");
         delete(obj);
         obj = new (std::nothrow) EgcUnaryMinusNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "UnaryMinusNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "UnaryMinusNode");
         delete(obj);
         obj = new (std::nothrow) EgcDefinitionNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "DefinitionNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "DefinitionNode");
         delete(obj);
         obj = new (std::nothrow) EgcExponentNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ExponentNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ExponentNode");
         delete(obj);
         obj = new (std::nothrow) EgcMultiplicationNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "MultiplicationNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "MultiplicationNode");
         delete(obj);
         obj = new (std::nothrow) EgcEqualNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "EqualNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "EqualNode");
         delete(obj);
         obj = new (std::nothrow) EgcBinEmptyNode();
         if (obj->isContainer())
-                m_list.insert(static_cast<EgcContainerNode*>(obj)->bindingPower(), "BinEmptyNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "BinEmptyNode");
         delete(obj);
         //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.
@@ -192,10 +196,11 @@ void EgcasPrintOpPrec::printPrecedence()
         createList();
 
         QMapIterator<qint32, QString> i(m_list);
-        qDebug() << "operator precedence:";
+        cout << endl << "operator precedence:" << endl;
+        cout << "============================" << endl;
         while (i.hasNext()) {
-            i.next();
-            qDebug() << i.value() << ":\t " << i.key();
+                i.next();
+                cout << setw(20) << i.value().toUtf8().data() << ":\t " << i.key() << endl;
         }
 }
 

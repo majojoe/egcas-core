@@ -31,3 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcBinEmptyNode::EgcBinEmptyNode()
 {
 }
+
+qint32 EgcBinEmptyNode::getBindingPower(void) const
+{
+        return 20;
+}
