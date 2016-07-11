@@ -321,7 +321,19 @@ private:
          * @return true if screen iterator is in subtree, false otherwise
          */
         bool isScreenIterInSubtree(EgcNode& tree, bool &rightSide) const;
-        
+        /**
+         * @brief rearrangePrecedence when a formula is modified (modify, insert or remove operators), the formula tree
+         * needs to be rearranged in a sense that the operator precedence of the mathematical operation is valid again.
+         * E.g. when changing a plus operator to a multiplication operator, the multiplication has a higher precedence.
+         * Therefore the formula structure has to be rearranged to reflect the changed operation.
+         */
+        void rearrangePrecedence(void);
+        /**
+         * @brief rotateTreeRight rotates the subtree of this node right (see tree threory -> discrete mathematics)
+         * @return true if right rotation was possible and done, false otherwise.
+         */
+        virtual bool rotateTreeRight(EgcNode& treeNodeToRotate);
+
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
