@@ -734,3 +734,48 @@ bool EgcFormulaEntity::isResultNode(const EgcNode& node)
 
         return retval;
 }
+
+void EgcFormulaEntity::rearrangePrecedence(void)
+{
+
+}
+
+
+bool EgcFormulaEntity::rotateTreeRight(EgcNode& treeNodeToRotate)
+{
+        if (!treeNodeToRotate.isContainer())
+                return false;
+        EgcContainerNode& rotContainer = static_cast<EgcContainerNode&>(treeNodeToRotate);
+        if (rotContainer.getNumberChildNodes() != 2)
+                return false;   //only binary nodes can be rotated for now
+        EgcNode* lchild = rotContainer.getChild(0);
+        if (!lchild)
+                return false;
+        if (!lchild->isContainer())
+                return false;
+        EgcContainerNode& lcontainer = static_cast<EgcContainerNode&>(*lchild);
+        if (lcontainer.getNumberChildNodes() != 2)
+                return false;
+        EgcNode* rchild = lcontainer.getChild(1);
+        if(!rchild)
+                return false;
+        if (!treeNodeToRotate.getParent())
+                return false;
+        EgcContainerNode& parent = *treeNodeToRotate.getParent();
+        quint32 pos;
+        if(!rotContainer.getIndexOfChild(treeNodeToRotate, pos))
+                return false;
+
+        QScopedPointer<EgcContainerNode> q(static_cast<EgcContainerNode*>(cut(treeNodeToRotate)));
+        QScopedPointer<EgcContainerNode> p(static_cast<EgcContainerNode*>(cut(*lchild)));
+        QScopedPointer<EgcNode> b(cut(*rchild));
+
+        if (!paste(*q, *p->getChild(1)))
+                return false;
+        if (!paste(*b, *q->getChild(0)))
+                return false;
+        if (!paste(*p, *parent.getChild(pos)))
+                return false;
+
+        return true;
+}
