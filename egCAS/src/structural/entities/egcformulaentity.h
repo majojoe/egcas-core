@@ -333,6 +333,11 @@ private:
          * @return true if right rotation was possible and done, false otherwise.
          */
         virtual bool rotateTreeRight(EgcNode& treeNodeToRotate);
+        /**
+         * @brief rotateTreeLeft rotates the subtree of this node left (see tree threory -> discrete mathematics)
+         * @return true if left rotation was possible and done, false otherwise.
+         */
+        virtual bool rotateTreeLeft(EgcNode& treeNodeToRotate);
 
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
