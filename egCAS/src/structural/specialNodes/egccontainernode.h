@@ -133,11 +133,6 @@ public:
          */
         virtual bool isOperation(void) const override;
         /**
-         * @brief isRightAssociative check if current node is right associative.
-         * @return true if node is right associative, false otherwise. Only a container can have a associativity.
-         */
-        virtual bool isRightAssociative(void) const;
-        /**
          * @brief hasSubNode checks if node is a subnode (any child, grandchild, ...) of this container node
          * @param node the node to check if it is a subnode of this container node
          * @param index the index of this container where the given subchild is in
@@ -156,6 +151,12 @@ public:
          * the operation (number >= 0).
          */
         qint32 bindingPower(void) const;
+        /**
+         * @brief isLeftAssociative returns wether the operation is left or right associative. This is only applicable
+         * if it is an operation.
+         * @return returns true if the operation is left associative, false if it is right associative.
+         */
+        virtual bool isLeftAssociative(void) const;
 
 protected:
         /**

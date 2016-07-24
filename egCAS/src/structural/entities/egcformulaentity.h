@@ -329,6 +329,12 @@ private:
          */
         void rearrangePrecedence(void);
         /**
+         * @brief rearrangeOnePrecedence rearanging the precedence of a formula tree needs to be done in an iterative
+         * way. This rearanges just one operation in the tree if there is s.th. to rearange.
+         * @return true if the end of the tree has been reached without rearrainging a node, false otherwise
+         */
+        bool rearrangeOnePrecedence(void);
+        /**
          * @brief rotateTreeRight rotates the subtree of this node right (see tree threory -> discrete mathematics)
          * @return true if right rotation was possible and done, false otherwise.
          */

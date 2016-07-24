@@ -617,8 +617,6 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
         if (isNodeInFormula(treeToPaste))
                 return false;
 
-        if (whereToPaste.getNodeType() == EgcNodeType::BaseNode)
-                return false;
         if (treeToPaste.getNodeType() == EgcNodeType::BaseNode)
                 return false;
 
@@ -737,9 +735,53 @@ bool EgcFormulaEntity::isResultNode(const EgcNode& node)
 
 void EgcFormulaEntity::rearrangePrecedence(void)
 {
+        bool rearranged;
 
+        do {
+                rearranged = rearrangeOnePrecedence();
+        } while(!rearranged);
 }
 
+bool EgcFormulaEntity::rearrangeOnePrecedence(void)
+{
+        EgcNodeIterator iter(*this);
+        EgcNode* node;
+
+        while(iter.hasNext()) {
+                node = &iter.next();
+                if (!node->isContainer())
+                        continue;
+                EgcContainerNode* container = static_cast<EgcContainerNode*>(node);
+                if (container->getNumberChildNodes() != 2)
+                        continue;
+                EgcContainerNode* lchild = nullptr;
+                EgcContainerNode* rchild = nullptr;
+                if (container->getChild(0)->isContainer())
+                        lchild = static_cast<EgcContainerNode*>(container->getChild(0));
+                if (container->getChild(1)->isContainer())
+                        rchild = static_cast<EgcContainerNode*>(container->getChild(1));
+
+                if (lchild) {
+                        if (    container->bindingPower() > lchild->bindingPower()
+                             || (container->bindingPower() == lchild->bindingPower() && container->isOperation()
+                                 && !container->isLeftAssociative())) {
+                                rotateTreeRight(*container);
+                                return false;
+                        }
+                }
+
+                if (rchild) {
+                        if (    container->bindingPower() > rchild->bindingPower()
+                             || (container->bindingPower() == rchild->bindingPower() && container->isOperation()
+                                 && container->isLeftAssociative())) {
+                                rotateTreeLeft(*container);
+                                return false;
+                        }
+                }
+        }
+
+        return true;
+}
 
 bool EgcFormulaEntity::rotateTreeRight(EgcNode& treeNodeToRotate)
 {
@@ -770,11 +812,11 @@ bool EgcFormulaEntity::rotateTreeRight(EgcNode& treeNodeToRotate)
         QScopedPointer<EgcContainerNode> p(static_cast<EgcContainerNode*>(cut(*lchild)));
         QScopedPointer<EgcNode> b(cut(*rchild));
 
-        if (!paste(*q, *p->getChild(1)))
+        if (!paste(*q.take(), *p->getChild(1)))
                 return false;
-        if (!paste(*b, *q->getChild(0)))
+        if (!paste(*b.take(), *q->getChild(0)))
                 return false;
-        if (!paste(*p, *parent.getChild(pos)))
+        if (!paste(*p.take(), *parent.getChild(pos)))
                 return false;
 
         return true;
@@ -809,11 +851,11 @@ bool EgcFormulaEntity::rotateTreeLeft(EgcNode& treeNodeToRotate)
         QScopedPointer<EgcContainerNode> q(static_cast<EgcContainerNode*>(cut(*rchild)));
         QScopedPointer<EgcNode> b(cut(*lchild));
 
-        if (!paste(*p, *q->getChild(0)))
+        if (!paste(*p.take(), *q->getChild(0)))
                 return false;
-        if (!paste(*b, *q->getChild(1)))
+        if (!paste(*b.take(), *q->getChild(1)))
                 return false;
-        if (!paste(*q, *parent.getChild(pos)))
+        if (!paste(*q.take(), *parent.getChild(pos)))
                 return false;
 
         return true;

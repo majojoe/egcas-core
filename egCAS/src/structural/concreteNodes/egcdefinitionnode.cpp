@@ -36,8 +36,3 @@ qint32 EgcDefinitionNode::getBindingPower(void) const
 {
         return 2;
 }
-
-bool EgcDefinitionNode::isLeftAssociative(void) const
-{
-        return true;
-}
