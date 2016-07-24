@@ -40,12 +40,6 @@ class EgcEqualNode : public EgcBinaryOperator
         EGC_SET_EXPRESSION_TYPE(EgcEqualNode, EgcNodeType::EqualNode);
 public:
         EgcEqualNode();
-        /**
-         * @brief isLeftAssociative returns wether the operation is left or right associative. This is only applicable
-         * if it is an operation.
-         * @return returns true if the operation is left associative, false if it is right associative.
-         */
-        virtual bool isLeftAssociative(void) const;
 
 protected:
         /**

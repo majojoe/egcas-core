@@ -133,11 +133,6 @@ bool EgcContainerNode::isOperation(void) const
         return true;
 }
 
-bool EgcContainerNode::isRightAssociative(void) const
-{
-        return false;
-}
-
 bool EgcContainerNode::hasSubNode(const EgcNode& node, quint32 &index) const
 {
         EgcNode* parent = nullptr;
@@ -179,4 +174,9 @@ qint32 EgcContainerNode::bindingPower(void) const
 qint32 EgcContainerNode::getBindingPower(void) const
 {
         return -1;
+}
+
+bool EgcContainerNode::isLeftAssociative(void) const
+{
+        return true;
 }
