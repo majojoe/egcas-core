@@ -98,6 +98,12 @@ public:
          */
         EgcFormulaEntity& operator=(EgcFormulaEntity&& rhs);
         /**
+         * @brief operator== comparison operator overload
+         * @param formula the formula to compare against
+         * @return true if the trees are equal
+         */
+        bool operator==(const EgcFormulaEntity& formual) const;
+        /**
          * @brief getBaseElement returns the base element of a formula
          * @return the root element of the formula
          */
@@ -277,6 +283,13 @@ public:
          * @return true if it is a result node, false otherwise
          */
         static bool isResultNode(const EgcNode& node);
+        /**
+         * @brief rearrangePrecedence when a formula is modified (modify, insert or remove operators), the formula tree
+         * needs to be rearranged in a sense that the operator precedence of the mathematical operation is valid again.
+         * E.g. when changing a plus operator to a multiplication operator, the multiplication has a higher precedence.
+         * Therefore the formula structure has to be rearranged to reflect the changed operation.
+         */
+        void rearrangePrecedence(void);
 
 private:
         /**
@@ -321,13 +334,6 @@ private:
          * @return true if screen iterator is in subtree, false otherwise
          */
         bool isScreenIterInSubtree(EgcNode& tree, bool &rightSide) const;
-        /**
-         * @brief rearrangePrecedence when a formula is modified (modify, insert or remove operators), the formula tree
-         * needs to be rearranged in a sense that the operator precedence of the mathematical operation is valid again.
-         * E.g. when changing a plus operator to a multiplication operator, the multiplication has a higher precedence.
-         * Therefore the formula structure has to be rearranged to reflect the changed operation.
-         */
-        void rearrangePrecedence(void);
         /**
          * @brief rearrangeOnePrecedence rearanging the precedence of a formula tree needs to be done in an iterative
          * way. This rearanges just one operation in the tree if there is s.th. to rearange.
