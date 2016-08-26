@@ -90,47 +90,35 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
                 cog.outl("        break;")
 
         ]]]*/
-        case EgcNodeType::ArgumentsNode:
-                retval = new (std::nothrow) EgcArgumentsNode();
-                break;
         case EgcNodeType::EmptyNode:
                 retval = new (std::nothrow) EgcEmptyNode();
                 break;
-        case EgcNodeType::ParenthesisNode:
-                retval = new (std::nothrow) EgcParenthesisNode();
-                break;
-        case EgcNodeType::VariableNode:
-                retval = new (std::nothrow) EgcVariableNode();
-                break;
-        case EgcNodeType::PlusNode:
-                retval = new (std::nothrow) EgcPlusNode();
+        case EgcNodeType::ArgumentsNode:
+                retval = new (std::nothrow) EgcArgumentsNode();
                 break;
         case EgcNodeType::AlnumNode:
                 retval = new (std::nothrow) EgcAlnumNode();
                 break;
-        case EgcNodeType::DifferentialNode:
-                retval = new (std::nothrow) EgcDifferentialNode();
+        case EgcNodeType::MultiplicationNode:
+                retval = new (std::nothrow) EgcMultiplicationNode();
+                break;
+        case EgcNodeType::VariableNode:
+                retval = new (std::nothrow) EgcVariableNode();
                 break;
         case EgcNodeType::FunctionNode:
                 retval = new (std::nothrow) EgcFunctionNode();
                 break;
-        case EgcNodeType::IntegralNode:
-                retval = new (std::nothrow) EgcIntegralNode();
-                break;
         case EgcNodeType::DivisionNode:
                 retval = new (std::nothrow) EgcDivisionNode();
-                break;
-        case EgcNodeType::MinusNode:
-                retval = new (std::nothrow) EgcMinusNode();
                 break;
         case EgcNodeType::NumberNode:
                 retval = new (std::nothrow) EgcNumberNode();
                 break;
-        case EgcNodeType::RootNode:
-                retval = new (std::nothrow) EgcRootNode();
+        case EgcNodeType::MinusNode:
+                retval = new (std::nothrow) EgcMinusNode();
                 break;
-        case EgcNodeType::UnaryMinusNode:
-                retval = new (std::nothrow) EgcUnaryMinusNode();
+        case EgcNodeType::IntegralNode:
+                retval = new (std::nothrow) EgcIntegralNode();
                 break;
         case EgcNodeType::DefinitionNode:
                 retval = new (std::nothrow) EgcDefinitionNode();
@@ -138,14 +126,26 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::ExponentNode:
                 retval = new (std::nothrow) EgcExponentNode();
                 break;
-        case EgcNodeType::MultiplicationNode:
-                retval = new (std::nothrow) EgcMultiplicationNode();
-                break;
-        case EgcNodeType::EqualNode:
-                retval = new (std::nothrow) EgcEqualNode();
+        case EgcNodeType::RootNode:
+                retval = new (std::nothrow) EgcRootNode();
                 break;
         case EgcNodeType::BinEmptyNode:
                 retval = new (std::nothrow) EgcBinEmptyNode();
+                break;
+        case EgcNodeType::ParenthesisNode:
+                retval = new (std::nothrow) EgcParenthesisNode();
+                break;
+        case EgcNodeType::DifferentialNode:
+                retval = new (std::nothrow) EgcDifferentialNode();
+                break;
+        case EgcNodeType::PlusNode:
+                retval = new (std::nothrow) EgcPlusNode();
+                break;
+        case EgcNodeType::UnaryMinusNode:
+                retval = new (std::nothrow) EgcUnaryMinusNode();
+                break;
+        case EgcNodeType::EqualNode:
+                retval = new (std::nothrow) EgcEqualNode();
                 break;
         //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.

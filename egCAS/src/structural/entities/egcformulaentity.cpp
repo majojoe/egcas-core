@@ -159,6 +159,22 @@ EgcFormulaEntity& EgcFormulaEntity::operator=(EgcFormulaEntity&& rhs)
         return *this;
 }
 
+bool EgcFormulaEntity::operator==(const EgcFormulaEntity& formula) const
+{
+        EgcNode* node1 = this->getRootElement();
+        EgcNode* node2 = formula.getRootElement();
+
+        if (    !node1
+             || !node2)
+                return false;
+
+        if (*node1 == *node2)
+                return true;
+
+        return false;
+}
+
+
 EgcFormulaEntity::~EgcFormulaEntity()
 {
 }

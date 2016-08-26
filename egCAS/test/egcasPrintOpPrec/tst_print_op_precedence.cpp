@@ -111,61 +111,45 @@ void EgcasPrintOpPrec::createList(void)
                 cog.outl("delete(obj);")
 
         ]]]*/
-        obj = new (std::nothrow) EgcArgumentsNode();
-        if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ArgumentsNode");
-        delete(obj);
         obj = new (std::nothrow) EgcEmptyNode();
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "EmptyNode");
         delete(obj);
-        obj = new (std::nothrow) EgcParenthesisNode();
+        obj = new (std::nothrow) EgcArgumentsNode();
         if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ParenthesisNode");
-        delete(obj);
-        obj = new (std::nothrow) EgcVariableNode();
-        if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "VariableNode");
-        delete(obj);
-        obj = new (std::nothrow) EgcPlusNode();
-        if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "PlusNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ArgumentsNode");
         delete(obj);
         obj = new (std::nothrow) EgcAlnumNode();
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "AlnumNode");
         delete(obj);
-        obj = new (std::nothrow) EgcDifferentialNode();
+        obj = new (std::nothrow) EgcMultiplicationNode();
         if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "DifferentialNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "MultiplicationNode");
+        delete(obj);
+        obj = new (std::nothrow) EgcVariableNode();
+        if (obj->isContainer())
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "VariableNode");
         delete(obj);
         obj = new (std::nothrow) EgcFunctionNode();
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "FunctionNode");
         delete(obj);
-        obj = new (std::nothrow) EgcIntegralNode();
-        if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "IntegralNode");
-        delete(obj);
         obj = new (std::nothrow) EgcDivisionNode();
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "DivisionNode");
-        delete(obj);
-        obj = new (std::nothrow) EgcMinusNode();
-        if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "MinusNode");
         delete(obj);
         obj = new (std::nothrow) EgcNumberNode();
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "NumberNode");
         delete(obj);
-        obj = new (std::nothrow) EgcRootNode();
+        obj = new (std::nothrow) EgcMinusNode();
         if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "RootNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "MinusNode");
         delete(obj);
-        obj = new (std::nothrow) EgcUnaryMinusNode();
+        obj = new (std::nothrow) EgcIntegralNode();
         if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "UnaryMinusNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "IntegralNode");
         delete(obj);
         obj = new (std::nothrow) EgcDefinitionNode();
         if (obj->isContainer())
@@ -175,17 +159,33 @@ void EgcasPrintOpPrec::createList(void)
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ExponentNode");
         delete(obj);
-        obj = new (std::nothrow) EgcMultiplicationNode();
+        obj = new (std::nothrow) EgcRootNode();
         if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "MultiplicationNode");
-        delete(obj);
-        obj = new (std::nothrow) EgcEqualNode();
-        if (obj->isContainer())
-                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "EqualNode");
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "RootNode");
         delete(obj);
         obj = new (std::nothrow) EgcBinEmptyNode();
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "BinEmptyNode");
+        delete(obj);
+        obj = new (std::nothrow) EgcParenthesisNode();
+        if (obj->isContainer())
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ParenthesisNode");
+        delete(obj);
+        obj = new (std::nothrow) EgcDifferentialNode();
+        if (obj->isContainer())
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "DifferentialNode");
+        delete(obj);
+        obj = new (std::nothrow) EgcPlusNode();
+        if (obj->isContainer())
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "PlusNode");
+        delete(obj);
+        obj = new (std::nothrow) EgcUnaryMinusNode();
+        if (obj->isContainer())
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "UnaryMinusNode");
+        delete(obj);
+        obj = new (std::nothrow) EgcEqualNode();
+        if (obj->isContainer())
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "EqualNode");
         delete(obj);
         //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.
