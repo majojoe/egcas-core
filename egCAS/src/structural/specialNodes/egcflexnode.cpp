@@ -399,7 +399,7 @@ bool EgcFlexNode::operator==(const EgcNode& node) const
 {
         bool retval = false;
 
-        if (node.isFlexNode()) {
+        if (node.isFlexNode() && this->getNodeType() == node.getNodeType()) {
                 quint32 i;
                 quint32 count = m_childs.count();
                 const EgcFlexNode& flexNode = static_cast<const EgcFlexNode&>(node);

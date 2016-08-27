@@ -117,7 +117,7 @@ bool EgcAlnumNode::operator==(const EgcNode& node) const
 {
         bool retval = false;
 
-        if (node.getNodeType() == EgcNodeType::VariableNode) {
+        if (node.getNodeType() == EgcNodeType::AlnumNode) {
                 if (static_cast<const EgcAlnumNode&>(node).getValue() == m_value)
                         retval = true;
         }
