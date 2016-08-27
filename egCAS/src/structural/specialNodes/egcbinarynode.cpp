@@ -244,7 +244,7 @@ bool EgcBinaryNode::operator==(const EgcNode& node) const
 {
         bool retval = false;
 
-        if (node.isBinaryNode()) {
+        if (node.isBinaryNode() && this->getNodeType() == node.getNodeType()) {
                 EgcNode* left = static_cast<const EgcBinaryNode&>(node).getChild(0);
                 EgcNode* right = static_cast<const EgcBinaryNode&>(node).getChild(1);
                 if (!m_leftChild.isNull() && !m_rightChild.isNull() && left && right ) {

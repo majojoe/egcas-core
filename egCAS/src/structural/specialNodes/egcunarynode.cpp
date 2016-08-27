@@ -211,7 +211,7 @@ bool EgcUnaryNode::operator==(const EgcNode& node) const
 {
         bool retval = false;
 
-        if (node.isUnaryNode()) {
+        if (node.isUnaryNode() && this->getNodeType() == node.getNodeType()) {
                 EgcNode* child = static_cast<const EgcUnaryNode&>(node).getChild(0);
                 if (!m_child.isNull() && child) {
                         if (*m_child == *child)
