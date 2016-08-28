@@ -24,6 +24,6 @@ set(tests-to-execute
         tst_egcastest_view
 )
 
-add_custom_target(egcas-tests-all COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test-executer.sh ${tests-to-execute} 
+add_custom_target(egcas-tests-all COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test-executer.sh "${CMAKE_BINARY_DIR}/bin" ${tests-to-execute}
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} COMMENT "execute all tests")
 add_dependencies(egcas-tests-all ${tests-to-execute} )
