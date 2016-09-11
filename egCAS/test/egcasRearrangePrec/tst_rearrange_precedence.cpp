@@ -69,9 +69,10 @@ void EgcasRearrangePrecedence::rearrange()
         EgcNodeIterator iter(formula);
 
         QVERIFY(iter.findNext(EgcNodeType::ParenthesisNode) == true);
-        iter.remove();
+        EgcNode* child = formula.cut(iter.next());
+        formula.paste(*child, *static_cast<EgcContainerNode*>(formula.getRootElement())->getChild(0) );
 
-        //formula.rearrangePrecedence();
+        formula.rearrangePrecedence();
 
         // generate a second tree without parenthesis. This must be the same
         tree.reset(parser.parseKernelOutput("x+5*4^3"));

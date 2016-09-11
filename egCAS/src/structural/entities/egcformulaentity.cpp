@@ -821,16 +821,16 @@ bool EgcFormulaEntity::rotateTreeRight(EgcNode& treeNodeToRotate)
                 return false;
         EgcContainerNode& parent = *treeNodeToRotate.getParent();
         quint32 pos;
-        if(!rotContainer.getIndexOfChild(treeNodeToRotate, pos))
+        if(!parent.getIndexOfChild(treeNodeToRotate, pos))
                 return false;
 
-        QScopedPointer<EgcContainerNode> q(static_cast<EgcContainerNode*>(cut(treeNodeToRotate)));
-        QScopedPointer<EgcContainerNode> p(static_cast<EgcContainerNode*>(cut(*lchild)));
         QScopedPointer<EgcNode> b(cut(*rchild));
+        QScopedPointer<EgcContainerNode> p(static_cast<EgcContainerNode*>(cut(*lchild)));
+        QScopedPointer<EgcContainerNode> q(static_cast<EgcContainerNode*>(cut(treeNodeToRotate)));
 
-        if (!paste(*q.take(), *p->getChild(1)))
-                return false;
         if (!paste(*b.take(), *q->getChild(0)))
+                return false;
+        if (!paste(*q.take(), *p->getChild(1)))
                 return false;
         if (!paste(*p.take(), *parent.getChild(pos)))
                 return false;
@@ -860,16 +860,16 @@ bool EgcFormulaEntity::rotateTreeLeft(EgcNode& treeNodeToRotate)
                 return false;
         EgcContainerNode& parent = *treeNodeToRotate.getParent();
         quint32 pos;
-        if(!rotContainer.getIndexOfChild(treeNodeToRotate, pos))
+        if(!parent.getIndexOfChild(treeNodeToRotate, pos))
                 return false;
 
-        QScopedPointer<EgcContainerNode> p(static_cast<EgcContainerNode*>(cut(treeNodeToRotate)));
-        QScopedPointer<EgcContainerNode> q(static_cast<EgcContainerNode*>(cut(*rchild)));
         QScopedPointer<EgcNode> b(cut(*lchild));
+        QScopedPointer<EgcContainerNode> q(static_cast<EgcContainerNode*>(cut(*rchild)));
+        QScopedPointer<EgcContainerNode> p(static_cast<EgcContainerNode*>(cut(treeNodeToRotate)));
 
-        if (!paste(*p.take(), *q->getChild(0)))
+        if (!paste(*b.take(), *p->getChild(1)))
                 return false;
-        if (!paste(*b.take(), *q->getChild(1)))
+        if (!paste(*p.take(), *q->getChild(0)))
                 return false;
         if (!paste(*q.take(), *parent.getChild(pos)))
                 return false;
