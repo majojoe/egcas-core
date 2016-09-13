@@ -778,7 +778,7 @@ bool EgcFormulaEntity::rearrangeOnePrecedence(void)
                         rchild = static_cast<EgcContainerNode*>(container->getChild(1));
 
                 if (lchild) {
-                        if (    container->bindingPower() > lchild->bindingPower()
+                        if (    container->bindingPower() > lchild->bindingPower() && lchild->isOperation()
                              || (container->bindingPower() == lchild->bindingPower() && container->isOperation()
                                  && !container->isLeftAssociative())) {
                                 rotateTreeRight(*container);
@@ -787,7 +787,7 @@ bool EgcFormulaEntity::rearrangeOnePrecedence(void)
                 }
 
                 if (rchild) {
-                        if (    container->bindingPower() > rchild->bindingPower()
+                        if (    container->bindingPower() > rchild->bindingPower() && rchild->isOperation()
                              || (container->bindingPower() == rchild->bindingPower() && container->isOperation()
                                  && container->isLeftAssociative())) {
                                 rotateTreeLeft(*container);
@@ -812,6 +812,8 @@ bool EgcFormulaEntity::rotateTreeRight(EgcNode& treeNodeToRotate)
         if (!lchild->isContainer())
                 return false;
         EgcContainerNode& lcontainer = static_cast<EgcContainerNode&>(*lchild);
+        if (!lcontainer.isOperation())
+                return false;
         if (lcontainer.getNumberChildNodes() != 2)
                 return false;
         EgcNode* rchild = lcontainer.getChild(1);
@@ -851,6 +853,8 @@ bool EgcFormulaEntity::rotateTreeLeft(EgcNode& treeNodeToRotate)
         if (!rchild->isContainer())
                 return false;
         EgcContainerNode& rcontainer = static_cast<EgcContainerNode&>(*rchild);
+        if (!rcontainer.isOperation())
+                return false;
         if (rcontainer.getNumberChildNodes() != 2)
                 return false;
         EgcNode* lchild = rcontainer.getChild(0);
