@@ -50,11 +50,30 @@ class EgcasRearrangePrecedence : public QObject
 
 public:
         EgcasRearrangePrecedence() {}
+private:
+        void removeParenthesis(EgcFormulaEntity* formula);
 private Q_SLOTS:
-        void rearrange();
+        void rearrange_rot_right();
+        void rearrange_rot_left();
 };
 
-void EgcasRearrangePrecedence::rearrange()
+void EgcasRearrangePrecedence::removeParenthesis(EgcFormulaEntity* formula)
+{
+        bool parenthesisFound = false;
+
+        do {
+                EgcNodeIterator iter(*formula);
+                parenthesisFound = iter.findNext(EgcNodeType::ParenthesisNode);
+                if (parenthesisFound) {
+                        EgcNode* child = &iter.next();
+                        EgcNode* parent = child->getParent();
+                        formula->cut(*child);
+                        formula->paste(*child, *parent );
+                }
+        } while(parenthesisFound);
+}
+
+void EgcasRearrangePrecedence::rearrange_rot_right()
 {                
         EgcKernelParser parser;
         QScopedPointer<EgcNode> tree;
@@ -65,6 +84,10 @@ void EgcasRearrangePrecedence::rearrange()
         QVERIFY(!tree.isNull());
 
         EgcFormulaEntity formula(*tree.take());
+
+        EgcFormulaEntity formula3 = formula;
+        formula3.rearrangePrecedence();
+        QVERIFY(formula == formula3);
 
         EgcNodeIterator iter(formula);
 
@@ -82,6 +105,47 @@ void EgcasRearrangePrecedence::rearrange()
         QVERIFY(!tree.isNull());
 
         EgcFormulaEntity formula2(*tree.take());
+
+        removeParenthesis(&formula);
+        removeParenthesis(&formula2);
+
+        QVERIFY(formula == formula2);
+}
+
+void EgcasRearrangePrecedence::rearrange_rot_left()
+{
+        EgcKernelParser parser;
+        QScopedPointer<EgcNode> tree;
+        tree.reset(parser.parseKernelOutput("(3^4)^2"));
+        if (tree.isNull()) {
+                std::cout << parser.getErrorMessage().toStdString();
+        }
+        QVERIFY(!tree.isNull());
+
+        EgcFormulaEntity formula(*tree.take());
+        EgcFormulaEntity formula3 = formula;
+        formula3.rearrangePrecedence();
+        QVERIFY(formula == formula3);
+
+        EgcNodeIterator iter(formula);
+
+        QVERIFY(iter.findNext(EgcNodeType::ParenthesisNode) == true);
+        EgcNode* child = formula.cut(iter.next());
+        formula.paste(*child, *static_cast<EgcContainerNode*>(formula.getRootElement())->getChild(0) );
+
+        formula.rearrangePrecedence();
+
+        // generate a second tree without parenthesis. This must be the same
+        tree.reset(parser.parseKernelOutput("3^4^2"));
+        if (tree.isNull()) {
+                std::cout << parser.getErrorMessage().toStdString();
+        }
+        QVERIFY(!tree.isNull());
+
+        EgcFormulaEntity formula2(*tree.take());
+
+        removeParenthesis(&formula);
+        removeParenthesis(&formula2);
 
         QVERIFY(formula == formula2);
 }
