@@ -478,6 +478,8 @@ void EgcFormulaEntity::removeCharacter(bool before)
         else
                 m_scrIter->remove();
 
+        rearrangePrecedence();
+        //update m_scrIter since nothing is correct about the position
         m_item->updateView();
         m_item->hideCursors();
         showCurrentCursor();
@@ -781,8 +783,8 @@ bool EgcFormulaEntity::rearrangeOnePrecedence(void)
                         if (    container->bindingPower() > lchild->bindingPower() && lchild->isOperation()
                              || (container->bindingPower() == lchild->bindingPower() && container->isOperation()
                                  && !container->isLeftAssociative())) {
-                                rotateTreeRight(*container);
-                                return false;
+                                if (rotateTreeRight(*container))
+                                        return false;
                         }
                 }
 
@@ -790,8 +792,8 @@ bool EgcFormulaEntity::rearrangeOnePrecedence(void)
                         if (    container->bindingPower() > rchild->bindingPower() && rchild->isOperation()
                              || (container->bindingPower() == rchild->bindingPower() && container->isOperation()
                                  && container->isLeftAssociative())) {
-                                rotateTreeLeft(*container);
-                                return false;
+                                if (rotateTreeLeft(*container))
+                                        return false;
                         }
                 }
         }
