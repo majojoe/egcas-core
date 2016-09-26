@@ -232,17 +232,27 @@ bool EgcScrPosIterator::insert(QChar character)
 
 bool EgcScrPosIterator::remove(void)
 {
+        bool str;
+        return remove(str);
+}
+
+bool EgcScrPosIterator::remove(bool &structureChanged)
+{
         if (!m_subIdIter->hasNext()) {
+                structureChanged = true;
                 if (m_lastUnderlinedNode)
                         return m_nodeIter->deleteTree(false);
                 else
                         return m_nodeIter->remove(false);
         } else {
+                structureChanged = false;
                 bool retval = m_subIdIter->remove(false);
                 balanceNodeIter();
                 if (m_nodeIter->getNode().nrSubindexes() == 0) {
                         if (!m_nodeIter->replaceByEmtpy())
                                 retval = false;
+                        else
+                                structureChanged = true;
                 }
 
                 return retval;
@@ -251,17 +261,27 @@ bool EgcScrPosIterator::remove(void)
 
 bool EgcScrPosIterator::backspace(void)
 {
+        bool str;
+        return backspace(str);
+}
+
+bool EgcScrPosIterator::backspace(bool &structureChanged)
+{
         if (!m_subIdIter->hasPrevious()) {
+                structureChanged = true;
                 if (m_lastUnderlinedNode)
                         return m_nodeIter->deleteTree(true);
                 else
                         return m_nodeIter->remove(true);
         } else {
+                structureChanged = false;
                 bool retval;
                 retval =  m_subIdIter->remove(true);
                 if (m_nodeIter->getNode().nrSubindexes() == 0) {
-                        if (m_nodeIter->replaceByEmtpy())
+                        if (!m_nodeIter->replaceByEmtpy())
                                 retval = false;
+                        else
+                                structureChanged = true;
                 }
 
                 return retval;
@@ -361,4 +381,14 @@ void EgcScrPosIterator::balanceNodeIter(void)
                 if (m_nodeIter->rightSide())
                         m_nodeIter->previous();
         }        
+}
+
+void EgcScrPosIterator::lockDelayedCursorUpdate(void)
+{
+        m_nodeIter->lockDelayedCursorUpdate();
+}
+
+void EgcScrPosIterator::unlockDelayedCursorUpdate(void)
+{
+        m_nodeIter->unlockDelayedCursorUpdate();
 }

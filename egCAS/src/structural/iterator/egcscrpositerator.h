@@ -135,10 +135,24 @@ public:
          */
         bool remove(void);
         /**
+         * @brief remove removes the element that is next to the current iterator position (forward direction)
+         * @param structureChanged the structure (any node - type or node removed) has changed. If false only some
+         * contents of the node changed - e.g. the variable name.
+         * @return true if the operation was successful, false otherwise
+         */
+        bool remove(bool &structureChanged);
+        /**
          * @brief backspace removes the element that is previous to the current iterator position (backward direction)
          * @return true if the operation was successful, false otherwise
          */
         bool backspace(void);
+        /**
+         * @brief backspace removes the element that is previous to the current iterator position (backward direction)
+         * @param structureChanged the structure (any node - type or node removed) has changed. If false only some
+         * contents of the node changed - e.g. the variable name.
+         * @return true if the operation was successful, false otherwise
+         */
+        bool backspace(bool &structureChanged);
         /**
          * @brief switchParentSide if a parent is marked, and the cursor position is at one side, switch to the other
          */
@@ -157,12 +171,23 @@ public:
          */
         void finishFormulaChange(void);
         /**
-         * @brief updatePointer updates the giben old node pointer with the given new one.
+         * @brief updatePointer updates the given old node pointer with the given new one.
          * @param oldPointer the old pointer that needs to be updated with the new one below.
          * @param newPointer the new pointer the replaces the old one.
          * @param right if new screen iterator is at the right side or not.
          */
         void updatePointer(EgcNode* oldPointer, EgcNode* newPointer, bool right);
+        /**
+         * @brief lockDelayedCursorUpdate if the cursor update is locked, updatePointer has no effect. This can be
+         * useful, if there are some operations in between that shall have no effect. It is very unlikely that a user
+         * will need this function.
+         */
+        void lockDelayedCursorUpdate(void);
+        /**
+         * @brief unlockDelayedCursorUpdate after unlocking the cursor update will work as expected before. It is very
+         * unlikely that a user will need to use this.
+         */
+        void unlockDelayedCursorUpdate(void);
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula

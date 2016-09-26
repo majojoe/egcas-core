@@ -468,17 +468,21 @@ void EgcFormulaEntity::insertCharacter(QChar character)
 
 void EgcFormulaEntity::removeCharacter(bool before)
 {
+        bool structureChanged;
+
         if (!m_scrIter)
                 return;
         if (!m_item)
                 return;
 
         if (before)
-                m_scrIter->backspace();
+                m_scrIter->backspace(structureChanged);
         else
-                m_scrIter->remove();
+                m_scrIter->remove(structureChanged);
 
-        rearrangePrecedence();
+        if (structureChanged) {
+                rearrangePrecedence();
+        }
         //update m_scrIter since nothing is correct about the position
         m_item->updateView();
         m_item->hideCursors();
@@ -755,9 +759,14 @@ void EgcFormulaEntity::rearrangePrecedence(void)
 {
         bool rearranged;
 
+        m_scrIter->lockDelayedCursorUpdate();
+        m_scrIter->toFront();
+
         do {
                 rearranged = rearrangeOnePrecedence();
         } while(!rearranged);
+
+        m_scrIter->unlockDelayedCursorUpdate();
 }
 
 bool EgcFormulaEntity::rearrangeOnePrecedence(void)
