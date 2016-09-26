@@ -167,7 +167,17 @@ public:
          * @return true if everything went well, false otherwise
          */
         bool replaceByEmtpy(void);
-
+        /**
+         * @brief lockDelayedCursorUpdate if the cursor update is locked, setAtNodeDelayed has no effect. This can be
+         * useful, if there are some operations in between that shall have no effect. It is very unlikely that a user
+         * will need this function.
+         */
+        void lockDelayedCursorUpdate(void);
+        /**
+         * @brief unlockDelayedCursorUpdate after unlocking the cursor update will work as expected before. It is very
+         * unlikely that a user will need to use this.
+         */
+        void unlockDelayedCursorUpdate(void);
 private:
         /**
          * @brief getMathmlId returns the mathml id of a node with a specified state and a predecessor or successor
@@ -319,6 +329,7 @@ private:
         bool m_atRightSideAfterUpdate;                      ///< if cursor should be at the right side of m_iterPosAfterUpdate after update
         bool m_isInsert;                                    ///< true if after an insert operation the iterator shall be incremented (that cursor is after inserted element)
         EgcFormulaEntity &m_formula;                        ///< reference to formula associated with
+        bool m_lockDelayedUpdate;                           ///< lock the delayed update via setAtNodeDelayed
 };
 
 #endif // EGCIDNODEITER_H

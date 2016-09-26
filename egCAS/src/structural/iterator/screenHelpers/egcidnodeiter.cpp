@@ -42,7 +42,8 @@ EgcIdNodeIter::EgcIdNodeIter(EgcFormulaEntity& formula) : m_nodeIter{new EgcNode
                                                                 m_iterPosAfterUpdate{nullptr},
                                                                 m_atRightSideAfterUpdate{false},
                                                                 m_isInsert{false},
-                                                                m_formula(formula)
+                                                                m_formula(formula),
+                                                                m_lockDelayedUpdate(false)
 {
         toBack();
 }
@@ -860,7 +861,20 @@ bool EgcIdNodeIter::finishModOperation(void)
 
 void EgcIdNodeIter::setAtNodeDelayed(EgcNode& node, bool atRightSide)
 {
-        m_iterPosAfterUpdate = &node;
-        m_atRightSideAfterUpdate = atRightSide;
+        if (m_lockDelayedUpdate == false) {
+                m_iterPosAfterUpdate = &node;
+                m_atRightSideAfterUpdate = atRightSide;
+        }
 }
+
+void EgcIdNodeIter::lockDelayedCursorUpdate(void)
+{
+        m_lockDelayedUpdate = true;
+}
+
+void EgcIdNodeIter::unlockDelayedCursorUpdate(void)
+{
+        m_lockDelayedUpdate = false;
+}
+
 
