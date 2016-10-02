@@ -66,6 +66,12 @@ public:
         /// std destructor
         virtual ~EgcIdNodeIter();
         /**
+         * @brief EgcIdNodeIter copy constructor
+         * @param orig reference to original
+         */
+        EgcIdNodeIter(const EgcIdNodeIter& orig);
+
+        /**
          * @brief setAtNode set the iterator to a position on the right or left side of the given Node.
          * ATTENTION: the given node must be an element of the formula.
          * @param node the node where to position the iterator (at the left or at the right side of the node)

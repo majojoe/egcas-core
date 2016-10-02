@@ -54,6 +54,15 @@ EgcScrPosIterator::~EgcScrPosIterator()
 {
 }
 
+EgcScrPosIterator::EgcScrPosIterator(const EgcScrPosIterator& orig) : m_lookup(orig.m_lookup), //gcc bug
+                                                                      m_nodeIter{new EgcIdNodeIter(*orig.m_nodeIter)},
+                                                                      m_subIdIter{new EgcSubindNodeIter(*orig.m_subIdIter)},
+                                                                      m_lastUnderlinedNode{orig.m_lastUnderlinedNode},
+                                                                      m_originNode{orig.m_originNode}
+{
+
+}
+
 bool EgcScrPosIterator::hasNext(void) const
 {
         if (m_nodeIter->hasNext() || m_subIdIter->hasNext())
@@ -240,10 +249,18 @@ bool EgcScrPosIterator::remove(bool &structureChanged)
 {
         if (!m_subIdIter->hasNext()) {
                 structureChanged = true;
-                if (m_lastUnderlinedNode)
+                if (m_lastUnderlinedNode) {
                         return m_nodeIter->deleteTree(false);
-                else
-                        return m_nodeIter->remove(false);
+                } else {
+                        EgcScrPosIterator iter(*this);
+                        iter.nextNonoperationNode();
+                        EgcNode* nd = const_cast<EgcNode*>(iter.node());
+                        bool rside = iter.rightSide();
+                        bool retval = m_nodeIter->remove(false);
+                        if (nd)
+                                m_nodeIter->setAtNodeDelayed(*nd, rside);
+                        return retval;
+                }
         } else {
                 structureChanged = false;
                 bool retval = m_subIdIter->remove(false);
@@ -269,10 +286,18 @@ bool EgcScrPosIterator::backspace(bool &structureChanged)
 {
         if (!m_subIdIter->hasPrevious()) {
                 structureChanged = true;
-                if (m_lastUnderlinedNode)
+                if (m_lastUnderlinedNode) {
                         return m_nodeIter->deleteTree(true);
-                else
-                        return m_nodeIter->remove(true);
+                } else {
+                        EgcScrPosIterator iter(*this);
+                        iter.previousNonoperationNode();
+                        EgcNode* nd = const_cast<EgcNode*>(iter.node());
+                        bool rside = iter.rightSide();
+                        bool retval = m_nodeIter->remove(true);
+                        if (nd)
+                                m_nodeIter->setAtNodeDelayed(*nd, rside);
+                        return retval;
+                }
         } else {
                 structureChanged = false;
                 bool retval;
@@ -391,4 +416,18 @@ void EgcScrPosIterator::lockDelayedCursorUpdate(void)
 void EgcScrPosIterator::unlockDelayedCursorUpdate(void)
 {
         m_nodeIter->unlockDelayedCursorUpdate();
+}
+
+void EgcScrPosIterator::nextNonoperationNode(void)
+{
+        while(hasNext() && node()->isOperation()) {
+                next();
+        }
+}
+
+void EgcScrPosIterator::previousNonoperationNode(void)
+{
+        while(hasPrevious() && node()->isOperation()) {
+                previous();
+        }
 }

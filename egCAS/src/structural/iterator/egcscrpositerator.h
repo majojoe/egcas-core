@@ -61,6 +61,11 @@ public:
         /// std destructor
         virtual ~EgcScrPosIterator();
         /**
+         * @brief EgcScrPosIterator copy constructor
+         * @param orig reference to the original
+         */
+        EgcScrPosIterator(const EgcScrPosIterator& orig);
+        /**
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
          */
@@ -207,6 +212,14 @@ private:
          * (left or right always that one that is nearest).
          */
         void balanceNodeIter(void);
+        /**
+         * @brief nextNonoperationNode iterate to next node that is of non operation type
+         */
+        void nextNonoperationNode(void);
+        /**
+         * @brief previousNonoperationNode iterate to previous node that is of non operation type
+         */
+        void previousNonoperationNode(void);
 
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes

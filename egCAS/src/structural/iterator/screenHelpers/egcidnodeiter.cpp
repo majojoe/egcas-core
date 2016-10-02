@@ -52,6 +52,17 @@ EgcIdNodeIter::~EgcIdNodeIter()
 {
 }
 
+EgcIdNodeIter::EgcIdNodeIter(const EgcIdNodeIter& orig) : m_nodeIter{new EgcNodeIterator(*orig.m_nodeIter)},
+        m_node{orig.m_node},
+        m_iterPosAfterUpdate{orig.m_iterPosAfterUpdate},
+        m_atRightSideAfterUpdate{orig.m_atRightSideAfterUpdate},
+        m_isInsert{orig.m_isInsert},
+        m_formula(orig.m_formula),
+        m_lockDelayedUpdate{orig.m_lockDelayedUpdate}
+{
+
+}
+
 void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide, EgcSnapProperty snapProperty)
 {
         EgcNodeIterator iter(node);
