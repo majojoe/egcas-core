@@ -290,6 +290,12 @@ public:
          * Therefore the formula structure has to be rearranged to reflect the changed operation.
          */
         void rearrangePrecedence(void);
+        /**
+         * @brief isNodeInFormula checks if the given node is a node of this formula
+         * @param node the node to check
+         * @return true if the given node is a node of this formula, false otherwise
+         */
+        bool isNodeInFormula(EgcNode& node);
 
 private:
         /**
@@ -320,12 +326,6 @@ private:
          * @param before if true the character before the current cursor position is remove, if false the character behind
          */
         void removeCharacter(bool before);
-        /**
-         * @brief isNodeInFormula checks if the given node is a node of this formula
-         * @param node the node to check
-         * @return true if the given node is a node of this formula, false otherwise
-         */
-        bool isNodeInFormula(EgcNode& node);
         /**
          * @brief isScreenIterInSubtree check if screen iterator is in the given subtree.
          * @param tree subtree to check if screen iterator is anywhere below.
