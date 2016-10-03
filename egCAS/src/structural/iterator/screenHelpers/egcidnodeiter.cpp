@@ -872,7 +872,7 @@ bool EgcIdNodeIter::finishModOperation(void)
 
 void EgcIdNodeIter::setAtNodeDelayed(EgcNode& node, bool atRightSide)
 {
-        if (m_lockDelayedUpdate == false) {
+        if (m_lockDelayedUpdate == false && m_formula.isNodeInFormula(node)) {
                 m_iterPosAfterUpdate = &node;
                 m_atRightSideAfterUpdate = atRightSide;
         }
