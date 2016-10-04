@@ -177,8 +177,6 @@ void EgcasTest_Parser::fncTreeTestParser()
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
-        nodePointer = &(iter.next());
-        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::PlusNode);
 
         nodePointer = &(iter.next());
@@ -207,10 +205,6 @@ void EgcasTest_Parser::fncTreeTestParser()
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
         QCOMPARE(static_cast<EgcVariableNode*>(nodePointer)->getValue(), QString("Pt"));
 
-        nodePointer = &(iter.next());
-        nodePointer = &(iter.next());
-        nodePointer = &(iter.next());
-        nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
@@ -248,8 +242,6 @@ void EgcasTest_Parser::fncOperations1TestParser()
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
-        nodePointer = &(iter.next());
-        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::PlusNode);
 
         nodePointer = &(iter.next());
@@ -268,10 +260,10 @@ void EgcasTest_Parser::fncOperations1TestParser()
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
-        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
         QCOMPARE(static_cast<EgcNumberNode*>(nodePointer)->getValue(), QString("45"));
 
+        nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
@@ -281,8 +273,6 @@ void EgcasTest_Parser::fncOperations1TestParser()
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
         QCOMPARE(static_cast<EgcVariableNode*>(nodePointer)->getValue(), QString("a"));
 
-        nodePointer = &(iter.next());
-        nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
@@ -305,7 +295,7 @@ void EgcasTest_Parser::fncOperations2TestParser()
         QVERIFY(base.setChild(0, *tree.take()));
 
         EgcFormulaEntity formula(*base.takeOwnership(*base.getChild(0)));
-        QVERIFY(formula.getCASKernelCommand().contains("ost:((rn)^(45.8))+((a)/(3))") == true);
+        QVERIFY(formula.getCASKernelCommand().contains("ost:((rn)^((45.8)))+(((a))/((3)))") == true);
 }
 
 
