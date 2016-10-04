@@ -123,7 +123,7 @@ void EgcVariableNode::setStuffedVar(const QString& varName)
                 EgcAlnumNode *alnum;
                 if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
                         alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
-                        alnum->setValue(value);
+                        alnum->setStuffedValue(value);
                 }
 
                 if (this->nrSubindexes() > 1) {
