@@ -119,6 +119,10 @@ void EgcasPrintOpPrec::createList(void)
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ArgumentsNode");
         delete(obj);
+        obj = new (std::nothrow) EgcReorderingProtectorNode();
+        if (obj->isContainer())
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ReorderingProtector");
+        delete(obj);
         obj = new (std::nothrow) EgcAlnumNode();
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "AlnumNode");

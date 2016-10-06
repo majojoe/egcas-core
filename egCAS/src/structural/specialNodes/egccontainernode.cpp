@@ -106,9 +106,18 @@ bool EgcContainerNode::transferProperties(EgcContainerNode &from)
         }
 
         //test if all childs are null
+        EgcNode* nd;
         for (i = 0; i < nrChildNodes; i++) {
-                if (this->getChild(i) != nullptr)
-                        return false;
+                nd = this->getChild(i);
+                //check also if there is a reordering protector
+                if (nd != nullptr) {
+                        if (nd->getNodeType() != EgcNodeType::ParenthesisNode/*EgcNodeType::ReorderingProtectorNode*/) {
+                                return false;
+                        } else {
+                                if (static_cast<EgcContainerNode*>(nd)->getChild(0) != nullptr)
+                                        return false;
+                        }
+                }
         }
 
         EgcNode* child;

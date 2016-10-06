@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcbinaryoperator.h"
 #include "../egcnodecreator.h"
 #include "../visitor/egcnodevisitor.h"
-#include "structural/concreteNodes/egcparenthesisnode.h"
+#include "structural/specialNodes/egcreorderingprotectornode.h"
 #include "structural/entities/egcformulaentity.h"
 
 EgcBinaryOperator::EgcBinaryOperator()
@@ -42,20 +42,16 @@ bool EgcBinaryOperator::setChild(quint32 index, EgcNode& expression)
 
         if (index == 0) {
                 if (!m_leftChild.isNull()) {
-                        if (m_leftChild->getNodeType() == EgcNodeType::ParenthesisNode) {
-                                if (!static_cast<EgcParenthesisNode*>(m_leftChild.data())->isVisible()) {
-                                        retval = true;
-                                        static_cast<EgcParenthesisNode*>(m_leftChild.data())->setChild(0, expression);
-                                }
+                        if (m_leftChild->getNodeType() == EgcNodeType::ReorderingProtector) {
+                                retval = true;
+                                static_cast<EgcReorderingProtectorNode*>(m_leftChild.data())->setChild(0, expression);
                         }
                 }
         } else if (index == 1) {
                 if (!m_rightChild.isNull()) {
-                        if (m_rightChild->getNodeType() == EgcNodeType::ParenthesisNode) {
-                                if (!static_cast<EgcParenthesisNode*>(m_rightChild.data())->isVisible()) {
-                                        retval = true;
-                                        static_cast<EgcParenthesisNode*>(m_rightChild.data())->setChild(0, expression);
-                                }
+                        if (m_rightChild->getNodeType() == EgcNodeType::ReorderingProtector) {
+                                retval = true;
+                                static_cast<EgcReorderingProtectorNode*>(m_rightChild.data())->setChild(0, expression);
                         }
                 }
         }
@@ -70,17 +66,15 @@ bool EgcBinaryOperator::setChild(quint32 index, EgcNode& expression)
 bool EgcBinaryOperator::allocReorderingProtector(bool left, bool right)
 {
         if (left) {
-                QScopedPointer<EgcNode> parenthesis(EgcNodeCreator::create(EgcNodeType::ParenthesisNode));
-                if (!parenthesis.isNull()) {
-                        static_cast<EgcParenthesisNode*>(parenthesis.data())->setVisible(false);
-                        EgcBinaryNode::setChild(0, static_cast<EgcParenthesisNode&>(*parenthesis.take()));
+                QScopedPointer<EgcNode> reorder(EgcNodeCreator::create(EgcNodeType::ReorderingProtector));
+                if (!reorder.isNull()) {
+                        EgcBinaryNode::setChild(0, static_cast<EgcReorderingProtectorNode&>(*reorder.take()));
                 }
         }
         if (right) {
-                QScopedPointer<EgcNode> parenthesis(EgcNodeCreator::create(EgcNodeType::ParenthesisNode));
-                if (!parenthesis.isNull()) {
-                        static_cast<EgcParenthesisNode*>(parenthesis.data())->setVisible(false);
-                        EgcBinaryNode::setChild(1, static_cast<EgcParenthesisNode&>(*parenthesis.take()));
+                QScopedPointer<EgcNode> reorder(EgcNodeCreator::create(EgcNodeType::ReorderingProtector));
+                if (!reorder.isNull()) {
+                        EgcBinaryNode::setChild(1, static_cast<EgcReorderingProtectorNode&>(*reorder.take()));
                 }
         }
 }
@@ -91,18 +85,14 @@ bool EgcBinaryOperator::hasReorderingProtector(quint32 index) const
 
         if (index == 0) {
                 if (!m_leftChild.isNull()) {
-                        if (m_leftChild->getNodeType() == EgcNodeType::ParenthesisNode) {
-                                if (!static_cast<EgcParenthesisNode*>(m_leftChild.data())->isVisible()) {
-                                        retval = true;
-                                }
+                        if (m_leftChild->getNodeType() == EgcNodeType::ReorderingProtector) {
+                                retval = true;
                         }
                 }
         } else if (index == 1) {
                 if (!m_rightChild.isNull()) {
-                        if (m_rightChild->getNodeType() == EgcNodeType::ParenthesisNode) {
-                                if (!static_cast<EgcParenthesisNode*>(m_rightChild.data())->isVisible()) {
-                                        retval = true;
-                                }
+                        if (m_rightChild->getNodeType() == EgcNodeType::ReorderingProtector) {
+                                retval = true;
                         }
                 }
         }
