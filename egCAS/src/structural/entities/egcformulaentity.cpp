@@ -759,6 +759,9 @@ void EgcFormulaEntity::rearrangePrecedence(void)
 {
         bool rearranged;
 
+        if (!m_scrIter)
+                return;
+
         m_scrIter->lockDelayedCursorUpdate();
         m_scrIter->toFront();
 

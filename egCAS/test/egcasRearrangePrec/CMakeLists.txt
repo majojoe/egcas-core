@@ -74,6 +74,7 @@ set(tst_rearrange_precedence_SOURCES
         ../../src/view/egcabstractitem.cpp
         ../../src/view/egcscreenpos.cpp
         ../../src/view/egcasiteminterface.cpp
+        ../../src/structural/specialNodes/egcreorderingprotectornode.cpp
 )
 
 #set the verbosity level of the scanner and parser

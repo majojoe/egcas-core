@@ -96,6 +96,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::ArgumentsNode:
                 retval = new (std::nothrow) EgcArgumentsNode();
                 break;
+        case EgcNodeType::ReorderingProtector:
+                retval = new (std::nothrow) EgcReorderingProtectorNode();
+                break;
         case EgcNodeType::AlnumNode:
                 retval = new (std::nothrow) EgcAlnumNode();
                 break;

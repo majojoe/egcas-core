@@ -26,31 +26,23 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCPARENTHESISNODE_H
-#define EGCPARENTHESISNODE_H
+#ifndef EGCREORDERINGPROTECTORNODE_H
+#define EGCREORDERINGPROTECTORNODE_H
 
-#include "../specialNodes/egcunarynode.h"
+#include "../concreteNodes/egcparenthesisnode.h"
 
 /**
- * @brief The EgcParenthesisNode class is a class that reflects parenthesis' in an equation. This manages e.g. something like 3x*(4+8y).
+ * @brief The EgcReorderingProtectorNode class is a class that protects childs against reordering when a child is
+ * deleted or inserted e.g. when in the formula (x+5*4)^3 the parenthesis gets deleted, reordering takes place and
+ * reorders the formula tree to reflect x+5*4^3 correctly. To suppress this reordering behaviour in an operation node
+ * this class comes into play. The parenthesis of this class are not visible to the user.
  */
-class EgcParenthesisNode : public EgcUnaryNode
+class EgcReorderingProtectorNode : public EgcParenthesisNode
 {
         //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcParenthesisNode, EgcNodeType::ParenthesisNode);
+        EGC_SET_EXPRESSION_TYPE(EgcReorderingProtectorNode, EgcNodeType::ReorderingProtector);
 public:
-        EgcParenthesisNode();
-        /**
-         * @brief setVisible set the parenthesis visible or invisible. This can be used in conjunction with containers
-         * that won't show the parenthesis, but internally uses them as structural element for managing tree rotation.
-         * @param visible if true the parenthesis will be visible, false makes it invisible.
-         */
-        void setVisible(bool visible);
-        /**
-         * @brief isVisible returns if the parenthesis is visible or not
-         * @return returns true if parenthesis are visible or false if not
-         */
-        bool isVisible(void);
+        EgcReorderingProtectorNode();
         /**
          * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
          * left side of the container)
@@ -65,16 +57,12 @@ public:
          * @return true if the given side of the node has visible signs.
          */
         virtual bool visibleSigns(EgcNodeSide side) const override;
-protected:
-        /**
-         * @brief bindingPower returns the binding power of the this operation. Needs to be overridden by the user if
-         * this is an operation.
-         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
-         * the operation (number >= 0).
-         */
-        virtual qint32 getBindingPower(void) const override;
 
-        bool m_visible;         ///< determines if the parenthesis are visible or not
+private:
+        /**
+         * hide public interface from parenthesis node
+         */
+        void setVisible(bool visible);
 };
 
-#endif // EGCPARENTHESISNODE_H
+#endif // EGCREORDERINGPROTECTORNODE_H

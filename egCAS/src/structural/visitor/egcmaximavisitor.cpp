@@ -92,6 +92,10 @@ void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("(%1)", unary);
                 break;
+        case EgcNodeType::ReorderingProtector:
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("(%1)", unary);
+                break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("-(%1)", unary);
