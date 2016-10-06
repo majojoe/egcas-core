@@ -99,8 +99,8 @@ void EgcasTest_Structural::testCopyConstructors()
 
         EgcRootNode copyExpression(rootExpression);
 
-        auto *copyChild = static_cast<EgcBinaryNode*>(copyExpression.getChild(0));
-        auto *numberChild1 = static_cast<EgcNumberNode*>(copyChild->getChild(0));
+        auto *copyChild = static_cast<EgcBinaryNode*>(static_cast<EgcParenthesisNode*>(copyExpression.getChild(0))->getChild(0));
+        auto *numberChild1 = static_cast<EgcNumberNode*>(static_cast<EgcParenthesisNode*>(copyChild->getChild(0))->getChild(0));
         auto *numberChild2 = static_cast<EgcNumberNode*>(copyExpression.getChild(1));
         QVERIFY(numberChild1->getValue() == "200.1");
         QVERIFY(numberChild2->getValue() == "90.365");
@@ -245,14 +245,14 @@ void EgcasTest_Structural::testIterator()
                                 |---|
         */
 
-        EgcFormulaEntity formula(EgcNodeType::RootNode);
+        EgcFormulaEntity formula(EgcNodeType::PlusNode);
 
         EgcNodeIterator iter(formula);
         QVERIFY(iter.hasNext() == true);
         QVERIFY(iter.hasPrevious() == false);
 
-        EgcRootNode* rootExpression = static_cast<EgcRootNode*>(formula.getRootElement());
-        auto *rootChildExpression = new EgcRootNode();
+        EgcPlusNode* rootExpression = static_cast<EgcPlusNode*>(formula.getRootElement());
+        auto *rootChildExpression = new EgcPlusNode();
         auto *numberExpression = new EgcNumberNode();
         auto *numberExpression2 = new EgcNumberNode();
         numberExpression->setValue("200.1");
@@ -484,7 +484,7 @@ void EgcasTest_Structural::testIterator()
         */
 
         //test iterator with big structure        
-        EgcFormulaEntity formula2(EgcNodeType::RootNode);
+        EgcFormulaEntity formula2(EgcNodeType::PlusNode);
 
         EgcNode* rootExpression2;
         EgcNode* node2;
@@ -499,27 +499,27 @@ void EgcasTest_Structural::testIterator()
         EgcNode* node11;
         EgcNode* node12;
 
-        rootExpression2 = static_cast<EgcRootNode*>(formula2.getRootElement());
-        node2 = addLeftChild(*rootExpression2, EgcNodeType::RootNode);
+        rootExpression2 = static_cast<EgcPlusNode*>(formula2.getRootElement());
+        node2 = addLeftChild(*rootExpression2, EgcNodeType::PlusNode);
         QVERIFY(node2 != nullptr);
 
         QVERIFY(addRightChild(*node2, EgcNodeType::NumberNode, "6.0") != nullptr);
         node6 = static_cast<EgcBinaryNode*>(node2)->getChild(1);
 
-        node3 = addLeftChild(*node2, EgcNodeType::RootNode);
+        node3 = addLeftChild(*node2, EgcNodeType::PlusNode);
 
         QVERIFY(addLeftChild(*node3, EgcNodeType::NumberNode, "4.0") != nullptr);
         QVERIFY(addRightChild(*node3, EgcNodeType::NumberNode, "5.0") != nullptr);
         node4 = static_cast<EgcBinaryNode*>(node3)->getChild(0);
         node5 = static_cast<EgcBinaryNode*>(node3)->getChild(1);
 
-        node7 = addRightChild(*rootExpression2, EgcNodeType::RootNode);
+        node7 = addRightChild(*rootExpression2, EgcNodeType::PlusNode);
         QVERIFY(node7 != nullptr);        
 
         QVERIFY(addLeftChild(*node7, EgcNodeType::NumberNode, "8.0") != nullptr);
         node8 = static_cast<EgcBinaryNode*>(node7)->getChild(0);
 
-        node9 = addRightChild(*node7, EgcNodeType::RootNode);
+        node9 = addRightChild(*node7, EgcNodeType::PlusNode);
         QVERIFY(node9 != nullptr);
 
         node10 = addLeftChild(*node9, EgcNodeType::ParenthesisNode);
@@ -1008,7 +1008,7 @@ void EgcasTest_Structural::testInsertDelete()
                                 |---|       |---|
         */
 
-        EgcFormulaEntity formula4(EgcNodeType::RootNode);
+        EgcFormulaEntity formula4(EgcNodeType::PlusNode);
         EgcIteratorState state;
         EgcNode *nodePointer;
         EgcNodeIterator iter8(formula4);
@@ -1020,7 +1020,7 @@ void EgcasTest_Structural::testInsertDelete()
 
         nodePointer = &(iter8.next());
         node1 = nodePointer;
-        iter8.insert(EgcNodeType::RootNode);
+        iter8.insert(EgcNodeType::PlusNode);
         nodePointer = &(iter8.previous());
         nodePointer = &(iter8.next());
         node2 = nodePointer;
@@ -1143,7 +1143,7 @@ void EgcasTest_Structural::testVisitors()
                                 |---|       |---|
         */
 
-        EgcFormulaEntity formula4(EgcNodeType::RootNode);
+        EgcFormulaEntity formula4(EgcNodeType::PlusNode);
         EgcNode *nodePointer;
         EgcNodeIterator iter8(formula4);
         EgcNode *node1;
@@ -1154,7 +1154,7 @@ void EgcasTest_Structural::testVisitors()
 
         nodePointer = &(iter8.next());
         node1 = nodePointer;
-        iter8.insert(EgcNodeType::RootNode);
+        iter8.insert(EgcNodeType::PlusNode);
         nodePointer = &(iter8.previous());
         nodePointer = &(iter8.next());
         node2 = nodePointer;
@@ -1190,20 +1190,20 @@ void EgcasTest_Structural::testVisitors()
         //test maxima visitor
         EgcMaximaVisitor maximaVisitor(formula4);
         QString result(maximaVisitor.getResult());
-        QVERIFY(result == QString("fpprintprec:0$((30.452)^(1/3))^(1/2);fpprintprec:15$"));
-        QVERIFY(formula4.getCASKernelCommand() == QString("fpprintprec:0$((30.452)^(1/3))^(1/2);fpprintprec:15$"));
+        QVERIFY(result == QString("fpprintprec:0$((30.452)+(3))+(2);fpprintprec:15$"));
+        QVERIFY(formula4.getCASKernelCommand() == QString("fpprintprec:0$((30.452)+(3))+(2);fpprintprec:15$"));
 
         //test maxima visitor with copied formula
         EgcMaximaVisitor maximaVisitor2(formula5);
         QString result2(maximaVisitor2.getResult());
-        QVERIFY(result2 == QString("fpprintprec:0$((30.452)^(1/3))^(1/2);fpprintprec:15$"));
-        QVERIFY(formula5.getCASKernelCommand() == QString("fpprintprec:0$((30.452)^(1/3))^(1/2);fpprintprec:15$"));
+        QVERIFY(result2 == QString("fpprintprec:0$((30.452)+(3))+(2);fpprintprec:15$"));
+        QVERIFY(formula5.getCASKernelCommand() == QString("fpprintprec:0$((30.452)+(3))+(2);fpprintprec:15$"));
 
         //test math ml visitor
         EgcMathMlVisitor mathMlVisitor(formula4);
         result = mathMlVisitor.getResult();        
-        QVERIFY(result == QString("<math><mroot id=\"5\" ><mrow><mroot id=\"3\" ><mrow><mn id=\"1\" >30.452</mn></mrow><mrow><mn id=\"2\" >3</mn></mrow></mroot></mrow><mrow></mrow></mroot></math>"));
-        QVERIFY(formula4.getMathMlCode() == QString("<math><mroot id=\"5\" ><mrow><mroot id=\"3\" ><mrow><mn id=\"1\" >30.452</mn></mrow><mrow><mn id=\"2\" >3</mn></mrow></mroot></mrow><mrow></mrow></mroot></math>"));
+        QVERIFY(result == QString("<math><mrow  id=\"6\" ><mrow  id=\"3\" ><mn id=\"1\" >30.452</mn><mo id=\"4\" >+</mo><mn id=\"2\" >3</mn></mrow><mo id=\"7\" >+</mo><mn id=\"5\" >2</mn></mrow></math>"));
+        QVERIFY(formula4.getMathMlCode() == QString("<math><mrow  id=\"6\" ><mrow  id=\"3\" ><mn id=\"1\" >30.452</mn><mo id=\"4\" >+</mo><mn id=\"2\" >3</mn></mrow><mo id=\"7\" >+</mo><mn id=\"5\" >2</mn></mrow></math>"));
 }
 
 void EgcasTest_Structural::testFlexNode()
@@ -1229,7 +1229,7 @@ void EgcasTest_Structural::testFlexNode()
                                        |---|
         */
 
-        EgcFormulaEntity formula5(EgcNodeType::RootNode);
+        EgcFormulaEntity formula5(EgcNodeType::PlusNode);
         EgcNode *nodePointer;
         EgcNodeIterator iter9(formula5);
         EgcNode *node1;
@@ -1330,7 +1330,7 @@ void EgcasTest_Structural::testFlexNodeVisitors()
                                        |---|
         */
 
-        EgcFormulaEntity formula5(EgcNodeType::RootNode);
+        EgcFormulaEntity formula5(EgcNodeType::PlusNode);
         EgcNode *nodePointer;
         EgcNodeIterator iter9(formula5);
         EgcNode *node1;
@@ -1400,14 +1400,14 @@ void EgcasTest_Structural::testFlexNodeVisitors()
         static_cast<EgcFunctionNode*>(node2)->setName("testFunction");
 
         //test maxima visitor
-        QVERIFY(formula5.getCASKernelCommand() == QString("fpprintprec:0$(testFunction(3,(5),6,7))^(1/8);fpprintprec:15$"));
+        QVERIFY(formula5.getCASKernelCommand() == QString("fpprintprec:0$(testFunction(3,(5),6,7))+(8);fpprintprec:15$"));
 
         //test math ml visitor
-        QVERIFY(formula5.getMathMlCode() == QString("<math><mroot id=\"8\" ><mrow><mrow  id=\"6\" ><mi>testFunction</mi>"
-                "<mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow><mn id=\"1\" >3</mn><mo>,</mo><mfenced  id=\"3\"  "
-                "open=\"(\" close=\")\" separators=\",\"><mrow><mn id=\"2\" >5</mn></mrow></mfenced><mo>,"
-                "</mo><mn id=\"4\" >6</mn><mo>,</mo><mn id=\"5\" >7</mn></mrow><mo>)</mo></mrow></mrow></mrow><mrow>"
-                "<mn id=\"7\" >8</mn></mrow></mroot></math>"));
+        QVERIFY(formula5.getMathMlCode() == QString("<math><mrow  id=\"8\" ><mrow  id=\"6\" ><mi>testFunction</mi>"
+                "<mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow><mn id=\"1\" >3</mn><mo>,</mo>"
+                "<mfenced  id=\"3\"  open=\"(\" close=\")\" separators=\",\"><mrow><mn id=\"2\" >5</mn></mrow>"
+                "</mfenced><mo>,</mo><mn id=\"4\" >6</mn><mo>,</mo><mn id=\"5\" >7</mn></mrow><mo>)</mo></mrow></mrow>"
+                "<mo id=\"9\" >+</mo><mn id=\"7\" >8</mn></mrow></math>"));
 }
 
 EgcNode*EgcasTest_Structural::addChild(EgcNode& parent, EgcNodeType type, QString number)
@@ -1415,12 +1415,12 @@ EgcNode*EgcasTest_Structural::addChild(EgcNode& parent, EgcNodeType type, QStrin
         if (parent.isUnaryNode()) {
                 EgcUnaryNode& node = static_cast<EgcUnaryNode&>(parent);
                 if (   type == EgcNodeType::RootNode
-                                || type == EgcNodeType::NumberNode
-                                || type == EgcNodeType::ParenthesisNode) {
+                    || type == EgcNodeType::NumberNode
+                    || type == EgcNodeType::ParenthesisNode) {
                         node.setChild(0, *EgcNodeCreator::create(type));
                         if (node.getChild(0) != nullptr) {
                                 if (    type == EgcNodeType::RootNode
-                                                || type == EgcNodeType::ParenthesisNode) {
+                                     || type == EgcNodeType::ParenthesisNode) {
                                         return node.getChild(0);
                                 } else {
                                         EgcNumberNode* num = static_cast<EgcNumberNode*>(node.getChild(0));
@@ -1441,11 +1441,13 @@ EgcNode*EgcasTest_Structural::addLeftChild(EgcNode& parent, EgcNodeType type, QS
                 EgcBinaryNode& node = static_cast<EgcBinaryNode&>(parent);
                 if (   type == EgcNodeType::RootNode
                                 || type == EgcNodeType::NumberNode
-                                || type == EgcNodeType::ParenthesisNode) {
+                                || type == EgcNodeType::ParenthesisNode
+                                || type == EgcNodeType::PlusNode) {
                         node.setChild(0, *EgcNodeCreator::create(type));
                         if (node.getChild(0) != nullptr) {
                                 if (    type == EgcNodeType::RootNode
-                                                || type == EgcNodeType::ParenthesisNode) {
+                                                || type == EgcNodeType::ParenthesisNode
+                                                || type == EgcNodeType::PlusNode) {
                                         return node.getChild(0);
                                 } else {
                                         EgcNumberNode* num = static_cast<EgcNumberNode*>(node.getChild(0));
@@ -1465,12 +1467,14 @@ EgcNode* EgcasTest_Structural::addRightChild(EgcNode& parent, EgcNodeType type, 
         if (parent.isBinaryNode()) {
                 EgcBinaryNode& node = static_cast<EgcBinaryNode&>(parent);
                 if (   type == EgcNodeType::RootNode
-                                || type == EgcNodeType::NumberNode
-                                || type == EgcNodeType::ParenthesisNode) {
+                    || type == EgcNodeType::NumberNode
+                    || type == EgcNodeType::ParenthesisNode
+                    || type == EgcNodeType::PlusNode) {
                         node.setChild(1, *EgcNodeCreator::create(type));
                         if (node.getChild(1) != nullptr) {
                                 if (    type == EgcNodeType::RootNode
-                                                || type == EgcNodeType::ParenthesisNode) {
+                                     || type == EgcNodeType::ParenthesisNode
+                                     || type == EgcNodeType::PlusNode) {
                                         return node.getChild(1);
                                 } else {
                                         EgcNumberNode* num = static_cast<EgcNumberNode*>(node.getChild(1));
