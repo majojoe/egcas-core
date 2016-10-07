@@ -759,17 +759,18 @@ void EgcFormulaEntity::rearrangePrecedence(void)
 {
         bool rearranged;
 
-        if (!m_scrIter)
-                return;
 
-        m_scrIter->lockDelayedCursorUpdate();
-        m_scrIter->toFront();
+        if (m_scrIter) {
+                m_scrIter->lockDelayedCursorUpdate();
+                m_scrIter->toFront();
+        }
 
         do {
                 rearranged = rearrangeOnePrecedence();
         } while(!rearranged);
 
-        m_scrIter->unlockDelayedCursorUpdate();
+        if (m_scrIter)
+                m_scrIter->unlockDelayedCursorUpdate();
 }
 
 bool EgcFormulaEntity::rearrangeOnePrecedence(void)
