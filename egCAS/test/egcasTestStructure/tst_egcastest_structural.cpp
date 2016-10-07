@@ -170,13 +170,13 @@ void EgcasTest_Structural::testTransferProperties()
         QVERIFY(static_cast<EgcContainerNode*>(node1->getChild(0))->getChild(0) == transferNode4);
 
         QVERIFY((static_cast<EgcNumberNode*>(static_cast<EgcContainerNode*>(transferNode4->getChild(0))->getChild(0) ))->getValue() == "3");
-        QVERIFY((static_cast<EgcNumberNode*>(static_cast<EgcContainerNode*>(transferNode4->getChild(1))->getChild(0) ))->getValue() == "4");
+        QVERIFY((static_cast<EgcNumberNode*>(transferNode4->getChild(1)))->getValue() == "4");
         QVERIFY(transferNode4->getParent()->getParent() == node1);
 
         delete(node2);
 
         QVERIFY((static_cast<EgcNumberNode*>(static_cast<EgcContainerNode*>(transferNode4->getChild(0))->getChild(0) ))->getValue() == "3");
-        QVERIFY((static_cast<EgcNumberNode*>(static_cast<EgcContainerNode*>(transferNode4->getChild(1))->getChild(0) ))->getValue() == "4");
+        QVERIFY((static_cast<EgcNumberNode*>(transferNode4->getChild(1)))->getValue() == "4");
         QVERIFY(transferNode4->getParent()->getParent() == node1);
 
         delete(transferNode1);

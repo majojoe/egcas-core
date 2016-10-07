@@ -42,16 +42,24 @@ bool EgcBinaryOperator::setChild(quint32 index, EgcNode& expression)
 
         if (index == 0) {
                 if (!m_leftChild.isNull()) {
-                        if (m_leftChild->getNodeType() == EgcNodeType::ReorderingProtector) {
+                        if (    m_leftChild->getNodeType() == EgcNodeType::ReorderingProtector
+                             && expression.getNodeType() != EgcNodeType::ReorderingProtector) {
                                 retval = true;
                                 static_cast<EgcReorderingProtectorNode*>(m_leftChild.data())->setChild(0, expression);
+                        } else if (    m_leftChild->getNodeType() == EgcNodeType::ReorderingProtector
+                                       && expression.getNodeType() == EgcNodeType::ReorderingProtector) {
+                                m_leftChild.reset(); //child will be set below
                         }
                 }
         } else if (index == 1) {
                 if (!m_rightChild.isNull()) {
-                        if (m_rightChild->getNodeType() == EgcNodeType::ReorderingProtector) {
+                        if (    m_rightChild->getNodeType() == EgcNodeType::ReorderingProtector
+                             && expression.getNodeType() != EgcNodeType::ReorderingProtector) {
                                 retval = true;
                                 static_cast<EgcReorderingProtectorNode*>(m_rightChild.data())->setChild(0, expression);
+                        } else if (    m_rightChild->getNodeType() == EgcNodeType::ReorderingProtector
+                                       && expression.getNodeType() == EgcNodeType::ReorderingProtector) {
+                                m_rightChild.reset(); //child will be set below
                         }
                 }
         }
