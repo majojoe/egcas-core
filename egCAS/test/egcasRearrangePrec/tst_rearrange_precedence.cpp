@@ -108,6 +108,7 @@ void EgcasRearrangePrecedence::rearrange_rot_right()
 
         removeParenthesis(&formula);
         removeParenthesis(&formula2);
+        formula.rearrangePrecedence();
 
         QVERIFY(formula == formula2);
 }
@@ -146,6 +147,7 @@ void EgcasRearrangePrecedence::rearrange_rot_left()
 
         removeParenthesis(&formula);
         removeParenthesis(&formula2);
+        formula.rearrangePrecedence();
 
         QVERIFY(formula == formula2);
 }
