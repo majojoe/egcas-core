@@ -105,7 +105,7 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
                 }
                 break;
         default:
-                qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
+                qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType())) ;
                 break;
         }
 }
@@ -139,7 +139,7 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* node)
                 }
                 break;
         default:
-                qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
+                qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType())) ;
                 break;
         }
 }
@@ -230,7 +230,7 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                 break;
         }
         default:
-                qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
+                qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType()));
                 break;
         }
 }
@@ -252,7 +252,7 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                 pushToStack("<mi" %id%">&#x2B1A;</mi>", node);
                 break;
         default:
-                qDebug("No visitor code for mathml defined for this type: %d", node->getNodeType()) ;
+                qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType()));
                 break;
         }
 }

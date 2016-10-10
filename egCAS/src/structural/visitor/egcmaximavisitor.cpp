@@ -80,7 +80,7 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                         assembleResult("(%1)()(%2)", binary);
                 break;
         default:
-                qDebug("No visitor code for maxima defined for this type: %d", binary->getNodeType()) ;
+                qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(binary->getNodeType())) ;
                 break;
         }
 }
@@ -101,7 +101,7 @@ void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
                         assembleResult("-(%1)", unary);
                 break;
         default:
-                qDebug("No visitor code for maxima defined for this type: %d", unary->getNodeType()) ;
+                qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(unary->getNodeType())) ;
                 break;
         }
 }
@@ -140,7 +140,7 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
                 }
                 break;
         default:
-                qDebug("No visitor code for maxima defined for this type: %d", flex->getNodeType()) ;
+                qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(flex->getNodeType())) ;
                 break;
         }
 }
@@ -158,7 +158,7 @@ void EgcMaximaVisitor::visit(EgcNode* node)
                 pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);
                 break;
         default:
-                qDebug("No visitor code for maxima defined for this type: %d", node->getNodeType()) ;
+                qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(node->getNodeType())) ;
                 break;
         }
 }
