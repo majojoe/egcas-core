@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcDivisionNode::EgcDivisionNode()
 {
-        allocReorderingProtector(true, true);
+        allocReorderingProtector();
 }
 
 bool EgcDivisionNode::cursorSnaps(EgcNodeSide side) const
@@ -47,4 +47,9 @@ bool EgcDivisionNode::cursorSnaps(EgcNodeSide side) const
 qint32 EgcDivisionNode::getBindingPower(void) const
 {
         return 30;
+}
+
+EgcBinaryOperator::ReordProtectSide EgcDivisionNode::getReordProtectSide(void) const
+{
+        return ReordProtectSide::rightAndLeftProtector;
 }

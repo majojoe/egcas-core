@@ -65,7 +65,6 @@ set(tst_egcastest_scriters_SOURCES
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
         ../../src/utils/egcutfcodepoint.cpp
-        ../../src/structural/specialNodes/egcreorderingprotectornode.cpp
 )
 
 #set the verbosity level of the scanner and parser

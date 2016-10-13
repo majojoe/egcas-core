@@ -28,6 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QScopedPointer>
 #include "egccontainernode.h"
+#include "egcbinaryoperator.h"
 
 EgcContainerNode::EgcContainerNode()
 {
@@ -111,11 +112,11 @@ bool EgcContainerNode::transferProperties(EgcContainerNode &from)
                 nd = this->getChild(i);
                 //check also if there is a reordering protector
                 if (nd != nullptr) {
-                        if (nd->getNodeType() != EgcNodeType::ReorderingProtector) {
-                                return false;
-                        } else {
+                        if (EgcBinaryOperator::isReorderingProtector(*nd)) {
                                 if (static_cast<EgcContainerNode*>(nd)->getChild(0) != nullptr)
                                         return false;
+                        } else {
+                                return false;
                         }
                 }
         }

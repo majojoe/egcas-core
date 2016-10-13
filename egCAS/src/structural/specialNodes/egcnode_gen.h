@@ -71,7 +71,6 @@ cog.outl("        NodeUndefined")
 ]]]*/
 EmptyNode = 0,
 ArgumentsNode,
-ReorderingProtector,
 AlnumNode,
 MultiplicationNode,
 VariableNode,

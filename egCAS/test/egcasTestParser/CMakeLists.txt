@@ -50,7 +50,6 @@ set(tst_egcastest_parser_SOURCES
         ../../src/structural/egcnodecreator.cpp
         ../../src/structural/specialNodes/egccontainernode.cpp
         ../../src/structural/specialNodes/egcargumentsnode.cpp
-        ../../src/structural/specialNodes/egcreorderingprotectornode.cpp
         ${tst_egcastest_parser_concrete_SOURCES}
         ../../src/structural/iterator/screenHelpers/egcidnodeiter.cpp
         ../../src/structural/iterator/screenHelpers/egcsubidnodeiter.cpp

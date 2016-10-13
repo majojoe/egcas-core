@@ -74,7 +74,12 @@ protected:
          */
         virtual qint32 getBindingPower(void) const override;
 
-        bool m_visible;         ///< determines if the parenthesis are visible or not
+        ///determines if the parenthesis are visible or not. If the parenthesis are not visible, these are reordering
+        /// protectors against reordering childs to reflect new formula structure that depends on binding power.
+        /// This is the only reason to make parenthesis invisible. See EgcBinaryOperator->isReorderingProtector. If in
+        /// future this shall be used for other purposes also, split the reordering property to a different property and
+        /// rewrite EgcBinaryOperator->isReorderingProtector
+        bool m_visible;
 };
 
 #endif // EGCPARENTHESISNODE_H

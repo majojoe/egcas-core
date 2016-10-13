@@ -7,7 +7,6 @@
 #include "specialNodes/egcbasenode.h"
 #include "specialNodes/egcemptynode.h"
 #include "specialNodes/egcargumentsnode.h"
-#include "specialNodes/egcreorderingprotectornode.h"
 
 /*[[[cog
 import cog

@@ -117,9 +117,6 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* node)
         QString id;
 
         switch (node->getNodeType()) {
-        case EgcNodeType::ReorderingProtector:
-                suppressThis(node);
-                break;
         case EgcNodeType::ParenthesisNode: {
                 if (static_cast<EgcParenthesisNode*>(node)->isVisible()) {
                         if (m_state == EgcIteratorState::RightIteration) {

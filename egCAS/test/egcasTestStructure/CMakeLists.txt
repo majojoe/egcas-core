@@ -48,7 +48,6 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
         ../../src/utils/egcutfcodepoint.cpp
-        ../../src/structural/specialNodes/egcreorderingprotectornode.cpp
 )
 
 add_executable(tst_egcastest_structural ${tst_egcastest_structural_SOURCES} )

@@ -38,7 +38,6 @@ set(tst_print_op_precedence_SOURCES
         ../../src/structural/specialNodes/egccontainernode.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp
         ../../src/structural/specialNodes/egcemptynode.cpp
-        ../../src/structural/specialNodes/egcreorderingprotectornode.cpp
         ../../src/structural/egcnodecreator.cpp
         ../../src/utils/egcutfcodepoint.cpp
         ${tst_print_op_precedence_concrete_SOURCES}
