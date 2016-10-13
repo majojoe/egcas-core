@@ -147,7 +147,6 @@ set(egCAS_SOURCES
         structural/specialNodes/egcargumentsnode.cpp
         structural/specialNodes/egcbinaryoperator.cpp
         utils/egcutfcodepoint.cpp
-        structural/specialNodes/egcreorderingprotectornode.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS

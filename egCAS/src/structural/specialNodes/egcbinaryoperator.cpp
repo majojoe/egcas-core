@@ -29,11 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcbinaryoperator.h"
 #include "../egcnodecreator.h"
 #include "../visitor/egcnodevisitor.h"
-#include "structural/specialNodes/egcreorderingprotectornode.h"
+#include "structural/concreteNodes/egcparenthesisnode.h"
 #include "structural/entities/egcformulaentity.h"
 
 EgcBinaryOperator::EgcBinaryOperator()
 {
+        allocReorderingProtector();
 }
 
 bool EgcBinaryOperator::setChild(quint32 index, EgcNode& expression)
@@ -42,23 +43,23 @@ bool EgcBinaryOperator::setChild(quint32 index, EgcNode& expression)
 
         if (index == 0) {
                 if (!m_leftChild.isNull()) {
-                        if (    m_leftChild->getNodeType() == EgcNodeType::ReorderingProtector
-                             && expression.getNodeType() != EgcNodeType::ReorderingProtector) {
+                        if (    isReorderingProtector(*m_leftChild)
+                             && !isReorderingProtector(expression)) {
                                 retval = true;
-                                static_cast<EgcReorderingProtectorNode*>(m_leftChild.data())->setChild(0, expression);
-                        } else if (    m_leftChild->getNodeType() == EgcNodeType::ReorderingProtector
-                                       && expression.getNodeType() == EgcNodeType::ReorderingProtector) {
+                                static_cast<EgcParenthesisNode*>(m_leftChild.data())->setChild(0, expression);
+                        } else if (    isReorderingProtector(*m_leftChild)
+                                    && isReorderingProtector(expression)) {
                                 m_leftChild.reset(); //child will be set below
                         }
                 }
         } else if (index == 1) {
                 if (!m_rightChild.isNull()) {
-                        if (    m_rightChild->getNodeType() == EgcNodeType::ReorderingProtector
-                             && expression.getNodeType() != EgcNodeType::ReorderingProtector) {
+                        if (    isReorderingProtector(*m_rightChild)
+                             && !isReorderingProtector(expression)) {
                                 retval = true;
-                                static_cast<EgcReorderingProtectorNode*>(m_rightChild.data())->setChild(0, expression);
-                        } else if (    m_rightChild->getNodeType() == EgcNodeType::ReorderingProtector
-                                       && expression.getNodeType() == EgcNodeType::ReorderingProtector) {
+                                static_cast<EgcParenthesisNode*>(m_rightChild.data())->setChild(0, expression);
+                        } else if (    isReorderingProtector(*m_rightChild)
+                                    && isReorderingProtector(expression)) {
                                 m_rightChild.reset(); //child will be set below
                         }
                 }
@@ -71,18 +72,24 @@ bool EgcBinaryOperator::setChild(quint32 index, EgcNode& expression)
         return retval;
 }
 
-bool EgcBinaryOperator::allocReorderingProtector(bool left, bool right)
+bool EgcBinaryOperator::allocReorderingProtector(void)
 {
-        if (left) {
-                QScopedPointer<EgcNode> reorder(EgcNodeCreator::create(EgcNodeType::ReorderingProtector));
+        EgcBinaryOperator::ReordProtectSide prot = getReordProtectSide();
+
+        if (static_cast<int>(prot) & static_cast<int>(ReordProtectSide::leftProtector) ) { //left side
+                QScopedPointer<EgcParenthesisNode> reorder(static_cast<EgcParenthesisNode*>
+                                                           (EgcNodeCreator::create(EgcNodeType::ParenthesisNode)));
                 if (!reorder.isNull()) {
-                        EgcBinaryNode::setChild(0, static_cast<EgcReorderingProtectorNode&>(*reorder.take()));
+                        reorder->setVisible(false);
+                        EgcBinaryNode::setChild(0, *reorder.take());
                 }
         }
-        if (right) {
-                QScopedPointer<EgcNode> reorder(EgcNodeCreator::create(EgcNodeType::ReorderingProtector));
+        if (static_cast<int>(prot) & static_cast<int>(ReordProtectSide::rightProtector)) { //right side
+                QScopedPointer<EgcParenthesisNode> reorder(static_cast<EgcParenthesisNode*>
+                                                              (EgcNodeCreator::create(EgcNodeType::ParenthesisNode)));
                 if (!reorder.isNull()) {
-                        EgcBinaryNode::setChild(1, static_cast<EgcReorderingProtectorNode&>(*reorder.take()));
+                        reorder->setVisible(false);
+                        EgcBinaryNode::setChild(1, static_cast<EgcParenthesisNode&>(*reorder.take()));
                 }
         }
 }
@@ -93,13 +100,13 @@ bool EgcBinaryOperator::hasReorderingProtector(quint32 index) const
 
         if (index == 0) {
                 if (!m_leftChild.isNull()) {
-                        if (m_leftChild->getNodeType() == EgcNodeType::ReorderingProtector) {
+                        if (isReorderingProtector(*m_leftChild)) {
                                 retval = true;
                         }
                 }
         } else if (index == 1) {
                 if (!m_rightChild.isNull()) {
-                        if (m_rightChild->getNodeType() == EgcNodeType::ReorderingProtector) {
+                        if (isReorderingProtector(*m_rightChild)) {
                                 retval = true;
                         }
                 }
@@ -111,4 +118,19 @@ bool EgcBinaryOperator::hasReorderingProtector(quint32 index) const
 bool EgcBinaryOperator::isLeftAssociative(void) const
 {
         return true;
+}
+
+EgcBinaryOperator::ReordProtectSide EgcBinaryOperator::getReordProtectSide(void) const
+{
+        return ReordProtectSide::none;
+}
+
+bool EgcBinaryOperator::isReorderingProtector(EgcNode& node)
+{
+        if (node.getNodeType() == EgcNodeType::ParenthesisNode) {
+                if (!static_cast<EgcParenthesisNode&>(node).isVisible())
+                        return true;
+        }
+
+        return false;
 }

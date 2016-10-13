@@ -55,7 +55,11 @@ protected:
          * the operation (number >= 0).
          */
         virtual qint32 getBindingPower(void) const override;
-
+        /**
+         * @brief getReordProtectSide returns the sides where reordering protectors of a special node are
+         * @return the sides where reordering protectors are
+         */
+        virtual ReordProtectSide getReordProtectSide(void) const override;
 };
 
 #endif // EGCDIVISIONNODE_H

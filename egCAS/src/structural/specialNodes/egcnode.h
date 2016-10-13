@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCNODE_H
 #define EGCNODE_H
 
+#include <QString>
 #include "egcnode_gen.h"
 
 class EgcContainerNode;
@@ -47,11 +48,12 @@ enum class EgcNodeSide
  * changed in a subclass */
 #define EGC_SET_EXPRESSION_TYPE(classname, type)                                                                       \
 public:                                                                                                                \
-        virtual EgcNodeType getNodeType(void) const {return s_nodeType;}                                     \
-        virtual EgcNode* copy(void) {                                                                        \
+        virtual EgcNodeType getNodeType(void) const {return s_nodeType;}                                               \
+        virtual QString getNodeName(void) const {return QString(#type);}                                               \
+        virtual EgcNode* copy(void) {                                                                                  \
                 return new (std::nothrow) classname(static_cast<const classname&>(*this));                             \
         }                                                                                                              \
-        static EgcNode* create(void) {return new (std::nothrow) classname();}                                \
+        static EgcNode* create(void) {return new (std::nothrow) classname();}                                          \
 protected:                                                                                                             \
         static const EgcNodeType s_nodeType = type
 
@@ -64,6 +66,7 @@ class EgcNode
 {
 public:
         virtual EgcNodeType getNodeType(void) const {return s_nodeType;}
+        virtual QString getNodeName(void) const {return QString("EgcNodeType::NodeUndefined");}
         virtual EgcNode* copy(void) {return nullptr;}
         static EgcNode* create() {return nullptr;}
 protected:
