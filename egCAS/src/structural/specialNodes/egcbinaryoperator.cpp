@@ -39,76 +39,74 @@ EgcBinaryOperator::EgcBinaryOperator()
 
 bool EgcBinaryOperator::setChild(quint32 index, EgcNode& expression)
 {
-        bool retval = false;
+        bool isReorder = true;  //expression is reordering parenthesis
+        QScopedPointer<EgcNode> *child;
 
-        if (index == 0) {
-                if (!m_leftChild.isNull()) {
-                        if (    isReorderingProtector(*m_leftChild)
-                             && !isReorderingProtector(expression)) {
-                                retval = true;
-                                static_cast<EgcParenthesisNode*>(m_leftChild.data())->setChild(0, expression);
-                        } else if (    isReorderingProtector(*m_leftChild)
-                                    && isReorderingProtector(expression)) {
-                                m_leftChild.reset(); //child will be set below
-                        }
-                }
-        } else if (index == 1) {
-                if (!m_rightChild.isNull()) {
-                        if (    isReorderingProtector(*m_rightChild)
-                             && !isReorderingProtector(expression)) {
-                                retval = true;
-                                static_cast<EgcParenthesisNode*>(m_rightChild.data())->setChild(0, expression);
-                        } else if (    isReorderingProtector(*m_rightChild)
-                                    && isReorderingProtector(expression)) {
-                                m_rightChild.reset(); //child will be set below
-                        }
+        if (index > 1)
+                return false;
+
+        if (index == 0)
+                child = &m_leftChild;
+        else if (index == 1)
+                child = &m_rightChild;
+
+        if (!child->isNull()) {
+                if (    isReorderingProtector(*(*child))
+                                && !isReorderingProtector(expression)) {
+                        isReorder = false;
+                        static_cast<EgcParenthesisNode*>(child->data())->setChild(0, expression);
+                } else if (    isReorderingProtector(*(*child))
+                               && isReorderingProtector(expression)) {
+                        child->reset(); //child will be set below
                 }
         }
 
-        if (!retval) {
+        if (isReorder) {
                 return EgcBinaryNode::setChild(index, expression);
         }
 
-        return retval;
+        return false;
 }
 
-bool EgcBinaryOperator::allocReorderingProtector(void)
+void EgcBinaryOperator::allocReorderProtChild(quint32 index)
+{
+        if (index > 1)
+                return;
+
+        QScopedPointer<EgcParenthesisNode> reorder(static_cast<EgcParenthesisNode*>
+                                                   (EgcNodeCreator::create(EgcNodeType::ParenthesisNode)));
+        if (!reorder.isNull()) {
+                reorder->setVisible(false);
+                EgcBinaryNode::setChild(index, *reorder.take());
+        }
+}
+
+void EgcBinaryOperator::allocReorderingProtector(void)
 {
         EgcBinaryOperator::ReordProtectSide prot = getReordProtectSide();
 
-        if (static_cast<int>(prot) & static_cast<int>(ReordProtectSide::leftProtector) ) { //left side
-                QScopedPointer<EgcParenthesisNode> reorder(static_cast<EgcParenthesisNode*>
-                                                           (EgcNodeCreator::create(EgcNodeType::ParenthesisNode)));
-                if (!reorder.isNull()) {
-                        reorder->setVisible(false);
-                        EgcBinaryNode::setChild(0, *reorder.take());
-                }
-        }
-        if (static_cast<int>(prot) & static_cast<int>(ReordProtectSide::rightProtector)) { //right side
-                QScopedPointer<EgcParenthesisNode> reorder(static_cast<EgcParenthesisNode*>
-                                                              (EgcNodeCreator::create(EgcNodeType::ParenthesisNode)));
-                if (!reorder.isNull()) {
-                        reorder->setVisible(false);
-                        EgcBinaryNode::setChild(1, static_cast<EgcParenthesisNode&>(*reorder.take()));
-                }
-        }
+        if (static_cast<int>(prot) & static_cast<int>(ReordProtectSide::leftProtector) )  //left side
+                allocReorderProtChild(0);
+        if (static_cast<int>(prot) & static_cast<int>(ReordProtectSide::rightProtector))  //right side
+                allocReorderProtChild(1);
 }
 
 bool EgcBinaryOperator::hasReorderingProtector(quint32 index) const
 {
         bool retval = false;
+        const QScopedPointer<EgcNode> *child;
 
-        if (index == 0) {
-                if (!m_leftChild.isNull()) {
-                        if (isReorderingProtector(*m_leftChild)) {
-                                retval = true;
-                        }
-                }
-        } else if (index == 1) {
-                if (!m_rightChild.isNull()) {
-                        if (isReorderingProtector(*m_rightChild)) {
-                                retval = true;
-                        }
+//        if (index > 1)
+//                return false;
+
+        if (index == 0)
+                child = &m_leftChild;
+        else if (index == 1)
+                child = &m_rightChild;
+
+        if (!child->isNull()) {
+                if (isReorderingProtector(*(*child))) {
+                        retval = true;
                 }
         }
 

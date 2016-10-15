@@ -85,12 +85,18 @@ protected:
          * would appear beside the fraction sign after reordering.
          * @return true if everything went well, false otherwise
          */
-        bool allocReorderingProtector(void);
+        void allocReorderingProtector(void);
         /**
          * @brief getReordProtectSide returns the sides where reordering protectors of a special node are
          * @return the sides where reordering protectors are
          */
         virtual ReordProtectSide getReordProtectSide(void) const;
+private:
+        /**
+         * @brief allocReorderProtChild allocate and set a reordering child for the given index
+         * @param index the index for which we want to allocate a reorder child
+         */
+        void allocReorderProtChild(quint32 index);
 };
 
 #endif // #ifndef EGCBINARYOPERATOR_H
