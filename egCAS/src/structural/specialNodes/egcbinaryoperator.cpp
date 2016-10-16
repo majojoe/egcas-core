@@ -59,6 +59,9 @@ bool EgcBinaryOperator::setChild(quint32 index, EgcNode& expression)
                                && isReorderingProtector(expression)) {
                         child->reset(); //child will be set below
                 }
+        } else if (isReorderingProtector(expression)) { //make the reordering protector visible
+                if (expression.getNodeType() == EgcNodeType::ParenthesisNode)
+                        static_cast<EgcParenthesisNode&>(expression).setVisible(true);
         }
 
         if (isReorder) {
@@ -96,8 +99,8 @@ bool EgcBinaryOperator::hasReorderingProtector(quint32 index) const
         bool retval = false;
         const QScopedPointer<EgcNode> *child;
 
-//        if (index > 1)
-//                return false;
+        if (index > 1)
+                return false;
 
         if (index == 0)
                 child = &m_leftChild;
