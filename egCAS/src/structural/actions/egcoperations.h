@@ -45,6 +45,8 @@ enum class EgcOperations
         spacePressed,                   ///< user pressed space (wants to highlight parent element)
         backspacePressed,               ///< user pressed backspace (wants to delete the element before the cursor)
         delPressed,                     ///< user pressed space (wants to delete the element behind the cursor)
+        homePressed,                    ///< user pressed home key
+        endPressed,                     ///< user pressed End key
         alnumKeyPressed,                ///< user pressed any digit or letter key
 };
 
