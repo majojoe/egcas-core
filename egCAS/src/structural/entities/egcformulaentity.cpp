@@ -439,6 +439,20 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         case EgcOperations::mathOperator:
                 insertOperation(action.m_character);
                 break;
+        case EgcOperations::homePressed:
+                if (m_scrIter) {
+                        m_scrIter->toFront();
+                        m_scrIter->resetUnderline();
+                        showCurrentCursor();
+                }
+                break;
+        case EgcOperations::endPressed:
+                if (m_scrIter) {
+                        m_scrIter->toBack();
+                        m_scrIter->resetUnderline();
+                        showCurrentCursor();
+                }
+                break;
         }
 }
 

@@ -300,6 +300,14 @@ void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
         case Qt::Key_ParenRight:
                 m_entity->handleAction(getActionObject(')'));
                 break;
+        case Qt::Key_End:
+                action.m_op = EgcOperations::endPressed;
+                m_entity->handleAction(action);
+                break;
+        case Qt::Key_Home:
+                action.m_op = EgcOperations::homePressed;
+                m_entity->handleAction(action);
+                break;
         default:
                 QString chr(event->text()[0]);
                 if (chr.contains(s_alnumKeyFilter)) {
