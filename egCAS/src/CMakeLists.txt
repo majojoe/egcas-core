@@ -147,6 +147,7 @@ set(egCAS_SOURCES
         structural/specialNodes/egcargumentsnode.cpp
         structural/specialNodes/egcbinaryoperator.cpp
         utils/egcutfcodepoint.cpp
+        view/egccrossitem.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS
