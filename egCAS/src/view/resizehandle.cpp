@@ -88,7 +88,6 @@ void ResizeHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
         setPos(mapToScene(mapFromItem(m_resizableContent, m_resizableContent->boundingRect().bottomRight())));
 }
 
-
 void ResizeHandle::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
         (void) option;

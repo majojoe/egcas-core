@@ -43,14 +43,33 @@ public:
         ///paint the EgcCrossItem control here
         void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0);
 
+protected:
+        /**
+         * @brief itemChange reimplements change function of QGraphicsItem to be able to realize a grid
+         * @param change enum that describes state changes that are notified
+         * @param value the value that has changed
+         * @return the value that has been adjusted
+         */
+        QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+
 signals:
 
 public slots:
 private:
+        /**
+         * @brief snapGrid snap to scene grid
+         * @param pos the position to snap to grid
+         * @return the new position that is snapped to the grid
+         */
+        QPointF snapGrid(const QPointF& pos);
+        /**
+         * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
+         * subclasses already inherit from it - and we don't want to make it complicated)
+         * @return the size of the grid
+         */
+        QSizeF getGrid(void);
+
         const QSize m_size = QSize(40,40);     ///< size of the cross
-        QGraphicsLineItem *m_line_hor;         ///< horizontal line of the cross
-        QGraphicsLineItem *m_line_vert;        ///< vertical line of the cross
-        QPointF m_pos;                         ///< position of the cross
 
         Q_DISABLE_COPY(EgcCrossItem)
 

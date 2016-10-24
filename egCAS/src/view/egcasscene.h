@@ -40,6 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgcFormulaItem;
 class EgcPixmapItem;
 class EgcTextItem;
+class EgcCrossItem;
 
 class EgCasScene : public QGraphicsScene
 {
@@ -116,10 +117,16 @@ public:
         void hideFormulaCursors( void );
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
+        /**
+         * @brief mouseReleaseEvent reimplements mouse release event to show cursor
+         * @param event mouse event
+         */
+        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
 private:
         QSizeF m_grid;
         QGraphicsLineItem* m_cursor;             ///< formula cursor for modifying formula
         QGraphicsLineItem* m_nodeUnderline;      ///< node cursor to show user the context of changes in a formula
+        EgcCrossItem* m_cross;                   ///< crosshair (cursor) to be able to see enter position
 };
 
 #endif // EGCASSCENE_H

@@ -28,21 +28,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QPainter>
 #include <QGraphicsItem>
-#include <QGraphicsScene>
-#include <QCursor>
 #include <QGraphicsSceneMouseEvent>
-#include <QtCore/qmath.h>
 #include "egccrossitem.h"
+#include "egcasscene.h"
 
-EgcCrossItem::EgcCrossItem(QGraphicsItem *parent) : m_line_hor{new QGraphicsLineItem(this)},
-                                                    m_line_vert{new QGraphicsLineItem(this)}, m_pos{0.0, 0.0}
+EgcCrossItem::EgcCrossItem(QGraphicsItem *parent)
 {
-        setFlags(ItemIsMovable | ItemClipsToShape);
-        m_line_hor->setPen(QPen(QBrush(QColor(Qt::green)), 2.0));
-        m_line_vert->setPen(QPen(QBrush(QColor(Qt::green)), 2.0));
-        m_line_hor->setLine(static_cast<qreal>(-m_size.width()/2), 0.0, static_cast<qreal>(m_size.width()/2), 0.0);
-        m_line_vert->setLine(0.0, static_cast<qreal>(-m_size.height()/2), 0.0, static_cast<qreal>(m_size.height()/2));
-        //hide();
+        setFlags(ItemClipsToShape | ItemSendsScenePositionChanges);
+        hide();
 }
 
 QRectF EgcCrossItem::boundingRect() const
@@ -58,16 +51,45 @@ void EgcCrossItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * op
         (void) widget;
 
         painter->save();
-
-        //painter->setRenderHint(QPainter::Antialiasing, true);
-        painter->setPen(QPen(Qt::green));
-        painter->setBrush(QBrush(Qt::green));
-        QRectF boundRect(0.0, 0.0, m_handleSize.width(), m_handleSize.height());
-        QVector<QPointF> triangle;
-        triangle.append(boundRect.topRight());
-        triangle.append(boundRect.bottomRight());
-        triangle.append(boundRect.bottomLeft());
-        painter->drawPolygon(QPolygonF(triangle));
-
+        painter->setPen(QPen(Qt::darkGreen));
+        painter->setBrush(QBrush(Qt::darkGreen));
+        painter->drawLine(static_cast<qreal>(-m_size.width()/2), 0, static_cast<qreal>(m_size.width()/2), 0);
+        painter->drawLine(0, static_cast<qreal>(-m_size.height()/2), 0, static_cast<qreal>(m_size.height()/2));
         painter->restore();
+}
+
+QVariant EgcCrossItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+     if (change == ItemPositionChange && scene()) {
+         // value is the new position.
+         QPointF newPos = snapGrid(value.toPointF());
+
+         return newPos;
+     }
+     return QGraphicsItem::itemChange(change, value);
+}
+
+QPointF EgcCrossItem::snapGrid(const QPointF& pos)
+{
+        // value is the new position.
+        QPointF newPos = pos;
+        QSizeF grid = getGrid();
+        if (grid.isValid()) {
+                newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
+                newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
+        }
+
+        return newPos;
+}
+
+QSizeF EgcCrossItem::getGrid(void)
+{
+        QSizeF grid;
+
+        QGraphicsScene *scene = this->scene();
+        if (scene) {
+                grid = static_cast<EgCasScene*>(scene)->grid();
+        }
+
+        return grid;
 }

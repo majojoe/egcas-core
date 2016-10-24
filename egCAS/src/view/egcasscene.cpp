@@ -29,10 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QGraphicsScene>
 #include <QtCore>
 #include <QPainter>
+#include <QGraphicsSceneEvent>
 #include "egcasscene.h"
 #include "egctextitem.h"
 #include "egcpixmapitem.h"
 #include "egcformulaitem.h"
+#include "egccrossitem.h"
 
 
 EgCasScene::EgCasScene(QObject *parent) :
@@ -42,6 +44,11 @@ EgCasScene::EgCasScene(QObject *parent) :
         m_grid = QSizeF(30.0, 30.0);
         m_cursor->setPen(QPen(QBrush(QColor(Qt::red)), 2.0));
         m_nodeUnderline->setPen(QPen(QBrush(QColor(Qt::red)), 2.0));
+
+        m_cross = new (std::nothrow) EgcCrossItem();
+        if (m_cross) {
+                addItem(m_cross);
+        }
 }
 
 EgCasScene::~EgCasScene()
@@ -198,3 +205,17 @@ void EgCasScene::hideFormulaCursors( void )
         if (m_nodeUnderline)
                 m_nodeUnderline->hide();
 }
+
+void EgCasScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+        if (!mouseGrabberItem()) {
+                if (m_cross) {
+                        m_cross->show();
+                        m_cross->setPos(event->scenePos());
+                }
+        } else {
+                m_cross->hide();
+        }
+        QGraphicsScene::mouseReleaseEvent(event);
+}
+
