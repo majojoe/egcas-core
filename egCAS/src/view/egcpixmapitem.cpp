@@ -26,6 +26,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
 #include "egcpixmapitem.h"
 #include "egcasscene.h"
 #include "resizehandle.h"
@@ -48,6 +50,14 @@ EgcPixmapItem::EgcPixmapItem(const QPointF point, QGraphicsItem *parent) : EgcPi
 
 EgcPixmapItem::~EgcPixmapItem()
 {        
+}
+
+void EgcPixmapItem::focusInEvent(QFocusEvent * event)
+{
+        if (event->reason() == Qt::ActiveWindowFocusReason)
+                return;
+
+        m_resizeHandle->activate();
 }
 
 QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &value)

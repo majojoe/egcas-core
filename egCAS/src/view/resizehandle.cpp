@@ -164,3 +164,10 @@ void ResizeHandle::mouseMoveEventInfo(void)
 {
         setPos(mapToScene(mapFromItem(m_resizableContent, m_resizableContent->boundingRect().bottomRight())));
 }
+
+void ResizeHandle::activate(void)
+{
+        m_selectionState = true;
+        setSelected(true);
+        setCursor(QCursor(Qt::SizeFDiagCursor));
+}

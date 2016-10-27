@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcCrossItem::EgcCrossItem(QGraphicsItem *parent)
 {
-        setFlags(ItemClipsToShape | ItemSendsScenePositionChanges);
+        setFlags( ItemSendsScenePositionChanges | ItemClipsChildrenToShape | ItemClipsToShape);
         hide();
 }
 
@@ -92,4 +92,24 @@ QSizeF EgcCrossItem::getGrid(void)
         }
 
         return grid;
+}
+
+void EgcCrossItem::up(void)
+{
+        moveBy(0, -getGrid().height());
+}
+
+void EgcCrossItem::down(void)
+{
+        moveBy(0, getGrid().height());
+}
+
+void EgcCrossItem::left(void)
+{
+        moveBy(-getGrid().width(), 0);
+}
+
+void EgcCrossItem::right(void)
+{
+        moveBy(getGrid().width(), 0);
 }

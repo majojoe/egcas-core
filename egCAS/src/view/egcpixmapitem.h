@@ -109,6 +109,11 @@ protected:
          * @param event pointer to QGraphicsSceneMouseEvent
          */
         void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        /**
+         * @brief focusInEvent overwrite focus in event to be able to work with the position iterator
+         * @param event focus event
+         */
+        virtual void focusInEvent(QFocusEvent * event) override;
 
 signals:
 

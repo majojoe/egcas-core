@@ -106,7 +106,12 @@ protected:
          * @brief focusOutEvent overrides
          * @param event
          */
-        void focusOutEvent(QFocusEvent*event);
+        virtual void focusOutEvent(QFocusEvent*event) override;
+        /**
+         * @brief focusInEvent overwrite focus in event to be able to work with the position iterator
+         * @param event focus event
+         */
+        virtual void focusInEvent(QFocusEvent * event) override;
 
 signals:
 

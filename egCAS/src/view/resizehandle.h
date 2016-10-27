@@ -72,6 +72,10 @@ public:
          * This must be called after the mouse handle of the base class has been called!!!
          */
         void mouseMoveEventInfo(void);
+        /**
+         * @brief activate the resize handle
+         */
+        void activate(void);
 
 signals:
 

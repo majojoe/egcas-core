@@ -26,6 +26,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
 #include <QTextCursor>
 #include "egctextitem.h"
 #include "egcasscene.h"
@@ -59,19 +61,30 @@ QVariant EgcTextItem::itemChange(GraphicsItemChange change, const QVariant &valu
      return QGraphicsItem::itemChange(change, value);
  }
 
-void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent*event)
+void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
+        setFocus(Qt::MouseFocusReason);
         setTextInteractionFlags(Qt::TextEditable | Qt::TextEditorInteraction);
         QTextCursor cursor = textCursor();
         cursor.movePosition(QTextCursor::End);
         setTextCursor(cursor);
-        setFocus();
-        QGraphicsItem::mouseDoubleClickEvent(event);
+}
+
+void EgcTextItem::focusInEvent(QFocusEvent* event)
+{
+        QGraphicsItem::focusInEvent(event);
+
+        if (event->reason() == Qt::OtherFocusReason) {
+                setTextInteractionFlags(Qt::TextEditable | Qt::TextEditorInteraction);
+                QTextCursor cursor = textCursor();
+                cursor.movePosition(QTextCursor::End);
+                setTextCursor(cursor);
+        }
 }
 
 void EgcTextItem::focusOutEvent(QFocusEvent *event)
 {
-        QTextCursor cursor(textCursor());
+        QTextCursor cursor = textCursor();
         cursor.clearSelection();
         setTextCursor(cursor);
         setTextInteractionFlags(Qt::NoTextInteraction);
@@ -124,3 +137,4 @@ QSizeF EgcTextItem::getGrid(void)
 
         return grid;
 }
+

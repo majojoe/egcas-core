@@ -42,6 +42,22 @@ public:
         QRectF boundingRect() const;
         ///paint the EgcCrossItem control here
         void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0);
+        /**
+         * @brief up moves the cross cursor up
+         */
+        void up(void);
+        /**
+         * @brief up moves the cross cursor down
+         */
+        void down(void);
+        /**
+         * @brief up moves the cross cursor left
+         */
+        void left(void);
+        /**
+         * @brief up moves the cross cursor right
+         */
+        void right(void);
 
 protected:
         /**
