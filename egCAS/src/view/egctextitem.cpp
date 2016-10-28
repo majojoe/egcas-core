@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 #include <QTextCursor>
+#include <QCursor>
 #include "egctextitem.h"
 #include "egcasscene.h"
 
@@ -63,32 +64,39 @@ QVariant EgcTextItem::itemChange(GraphicsItemChange change, const QVariant &valu
 
 void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
-        setFocus(Qt::MouseFocusReason);
-        setTextInteractionFlags(Qt::TextEditable | Qt::TextEditorInteraction);
+        setTextInteractionFlags(Qt::TextEditorInteraction);
+        if (!hasCursor())
+                setCursor(QCursor(Qt::IBeamCursor));
         QTextCursor cursor = textCursor();
         cursor.movePosition(QTextCursor::End);
         setTextCursor(cursor);
+        setFocus(Qt::MouseFocusReason);
 }
 
 void EgcTextItem::focusInEvent(QFocusEvent* event)
 {
-        QGraphicsItem::focusInEvent(event);
-
         if (event->reason() == Qt::OtherFocusReason) {
-                setTextInteractionFlags(Qt::TextEditable | Qt::TextEditorInteraction);
+                setTextInteractionFlags(Qt::TextEditorInteraction);
+                if (!hasCursor())
+                        setCursor(QCursor(Qt::IBeamCursor));
                 QTextCursor cursor = textCursor();
                 cursor.movePosition(QTextCursor::End);
                 setTextCursor(cursor);
         }
+
+        QGraphicsTextItem::focusInEvent(event);
 }
 
 void EgcTextItem::focusOutEvent(QFocusEvent *event)
 {
-        QTextCursor cursor = textCursor();
-        cursor.clearSelection();
-        setTextCursor(cursor);
         setTextInteractionFlags(Qt::NoTextInteraction);
-        QGraphicsItem::focusOutEvent(event);
+        if (hasCursor()) {
+                QTextCursor cursor = textCursor();
+                cursor.clearSelection();
+        }
+        unsetCursor();
+
+        QGraphicsTextItem::focusOutEvent(event);
 }
 
 void EgcTextItem::setEntity(EgcAbstractTextEntity* entity)
