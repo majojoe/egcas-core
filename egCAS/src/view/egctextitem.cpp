@@ -90,6 +90,7 @@ void EgcTextItem::focusInEvent(QFocusEvent* event)
 void EgcTextItem::focusOutEvent(QFocusEvent *event)
 {
         setTextInteractionFlags(Qt::NoTextInteraction);
+        setFlag(ItemIsFocusable);
         if (hasCursor()) {
                 QTextCursor cursor = textCursor();
                 cursor.clearSelection();
