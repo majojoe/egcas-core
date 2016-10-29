@@ -47,17 +47,37 @@ public:
          */
         void up(void);
         /**
+         * @brief snap to next grid increment upwards starting at yCoord
+         * @param yCoord the coordinate where to start with snapping upwards -> direction 0
+         */
+        void up(qreal yCoord);
+        /**
          * @brief up moves the cross cursor down
          */
         void down(void);
+        /**
+         * @brief snap to next grid increment downwards starting at yCoord
+         * @param yCoord the coordinate where to start with snapping downwards -> direction infinity
+         */
+        void down(qreal yCoord);
         /**
          * @brief up moves the cross cursor left
          */
         void left(void);
         /**
+         * @brief snap to next grid increment to the left starting at xCoord
+         * @param xCoord the coordinate where to start with snapping to the left -> direction 0
+         */
+        void left(qreal xCoord);
+        /**
          * @brief up moves the cross cursor right
          */
         void right(void);
+        /**
+         * @brief snap to next grid increment to the right starting at xCoord
+         * @param xCoord the coordinate where to start with snapping to the right -> direction infinity
+         */
+        void right(qreal xCoord);
 
 protected:
         /**

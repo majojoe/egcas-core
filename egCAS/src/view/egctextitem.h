@@ -112,11 +112,36 @@ protected:
          * @param event focus event
          */
         virtual void focusInEvent(QFocusEvent * event) override;
+        /**
+         * @brief keyReleaseEvent overwrites key events
+         * @param keyEvent the key event to react on
+         */
+        virtual void keyPressEvent(QKeyEvent *keyEvent) override;
+        /**
+         * @brief isAtLeftEnd checks if cursor is at the left end of the text field
+         * @return true if cursor is at the left end, false otherwise
+         */
+        bool isAtLeftEnd(void);
+        /**
+         * @brief isAtRightEnd checks if cursor is at the right end of the text field
+         * @return true if cursor is at the right end, false otherwise
+         */
+        bool isAtRightEnd(void);
+        /**
+         * @brief isAtTop checks if cursor is at the toop of the text field
+         * @return true if cursor is at the top, false otherwise
+         */
+        bool isAtTop(void);
+        /**
+         * @brief isAtBottom checks if cursor is at the bottom of the text field
+         * @return true if cursor is at the bottom, false otherwise
+         */
+        bool isAtBottom(void);
 
 signals:
 
 
-private:
+private:        
         Q_DISABLE_COPY(EgcTextItem)
         EgcAbstractTextEntity* m_entity;        ///< pointer to text entity (no ownership)
 };

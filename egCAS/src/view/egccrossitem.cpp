@@ -97,19 +97,59 @@ QSizeF EgcCrossItem::getGrid(void)
 void EgcCrossItem::up(void)
 {
         moveBy(0, -getGrid().height());
+        show();
 }
 
 void EgcCrossItem::down(void)
 {
         moveBy(0, getGrid().height());
+        show();
 }
 
 void EgcCrossItem::left(void)
 {
         moveBy(-getGrid().width(), 0);
+        show();
 }
 
 void EgcCrossItem::right(void)
 {
         moveBy(getGrid().width(), 0);
+        show();
+}
+
+void EgcCrossItem::up(qreal yCoord)
+{
+        QPointF point = snapGrid(QPointF(pos().x(), yCoord));
+        setPos(point);
+        show();
+        if (point.y() >= yCoord)
+                up();
+}
+
+void EgcCrossItem::down(qreal yCoord)
+{
+        QPointF point = snapGrid(QPointF(pos().x(), yCoord));
+        setPos(point);
+        show();
+        if (point.y() <= yCoord)
+                down();
+}
+
+void EgcCrossItem::left(qreal xCoord)
+{
+        QPointF point = snapGrid(QPointF(xCoord, pos().y()));
+        setPos(point);
+        show();
+        if (point.x() >= xCoord)
+                left();
+}
+
+void EgcCrossItem::right(qreal xCoord)
+{
+        QPointF point = snapGrid(QPointF(xCoord, pos().y()));
+        setPos(point);
+        show();
+        if (point.x() <= xCoord)
+                right();
 }

@@ -42,10 +42,16 @@ class EgcPixmapItem;
 class EgcTextItem;
 class EgcCrossItem;
 
+/**
+ * @brief The SnapDirection enum specifies the snap direction in which direction the cursor should snap comming from an
+ * item
+ */
+enum class EgcSceneSnapDirection{up, down, left, right};
+
 class EgCasScene : public QGraphicsScene
 {
         Q_OBJECT
-public:
+public:        
         ///constructor of EgCasScene
         explicit EgCasScene(QObject *parent = 0);
         virtual ~EgCasScene();
@@ -115,6 +121,12 @@ public:
          * @brief hideFormulaCursors hides all formula cursors
          */
         void hideFormulaCursors( void );
+        /**
+         * @brief itemYieldsFocus is called from an item that wants to hand over its focus and give it back to the scene.
+         * @param direction the direction in which the cursor should snap in
+         * @param item the item which hands over the focus
+         */
+        void itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem& item);
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
         /**

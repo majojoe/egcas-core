@@ -231,7 +231,7 @@ void EgCasScene::keyPressEvent(QKeyEvent *keyEvent)
              || key == Qt::Key_Down) {
                 handleCursorEvent(keyEvent);
         } else {
-                QGraphicsScene::keyReleaseEvent(keyEvent);
+                QGraphicsScene::keyPressEvent(keyEvent);
         }
 }
 
@@ -270,4 +270,27 @@ void EgCasScene::handleCursorEvent(QKeyEvent *keyEvent)
 void EgCasScene::focusOutEvent(QFocusEvent * event)
 {
         m_cross->hide();
+}
+
+void EgCasScene::itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem& item)
+{
+        QRectF bounds = item.mapRectToScene(item.boundingRect());
+
+        switch(direction) {
+        case EgcSceneSnapDirection::up:
+                m_cross->up(bounds.top());
+                break;
+        case EgcSceneSnapDirection::down:
+                m_cross->down(bounds.bottom());
+                break;
+        case EgcSceneSnapDirection::left:
+                m_cross->left(bounds.left());
+                break;
+        default: //right
+                m_cross->right(bounds.right());
+                break;
+        }
+
+        clearSelection();
+        setFocusItem(nullptr);
 }

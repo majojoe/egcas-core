@@ -147,3 +147,94 @@ QSizeF EgcTextItem::getGrid(void)
         return grid;
 }
 
+void EgcTextItem::keyPressEvent(QKeyEvent *keyEvent)
+{
+        bool accepted = false;
+        int key = keyEvent->key();
+        EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
+        if (!scn)
+                return;
+
+        switch (key) {
+        case Qt::Key_Left:
+                if (isAtLeftEnd()) {
+                        accepted = true;
+                        scn->itemYieldsFocus(EgcSceneSnapDirection::left, *this);
+                }
+                break;
+        case Qt::Key_Right:
+                if (isAtRightEnd()) {
+                        accepted = true;
+                        scn->itemYieldsFocus(EgcSceneSnapDirection::right, *this);
+                }
+                break;
+        case Qt::Key_Up:
+                if (isAtTop()) {
+                        accepted = true;
+                        scn->itemYieldsFocus(EgcSceneSnapDirection::up, *this);
+                }
+                break;
+        case Qt::Key_Down:
+                if (isAtBottom()) {
+                        accepted = true;
+                        scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
+                }
+                break;
+        }
+
+        if (accepted) {
+                keyEvent->accept();
+        } else {
+                keyEvent->ignore();
+                QGraphicsTextItem::keyPressEvent(keyEvent);
+        }
+}
+
+
+bool EgcTextItem::isAtLeftEnd(void)
+{
+        QTextCursor cursor = textCursor();
+        QTextCursor testCursor = cursor;
+
+        testCursor.movePosition(QTextCursor::StartOfLine);
+        if (testCursor.position() == cursor.position())
+                return true;
+
+        return false;
+}
+
+bool EgcTextItem::isAtRightEnd(void)
+{
+        QTextCursor cursor = textCursor();
+        QTextCursor testCursor = cursor;
+
+        testCursor.movePosition(QTextCursor::EndOfLine);
+        if (testCursor.position() == cursor.position())
+                return true;
+
+        return false;
+}
+
+bool EgcTextItem::isAtTop(void)
+{
+        QTextCursor cursor = textCursor();
+        QTextCursor testCursor = cursor;
+
+        testCursor.movePosition(QTextCursor::Up);
+        if (testCursor.position() == cursor.position())
+                return true;
+
+        return false;
+}
+
+bool EgcTextItem::isAtBottom(void)
+{
+        QTextCursor cursor = textCursor();
+        QTextCursor testCursor = cursor;
+
+        testCursor.movePosition(QTextCursor::Down);
+        if (testCursor.position() == cursor.position())
+                return true;
+
+        return false;
+}
