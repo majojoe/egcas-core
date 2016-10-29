@@ -192,7 +192,6 @@ void EgcTextItem::keyPressEvent(QKeyEvent *keyEvent)
         }
 }
 
-
 bool EgcTextItem::isAtLeftEnd(void)
 {
         QTextCursor cursor = textCursor();

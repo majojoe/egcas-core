@@ -138,3 +138,38 @@ QSizeF EgcPixmapItem::getGrid(void)
         return grid;
 }
 
+void EgcPixmapItem::keyPressEvent(QKeyEvent *keyEvent)
+{
+        bool accepted = false;
+        int key = keyEvent->key();
+        EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
+        if (!scn)
+                return;
+
+        switch (key) {
+        case Qt::Key_Left:
+                accepted = true;
+                scn->itemYieldsFocus(EgcSceneSnapDirection::left, *this);
+                break;
+        case Qt::Key_Right:
+                accepted = true;
+                scn->itemYieldsFocus(EgcSceneSnapDirection::right, *this);
+                break;
+        case Qt::Key_Up:
+                accepted = true;
+                scn->itemYieldsFocus(EgcSceneSnapDirection::up, *this);
+                break;
+        case Qt::Key_Down:
+                accepted = true;
+                scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
+                break;
+        }
+
+        if (accepted) {
+                keyEvent->accept();
+        } else {
+                keyEvent->ignore();
+                QGraphicsPixmapItem::keyPressEvent(keyEvent);
+        }
+}
+

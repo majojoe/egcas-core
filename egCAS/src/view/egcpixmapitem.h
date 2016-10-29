@@ -114,6 +114,11 @@ protected:
          * @param event focus event
          */
         virtual void focusInEvent(QFocusEvent * event) override;
+        /**
+         * @brief keyPressEvent overwrites key events
+         * @param keyEvent the key event to react on
+         */
+        virtual void keyPressEvent(QKeyEvent *keyEvent) override;
 
 signals:
 
