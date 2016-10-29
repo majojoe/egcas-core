@@ -296,6 +296,16 @@ public:
          * @return true if the given node is a node of this formula, false otherwise
          */
         bool isNodeInFormula(EgcNode& node);
+        /**
+         * @brief cursorAtBegin checks if cursor is at beginning of formula
+         * @return true if cursor is at beginning
+         */
+        virtual bool cursorAtBegin(void) override;
+        /**
+         * @brief cursorAtEnd checks if cursor is at end of formula
+         * @return true if cursor is at end
+         */
+        virtual bool cursorAtEnd(void) override;
 
 private:
         /**

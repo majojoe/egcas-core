@@ -909,3 +909,19 @@ bool EgcFormulaEntity::rotateTreeLeft(EgcNode& treeNodeToRotate)
 
         return true;
 }
+
+bool EgcFormulaEntity::cursorAtBegin(void)
+{
+        if (!m_scrIter->hasPrevious())
+                return true;
+
+        return false;
+}
+
+bool EgcFormulaEntity::cursorAtEnd(void)
+{
+        if (!m_scrIter->hasNext())
+                return true;
+
+        return false;
+}

@@ -274,13 +274,25 @@ void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
                 return;
 
         switch (key) {
+        case Qt::Key_Up:
+        case Qt::Key_Down:
+                keyCursorKeyHandler(event);
+                break;
         case Qt::Key_Right:
-                action.m_op = EgcOperations::cursorForward;
-                m_entity->handleAction(action);
+                if (m_entity->cursorAtEnd()) {
+                        keyCursorKeyHandler(event);
+                } else {
+                        action.m_op = EgcOperations::cursorForward;
+                        m_entity->handleAction(action);
+                }
                 break;
         case Qt::Key_Left:
-                action.m_op = EgcOperations::cursorBackward;
-                m_entity->handleAction(action);
+                if (m_entity->cursorAtBegin()) {
+                        keyCursorKeyHandler(event);
+                } else {
+                        action.m_op = EgcOperations::cursorBackward;
+                        m_entity->handleAction(action);
+                }
                 break;
         case Qt::Key_Space:
                 action.m_op = EgcOperations::spacePressed;
@@ -376,4 +388,39 @@ EgcAction EgcFormulaItem::getActionObject(QChar op) const
         action.m_character = op;
 
         return action;
+}
+
+void EgcFormulaItem::keyCursorKeyHandler(QKeyEvent *keyEvent)
+{
+        bool accepted = false;
+        int key = keyEvent->key();
+        EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
+        if (!scn)
+                return;
+
+        switch (key) {
+        case Qt::Key_Left:
+                accepted = true;
+                scn->itemYieldsFocus(EgcSceneSnapDirection::left, *this);
+                break;
+        case Qt::Key_Right:
+                accepted = true;
+                scn->itemYieldsFocus(EgcSceneSnapDirection::right, *this);
+                break;
+        case Qt::Key_Up:
+                accepted = true;
+                scn->itemYieldsFocus(EgcSceneSnapDirection::up, *this);
+                break;
+        case Qt::Key_Down:
+                accepted = true;
+                scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
+                break;
+        }
+
+        if (accepted) {
+                keyEvent->accept();
+        } else {
+                keyEvent->ignore();
+                QGraphicsItem::keyPressEvent(keyEvent);
+        }
 }

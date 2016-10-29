@@ -113,7 +113,7 @@ protected:
          */
         virtual void focusInEvent(QFocusEvent * event) override;
         /**
-         * @brief keyReleaseEvent overwrites key events
+         * @brief keyPressEvent overwrites key events
          * @param keyEvent the key event to react on
          */
         virtual void keyPressEvent(QKeyEvent *keyEvent) override;

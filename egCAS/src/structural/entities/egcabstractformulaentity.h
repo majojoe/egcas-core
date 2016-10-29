@@ -56,6 +56,16 @@ public:
          * @param action the action given
          */
         virtual void handleAction(const EgcAction& action) = 0;
+        /**
+         * @brief cursorAtBegin checks if cursor is at beginning of formula
+         * @return true if cursor is at beginning
+         */
+        virtual bool cursorAtBegin(void) = 0;
+        /**
+         * @brief cursorAtEnd checks if cursor is at end of formula
+         * @return true if cursor is at end
+         */
+        virtual bool cursorAtEnd(void) = 0;
 };
 
 #endif // EGCABSTRACTFORMULAENTITY_H

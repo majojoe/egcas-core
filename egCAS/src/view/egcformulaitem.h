@@ -207,6 +207,21 @@ protected:
          * @return the action object with the operation provided
          */
         EgcAction getActionObject(QChar op) const;
+        /**
+         * @brief keyCursorKeyHandler overwrites key events
+         * @param keyEvent the key event to react on
+         */
+        void keyCursorKeyHandler(QKeyEvent *keyEvent);
+        /**
+         * @brief isAtLeftEnd checks if cursor is at the left end of the text field
+         * @return true if cursor is at the left end, false otherwise
+         */
+        bool isAtLeftEnd(void);
+        /**
+         * @brief isAtRightEnd checks if cursor is at the right end of the text field
+         * @return true if cursor is at the right end, false otherwise
+         */
+        bool isAtRightEnd(void);
 
 signals:
 
