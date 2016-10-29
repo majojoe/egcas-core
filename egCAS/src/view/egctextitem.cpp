@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egctextitem.h"
 #include "egcasscene.h"
 
-EgcTextItem::EgcTextItem(QGraphicsItem*parent) : QGraphicsTextItem{parent}, m_entity{nullptr}
+EgcTextItem::EgcTextItem(QGraphicsItem*parent) : QGraphicsTextItem{parent}, m_entity{nullptr}, m_editingActivated{false}
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
 }
@@ -64,13 +64,13 @@ QVariant EgcTextItem::itemChange(GraphicsItemChange change, const QVariant &valu
 
 void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
-        setTextInteractionFlags(Qt::TextEditorInteraction);
-        if (!hasCursor())
-                setCursor(QCursor(Qt::IBeamCursor));
-        QTextCursor cursor = textCursor();
-        cursor.movePosition(QTextCursor::End);
-        setTextCursor(cursor);
-        setFocus(Qt::MouseFocusReason);
+        if (!m_editingActivated) {
+                clearFocus();
+                setFocus(Qt::OtherFocusReason);
+        } else {
+                QGraphicsTextItem::mouseDoubleClickEvent(event);
+        }
+        m_editingActivated = true;
 }
 
 void EgcTextItem::focusInEvent(QFocusEvent* event)
@@ -89,11 +89,13 @@ void EgcTextItem::focusInEvent(QFocusEvent* event)
 
 void EgcTextItem::focusOutEvent(QFocusEvent *event)
 {
+        m_editingActivated = false;
         setTextInteractionFlags(Qt::NoTextInteraction);
         setFlag(ItemIsFocusable);
         if (hasCursor()) {
                 QTextCursor cursor = textCursor();
                 cursor.clearSelection();
+                setTextCursor(cursor);
         }
         unsetCursor();
 

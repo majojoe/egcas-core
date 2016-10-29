@@ -144,6 +144,7 @@ signals:
 private:        
         Q_DISABLE_COPY(EgcTextItem)
         EgcAbstractTextEntity* m_entity;        ///< pointer to text entity (no ownership)
+        bool m_editingActivated;                ///< editing has already been activated
 };
 
 #endif // EGCTEXTITEM_H

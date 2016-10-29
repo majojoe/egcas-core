@@ -134,23 +134,8 @@ protected:
          * @param event mouse event
          */
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
-        /**
-         * @brief keyReleaseEvent overwrites key events
-         * @param keyEvent the key event to react on
-         */
-        virtual void keyPressEvent(QKeyEvent *keyEvent) override;
-        /**
-         * @brief focusOutEvent overwrite focus in event to be able to work with the position iterator
-         * @param event focus event
-         */
-        virtual void focusOutEvent(QFocusEvent * event) override;
 
 private:
-        /**
-         * @brief handleCursorEvent handles cross cursor events
-         * @param keyEvent the key event that occurred
-         */
-        void handleCursorEvent(QKeyEvent *keyEvent);
 
         QSizeF m_grid;
         QGraphicsLineItem* m_cursor;             ///< formula cursor for modifying formula

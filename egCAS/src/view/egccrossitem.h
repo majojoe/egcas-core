@@ -87,6 +87,21 @@ protected:
          * @return the value that has been adjusted
          */
         QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+        /**
+         * @brief keyReleaseEvent overwrites key events
+         * @param keyEvent the key event to react on
+         */
+        virtual void keyPressEvent(QKeyEvent *keyEvent) override;
+        /**
+         * @brief focusOutEvent overwrite focus in event
+         * @param event focus event
+         */
+        virtual void focusOutEvent(QFocusEvent * event) override;
+        /**
+         * @brief focusOutEvent overwrite focus in event
+         * @param event focus event
+         */
+        virtual void focusInEvent(QFocusEvent * event) override;
 
 signals:
 

@@ -212,64 +212,12 @@ void EgCasScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 {
         if (!mouseGrabberItem()) {
                 if (m_cross) {
-                        m_cross->show();
                         m_cross->setPos(event->scenePos());
+                        m_cross->show();
+                        setFocusItem(m_cross);
                 }
-        } else {
-                m_cross->hide();
         }
         QGraphicsScene::mouseReleaseEvent(event);
-}
-
-
-void EgCasScene::keyPressEvent(QKeyEvent *keyEvent)
-{
-        int key = keyEvent->key();
-        if (    key == Qt::Key_Left
-             || key == Qt::Key_Right
-             || key == Qt::Key_Up
-             || key == Qt::Key_Down) {
-                handleCursorEvent(keyEvent);
-        } else {
-                QGraphicsScene::keyPressEvent(keyEvent);
-        }
-}
-
-void EgCasScene::handleCursorEvent(QKeyEvent *keyEvent)
-{
-        if (m_cross->isVisible()) {
-                keyEvent->accept();
-                switch(keyEvent->key()) {
-                case Qt::Key_Up:
-                        m_cross->up();
-                        break;
-                case Qt::Key_Down:
-                        m_cross->down();
-                        break;
-                case Qt::Key_Left:
-                        m_cross->left();
-                        break;
-                default:  //right
-                        m_cross->right();
-                        break;
-                }
-
-                QGraphicsItem* item = itemAt(m_cross->scenePos(), QTransform());
-                if (item) {
-                        if (item != m_cross) {
-                                m_cross->hide();
-                                item->setSelected(true);
-                                item->setFocus();
-                        }
-                }
-        } else {
-                QGraphicsScene::keyReleaseEvent(keyEvent);
-        }
-}
-
-void EgCasScene::focusOutEvent(QFocusEvent * event)
-{
-        m_cross->hide();
 }
 
 void EgCasScene::itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem& item)
@@ -292,5 +240,6 @@ void EgCasScene::itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem&
         }
 
         clearSelection();
-        setFocusItem(nullptr);
+        m_cross->show();
+        setFocusItem(m_cross);
 }

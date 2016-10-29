@@ -29,12 +29,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
 #include "egccrossitem.h"
 #include "egcasscene.h"
 
 EgcCrossItem::EgcCrossItem(QGraphicsItem *parent)
 {
-        setFlags( ItemSendsScenePositionChanges | ItemClipsChildrenToShape | ItemClipsToShape);
+        setFlags( ItemSendsScenePositionChanges | ItemClipsChildrenToShape | ItemClipsToShape | ItemIsFocusable);
         hide();
 }
 
@@ -67,6 +68,58 @@ QVariant EgcCrossItem::itemChange(GraphicsItemChange change, const QVariant &val
          return newPos;
      }
      return QGraphicsItem::itemChange(change, value);
+}
+
+void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
+{
+        int key = keyEvent->key();
+        if (    key == Qt::Key_Left
+             || key == Qt::Key_Right
+             || key == Qt::Key_Up
+             || key == Qt::Key_Down) {
+                keyEvent->accept();
+
+                switch(keyEvent->key()) {
+                case Qt::Key_Up:
+                        up();
+                        break;
+                case Qt::Key_Down:
+                        down();
+                        break;
+                case Qt::Key_Left:
+                        left();
+                        break;
+                default:  //right
+                        right();
+                        break;
+                }
+
+                QGraphicsScene* scn = scene();
+                if (!scn)
+                        return;
+
+                QGraphicsItem* item = scn->itemAt(scenePos(), QTransform());
+                if (item) {
+                        if (item != this) {
+                                item->setSelected(true);
+                                item->setFocus();
+                        }
+                }
+        } else {
+                QGraphicsItem::keyPressEvent(keyEvent);
+        }
+}
+
+void EgcCrossItem::focusOutEvent(QFocusEvent * event)
+{
+        hide();
+        QGraphicsItem::focusOutEvent(event);
+}
+
+void EgcCrossItem::focusInEvent(QFocusEvent * event)
+{
+        show();
+        QGraphicsItem::focusInEvent(event);
 }
 
 QPointF EgcCrossItem::snapGrid(const QPointF& pos)
