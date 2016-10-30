@@ -79,24 +79,29 @@ void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
              || key == Qt::Key_Down) {
                 keyEvent->accept();
 
-                switch(keyEvent->key()) {
-                case Qt::Key_Up:
-                        up();
-                        break;
-                case Qt::Key_Down:
-                        down();
-                        break;
-                case Qt::Key_Left:
-                        left();
-                        break;
-                default:  //right
-                        right();
-                        break;
-                }
-
                 QGraphicsScene* scn = scene();
                 if (!scn)
                         return;
+
+                switch(keyEvent->key()) {
+                case Qt::Key_Up:
+                        if (scenePos().y() > 0)
+                                up();
+                        break;
+                case Qt::Key_Down:
+                        if (scenePos().y() < scn->sceneRect().height() - getGrid().height())
+                                down();
+                        break;
+                case Qt::Key_Left:
+                        if (scenePos().x() > 0)
+                                left();
+                        break;
+                default:  //right
+                        if (scenePos().x() < scn->sceneRect().width() - getGrid().width())
+                                right();
+                        break;
+                }
+
 
                 QGraphicsItem* item = scn->itemAt(scenePos(), QTransform());
                 if (item) {
@@ -105,6 +110,7 @@ void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
                                 item->setFocus();
                         }
                 }
+                ensureVisible(boundingRect(), 0, 0);
         } else {
                 QGraphicsItem::keyPressEvent(keyEvent);
         }
