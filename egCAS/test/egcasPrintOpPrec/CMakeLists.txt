@@ -24,6 +24,7 @@ find_package(Qt5 COMPONENTS Core Widgets Test)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 
 file(GLOB_RECURSE tst_print_op_precedence_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
 

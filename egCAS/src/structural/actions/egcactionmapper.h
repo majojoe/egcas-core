@@ -26,32 +26,21 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#ifndef EGCACTIONMAPPER_H
+#define EGCACTIONMAPPER_H
 
+#include <QKeyEvent>
+#include "egcaction.h"
 
-#ifndef EGCABSTRACTENTITY_H
-#define EGCABSTRACTENTITY_H
-
-#include "actions/egcaction.h"
-
-/**
- * @brief The EgcEntityType defines different types of entities inside a egCAS (formula) document/worksheet
- */
-enum class EgcItemChangeType
-{
-        posChanged = 0,        ///< position of the item on the scene has changed
-        contentChanged = 1,    ///< content of the item has changed
-        //itemDeleted
-};
-
-
-class EgcAbstractEntity
+class EgcActionMapper
 {
 public:
-        virtual ~EgcAbstractEntity() {}
-        /**
-         * @brief itemChanged is called when the item that is associated with the enity has changed
-         */
-        virtual void itemChanged(EgcItemChangeType changeType) = 0;
+        EgcActionMapper();
+        static EgcAction map(QKeyEvent *event);
+private:
+        static QRegularExpression s_alnumKeyFilter;     ///< regex for checking if a key is an alnum key
+        static bool s_regexInitialized;
+
 };
 
-#endif // EGCABSTRACTENTITY_H
+#endif // EGCACTIONMAPPER_H

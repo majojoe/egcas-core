@@ -31,6 +31,8 @@ set(tst_egcastest_view_SOURCES
         ../../src/view/egcabstractitem.cpp
         ../../src/view/egcscreenpos.cpp
         ../../src/view/egcasiteminterface.cpp
+        ../../src/view/egccrossitem.cpp
+        ../../src/structural/actions/egcactionmapper.cpp
 )
 
 add_executable(tst_egcastest_view ${tst_egcastest_view_SOURCES} )

@@ -48,6 +48,8 @@ enum class EgcOperations
         homePressed,                    ///< user pressed home key
         endPressed,                     ///< user pressed End key
         alnumKeyPressed,                ///< user pressed any digit or letter key
+        noAction,
+
 };
 
 #endif // EGCOPERATIONS_H

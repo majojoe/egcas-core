@@ -127,6 +127,11 @@ public:
          * @param item the item which hands over the focus
          */
         void itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem& item);
+        /**
+         * @brief triggerFormulaCreation
+         * @param point
+         */
+        void triggerFormulaCreation(QPointF point, QKeyEvent* event);
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
         /**
@@ -134,6 +139,13 @@ protected:
          * @param event mouse event
          */
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
+
+signals:
+        /**
+         * @brief createFormula signal that is emitted if a empty formula shall be created at the given position.
+         * @param point the position where to create a formula
+         */
+        void createFormula(QPointF point, EgcAction action);
 
 private:
 

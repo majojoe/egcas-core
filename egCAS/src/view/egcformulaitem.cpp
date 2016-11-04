@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcabstractformulaentity.h"
 #include "egcabstractformulaitem.h"
 #include "egcscreenpos.h"
+#include "actions/egcactionmapper.h"
 
 quint8 EgcFormulaItem::s_baseFontSize = 14;
 QRegularExpression EgcFormulaItem::s_alnumKeyFilter = QRegularExpression("[._0-9a-zA-ZΆ-ώ]+");

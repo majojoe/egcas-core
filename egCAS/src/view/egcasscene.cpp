@@ -37,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcpixmapitem.h"
 #include "egcformulaitem.h"
 #include "egccrossitem.h"
+#include "actions/egcactionmapper.h"
 
 
 EgCasScene::EgCasScene(QObject *parent) :
@@ -243,3 +244,9 @@ void EgCasScene::itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem&
         m_cross->show();
         setFocusItem(m_cross);
 }
+
+void EgCasScene::triggerFormulaCreation(QPointF point, QKeyEvent* event)
+{
+        emit createFormula(point, EgcActionMapper::map(*event));
+}
+

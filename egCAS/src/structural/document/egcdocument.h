@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCDOCUMENT_H
 #define EGCDOCUMENT_H
 
+#include <QObject>
 #include <QScopedPointer>
 #include <QPointF>
 #include "entities/egcentity.h"
@@ -42,8 +43,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgcEntityList;
 class EgCasScene;
 
-class EgcDocument : public EgcAbstractEntityList
+class EgcDocument : public QObject, EgcAbstractEntityList
 {
+        Q_OBJECT
 public:
         ///std constructor
         EgcDocument();
