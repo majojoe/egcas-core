@@ -36,7 +36,18 @@ class EgcActionMapper
 {
 public:
         EgcActionMapper();
+        /**
+         * @brief map map key event to action object
+         * @param event the event to map to an action object
+         * @return the action mapped
+         */
         static EgcAction map(QKeyEvent *event);
+        /**
+         * @brief getActionObject return the action object for the given mathematical operator
+         * @param op the given operator
+         * @return the action object with the operation provided
+         */
+        static EgcAction getMathOperationAction(QChar op);
 private:
         static QRegularExpression s_alnumKeyFilter;     ///< regex for checking if a key is an alnum key
         static bool s_regexInitialized;

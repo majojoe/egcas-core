@@ -45,7 +45,8 @@ EgcActionMapper::EgcActionMapper()
 
 EgcAction EgcActionMapper::map(QKeyEvent *event)
 {
-        EgcAction action = EgcOperations::noAction;
+        EgcAction action;
+        action.m_op = EgcOperations::noAction;
 
         if (event == nullptr)
                 return action;
@@ -59,11 +60,6 @@ EgcAction EgcActionMapper::map(QKeyEvent *event)
         }
 
         switch(event->key()) {
-        case Qt::Key_Up:
-                action.m_op = EgcOperations::cursorUp;
-        case Qt::Key_Down:
-                action.m_op = EgcOperations::cursorDown;
-                break;
         case Qt::Key_Right:
                 action.m_op = EgcOperations::cursorForward;
                 break;
@@ -80,10 +76,10 @@ EgcAction EgcActionMapper::map(QKeyEvent *event)
                 action.m_op = EgcOperations::delPressed;
                 break;
         case Qt::Key_ParenLeft:
-                action.m_op = EgcOperations::ParenLeft;
+                action = getMathOperationAction('(');
                 break;
         case Qt::Key_ParenRight:
-                action.m_op = EgcOperations::ParenRight;
+                action = getMathOperationAction(')');
                 break;
         case Qt::Key_End:
                 action.m_op = EgcOperations::endPressed;
@@ -96,3 +92,14 @@ EgcAction EgcActionMapper::map(QKeyEvent *event)
                 break;
         }
 }
+
+EgcAction EgcActionMapper::getMathOperationAction(QChar op)
+{
+        EgcAction action;
+
+        action.m_op = EgcOperations::mathOperator;
+        action.m_character = op;
+
+        return action;
+}
+

@@ -202,12 +202,6 @@ protected:
          */
         void keyReleaseEvent(QKeyEvent * event) override;
         /**
-         * @brief getActionObject return the action object for the given mathematical operator
-         * @param op the given operator
-         * @return the action object with the operation provided
-         */
-        EgcAction getActionObject(QChar op) const;
-        /**
          * @brief keyCursorKeyHandler overwrites key events
          * @param keyEvent the key event to react on
          */

@@ -274,61 +274,29 @@ void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
         if (!m_entity)
                 return;
 
+        action = EgcActionMapper::map(event);
+
         switch (key) {
         case Qt::Key_Up:
         case Qt::Key_Down:
                 keyCursorKeyHandler(event);
                 break;
         case Qt::Key_Right:
-                if (m_entity->cursorAtEnd()) {
+                if (m_entity->cursorAtEnd())
                         keyCursorKeyHandler(event);
-                } else {
-                        action.m_op = EgcOperations::cursorForward;
+                else
                         m_entity->handleAction(action);
-                }
                 break;
         case Qt::Key_Left:
-                if (m_entity->cursorAtBegin()) {
+                if (m_entity->cursorAtBegin())
                         keyCursorKeyHandler(event);
-                } else {
-                        action.m_op = EgcOperations::cursorBackward;
+                else
                         m_entity->handleAction(action);
-                }
                 break;
-        case Qt::Key_Space:
-                action.m_op = EgcOperations::spacePressed;
-                m_entity->handleAction(action);
-                break;
-        case Qt::Key_Backspace:
-                action.m_op = EgcOperations::backspacePressed;
-                m_entity->handleAction(action);
-                break;
-        case Qt::Key_Delete:
-                action.m_op = EgcOperations::delPressed;
-                m_entity->handleAction(action);
-                break;
-        case Qt::Key_ParenLeft:
-                m_entity->handleAction(getActionObject('('));
-                break;
-        case Qt::Key_ParenRight:
-                m_entity->handleAction(getActionObject(')'));
-                break;
-        case Qt::Key_End:
-                action.m_op = EgcOperations::endPressed;
-                m_entity->handleAction(action);
-                break;
-        case Qt::Key_Home:
-                action.m_op = EgcOperations::homePressed;
-                m_entity->handleAction(action);
-                break;
-        default:
-                QString chr(event->text()[0]);
-                if (chr.contains(s_alnumKeyFilter)) {
-                        action.m_op = EgcOperations::alnumKeyPressed;
-                        action.m_character = chr[0];
-                        m_entity->handleAction(action);
-                }
 
+        default:
+                if (action.m_op != EgcOperations::noAction)
+                        m_entity->handleAction(action);
                 break;
         }
 }
@@ -379,16 +347,6 @@ void EgcFormulaItem::hideCursors(void)
         EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
         if (scn)
                 scn->hideFormulaCursors();
-}
-
-EgcAction EgcFormulaItem::getActionObject(QChar op) const
-{
-        EgcAction action;
-
-        action.m_op = EgcOperations::mathOperator;
-        action.m_character = op;
-
-        return action;
 }
 
 void EgcFormulaItem::keyCursorKeyHandler(QKeyEvent *keyEvent)
