@@ -119,6 +119,11 @@ private:
          * @return the size of the grid
          */
         QSizeF getGrid(void);
+        /**
+         * @brief selectedItem returns the selected item at the cursor position
+         * @return selected item at cursor pos
+         */
+        QGraphicsItem *selectedItem(void) const;
 
         const QSize m_size = QSize(40,40);     ///< size of the cross
 

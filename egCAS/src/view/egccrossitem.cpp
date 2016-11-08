@@ -72,16 +72,16 @@ QVariant EgcCrossItem::itemChange(GraphicsItemChange change, const QVariant &val
 
 void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
 {
+        QGraphicsScene* scn = scene();
+        if (!scn)
+                return;
+
         int key = keyEvent->key();
         if (    key == Qt::Key_Left
              || key == Qt::Key_Right
              || key == Qt::Key_Up
              || key == Qt::Key_Down) {
                 keyEvent->accept();
-
-                QGraphicsScene* scn = scene();
-                if (!scn)
-                        return;
 
                 switch(keyEvent->key()) {
                 case Qt::Key_Up:
@@ -102,18 +102,36 @@ void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
                         break;
                 }
 
-
-                QGraphicsItem* item = scn->itemAt(scenePos(), QTransform());
+                QGraphicsItem* item = selectedItem();
                 if (item) {
-                        if (item != this) {
-                                item->setSelected(true);
-                                item->setFocus();
-                        }
+                        item->setSelected(true);
+                        item->setFocus();
                 }
                 ensureVisible(boundingRect(), 0, 0);
         } else {
                 QGraphicsItem::keyPressEvent(keyEvent);
+                if (!selectedItem()) {
+                        EgCasScene *scene = qobject_cast<EgCasScene*>(scn);
+                        if (scene) {
+                                scene->triggerFormulaCreation(scenePos(), keyEvent);
+                        }
+                }
         }
+}
+
+QGraphicsItem *EgcCrossItem::selectedItem(void) const
+{
+        QGraphicsScene* scn = scene();
+        if (!scn)
+                return nullptr;
+
+        QGraphicsItem* item = scn->itemAt(scenePos(), QTransform());
+        if (item) {
+                if (item != this)
+                        return item;
+        }
+
+        return nullptr;
 }
 
 void EgcCrossItem::focusOutEvent(QFocusEvent * event)
