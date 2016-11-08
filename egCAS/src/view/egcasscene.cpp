@@ -247,6 +247,6 @@ void EgCasScene::itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem&
 
 void EgCasScene::triggerFormulaCreation(QPointF point, QKeyEvent* event)
 {
-        emit createFormula(point, EgcActionMapper::map(event));
+        emit createFormula(point, event);
 }
 

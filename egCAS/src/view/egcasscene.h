@@ -144,8 +144,9 @@ signals:
         /**
          * @brief createFormula signal that is emitted if a empty formula shall be created at the given position.
          * @param point the position where to create a formula
+         * @param event pointer to key press event
          */
-        void createFormula(QPointF point, EgcAction action);
+        void createFormula(QPointF point, QKeyEvent* event);
 
 private:
 

@@ -42,6 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class EgcEntityList;
 class EgCasScene;
+class QKeyEvent;
 
 class EgcDocument : public QObject, EgcAbstractEntityList
 {
@@ -93,6 +94,14 @@ public:
          * @brief calculate calculates the document
          */
         void calculate(void);
+
+private slots:
+        /**
+         * @brief insertFormula insert a formula into the current document
+         * @param point position where to insert formula
+         * @param event the key event to pass to the selected formula
+         */
+        void insertFormula(QPointF point, QKeyEvent* event);
 
 private:
         virtual void sort(void) override {}
