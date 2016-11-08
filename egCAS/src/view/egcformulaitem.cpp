@@ -383,3 +383,9 @@ void EgcFormulaItem::keyCursorKeyHandler(QKeyEvent *keyEvent)
                 QGraphicsItem::keyPressEvent(keyEvent);
         }
 }
+
+void EgcFormulaItem::selectFormula(void)
+{
+        setSelected(true);
+        setFocus();
+}

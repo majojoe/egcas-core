@@ -157,6 +157,11 @@ public:
          */
         virtual void hideCursors(void) override;
 
+        /**
+         * @brief selectFormula select the formula and grab focus
+         */
+        virtual void selectFormula(void) override;
+
 protected:
         /**
          * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the

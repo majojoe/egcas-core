@@ -91,6 +91,10 @@ public:
          * @brief hideCursors hide the cursors e.g. in case the element is moved
          */
         virtual void hideCursors(void) = 0;
+        /**
+         * @brief selectFormula select the formula and grab focus
+         */
+        virtual void selectFormula(void) = 0;
 };
 
 #endif // EGCABSTRACTFORMULAITEM_H

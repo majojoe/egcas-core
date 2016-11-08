@@ -37,7 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasScene()}, m_calc{new EgcCalculation()}
 {
-        connect(m_scene.data(), SIGNAL(createFormula(QPointF, QKeyEvent*)), this, SLOT(insertFormula(QPointF, QKeyEvent*)));
+        connect(m_scene.data(), SIGNAL(createFormula(QPointF, QKeyEvent*)), this, SLOT(insertFormulaOnKeyPress(QPointF, QKeyEvent*)));
 }
 
 EgcEntityList* EgcDocument::getEntityList(void)
@@ -108,7 +108,8 @@ EgcCalculation const* EgcDocument::getCalcClass(void)
         return m_calc.data();
 }
 
-void EgcDocument::insertFormula(QPointF point, QKeyEvent* event)
+void EgcDocument::insertFormulaOnKeyPress(QPointF point, QKeyEvent* event)
 {
         EgcFormulaEntity *formula = static_cast<EgcFormulaEntity*>(createEntity(EgcEntityType::Formula, point));
+        formula->setSelected();
 }

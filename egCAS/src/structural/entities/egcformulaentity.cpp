@@ -925,3 +925,8 @@ bool EgcFormulaEntity::cursorAtEnd(void)
 
         return false;
 }
+
+void EgcFormulaEntity::setSelected(void)
+{
+        m_item->selectFormula();
+}

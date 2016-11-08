@@ -101,7 +101,7 @@ private slots:
          * @param point position where to insert formula
          * @param event the key event to pass to the selected formula
          */
-        void insertFormula(QPointF point, QKeyEvent* event);
+        void insertFormulaOnKeyPress(QPointF point, QKeyEvent* event);
 
 private:
         virtual void sort(void) override {}

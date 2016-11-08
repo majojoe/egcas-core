@@ -306,7 +306,10 @@ public:
          * @return true if cursor is at end
          */
         virtual bool cursorAtEnd(void) override;
-
+        /**
+         * @brief setSelected sets the formula selected
+         */
+        void setSelected(void);
 private:
         /**
          * @brief moveCursor move the screen formula cursor back- or forward
