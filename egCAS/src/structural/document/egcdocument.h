@@ -78,11 +78,10 @@ public:
          * @brief createEntity create an entity for a list that is a sublist of this document. The list given takes
          * ownership of the created entity. The user doesn't need to worry about the pointer returned.
          * @param type the entity type to create
-         * @param list the list where to insert the entity in
          * @param point the position inside the scene where to create the entity
          * @return the entity created or a nullptr if the entity couldn't be created
          */
-        EgcEntity* createEntity(EgcEntityType type, EgcEntityList& list, QPointF point);
+        EgcEntity* createEntity(EgcEntityType type, QPointF point);
         /**
          * @brief cloneEntity clone an existing entity
          * @param list the list where to insert the entity to be cloned

@@ -58,19 +58,19 @@ EgcDocument* EgcDocument::getDocument(void)
         return this;
 }
 
-EgcEntity* EgcDocument::createEntity(EgcEntityType type, EgcEntityList& list, QPointF point)
+EgcEntity* EgcDocument::createEntity(EgcEntityType type, QPointF point)
 {
         EgcEntity* ptr = nullptr;
 
         switch (type) {
         case EgcEntityType::Text:
-                ptr = m_textCreator.create(list, point);
+                ptr = m_textCreator.create(*m_list, point);
                 break;
         case EgcEntityType::Picture:
-                ptr = m_pixmapCreator.create(list, point);
+                ptr = m_pixmapCreator.create(*m_list, point);
                 break;
         default:
-                ptr = m_formulaCreator.create(list, point);
+                ptr = m_formulaCreator.create(*m_list, point);
         }
 
         return ptr;

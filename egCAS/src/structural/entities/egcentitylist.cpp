@@ -111,7 +111,7 @@ EgcEntity* EgcEntityList::createEntity(EgcEntityType type, QPointF point)
 {
         EgcDocument* doc = getDocument();
         if (doc) {
-                EgcEntity* entity = doc->createEntity(type, *this, point);
+                EgcEntity* entity = doc->createEntity(type, point);
                 entity->setList(this);
                 return entity;
         } else {
