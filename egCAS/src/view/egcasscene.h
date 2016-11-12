@@ -129,7 +129,8 @@ public:
         void itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem& item);
         /**
          * @brief triggerFormulaCreation
-         * @param point
+         * @param point the position where to create a formula
+         * @param event the event emitted when a key has been pressed
          */
         void triggerFormulaCreation(QPointF point, QKeyEvent* event);
 protected:
@@ -146,7 +147,7 @@ signals:
          * @param point the position where to create a formula
          * @param event pointer to key press event
          */
-        void createFormula(QPointF point, QKeyEvent* event);
+        void createFormula(QPointF point, EgcAction action);
 
 private:
 

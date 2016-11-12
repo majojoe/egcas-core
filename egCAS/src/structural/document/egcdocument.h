@@ -39,10 +39,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/creator/egcpixmapcreator.h"
 #include "entities/creator/egctextcreator.h"
 #include "egccalculation.h"
+#include "actions/egcaction.h"
 
 class EgcEntityList;
 class EgCasScene;
-class QKeyEvent;
 
 class EgcDocument : public QObject, EgcAbstractEntityList
 {
@@ -99,9 +99,9 @@ private slots:
         /**
          * @brief insertFormula insert a formula into the current document
          * @param point position where to insert formula
-         * @param event the key event to pass to the selected formula
+         * @param action the action to pass to the selected formula
          */
-        void insertFormulaOnKeyPress(QPointF point, QKeyEvent* event);
+        void insertFormulaOnKeyPress(QPointF point, EgcAction action);
 
 private:
         virtual void sort(void) override {}

@@ -456,6 +456,34 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         }
 }
 
+EgcNode* EgcFormulaEntity::replaceEmptyNodeWith(EgcNodeType type)
+{
+        if (!isEmptyNode())  //check if current node is an empty node
+                return nullptr;
+
+        QScopedPointer<EgcNode> newNode(EgcNodeCreator::create(type));
+        if (!newNode)
+                return nullptr;
+
+        EgcNode* oldNode = const_cast<EgcNode*>(m_scrIter->node());
+        EgcNode* newPtr = newNode.data();
+        if (!paste(*newNode.take(), *oldNode))
+                return nullptr;
+
+        m_scrIter->updatePointer(oldNode, newPtr, false);
+
+        return newPtr;
+}
+
+bool EgcFormulaEntity::isEmptyNode(void)
+{
+        if (m_scrIter->node()->getNodeType() == EgcNodeType::EmptyNode) {
+                return true;
+        }
+
+        return false;
+}
+
 void EgcFormulaEntity::insertOperation(QChar operation)
 {
         if (!m_scrIter)
@@ -463,9 +491,49 @@ void EgcFormulaEntity::insertOperation(QChar operation)
         if (!m_item)
                 return;
 
-        m_scrIter->insertOp(operation);
+        insertOp(operation);
         m_item->hideCursors();
         m_item->updateView();
+}
+
+bool EgcFormulaEntity::insertOp(QChar operations)
+{
+        bool retval = false;
+
+        if (    operations == '('
+             || operations == ')') {
+                if (    operations == '('
+                     && (    !m_scrIter->rightSide() ))
+                        return insertUnaryOp(EgcNodeType::ParenthesisNode);
+                if (    operations == ')'
+                     && (    m_scrIter->rightSide()) )
+                        return insertUnaryOp(EgcNodeType::ParenthesisNode);
+        }
+
+        return retval;
+}
+
+bool EgcFormulaEntity::insertUnaryOp(EgcNodeType type)
+{
+        const EgcNode* node = m_scrIter->node();
+        if (node) {
+                if (node->getNodeType() == EgcNodeType::AlnumNode)
+                        node = node->getParent();
+        }
+
+        if (!node)
+                return false;
+
+        if (type == EgcNodeType::BaseNode)
+                return false;
+
+        QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
+        if (!tmp->isUnaryNode())
+                return false;
+
+        m_scrIter->insert(type);
+
+        return true;
 }
 
 void EgcFormulaEntity::insertCharacter(QChar character)
@@ -474,6 +542,19 @@ void EgcFormulaEntity::insertCharacter(QChar character)
                 return;
         if (!m_item)
                 return;
+
+        if (isEmptyNode()) {
+                if (character.isDigit()) {
+                        EgcNumberNode * node = static_cast<EgcNumberNode*>(replaceEmptyNodeWith(EgcNodeType::NumberNode));
+                        if (node)
+                                node->setValue("");
+                } else {
+                        EgcVariableNode * node = static_cast<EgcVariableNode*>(replaceEmptyNodeWith(EgcNodeType::VariableNode));
+                        //if (node)
+                                //node->setValue("");
+                }
+                m_item->updateView();
+        }
 
         m_scrIter->insert(character);
         m_item->hideCursors();

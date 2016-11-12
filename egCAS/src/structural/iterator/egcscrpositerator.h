@@ -129,11 +129,11 @@ public:
          */
         bool insert(QChar character);
         /**
-         * @brief insert insert any operation at current position of the iterator
-         * @param operations the operation to insert
-         * @return true if the insert operation was successful, false otherwise
+         * @brief insert insert a new type at the cursors current position
+         * @param type the type to insert at the current position
+         * @return true if the operation was successful, false otherwise
          */
-        bool insertOp(QChar operations);
+        bool insert(EgcNodeType type);
         /**
          * @brief remove removes the element that is next to the current iterator position (forward direction)
          * @return true if the operation was successful, false otherwise
@@ -199,13 +199,6 @@ private:
          * @return returns the next visible parent node of the current node
          */
         EgcNode& getNextVisibleParentNode(void);
-        /**
-         * @brief insertUnaryOp insert a unary node in the tree above the given node (position)
-         * @param type the node type to insert 
-         * @param node the node where to insert the operation
-         * @return true if everything worked well, false otherwise.
-         */
-        bool insertUnaryOp(EgcNodeType type, EgcNode* node);
         /**
          * @brief balanceNodeIter iterate the node iterator to the right side or to the left if modifying the subiter.
          * If this function is always called when modifying the subiter, the nodeIter is always on the correct side 

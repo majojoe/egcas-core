@@ -239,6 +239,11 @@ bool EgcScrPosIterator::insert(QChar character)
         return retval;
 }
 
+bool EgcScrPosIterator::insert(EgcNodeType type)
+{
+        return m_nodeIter->insert(type);
+}
+
 bool EgcScrPosIterator::remove(void)
 {
         bool str;
@@ -324,45 +329,6 @@ bool EgcScrPosIterator::isUnderlineActive(void)
                 return true;
         else
                 return false;
-}
-
-bool EgcScrPosIterator::insertOp(QChar operations)
-{
-        bool retval = false;
-
-        if (    operations == '('
-             || operations == ')') {
-                if (    operations == '('
-                     && (    !rightSide() ))
-                        return insertUnaryOp(EgcNodeType::ParenthesisNode, &m_nodeIter->getNode());
-                if (    operations == ')'
-                     && (    rightSide()) )
-                        return insertUnaryOp(EgcNodeType::ParenthesisNode, &m_nodeIter->getNode());
-        }
-
-        return retval;
-}
-
-bool EgcScrPosIterator::insertUnaryOp(EgcNodeType type, EgcNode* node)
-{
-        if (node) {
-                if (node->getNodeType() == EgcNodeType::AlnumNode)
-                        node = node->getParent();
-        }
-
-        if (!node)
-                return false;
-
-        if (type == EgcNodeType::BaseNode)
-                return false;
-        
-        QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
-        if (!tmp->isUnaryNode())
-                return false;
-
-        m_nodeIter->insert(type);
-        
-        return true;
 }
 
 void EgcScrPosIterator::finishFormulaChange(void)

@@ -278,6 +278,13 @@ public:
          */
         bool paste(EgcNode& treeToPaste, EgcNode& whereToPaste);
         /**
+         * @brief replaceEmptyNodeWith replace the empty node where currently the cursor is, with a node of the given
+         * type.
+         * @param type the type to use for the node as replacement for the empty node
+         * @return nullptr if operation was not successful, or node inserted at cursor position where empty node was.
+         */
+        EgcNode* replaceEmptyNodeWith(EgcNodeType type);
+        /**
          * @brief isResultNode check if the given node is part of a result from the calculation kernel
          * @param node the node to check for if it is a part of a result
          * @return true if it is a result node, false otherwise
@@ -363,7 +370,23 @@ private:
          * @return true if left rotation was possible and done, false otherwise.
          */
         virtual bool rotateTreeLeft(EgcNode& treeNodeToRotate);
-
+        /**
+         * @brief isEmptyNode check if current node where cursor is, is an empty node or not
+         * @return true if it is an empty node, false otherwise
+         */
+        bool isEmptyNode(void);
+        /**
+         * @brief insert insert any operation at current position of the iterator
+         * @param operations the operation to insert
+         * @return true if the insert operation was successful, false otherwise
+         */
+        bool insertOp(QChar operations);
+        /**
+         * @brief insertUnaryOp insert a unary node in the tree above the given node (position)
+         * @param type the node type to insert
+         * @return true if everything worked well, false otherwise.
+         */
+        bool insertUnaryOp(EgcNodeType type);
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
