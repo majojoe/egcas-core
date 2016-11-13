@@ -764,7 +764,7 @@ bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState stat
         return true;
 }
 
-bool EgcIdNodeIter::replaceByEmtpy(void)
+bool EgcIdNodeIter::replaceByEmtpy(bool cursorRight)
 {
         if (!m_node)
                 return false;
@@ -777,7 +777,7 @@ bool EgcIdNodeIter::replaceByEmtpy(void)
                 return false;
         EgcNode* tmp = empty.data();
         m_formula.paste(*empty.take(), *m_node);
-        setAtNodeDelayed(*tmp, false);
+        setAtNodeDelayed(*tmp, cursorRight);
 
         return true;
 }

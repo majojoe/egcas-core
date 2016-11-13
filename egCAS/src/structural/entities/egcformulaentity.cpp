@@ -855,7 +855,7 @@ void EgcFormulaEntity::rearrangePrecedence(void)
 
         if (m_scrIter) {
                 m_scrIter->lockDelayedCursorUpdate();
-                m_scrIter->toFront();
+                m_scrIter->invalidateCursor(getBaseElement());
         }
 
         do {

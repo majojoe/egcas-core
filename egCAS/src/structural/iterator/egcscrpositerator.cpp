@@ -271,7 +271,7 @@ bool EgcScrPosIterator::remove(bool &structureChanged)
                 bool retval = m_subIdIter->remove(false);
                 balanceNodeIter();
                 if (m_nodeIter->getNode().nrSubindexes() == 0) {
-                        if (!m_nodeIter->replaceByEmtpy())
+                        if (!m_nodeIter->replaceByEmtpy(false))
                                 retval = false;
                         else
                                 structureChanged = true;
@@ -308,7 +308,7 @@ bool EgcScrPosIterator::backspace(bool &structureChanged)
                 bool retval;
                 retval =  m_subIdIter->remove(true);
                 if (m_nodeIter->getNode().nrSubindexes() == 0) {
-                        if (!m_nodeIter->replaceByEmtpy())
+                        if (!m_nodeIter->replaceByEmtpy(true))
                                 retval = false;
                         else
                                 structureChanged = true;
@@ -391,4 +391,10 @@ void EgcScrPosIterator::previousNonoperationNode(void)
         while(hasPrevious() && node()->isOperation()) {
                 previous();
         }
+}
+
+void EgcScrPosIterator::invalidateCursor(EgcNode& baseNode)
+{
+        m_nodeIter->toFront();
+        m_subIdIter->setNode(baseNode);
 }

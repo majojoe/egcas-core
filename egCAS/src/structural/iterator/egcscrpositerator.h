@@ -193,6 +193,11 @@ public:
          * unlikely that a user will need to use this.
          */
         void unlockDelayedCursorUpdate(void);
+        /**
+         * @brief invalidateCursor make sure cursor is not valid anymore. Cursor must be updated upon next cursor update.
+         * @param baseNode the base node of the formula must be given here
+         */
+        void invalidateCursor(EgcNode& baseNode);
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula

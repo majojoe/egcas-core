@@ -170,9 +170,10 @@ public:
         bool deleteTree(bool before);
         /**
          * @brief replaceByEmtpy replaces current node by empty node
+         * @param cursorRight true if the cursor shall be at the right side of the empty element, false if left
          * @return true if everything went well, false otherwise
          */
-        bool replaceByEmtpy(void);
+        bool replaceByEmtpy(bool cursorRight);
         /**
          * @brief lockDelayedCursorUpdate if the cursor update is locked, setAtNodeDelayed has no effect. This can be
          * useful, if there are some operations in between that shall have no effect. It is very unlikely that a user
