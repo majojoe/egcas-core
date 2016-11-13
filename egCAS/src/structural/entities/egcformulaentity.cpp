@@ -549,9 +549,7 @@ void EgcFormulaEntity::insertCharacter(QChar character)
                         if (node)
                                 node->setValue("");
                 } else {
-                        EgcVariableNode * node = static_cast<EgcVariableNode*>(replaceEmptyNodeWith(EgcNodeType::VariableNode));
-                        //if (node)
-                                //node->setValue("");
+                        replaceEmptyNodeWith(EgcNodeType::VariableNode);
                 }
                 m_item->updateView();
         }

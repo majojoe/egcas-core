@@ -89,10 +89,11 @@ void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide, EgcSnapProperty s
 
         EgcNode* visible_node;
 
-        if (atRightSide)
-                visible_node = gotoNodeWithId(true, &iter, node, false, snapProperty);
-        else
+        if (atRightSide) {
                 visible_node = gotoNodeWithId(false, &iter, node, false, snapProperty);
+        } else {
+                visible_node = gotoNodeWithId(true, &iter, node, false, snapProperty);
+        }
 
         if (visible_node) {
                 m_node = visible_node;
