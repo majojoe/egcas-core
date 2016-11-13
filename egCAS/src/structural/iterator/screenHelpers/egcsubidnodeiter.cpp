@@ -176,7 +176,7 @@ bool EgcSubindNodeIter::insert(QChar character)
         int pos = -1;
         if (m_nextId != -1)
                 pos = m_nextId;
-        else if (m_prevId != -1)
+        else
                 pos = m_prevId + 1;
         if (pos != -1) {
                 switch (m_node->getNodeType()) {

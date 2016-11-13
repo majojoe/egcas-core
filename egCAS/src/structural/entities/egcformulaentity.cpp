@@ -470,7 +470,7 @@ EgcNode* EgcFormulaEntity::replaceEmptyNodeWith(EgcNodeType type)
         if (!paste(*newNode.take(), *oldNode))
                 return nullptr;
 
-        m_scrIter->updatePointer(oldNode, newPtr, false);
+        m_scrIter->updatePointer(oldNode, newPtr, true);
 
         return newPtr;
 }

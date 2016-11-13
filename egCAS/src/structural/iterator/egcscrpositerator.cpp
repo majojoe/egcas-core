@@ -355,11 +355,6 @@ void EgcScrPosIterator::updatePointer(EgcNode* oldPointer, EgcNode* newPointer, 
                 return;
 
         m_nodeIter->setAtNodeDelayed(*newPointer, right);
-        if (oldPointer != newPointer) {
-                m_subIdIter->setNode(*newPointer);
-                if (right)
-                        m_subIdIter->toBack();
-        }
 }
 
 void EgcScrPosIterator::balanceNodeIter(void)
