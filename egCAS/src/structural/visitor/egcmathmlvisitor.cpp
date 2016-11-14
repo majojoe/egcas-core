@@ -151,7 +151,7 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
         case EgcNodeType::FunctionNode:
                 if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
-                        QString startStr = QString("<mrow "%id%"><mi>%1</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>")
+                        QString startStr = QString("<mrow "%id%"><mi mathvariant=\"italic\">%1</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>")
                                       .arg(static_cast<EgcFunctionNode*>(node)->getName());
                         assembleResult(startStr, "<mo>,</mo>", "</mrow><mo>)</mo></mrow></mrow>", node);
                 }
@@ -243,7 +243,7 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                 pushToStack("<mn" %id%">" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>", node);
                 break;
         case EgcNodeType::AlnumNode:
-                pushToStack("<mi" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue() % "</mi>", node);
+                pushToStack("<mi mathvariant=\"normal\"" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue() % "</mi>", node);
                 break;
         case EgcNodeType::EmptyNode:
                 pushToStack("<mi" %id%">&#x2B1A;</mi>", node);
