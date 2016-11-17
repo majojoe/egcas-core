@@ -84,6 +84,11 @@ public:
          * @return the pixmap of the current item
          */
         virtual QPixmap getPixmap(void) override;
+        /**
+         * @brief type returns the type of the item
+         * @return item type
+         */
+        virtual int type() const override;
 
 protected:
         /**

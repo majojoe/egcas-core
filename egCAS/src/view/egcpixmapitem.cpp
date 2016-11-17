@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcpixmapitem.h"
 #include "egcasscene.h"
 #include "resizehandle.h"
+#include "egcitemtypes.h"
 
 EgcPixmapItem::EgcPixmapItem(QGraphicsItem*parent) : QGraphicsPixmapItem{parent}, m_entity{nullptr}
 {
@@ -173,3 +174,7 @@ void EgcPixmapItem::keyPressEvent(QKeyEvent *keyEvent)
         }
 }
 
+int EgcPixmapItem::type() const
+{
+        return static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType);
+}

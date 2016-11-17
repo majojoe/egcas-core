@@ -40,11 +40,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/creator/egctextcreator.h"
 #include "egccalculation.h"
 #include "actions/egcaction.h"
+#include "egcabstractdocument.h"
 
 class EgcEntityList;
 class EgCasScene;
 
-class EgcDocument : public QObject, EgcAbstractEntityList
+class EgcDocument : public QObject, EgcAbstractEntityList, EgcAbstractDocument
 {
         Q_OBJECT
 public:
@@ -94,6 +95,12 @@ public:
          * @brief calculate calculates the document
          */
         void calculate(void);
+        /**
+         * @brief deleteFormula delete a formula
+         * @param formula the formula to delete
+         * @return true if everything went well, false otherwise
+         */
+        virtual bool deleteFormula(EgcAbstractFormulaEntity* formula) override;
 
 private slots:
         /**

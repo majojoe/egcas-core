@@ -1009,3 +1009,14 @@ void EgcFormulaEntity::setSelected(void)
 {
         m_item->selectFormula();
 }
+
+bool EgcFormulaEntity::isEmpty(void)
+{
+        EgcNode* node = getRootElement();
+        if (!node)
+                return true;
+        if (getRootElement()->getNodeType() == EgcNodeType::EmptyNode)
+                return true;
+
+        return false;
+}

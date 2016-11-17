@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcabstractformulaitem.h"
 #include "egcscreenpos.h"
 #include "actions/egcactionmapper.h"
+#include "egcitemtypes.h"
 
 quint8 EgcFormulaItem::s_baseFontSize = 14;
 QRegularExpression EgcFormulaItem::s_alnumKeyFilter = QRegularExpression("[._0-9a-zA-ZΆ-ώ]+");
@@ -388,4 +389,17 @@ void EgcFormulaItem::selectFormula(void)
 {
         setSelected(true);
         setFocus();
+}
+
+int EgcFormulaItem::type() const
+{
+        return static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType);
+}
+
+bool EgcFormulaItem::isEmpty(void)
+{
+        if (m_entity)
+                return m_entity->isEmpty();
+
+        return false;
 }

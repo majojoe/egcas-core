@@ -137,6 +137,11 @@ protected:
          * @return true if cursor is at the bottom, false otherwise
          */
         bool isAtBottom(void);
+        /**
+         * @brief type returns the type of the item
+         * @return item type
+         */
+        virtual int type() const override;
 
 signals:
 

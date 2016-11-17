@@ -317,6 +317,11 @@ public:
          * @brief setSelected sets the formula selected
          */
         void setSelected(void);
+        /**
+         * @brief isEmpty check if the formula is an empty formula
+         * @return true if empty, false otherwise
+         */
+        virtual bool isEmpty(void);
 private:
         /**
          * @brief moveCursor move the screen formula cursor back- or forward

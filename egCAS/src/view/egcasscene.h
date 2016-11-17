@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcabstractformulaentity.h"
 #include "entities/egcabstractpixmapentity.h"
 #include "entities/egcabstracttextentity.h"
+#include "document/egcabstractdocument.h"
 
 class EgcFormulaItem;
 class EgcPixmapItem;
@@ -53,7 +54,7 @@ class EgCasScene : public QGraphicsScene
         Q_OBJECT
 public:        
         ///constructor of EgCasScene
-        explicit EgCasScene(QObject *parent = 0);
+        explicit EgCasScene(EgcAbstractDocument& doc, QObject *parent = 0);
         virtual ~EgCasScene();
         /**
          * @brief grid return the grid size
@@ -133,6 +134,7 @@ public:
          * @param event the event emitted when a key has been pressed
          */
         void triggerFormulaCreation(QPointF point, QKeyEvent* event);
+
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
         /**
@@ -140,6 +142,11 @@ protected:
          * @param event mouse event
          */
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
+        /**
+         * @brief keyPressEvent overrides key press event from QGraphicsItem
+         * @param event contains the key pressed
+         */
+        virtual void keyPressEvent(QKeyEvent * event) override;
 
 signals:
         /**
@@ -152,9 +159,10 @@ signals:
 private:
 
         QSizeF m_grid;
-        QGraphicsLineItem* m_cursor;             ///< formula cursor for modifying formula
-        QGraphicsLineItem* m_nodeUnderline;      ///< node cursor to show user the context of changes in a formula
-        EgcCrossItem* m_cross;                   ///< crosshair (cursor) to be able to see enter position
+        QGraphicsLineItem* m_cursor;            ///< formula cursor for modifying formula
+        QGraphicsLineItem* m_nodeUnderline;     ///< node cursor to show user the context of changes in a formula
+        EgcCrossItem* m_cross;                  ///< crosshair (cursor) to be able to see enter position
+        EgcAbstractDocument& m_document;        ///< reference to document that contains the scene
 };
 
 #endif // EGCASSCENE_H

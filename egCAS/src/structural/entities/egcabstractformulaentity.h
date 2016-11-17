@@ -66,6 +66,12 @@ public:
          * @return true if cursor is at end
          */
         virtual bool cursorAtEnd(void) = 0;
+        /**
+         * @brief isEmpty check if the formula is an empty formula
+         * @return true if empty, false otherwise
+         */
+        virtual bool isEmpty(void) = 0;
+
 };
 
 #endif // EGCABSTRACTFORMULAENTITY_H

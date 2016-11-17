@@ -161,6 +161,16 @@ public:
          * @brief selectFormula select the formula and grab focus
          */
         virtual void selectFormula(void) override;
+        /**
+         * @brief type returns the type of the item
+         * @return item type
+         */
+        virtual int type() const override;
+        /**
+         * @brief isEmpty check if the formula is an empty formula
+         * @return true if empty, false otherwise
+         */
+        bool isEmpty(void);
 
 protected:
         /**

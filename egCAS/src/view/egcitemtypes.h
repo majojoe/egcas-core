@@ -27,47 +27,18 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCABSTRACTITEM_H
-#define EGCABSTRACTITEM_H
+#ifndef EGCITEMTYPES_H
+#define EGCITEMTYPES_H
 
-class QPointF;
-class QSizeF;
+#include <QGraphicsItem>
 
-
-class EgcAbstractItem
-{
-public:
-        ///std constructor
-        EgcAbstractItem();
-        /**
-         * @brief ~EgcAbstractItem virtual destructor in order to be able to delete subclasses
-         */
-        virtual ~EgcAbstractItem() {}
-        /**
-         * @brief activateGrid activates or deactivates the snap to grid functionality
-         * @param activate if true the grid will be activated, if false it will become decativated
-         */
-        void activateGrid(bool activate);
-        /**
-         * @brief isGridActivated returns wheter grid is activated or not.
-         * @return true if grid is activated, false otherwise
-         */
-        bool isGridActivated(void);
-protected:
-        /**
-         * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
-         * subclasses already inherit from it - and we don't want to make it complicated)
-         * @return the size of the grid
-         */
-        virtual QSizeF getGrid(void) = 0;
-        /**
-         * @brief snapGrid snap to scene grid
-         * @param pos the position to snap to grid
-         * @return the new position that is snapped to the grid
-         */
-        QPointF snapGrid(const QPointF& pos);
-
-        bool m_gridActivated;           ///< reflects if the grid is activated
+/**
+ * @brief type definitions for custom graphic items
+ */
+enum class EgcGraphicsItemType {
+        EgcFormulaItemType = QGraphicsItem::UserType + 1,
+        EgcTextItemType = QGraphicsItem::UserType + 2,
+        EgcPixmapItemType = QGraphicsItem::UserType + 3
 };
 
-#endif // EGCABSTRACTITEM_H
+#endif //#ifndef EGCITEMTYPES_H

@@ -12,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -27,47 +27,23 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCABSTRACTITEM_H
-#define EGCABSTRACTITEM_H
-
-class QPointF;
-class QSizeF;
+#ifndef EGCABSTRACTDOCUMENT_H
+#define EGCABSTRACTDOCUMENT_H
 
 
-class EgcAbstractItem
+class EgcAbstractFormulaEntity;
+
+class EgcAbstractDocument 
 {
 public:
-        ///std constructor
-        EgcAbstractItem();
+        ///destructor
+        virtual ~EgcAbstractDocument() {}
         /**
-         * @brief ~EgcAbstractItem virtual destructor in order to be able to delete subclasses
+         * @brief deleteFormula delete a formula
+         * @param formula the formula to delete
+         * @return true if everything went well, false otherwise
          */
-        virtual ~EgcAbstractItem() {}
-        /**
-         * @brief activateGrid activates or deactivates the snap to grid functionality
-         * @param activate if true the grid will be activated, if false it will become decativated
-         */
-        void activateGrid(bool activate);
-        /**
-         * @brief isGridActivated returns wheter grid is activated or not.
-         * @return true if grid is activated, false otherwise
-         */
-        bool isGridActivated(void);
-protected:
-        /**
-         * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
-         * subclasses already inherit from it - and we don't want to make it complicated)
-         * @return the size of the grid
-         */
-        virtual QSizeF getGrid(void) = 0;
-        /**
-         * @brief snapGrid snap to scene grid
-         * @param pos the position to snap to grid
-         * @return the new position that is snapped to the grid
-         */
-        QPointF snapGrid(const QPointF& pos);
-
-        bool m_gridActivated;           ///< reflects if the grid is activated
+        virtual bool deleteFormula(EgcAbstractFormulaEntity* formula) = 0;
 };
 
-#endif // EGCABSTRACTITEM_H
+#endif //#ifndef EGCABSTRACTDOCUMENT_H

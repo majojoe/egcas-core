@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QCursor>
 #include "egctextitem.h"
 #include "egcasscene.h"
+#include "egcitemtypes.h"
 
 EgcTextItem::EgcTextItem(QGraphicsItem*parent) : QGraphicsTextItem{parent}, m_entity{nullptr}, m_editingActivated{false}
 {
@@ -238,4 +239,9 @@ bool EgcTextItem::isAtBottom(void)
                 return true;
 
         return false;
+}
+
+int EgcTextItem::type() const
+{
+        return static_cast<int>(EgcGraphicsItemType::EgcTextItemType);
 }

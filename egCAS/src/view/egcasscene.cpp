@@ -40,8 +40,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "actions/egcactionmapper.h"
 
 
-EgCasScene::EgCasScene(QObject *parent) :
-        QGraphicsScene{parent}, m_cursor{addLine(0,0,0,0,QPen(QColor(Qt::red)))},
+EgCasScene::EgCasScene(EgcAbstractDocument& doc, QObject *parent) :
+        m_document{doc}, QGraphicsScene{parent}, m_cursor{addLine(0,0,0,0,QPen(QColor(Qt::red)))},
         m_nodeUnderline{addLine(0,0,0,0,QPen(QColor(Qt::red)))}
 {        
         m_grid = QSizeF(30.0, 30.0);
@@ -217,6 +217,9 @@ void EgCasScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
                         m_cross->show();
                         setFocusItem(m_cross);
                 }
+        } else {
+                if (m_cross)
+                        m_cross->setPos(event->scenePos());
         }
         QGraphicsScene::mouseReleaseEvent(event);
 }
@@ -250,3 +253,25 @@ void EgCasScene::triggerFormulaCreation(QPointF point, QKeyEvent *event)
         emit createFormula(point, EgcActionMapper::map(event));
 }
 
+void EgCasScene::keyPressEvent(QKeyEvent * event)
+{
+        int key = event->key();
+
+        if (    key == Qt::Key_Backspace
+             || key == Qt::Key_Delete) {
+             QGraphicsItem *item = focusItem();
+                if (item) {
+                        EgcFormulaItem *formula = qgraphicsitem_cast<EgcFormulaItem*>(item);
+                        if (formula) {
+                                EgcAbstractFormulaEntity* entity = formula->
+                                if (formula->isEmpty())
+                                        m_document.deleteFormula(formula);
+                        }
+                }
+        }
+
+        event->ignore();
+
+        QGraphicsScene::keyPressEvent(event);
+
+}
