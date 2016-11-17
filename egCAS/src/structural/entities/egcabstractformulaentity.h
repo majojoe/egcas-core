@@ -70,7 +70,7 @@ public:
          * @brief isEmpty check if the formula is an empty formula
          * @return true if empty, false otherwise
          */
-        virtual bool isEmpty(void) = 0;
+        virtual bool isEmpty(void) const = 0;
 
 };
 

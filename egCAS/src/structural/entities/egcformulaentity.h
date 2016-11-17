@@ -225,6 +225,11 @@ public:
          */
         void setItem(EgcAbstractFormulaItem* item) override;
         /**
+         * @brief getItem returns a pointer to the item in the scene
+         * @return pointer to item in scene
+         */
+        EgcAbstractFormulaItem* getItem(void) const;
+        /**
          * @brief updateView update the view with the new mathml representation if anything changes
          */
         void updateView(void);
@@ -321,7 +326,7 @@ public:
          * @brief isEmpty check if the formula is an empty formula
          * @return true if empty, false otherwise
          */
-        virtual bool isEmpty(void);
+        virtual bool isEmpty(void) const;
 private:
         /**
          * @brief moveCursor move the screen formula cursor back- or forward

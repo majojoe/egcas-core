@@ -263,9 +263,9 @@ void EgCasScene::keyPressEvent(QKeyEvent * event)
                 if (item) {
                         EgcFormulaItem *formula = qgraphicsitem_cast<EgcFormulaItem*>(item);
                         if (formula) {
-                                EgcAbstractFormulaEntity* entity = formula->
-                                if (formula->isEmpty())
-                                        m_document.deleteFormula(formula);
+                                EgcAbstractFormulaEntity* entity = formula->getEnity();
+                                if (entity->isEmpty())
+                                        m_document.deleteFormula(entity);
                         }
                 }
         }

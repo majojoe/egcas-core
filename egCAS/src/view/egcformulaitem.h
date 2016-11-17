@@ -104,6 +104,11 @@ public:
          */
         void setEntity(EgcAbstractFormulaEntity* entity);
         /**
+         * @brief getEnity returns a pointer to the entity that contains the logical structure for the formula
+         * @return the entity that is associated with the formula item
+         */
+        EgcAbstractFormulaEntity* getEnity(void) const;
+        /**
          * @brief getPosItemIface needs to be overwritten by subclasses to get the position of the item
          * @return the Position of the item
          */

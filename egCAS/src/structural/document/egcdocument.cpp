@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egccalculation.h"
 #include "entities/egcformulaentity.h"
 
-EgcDocument::EgcDocument() : m_list{new EgcEntityList()}, m_scene{new EgCasScene(nullptr, this)}, m_calc{new EgcCalculation()}
+EgcDocument::EgcDocument() : m_list{new EgcEntityList()}, m_scene{new EgCasScene(*this, nullptr)}, m_calc{new EgcCalculation()}
 {
         connect(m_scene.data(), SIGNAL(createFormula(QPointF, EgcAction)), this, SLOT(insertFormulaOnKeyPress(QPointF, EgcAction)));
 }
@@ -117,5 +117,17 @@ void EgcDocument::insertFormulaOnKeyPress(QPointF point, EgcAction action)
 
 bool EgcDocument::deleteFormula(EgcAbstractFormulaEntity* formula)
 {
-#warning implement this
+        if(!formula)
+                return false;
+        EgcFormulaEntity* entity = static_cast<EgcFormulaEntity*>(formula);
+
+        EgcAbstractFormulaItem* item = entity->getItem();
+        if (!item)
+                return false;
+        this->getScene()->removeItem(item);
+
+        m_list->deleteEntity(entity);
+        entity->updateView();
+
+        return true;
 }

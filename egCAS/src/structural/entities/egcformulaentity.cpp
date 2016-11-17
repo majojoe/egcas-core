@@ -1010,7 +1010,7 @@ void EgcFormulaEntity::setSelected(void)
         m_item->selectFormula();
 }
 
-bool EgcFormulaEntity::isEmpty(void)
+bool EgcFormulaEntity::isEmpty(void) const
 {
         EgcNode* node = getRootElement();
         if (!node)
@@ -1019,4 +1019,9 @@ bool EgcFormulaEntity::isEmpty(void)
                 return true;
 
         return false;
+}
+
+EgcAbstractFormulaItem* EgcFormulaEntity::getItem(void) const
+{
+        return m_item;
 }

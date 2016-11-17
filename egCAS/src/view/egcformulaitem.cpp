@@ -403,3 +403,8 @@ bool EgcFormulaItem::isEmpty(void)
 
         return false;
 }
+
+EgcAbstractFormulaEntity* EgcFormulaItem::getEnity(void) const
+{
+        return m_entity;
+}
