@@ -134,6 +134,24 @@ public:
          * @param event the event emitted when a key has been pressed
          */
         void triggerFormulaCreation(QPointF point, QKeyEvent* event);
+        /**
+         * @brief deleteItem removes the given item from the scene and deletes it
+         * @param item item to delete
+         * @return true if deleting the item was successful, false otherwise
+         */
+        bool deleteItem(EgcAbstractFormulaItem* item);
+        /**
+         * @brief deleteItem removes the given item from the scene and deletes it
+         * @param item item to delete
+         * @return true if deleting the item was successful, false otherwise
+         */
+        bool deleteItem(EgcAbstractPixmapItem* item);
+        /**
+         * @brief deleteItem removes the given item from the scene and deletes it
+         * @param item item to delete
+         * @return true if deleting the item was successful, false otherwise
+         */
+        bool deleteItem(EgcAbstractTextItem* item);
 
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
@@ -147,6 +165,12 @@ protected:
          * @param event contains the key pressed
          */
         virtual void keyPressEvent(QKeyEvent * event) override;
+        /**
+         * @brief deleteItem delete a QGraphicsItem from the scene
+         * @param item item to delete
+         * @return true if successful, false otherwise
+         */
+        bool deleteItem(QGraphicsItem* item);
 
 signals:
         /**

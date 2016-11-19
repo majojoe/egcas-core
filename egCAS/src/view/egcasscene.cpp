@@ -275,3 +275,45 @@ void EgCasScene::keyPressEvent(QKeyEvent * event)
         QGraphicsScene::keyPressEvent(event);
 
 }
+
+bool EgCasScene::deleteItem(EgcAbstractFormulaItem* item)
+{
+        QGraphicsItem* qitem = dynamic_cast<QGraphicsItem*>(item);
+
+        if (!qitem)
+                return false;
+
+        return deleteItem(qitem);
+}
+
+bool EgCasScene::deleteItem(EgcAbstractPixmapItem* item)
+{
+        QGraphicsItem* qitem = dynamic_cast<QGraphicsItem*>(item);
+
+        if (!qitem)
+                return false;
+
+        return deleteItem(qitem);
+}
+
+bool EgCasScene::deleteItem(EgcAbstractTextItem* item)
+{
+        QGraphicsItem* qitem = dynamic_cast<QGraphicsItem*>(item);
+
+        if (!qitem)
+                return false;
+
+        return deleteItem(qitem);
+}
+
+bool EgCasScene::deleteItem(QGraphicsItem *item)
+{
+        if (!item)
+                return false;
+
+        itemYieldsFocus(EgcSceneSnapDirection::left, *item);
+        removeItem(item);
+        delete item;
+
+        return true;
+}
