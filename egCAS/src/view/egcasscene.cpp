@@ -255,25 +255,29 @@ void EgCasScene::triggerFormulaCreation(QPointF point, QKeyEvent *event)
 
 void EgCasScene::keyPressEvent(QKeyEvent * event)
 {
+        bool redirect_key = true;
+
         int key = event->key();
 
         if (    key == Qt::Key_Backspace
              || key == Qt::Key_Delete) {
-             QGraphicsItem *item = focusItem();
+                QGraphicsItem *item = focusItem();
                 if (item) {
-                        EgcFormulaItem *formula = qgraphicsitem_cast<EgcFormulaItem*>(item);
+                        EgcFormulaItem *formula = dynamic_cast<EgcFormulaItem*>(item);
                         if (formula) {
                                 EgcAbstractFormulaEntity* entity = formula->getEnity();
-                                if (entity->isEmpty())
+                                if (entity->isEmpty()) {
                                         m_document.deleteFormula(entity);
+                                        redirect_key = false;
+                                }
                         }
                 }
         }
 
-        event->ignore();
-
-        QGraphicsScene::keyPressEvent(event);
-
+        if (redirect_key) {
+                event->ignore();
+                QGraphicsScene::keyPressEvent(event);
+        }
 }
 
 bool EgCasScene::deleteItem(EgcAbstractFormulaItem* item)
