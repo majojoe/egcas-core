@@ -298,3 +298,8 @@ bool EgcVariableNode::cursorSnaps(EgcNodeSide side) const
 {
         return false;
 }
+
+bool EgcVariableNode::visibleSigns(EgcNodeSide side) const
+{
+        return false;
+}

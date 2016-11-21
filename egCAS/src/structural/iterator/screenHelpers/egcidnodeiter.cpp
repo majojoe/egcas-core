@@ -771,7 +771,6 @@ bool EgcIdNodeIter::replaceByEmtpy(bool cursorRight)
         if (!m_node->getParent())
                 return false;
 
-
         QScopedPointer<EgcNode> empty(EgcNodeCreator::create(EgcNodeType::EmptyNode));
         if (empty.isNull())
                 return false;

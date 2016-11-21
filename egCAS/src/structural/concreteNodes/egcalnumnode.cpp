@@ -166,3 +166,8 @@ bool EgcAlnumNode::remove(int position)
 
         return retval;
 }
+
+bool EgcAlnumNode::visibleSigns(EgcNodeSide side) const
+{
+        return true;
+}
