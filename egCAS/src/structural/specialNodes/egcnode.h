@@ -160,6 +160,11 @@ public:
          */
         virtual bool visibleSigns(EgcNodeSide side) const;
         /**
+         * @brief hasVisibleSigns checks if the node has any visible signs
+         * @return returns true if the node has visible signs, false otherwise
+         */
+        bool hasVisibleSigns(void) const;
+        /**
          * @brief modifyableElement find out where the node has modifyable elements (e.g. a exponent node has a
          * modifyable operator in the middle, but it is not visible)
          * @param side the side to test for visible signs

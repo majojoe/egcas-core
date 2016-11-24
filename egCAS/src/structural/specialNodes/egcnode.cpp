@@ -120,3 +120,14 @@ bool EgcNode::modifyableElement(EgcNodeSide side) const
 {
         return this->visibleSigns(side);
 }
+
+bool EgcNode::hasVisibleSigns(void) const
+{
+        if (    visibleSigns(EgcNodeSide::left)
+             || visibleSigns(EgcNodeSide::middle)
+             || visibleSigns(EgcNodeSide::right)) {
+                return true;
+        }
+
+        return false;
+}

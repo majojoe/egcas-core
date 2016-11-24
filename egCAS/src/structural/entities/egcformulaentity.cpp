@@ -1019,7 +1019,7 @@ bool EgcFormulaEntity::isEmpty(void) const
                 return true;
         else { // if there are only invisible (unary) containers and the only leaf is an empty node
                 EgcContainerNode* container;
-                while(node->isContainer() && !node->visibleSigns()) {
+                while(node->isContainer() && !node->hasVisibleSigns()) {
                         container = static_cast<EgcContainerNode*>(node);
                         if (container->getNumberChildNodes() == 1)
                                 node = static_cast<EgcContainerNode*>(node)->getChild(0);

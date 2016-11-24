@@ -267,8 +267,10 @@ void EgCasScene::keyPressEvent(QKeyEvent * event)
                         if (formula) {
                                 EgcAbstractFormulaEntity* entity = formula->getEnity();
                                 if (entity->isEmpty()) {
+                                        itemYieldsFocus(EgcSceneSnapDirection::left, *item);
                                         m_document.deleteFormula(entity);
                                         redirect_key = false;
+
                                 }
                         }
                 }
