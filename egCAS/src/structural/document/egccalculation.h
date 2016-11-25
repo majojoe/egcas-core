@@ -33,9 +33,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QObject>
 #include "entities/egcentitylist.h"
 #include "casKernel/egcmaximaconn.h"
-#include "casKernel/parser/egckernelparser.h"
+
 
 class EgcFormulaEntity;
+class EgcKernelParser;
 
 
 enum class EgcKernelErrorType {
@@ -86,6 +87,7 @@ private slots:
          */
         void nextCalculation(void);
 private:
+        Q_DISABLE_COPY(EgcCalculation);
         /**
          * @brief handleCalculation computes the calculation for the current formula
          * @param entity a reference to the formula currently computed
@@ -102,7 +104,7 @@ private:
         bool m_computeWhenStarted;              ///< begin with computation when the kernel has started
         bool m_updateInstantly;                 ///< when true, update the view instantly, otherwise it's updated after resuming the calculation
         EgcFormulaEntity* m_waitForResult;      ///< a pointer to the formula entity that is currently being calculated
-        EgcKernelParser m_parser;               ///< the parser used for parsing cas kernel output
+        QScopedPointer<EgcKernelParser> m_parser; ///< the parser used for parsing cas kernel output
         bool m_calculationRunning;              ///< calculation is already running (no new one can be started)
 };
 

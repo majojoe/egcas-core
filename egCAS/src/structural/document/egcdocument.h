@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgcEntityList;
 class EgCasScene;
 
-class EgcDocument : public QObject, EgcAbstractEntityList, EgcAbstractDocument
+class EgcDocument : public QObject, EgcAbstractEntityList, public EgcAbstractDocument
 {
         Q_OBJECT
 public:

@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class QPointF;
 class EgcAbstractEntityList;
+class EgcAbstractDocument;
 
 /**
  * @brief The EgcEntityType defines different types of entities inside a egCAS (formula) document/worksheet
@@ -88,6 +89,13 @@ public:
          * @return true if o1 is less than 02, false otherwise
          */
         static bool lessThan(EgcEntity* o1, EgcEntity* o2);
+        /**
+         * @brief getDocument returns the document that contains the current entity
+         * @return the document
+         */
+        EgcAbstractDocument* getDocument(void);
+
+
 protected:
         EgcAbstractEntityList* m_list;            ///< pointer to the list containing this entity
 };

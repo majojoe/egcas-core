@@ -34,10 +34,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcentity.h"
 #include "entities/egcformulaentity.h"
 #include "egcnodes.h"
+#include "casKernel/parser/egckernelparser.h"
 
 EgcCalculation::EgcCalculation(QObject *parent) : QObject{parent}, m_conn{new EgcMaximaConn()}, m_iterator{nullptr},
-        m_kernelStarted{false}, m_computeWhenStarted{false}, m_updateInstantly{true}, m_waitForResult{nullptr},
-        m_calculationRunning{false}
+        m_kernelStarted{false}, m_computeWhenStarted{false}, m_updateInstantly{true}, m_parser{new EgcKernelParser()},
+        m_waitForResult{nullptr}, m_calculationRunning{false}
 {
         
         connect(m_conn.data(), SIGNAL(resultReceived(QString)), this, SLOT(resultReceived(QString)));
@@ -131,11 +132,11 @@ void EgcCalculation::triggerNextCalcualtion(void)
 void EgcCalculation::resultReceived(QString result)
 {
         if (m_waitForResult) {
-                EgcNode* tree = m_parser.parseKernelOutput(result);
+                EgcNode* tree = m_parser->parseKernelOutput(result);
                 if (tree) {
                         m_waitForResult->setResult(tree);
                 } else {
-                        m_waitForResult->setErrorMessage(m_parser.getErrorMessage());
+                        m_waitForResult->setErrorMessage(m_parser->getErrorMessage());
                 }
                 if (m_updateInstantly)
                         m_waitForResult->updateView();                

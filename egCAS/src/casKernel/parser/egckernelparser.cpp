@@ -36,12 +36,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "interpreter.h"
 #include "egckernelparser.h"
 
+
 using namespace CASParser;
 using namespace std;
 
 
 EgcKernelParser::EgcKernelParser() : m_i{new Interpreter()}
 {
+}
+
+EgcKernelParser::~EgcKernelParser()
+{
+
 }
 
 EgcNode* EgcKernelParser::parseKernelOutput(const QString& strToParse)

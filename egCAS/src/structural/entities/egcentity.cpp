@@ -28,6 +28,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QPointF>
 #include "egcentity.h"
+#include "egcabstractentitylist.h"
+#include "document/egcdocument.h"
 
 EgcEntity::EgcEntity(void)
 {
@@ -73,4 +75,12 @@ bool EgcEntity::lessThan(EgcEntity* o1, EgcEntity* o2)
                 return true;
         else
                 return false;
+}
+
+EgcAbstractDocument* EgcEntity::getDocument(void)
+{
+        if (!m_list)
+                return nullptr;
+
+        return m_list->getDocument();
 }
