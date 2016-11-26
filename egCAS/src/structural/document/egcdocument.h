@@ -101,7 +101,17 @@ public:
          * @return true if everything went well, false otherwise
          */
         virtual bool deleteFormula(EgcAbstractFormulaEntity* formula) override;
-
+        /**
+         * @brief deleteEntity Delete the given entity. This can be called from the entity itself.
+         * @param entity the entity to delete
+         */
+        virtual void deleteEntity(EgcEntity* entity) override;
+signals:
+        /**
+         * @brief startDeleletingEntity signal to be emitted when entity shall be deleted
+         * @param entity the entity to delete
+         */
+        void startDeleletingEntity(EgcEntity* entity);
 private slots:
         /**
          * @brief insertFormula insert a formula into the current document
@@ -109,6 +119,12 @@ private slots:
          * @param action the action to pass to the selected formula
          */
         void insertFormulaOnKeyPress(QPointF point, EgcAction action);
+        /**
+         * @brief deleteLaterEntity delete later the given entitiy. This can be called from the entity itself.
+         * @param entity the entity to delete
+         * @return true if this has been successful, false otherwise
+         */
+        void deleteLaterEntity(EgcEntity* entity);
 
 private:
         virtual void sort(void) override {}

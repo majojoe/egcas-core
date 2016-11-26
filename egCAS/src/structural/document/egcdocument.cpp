@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasScene(*this, nullptr)}, m_calc{new EgcCalculation()}
 {
         connect(m_scene.data(), SIGNAL(createFormula(QPointF, EgcAction)), this, SLOT(insertFormulaOnKeyPress(QPointF, EgcAction)));
+        connect(this, SIGNAL(startDeleletingEntity(EgcEntity*)), this, SLOT(deleteLaterEntity(EgcEntity*)), Qt::QueuedConnection);
 }
 
 EgcEntityList* EgcDocument::getEntityList(void)
@@ -129,4 +130,15 @@ bool EgcDocument::deleteFormula(EgcAbstractFormulaEntity* formula)
         m_list->deleteEntity(entity);
 
         return true;
+}
+
+void EgcDocument::deleteEntity(EgcEntity* entity)
+{
+        emit startDeleletingEntity(entity);
+}
+
+void EgcDocument::deleteLaterEntity(EgcEntity* entity)
+{
+        if (entity->getEntityType() == EgcEntityType::Formula)
+                deleteFormula(dynamic_cast<EgcAbstractFormulaEntity*>(entity));
 }

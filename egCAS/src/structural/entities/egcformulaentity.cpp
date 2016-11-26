@@ -40,6 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcabstractentitylist.h"
 #include "actions/egcaction.h"
 #include "iterator/egcscrpositerator.h"
+#include "document/egcabstractdocument.h"
 
 quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 15;
 
@@ -567,6 +568,13 @@ void EgcFormulaEntity::removeCharacter(bool before)
                 return;
         if (!m_item)
                 return;
+
+        if (m_scrIter->node()->getNodeType() == EgcNodeType::EmptyNode) {
+                if (isEmpty()) {
+                        getDocument()->deleteEntity(this);
+                        return;
+                }
+        }
 
         if (before)
                 m_scrIter->backspace(structureChanged);

@@ -253,35 +253,6 @@ void EgCasScene::triggerFormulaCreation(QPointF point, QKeyEvent *event)
         emit createFormula(point, EgcActionMapper::map(event));
 }
 
-void EgCasScene::keyPressEvent(QKeyEvent * event)
-{
-        bool redirect_key = true;
-
-        int key = event->key();
-
-        if (    key == Qt::Key_Backspace
-             || key == Qt::Key_Delete) {
-                QGraphicsItem *item = focusItem();
-                if (item) {
-                        EgcFormulaItem *formula = dynamic_cast<EgcFormulaItem*>(item);
-                        if (formula) {
-                                EgcAbstractFormulaEntity* entity = formula->getEnity();
-                                if (entity->isEmpty()) {
-                                        itemYieldsFocus(EgcSceneSnapDirection::left, *item);
-                                        m_document.deleteFormula(entity);
-                                        redirect_key = false;
-
-                                }
-                        }
-                }
-        }
-
-        if (redirect_key) {
-                event->ignore();
-                QGraphicsScene::keyPressEvent(event);
-        }
-}
-
 bool EgCasScene::deleteItem(EgcAbstractFormulaItem* item)
 {
         QGraphicsItem* qitem = dynamic_cast<QGraphicsItem*>(item);

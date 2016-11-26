@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 class EgcAbstractFormulaEntity;
+class EgcEntity;
 
 class EgcAbstractDocument 
 {
@@ -44,6 +45,12 @@ public:
          * @return true if everything went well, false otherwise
          */
         virtual bool deleteFormula(EgcAbstractFormulaEntity* formula) = 0;
+        /**
+         * @brief deleteEntity Delete the given entity. This can be called from the entity itself.
+         * @param entity the entity to delete
+         */
+        virtual void deleteEntity(EgcEntity* entity) = 0;
+
 };
 
 #endif //#ifndef EGCABSTRACTDOCUMENT_H

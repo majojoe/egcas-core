@@ -161,11 +161,6 @@ protected:
          */
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
         /**
-         * @brief keyPressEvent overrides key press event from QGraphicsItem
-         * @param event contains the key pressed
-         */
-        virtual void keyPressEvent(QKeyEvent * event) override;
-        /**
          * @brief deleteItem delete a QGraphicsItem from the scene
          * @param item item to delete
          * @return true if successful, false otherwise
