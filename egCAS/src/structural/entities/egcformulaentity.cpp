@@ -505,16 +505,28 @@ bool EgcFormulaEntity::insertOp(QChar operations)
              || operations == ')') {
                 if (    operations == '('
                      && (    !m_scrIter->rightSide() ))
-                        return insertUnaryOp(EgcNodeType::ParenthesisNode);
+                        return createAndInsertOp(EgcNodeType::ParenthesisNode);
                 if (    operations == ')'
                      && (    m_scrIter->rightSide()) )
-                        return insertUnaryOp(EgcNodeType::ParenthesisNode);
+                        return createAndInsertOp(EgcNodeType::ParenthesisNode);
         }
+        if (operations == '+')
+                return createAndInsertOp(EgcNodeType::PlusNode);
+        if (operations == '-')
+                return createAndInsertOp(EgcNodeType::MinusNode);
+        if (operations == '/')
+                return createAndInsertOp(EgcNodeType::DivisionNode);
+        if (operations == '*')
+                return createAndInsertOp(EgcNodeType::MultiplicationNode);
+        if (operations == ':')
+                return createAndInsertOp(EgcNodeType::DefinitionNode);
+        if (operations == '=')
+                return createAndInsertOp(EgcNodeType::EqualNode);
 
         return retval;
 }
 
-bool EgcFormulaEntity::insertUnaryOp(EgcNodeType type)
+bool EgcFormulaEntity::createAndInsertOp(EgcNodeType type)
 {
         const EgcNode* node = m_scrIter->node();
         if (node) {
@@ -529,7 +541,7 @@ bool EgcFormulaEntity::insertUnaryOp(EgcNodeType type)
                 return false;
 
         QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
-        if (!tmp->isUnaryNode())
+        if (!tmp)
                 return false;
 
         m_scrIter->insert(type);

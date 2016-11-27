@@ -396,7 +396,7 @@ private:
          * @param type the node type to insert
          * @return true if everything worked well, false otherwise.
          */
-        bool insertUnaryOp(EgcNodeType type);
+        bool createAndInsertOp(EgcNodeType type);
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user

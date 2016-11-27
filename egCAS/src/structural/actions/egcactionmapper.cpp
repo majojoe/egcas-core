@@ -87,6 +87,25 @@ EgcAction EgcActionMapper::map(QKeyEvent *event)
         case Qt::Key_Home:
                 action.m_op = EgcOperations::homePressed;
                 break;
+        case Qt::Key_Plus:
+                action = getMathOperationAction('+');
+                break;
+        case Qt::Key_Minus:
+                action = getMathOperationAction('-');
+                break;
+        case Qt::Key_division:
+                action = getMathOperationAction('/');
+                break;
+        case Qt::Key_multiply:
+                action = getMathOperationAction('*');
+                break;
+        case Qt::Key_Equal:
+                action = getMathOperationAction('=');
+                break;
+        case Qt::Key_Colon:
+                action = getMathOperationAction(':');
+                break;
+
         default:
                 action.m_op = EgcOperations::noAction;
                 break;
