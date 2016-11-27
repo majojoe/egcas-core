@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QRegularExpression>
 #include "egcactionmapper.h"
 
-
 QRegularExpression EgcActionMapper::s_alnumKeyFilter = QRegularExpression("[._0-9a-zA-ZΆ-ώ]+");
 bool EgcActionMapper::s_regexInitialized = false;
 
@@ -58,6 +57,8 @@ EgcAction EgcActionMapper::map(QKeyEvent *event)
 
                 return action;
         }
+
+        //qDebug() << "key: " << static_cast<int>(event->key());
 
         switch(event->key()) {
         case Qt::Key_Right:
@@ -93,10 +94,10 @@ EgcAction EgcActionMapper::map(QKeyEvent *event)
         case Qt::Key_Minus:
                 action = getMathOperationAction('-');
                 break;
-        case Qt::Key_division:
+        case Qt::Key_Slash:
                 action = getMathOperationAction('/');
                 break;
-        case Qt::Key_multiply:
+        case Qt::Key_Asterisk:
                 action = getMathOperationAction('*');
                 break;
         case Qt::Key_Equal:

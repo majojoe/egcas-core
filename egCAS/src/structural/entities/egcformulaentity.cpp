@@ -493,8 +493,12 @@ void EgcFormulaEntity::insertOperation(QChar operation)
                 return;
 
         insertOp(operation);
+
+        rearrangePrecedence();
+
         m_item->hideCursors();
         m_item->updateView();
+        showCurrentCursor();
 }
 
 bool EgcFormulaEntity::insertOp(QChar operations)
