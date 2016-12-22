@@ -177,11 +177,10 @@ public:
         void finishFormulaChange(void);
         /**
          * @brief updatePointer updates the given old node pointer with the given new one.
-         * @param oldPointer the old pointer that needs to be updated with the new one below.
          * @param newPointer the new pointer the replaces the old one.
          * @param right if new screen iterator is at the right side or not.
          */
-        void updatePointer(EgcNode* oldPointer, EgcNode* newPointer, bool right);
+        void updatePointer(EgcNode* newPointer, bool right);
         /**
          * @brief lockDelayedCursorUpdate if the cursor update is locked, updatePointer has no effect. This can be
          * useful, if there are some operations in between that shall have no effect. It is very unlikely that a user

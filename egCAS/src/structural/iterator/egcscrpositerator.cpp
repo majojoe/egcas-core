@@ -346,7 +346,7 @@ void EgcScrPosIterator::finishFormulaChange(void)
                 next();
 }
 
-void EgcScrPosIterator::updatePointer(EgcNode* oldPointer, EgcNode* newPointer, bool right)
+void EgcScrPosIterator::updatePointer(EgcNode* newPointer, bool right)
 {
         m_lastUnderlinedNode = nullptr;
         m_originNode = nullptr;

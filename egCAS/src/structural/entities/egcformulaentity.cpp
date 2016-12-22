@@ -471,7 +471,7 @@ EgcNode* EgcFormulaEntity::replaceEmptyNodeWith(EgcNodeType type)
         if (!paste(*newNode.take(), *oldNode))
                 return nullptr;
 
-        m_scrIter->updatePointer(oldNode, newPtr, true);
+        m_scrIter->updatePointer(newPtr, true);
 
         return newPtr;
 }
@@ -548,6 +548,7 @@ bool EgcFormulaEntity::createAndInsertOp(EgcNodeType type)
         if (!tmp)
                 return false;
 
+        m_scrIter->updatePointer(node, m_scrIter->rightSide());
         m_scrIter->insert(type);
 
         return true;
@@ -746,7 +747,7 @@ EgcNode* EgcFormulaEntity::cut(EgcNode& node)
         cParent->getChild(index)->provideParent(cParent);
 
         if (!m_scrIter.isNull())
-                m_scrIter->updatePointer(&node, newCursorPos, rightSide);
+                m_scrIter->updatePointer(newCursorPos, rightSide);
 
         return cutTree.take();
 }
@@ -792,12 +793,12 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
         treeToPaste.provideParent(cParent);
 
         if (!m_scrIter.isNull())
-                m_scrIter->updatePointer(&whereToPaste, newCursorPos, rightSide);
+                m_scrIter->updatePointer(newCursorPos, rightSide);
 
         return true;
 }
 
-bool EgcFormulaEntity::isNodeInFormula(EgcNode& node)
+bool EgcFormulaEntity::isNodeInFormula(EgcNode& node) 
 {
         quint32 index;
 
