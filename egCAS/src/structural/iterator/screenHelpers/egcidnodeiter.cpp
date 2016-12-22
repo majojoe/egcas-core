@@ -564,13 +564,19 @@ bool EgcIdNodeIter::remove(bool before)
         node = getNodeToModify(before, state);
         if (!node) return false;
 
+        while(!node->isDeleteable()) {
+                node = node->getParent();
+                if (!node)
+                        return false;
+        }
+
         if (node->isContainer()) {
 
                 if (!node->getParent()) return false;
                 EgcContainerNode* container = static_cast<EgcContainerNode*>(node);
 
                 //correct node to remove if returned node is a leaf container
-                if (container->isLeafContainer()) {
+                if (container->isAtomic()) {
                         if (container->getChild(0) == m_node && !rightSide())
                                 node = getNodeToModify(before, state, true);
                         if (container->getChild(container->getNumberChildNodes() - 1) == m_node && rightSide())
@@ -752,7 +758,7 @@ bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState stat
         if (!parent)
                 return false;
 
-        if (parent->isLeafContainer()) {
+        if (parent->isAtomic()) {
                 //leaf containers shall be removed as a whole
                 setAtNode(*parent, true, EgcSnapProperty::SnapAll);
                 return deleteTree(true);
@@ -772,16 +778,26 @@ bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState stat
 
 bool EgcIdNodeIter::replaceByEmtpy(bool cursorRight)
 {
-        if (!m_node)
+        EgcNode* node = m_node;
+
+        if (!node) return false;
+
+        while(!node->isDeleteable()) {
+                node = node->getParent();
+                if (!node)
+                        return false;
+        }
+
+        if (!node)
                 return false;
-        if (!m_node->getParent())
+        if (!node->getParent())
                 return false;
 
         QScopedPointer<EgcNode> empty(EgcNodeCreator::create(EgcNodeType::EmptyNode));
         if (empty.isNull())
                 return false;
         EgcNode* tmp = empty.data();
-        m_formula.paste(*empty.take(), *m_node);
+        m_formula.paste(*empty.take(), *node);
         setAtNodeDelayed(*tmp, cursorRight);
 
         return true;

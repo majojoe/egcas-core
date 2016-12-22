@@ -164,11 +164,6 @@ bool EgcContainerNode::hasSubNode(const EgcNode& node, quint32 &index) const
         return true;
 }
 
-bool EgcContainerNode::isLeafContainer(void) const
-{
-        return false;
-}
-
 qint32 EgcContainerNode::bindingPower(void) const
 {
         if (isOperation()) {

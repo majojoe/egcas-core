@@ -141,11 +141,6 @@ public:
          */
         bool hasSubNode(const EgcNode& node, quint32 &index) const;
         /**
-         * @brief isLeafContainer if a container contains only leafes and no operations
-         * @return true if container is a container that holds leafes and is only intended to hold such leafes.
-         */
-        virtual bool isLeafContainer(void) const;
-        /**
          * @brief bindingPower returns the binding power of the this operation. Only applicable if this is a operation.
          * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
          * the operation (number >= 0).

@@ -136,3 +136,8 @@ bool EgcNode::isAtomic(void) const
 {
         return false;
 }
+
+bool EgcNode::isDeleteable(void) const
+{
+        return true;
+}

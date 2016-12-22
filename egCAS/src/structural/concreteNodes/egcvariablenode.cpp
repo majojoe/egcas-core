@@ -289,11 +289,6 @@ bool EgcVariableNode::isOperation(void) const
         return false;
 }
 
-bool EgcVariableNode::isLeafContainer(void) const
-{
-        return true;
-}
-
 bool EgcVariableNode::cursorSnaps(EgcNodeSide side) const
 {
         return false;
@@ -308,3 +303,4 @@ bool EgcVariableNode::isAtomic(void) const
 {
         return true;
 }
+

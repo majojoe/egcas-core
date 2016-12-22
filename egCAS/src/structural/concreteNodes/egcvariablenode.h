@@ -99,11 +99,6 @@ public:
          */
         virtual bool isOperation(void) const override;
         /**
-         * @brief isLeafContainer if a container contains only leafes and no operations
-         * @return true if container is a container that holds leafes and is only intended to hold such leafes.
-         */
-        virtual bool isLeafContainer(void) const override;
-        /**
          * @brief insertSubscript inserts a empty subscript (EgcEmptyNode)
          */
         virtual void insertSubscript(void);
@@ -122,10 +117,11 @@ public:
          */
         virtual bool visibleSigns(EgcNodeSide side) const override;
         /**
-         * @brief isAtomic a node can be atomic e.g. if it contains subnodes that cannot be deleted without deleting the
-         * containing node or where inserting nodes in between is not allowed. E.g. the variable node contains
+         * @brief isAtomic a node can be atomic e.g. if it contains any subnodes that cannot be deleted without deleting
+         * the containing node or where inserting nodes in between is not allowed. E.g. the variable node contains
          * sub-nodes. It makes no sense to delete these or inserting nodes in between without corrupting the variable
          * node. However Beside these property the sub-nodes are normal nodes that can be traversed in normal manner.
+         * If any sub-node is not deleteable is must seperately be marked with isDeleteable returning false.
          * @return true if the node is atomic, false if not.
          */
         virtual bool isAtomic(void) const override;

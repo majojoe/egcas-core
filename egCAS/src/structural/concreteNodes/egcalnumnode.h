@@ -112,6 +112,13 @@ public:
          * @return true if the given side of the node has visible signs.
          */
         virtual bool visibleSigns(EgcNodeSide side) const override;
+        /**
+         * @brief isDeleteable if a node is not deleteable it may not be deleted seperately. There may be a parent that
+         * is marked as atomic, but deleteable, then the parent must be deleted in order to delete the not deleteable
+         * sub-node. This functionality is in some ways comparable to a composition.
+         * @return true if node is deleteable (majority), false if NOT deleteable.
+         */
+        virtual bool isDeleteable(void) const override;
 
 protected:
         /**

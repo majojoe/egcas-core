@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include <QStringBuilder>
 #include <QRegularExpression>
+#include "specialNodes/egccontainernode.h"
 #include "egcalnumnode.h"
 #include "utils/egcutfcodepoint.h"
 
@@ -169,5 +170,21 @@ bool EgcAlnumNode::remove(int position)
 
 bool EgcAlnumNode::visibleSigns(EgcNodeSide side) const
 {
+        return true;
+}
+
+bool EgcAlnumNode::isDeleteable(void) const
+{
+        EgcContainerNode* parent = getParent();
+        quint32 ind = 0;
+        if (!parent)
+                return true;
+
+        (void) parent->getIndexOfChild(*const_cast<EgcAlnumNode*>(this), ind);
+
+        if (    parent->getNodeType() == EgcNodeType::VariableNode
+             && ind == 0)
+                        return false;
+
         return true;
 }
