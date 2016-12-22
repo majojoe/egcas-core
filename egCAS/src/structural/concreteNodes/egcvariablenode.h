@@ -121,6 +121,14 @@ public:
          * @return true if the given side of the node has visible signs.
          */
         virtual bool visibleSigns(EgcNodeSide side) const override;
+        /**
+         * @brief isAtomic a node can be atomic e.g. if it contains subnodes that cannot be deleted without deleting the
+         * containing node or where inserting nodes in between is not allowed. E.g. the variable node contains
+         * sub-nodes. It makes no sense to delete these or inserting nodes in between without corrupting the variable
+         * node. However Beside these property the sub-nodes are normal nodes that can be traversed in normal manner.
+         * @return true if the node is atomic, false if not.
+         */
+        virtual bool isAtomic(void) const override;
 
 protected:
         static QRegularExpression s_varSubSeparator; ///< regex for separating variable and subscript

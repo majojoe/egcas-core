@@ -548,7 +548,6 @@ bool EgcFormulaEntity::createAndInsertOp(EgcNodeType type)
         if (!tmp)
                 return false;
 
-        m_scrIter->updatePointer(node, m_scrIter->rightSide());
         m_scrIter->insert(type);
 
         return true;

@@ -131,3 +131,8 @@ bool EgcNode::hasVisibleSigns(void) const
 
         return false;
 }
+
+bool EgcNode::isAtomic(void) const
+{
+        return false;
+}

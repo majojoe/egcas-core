@@ -535,6 +535,12 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
         EgcNode* node;
         bool right = rightSide();
 
+        if (m_nodeIter->peekPrevious().isAtomic())
+                m_nodeIter->previous();
+
+        if (m_nodeIter->peekNext().isAtomic())
+                m_nodeIter->next();
+
         if(!m_nodeIter->insert(type))
                 return false;
         

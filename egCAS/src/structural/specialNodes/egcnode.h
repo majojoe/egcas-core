@@ -171,6 +171,14 @@ public:
          * @return true if the given side of the node has modifyable elements.
          */
         virtual bool modifyableElement(EgcNodeSide side) const;
+        /**
+         * @brief isAtomic a node can be atomic e.g. if it contains subnodes that cannot be deleted without deleting the
+         * containing node or where inserting nodes in between is not allowed. E.g. the variable node contains
+         * sub-nodes. It makes no sense to delete these or inserting nodes in between without corrupting the variable
+         * node. However Beside these property the sub-nodes are normal nodes that can be traversed in normal manner.
+         * @return true if the node is atomic, false if not.
+         */
+        virtual bool isAtomic(void) const;
 
 protected:
         EgcContainerNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)

@@ -303,3 +303,8 @@ bool EgcVariableNode::visibleSigns(EgcNodeSide side) const
 {
         return false;
 }
+
+bool EgcVariableNode::isAtomic(void) const
+{
+        return true;
+}
