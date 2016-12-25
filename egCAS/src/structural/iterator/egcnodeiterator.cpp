@@ -284,6 +284,31 @@ EgcNode& EgcNodeIterator::getPreviousElement(EgcNode& currentPrev, EgcNode& curr
         return *prev;
 }
 
+bool EgcNodeIterator::replaceBinEmptyNodeBy(EgcNodeType type)
+{
+        EgcNode* nodeToReplace = nullptr;
+
+        if (m_previous->getNodeType() == EgcNodeType::BinEmptyNode)
+                nodeToReplace = m_previous;
+        if (m_next->getNodeType() == EgcNodeType::BinEmptyNode)
+                nodeToReplace = m_next;
+
+        if (nodeToReplace == nullptr)
+                return false;
+
+        //check if new type is binary node
+        QScopedPointer<EgcNode> node (EgcNodeCreator::create(type));
+        if (!node.data())
+                return false;
+        if (!node->isBinaryNode())
+                return false;
+
+        if (!replace(*nodeToReplace, type))
+                return false;
+
+        return true;
+}
+
 bool EgcNodeIterator::insert(EgcNodeType type)
 {
         bool retval = false;

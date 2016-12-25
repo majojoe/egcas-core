@@ -144,6 +144,12 @@ public:
          * @return true if everything went well, false otherwise
          */
         virtual bool insertChildSpace(void);
+        /**
+         * @brief replaceBinEmptyNodeBy replaces a binary empty node the given type
+         * @param type the type of the node that will replace the empty node
+         * @return true if everything went well, false otherwise
+         */
+        bool replaceBinEmptyNodeBy(EgcNodeType type);
 
 protected:
         /**

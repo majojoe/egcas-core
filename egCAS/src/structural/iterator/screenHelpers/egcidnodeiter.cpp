@@ -541,17 +541,36 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
         if (m_nodeIter->peekNext().isAtomic())
                 m_nodeIter->next();
 
-        if(!m_nodeIter->insert(type))
-                return false;
-        
-        //make the iterators valid again
-        //it doesn't matter if we are at the right or left, we must always peek the previous node
-        node = &m_nodeIter->peekPrevious();
+        if (    (m_nodeIter->peekPrevious().getNodeType() == EgcNodeType::BinEmptyNode && !right)
+             || (m_nodeIter->peekNext().getNodeType() == EgcNodeType::BinEmptyNode && right)) {
+                if (!m_nodeIter->replaceBinEmptyNodeBy(type))
+                        return false;
 
-        m_iterPosAfterUpdate = node;
-        m_atRightSideAfterUpdate = right;
-        m_isInsert = true;
-                
+                //make the iterators valid again
+                //it doesn't matter if we are at the right or left, we must always peek the previous node
+                if (right)
+                        node = &m_nodeIter->peekNext();
+                else
+                        node = &m_nodeIter->peekPrevious();
+
+                m_iterPosAfterUpdate = node;
+                m_atRightSideAfterUpdate = right;
+                m_isInsert = false;
+
+        } else {
+                if(!m_nodeIter->insert(type))
+                        return false;
+
+                //make the iterators valid again
+                //it doesn't matter if we are at the right or left, we must always peek the previous node
+                node = &m_nodeIter->peekPrevious();
+
+                m_iterPosAfterUpdate = node;
+                m_atRightSideAfterUpdate = right;
+                m_isInsert = true;
+
+        }
+        
         return true;
 }
 
