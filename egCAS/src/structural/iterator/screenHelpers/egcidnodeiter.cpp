@@ -585,7 +585,7 @@ bool EgcIdNodeIter::remove(bool before)
         node = getNodeToModify(before, state);
         if (!node) return false;
 
-        while(!node->isDeleteable()) {
+        while(node->isAtomicChild()) {
                 node = node->getParent();
                 if (!node)
                         return false;
@@ -803,7 +803,7 @@ bool EgcIdNodeIter::replaceByEmtpy(bool cursorRight)
 
         if (!node) return false;
 
-        while(!node->isDeleteable()) {
+        while(node->isAtomicChild()) {
                 node = node->getParent();
                 if (!node)
                         return false;

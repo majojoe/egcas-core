@@ -173,18 +173,18 @@ bool EgcAlnumNode::visibleSigns(EgcNodeSide side) const
         return true;
 }
 
-bool EgcAlnumNode::isDeleteable(void) const
+bool EgcAlnumNode::isAtomicChild(void) const
 {
         EgcContainerNode* parent = getParent();
         quint32 ind = 0;
         if (!parent)
-                return true;
+                return false;
 
         (void) parent->getIndexOfChild(*const_cast<EgcAlnumNode*>(this), ind);
 
         if (    parent->getNodeType() == EgcNodeType::VariableNode
              && ind == 0)
-                        return false;
+                        return true;
 
-        return true;
+        return false;
 }
