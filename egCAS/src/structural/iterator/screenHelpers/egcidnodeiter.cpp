@@ -554,7 +554,7 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
                         node = &m_nodeIter->peekPrevious();
 
                 m_iterPosAfterUpdate = node;
-                m_atRightSideAfterUpdate = right;
+                m_atRightSideAfterUpdate = true;
                 m_isInsert = false;
 
         } else {
@@ -579,6 +579,8 @@ bool EgcIdNodeIter::remove(bool before)
         bool retval = false;
         EgcIteratorState state;
         EgcNode* node;
+
+        m_isInsert = false;
 
         node = getNodeToModify(before, state);
         if (!node) return false;
@@ -891,6 +893,8 @@ bool EgcIdNodeIter::deleteTree(bool before)
 
 bool EgcIdNodeIter::finishModOperation(void)
 {
+        bool retval = false;
+
         if (m_iterPosAfterUpdate) {
                 setAtNode(*m_iterPosAfterUpdate, m_atRightSideAfterUpdate);
                 //correct cursor for remove operations
@@ -903,12 +907,13 @@ bool EgcIdNodeIter::finishModOperation(void)
                 m_iterPosAfterUpdate = nullptr;
         }
 
-        if (!m_atRightSideAfterUpdate && m_isInsert) {
-                m_isInsert = false;
-                return true;
-        } else {
-                return false;
-        }
+        if (!m_atRightSideAfterUpdate && m_isInsert)
+                retval = true;
+        else
+                retval = false;
+        m_isInsert = false;
+
+        return retval;
 }
 
 void EgcIdNodeIter::setAtNodeDelayed(EgcNode& node, bool atRightSide)
