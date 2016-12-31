@@ -328,7 +328,24 @@ private:
          * @return the node that shall be modified
          */
         EgcNode* getNodeToModify(bool before, EgcIteratorState &state, bool goOn = false);
-
+        /**
+         * @brief findAtomicNode returns the node that is not bound atomically to its parent. Therefore insert
+         * operations (or deletions) can take place now (Is atomic). Note that atomic nodes can also have non atomic
+         * childs (beside atomic childs).
+         * @node a reference to the node where to start the search
+         * @return the next atomic node of the given node (the node given if it is atomic or one of it's parents if
+         * given node is a atomic child). This can also return nullptr, if no atomic node has been found.
+         */
+        EgcNode* findAtomicNode(EgcNode& node) const;
+        /**
+         * @brief moveToAtomicNode move m_nodeIter to the next atomic node. Therefore insert operations (or deletions)
+         * can take place now (Is atomic). Note that atomic nodes can also have non atomic childs (beside atomic
+         * childs). Note that this object must be in a consistent state in order to use this function successful (
+         * m_node and m_nodeIter must be convergent).
+         * @param forward in which direction to move the cursor. if true cursor is moved forward, if false backwards
+         * @return true if everything worked well, false otherwise.
+         */
+        bool moveToAtomicNode(bool forward);
 
         QScopedPointer<EgcNodeIterator> m_nodeIter;         ///< the node iterator that points to the current node with a mathml id
         EgcNode* m_node;                                    ///< currently active node (where the cursor is currently)

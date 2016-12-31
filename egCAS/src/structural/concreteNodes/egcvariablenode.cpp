@@ -299,7 +299,7 @@ bool EgcVariableNode::visibleSigns(EgcNodeSide side) const
         return false;
 }
 
-bool EgcVariableNode::isAtomic(void) const
+bool EgcVariableNode::hasAtomicChilds(void) const
 {
         return true;
 }

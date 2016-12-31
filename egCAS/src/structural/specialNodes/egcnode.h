@@ -179,7 +179,7 @@ public:
          * If any sub-node is not deleteable is must seperately be marked with isDeleteable returning false.
          * @return true if the node is atomic, false if not.
          */
-        virtual bool isAtomic(void) const;
+        virtual bool hasAtomicChilds(void) const;
         /**
          * @brief isAtomicChild if a node is a child of a atomic node it may not be deleted seperately. There may be a
          * parent that is marked as atomic (is deleteable), then the parent must be deleted in order to delete the not

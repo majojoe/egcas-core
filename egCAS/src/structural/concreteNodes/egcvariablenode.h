@@ -124,7 +124,7 @@ public:
          * If any sub-node is not deleteable is must seperately be marked with isDeleteable returning false.
          * @return true if the node is atomic, false if not.
          */
-        virtual bool isAtomic(void) const override;
+        virtual bool hasAtomicChilds(void) const override;
 
 protected:
         static QRegularExpression s_varSubSeparator; ///< regex for separating variable and subscript

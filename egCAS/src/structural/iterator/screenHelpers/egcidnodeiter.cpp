@@ -535,11 +535,12 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
         EgcNode* node;
         bool right = rightSide();
 
-        if (m_nodeIter->peekPrevious().isAtomic())
-                m_nodeIter->previous();
-
-        if (m_nodeIter->peekNext().isAtomic())
-                m_nodeIter->next();
+        if (!m_node)
+                return false;
+        if (m_node->isAtomicChild()) {
+                if (!moveToAtomicNode(right))
+                        return false;
+        }
 
         if (    (m_nodeIter->peekPrevious().getNodeType() == EgcNodeType::BinEmptyNode && !right)
              || (m_nodeIter->peekNext().getNodeType() == EgcNodeType::BinEmptyNode && right)) {
@@ -585,25 +586,10 @@ bool EgcIdNodeIter::remove(bool before)
         node = getNodeToModify(before, state);
         if (!node) return false;
 
-        while(node->isAtomicChild()) {
-                node = node->getParent();
-                if (!node)
-                        return false;
-        }
+        node = findAtomicNode(*node);
+        if (!node)
+                return false;
 
-        if (node->isContainer()) {
-
-                if (!node->getParent()) return false;
-                EgcContainerNode* container = static_cast<EgcContainerNode*>(node);
-
-                //correct node to remove if returned node is a leaf container
-                if (container->isAtomic()) {
-                        if (container->getChild(0) == m_node && !rightSide())
-                                node = getNodeToModify(before, state, true);
-                        if (container->getChild(container->getNumberChildNodes() - 1) == m_node && rightSide())
-                                node = getNodeToModify(before, state, true);
-                }
-        }
         if (!node)
                 return false;
         if (!node->getParent())
@@ -779,11 +765,11 @@ bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState stat
         if (!parent)
                 return false;
 
-        if (parent->isAtomic()) {
-                //leaf containers shall be removed as a whole
-                setAtNode(*parent, true, EgcSnapProperty::SnapAll);
-                return deleteTree(true);
-        }
+//        if (parent->hasAtomicChilds()) {
+//                //leaf containers shall be removed as a whole
+//                setAtNode(*parent, true, EgcSnapProperty::SnapAll);
+//                return deleteTree(true);
+//        }
 
         quint32 index;
         if (!parent->hasSubNode(node, index))
@@ -803,11 +789,9 @@ bool EgcIdNodeIter::replaceByEmtpy(bool cursorRight)
 
         if (!node) return false;
 
-        while(node->isAtomicChild()) {
-                node = node->getParent();
-                if (!node)
-                        return false;
-        }
+        node = findAtomicNode(*node);
+        if (!node)
+                return false;
 
         if (!node)
                 return false;
@@ -934,4 +918,46 @@ void EgcIdNodeIter::unlockDelayedCursorUpdate(void)
         m_lockDelayedUpdate = false;
 }
 
+EgcNode* EgcIdNodeIter::findAtomicNode(EgcNode& node) const
+{
+        EgcNode* node_ptr = &node;
 
+        while(node_ptr->isAtomicChild()) {
+                node_ptr = node_ptr->getParent();
+                if (!node_ptr)
+                        return nullptr;
+        }
+
+        return node_ptr;
+}
+
+bool EgcIdNodeIter::moveToAtomicNode(bool forward)
+{
+        EgcNode* node = m_node;
+        if (!m_node)
+                return false;
+
+        if (    (m_node != &m_nodeIter->peekNext())
+             && (m_node != &m_nodeIter->peekPrevious()))
+                return false;
+
+        node = findAtomicNode(*m_node);
+        if (!node)
+                return false;
+
+        if (forward) {
+                while(m_nodeIter->hasNext() && &m_nodeIter->peekPrevious() != node) {
+                        m_nodeIter->next();
+                }
+                if (&m_nodeIter->peekPrevious() != node)
+                        return false;
+        } else {
+                while(m_nodeIter->hasPrevious() && &m_nodeIter->peekNext() != node) {
+                        m_nodeIter->previous();
+                }
+                if (&m_nodeIter->peekNext() != node)
+                        return false;
+        }
+
+        return true;
+}
