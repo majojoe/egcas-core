@@ -54,7 +54,7 @@ bool EgcBinaryOperator::setChild(quint32 index, EgcNode& expression)
                 if (    isReorderingProtector(*(*child))
                                 && !isReorderingProtector(expression)) {
                         isReorder = false;
-                        static_cast<EgcParenthesisNode*>(child->data())->setChild(0, expression);
+                        return static_cast<EgcParenthesisNode*>(child->data())->setChild(0, expression);
                 } else if (    isReorderingProtector(*(*child))
                                && isReorderingProtector(expression)) {
                         child->reset(); //child will be set below
