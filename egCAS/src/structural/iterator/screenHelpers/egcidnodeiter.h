@@ -187,6 +187,30 @@ public:
         void unlockDelayedCursorUpdate(void);
 private:
         /**
+         * @brief hasNext Checks if there is at most one more item after the current item.
+         * @param snapProperty the snap property to use
+         * @return True if an item was found, false otherwise.
+         */
+        bool hasNext(EgcSnapProperty snapProperty) const;
+        /**
+         * @brief hasPrevious Checks if there is at most one more item before the current item.
+         * @param snapProperty the snap property to use
+         * @return True if an item was found, false otherwise.
+         */
+        bool hasPrevious(EgcSnapProperty snapProperty) const;
+        /**
+         * @brief next Returns the next node and increments the iterator by one.
+         * @param snapProperty the snap property to use
+         * @return a reference to the next mathml id.
+         */
+        EgcNode &  next(EgcSnapProperty snapProperty);
+        /**
+         * @brief previous Returns the previous node and decrements the iterator by one.
+         * @param snapProperty the snap property to use
+         * @return a refererence to the previous mathml id.
+         */
+        EgcNode &  previous(EgcSnapProperty snapProperty);
+        /**
          * @brief getMathmlId returns the mathml id of a node with a specified state and a predecessor or successor
          * @param node the node to check for existence of a mathml id
          * @param state the state of the node given
@@ -346,6 +370,20 @@ private:
          * @return true if everything worked well, false otherwise.
          */
         bool moveToAtomicNode(bool forward);
+        /**
+         * @brief besideBinEmptyNode check if there is a empty binary node near the current cursor
+         * @param right check if there is an empty node on the right side of m_node, if false check is done for left
+         * side.
+         * @return true if empty binary node found, false otherwise
+         */
+        bool besideBinEmptyNode(bool right);
+        /**
+         * @brief replaceBinEmptyNodeBy replace the empty binary node beside m_node
+         * @param type the type of the node to replace the empty node
+         * @param right if true, search on the right side of m_node, if false search on the left
+         * @return true if everything worked well, false otherwise
+         */
+        bool replaceBinEmptyNodeBy(EgcNodeType type, bool right);
 
         QScopedPointer<EgcNodeIterator> m_nodeIter;         ///< the node iterator that points to the current node with a mathml id
         EgcNode* m_node;                                    ///< currently active node (where the cursor is currently)

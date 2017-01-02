@@ -101,31 +101,41 @@ void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide, EgcSnapProperty s
         }
 }
 
-bool EgcIdNodeIter::hasNext(void) const
+bool EgcIdNodeIter::hasNext(EgcSnapProperty snapProperty) const
 {
         EgcNodeIterator tempIter = *m_nodeIter;
         EgcNode* prev;
 
-        prev = gotoNodeWithId(true, &tempIter, *m_node, true);
+        prev = gotoNodeWithId(true, &tempIter, *m_node, true, snapProperty);
 
         if (prev)
                 return true;
         return false;
 }
 
-bool EgcIdNodeIter::hasPrevious(void) const
+bool EgcIdNodeIter::hasNext(void) const
+{
+        return hasNext(EgcSnapProperty::SnapVisibleCursor);
+}
+
+bool EgcIdNodeIter::hasPrevious(EgcSnapProperty snapProperty) const
 {
         EgcNodeIterator tempIter = *m_nodeIter;
         EgcNode* next;
 
-        next = gotoNodeWithId(false, &tempIter, *m_node, true);
+        next = gotoNodeWithId(false, &tempIter, *m_node, true, snapProperty);
 
         if (next)
                 return true;
         return false;
 }
 
-EgcNode &  EgcIdNodeIter::next(void)
+bool EgcIdNodeIter::hasPrevious(void) const
+{
+        return hasPrevious(EgcSnapProperty::SnapVisibleCursor);
+}
+
+EgcNode &  EgcIdNodeIter::next(EgcSnapProperty snapProperty)
 {
         EgcNode* old;
         EgcNode* next;
@@ -134,12 +144,12 @@ EgcNode &  EgcIdNodeIter::next(void)
         old = m_node;
         if (m_node == &m_nodeIter->peekPrevious()) {
                 m_node = &m_nodeIter->peekNext();
-                next = gotoNodeWithId(true, &tempIter, *m_node);
+                next = gotoNodeWithId(true, &tempIter, *m_node, false, snapProperty);
         } else {
                 if (m_nodeIter->hasNext()) {
                         m_nodeIter->next();
                         tempIter = *m_nodeIter;
-                        next = gotoNodeWithId(true, &tempIter, *m_node);
+                        next = gotoNodeWithId(true, &tempIter, *m_node, false, snapProperty);
                 }
         }
 
@@ -153,7 +163,12 @@ EgcNode &  EgcIdNodeIter::next(void)
         return *m_node;
 }
 
-EgcNode & EgcIdNodeIter::previous(void)
+EgcNode &  EgcIdNodeIter::next(void)
+{
+        return next(EgcSnapProperty::SnapVisibleCursor);
+}
+
+EgcNode & EgcIdNodeIter::previous(EgcSnapProperty snapProperty)
 {
         EgcNode* old;
         EgcNode* previous;
@@ -162,12 +177,12 @@ EgcNode & EgcIdNodeIter::previous(void)
         old = m_node;
         if (m_node == &m_nodeIter->peekNext()) {
                 m_node = &m_nodeIter->peekPrevious();
-                previous = gotoNodeWithId(false, &tempIter, *m_node);
+                previous = gotoNodeWithId(false, &tempIter, *m_node, false, snapProperty);
         } else {
                 if (m_nodeIter->hasPrevious()) {
                         m_nodeIter->previous();
                         tempIter = *m_nodeIter;
-                        previous = gotoNodeWithId(false, &tempIter, *m_node);
+                        previous = gotoNodeWithId(false, &tempIter, *m_node, false, snapProperty);
                 }
         }
 
@@ -179,6 +194,11 @@ EgcNode & EgcIdNodeIter::previous(void)
         }
 
         return *m_node;
+}
+
+EgcNode & EgcIdNodeIter::previous(void)
+{
+        return previous(EgcSnapProperty::SnapVisibleCursor);
 }
 
 void EgcIdNodeIter::toBack(void)
@@ -542,9 +562,8 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
                         return false;
         }
 
-        if (    (m_nodeIter->peekPrevious().getNodeType() == EgcNodeType::BinEmptyNode && !right)
-             || (m_nodeIter->peekNext().getNodeType() == EgcNodeType::BinEmptyNode && right)) {
-                if (!m_nodeIter->replaceBinEmptyNodeBy(type))
+        if (besideBinEmptyNode(right)) {
+                if (!replaceBinEmptyNodeBy(type, right))
                         return false;
 
                 //make the iterators valid again
@@ -946,18 +965,49 @@ bool EgcIdNodeIter::moveToAtomicNode(bool forward)
                 return false;
 
         if (forward) {
-                while(m_nodeIter->hasNext() && &m_nodeIter->peekPrevious() != node) {
-                        m_nodeIter->next();
+                while(hasNext(EgcSnapProperty::SnapAll) && &m_nodeIter->peekPrevious() != node) {
+                        next(EgcSnapProperty::SnapAll);
                 }
                 if (&m_nodeIter->peekPrevious() != node)
                         return false;
         } else {
-                while(m_nodeIter->hasPrevious() && &m_nodeIter->peekNext() != node) {
-                        m_nodeIter->previous();
+                while(hasPrevious(EgcSnapProperty::SnapAll) && &m_nodeIter->peekNext() != node) {
+                        previous(EgcSnapProperty::SnapAll);
                 }
                 if (&m_nodeIter->peekNext() != node)
                         return false;
         }
 
         return true;
+}
+
+bool EgcIdNodeIter::besideBinEmptyNode(bool right)
+{
+        EgcNode* node;
+        EgcIteratorState state;
+
+        node = getNodeToModify(!right, state);
+
+        if (!node)
+                return false;
+
+        if (node->getNodeType() == EgcNodeType::BinEmptyNode)
+                return true;
+
+        return false;
+}
+
+bool EgcIdNodeIter::replaceBinEmptyNodeBy(EgcNodeType type, bool right)
+{
+        const EgcNode *node = m_node;
+
+        if (!m_node)
+                return false;
+
+        (void) gotoNodeWithId(right, m_nodeIter.data(), *node, true, EgcSnapProperty::SnapModifyable);
+
+        if (m_nodeIter->replaceBinEmptyNodeBy(type))
+                return true;
+
+        return false;
 }
