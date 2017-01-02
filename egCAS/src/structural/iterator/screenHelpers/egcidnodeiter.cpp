@@ -562,19 +562,14 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
                         return false;
         }
 
+        node = m_node;
+
         if (besideBinEmptyNode(right)) {
                 if (!replaceBinEmptyNodeBy(type, right))
                         return false;
 
-                //make the iterators valid again
-                //it doesn't matter if we are at the right or left, we must always peek the previous node
-                if (right)
-                        node = &m_nodeIter->peekNext();
-                else
-                        node = &m_nodeIter->peekPrevious();
-
                 m_iterPosAfterUpdate = node;
-                m_atRightSideAfterUpdate = true;
+                m_atRightSideAfterUpdate = right;
                 m_isInsert = false;
 
         } else {
@@ -583,7 +578,7 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
 
                 //make the iterators valid again
                 //it doesn't matter if we are at the right or left, we must always peek the previous node
-                node = &m_nodeIter->peekPrevious();
+                //node = &m_nodeIter->peekPrevious();
 
                 m_iterPosAfterUpdate = node;
                 m_atRightSideAfterUpdate = right;
@@ -784,12 +779,6 @@ bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState stat
         if (!parent)
                 return false;
 
-//        if (parent->hasAtomicChilds()) {
-//                //leaf containers shall be removed as a whole
-//                setAtNode(*parent, true, EgcSnapProperty::SnapAll);
-//                return deleteTree(true);
-//        }
-
         quint32 index;
         if (!parent->hasSubNode(node, index))
                 return false;
@@ -901,11 +890,11 @@ bool EgcIdNodeIter::finishModOperation(void)
         if (m_iterPosAfterUpdate) {
                 setAtNode(*m_iterPosAfterUpdate, m_atRightSideAfterUpdate);
                 //correct cursor for remove operations
-                if (!m_isInsert && m_iterPosAfterUpdate != m_node) {
+                if (m_isInsert) {
                         if (m_atRightSideAfterUpdate)
-                                previous();
-                        else
                                 next();
+                        else
+                                previous();
                 }
                 m_iterPosAfterUpdate = nullptr;
         }
