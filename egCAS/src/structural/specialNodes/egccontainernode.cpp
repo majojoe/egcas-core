@@ -185,3 +185,10 @@ bool EgcContainerNode::isLeftAssociative(void) const
 {
         return true;
 }
+
+bool EgcContainerNode::determineIfChildIsAtomicallyBoundallyBound(const EgcNode* node) const
+{
+        (void) node;
+
+        return false;
+}

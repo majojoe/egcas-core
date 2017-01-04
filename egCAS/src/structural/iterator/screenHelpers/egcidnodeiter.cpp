@@ -557,7 +557,7 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
 
         if (!m_node)
                 return false;
-        if (m_node->isAtomicChild()) {
+        if (m_node->isAtomicallyBoundChild()) {
                 if (!moveToAtomicNode(right))
                         return false;
         }
@@ -703,7 +703,7 @@ bool EgcIdNodeIter::removeFlex(bool before, EgcNode &node, EgcIteratorState stat
         else if (    (state == EgcIteratorState::LeftIteration || state == EgcIteratorState::RightIteration)
                      && nrChilds != 1)
                 deleteAll = true;
-        else if (state == EgcIteratorState::MiddleIteration && flex.childsDeleteable())
+        else if (state == EgcIteratorState::MiddleIteration)
                 deleteChild = true;
         else
                 return false;
@@ -728,6 +728,8 @@ bool EgcIdNodeIter::removeFlex(bool before, EgcNode &node, EgcIteratorState stat
                 if (!flex.hasSubNode(*m_node, index))
                         return false;
                 if (!flex.getChild(index))
+                        return false;
+                if (m_node->isAtomicallyBoundChild())
                         return false;
 
                 flex.remove(index);
@@ -783,10 +785,17 @@ bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState stat
         if (!parent->hasSubNode(node, index))
                 return false;
 
-        QScopedPointer<EgcNode> leaf(m_formula.cut(node));
-        EgcNode* child = parent->getChild(index);
-        if (child)
-                setAtNodeDelayed(*child, before);
+        if (    node.getNodeType() == EgcNodeType::EmptyNode
+             && parent->isFlexNode()) {
+                EgcFlexNode* flex = static_cast<EgcFlexNode*>(parent);
+                flex->remove(index);
+                setAtNodeDelayed(*parent, before);
+        } else {
+                QScopedPointer<EgcNode> leaf(m_formula.cut(node));
+                EgcNode* child = parent->getChild(index);
+                if (child)
+                        setAtNodeDelayed(*child, before);
+        }
 
         return true;
 }
@@ -930,7 +939,7 @@ EgcNode* EgcIdNodeIter::findAtomicNode(EgcNode& node) const
 {
         EgcNode* node_ptr = &node;
 
-        while(node_ptr->isAtomicChild()) {
+        while(node_ptr->isAtomicallyBoundChild()) {
                 node_ptr = node_ptr->getParent();
                 if (!node_ptr)
                         return nullptr;

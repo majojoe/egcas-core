@@ -52,13 +52,6 @@ public:
          */
         QString& getName(void);
         /**
-         * @brief childsDeleteable returns wether childs are deleteable or not (sometimes subclasses of this class
-         * shall not be able to delete childs, since that makes no sense in some cases, e.g. for integral nodes (fix
-         * number of childs))
-         * @return true if childs are deleteable, false otherwise
-         */
-        virtual bool childsDeleteable(void) override;
-        /**
          * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
          * left side of the container)
          * @param side the side to test for cursor snap.
@@ -72,6 +65,15 @@ public:
          * @return true if the given side of the node has visible signs.
          */
         virtual bool visibleSigns(EgcNodeSide side) const override;
+        /**
+         * @brief determineIfChildIsAtomicallyBound normally a parent knows better if his child is atomically bound to the
+         * parent. By implementing this the child can ask the parent whether it may be deleted (insert can take place)
+         * or not. So the method isAtomicallyBoundChild can be easily implemented.
+         * ONLY INTENDED TO BE USED BY DIRECT CHILDS!
+         * @param node the node to check for.
+         * @return true if child is atomically bound to its parent, false if not
+         */
+        virtual bool determineIfChildIsAtomicallyBoundallyBound(const EgcNode* node) const;
 
 protected:
 

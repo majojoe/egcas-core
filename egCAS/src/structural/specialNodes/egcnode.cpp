@@ -132,12 +132,7 @@ bool EgcNode::hasVisibleSigns(void) const
         return false;
 }
 
-bool EgcNode::hasAtomicChilds(void) const
-{
-        return false;
-}
-
-bool EgcNode::isAtomicChild(void) const
+bool EgcNode::isAtomicallyBoundChild(void) const
 {
         return false;
 }

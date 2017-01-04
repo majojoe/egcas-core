@@ -172,22 +172,13 @@ public:
          */
         virtual bool modifyableElement(EgcNodeSide side) const;
         /**
-         * @brief isAtomic a node can be atomic e.g. if it contains any subnodes that cannot be deleted without deleting
-         * the containing node or where inserting nodes in between is not allowed. E.g. the variable node contains
-         * sub-nodes. It makes no sense to delete these or inserting nodes in between without corrupting the variable
-         * node. However Beside these property the sub-nodes are normal nodes that can be traversed in normal manner.
-         * If any sub-node is not deleteable is must seperately be marked with isDeleteable returning false.
-         * @return true if the node is atomic, false if not.
-         */
-        virtual bool hasAtomicChilds(void) const;
-        /**
-         * @brief isAtomicChild if a node is a child of a atomic node it may not be deleted seperately. There may be a
+         * @brief isAtomicallyBoundChild if a node is a child of a atomic node it may not be deleted seperately. There may be a
          * parent that is marked as atomic (is deleteable), then the parent must be deleted in order to delete the not
          * deleteable sub-node. This functionality is in some ways comparable to a composition. The also must not be
          * inserted a node in between (this would change the structure).
          * @return true if node is a child of a atomic node, false if NOT a child of a atomic node (majority).
          */
-        virtual bool isAtomicChild(void) const;
+        virtual bool isAtomicallyBoundChild(void) const;
 
 protected:
         EgcContainerNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)

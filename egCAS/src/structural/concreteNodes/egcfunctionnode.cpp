@@ -42,11 +42,6 @@ QString& EgcFunctionNode::getName(void)
         return m_name;
 }
 
-bool EgcFunctionNode::childsDeleteable(void)
-{
-        return true;
-}
-
 bool EgcFunctionNode::cursorSnaps(EgcNodeSide side) const
 {
         if (   side == EgcNodeSide::left
@@ -61,4 +56,11 @@ bool EgcFunctionNode::visibleSigns(EgcNodeSide side) const
         (void) side;
 
         return true;
+}
+
+bool EgcFunctionNode::determineIfChildIsAtomicallyBoundallyBound(const EgcNode* node) const
+{
+        (void) node;
+
+        return false;
 }

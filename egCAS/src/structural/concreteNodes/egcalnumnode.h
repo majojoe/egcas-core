@@ -113,13 +113,13 @@ public:
          */
         virtual bool visibleSigns(EgcNodeSide side) const override;
         /**
-         * @brief isAtomicChild if a node is a child of a atomic node it may not be deleted seperately. There may be a
+         * @brief isAtomicallyBoundChild if a node is a child of a atomic node it may not be deleted seperately. There may be a
          * parent that is marked as atomic (is deleteable), then the parent must be deleted in order to delete the not
          * deleteable sub-node. This functionality is in some ways comparable to a composition. The also must not be
          * inserted a node in between (this would change the structure).
          * @return true if node is a child of a atomic node, false if NOT a child of a atomic node (majority).
          */
-        virtual bool isAtomicChild(void) const override;
+        virtual bool isAtomicallyBoundChild(void) const override;
 
 protected:
         /**

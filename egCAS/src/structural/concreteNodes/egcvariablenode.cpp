@@ -299,8 +299,18 @@ bool EgcVariableNode::visibleSigns(EgcNodeSide side) const
         return false;
 }
 
-bool EgcVariableNode::hasAtomicChilds(void) const
+bool EgcVariableNode::determineIfChildIsAtomicallyBoundallyBound(const EgcNode* node) const
 {
-        return true;
-}
+        quint32 ind = 0;
 
+        if (!node)
+                return false;
+
+        (void) getIndexOfChild(*const_cast<EgcNode*>(node), ind);
+
+        if (ind == 0)
+                return true;
+
+        return false;
+
+}

@@ -117,16 +117,16 @@ public:
          */
         virtual bool visibleSigns(EgcNodeSide side) const override;
         /**
-         * @brief isAtomic a node can be atomic e.g. if it contains any subnodes that cannot be deleted without deleting
-         * the containing node or where inserting nodes in between is not allowed. E.g. the variable node contains
-         * sub-nodes. It makes no sense to delete these or inserting nodes in between without corrupting the variable
-         * node. However Beside these property the sub-nodes are normal nodes that can be traversed in normal manner.
-         * If any sub-node is not deleteable is must seperately be marked with isDeleteable returning false.
-         * @return true if the node is atomic, false if not.
+         * @brief determineIfChildIsAtomicallyBound normally a parent knows better if his child is atomically bound to the
+         * parent. By implementing this the child can ask the parent whether it may be deleted (insert can take place)
+         * or not. So the method isAtomicallyBoundChild can be easily implemented.
+         * ONLY INTENDED TO BE USED BY DIRECT CHILDS!
+         * @param node the node to check for.
+         * @return true if child is atomically bound to its parent, false if not
          */
-        virtual bool hasAtomicChilds(void) const override;
+        virtual bool determineIfChildIsAtomicallyBoundallyBound(const EgcNode* node) const override;
 
-protected:
+protected:        
         static QRegularExpression s_varSubSeparator; ///< regex for separating variable and subscript
         static bool s_initializeRegex;    ///< initialize regex?
 };

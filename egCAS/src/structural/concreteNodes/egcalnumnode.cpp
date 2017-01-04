@@ -173,18 +173,11 @@ bool EgcAlnumNode::visibleSigns(EgcNodeSide side) const
         return true;
 }
 
-bool EgcAlnumNode::isAtomicChild(void) const
+bool EgcAlnumNode::isAtomicallyBoundChild(void) const
 {
         EgcContainerNode* parent = getParent();
-        quint32 ind = 0;
         if (!parent)
                 return false;
 
-        (void) parent->getIndexOfChild(*const_cast<EgcAlnumNode*>(this), ind);
-
-        if (    parent->getNodeType() == EgcNodeType::VariableNode
-             && ind == 0)
-                        return true;
-
-        return false;
+        return parent->determineIfChildIsAtomicallyBoundallyBound(this);
 }
