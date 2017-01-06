@@ -570,7 +570,7 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
 
                 m_iterPosAfterUpdate = node;
                 m_atRightSideAfterUpdate = right;
-                m_isInsert = false;
+                m_isInsert = true;
 
         } else {
                 if(!m_nodeIter->insert(type))
