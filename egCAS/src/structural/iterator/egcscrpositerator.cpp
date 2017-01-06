@@ -253,6 +253,10 @@ bool EgcScrPosIterator::remove(void)
 
 bool EgcScrPosIterator::remove(bool &structureChanged)
 {
+        if (m_nodeIter->getNode().getNodeType() == EgcNodeType::EmptyNode && !m_nodeIter->rightSide()) {
+                next();
+                return false;
+        }
         if (!m_subIdIter->hasNext()) {
                 structureChanged = true;
                 if (m_lastUnderlinedNode) {
