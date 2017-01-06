@@ -42,7 +42,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcScrPosIterator::EgcScrPosIterator(EgcFormulaEntity& formula) : m_lookup(formula.getMathmlMappingCRef()), //gcc bug
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
                                                                         m_lastUnderlinedNode{nullptr},
-                                                                        m_originNode{nullptr}
+                                                                        m_originNode{nullptr},
+                                                                        m_checkForBinEmpty{false}
 {
 
         m_subIdIter.reset(new EgcSubindNodeIter(m_nodeIter->getNode()));
@@ -299,6 +300,7 @@ bool EgcScrPosIterator::backspace(bool &structureChanged)
                         EgcNode* nd = const_cast<EgcNode*>(iter.node());
                         bool rside = iter.rightSide();
                         bool retval = m_nodeIter->remove(true);
+                        m_checkForBinEmpty = true;
                         if (nd)
                                 m_nodeIter->setAtNodeDelayed(*nd, rside);
                         return retval;
@@ -308,7 +310,7 @@ bool EgcScrPosIterator::backspace(bool &structureChanged)
                 bool retval;
                 retval =  m_subIdIter->remove(true);
                 if (m_nodeIter->getNode().nrSubindexes() == 0) {
-                        if (!m_nodeIter->replaceByEmtpy(true))
+                        if (!m_nodeIter->replaceByEmtpy(false))
                                 retval = false;
                         else
                                 structureChanged = true;
@@ -344,6 +346,12 @@ void EgcScrPosIterator::finishFormulaChange(void)
         }
         if (hasNext() && doStep)
                 next();
+
+        if (m_checkForBinEmpty) {
+                if (m_nodeIter->besideBinEmptyNode(false) && hasPrevious())
+                        previous();
+        }
+        m_checkForBinEmpty = false;
 }
 
 void EgcScrPosIterator::updatePointer(EgcNode* newPointer, bool right)

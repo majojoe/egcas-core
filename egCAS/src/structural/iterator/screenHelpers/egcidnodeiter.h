@@ -185,6 +185,13 @@ public:
          * unlikely that a user will need to use this.
          */
         void unlockDelayedCursorUpdate(void);
+        /**
+         * @brief besideBinEmptyNode check if there is a empty binary node near the current cursor
+         * @param right check if there is an empty node on the right side of m_node, if false check is done for left
+         * side.
+         * @return true if empty binary node found, false otherwise
+         */
+        bool besideBinEmptyNode(bool right);
 private:
         /**
          * @brief hasNext Checks if there is at most one more item after the current item.
@@ -370,13 +377,6 @@ private:
          * @return true if everything worked well, false otherwise.
          */
         bool moveToAtomicNode(bool forward);
-        /**
-         * @brief besideBinEmptyNode check if there is a empty binary node near the current cursor
-         * @param right check if there is an empty node on the right side of m_node, if false check is done for left
-         * side.
-         * @return true if empty binary node found, false otherwise
-         */
-        bool besideBinEmptyNode(bool right);
         /**
          * @brief replaceBinEmptyNodeBy replace the empty binary node beside m_node
          * @param type the type of the node to replace the empty node

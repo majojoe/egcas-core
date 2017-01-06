@@ -221,8 +221,9 @@ private:
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes
         QScopedPointer<EgcSubindNodeIter> m_subIdIter;  ///< iterator for the subindexes of a node
-        EgcNode* m_lastUnderlinedNode;                      ///< the last visible parent node that was given back
+        EgcNode* m_lastUnderlinedNode;                  ///< the last visible parent node that was given back
         EgcNode* m_originNode;                          ///< the node that was the origin of looking up a visible parent
+        bool m_checkForBinEmpty;                        ///< check for empty binary node beside cursor after remove
 };
 
 #endif // EGCSCRPOSITERATOR_H
