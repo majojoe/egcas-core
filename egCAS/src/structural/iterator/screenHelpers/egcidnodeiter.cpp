@@ -635,8 +635,14 @@ bool EgcIdNodeIter::removeBinary(bool before, EgcNode &node, EgcIteratorState st
         if (!node.getParent())
                 return false;
 
-        if (state == EgcIteratorState::LeftIteration || state == EgcIteratorState::RightIteration)
+        if (!bin.getChild(0) || !bin.getChild(1))
                 deleteAll = true;
+        else if (state == EgcIteratorState::LeftIteration || state == EgcIteratorState::RightIteration)
+                deleteAll = true;
+        else if (before && bin.getChild(1)->getNodeType() == EgcNodeType::EmptyNode)
+                deleteChild = true;
+        else if (!before && bin.getChild(0)->getNodeType() == EgcNodeType::EmptyNode)
+                deleteChild = true;
         else if (state == EgcIteratorState::MiddleIteration && node.getNodeType() != EgcNodeType::BinEmptyNode)
                 removeType = true;
         else    //BinEmptyNode
@@ -666,9 +672,9 @@ bool EgcIdNodeIter::removeBinary(bool before, EgcNode &node, EgcIteratorState st
                 if (!bin.getChild(1))
                         return false;
                 if (before)
-                        index = 1;
-                else
                         index = 0;
+                else
+                        index = 1;
 
                 EgcNode* tmpChild = bin.getChild(index);
                 QScopedPointer<EgcNode> child(m_formula.cut(*tmpChild));
@@ -676,7 +682,7 @@ bool EgcIdNodeIter::removeBinary(bool before, EgcNode &node, EgcIteratorState st
                         return false;
                 m_formula.paste(*child.take(), node);
 
-                setAtNodeDelayed(*tmpChild, !before);
+                setAtNodeDelayed(*tmpChild, before);
 
         } else {
                 return false;
