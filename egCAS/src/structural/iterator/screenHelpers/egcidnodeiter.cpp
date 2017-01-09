@@ -716,10 +716,11 @@ bool EgcIdNodeIter::removeFlex(bool before, EgcNode &node, EgcIteratorState stat
 
         //search for the index of the child tree of the nodeToDelete we are currently in
         if (deleteAll) {
-                EgcNode* parent = node.getParent();
+                EgcContainerNode* parent = node.getParent();
+                quint32 index = parent->getIndexOfChild(node, index);
                 QScopedPointer<EgcNode> container(m_formula.cut(node));
-                if (!container.isNull())
-                        setAtNodeDelayed(*parent, before);
+                if (parent)
+                        setAtNodeDelayed(*(parent->getChild(index)), false);
         } else if (deleteContainer) {
                 if (!flex.getChild(0))
                         return false;
@@ -772,11 +773,21 @@ bool EgcIdNodeIter::removeUnary(bool before, EgcNode& node, EgcIteratorState sta
         if (!tmpChild)
                 return false;
 
+        EgcIdNodeIter iter(m_formula);
+        iter.setAtNode(node, before);
+        if (before) {
+                if (iter.hasPrevious())
+                        iter.previous();
+        } else {
+                if (iter.hasNext())
+                        iter.next();
+        }
+        EgcNode& nd = iter.getNode();
         QScopedPointer<EgcNode> child(m_formula.cut(*unary.getChild(0)));
         if (child.isNull())
                 return false;
         m_formula.paste(*child.take(), node);
-        setAtNodeDelayed(*tmpChild, before);
+        setAtNodeDelayed(nd, before);
 
         return true;
 }

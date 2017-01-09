@@ -209,14 +209,6 @@ private:
          * (left or right always that one that is nearest).
          */
         void balanceNodeIter(void);
-        /**
-         * @brief nextNonoperationNode iterate to next node that is of non operation type
-         */
-        void nextNonoperationNode(void);
-        /**
-         * @brief previousNonoperationNode iterate to previous node that is of non operation type
-         */
-        void previousNonoperationNode(void);
 
         const EgcMathmlLookup& m_lookup;                ///< a reference to the lookup data
         QScopedPointer<EgcIdNodeIter> m_nodeIter;       ///< the node iterator to iterate over the formula nodes

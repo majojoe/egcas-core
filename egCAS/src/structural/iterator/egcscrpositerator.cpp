@@ -262,13 +262,7 @@ bool EgcScrPosIterator::remove(bool &structureChanged)
                 if (m_lastUnderlinedNode) {
                         return m_nodeIter->deleteTree(false);
                 } else {
-                        EgcScrPosIterator iter(*this);
-                        iter.nextNonoperationNode();
-                        EgcNode* nd = const_cast<EgcNode*>(iter.node());
-                        bool rside = iter.rightSide();
                         bool retval = m_nodeIter->remove(false);
-                        if (nd)
-                                m_nodeIter->setAtNodeDelayed(*nd, rside);
                         return retval;
                 }
         } else {
@@ -299,14 +293,8 @@ bool EgcScrPosIterator::backspace(bool &structureChanged)
                 if (m_lastUnderlinedNode) {
                         return m_nodeIter->deleteTree(true);
                 } else {
-                        EgcScrPosIterator iter(*this);
-                        iter.previousNonoperationNode();
-                        EgcNode* nd = const_cast<EgcNode*>(iter.node());
-                        bool rside = iter.rightSide();
                         bool retval = m_nodeIter->remove(true);
                         m_checkForBinEmpty = true;
-                        if (nd)
-                                m_nodeIter->setAtNodeDelayed(*nd, rside);
                         return retval;
                 }
         } else {
@@ -389,20 +377,6 @@ void EgcScrPosIterator::lockDelayedCursorUpdate(void)
 void EgcScrPosIterator::unlockDelayedCursorUpdate(void)
 {
         m_nodeIter->unlockDelayedCursorUpdate();
-}
-
-void EgcScrPosIterator::nextNonoperationNode(void)
-{
-        while(hasNext() && node()->isOperation()) {
-                next();
-        }
-}
-
-void EgcScrPosIterator::previousNonoperationNode(void)
-{
-        while(hasPrevious() && node()->isOperation()) {
-                previous();
-        }
 }
 
 void EgcScrPosIterator::invalidateCursor(EgcNode& baseNode)
