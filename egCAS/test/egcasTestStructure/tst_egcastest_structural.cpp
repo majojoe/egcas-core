@@ -1020,7 +1020,7 @@ void EgcasTest_Structural::testInsertDelete()
 
         nodePointer = &(iter8.next());
         node1 = nodePointer;
-        iter8.insert(EgcNodeType::PlusNode);
+        iter8.insert(EgcNodeType::PlusNode, false);
         nodePointer = &(iter8.previous());
         nodePointer = &(iter8.next());
         node2 = nodePointer;
@@ -1154,7 +1154,7 @@ void EgcasTest_Structural::testVisitors()
 
         nodePointer = &(iter8.next());
         node1 = nodePointer;
-        iter8.insert(EgcNodeType::PlusNode);
+        iter8.insert(EgcNodeType::PlusNode, false);
         nodePointer = &(iter8.previous());
         nodePointer = &(iter8.next());
         node2 = nodePointer;
@@ -1243,7 +1243,7 @@ void EgcasTest_Structural::testFlexNode()
 
         nodePointer = &(iter9.next());
         node1 = nodePointer;
-        iter9.insert(EgcNodeType::FunctionNode);
+        iter9.insert(EgcNodeType::FunctionNode, false);
         nodePointer = &(iter9.previous());
         nodePointer = &(iter9.next());
         node2 = nodePointer;
@@ -1344,7 +1344,7 @@ void EgcasTest_Structural::testFlexNodeVisitors()
 
         nodePointer = &(iter9.next());
         node1 = nodePointer;
-        iter9.insert(EgcNodeType::FunctionNode);
+        iter9.insert(EgcNodeType::FunctionNode, false);
         nodePointer = &(iter9.previous());
         nodePointer = &(iter9.next());
         node2 = nodePointer;
