@@ -107,7 +107,7 @@ public:
          */
         EgcContainerNode* getParent(void) const;
         /**
-         * @brief isParent checks if the given node is the parent of this node
+         * @brief isChild checks if the given node is the parent of this node
          * @param parent the node to check wether it is the parent of the current node or not.
          * @return true if the given node is the parent, false otherwise
          */

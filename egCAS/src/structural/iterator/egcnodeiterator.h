@@ -124,9 +124,11 @@ public:
         /**
          * @brief insert inserts the given item at the current position.
          * @param type the node type to be inserted
+         * @param insertBeforeChild if true the node to insert will have empty nodes before the current child, otherwise
+         * afterwards
          * @return false if insertiation in the tree is not possible (e.g. not a containter type), true otherwise
          */
-        virtual bool insert(EgcNodeType type);
+        virtual bool insert(EgcNodeType type, bool insertBeforeChild);
         /**
          * @brief remove removes the last item it was jumped over.
          */

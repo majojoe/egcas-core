@@ -309,7 +309,7 @@ bool EgcNodeIterator::replaceBinEmptyNodeBy(EgcNodeType type)
         return true;
 }
 
-bool EgcNodeIterator::insert(EgcNodeType type)
+bool EgcNodeIterator::insert(EgcNodeType type, bool insertBeforeChild)
 {
         bool retval = false;
 
@@ -323,15 +323,12 @@ bool EgcNodeIterator::insert(EgcNodeType type)
                 EgcContainerNode* node_cont = static_cast<EgcContainerNode*>(node.data());
                 quint32 nodeIndex = 0;
                 quint32 nrChildNodes = node_cont->getNumberChildNodes();
-                bool forward = true;
-                if (m_history == m_next)
-                        forward = false;
 
                 if (nrChildNodes > 1) {
                         quint32 n;
                         quint32 start;
 
-                        if (forward) {
+                        if (!insertBeforeChild) {
                                 start = 1;
                                 n = nrChildNodes;
                                 nodeIndex = 0;

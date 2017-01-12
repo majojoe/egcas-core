@@ -573,12 +573,11 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
                 m_isInsert = true;
 
         } else {
-                if(!m_nodeIter->insert(type))
+                bool insertBeforeChild = false;
+                if (&m_nodeIter->peekNext() == m_node)
+                        insertBeforeChild = true;
+                if(!m_nodeIter->insert(type, insertBeforeChild))
                         return false;
-
-                //make the iterators valid again
-                //it doesn't matter if we are at the right or left, we must always peek the previous node
-                //node = &m_nodeIter->peekPrevious();
 
                 m_iterPosAfterUpdate = node;
                 m_atRightSideAfterUpdate = right;
