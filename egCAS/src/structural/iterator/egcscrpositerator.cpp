@@ -253,8 +253,8 @@ bool EgcScrPosIterator::remove(void)
 
 bool EgcScrPosIterator::remove(bool &structureChanged)
 {
-        if (m_nodeIter->getNode().getNodeType() == EgcNodeType::EmptyNode && !m_nodeIter->rightSide()) {
-                next();
+        if (m_nodeIter->getNode().getNodeType() == EgcNodeType::EmptyNode && !m_nodeIter->rightSide() && hasNext()) {
+                (void) next();
                 return false;
         }
         if (!m_subIdIter->hasNext()) {
@@ -288,15 +288,20 @@ bool EgcScrPosIterator::backspace(void)
 
 bool EgcScrPosIterator::backspace(bool &structureChanged)
 {
+        if (m_nodeIter->getNode().getNodeType() == EgcNodeType::EmptyNode && m_nodeIter->rightSide() && hasPrevious()) {
+                (void) previous();
+                return false;
+        }
         if (!m_subIdIter->hasPrevious()) {
+                bool retval;
                 structureChanged = true;
                 if (m_lastUnderlinedNode) {
-                        return m_nodeIter->deleteTree(true);
+                        retval = m_nodeIter->deleteTree(true);
                 } else {
-                        bool retval = m_nodeIter->remove(true);
+                        retval = m_nodeIter->remove(true);
                         m_checkForBinEmpty = true;
-                        return retval;
                 }
+                return retval;
         } else {
                 structureChanged = false;
                 bool retval;
@@ -341,7 +346,7 @@ void EgcScrPosIterator::finishFormulaChange(void)
 
         if (m_checkForBinEmpty) {
                 if (m_nodeIter->besideBinEmptyNode(false) && hasPrevious())
-                        previous();
+                        (void) previous();
         }
         m_checkForBinEmpty = false;
 }
