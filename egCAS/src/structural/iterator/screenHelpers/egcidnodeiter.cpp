@@ -899,7 +899,7 @@ bool EgcIdNodeIter::deleteTree(bool before)
                         return false;
                 
                 setAtNode(*nodeToDelete, true, EgcSnapProperty::SnapAll);
-                m_nodeIter->remove();
+                m_nodeIter->remove(false);
                 
                 setAtNodeDelayed(*cParent->getChild(index), atRightSide);
         }

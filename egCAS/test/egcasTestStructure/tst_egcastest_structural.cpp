@@ -1093,7 +1093,7 @@ void EgcasTest_Structural::testInsertDelete()
         iter8.toFront();
         (void) iter8.next();
         (void) iter8.next();
-        iter8.remove();
+        iter8.remove(false);
 
         nodePointer = &(iter8.next());
         state = iter8.getLastState();
@@ -1303,7 +1303,7 @@ void EgcasTest_Structural::testFlexNode()
         nodePointer = &(iter9.previous());
         nodePointer = &(iter9.previous());
         QVERIFY(static_cast<EgcNumberNode*>(nodePointer)->getValue() == "6");
-        iter9.remove();
+        iter9.remove(true);
         QVERIFY(static_cast<EgcFlexNode*>(node2)->getNumberChildNodes() == 3);
 }
 

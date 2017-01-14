@@ -130,9 +130,10 @@ public:
          */
         virtual bool insert(EgcNodeType type, bool insertBeforeChild);
         /**
-         * @brief remove removes the last item it was jumped over.
+         * @brief remove removes the next or previous item.
+         * @param deleteNext if true, the following (next) node will be deleted, otherwise the previous
          */
-        virtual void remove();
+        virtual void remove(bool deleteNext = true);
         /**
          * @brief replace replace the given node by the type given
          * @param node the node to be replaced
@@ -189,7 +190,6 @@ protected:
         EgcNode* m_previous;                    ///< pointer to previous data element in the tree structure
         EgcBaseNode* m_baseElement;             ///< pointer to data element at the root of the tree structure
         EgcIteratorState m_state;               ///< reflects the iterator state to know where to go next time
-        EgcNode* m_history;                     ///< the last node we jumped over
 };
 
 

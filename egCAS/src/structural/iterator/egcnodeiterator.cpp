@@ -38,7 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcNodeIterator::EgcNodeIterator(const EgcFormulaEntity& formula) :
         m_next(formula.getBaseElement().getChild(0)), m_previous(&formula.getBaseElement()),
-        m_baseElement(&formula.getBaseElement()), m_state(EgcIteratorState::LeftIteration), m_history(nullptr)
+        m_baseElement(&formula.getBaseElement()), m_state(EgcIteratorState::LeftIteration)
 {
 }
 
@@ -92,7 +92,6 @@ EgcNode & EgcNodeIterator::next(void)
                 m_next = m_baseElement->getChild(0);
                 m_previous = m_baseElement;
         }
-        m_history = tempNode;
 
         return *tempNode;
 }
@@ -122,7 +121,6 @@ EgcNode & EgcNodeIterator::previous(void)
                 m_next = m_baseElement;
                 m_previous = m_baseElement->getChild(0);
         }
-        m_history = tempNode;
 
         return *tempNode;
 }
@@ -387,29 +385,28 @@ bool EgcNodeIterator::insert(EgcNodeType type, bool insertBeforeChild)
                 }
 
                 //repair the node pointer organization data
-                m_previous = m_history = nodePtr;
+                m_previous = nodePtr;
         }
 
         return retval;
 }
 
-void EgcNodeIterator::remove()
+void EgcNodeIterator::remove(bool deleteNext)
 {
-        //the last node jumped over is in m_history
-        EgcNode *history = m_history;
-        if (!history) //if there is no history, we are going to delete the root node
-                history = m_baseElement->getChild(0);
-        EgcNode *parent = history->getParent();
+        EgcNode *toDelete;
+        if (deleteNext)
+                toDelete = m_next;
+        else
+                toDelete = m_previous;
+        if (!toDelete) //if there is no history, we are going to delete the root node
+                toDelete = m_baseElement->getChild(0);
+        EgcContainerNode *parent = toDelete->getParent();
         if (!parent) //nullptr is not allowed
                 return;
         quint32 index = 0;
-        m_next = parent;
-        m_previous = history;
-        m_history = nullptr;
-        (void) next();
 
         if (parent->isContainer()) { //must be true, only for case of error
-                if (static_cast<EgcContainerNode*>(parent)->getIndexOfChild(*history, index)) {
+                if (static_cast<EgcContainerNode*>(parent)->getIndexOfChild(*toDelete, index)) {
                         if (parent->isFlexNode() && (static_cast<EgcFlexNode*>(parent)->getNumberChildNodes() > 1))
                                 static_cast<EgcFlexNode*>(parent)->remove(index);
                         else
@@ -417,11 +414,14 @@ void EgcNodeIterator::remove()
                                                        setChild(index,*EgcNodeCreator::create(EgcNodeType::EmptyNode));
                 }
         }
-        //jump back again
-        (void) previous();
-        //correct the history
-        if (parent->isContainer()) //must be true, only for case of error
-                m_history = static_cast<EgcContainerNode*>(parent)->getChild(index);
+        if (deleteNext) {
+                m_next = parent->getChild(index);
+                m_previous = parent;
+        } else {
+                m_next = parent;
+                m_previous = parent->getChild(index);
+        }
+
 }
 
 EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
@@ -487,8 +487,6 @@ EgcNode* EgcNodeIterator::replace(EgcNode& node, EgcNodeType type)
         if (retval) { //all other cases
                 if (m_next == &node)
                         m_next = retval;
-                if (m_history == &node)
-                        m_history = retval;
                 if (m_previous == &node)
                         m_previous = retval;
         } else {
@@ -609,8 +607,6 @@ bool EgcNodeIterator::insertChildSpace(void)
                 QScopedPointer<EgcNode> tempNode(EgcNodeCreator::create(EgcNodeType::EmptyNode));
                 EgcNode* ptr = tempNode.data();
                 node->insert(index, *tempNode.take());
-                if (m_previous == m_history)
-                        m_history = ptr;
                 m_previous = ptr;
         }
 
