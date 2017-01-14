@@ -716,7 +716,9 @@ bool EgcIdNodeIter::removeFlex(bool before, EgcNode &node, EgcIteratorState stat
         //search for the index of the child tree of the nodeToDelete we are currently in
         if (deleteAll) {
                 EgcContainerNode* parent = node.getParent();
-                quint32 index = parent->getIndexOfChild(node, index);
+                quint32 index;
+                if (!parent->getIndexOfChild(node, index))
+                        return false;
                 QScopedPointer<EgcNode> container(m_formula.cut(node));
                 if (parent)
                         setAtNodeDelayed(*(parent->getChild(index)), false);
