@@ -913,8 +913,10 @@ bool EgcFormulaEntity::rearrangeOnePrecedence(void)
                         if (    container->bindingPower() > lchild->bindingPower() && lchild->isOperation()
                              || (container->bindingPower() == lchild->bindingPower() && container->isOperation()
                                  && !container->isLeftAssociative())) {
-                                if (rotateTreeRight(*container))
-                                        return false;
+                                if (lchild->bindingPower() > 0) {
+                                        if (rotateTreeRight(*container))
+                                                return false;
+                                }
                         }
                 }
 
@@ -922,8 +924,10 @@ bool EgcFormulaEntity::rearrangeOnePrecedence(void)
                         if (    container->bindingPower() > rchild->bindingPower() && rchild->isOperation()
                              || (container->bindingPower() == rchild->bindingPower() && container->isOperation()
                                  && container->isLeftAssociative())) {
-                                if (rotateTreeLeft(*container))
-                                        return false;
+                                if (rchild->bindingPower() > 0) {
+                                        if (rotateTreeLeft(*container))
+                                                return false;
+                                }
                         }
                 }
         }
