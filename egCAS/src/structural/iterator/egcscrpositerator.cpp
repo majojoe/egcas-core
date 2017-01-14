@@ -43,7 +43,8 @@ EgcScrPosIterator::EgcScrPosIterator(EgcFormulaEntity& formula) : m_lookup(formu
                                                                         m_nodeIter{new EgcIdNodeIter(formula)},
                                                                         m_lastUnderlinedNode{nullptr},
                                                                         m_originNode{nullptr},
-                                                                        m_checkForBinEmpty{false}
+                                                                        m_checkForBinEmpty{false},
+                                                                        m_wasBackspace{false}
 {
 
         m_subIdIter.reset(new EgcSubindNodeIter(m_nodeIter->getNode()));
@@ -59,7 +60,10 @@ EgcScrPosIterator::EgcScrPosIterator(const EgcScrPosIterator& orig) : m_lookup(o
                                                                       m_nodeIter{new EgcIdNodeIter(*orig.m_nodeIter)},
                                                                       m_subIdIter{new EgcSubindNodeIter(*orig.m_subIdIter)},
                                                                       m_lastUnderlinedNode{orig.m_lastUnderlinedNode},
-                                                                      m_originNode{orig.m_originNode}
+                                                                      m_originNode{orig.m_originNode},
+                                                                      m_checkForBinEmpty{orig.m_checkForBinEmpty},
+                                                                      m_wasBackspace{orig.m_wasBackspace}
+
 {
 
 }
@@ -301,6 +305,7 @@ bool EgcScrPosIterator::backspace(bool &structureChanged)
                         retval = m_nodeIter->remove(true);
                         m_checkForBinEmpty = true;
                 }
+                m_wasBackspace = true;
                 return retval;
         } else {
                 structureChanged = false;
@@ -348,7 +353,14 @@ void EgcScrPosIterator::finishFormulaChange(void)
                 if (m_nodeIter->besideBinEmptyNode(false) && hasPrevious())
                         (void) previous();
         }
+        if (m_wasBackspace) {
+                if (    m_nodeIter->getNode().getNodeType() == EgcNodeType::EmptyNode && m_nodeIter->rightSide()
+                     && hasPrevious()) {
+                        (void) previous();
+                }
+        }
         m_checkForBinEmpty = false;
+        m_wasBackspace = false;
 }
 
 void EgcScrPosIterator::updatePointer(EgcNode* newPointer, bool right)

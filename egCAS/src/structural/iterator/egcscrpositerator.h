@@ -216,6 +216,7 @@ private:
         EgcNode* m_lastUnderlinedNode;                  ///< the last visible parent node that was given back
         EgcNode* m_originNode;                          ///< the node that was the origin of looking up a visible parent
         bool m_checkForBinEmpty;                        ///< check for empty binary node beside cursor after remove
+        bool m_wasBackspace;                            ///< the last remove was a remove happened by pressing backspace
 };
 
 #endif // EGCSCRPOSITERATOR_H
