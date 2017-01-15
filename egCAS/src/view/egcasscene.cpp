@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcformulaitem.h"
 #include "egccrossitem.h"
 #include "actions/egcactionmapper.h"
+#include "egcitemtypes.h"
 
 
 EgCasScene::EgCasScene(EgcAbstractDocument& doc, QObject *parent) :
@@ -251,6 +252,26 @@ void EgCasScene::itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem&
 void EgCasScene::triggerFormulaCreation(QPointF point, QKeyEvent *event)
 {
         emit createFormula(point, EgcActionMapper::map(event));
+}
+
+void EgCasScene::moveItems(bool moveDown, QPointF point)
+{
+        qreal grid_h = m_grid.height();
+        QList<QGraphicsItem *> allItems = items();
+        QGraphicsItem* item;
+
+        foreach (item, allItems) {
+                if (    item->type() == static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType)
+                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType)
+                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcTextItemType)) {
+                        if (item->pos().y() >= point.y()) {
+                                if (moveDown)
+                                        item->moveBy(0.0, grid_h);
+                                else if (item->pos().y() > point.y())
+                                        item->moveBy(0.0, -grid_h);
+                        }
+                }
+        }
 }
 
 bool EgCasScene::deleteItem(EgcAbstractFormulaItem* item)

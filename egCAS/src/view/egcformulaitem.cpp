@@ -294,7 +294,10 @@ void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
                 else
                         m_entity->handleAction(action);
                 break;
-
+        case Qt::Key_Enter:
+        case Qt::Key_Return:
+                keyCursorKeyHandler(event);
+                break;
         default:
                 if (action.m_op != EgcOperations::noAction)
                         m_entity->handleAction(action);
@@ -372,6 +375,10 @@ void EgcFormulaItem::keyCursorKeyHandler(QKeyEvent *keyEvent)
                 scn->itemYieldsFocus(EgcSceneSnapDirection::up, *this);
                 break;
         case Qt::Key_Down:
+                accepted = true;
+                scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
+                break;
+        case Qt::Key_Enter:
                 accepted = true;
                 scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
                 break;

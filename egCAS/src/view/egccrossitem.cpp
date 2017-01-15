@@ -75,15 +75,36 @@ void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
         QGraphicsScene* scn = scene();
         if (!scn)
                 return;
+        EgCasScene *escn = qobject_cast<EgCasScene*>(scn);
+        if (!escn)
+                return;
 
         int key = keyEvent->key();
         if (    key == Qt::Key_Left
              || key == Qt::Key_Right
              || key == Qt::Key_Up
-             || key == Qt::Key_Down) {
+             || key == Qt::Key_Down
+             || key == Qt::Key_Enter
+             || key == Qt::Key_Return
+             || key == Qt::Key_Backspace
+             || key == Qt::Key_Delete) {
                 keyEvent->accept();
 
                 switch(keyEvent->key()) {
+                case Qt::Key_Enter:
+                case Qt::Key_Return:
+                        escn->moveItems(true, scenePos());
+                        if (scenePos().y() < scn->sceneRect().height() - getGrid().height())
+                                down();
+                        break;
+                case Qt::Key_Backspace:
+                        escn->moveItems(false, scenePos());
+                        if (scenePos().y() > 0)
+                                up();
+                        break;
+                case Qt::Key_Delete:
+                        escn->moveItems(false, scenePos());
+                        break;
                 case Qt::Key_Up:
                         if (scenePos().y() > 0)
                                 up();
@@ -111,10 +132,7 @@ void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
         } else {
                 QGraphicsItem::keyPressEvent(keyEvent);
                 if (!selectedItem()) {
-                        EgCasScene *scene = qobject_cast<EgCasScene*>(scn);
-                        if (scene) {
-                                scene->triggerFormulaCreation(scenePos(), keyEvent);
-                        }
+                        escn->triggerFormulaCreation(scenePos(), keyEvent);
                 }
         }
 }

@@ -152,6 +152,12 @@ public:
          * @return true if deleting the item was successful, false otherwise
          */
         bool deleteItem(EgcAbstractTextItem* item);
+        /**
+         * @brief moveItems moves all following (from the given point onwards) items up or down by the gridsize
+         * @param moveDown if true this moves the items downwards, upwards otherwise
+         * @param point the point where onwards the movement shall be started
+         */
+        void moveItems(bool moveDown, QPointF point);
 
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
