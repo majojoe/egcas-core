@@ -149,6 +149,7 @@ set(egCAS_SOURCES
         utils/egcutfcodepoint.cpp
         view/egccrossitem.cpp
         structural/actions/egcactionmapper.cpp
+        view/egcworksheet.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS
