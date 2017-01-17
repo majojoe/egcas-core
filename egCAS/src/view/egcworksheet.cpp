@@ -26,9 +26,81 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#include <QtMath>
 #include "egcworksheet.h"
 
 EgcWorksheet::EgcWorksheet()
 {
 
 }
+
+QSizeF EgcWorksheet::getSize(void)
+{
+        return m_size;
+}
+
+void EgcWorksheet::setSize(QSizeF size)
+{
+        m_size = size;
+}
+
+qreal EgcWorksheet::getLeftMargin(void)
+{
+        return m_leftMargin;
+}
+
+void EgcWorksheet::setLeftMargin(qreal margin)
+{
+        m_leftMargin = margin;
+}
+
+qreal EgcWorksheet::getRightMargin(void)
+{
+        return m_rightMargin;
+}
+
+void EgcWorksheet::setRightMargin(qreal margin)
+{
+        m_rightMargin = margin;
+}
+
+qreal EgcWorksheet::getTopMargin(void)
+{
+        return m_topMargin;
+}
+
+void EgcWorksheet::setTopMargin(qreal margin)
+{
+        m_topMargin = margin;
+}
+
+qreal EgcWorksheet::getBottomMargin(void)
+{
+        return m_bottomMargin;
+}
+
+void EgcWorksheet::setBottomMargin(qreal margin)
+{
+        m_bottomMargin = margin;
+}
+
+QPointF EgcWorksheet::snapWorksheet(QPointF point)
+{
+        qreal x = point.x();
+        qreal y = point.y();
+
+        qreal page = qFloor(y / m_size.height());
+        qreal yOffset = y - (page * m_size.height());
+
+        if (x < m_leftMargin)
+                x = m_leftMargin;
+        if (x > (m_size.width() - m_rightMargin))
+                x = (m_size.width() - m_rightMargin);
+        if (yOffset < m_topMargin)
+                yOffset = m_topMargin;
+        if (yOffset > (m_size.height() - m_bottomMargin))
+                yOffset = m_size.height() - m_bottomMargin;
+
+        return QPoint(x, yOffset + (page * m_size.height()));
+}
+

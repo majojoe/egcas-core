@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCWORKSHEET_H
 
 #include <QSizeF>
+#include <QPointF>
 
 /**
  * @brief The EgcWorksheet class holds all information about size and margins of the worksheet
@@ -56,8 +57,9 @@ public:
         qreal getLeftMargin(void);
         /**
          * @brief setLeftMargin sets the left margin of the worksheet
+         * @param margin the margin to set
          */
-        void setLeftMargin(qreal);
+        void setLeftMargin(qreal margin);
         /**
          * @brief getRightMargin returns the right margin of the worksheet
          * @return the right margin
@@ -65,8 +67,9 @@ public:
         qreal getRightMargin(void);
         /**
          * @brief setRightMargin sets the right margin of the worksheet
+         * @param margin the margin to set
          */
-        void setRightMargin(qreal);
+        void setRightMargin(qreal margin);
         /**
          * @brief getTopMargin returns the top margin of the worksheet
          * @return the top margin
@@ -74,8 +77,9 @@ public:
         qreal getTopMargin(void);
         /**
          * @brief setTopMargin sets the top margin of the worksheet
+         * @param margin the margin to set
          */
-        void setTopMargin(qreal);
+        void setTopMargin(qreal margin);
         /**
          * @brief getBottomMargin returns the bottom margin of the worksheet
          * @return the bottom margin
@@ -83,8 +87,15 @@ public:
         qreal getBottomMargin(void);
         /**
          * @brief setBottomMargin sets the bottom margin of the worksheet
+         * @param margin the margin to set
          */
-        void setBottomMargin(qreal);
+        void setBottomMargin(qreal margin);
+        /**
+         * @brief snapWorksheet snap the given point into the worksheet
+         * @param point can be any point of the scene
+         * @return the corrected point that is inside the worksheet
+         */
+        QPointF snapWorksheet(QPointF point);
 
 private:
         QSizeF m_size;                  //the worksheet size
