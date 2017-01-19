@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QSizeF>
 #include <QPointF>
+#include <QRectF>
 
 /**
  * @brief The EgcWorksheet class holds all information about size and margins of the worksheet
@@ -95,7 +96,29 @@ public:
          * @param point can be any point of the scene
          * @return the corrected point that is inside the worksheet
          */
-        QPointF snapWorksheet(QPointF point);
+        QPointF snapWorksheet(const QPointF& point);
+        /**
+         * @brief snapWorksheet snap the given item rectangle into the worksheet
+         * @param item is the rectangular shape of the item on the scene
+         * @return the corrected position of the item inside the worksheet
+         */
+        QPointF snapWorksheet(const QRectF& item);
+        /**
+         * @brief itemWrapsToNewPage check if given item wraps to new page
+         * @param item the rectangle that is used by the item on the scene
+         * @param yOffset the offset in y direction by that the item shall be moved
+         * @return true if the item is on a new page after the move
+         */
+        bool itemWrapsToNewPage(const QRectF& item, qreal yOffset);
+        /**
+         * @brief itemOverlapsPageWidth checks if the item overlaps with its width the worksheet width. Furthermore
+         * it calculates the offset by which the item overlaps the worksheet page
+         * @param item the rectangular shape of the item on the scene
+         * @param overlapsPageBy 0 if the item does not overlap the worksheet or the offset by which the item overlaps
+         * the worksheet in x direction, if so. Scene can be extended by the offset then to view the whole item.
+         * @return true if the item overlaps the x direction of the worksheet, false otherwise.
+         */
+        bool itemOverlapsPageWidth(const QRectF& item, qreal& overlapsPageBy);
 
 private:
         QSizeF m_size;                  //the worksheet size

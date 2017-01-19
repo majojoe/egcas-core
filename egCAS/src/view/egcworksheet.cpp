@@ -84,7 +84,7 @@ void EgcWorksheet::setBottomMargin(qreal margin)
         m_bottomMargin = margin;
 }
 
-QPointF EgcWorksheet::snapWorksheet(QPointF point)
+QPointF EgcWorksheet::snapWorksheet(const QPointF& point)
 {
         qreal x = point.x();
         qreal y = point.y();
@@ -102,5 +102,67 @@ QPointF EgcWorksheet::snapWorksheet(QPointF point)
                 yOffset = m_size.height() - m_bottomMargin;
 
         return QPoint(x, yOffset + (page * m_size.height()));
+}
+
+QPointF EgcWorksheet::snapWorksheet(const QRectF& item)
+{
+        QPointF newTopLeftPos = item.topLeft();
+        qreal page = qFloor(item.top() / m_size.height());
+        qreal topBorder = (page * m_size.height()) + m_topMargin;
+        qreal bottomBorder = (page * m_size.height()) + m_size.height() - m_bottomMargin;
+        qreal rightBorder = m_size.width() - m_rightMargin;
+
+        if (item.right() > rightBorder) {
+                QRectF tmp(item);
+                tmp.moveRight(rightBorder);
+                newTopLeftPos = tmp.topLeft();
+        }
+        if (item.left() < m_leftMargin) {
+                QRectF tmp(item);
+                tmp.moveLeft(m_leftMargin);
+                newTopLeftPos = tmp.topLeft();
+        }
+        if (item.bottom() > bottomBorder) {
+                QRectF tmp(item);
+                tmp.moveBottom(bottomBorder);
+                newTopLeftPos = tmp.topLeft();
+        }
+        if (item.top() < topBorder) {
+                QRectF tmp(item);
+                tmp.moveTop(topBorder);
+                newTopLeftPos = tmp.topLeft();
+        }
+
+        return newTopLeftPos;
+}
+
+bool EgcWorksheet::itemWrapsToNewPage(const QRectF& item, qreal yOffset)
+{
+        if (yOffset < 0)
+                return false;
+
+        qreal x = item.topLeft().x();
+        qreal y = item.topLeft().y();
+
+        qreal page = qFloor(y / m_size.height());
+        qreal yPageOffset = y - (page * m_size.height());
+
+        if (yPageOffset + yOffset + m_bottomMargin > m_size.height())
+                return true;
+
+        return false;
+}
+
+bool EgcWorksheet::itemOverlapsPageWidth(const QRectF& item, qreal& overlapsPageBy)
+{
+        bool retval = false;
+        overlapsPageBy = item.topRight().x() - m_size.width();
+
+        if (overlapsPageBy < 0) {
+                overlapsPageBy = 0;
+                retval = true;
+        }
+
+        return retval;
 }
 
