@@ -37,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcabstractpixmapentity.h"
 #include "entities/egcabstracttextentity.h"
 #include "document/egcabstractdocument.h"
+#include "egcworksheet.h"
 
 class EgcFormulaItem;
 class EgcPixmapItem;
@@ -184,6 +185,7 @@ signals:
 private:
 
         QSizeF m_grid;
+        EgcWorksheet m_worksheet;               ///< the worksheet we are working on
         QGraphicsLineItem* m_cursor;            ///< formula cursor for modifying formula
         QGraphicsLineItem* m_nodeUnderline;     ///< node cursor to show user the context of changes in a formula
         EgcCrossItem* m_cross;                  ///< crosshair (cursor) to be able to see enter position

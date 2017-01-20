@@ -29,7 +29,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QtMath>
 #include "egcworksheet.h"
 
-EgcWorksheet::EgcWorksheet()
+EgcWorksheet::EgcWorksheet() : m_size{QSize(2100,2900)}, m_leftMargin{150}, m_rightMargin{150}, m_topMargin{150},
+                               m_bottomMargin{150}
 {
 
 }
