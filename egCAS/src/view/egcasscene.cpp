@@ -71,45 +71,101 @@ void EgCasScene::setGrid(QSizeF grid)
         m_grid = grid;
 }
 
-void EgCasScene::drawBackground(QPainter*painter, const QRectF&rect)
+void EgCasScene::drawHorizontalLines(QPainter*painter, const QRectF& rect, qreal leftX, qreal rightX)
 {
-        //draw horizontal lines
-        painter->save();
-        painter->setPen(QPen(Qt::lightGray, 1));
         qreal x1 = rect.left();
+        if (x1 < leftX)
+                x1 = leftX;
         qreal y1 = rect.top();
         y1 = qRound(y1/m_grid.height()) * m_grid.height();
         qreal x2 = rect.right();
-        qreal y2 = rect.top();
-        y2 = qRound(y2/m_grid.height()) * m_grid.height();
+        if (x2 > rightX)
+                x2 = rightX;
+        qreal y2 = y1;
         qreal ymax = rect.bottom();
         qreal gridH = m_grid.height();
         QLineF horizontal(x1, y1, x2, y2);
 
         while (y1 <= ymax) {
-                painter->drawLine(horizontal);
+                if (m_worksheet.isVisible(QPointF(x1 + .1, y1)))
+                        painter->drawLine(horizontal);
                 y1 += gridH;
-                y2 += gridH;
+                y2 = y1;
                 horizontal.setLine(x1, y1, x2, y2);
         };
+}
 
-        x1 = rect.left();
+void EgCasScene::drawVerticalLines(QPainter*painter, const QRectF& rect, qreal leftX, qreal rightX)
+{
+        quint32 page;
+        QRectF area;
+
+        qreal x1 = rect.left();
+        if (x1 < leftX)
+                x1 = leftX;
         x1 = qRound(x1/m_grid.width()) * m_grid.width();
-        y1 = rect.top();
-        x2 = rect.left();
-        x2 = qRound(x2/m_grid.width()) * m_grid.width();
-        y2 = rect.bottom();
+        qreal y1 = rect.top();
+        qreal x2 = x1;
+        qreal y2 = rect.bottom();
+        qreal xTmp = x1;
 
         qreal xmax = rect.right();
+        if (xmax > rightX)
+                xmax = rightX;
         qreal gridW = m_grid.width();
         QLineF vertical(x1, y1, x2, y2);
 
-        while (x1 <= xmax) {
-                painter->drawLine(vertical);
-                x1 += gridW;
-                x2 += gridW;
-                vertical.setLine(x1, y1, x2, y2);
-        };
+        page = m_worksheet.pageAtPoint(QPointF(x1, y1));
+        area = m_worksheet.activeArea(page);
+        y1 = area.top();
+        do {
+                y2 = qMin(area.bottom(), rect.bottom());
+                while (x1 <= xmax) {
+                        vertical.setLine(x1, y1, x2, y2);
+                        painter->drawLine(vertical);
+                        x1 += gridW;
+                        x2 = x1;
+                };
+                x1 = xTmp;
+                x2 = xTmp;
+                area = m_worksheet.activeArea(++page);
+                y1 = area.top();
+        } while(y1 < rect.bottom());
+}
+
+void EgCasScene::drawActiveAreaBorder(QPainter* painter, const QRectF&rect)
+{
+        quint32 page = m_worksheet.pageAtPoint(rect.topLeft());
+        QRectF area = m_worksheet.activeArea(page);
+
+        painter->save();
+        painter->setPen(QPen(Qt::darkGray, 2));
+
+        do {
+                painter->drawRect(area);
+                area = m_worksheet.activeArea(++page);
+        } while (area.top() < rect.bottom());
+
+        painter->restore();
+}
+
+void EgCasScene::drawBackground(QPainter*painter, const QRectF&rect)
+{
+        int nrPages = qFloor((sceneRect().height() + 0.1) / m_worksheet.getSize().height());
+        if (nrPages < 1)
+                return;
+
+        qreal leftX = m_worksheet.getLeftMargin();
+        qreal rightX = m_worksheet.getSize().width() - m_worksheet.getRightMargin();
+
+        painter->save();
+        painter->setPen(QPen(Qt::lightGray, 1));
+
+        drawHorizontalLines(painter, rect, leftX, rightX);
+
+        drawVerticalLines(painter, rect, leftX, rightX);
+
+        drawActiveAreaBorder(painter, rect);
 
         painter->restore();
 }

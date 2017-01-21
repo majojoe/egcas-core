@@ -119,6 +119,24 @@ public:
          * @return true if the item overlaps the x direction of the worksheet, false otherwise.
          */
         bool itemOverlapsPageWidth(const QRectF& item, qreal& overlapsPageBy);
+        /**
+         * @brief isVisible checks if given point is within a visible area of a worksheet
+         * @param point the point to check
+         * @return true if the point is within a visible area, false otherwise
+         */
+        bool isVisible(QPointF point) const;
+        /**
+         * @brief pageAtPoint returns the page index for the given point
+         * @param point the point to calculate the page index for
+         * @return the page index
+         */
+        quint32 pageAtPoint(QPointF point) const;
+        /**
+         * @brief activeArea returns the active/visible area for the given page index
+         * @param pageIndex the page index we want to get the visible area for
+         * @return the active area
+         */
+        QRectF activeArea(quint32 pageIndex) const;
 
 private:
         QSizeF m_size;                  //the worksheet size

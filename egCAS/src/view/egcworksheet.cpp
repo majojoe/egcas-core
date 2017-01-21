@@ -167,3 +167,34 @@ bool EgcWorksheet::itemOverlapsPageWidth(const QRectF& item, qreal& overlapsPage
         return retval;
 }
 
+bool EgcWorksheet::isVisible(QPointF point) const
+{
+        bool retval = true;
+
+        qreal page = qFloor(point.y() / m_size.height());
+        qreal yOffset = point.y() - (page * m_size.height());
+
+        if (yOffset < m_topMargin)
+                retval = false;
+        if (yOffset > (m_size.height() - m_bottomMargin))
+                retval = false;
+        if (point.x() < m_leftMargin)
+                retval = false;
+        if (point.x() > (m_size.width() - m_rightMargin))
+                retval = false;
+
+        return retval;
+}
+
+quint32 EgcWorksheet::pageAtPoint(QPointF point) const
+{
+        return qFloor(point.y() / m_size.height());
+}
+
+QRectF EgcWorksheet::activeArea(quint32 pageIndex) const
+{
+        QRectF activeRect(m_leftMargin, m_topMargin, m_size.width() - (m_leftMargin + m_rightMargin),
+                    m_size.height() - (m_topMargin + m_bottomMargin));
+        activeRect.moveTop((pageIndex * m_size.height()) + m_topMargin);
+        return activeRect;
+}

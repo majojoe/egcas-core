@@ -183,6 +183,28 @@ signals:
         void createFormula(QPointF point, EgcAction action);
 
 private:
+        /**
+         * @brief drawHorizontalLines draws the horizontal lines of the grid on each worksheet
+         * @param painter painter of the scene
+         * @param rect active rectangle of the scene
+         * @param leftX left x coordinate where active area begins
+         * @param rightX right x coordinate where active area ends
+         */
+        void drawHorizontalLines(QPainter* painter, const QRectF&rect, qreal leftX, qreal rightX);
+        /**
+         * @brief drawVerticalLines draws the vertical lines of the grid on each worksheet
+         * @param painter painter of the scene
+         * @param rect active rectangle of the scene
+         * @param leftX left x coordinate where active area begins
+         * @param rightX right x coordinate where active area ends
+         */
+        void drawVerticalLines(QPainter* painter, const QRectF&rect, qreal leftX, qreal rightX);
+        /**
+         * @brief drawActiveAreaBorder draws the border on the worksheet around the active area
+         * @param painter painter of the scene
+         * @param rect active rectangle of the scene
+         */
+        void drawActiveAreaBorder(QPainter* painter, const QRectF&rect);
 
         QSizeF m_grid;
         EgcWorksheet m_worksheet;               ///< the worksheet we are working on
