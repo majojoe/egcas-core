@@ -159,6 +159,11 @@ public:
          * @param point the point where onwards the movement shall be started
          */
         void moveItems(bool moveDown, QPointF point);
+        /**
+         * @brief worksheet returns a reference to the worksheet
+         * @return the worksheet associated with this scene
+         */
+        EgcWorksheet& worksheet(void);
 
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
@@ -173,6 +178,15 @@ protected:
          * @return true if successful, false otherwise
          */
         bool deleteItem(QGraphicsItem* item);
+        /**
+         * @brief addPage adds space for one page to the scene (items are not moved on the scene)
+         */
+        void addPage(void);
+        /**
+         * @brief removePage removes space for one page from the scene (items are not moved on the scene). If scene is
+         * only one size big, the space for that page will NOT be removed.
+         */
+        void removePage(void);
 
 signals:
         /**

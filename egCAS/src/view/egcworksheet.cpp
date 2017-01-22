@@ -27,10 +27,11 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QtMath>
+#include <egcasscene.h>
 #include "egcworksheet.h"
 
-EgcWorksheet::EgcWorksheet() : m_size{QSize(2100,2900)}, m_leftMargin{150}, m_rightMargin{150}, m_topMargin{150},
-                               m_bottomMargin{150}
+EgcWorksheet::EgcWorksheet(EgCasScene& scene) : m_size{QSize(2100,2900)}, m_leftMargin{150}, m_rightMargin{150},
+                                                m_topMargin{150}, m_bottomMargin{150}, m_scene{scene}
 {
 
 }
@@ -43,9 +44,16 @@ QSizeF EgcWorksheet::getSize(void)
 void EgcWorksheet::setSize(QSizeF size)
 {
         m_size = size;
+        QRectF scnRect = m_scene.sceneRect();
+        int nrPages = qFloor((scnRect.height() + 0.1) / m_size.height());
+
+        m_scene.setSceneRect(scnRect.x(), scnRect.y(), m_size.width(), m_size.height() * nrPages);
+
+        //set grid to be a multiple of size height (is adjusted by setGrid)
+        m_scene.setGrid(m_scene.grid());
 }
 
-qreal EgcWorksheet::getLeftMargin(void)
+qreal EgcWorksheet::getLeftMargin(void) const
 {
         return m_leftMargin;
 }
@@ -55,7 +63,7 @@ void EgcWorksheet::setLeftMargin(qreal margin)
         m_leftMargin = margin;
 }
 
-qreal EgcWorksheet::getRightMargin(void)
+qreal EgcWorksheet::getRightMargin(void) const
 {
         return m_rightMargin;
 }
@@ -65,7 +73,7 @@ void EgcWorksheet::setRightMargin(qreal margin)
         m_rightMargin = margin;
 }
 
-qreal EgcWorksheet::getTopMargin(void)
+qreal EgcWorksheet::getTopMargin(void) const
 {
         return m_topMargin;
 }
@@ -75,7 +83,7 @@ void EgcWorksheet::setTopMargin(qreal margin)
         m_topMargin = margin;
 }
 
-qreal EgcWorksheet::getBottomMargin(void)
+qreal EgcWorksheet::getBottomMargin(void) const
 {
         return m_bottomMargin;
 }
@@ -85,7 +93,7 @@ void EgcWorksheet::setBottomMargin(qreal margin)
         m_bottomMargin = margin;
 }
 
-QPointF EgcWorksheet::snapWorksheet(const QPointF& point)
+QPointF EgcWorksheet::snapWorksheet(const QPointF& point) const
 {
         qreal x = point.x();
         qreal y = point.y();
@@ -105,7 +113,7 @@ QPointF EgcWorksheet::snapWorksheet(const QPointF& point)
         return QPoint(x, yOffset + (page * m_size.height()));
 }
 
-QPointF EgcWorksheet::snapWorksheet(const QRectF& item)
+QPointF EgcWorksheet::snapWorksheet(const QRectF& item) const
 {
         QPointF newTopLeftPos = item.topLeft();
         qreal page = qFloor(item.top() / m_size.height());

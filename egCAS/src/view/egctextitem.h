@@ -85,11 +85,11 @@ public:
 
 protected:
         /**
-         * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
+         * @brief getEgcScene needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
          * subclasses already inherit from it - and we don't want to make it complicated)
-         * @return the size of the grid
+         * @return pointer to EgCasScene
          */
-        virtual QSizeF getGrid(void) override;        
+        virtual EgCasScene* getEgcScene(void) override;
         /**
          * @brief itemChange reimplements change function of QGraphicsItem to be able to realize a grid
          * @param change enum that describes state changes that are notified
@@ -142,6 +142,11 @@ protected:
          * @return item type
          */
         virtual int type() const override;
+        /**
+         * @brief bRect returns the bounding rect of the abstract item (interface to concrete item)
+         * @return bounding rect rectangle
+         */
+        virtual QRectF bRect(void) const override;
 
 signals:
 

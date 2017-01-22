@@ -115,7 +115,7 @@ QPointF EgcTextItem::getPosition( void ) const
 
 void EgcTextItem::setPos(const QPointF &point)
 {
-        QGraphicsTextItem::setPos(snapGrid(point));
+        QGraphicsTextItem::setPos(snap(point));
 }
 
 void EgcTextItem::setFont(const QFont& font)
@@ -138,16 +138,14 @@ QString EgcTextItem::getText(void)
         return toPlainText();
 }
 
-QSizeF EgcTextItem::getGrid(void)
+EgCasScene* EgcTextItem::getEgcScene(void)
 {
-        QSizeF grid;
-
         QGraphicsScene *scene = this->scene();
         if (scene) {
-                grid = static_cast<EgCasScene*>(scene)->grid();
+                return static_cast<EgCasScene*>(scene);
         }
 
-        return grid;
+        return nullptr;
 }
 
 void EgcTextItem::keyPressEvent(QKeyEvent *keyEvent)
@@ -244,4 +242,9 @@ bool EgcTextItem::isAtBottom(void)
 int EgcTextItem::type() const
 {
         return static_cast<int>(EgcGraphicsItemType::EgcTextItemType);
+}
+
+QRectF EgcTextItem::bRect(void) const
+{
+        return boundingRect();
 }

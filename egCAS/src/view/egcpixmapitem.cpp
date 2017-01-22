@@ -104,7 +104,7 @@ QPointF EgcPixmapItem::getPosition( void ) const
 
 void EgcPixmapItem::setPos(const QPointF &point)
 {
-        QGraphicsPixmapItem::setPos(snapGrid(point));
+        QGraphicsPixmapItem::setPos(snap(point));
 }
 
 void EgcPixmapItem::setScaleFactor(qreal scaleFactor)
@@ -127,16 +127,14 @@ QPixmap EgcPixmapItem::getPixmap(void)
         return pixmap();
 }
 
-QSizeF EgcPixmapItem::getGrid(void)
+EgCasScene* EgcPixmapItem::getEgcScene(void)
 {
-        QSizeF grid;
-
         QGraphicsScene *scene = this->scene();
         if (scene) {
-                grid = static_cast<EgCasScene*>(scene)->grid();
+                return static_cast<EgCasScene*>(scene);
         }
 
-        return grid;
+        return nullptr;
 }
 
 void EgcPixmapItem::keyPressEvent(QKeyEvent *keyEvent)
@@ -177,4 +175,9 @@ void EgcPixmapItem::keyPressEvent(QKeyEvent *keyEvent)
 int EgcPixmapItem::type() const
 {
         return static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType);
+}
+
+QRectF EgcPixmapItem::bRect(void) const
+{
+        return boundingRect();
 }

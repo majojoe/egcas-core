@@ -42,10 +42,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 EgCasScene::EgCasScene(EgcAbstractDocument& doc, QObject *parent) :
-        m_document{doc}, QGraphicsScene{parent}, m_cursor{addLine(0,0,0,0,QPen(QColor(Qt::red)))},
+        m_worksheet{*this}, m_document{doc}, QGraphicsScene{parent}, m_cursor{addLine(0,0,0,0,QPen(QColor(Qt::red)))},
         m_nodeUnderline{addLine(0,0,0,0,QPen(QColor(Qt::red)))}
 {        
-        m_grid = QSizeF(30.0, 30.0);
+        m_grid = QSizeF(29.0, 29.0);
         m_cursor->setPen(QPen(QBrush(QColor(Qt::red)), 2.0));
         m_nodeUnderline->setPen(QPen(QBrush(QColor(Qt::red)), 2.0));
 
@@ -68,6 +68,10 @@ QSizeF EgCasScene::grid()
 
 void EgCasScene::setGrid(QSizeF grid)
 {
+        qreal sheetHeight = m_worksheet.getSize().height();
+        qreal divisor = qRound(sheetHeight / grid.height());
+        grid.setHeight(sheetHeight / divisor);
+        grid.setWidth(grid.height());
         m_grid = grid;
 }
 
@@ -77,7 +81,7 @@ void EgCasScene::drawHorizontalLines(QPainter*painter, const QRectF& rect, qreal
         if (x1 < leftX)
                 x1 = leftX;
         qreal y1 = rect.top();
-        y1 = qRound(y1/m_grid.height()) * m_grid.height();
+        y1 = qCeil(y1/m_grid.height()) * m_grid.height();
         qreal x2 = rect.right();
         if (x2 > rightX)
                 x2 = rightX;
@@ -103,7 +107,7 @@ void EgCasScene::drawVerticalLines(QPainter*painter, const QRectF& rect, qreal l
         qreal x1 = rect.left();
         if (x1 < leftX)
                 x1 = leftX;
-        x1 = qRound(x1/m_grid.width()) * m_grid.width();
+        x1 = qCeil(x1/m_grid.width()) * m_grid.width();
         qreal y1 = rect.top();
         qreal x2 = x1;
         qreal y2 = rect.bottom();
@@ -370,4 +374,27 @@ bool EgCasScene::deleteItem(QGraphicsItem *item)
         delete item;
 
         return true;
+}
+
+void EgCasScene::addPage(void)
+{
+        QRectF scnRect = sceneRect();
+        qreal newHeight = m_worksheet.getSize().height() + scnRect.height();
+        setSceneRect(scnRect.x(), scnRect.y(), scnRect.width(), newHeight);
+}
+
+void EgCasScene::removePage(void)
+{
+        int nrPages = qFloor((sceneRect().height() + 0.1) / m_worksheet.getSize().height());
+        if (nrPages <= 1)
+                return;
+
+        QRectF scnRect = sceneRect();
+        qreal newHeight = scnRect.height() - m_worksheet.getSize().height();
+        setSceneRect(scnRect.x(), scnRect.y(), scnRect.width(), newHeight);
+}
+
+EgcWorksheet& EgCasScene::worksheet(void)
+{
+        return m_worksheet;
 }

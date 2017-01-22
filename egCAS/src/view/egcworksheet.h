@@ -33,13 +33,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QPointF>
 #include <QRectF>
 
+class EgCasScene;
+
 /**
  * @brief The EgcWorksheet class holds all information about size and margins of the worksheet
  */
 class EgcWorksheet
 {
 public:
-        EgcWorksheet();
+        EgcWorksheet(EgCasScene& scene);
 
         /**
          * @brief getSize returns size of one worksheet
@@ -55,7 +57,7 @@ public:
          * @brief getLeftMargin returns the left margin of the worksheet
          * @return the left margin
          */
-        qreal getLeftMargin(void);
+        qreal getLeftMargin(void) const;
         /**
          * @brief setLeftMargin sets the left margin of the worksheet
          * @param margin the margin to set
@@ -65,7 +67,7 @@ public:
          * @brief getRightMargin returns the right margin of the worksheet
          * @return the right margin
          */
-        qreal getRightMargin(void);
+        qreal getRightMargin(void) const;
         /**
          * @brief setRightMargin sets the right margin of the worksheet
          * @param margin the margin to set
@@ -75,7 +77,7 @@ public:
          * @brief getTopMargin returns the top margin of the worksheet
          * @return the top margin
          */
-        qreal getTopMargin(void);
+        qreal getTopMargin(void) const;
         /**
          * @brief setTopMargin sets the top margin of the worksheet
          * @param margin the margin to set
@@ -85,7 +87,7 @@ public:
          * @brief getBottomMargin returns the bottom margin of the worksheet
          * @return the bottom margin
          */
-        qreal getBottomMargin(void);
+        qreal getBottomMargin(void) const;
         /**
          * @brief setBottomMargin sets the bottom margin of the worksheet
          * @param margin the margin to set
@@ -96,13 +98,13 @@ public:
          * @param point can be any point of the scene
          * @return the corrected point that is inside the worksheet
          */
-        QPointF snapWorksheet(const QPointF& point);
+        QPointF snapWorksheet(const QPointF& point) const;
         /**
          * @brief snapWorksheet snap the given item rectangle into the worksheet
          * @param item is the rectangular shape of the item on the scene
          * @return the corrected position of the item inside the worksheet
          */
-        QPointF snapWorksheet(const QRectF& item);
+        QPointF snapWorksheet(const QRectF& item) const;
         /**
          * @brief itemWrapsToNewPage check if given item wraps to new page
          * @param item the rectangle that is used by the item on the scene
@@ -139,11 +141,12 @@ public:
         QRectF activeArea(quint32 pageIndex) const;
 
 private:
-        QSizeF m_size;                  //the worksheet size
-        qreal m_leftMargin;             //the left margin of the worksheet
-        qreal m_rightMargin;            //the right margin of the worksheet
-        qreal m_topMargin;              //the top margin of the worksheet
-        qreal m_bottomMargin;           //the bottom margin of the worksheet
+        QSizeF m_size;                  ///< the worksheet size
+        qreal m_leftMargin;             ///< the left margin of the worksheet
+        qreal m_rightMargin;            ///< the right margin of the worksheet
+        qreal m_topMargin;              ///< the top margin of the worksheet
+        qreal m_bottomMargin;           ///< the bottom margin of the worksheet
+        EgCasScene& m_scene;            ///< reference to scene
 
 };
 

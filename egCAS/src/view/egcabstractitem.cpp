@@ -29,21 +29,37 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QSizeF>
 #include <QPointF>
+#include <QtMath>
 #include "egcabstractitem.h"
+#include "egcasscene.h"
 
 EgcAbstractItem::EgcAbstractItem() : m_gridActivated{true}
 {
         
 }
 
-QPointF EgcAbstractItem::snapGrid(const QPointF& pos)
+QPointF EgcAbstractItem::snap(const QPointF& pos)
 {
         // value is the new position.
         QPointF newPos = pos;
-        QSizeF grid = getGrid();
-        if (grid.isValid() && m_gridActivated) {
-                newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
-                newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
+        EgCasScene* scn = getEgcScene();
+        if (scn) {
+                const EgcWorksheet& sheet = scn->worksheet();
+                QSizeF grid = scn->grid();
+                QRectF iRect = bRect();
+                iRect.moveTopLeft(newPos);
+                newPos = sheet.snapWorksheet(iRect);
+                QPointF tmpPos = newPos;
+                if (grid.isValid() && m_gridActivated) {
+                        newPos.setX(qFloor(tmpPos.x()/grid.width()) * grid.width() );
+                        if (newPos.x() < sheet.getLeftMargin())
+                                newPos.setX(qCeil(tmpPos.x()/grid.width()) * grid.width() );
+
+                        tmpPos = newPos;
+                        newPos.setY(qFloor(tmpPos.y()/grid.height()) * grid.height() );
+                        if (!sheet.isVisible(newPos))
+                                newPos.setY(qCeil(tmpPos.y()/grid.height()) * grid.height() );
+                }
         }
 
         return newPos;

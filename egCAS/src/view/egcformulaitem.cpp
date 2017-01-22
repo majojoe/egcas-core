@@ -183,7 +183,7 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
                 hideCursors();
                 m_posChanged = true;
                 // value is the new position.
-                return snapGrid(value.toPointF());
+                return snap(value.toPointF());
         }
 
         return QGraphicsItem::itemChange(change, value);
@@ -201,7 +201,7 @@ QPointF EgcFormulaItem::getPosition( void ) const
 
 void EgcFormulaItem::setPos(const QPointF &pos)
 {
-        QGraphicsItem::setPos(snapGrid(pos));
+        QGraphicsItem::setPos(snap(pos));
 }
 
 void EgcFormulaItem::setGenericFontSize(int size)
@@ -225,16 +225,14 @@ void EgcFormulaItem::updateView(void)
         update();
 }
 
-QSizeF EgcFormulaItem::getGrid(void)
+EgCasScene* EgcFormulaItem::getEgcScene(void)
 {
-        QSizeF grid;
-
         QGraphicsScene *scene = this->scene();
         if (scene) {
-                grid = static_cast<EgCasScene*>(scene)->grid();
+                return static_cast<EgCasScene*>(scene);
         }
 
-        return grid;
+        return nullptr;
 }
 
 const EgcScreenPos& EgcFormulaItem::getScreenPos(void) const
@@ -414,4 +412,9 @@ bool EgcFormulaItem::isEmpty(void)
 EgcAbstractFormulaEntity* EgcFormulaItem::getEnity(void) const
 {
         return m_entity;
+}
+
+QRectF EgcFormulaItem::bRect(void) const
+{
+        return boundingRect();
 }

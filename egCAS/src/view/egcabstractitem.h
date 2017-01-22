@@ -30,9 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCABSTRACTITEM_H
 #define EGCABSTRACTITEM_H
 
+class QRectF;
 class QPointF;
 class QSizeF;
-
+class EgCasScene;
 
 class EgcAbstractItem
 {
@@ -55,17 +56,22 @@ public:
         bool isGridActivated(void);
 protected:
         /**
-         * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
+         * @brief getEgcScene needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
          * subclasses already inherit from it - and we don't want to make it complicated)
-         * @return the size of the grid
+         * @return pointer to EgCasScene
          */
-        virtual QSizeF getGrid(void) = 0;
+        virtual EgCasScene* getEgcScene(void) = 0;
+        /**
+         * @brief bRect returns the bounding rect of the abstract item (interface to concrete item)
+         * @return bounding rect rectangle
+         */
+        QRectF virtual bRect(void) const = 0;
         /**
          * @brief snapGrid snap to scene grid
          * @param pos the position to snap to grid
          * @return the new position that is snapped to the grid
          */
-        QPointF snapGrid(const QPointF& pos);
+        QPointF snap(const QPointF& pos);
 
         bool m_gridActivated;           ///< reflects if the grid is activated
 };

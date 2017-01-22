@@ -179,11 +179,11 @@ public:
 
 protected:
         /**
-         * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
+         * @brief getEgcScene needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
          * subclasses already inherit from it - and we don't want to make it complicated)
-         * @return the size of the grid
+         * @return pointer to EgCasScene
          */
-        virtual QSizeF getGrid(void) override;
+        virtual EgCasScene* getEgcScene(void) override;
         /**
          * @brief mousePressEvent overrides mousePressEvent from QGraphicsItem
          * @param event pointer to QGraphicsSceneMouseEvent
@@ -236,6 +236,11 @@ protected:
          * @return true if cursor is at the right end, false otherwise
          */
         bool isAtRightEnd(void);
+        /**
+         * @brief bRect returns the bounding rect of the abstract item (interface to concrete item)
+         * @return bounding rect rectangle
+         */
+        virtual QRectF bRect(void) const override;
 
 signals:
 
