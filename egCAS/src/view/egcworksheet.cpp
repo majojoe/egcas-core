@@ -121,28 +121,35 @@ QPointF EgcWorksheet::snapWorksheet(const QRectF& item) const
         qreal bottomBorder = (page * m_size.height()) + m_size.height() - m_bottomMargin;
         qreal rightBorder = m_size.width() - m_rightMargin;
 
+        qreal nx = newTopLeftPos.x();
+        qreal ny = newTopLeftPos.y();
+
         if (item.right() > rightBorder) {
                 QRectF tmp(item);
                 tmp.moveRight(rightBorder);
                 newTopLeftPos = tmp.topLeft();
+                nx = newTopLeftPos.x();
         }
         if (item.left() < m_leftMargin) {
                 QRectF tmp(item);
                 tmp.moveLeft(m_leftMargin);
                 newTopLeftPos = tmp.topLeft();
+                nx = newTopLeftPos.x();
         }
         if (item.bottom() > bottomBorder) {
                 QRectF tmp(item);
                 tmp.moveBottom(bottomBorder);
                 newTopLeftPos = tmp.topLeft();
+                ny = newTopLeftPos.y();
         }
         if (item.top() < topBorder) {
                 QRectF tmp(item);
                 tmp.moveTop(topBorder);
                 newTopLeftPos = tmp.topLeft();
+                ny = newTopLeftPos.y();
         }
 
-        return newTopLeftPos;
+        return QPointF(nx, ny);
 }
 
 bool EgcWorksheet::itemWrapsToNewPage(const QRectF& item, qreal yOffset)
