@@ -65,12 +65,7 @@ QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &va
 {
         if (change == ItemPositionChange && scene()) {
                 // value is the new position.
-                QPointF newPos = value.toPointF();
-                QSizeF grid = qobject_cast<EgCasScene*>(this->scene())->grid();
-                newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
-                newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
-
-                return newPos;
+                return snap(value.toPointF());
         }
 
         m_resizeHandle->itemChangeInfo(change, value, scene());
