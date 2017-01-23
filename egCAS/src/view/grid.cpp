@@ -26,42 +26,40 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#include "grid.h"
 
-#ifndef EGCABSTRACTITEM_H
-#define EGCABSTRACTITEM_H
 
-class QRectF;
-class QPointF;
-class QSizeF;
-class EgCasScene;
+using namespace egcas;
 
-class EgcAbstractItem
+Grid::Grid(EgCasScene& scene) : m_scene{scene}, m_activated{true}
 {
-public:
-        ///std constructor
-        EgcAbstractItem();
-        /**
-         * @brief ~EgcAbstractItem virtual destructor in order to be able to delete subclasses
-         */
-        virtual ~EgcAbstractItem() {}
-protected:
-        /**
-         * @brief getEgcScene needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
-         * subclasses already inherit from it - and we don't want to make it complicated)
-         * @return pointer to EgCasScene
-         */
-        virtual EgCasScene* getEgcScene(void) = 0;
-        /**
-         * @brief bRect returns the bounding rect of the abstract item (interface to concrete item)
-         * @return bounding rect rectangle
-         */
-        QRectF virtual bRect(void) const = 0;
-        /**
-         * @brief snapGrid snap to scene grid
-         * @param pos the position to snap to grid
-         * @return the new position that is snapped to the grid
-         */
-        QPointF snap(const QPointF& pos);
-};
+}
 
-#endif // EGCABSTRACTITEM_H
+Grid::Grid(EgCasScene& scene, QSize size) : m_scene{scene}, m_grid{size}, m_activated{true}
+{
+}
+
+void Grid::setGrid(QSize size)
+{
+        m_grid = size;
+}
+
+QSize Grid::grid(void) const
+{
+        return m_grid;
+}
+
+void Grid::activate(bool activate)
+{
+        m_activated = activate;
+}
+
+bool Grid::isActivated(void) const
+{
+        return m_activated;
+}
+
+QPointF Grid::snap(const QPointF& point) const
+{
+
+}

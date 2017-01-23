@@ -65,12 +65,3 @@ QPointF EgcAbstractItem::snap(const QPointF& pos)
         return newPos;
 }
 
-void EgcAbstractItem::activateGrid(bool activate)
-{
-        m_gridActivated = activate;
-}
-
-bool EgcAbstractItem::isGridActivated(void)
-{
-        return m_gridActivated;
-}

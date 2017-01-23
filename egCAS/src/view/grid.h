@@ -26,42 +26,58 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#ifndef GRID_H
+#define GRID_H
 
-#ifndef EGCABSTRACTITEM_H
-#define EGCABSTRACTITEM_H
+#include <QSize>
+#include <QPointF>
 
-class QRectF;
-class QPointF;
-class QSizeF;
 class EgCasScene;
 
-class EgcAbstractItem
+namespace egcas {
+
+/**
+ * @brief The Grid class bundles all functionality regarding the egcas worksheet grid
+ */
+class Grid
 {
 public:
-        ///std constructor
-        EgcAbstractItem();
+        Grid(EgCasScene& scene);
+        Grid(EgCasScene& scene, QSize size);
         /**
-         * @brief ~EgcAbstractItem virtual destructor in order to be able to delete subclasses
+         * @brief setGrid set the grid size
+         * @param size the width and height of the grid
          */
-        virtual ~EgcAbstractItem() {}
-protected:
+        void setGrid(QSize size);
         /**
-         * @brief getEgcScene needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
-         * subclasses already inherit from it - and we don't want to make it complicated)
-         * @return pointer to EgCasScene
+         * @brief grid the current grid size
+         * @return the grid size
          */
-        virtual EgCasScene* getEgcScene(void) = 0;
+        QSize grid(void) const;
         /**
-         * @brief bRect returns the bounding rect of the abstract item (interface to concrete item)
-         * @return bounding rect rectangle
+         * @brief snap snaps the given position to the grid
+         * @param point the point to snap to the grid
+         * @return the snapped position
          */
-        QRectF virtual bRect(void) const = 0;
+        QPointF snap(const QPointF& point) const;
         /**
-         * @brief snapGrid snap to scene grid
-         * @param pos the position to snap to grid
-         * @return the new position that is snapped to the grid
+         * @brief activate activates the grid
+         * @param activate if true the grid will be activated, if false deactivated
          */
-        QPointF snap(const QPointF& pos);
+        void activate(bool activate);
+        /**
+         * @brief isActivated check if grid is activated
+         * @return true if activated, false otherwise
+         */
+        bool isActivated(void) const;
+
+
+private:
+        QSize m_grid;                   ///< width and height of the grid
+        EgCasScene& m_scene;            ///< reference to scene
+        bool m_activated;               ///< if grid is activated or not
 };
 
-#endif // EGCABSTRACTITEM_H
+}
+
+#endif // GRID_H
