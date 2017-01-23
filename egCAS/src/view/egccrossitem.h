@@ -112,13 +112,13 @@ private:
          * @param pos the position to snap to grid
          * @return the new position that is snapped to the grid
          */
-        QPointF snapGrid(const QPointF& pos);
+        QPointF snapCursor(const QPointF& pos);
         /**
          * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
          * subclasses already inherit from it - and we don't want to make it complicated)
          * @return the size of the grid
          */
-        QSizeF getGrid(void);
+        QSizeF grid(void);
         /**
          * @brief selectedItem returns the selected item at the cursor position
          * @return selected item at cursor pos

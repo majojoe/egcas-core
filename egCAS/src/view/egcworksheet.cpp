@@ -30,8 +30,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <egcasscene.h>
 #include "egcworksheet.h"
 
-EgcWorksheet::EgcWorksheet(EgCasScene& scene) : m_size{QSize(2100,2900)}, m_leftMargin{150}, m_rightMargin{150},
-                                                m_topMargin{150}, m_bottomMargin{150}, m_scene{scene}
+EgcWorksheet::EgcWorksheet(EgCasScene& scene) : m_size{QSize(2100,2900)}, m_leftMargin{100}, m_rightMargin{100},
+                                                m_topMargin{100}, m_bottomMargin{100}, m_scene{scene}
 {
 
 }

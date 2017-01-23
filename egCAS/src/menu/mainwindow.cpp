@@ -106,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent) :
                                                                                      QPointF(750.0, 180.0)));
     pixmap->setFilePath(":res/plane.png");
 
-    QRectF rect(0,0,2100,2900);
+    QRectF rect(0,0,2100,5800);
     m_document->getScene()->setSceneRect(rect);
 }
 

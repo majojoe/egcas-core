@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
+#include <QtMath>
 #include "egccrossitem.h"
 #include "egcasscene.h"
 #include "actions/egcactionmapper.h"
@@ -64,7 +65,7 @@ QVariant EgcCrossItem::itemChange(GraphicsItemChange change, const QVariant &val
 {
      if (change == ItemPositionChange && scene()) {
          // value is the new position.
-         QPointF newPos = snapGrid(value.toPointF());
+         QPointF newPos = snapCursor(value.toPointF());
 
          return newPos;
      }
@@ -87,7 +88,7 @@ void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
         case Qt::Key_Enter:
         case Qt::Key_Return:
                 escn->moveItems(true, scenePos());
-                if (scenePos().y() < scn->sceneRect().height() - getGrid().height())
+                if (scenePos().y() < scn->sceneRect().height() - grid().height())
                         down();
                 break;
         case Qt::Key_Backspace:
@@ -103,7 +104,7 @@ void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
                         up();
                 break;
         case Qt::Key_Down:
-                if (scenePos().y() < scn->sceneRect().height() - getGrid().height())
+                if (scenePos().y() < scn->sceneRect().height() - grid().height())
                         down();
                 break;
         case Qt::Key_Left:
@@ -111,7 +112,7 @@ void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
                         left();
                 break;
         case Qt::Key_Right:
-                if (scenePos().x() < scn->sceneRect().width() - getGrid().width())
+                if (scenePos().x() < scn->sceneRect().width() - grid().width())
                         right();
                 break;
         default:
@@ -162,20 +163,35 @@ void EgcCrossItem::focusInEvent(QFocusEvent * event)
         QGraphicsItem::focusInEvent(event);
 }
 
-QPointF EgcCrossItem::snapGrid(const QPointF& pos)
+QPointF EgcCrossItem::snapCursor(const QPointF& pos)
 {
-        // value is the new position.
         QPointF newPos = pos;
-        QSizeF grid = getGrid();
-        if (grid.isValid()) {
-                newPos.setX(qRound(newPos.x()/grid.width()) * grid.width() );
-                newPos.setY(qRound(newPos.y()/grid.height()) * grid.height() );
+        QGraphicsScene *scene = this->scene();
+        EgCasScene* scn = nullptr;
+        if (scene) {
+                scn = static_cast<EgCasScene*>(scene);
+        }
+        if (scn) {
+                const EgcWorksheet& sheet = scn->worksheet();
+                QSizeF grid = scn->grid();
+                newPos = sheet.snapWorksheet(newPos);
+                QPointF tmpPos = newPos;
+                if (grid.isValid()) {
+                        newPos.setX(qFloor(tmpPos.x()/grid.width()) * grid.width() );
+                        if (newPos.x() < sheet.getLeftMargin())
+                                newPos.setX(qCeil(tmpPos.x()/grid.width()) * grid.width() );
+
+                        tmpPos = newPos;
+                        newPos.setY(qFloor(tmpPos.y()/grid.height()) * grid.height() );
+                        if (!sheet.isVisible(newPos))
+                                newPos.setY(qCeil(tmpPos.y()/grid.height()) * grid.height() );
+                }
         }
 
         return newPos;
 }
 
-QSizeF EgcCrossItem::getGrid(void)
+QSizeF EgcCrossItem::grid(void)
 {
         QSizeF grid;
 
@@ -189,31 +205,31 @@ QSizeF EgcCrossItem::getGrid(void)
 
 void EgcCrossItem::up(void)
 {
-        moveBy(0, -getGrid().height());
+        moveBy(0, -grid().height());
         show();
 }
 
 void EgcCrossItem::down(void)
 {
-        moveBy(0, getGrid().height());
+        moveBy(0, grid().height());
         show();
 }
 
 void EgcCrossItem::left(void)
 {
-        moveBy(-getGrid().width(), 0);
+        moveBy(-grid().width(), 0);
         show();
 }
 
 void EgcCrossItem::right(void)
 {
-        moveBy(getGrid().width(), 0);
+        moveBy(grid().width(), 0);
         show();
 }
 
 void EgcCrossItem::up(qreal yCoord)
 {
-        QPointF point = snapGrid(QPointF(pos().x(), yCoord));
+        QPointF point = snapCursor(QPointF(pos().x(), yCoord));
         setPos(point);
         show();
         if (point.y() >= yCoord)
@@ -222,7 +238,7 @@ void EgcCrossItem::up(qreal yCoord)
 
 void EgcCrossItem::down(qreal yCoord)
 {
-        QPointF point = snapGrid(QPointF(pos().x(), yCoord));
+        QPointF point = snapCursor(QPointF(pos().x(), yCoord));
         setPos(point);
         show();
         if (point.y() <= yCoord)
@@ -231,7 +247,7 @@ void EgcCrossItem::down(qreal yCoord)
 
 void EgcCrossItem::left(qreal xCoord)
 {
-        QPointF point = snapGrid(QPointF(xCoord, pos().y()));
+        QPointF point = snapCursor(QPointF(xCoord, pos().y()));
         setPos(point);
         show();
         if (point.x() >= xCoord)
@@ -240,7 +256,7 @@ void EgcCrossItem::left(qreal xCoord)
 
 void EgcCrossItem::right(qreal xCoord)
 {
-        QPointF point = snapGrid(QPointF(xCoord, pos().y()));
+        QPointF point = snapCursor(QPointF(xCoord, pos().y()));
         setPos(point);
         show();
         if (point.x() <= xCoord)
