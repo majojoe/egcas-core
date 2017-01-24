@@ -38,11 +38,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcabstracttextentity.h"
 #include "document/egcabstractdocument.h"
 #include "egcworksheet.h"
+#include "grid.h"
 
 class EgcFormulaItem;
 class EgcPixmapItem;
 class EgcTextItem;
 class EgcCrossItem;
+
+using namespace egcas;
 
 /**
  * @brief The SnapDirection enum specifies the snap direction in which direction the cursor should snap comming from an
@@ -220,7 +223,7 @@ private:
          */
         void drawActiveAreaBorder(QPainter* painter, const QRectF&rect);
 
-        QSizeF m_grid;
+        Grid m_grid;                            ///< returns the grid
         EgcWorksheet m_worksheet;               ///< the worksheet we are working on
         QGraphicsLineItem* m_cursor;            ///< formula cursor for modifying formula
         QGraphicsLineItem* m_nodeUnderline;     ///< node cursor to show user the context of changes in a formula

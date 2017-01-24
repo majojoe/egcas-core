@@ -61,5 +61,18 @@ bool Grid::isActivated(void) const
 
 QPointF Grid::snap(const QPointF& point) const
 {
+        QPointF newPos = pos;
+        QPointF tmpPos = newPos;
+        if (grid.isValid() && m_gridActivated) {
+                newPos.setX(qFloor(tmpPos.x()/grid.width()) * grid.width() );
+                if (newPos.x() < sheet.getLeftMargin())
+                        newPos.setX(qCeil(tmpPos.x()/grid.width()) * grid.width() );
 
+                tmpPos = newPos;
+                newPos.setY(qFloor(tmpPos.y()/grid.height()) * grid.height() );
+                if (!sheet.isVisible(newPos))
+                        newPos.setY(qCeil(tmpPos.y()/grid.height()) * grid.height() );
+        }
+
+        return newPos;
 }

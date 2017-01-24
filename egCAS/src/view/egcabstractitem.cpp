@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcabstractitem.h"
 #include "egcasscene.h"
 
-EgcAbstractItem::EgcAbstractItem() : m_gridActivated{true}
+EgcAbstractItem::EgcAbstractItem()
 {
         
 }
@@ -44,22 +44,11 @@ QPointF EgcAbstractItem::snap(const QPointF& pos)
         QPointF newPos = pos;
         EgCasScene* scn = getEgcScene();
         if (scn) {
-                const EgcWorksheet& sheet = scn->worksheet();
-                QSizeF grid = scn->grid();
+                const EgcWorksheet& sheet = scn->worksheet();                
                 QRectF iRect = bRect();
                 iRect.moveTopLeft(newPos);
                 newPos = sheet.snapWorksheet(iRect);
-                QPointF tmpPos = newPos;
-                if (grid.isValid() && m_gridActivated) {
-                        newPos.setX(qFloor(tmpPos.x()/grid.width()) * grid.width() );
-                        if (newPos.x() < sheet.getLeftMargin())
-                                newPos.setX(qCeil(tmpPos.x()/grid.width()) * grid.width() );
-
-                        tmpPos = newPos;
-                        newPos.setY(qFloor(tmpPos.y()/grid.height()) * grid.height() );
-                        if (!sheet.isVisible(newPos))
-                                newPos.setY(qCeil(tmpPos.y()/grid.height()) * grid.height() );
-                }
+                newPos = scn->grid().snap(newPos);
         }
 
         return newPos;

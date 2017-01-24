@@ -42,10 +42,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 EgCasScene::EgCasScene(EgcAbstractDocument& doc, QObject *parent) :
-        m_worksheet{*this}, m_document{doc}, QGraphicsScene{parent}, m_cursor{addLine(0,0,0,0,QPen(QColor(Qt::red)))},
-        m_nodeUnderline{addLine(0,0,0,0,QPen(QColor(Qt::red)))}
+        m_grid{*this, QSizeF(29.0, 29.0)}, m_worksheet{*this}, m_document{doc}, QGraphicsScene{parent},
+        m_cursor{addLine(0,0,0,0,QPen(QColor(Qt::red)))}, m_nodeUnderline{addLine(0,0,0,0,QPen(QColor(Qt::red)))}
 {        
-        m_grid = QSizeF(29.0, 29.0);
         m_cursor->setPen(QPen(QBrush(QColor(Qt::red)), 2.0));
         m_nodeUnderline->setPen(QPen(QBrush(QColor(Qt::red)), 2.0));
 
