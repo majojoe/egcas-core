@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef GRID_H
 #define GRID_H
 
-#include <QSize>
+#include <QSizeF>
 #include <QPointF>
 
 class EgCasScene;
@@ -43,17 +43,17 @@ class Grid
 {
 public:
         Grid(EgCasScene& scene);
-        Grid(EgCasScene& scene, QSize size);
+        Grid(EgCasScene& scene, QSizeF size);
         /**
          * @brief setGrid set the grid size
          * @param size the width and height of the grid
          */
-        void setGrid(QSize size);
+        void setGrid(QSizeF size);
         /**
          * @brief grid the current grid size
          * @return the grid size
          */
-        QSize grid(void) const;
+        QSizeF grid(void) const;
         /**
          * @brief snap snaps the given position to the grid
          * @param point the point to snap to the grid
@@ -73,7 +73,7 @@ public:
 
 
 private:
-        QSize m_grid;                   ///< width and height of the grid
+        QSizeF m_grid;                  ///< width and height of the grid
         EgCasScene& m_scene;            ///< reference to scene
         bool m_activated;               ///< if grid is activated or not
 };

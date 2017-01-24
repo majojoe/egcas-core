@@ -41,6 +41,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcitemtypes.h"
 
 
+using namespace egcas;
+
 EgCasScene::EgCasScene(EgcAbstractDocument& doc, QObject *parent) :
         m_grid{*this, QSizeF(29.0, 29.0)}, m_worksheet{*this}, m_document{doc}, QGraphicsScene{parent},
         m_cursor{addLine(0,0,0,0,QPen(QColor(Qt::red)))}, m_nodeUnderline{addLine(0,0,0,0,QPen(QColor(Qt::red)))}
@@ -60,7 +62,7 @@ EgCasScene::~EgCasScene()
         m_nodeUnderline = nullptr;
 }
 
-QSizeF EgCasScene::grid()
+Grid& EgCasScene::grid()
 {
         return m_grid;
 }
@@ -71,22 +73,23 @@ void EgCasScene::setGrid(QSizeF grid)
         qreal divisor = qRound(sheetHeight / grid.height());
         grid.setHeight(sheetHeight / divisor);
         grid.setWidth(grid.height());
-        m_grid = grid;
+        m_grid.setGrid(grid);
 }
 
 void EgCasScene::drawHorizontalLines(QPainter*painter, const QRectF& rect, qreal leftX, qreal rightX)
 {
+        QSizeF grid = m_grid.grid();
         qreal x1 = rect.left();
         if (x1 < leftX)
                 x1 = leftX;
         qreal y1 = rect.top();
-        y1 = qCeil(y1/m_grid.height()) * m_grid.height();
+        y1 = qCeil(y1/grid.height()) * grid.height();
         qreal x2 = rect.right();
         if (x2 > rightX)
                 x2 = rightX;
         qreal y2 = y1;
         qreal ymax = rect.bottom();
-        qreal gridH = m_grid.height();
+        qreal gridH = grid.height();
         QLineF horizontal(x1, y1, x2, y2);
 
         while (y1 <= ymax) {
@@ -102,11 +105,12 @@ void EgCasScene::drawVerticalLines(QPainter*painter, const QRectF& rect, qreal l
 {
         quint32 page;
         QRectF area;
+        QSizeF grid = m_grid.grid();
 
         qreal x1 = rect.left();
         if (x1 < leftX)
                 x1 = leftX;
-        x1 = qCeil(x1/m_grid.width()) * m_grid.width();
+        x1 = qCeil(x1/grid.width()) * grid.width();
         qreal y1 = rect.top();
         qreal x2 = x1;
         qreal y2 = rect.bottom();
@@ -115,7 +119,7 @@ void EgCasScene::drawVerticalLines(QPainter*painter, const QRectF& rect, qreal l
         qreal xmax = rect.right();
         if (xmax > rightX)
                 xmax = rightX;
-        qreal gridW = m_grid.width();
+        qreal gridW = grid.width();
         QLineF vertical(x1, y1, x2, y2);
 
         page = m_worksheet.pageAtPoint(QPointF(x1, y1));
@@ -315,7 +319,7 @@ void EgCasScene::triggerFormulaCreation(QPointF point, QKeyEvent *event)
 
 void EgCasScene::moveItems(bool moveDown, QPointF point)
 {
-        qreal grid_h = m_grid.height();
+        qreal grid_h = m_grid.grid().height();
         QList<QGraphicsItem *> allItems = items();
         QGraphicsItem* item;
 

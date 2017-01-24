@@ -173,7 +173,7 @@ QPointF EgcCrossItem::snapCursor(const QPointF& pos)
         }
         if (scn) {
                 const EgcWorksheet& sheet = scn->worksheet();
-                QSizeF grid = scn->grid();
+                QSizeF grid = scn->grid().grid();
                 newPos = sheet.snapWorksheet(newPos);
                 QPointF tmpPos = newPos;
                 if (grid.isValid()) {
@@ -197,7 +197,7 @@ QSizeF EgcCrossItem::grid(void)
 
         QGraphicsScene *scene = this->scene();
         if (scene) {
-                grid = static_cast<EgCasScene*>(scene)->grid();
+                grid = static_cast<EgCasScene*>(scene)->grid().grid();
         }
 
         return grid;

@@ -45,8 +45,6 @@ class EgcPixmapItem;
 class EgcTextItem;
 class EgcCrossItem;
 
-using namespace egcas;
-
 /**
  * @brief The SnapDirection enum specifies the snap direction in which direction the cursor should snap comming from an
  * item
@@ -61,10 +59,10 @@ public:
         explicit EgCasScene(EgcAbstractDocument& doc, QObject *parent = 0);
         virtual ~EgCasScene();
         /**
-         * @brief grid return the grid size
-         * @return the grid size as QSizeF
+         * @brief grid return a reference to the grid object
+         * @return the grid size as reference
          */
-        QSizeF grid(void);
+        egcas::Grid& grid(void);
         /**
          * @brief setGrid set the grid size to be used as background
          * @param grid the grid size to be set
@@ -223,7 +221,7 @@ private:
          */
         void drawActiveAreaBorder(QPainter* painter, const QRectF&rect);
 
-        Grid m_grid;                            ///< returns the grid
+        egcas::Grid m_grid;                     ///< returns the grid
         EgcWorksheet m_worksheet;               ///< the worksheet we are working on
         QGraphicsLineItem* m_cursor;            ///< formula cursor for modifying formula
         QGraphicsLineItem* m_nodeUnderline;     ///< node cursor to show user the context of changes in a formula

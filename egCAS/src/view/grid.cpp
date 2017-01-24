@@ -26,7 +26,9 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#include <QtMath>
 #include "grid.h"
+#include "egcasscene.h"
 
 
 using namespace egcas;
@@ -35,16 +37,16 @@ Grid::Grid(EgCasScene& scene) : m_scene{scene}, m_activated{true}
 {
 }
 
-Grid::Grid(EgCasScene& scene, QSize size) : m_scene{scene}, m_grid{size}, m_activated{true}
+Grid::Grid(EgCasScene& scene, QSizeF size) : m_scene{scene}, m_grid{size}, m_activated{true}
 {
 }
 
-void Grid::setGrid(QSize size)
+void Grid::setGrid(QSizeF size)
 {
         m_grid = size;
 }
 
-QSize Grid::grid(void) const
+QSizeF Grid::grid(void) const
 {
         return m_grid;
 }
@@ -61,17 +63,17 @@ bool Grid::isActivated(void) const
 
 QPointF Grid::snap(const QPointF& point) const
 {
-        QPointF newPos = pos;
+        QPointF newPos = point;
         QPointF tmpPos = newPos;
-        if (grid.isValid() && m_gridActivated) {
-                newPos.setX(qFloor(tmpPos.x()/grid.width()) * grid.width() );
-                if (newPos.x() < sheet.getLeftMargin())
-                        newPos.setX(qCeil(tmpPos.x()/grid.width()) * grid.width() );
+        if (m_grid.isValid() && m_activated) {
+                newPos.setX(qFloor(tmpPos.x()/m_grid.width()) * m_grid.width() );
+                if (newPos.x() < m_scene.worksheet().getLeftMargin())
+                        newPos.setX(qCeil(tmpPos.x()/m_grid.width()) * m_grid.width() );
 
                 tmpPos = newPos;
-                newPos.setY(qFloor(tmpPos.y()/grid.height()) * grid.height() );
-                if (!sheet.isVisible(newPos))
-                        newPos.setY(qCeil(tmpPos.y()/grid.height()) * grid.height() );
+                newPos.setY(qFloor(tmpPos.y()/m_grid.height()) * m_grid.height() );
+                if (!m_scene.worksheet().isVisible(newPos))
+                        newPos.setY(qCeil(tmpPos.y()/m_grid.height()) * m_grid.height() );
         }
 
         return newPos;

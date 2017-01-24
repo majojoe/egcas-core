@@ -50,7 +50,7 @@ void EgcWorksheet::setSize(QSizeF size)
         m_scene.setSceneRect(scnRect.x(), scnRect.y(), m_size.width(), m_size.height() * nrPages);
 
         //set grid to be a multiple of size height (is adjusted by setGrid)
-        m_scene.setGrid(m_scene.grid());
+        m_scene.setGrid(m_scene.grid().grid());
 }
 
 qreal EgcWorksheet::getLeftMargin(void) const
