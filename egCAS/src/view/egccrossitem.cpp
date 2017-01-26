@@ -177,14 +177,18 @@ QPointF EgcCrossItem::snapCursor(const QPointF& pos)
                 newPos = sheet.snapWorksheet(newPos);
                 QPointF tmpPos = newPos;
                 if (grid.isValid()) {
-                        newPos.setX(qFloor(tmpPos.x()/grid.width()) * grid.width() );
+                        newPos.setX(qRound(tmpPos.x()/grid.width()) * grid.width() );
                         if (newPos.x() < sheet.getLeftMargin())
                                 newPos.setX(qCeil(tmpPos.x()/grid.width()) * grid.width() );
+                        if (newPos.x() < sheet.getRightMargin())
+                                newPos.setX(qFloor(tmpPos.x()/grid.width()) * grid.width() );
 
                         tmpPos = newPos;
-                        newPos.setY(qFloor(tmpPos.y()/grid.height()) * grid.height() );
+                        newPos.setY(qRound(tmpPos.y()/grid.height()) * grid.height() );
                         if (!sheet.isVisible(newPos))
                                 newPos.setY(qCeil(tmpPos.y()/grid.height()) * grid.height() );
+                        if (!sheet.isVisible(newPos))
+                                newPos.setY(qFloor(tmpPos.y()/grid.height()) * grid.height() );
                 }
         }
 

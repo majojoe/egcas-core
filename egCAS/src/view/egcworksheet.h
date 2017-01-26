@@ -139,6 +139,18 @@ public:
          * @return the active area
          */
         QRectF activeArea(quint32 pageIndex) const;
+        /**
+         * @brief nrPages returns the number of current pages on the scene
+         * @return the number of pages has this worksheet is associated with.
+         */
+        quint32 nrPages(void) const;
+        /**
+         * @brief onLastPage returns if the given point is on the last page
+         * @param point the position to determine the page we are on
+         * @return true if this is the last page, false otherwise
+         */
+        bool onLastPage(QPointF point) const;
+
 
 private:
         QSizeF m_size;                  ///< the worksheet size

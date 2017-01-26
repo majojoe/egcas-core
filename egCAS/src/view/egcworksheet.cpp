@@ -45,9 +45,8 @@ void EgcWorksheet::setSize(QSizeF size)
 {
         m_size = size;
         QRectF scnRect = m_scene.sceneRect();
-        int nrPages = qFloor((scnRect.height() + 0.1) / m_size.height());
 
-        m_scene.setSceneRect(scnRect.x(), scnRect.y(), m_size.width(), m_size.height() * nrPages);
+        m_scene.setSceneRect(scnRect.x(), scnRect.y(), m_size.width(), m_size.height() * nrPages());
 
         //set grid to be a multiple of size height (is adjusted by setGrid)
         m_scene.setGrid(m_scene.grid().grid());
@@ -157,13 +156,13 @@ bool EgcWorksheet::itemWrapsToNewPage(const QRectF& item, qreal yOffset)
         if (yOffset < 0)
                 return false;
 
-        qreal x = item.topLeft().x();
-        qreal y = item.topLeft().y();
+        qreal x = item.x();
+        qreal y = item.y();
 
         qreal page = qFloor(y / m_size.height());
         qreal yPageOffset = y - (page * m_size.height());
 
-        if (yPageOffset + yOffset + m_bottomMargin > m_size.height())
+        if ((yPageOffset + yOffset + m_bottomMargin + item.height()) > m_size.height())
                 return true;
 
         return false;
@@ -212,4 +211,17 @@ QRectF EgcWorksheet::activeArea(quint32 pageIndex) const
                     m_size.height() - (m_topMargin + m_bottomMargin));
         activeRect.moveTop((pageIndex * m_size.height()) + m_topMargin);
         return activeRect;
+}
+
+quint32 EgcWorksheet::nrPages(void) const
+{
+        return qFloor((m_scene.sceneRect().height() + 0.1) / m_size.height());
+}
+
+bool EgcWorksheet::onLastPage(QPointF point) const
+{
+        if (pageAtPoint(point) + 1 == nrPages())
+                return true;
+
+        return false;
 }

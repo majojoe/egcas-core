@@ -328,10 +328,20 @@ void EgCasScene::moveItems(bool moveDown, QPointF point)
                      || item->type() == static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType)
                      || item->type() == static_cast<int>(EgcGraphicsItemType::EgcTextItemType)) {
                         if (item->pos().y() >= point.y()) {
-                                if (moveDown)
-                                        item->moveBy(0.0, grid_h);
-                                else if (item->pos().y() > point.y())
+                                if (moveDown) {
+                                        QRectF itemRect = item->mapRectToScene(item->boundingRect());
+                                        if (m_worksheet.itemWrapsToNewPage(itemRect, grid_h)) {
+                                                qreal bm = m_worksheet.getBottomMargin();
+                                                qreal tm = m_worksheet.getTopMargin();
+                                                item->moveBy(0.0, grid_h + bm + tm);
+                                                if (m_worksheet.onLastPage(itemRect.topLeft()))
+                                                        addPage();
+                                        } else {
+                                                item->moveBy(0.0, grid_h);
+                                        }
+                                } else if (item->pos().y() > point.y()) {
                                         item->moveBy(0.0, -grid_h);
+                                }
                         }
                 }
         }
