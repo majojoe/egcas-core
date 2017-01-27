@@ -156,15 +156,18 @@ public:
         bool deleteItem(EgcAbstractTextItem* item);
         /**
          * @brief moveItems moves all following (from the given point onwards) items up or down by the gridsize
-         * @param moveDown if true this moves the items downwards, upwards otherwise
+         * @param moveDwn if true this moves the items downwards, upwards otherwise
          * @param point the point where onwards the movement shall be started
          */
-        void moveItems(bool moveDown, QPointF point);
+        void moveItems(bool moveDwn, QPointF point);
         /**
          * @brief worksheet returns a reference to the worksheet
          * @return the worksheet associated with this scene
          */
         EgcWorksheet& worksheet(void);
+
+        void moveDown(QGraphicsItem* item, bool useItemPos = false);
+        void moveUp(QGraphicsItem* item, bool useItemPos = false);
 
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);

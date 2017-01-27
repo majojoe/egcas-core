@@ -153,17 +153,19 @@ QPointF EgcWorksheet::snapWorksheet(const QRectF& item) const
 
 bool EgcWorksheet::itemWrapsToNewPage(const QRectF& item, qreal yOffset)
 {
-        if (yOffset < 0)
-                return false;
-
         qreal x = item.x();
         qreal y = item.y();
 
         qreal page = qFloor(y / m_size.height());
         qreal yPageOffset = y - (page * m_size.height());
 
-        if ((yPageOffset + yOffset + m_bottomMargin + item.height()) > m_size.height())
-                return true;
+        if (yOffset > 0) {
+                if ((yPageOffset + yOffset + m_bottomMargin + item.height()) > m_size.height())
+                        return true;
+        } else {
+                if ((yPageOffset - (-yOffset + m_topMargin)) < 0)
+                        return true;
+        }
 
         return false;
 }

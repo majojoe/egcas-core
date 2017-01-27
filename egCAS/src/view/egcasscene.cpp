@@ -317,7 +317,61 @@ void EgCasScene::triggerFormulaCreation(QPointF point, QKeyEvent *event)
         emit createFormula(point, EgcActionMapper::map(event));
 }
 
-void EgCasScene::moveItems(bool moveDown, QPointF point)
+void EgCasScene::moveDown(QGraphicsItem* item, bool useItemPos)
+{
+        if (!item)
+                return;
+
+        qreal grid_h = m_grid.grid().height();
+        bool newPage;
+        QPointF position;
+
+        if (useItemPos) {
+                position = item->scenePos();
+        } else {
+                QRectF itemRect = item->mapRectToScene(item->boundingRect());
+                newPage = m_worksheet.itemWrapsToNewPage(itemRect, grid_h);
+                position = QPointF(itemRect.x(), itemRect.y());
+        }
+
+        if (newPage) {
+                qreal bm = m_worksheet.getBottomMargin();
+                qreal tm = m_worksheet.getTopMargin();
+                item->moveBy(0.0, grid_h + bm + tm);
+                if (m_worksheet.onLastPage(position))
+                        addPage();
+        } else {
+                item->moveBy(0.0, grid_h);
+        }
+}
+
+void EgCasScene::moveUp(QGraphicsItem* item, bool useItemPos)
+{
+        if (!item)
+                return;
+
+        qreal grid_h = m_grid.grid().height();
+        bool newPage;
+        qreal offset;
+
+        if (useItemPos) {
+                offset = 0;
+        } else {
+                QRectF itemRect = item->mapRectToScene(item->boundingRect());
+                newPage = m_worksheet.itemWrapsToNewPage(itemRect, -grid_h);
+                offset = itemRect.height();
+        }
+
+        if (newPage) {
+                qreal bm = m_worksheet.getBottomMargin();
+                qreal tm = m_worksheet.getTopMargin();
+                item->moveBy(0.0, -(offset + bm + tm));
+        } else {
+                item->moveBy(0.0, -grid_h);
+        }
+}
+
+void EgCasScene::moveItems(bool moveDwn, QPointF point)
 {
         qreal grid_h = m_grid.grid().height();
         QList<QGraphicsItem *> allItems = items();
@@ -328,19 +382,10 @@ void EgCasScene::moveItems(bool moveDown, QPointF point)
                      || item->type() == static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType)
                      || item->type() == static_cast<int>(EgcGraphicsItemType::EgcTextItemType)) {
                         if (item->pos().y() >= point.y()) {
-                                if (moveDown) {
-                                        QRectF itemRect = item->mapRectToScene(item->boundingRect());
-                                        if (m_worksheet.itemWrapsToNewPage(itemRect, grid_h)) {
-                                                qreal bm = m_worksheet.getBottomMargin();
-                                                qreal tm = m_worksheet.getTopMargin();
-                                                item->moveBy(0.0, grid_h + bm + tm);
-                                                if (m_worksheet.onLastPage(itemRect.topLeft()))
-                                                        addPage();
-                                        } else {
-                                                item->moveBy(0.0, grid_h);
-                                        }
+                                if (moveDwn) {
+                                        moveDown(item);
                                 } else if (item->pos().y() > point.y()) {
-                                        item->moveBy(0.0, -grid_h);
+                                        moveUp(item);
                                 }
                         }
                 }
