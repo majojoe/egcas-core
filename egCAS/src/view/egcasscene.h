@@ -165,9 +165,39 @@ public:
          * @return the worksheet associated with this scene
          */
         EgcWorksheet& worksheet(void);
-
+        /**
+         * @brief addPage adds space for one page to the scene (items are not moved on the scene)
+         * @param pageIndex add page before given page index. The new page will have the given index.
+         */
+        void addPage(quint32 pageIndex);
+        /**
+         * @brief removePage removes space for one page from the scene (items are not moved on the scene). If scene is
+         * only one size big, the space for that page will NOT be removed.
+         * @param pageIndex remove the page at given page index
+         */
+        void removePage(quint32 pageIndex);
+        /**
+         * @brief moveDown move given item downwards on the page. If the item collides with the worksheet borders, the
+         * item will be moved onto the next page. If there is no page anymore, one will be added
+         * @param item the item to move
+         * @param useItemPos normally the items bounding rectangle will be used to calculate if the item collides with
+         * the border. However if true only the items position will be used to do the calculations.
+         */
         void moveDown(QGraphicsItem* item, bool useItemPos = false);
+        /**
+         * @brief moveUp move given item upwards on the page. If the item collides with the worksheet borders, the
+         * item will be moved onto the previous page. If there is no item on the last page, the page will be deleted.
+         * @param item the item to move
+         * @param useItemPos normally the items bounding rectangle will be used to calculate if the item collides with
+         * the border. However if true only the items position will be used to do the calculations.
+         */
         void moveUp(QGraphicsItem* item, bool useItemPos = false);
+        /**
+         * @brief anyItemOnPage checks if any item is left on the given page
+         * @param pageIndex the index of the page to check
+         * @return true if there is any item, false otherwise
+         */
+        bool anyItemOnPage(quint32 pageIndex) const;
 
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
@@ -182,15 +212,6 @@ protected:
          * @return true if successful, false otherwise
          */
         bool deleteItem(QGraphicsItem* item);
-        /**
-         * @brief addPage adds space for one page to the scene (items are not moved on the scene)
-         */
-        void addPage(void);
-        /**
-         * @brief removePage removes space for one page from the scene (items are not moved on the scene). If scene is
-         * only one size big, the space for that page will NOT be removed.
-         */
-        void removePage(void);
 
 signals:
         /**

@@ -337,9 +337,10 @@ void EgCasScene::moveDown(QGraphicsItem* item, bool useItemPos)
         if (newPage) {
                 qreal bm = m_worksheet.getBottomMargin();
                 qreal tm = m_worksheet.getTopMargin();
-                item->moveBy(0.0, grid_h + bm + tm);
+                quint32 pageIndex = m_worksheet.pageAtPoint(position);
                 if (m_worksheet.onLastPage(position))
-                        addPage();
+                        addPage(pageIndex + 1);
+                item->moveBy(0.0, grid_h + bm + tm);
         } else {
                 item->moveBy(0.0, grid_h);
         }
@@ -365,10 +366,25 @@ void EgCasScene::moveUp(QGraphicsItem* item, bool useItemPos)
         if (newPage) {
                 qreal bm = m_worksheet.getBottomMargin();
                 qreal tm = m_worksheet.getTopMargin();
+                QPointF position = item->pos();
                 item->moveBy(0.0, -(offset + bm + tm));
+                if (m_worksheet.onLastPage(position)) {
+                        quint32 pageIndex = m_worksheet.pageAtPoint(position);
+                        if (!anyItemOnPage(pageIndex))
+                                removePage(pageIndex);
+                }
         } else {
                 item->moveBy(0.0, -grid_h);
         }
+}
+
+bool EgCasScene::anyItemOnPage(quint32 pageIndex) const
+{
+        QRectF pageRect = m_worksheet.activeArea(pageIndex);
+        if (items(pageRect).isEmpty())
+                return false;
+
+        return true;
 }
 
 void EgCasScene::moveItems(bool moveDwn, QPointF point)
@@ -434,22 +450,66 @@ bool EgCasScene::deleteItem(QGraphicsItem *item)
         return true;
 }
 
-void EgCasScene::addPage(void)
+void EgCasScene::addPage(quint32 pageIndex)
 {
         QRectF scnRect = sceneRect();
         qreal newHeight = m_worksheet.getSize().height() + scnRect.height();
         setSceneRect(scnRect.x(), scnRect.y(), scnRect.width(), newHeight);
+
+        //move all items from the sheets behind on page downwards
+        QList<QGraphicsItem *> allItems = items();
+        QGraphicsItem* item;
+        qreal heightSheet = m_worksheet.getSize().height();
+        qreal startPos = pageIndex * heightSheet;
+
+        foreach (item, allItems) {
+                if (    item->type() == static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType)
+                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType)
+                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcTextItemType)) {
+                        if (item->pos().y() >= startPos) {
+                                item->moveBy(0.0, heightSheet);
+                        }
+                }
+        }
 }
 
-void EgCasScene::removePage(void)
+void EgCasScene::removePage(quint32 pageIndex)
 {
         int nrPages = qFloor((sceneRect().height() + 0.1) / m_worksheet.getSize().height());
         if (nrPages <= 1)
                 return;
 
+        //remove all items that are still on the page
+        QList<QGraphicsItem *> itemsOnPage = items(m_worksheet.activeArea(pageIndex));
+        QGraphicsItem* item;
+        foreach (item, itemsOnPage) {
+                if (    item->type() == static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType)
+                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType)
+                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcTextItemType)) {
+                        deleteItem(item);
+                }
+        }
+
+        //resize scene
         QRectF scnRect = sceneRect();
         qreal newHeight = scnRect.height() - m_worksheet.getSize().height();
         setSceneRect(scnRect.x(), scnRect.y(), scnRect.width(), newHeight);
+
+        //move all items from the sheets behind on page upwards
+        QList<QGraphicsItem *> allItems = items();
+        qreal startPos = (pageIndex + 1) * m_worksheet.getSize().height();
+        qreal heightSheet = m_worksheet.getSize().height();
+
+        foreach (item, allItems) {
+                if (    item->type() == static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType)
+                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType)
+                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcTextItemType)) {
+                        if (item->pos().y() >= startPos) {
+                                item->moveBy(0.0, -heightSheet);
+                        }
+                }
+        }
+
 }
 
 EgcWorksheet& EgCasScene::worksheet(void)
