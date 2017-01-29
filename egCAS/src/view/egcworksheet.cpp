@@ -170,6 +170,25 @@ bool EgcWorksheet::itemWrapsToNewPage(const QRectF& item, qreal yOffset)
         return false;
 }
 
+bool EgcWorksheet::itemWrapsToNewPage(const QPointF& item, qreal yOffset)
+{
+        qreal x = item.x();
+        qreal y = item.y();
+
+        qreal page = qFloor(y / m_size.height());
+        qreal yPageOffset = y - (page * m_size.height());
+
+        if (yOffset > 0) {
+                if ((yPageOffset + yOffset + m_bottomMargin) > m_size.height())
+                        return true;
+        } else {
+                if ((yPageOffset - (-yOffset + m_topMargin)) < 0)
+                        return true;
+        }
+
+        return false;
+}
+
 bool EgcWorksheet::itemOverlapsPageWidth(const QRectF& item, qreal& overlapsPageBy)
 {
         bool retval = false;

@@ -113,6 +113,13 @@ public:
          */
         bool itemWrapsToNewPage(const QRectF& item, qreal yOffset);
         /**
+         * @brief itemWrapsToNewPage check if given item wraps to new page
+         * @param item the point that is used by the item on the scene
+         * @param yOffset the offset in y direction by that the item shall be moved
+         * @return true if the item is on a new page after the move
+         */
+        bool itemWrapsToNewPage(const QPointF& item, qreal yOffset);
+        /**
          * @brief itemOverlapsPageWidth checks if the item overlaps with its width the worksheet width. Furthermore
          * it calculates the offset by which the item overlaps the worksheet page
          * @param item the rectangular shape of the item on the scene

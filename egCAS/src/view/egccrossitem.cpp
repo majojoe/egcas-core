@@ -209,13 +209,19 @@ QSizeF EgcCrossItem::grid(void)
 
 void EgcCrossItem::up(void)
 {
-        moveBy(0, -grid().height());
+        QGraphicsScene *scene = this->scene();
+        if (scene) {
+                static_cast<EgCasScene*>(scene)->moveUp(this, true);
+        }
         show();
 }
 
 void EgcCrossItem::down(void)
 {
-        moveBy(0, grid().height());
+        QGraphicsScene *scene = this->scene();
+        if (scene) {
+                static_cast<EgCasScene*>(scene)->moveDown(this, true);
+        }
         show();
 }
 
