@@ -122,7 +122,7 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
                 if (m_entity) {
                         if (m_contentChanged) {
                                 m_contentChanged = false;
-                                m_entity->itemChanged(EgcItemChangeType::contentChanged);                
+                                m_entity->itemChanged(EgcItemChangeType::contentChanged);
                         }
                 }
         }
@@ -183,7 +183,9 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
                 hideCursors();
                 m_posChanged = true;
                 // value is the new position.
-                return snap(value.toPointF());
+                QPointF point = value.toPointF();
+                ensureVisible(point.x(), point.y(), 0.0, 0.0);
+                return snap(point);
         }
 
         return QGraphicsItem::itemChange(change, value);

@@ -65,7 +65,9 @@ QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &va
 {
         if (change == ItemPositionChange && scene()) {
                 // value is the new position.
-                return snap(value.toPointF());
+                QPointF point = value.toPointF();
+                ensureVisible(point.x(), point.y(), 0.0, 0.0);
+                return snap(point);
         }
 
         m_resizeHandle->itemChangeInfo(change, value, scene());

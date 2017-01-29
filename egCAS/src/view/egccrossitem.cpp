@@ -212,6 +212,7 @@ void EgcCrossItem::up(void)
         QGraphicsScene *scene = this->scene();
         if (scene) {
                 static_cast<EgCasScene*>(scene)->moveUp(this, true);
+                ensureVisible(QRectF(), 100.0, 100.0);
         }
         show();
 }
@@ -221,6 +222,7 @@ void EgcCrossItem::down(void)
         QGraphicsScene *scene = this->scene();
         if (scene) {
                 static_cast<EgCasScene*>(scene)->moveDown(this, true);
+                ensureVisible(QRectF(), 100.0, 100.0);
         }
         show();
 }
@@ -228,12 +230,14 @@ void EgcCrossItem::down(void)
 void EgcCrossItem::left(void)
 {
         moveBy(-grid().width(), 0);
+        ensureVisible();
         show();
 }
 
 void EgcCrossItem::right(void)
 {
         moveBy(grid().width(), 0);
+        ensureVisible();
         show();
 }
 
