@@ -151,6 +151,7 @@ set(egCAS_SOURCES
         structural/actions/egcactionmapper.cpp
         view/egcworksheet.cpp
         view/grid.cpp
+        menu/egcgraphicsview.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS
