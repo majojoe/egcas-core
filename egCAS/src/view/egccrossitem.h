@@ -124,6 +124,22 @@ private:
          * @return selected item at cursor pos
          */
         QGraphicsItem *selectedItem(void) const;
+        /**
+         * @brief lineBegin sets the cursor to the beginning of the line (left side of worksheet)
+         */
+        void lineBegin(void);
+        /**
+         * @brief lineEnd sets the cursor to the end of the line (right side of worksheet)
+         */
+        void lineEnd(void);
+        /**
+         * @brief documentBegin move cursor to the beginning of the document
+         */
+        void documentBegin(void);
+        /**
+         * @brief documentEnd move the cursor to the end of the document
+         */
+        void documentEnd(void);
 
         const QSize m_size = QSize(40,40);     ///< size of the cross
 

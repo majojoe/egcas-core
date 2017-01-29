@@ -115,6 +115,18 @@ void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
                 if (scenePos().x() < scn->sceneRect().width() - grid().width())
                         right();
                 break;
+        case Qt::Key_Home:
+                if (keyEvent->modifiers() == Qt::KeyboardModifier::ControlModifier)
+                        documentBegin();
+                else
+                        lineBegin();
+                break;
+        case Qt::Key_End:
+                if (keyEvent->modifiers() == Qt::KeyboardModifier::ControlModifier)
+                        documentEnd();
+                else
+                        lineEnd();
+                break;
         default:
                 isSignOrOperation = true;
                 QGraphicsItem::keyPressEvent(keyEvent);
@@ -180,7 +192,7 @@ QPointF EgcCrossItem::snapCursor(const QPointF& pos)
                         newPos.setX(qRound(tmpPos.x()/grid.width()) * grid.width() );
                         if (newPos.x() < sheet.getLeftMargin())
                                 newPos.setX(qCeil(tmpPos.x()/grid.width()) * grid.width() );
-                        if (newPos.x() < sheet.getRightMargin())
+                        if (newPos.x() > (sheet.getSize().width() - sheet.getRightMargin()))
                                 newPos.setX(qFloor(tmpPos.x()/grid.width()) * grid.width() );
 
                         tmpPos = newPos;
@@ -237,6 +249,42 @@ void EgcCrossItem::left(void)
 void EgcCrossItem::right(void)
 {
         moveBy(grid().width(), 0);
+        ensureVisible();
+        show();
+}
+
+void EgcCrossItem::lineBegin(void)
+{
+        setPos(0.0, pos().y());
+        ensureVisible();
+        show();
+}
+
+void EgcCrossItem::lineEnd(void)
+{
+        QGraphicsScene *scene = this->scene();
+        if (scene) {
+                qreal lineEndPos = static_cast<EgCasScene*>(scene)->worksheet().getSize().width();
+                setPos(lineEndPos, pos().y());
+        }
+        ensureVisible();
+        show();
+}
+
+void EgcCrossItem::documentBegin(void)
+{
+        setPos(pos().x(), 0.0);
+        ensureVisible();
+        show();
+}
+
+void EgcCrossItem::documentEnd(void)
+{
+        QGraphicsScene *scene = this->scene();
+        if (scene) {
+                qreal bottomMargin = static_cast<EgCasScene*>(scene)->worksheet().getBottomMargin();
+                setPos(pos().x(), scene->sceneRect().height() - bottomMargin);
+        }
         ensureVisible();
         show();
 }

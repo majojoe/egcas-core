@@ -36,7 +36,7 @@ EgcWorksheet::EgcWorksheet(EgCasScene& scene) : m_size{QSize(2100,2900)}, m_left
 
 }
 
-QSizeF EgcWorksheet::getSize(void)
+QSizeF EgcWorksheet::getSize(void) const
 {
         return m_size;
 }

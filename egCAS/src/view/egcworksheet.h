@@ -47,7 +47,7 @@ public:
          * @brief getSize returns size of one worksheet
          * @return the size of the worksheet
          */
-        QSizeF getSize(void);
+        QSizeF getSize(void) const;
         /**
          * @brief setSize sets the size of a worksheet
          * @param size the size to set
