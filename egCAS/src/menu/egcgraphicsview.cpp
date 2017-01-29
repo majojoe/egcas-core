@@ -28,9 +28,10 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QGraphicsView>
 #include <QWheelEvent>
+#include <QScrollBar>
 #include "egcgraphicsview.h"
 
-EgcGraphicsView::EgcGraphicsView(QWidget *parent) : QGraphicsView(parent), m_scale{1.0}
+EgcGraphicsView::EgcGraphicsView(QWidget *parent) : QGraphicsView(parent)
 {
 
 }
@@ -47,6 +48,12 @@ void EgcGraphicsView::wheelEvent(QWheelEvent *event)
                         scale(1.1, 1.1);
                 else
                         scale(0.9, 0.9);
+        } else if (event->modifiers() == Qt::KeyboardModifier::ShiftModifier) {
+                QScrollBar* bar = horizontalScrollBar();
+                if (event->delta() > 0.0)
+                        bar->setValue(bar->value() + bar->singleStep());
+                else
+                        bar->setValue(bar->value() - bar->singleStep());
         } else {
                 return QGraphicsView::wheelEvent(event);
         }
