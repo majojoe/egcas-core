@@ -379,6 +379,7 @@ void EgcFormulaItem::keyCursorKeyHandler(QKeyEvent *keyEvent)
                 scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
                 break;
         case Qt::Key_Enter:
+        case Qt::Key_Return:
                 accepted = true;
                 scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
                 break;

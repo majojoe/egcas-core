@@ -97,6 +97,11 @@ void EgcCalculation::nextCalculation(void)
         }
 }
 
+void EgcCalculation::resumeCalculation(void)
+{
+        triggerNextCalcualtion();
+}
+
 void EgcCalculation::handleCalculation(EgcFormulaEntity& entity)
 {
         m_waitForResult = nullptr;

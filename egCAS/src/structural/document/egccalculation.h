@@ -60,12 +60,12 @@ public:
          * @return true if calculation could be started, false if a calculation is already running
          */
         bool calculate(EgcEntityList& list, bool updateInstantly = true);
-//        /**
-//         * @brief resumeCalculation calculate all remaining formulas in the list (given with calculate) until all
-//         * formulas are calculated or there is another lock on a formula.
-//         * This method is for resuming a stopped calculation that has been interrupted upon a lock on a formula.
-//         */
-//        void resumeCalculation(void);
+        /**
+         * @brief resumeCalculation calculate all remaining formulas in the list (given with calculate) until all
+         * formulas are calculated or there is another lock on a formula.
+         * This method is for resuming a stopped calculation that has been interrupted upon a lock on a formula.
+         */
+        void resumeCalculation(void);
 signals:
         /**
          * @brief errorOccurred during calculation an error occurred

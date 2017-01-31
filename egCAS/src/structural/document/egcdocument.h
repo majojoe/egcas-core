@@ -106,6 +106,10 @@ public:
          * @param entity the entity to delete
          */
         virtual void deleteEntity(EgcEntity* entity) override;
+        /**
+         * @brief resumeCalculation resume calculation after it has been stopped due to e.g. editing a formula.
+         */
+        virtual void resumeCalculation(void) override;
 signals:
         /**
          * @brief startDeleletingEntity signal to be emitted when entity shall be deleted

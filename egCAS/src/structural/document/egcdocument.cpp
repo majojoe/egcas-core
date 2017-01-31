@@ -142,3 +142,11 @@ void EgcDocument::deleteLaterEntity(EgcEntity* entity)
         if (entity->getEntityType() == EgcEntityType::Formula)
                 deleteFormula(dynamic_cast<EgcAbstractFormulaEntity*>(entity));
 }
+
+void EgcDocument::resumeCalculation(void)
+{
+        if (m_calc.isNull())
+                return;
+
+        m_calc->resumeCalculation();
+}
