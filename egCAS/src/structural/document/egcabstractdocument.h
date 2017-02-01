@@ -54,6 +54,11 @@ public:
          * @brief resumeCalculation resume calculation after it has been stopped due to e.g. editing a formula.
          */
         virtual void resumeCalculation(void) = 0;
+        /**
+         * @brief startCalulation start the calculation of the document in the background
+         * @param entity the entity where to pause calculation
+         */
+        virtual void startCalulation(EgcAbstractFormulaEntity* entity) = 0;
 
 };
 

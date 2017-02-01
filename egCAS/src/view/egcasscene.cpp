@@ -517,3 +517,8 @@ EgcWorksheet& EgCasScene::worksheet(void)
 {
         return m_worksheet;
 }
+
+EgcAbstractDocument& EgCasScene::document(void) const
+{
+        return m_document;
+}

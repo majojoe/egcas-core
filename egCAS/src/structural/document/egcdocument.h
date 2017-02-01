@@ -110,6 +110,12 @@ public:
          * @brief resumeCalculation resume calculation after it has been stopped due to e.g. editing a formula.
          */
         virtual void resumeCalculation(void) override;
+        /**
+         * @brief startCalulation start the calculation of the document in the background
+         * @param entity the entity where to pause calculation
+         */
+        virtual void startCalulation(EgcAbstractFormulaEntity* entity) override;
+
 signals:
         /**
          * @brief startDeleletingEntity signal to be emitted when entity shall be deleted

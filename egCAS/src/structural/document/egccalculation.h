@@ -37,7 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class EgcFormulaEntity;
 class EgcKernelParser;
-
+class EgcAbstractFormulaEntity;
 
 enum class EgcKernelErrorType {
         kernelTerminated, timeout, rdWrError, kernelNotFound, unknown
@@ -57,9 +57,11 @@ public:
          * @param list the list to use for the calculations
          * @param updateInstantly if true the view will be updated instantly after calculating. If false, the update
          * will happen after resuming the calculation.
+         * @param entity pointer to the entity where to pause the calculation. If a nullptr is given, the whole document
+         * will be calculated.
          * @return true if calculation could be started, false if a calculation is already running
          */
-        bool calculate(EgcEntityList& list, bool updateInstantly = true);
+        bool calculate(EgcEntityList& list, bool updateInstantly = true, EgcAbstractFormulaEntity* entity = nullptr);
         /**
          * @brief resumeCalculation calculate all remaining formulas in the list (given with calculate) until all
          * formulas are calculated or there is another lock on a formula.
@@ -106,6 +108,8 @@ private:
         EgcFormulaEntity* m_waitForResult;      ///< a pointer to the formula entity that is currently being calculated
         QScopedPointer<EgcKernelParser> m_parser; ///< the parser used for parsing cas kernel output
         bool m_calculationRunning;              ///< calculation is already running (no new one can be started)
+        EgcAbstractFormulaEntity* m_entity;     ///< pointer to entity where to pause calculation
+        bool m_paused;                          ///< calculation has been paused due to editing a formula
 };
 
 #endif // EGCCALCULATION_H

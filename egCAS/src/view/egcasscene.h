@@ -198,6 +198,11 @@ public:
          * @return true if there is any item, false otherwise
          */
         bool anyItemOnPage(quint32 pageIndex) const;
+        /**
+         * @brief document returns a reference to the internal document
+         * @return the document that is associated with this scene
+         */
+        EgcAbstractDocument& document(void) const;
 
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);

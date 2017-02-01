@@ -150,3 +150,11 @@ void EgcDocument::resumeCalculation(void)
 
         m_calc->resumeCalculation();
 }
+
+void EgcDocument::startCalulation(EgcAbstractFormulaEntity* entity)
+{
+        if (m_calc.isNull())
+                return;
+
+        m_calc->calculate(*m_list, true, entity);
+}

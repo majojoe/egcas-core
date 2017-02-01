@@ -38,7 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcCalculation::EgcCalculation(QObject *parent) : QObject{parent}, m_conn{new EgcMaximaConn()}, m_iterator{nullptr},
         m_kernelStarted{false}, m_computeWhenStarted{false}, m_updateInstantly{true}, m_parser{new EgcKernelParser()},
-        m_waitForResult{nullptr}, m_calculationRunning{false}
+        m_waitForResult{nullptr}, m_calculationRunning{false}, m_entity{nullptr}, m_paused{false}
 {
         
         connect(m_conn.data(), SIGNAL(resultReceived(QString)), this, SLOT(resultReceived(QString)));
@@ -54,8 +54,10 @@ EgcCalculation::~EgcCalculation()
 {
 }
 
-bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly)
+bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly, EgcAbstractFormulaEntity* entity)
 {
+        m_paused = false;
+        m_entity = entity;
         if (m_calculationRunning)
                 return false;
 
@@ -83,17 +85,23 @@ void EgcCalculation::nextCalculation(void)
                 return;
         
         if (m_iterator->hasNext()) {
-                entity = m_iterator->next();
-                if (entity) {
-                        if (entity->getEntityType() == EgcEntityType::Formula)
-                                handleCalculation(static_cast<EgcFormulaEntity&>(*entity));
-                        else
+                if (    (m_iterator->peekNext() != dynamic_cast<EgcEntity*>(m_entity))
+                     || m_paused) {
+                        entity = m_iterator->next();
+                        if (entity) {
+                                if (entity->getEntityType() == EgcEntityType::Formula)
+                                        handleCalculation(static_cast<EgcFormulaEntity&>(*entity));
+                                else
+                                        triggerNextCalcualtion();
+                        } else {
                                 triggerNextCalcualtion();
+                        }
                 } else {
-                        triggerNextCalcualtion();
+                        m_paused = true;
                 }
         } else {
                 m_calculationRunning = false;
+                m_entity = nullptr;
         }
 }
 

@@ -251,6 +251,9 @@ void EgcFormulaItem::focusInEvent(QFocusEvent * event)
         EgcAction action;
         action.m_op = EgcOperations::formulaActivated;
         m_entity->handleAction(action);
+        EgCasScene* scn = getEgcScene();
+        if (scn)
+                scn->document().startCalulation(m_entity);
 }
 
 void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
@@ -262,9 +265,11 @@ void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
         EgcAction action;
         action.m_op = EgcOperations::formulaDeactivated;
         m_entity->handleAction(action);
-        EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
-        if (scn)
+        EgCasScene* scn = getEgcScene();
+        if (scn) {
                 scn->hideFormulaCursors();
+                scn->document().resumeCalculation();
+        }
 }
 
 void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
