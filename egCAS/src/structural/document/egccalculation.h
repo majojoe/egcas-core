@@ -68,6 +68,12 @@ public:
          * This method is for resuming a stopped calculation that has been interrupted upon a lock on a formula.
          */
         void resumeCalculation(void);
+        /**
+         * @brief setAutoCalculation set autocalculation on or off. This means that if a formula is changed, the kernel
+         * calculates the document in the background and updates all formulas as needed.
+         * @param on if true auto calculation is on ohterwise off.
+         */
+        void setAutoCalculation(bool on);
 signals:
         /**
          * @brief errorOccurred during calculation an error occurred
@@ -110,6 +116,7 @@ private:
         bool m_calculationRunning;              ///< calculation is already running (no new one can be started)
         EgcAbstractFormulaEntity* m_entity;     ///< pointer to entity where to pause calculation
         bool m_paused;                          ///< calculation has been paused due to editing a formula
+        bool m_autoCalc;                        ///< if false the calculation is only done when calculation is triggered manually
 };
 
 #endif // EGCCALCULATION_H

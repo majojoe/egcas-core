@@ -47,11 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui{new Ui::MainWindow}, m_document{new EgcDocument}
 {
     m_ui->setupUi(this);
-    connect(m_ui->mnu_show_license, SIGNAL(triggered()), this, SLOT(showLicense()));
-    connect(m_ui->mnu_calculate, SIGNAL(triggered()), this, SLOT(calculate()));
+    setupConnections();
     m_ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     m_ui->graphicsView->setScene(m_document->getScene());
-    //m_ui->graphicsView->scale(0.8,0.8);
 
     //add some formulas
     EgcFormulaItem::setBaseFontSize(18);
@@ -123,5 +121,17 @@ void MainWindow::showLicense(void)
 
 void MainWindow::calculate(void)
 {
-        m_document->calculate();
+        m_document->startCalulation();
+}
+
+void MainWindow::autoCalculation(bool on)
+{
+        m_document->setAutoCalculation(on);
+}
+
+void MainWindow::setupConnections(void)
+{
+        connect(m_ui->mnu_show_license, SIGNAL(triggered()), this, SLOT(showLicense()));
+        connect(m_ui->mnu_autoCalc, SIGNAL(triggered(bool)), this, SLOT(autoCalculation(bool)));
+        connect(m_ui->mnu_CalculateDocument, SIGNAL(triggered()), this, SLOT(calculate()));
 }

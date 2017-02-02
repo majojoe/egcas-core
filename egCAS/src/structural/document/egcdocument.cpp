@@ -99,11 +99,6 @@ EgcEntity* EgcDocument::cloneEntity(EgcEntityList& list, EgcEntity& entity2copy)
         return ptr;
 }
 
-void EgcDocument::calculate(void)
-{
-        m_calc->calculate(*m_list);
-}
-
 EgcCalculation const* EgcDocument::getCalcClass(void)
 {
         return m_calc.data();
@@ -156,5 +151,13 @@ void EgcDocument::startCalulation(EgcAbstractFormulaEntity* entity)
         if (m_calc.isNull())
                 return;
 
-        m_calc->calculate(*m_list, true, entity);
+        (void) m_calc->calculate(*m_list, true, entity);
+}
+
+void EgcDocument::setAutoCalculation(bool on)
+{
+        if (m_calc.isNull())
+                return;
+
+        m_calc->setAutoCalculation(on);
 }

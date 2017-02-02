@@ -51,8 +51,12 @@ public:
 public slots:
         void showLicense(void);
         void calculate(void);
+        void autoCalculation(bool on);
 private:
-
+        /**
+         * @brief setupConnections setup all connections to slots that are neccessary
+         */
+        void setupConnections(void);
         QScopedPointer<Ui::MainWindow> m_ui;
         QScopedPointer<EgcDocument> m_document;
 };

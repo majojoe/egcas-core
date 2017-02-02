@@ -92,10 +92,6 @@ public:
          */
         EgcEntity* cloneEntity(EgcEntityList& list, EgcEntity& entity2copy);
         /**
-         * @brief calculate calculates the document
-         */
-        void calculate(void);
-        /**
          * @brief deleteFormula delete a formula
          * @param formula the formula to delete
          * @return true if everything went well, false otherwise
@@ -111,11 +107,16 @@ public:
          */
         virtual void resumeCalculation(void) override;
         /**
-         * @brief startCalulation start the calculation of the document in the background
+         * @brief startCalulation start the calculation of the document
          * @param entity the entity where to pause calculation
          */
-        virtual void startCalulation(EgcAbstractFormulaEntity* entity) override;
-
+        virtual void startCalulation(EgcAbstractFormulaEntity* entity = nullptr) override;
+        /**
+         * @brief setAutoCalculation set autocalculation on or off. This means that if a formula is changed, the kernel
+         * calculates the document in the background and updates all formulas as needed.
+         * @param on if true auto calculation is on ohterwise off.
+         */
+        void setAutoCalculation(bool on);
 signals:
         /**
          * @brief startDeleletingEntity signal to be emitted when entity shall be deleted

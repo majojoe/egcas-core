@@ -38,7 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcCalculation::EgcCalculation(QObject *parent) : QObject{parent}, m_conn{new EgcMaximaConn()}, m_iterator{nullptr},
         m_kernelStarted{false}, m_computeWhenStarted{false}, m_updateInstantly{true}, m_parser{new EgcKernelParser()},
-        m_waitForResult{nullptr}, m_calculationRunning{false}, m_entity{nullptr}, m_paused{false}
+        m_waitForResult{nullptr}, m_calculationRunning{false}, m_entity{nullptr}, m_paused{false}, m_autoCalc{true}
 {
         
         connect(m_conn.data(), SIGNAL(resultReceived(QString)), this, SLOT(resultReceived(QString)));
@@ -59,6 +59,8 @@ bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly, EgcAbs
         m_paused = false;
         m_entity = entity;
         if (m_calculationRunning)
+                return false;
+        if (!m_autoCalc && entity) // only if auto calculation is active
                 return false;
 
         m_conn->reset();
@@ -216,4 +218,9 @@ void EgcCalculation::kernelErrorOccurred(QProcess::ProcessError error)
 void EgcCalculation::handleTimeout(void)
 {
         emit errorOccurred(EgcKernelErrorType::timeout, tr("The CAS kernel did not respond within 30s."));
+}
+
+void EgcCalculation::setAutoCalculation(bool on)
+{
+        m_autoCalc = on;
 }
