@@ -20,6 +20,7 @@ find_package(Qt5 COMPONENTS Widgets Core Test)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${mmlegcas_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 
 set(tst_egcastest_view_SOURCES
         tst_egcastest_view.cpp 
@@ -32,6 +33,9 @@ set(tst_egcastest_view_SOURCES
         ../../src/view/egcscreenpos.cpp
         ../../src/view/egcasiteminterface.cpp
         ../../src/view/egccrossitem.cpp
+        ../../src/view/egcworksheet.cpp
+        ../../src/view/grid.cpp
+        ../../src/menu/egcgraphicsview.cpp
         ../../src/structural/actions/egcactionmapper.cpp
 )
 

@@ -34,6 +34,7 @@ find_package(Qt5 COMPONENTS Core Widgets Test)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${mmlegcas_BINARY_DIR})
 
 file(GLOB_RECURSE tst_rearrange_precedence_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
@@ -76,6 +77,9 @@ set(tst_rearrange_precedence_SOURCES
         ../../src/view/egcasiteminterface.cpp
         ../../src/view/egccrossitem.cpp
         ../../src/structural/actions/egcactionmapper.cpp
+        ../../src/view/egcworksheet.cpp
+        ../../src/view/grid.cpp
+        ../../src/menu/egcgraphicsview.cpp
 )
 
 #set the verbosity level of the scanner and parser
