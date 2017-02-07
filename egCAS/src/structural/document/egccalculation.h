@@ -111,12 +111,13 @@ private:
         bool m_kernelStarted;   ///< indicates that cas kernel has started and can calculate formulas now
         bool m_computeWhenStarted;              ///< begin with computation when the kernel has started
         bool m_updateInstantly;                 ///< when true, update the view instantly, otherwise it's updated after resuming the calculation
-        EgcFormulaEntity* m_waitForResult;      ///< a pointer to the formula entity that is currently being calculated
+        EgcFormulaEntity* m_result;             ///< a pointer to the formula entity that is currently being calculated
         QScopedPointer<EgcKernelParser> m_parser; ///< the parser used for parsing cas kernel output
         bool m_calculationRunning;              ///< calculation is already running (no new one can be started)
         EgcAbstractFormulaEntity* m_entity;     ///< pointer to entity where to pause calculation
         bool m_paused;                          ///< calculation has been paused due to editing a formula
         bool m_autoCalc;                        ///< if false the calculation is only done when calculation is triggered manually
+        bool m_waitForResult;                   ///< if true class will wait for the result of a calculation
 };
 
 #endif // EGCCALCULATION_H

@@ -62,7 +62,7 @@ EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{"maxima", parent},
 
         m_startRegex = QRegularExpression(".*\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
         m_errRegex = QRegularExpression("(.*)\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
-        m_regex = QRegularExpression("\\(%o[0-9]+\\)(.*)\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
+        m_regex = QRegularExpression("\\(%o[0-9]+\\)(.*?)\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
         m_errUnwantedRegex = QRegularExpression("(.*)(" + regexFilterStr + ").*", QRegularExpression::DotMatchesEverythingOption);
         m_unwantedErrors = QRegularExpression("\\(%i1\\)");
         m_startRegex.optimize();

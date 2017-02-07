@@ -38,7 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcCalculation::EgcCalculation(QObject *parent) : QObject{parent}, m_conn{new EgcMaximaConn()}, m_iterator{nullptr},
         m_kernelStarted{false}, m_computeWhenStarted{false}, m_updateInstantly{true}, m_parser{new EgcKernelParser()},
-        m_waitForResult{nullptr}, m_calculationRunning{false}, m_entity{nullptr}, m_paused{false}, m_autoCalc{true}
+        m_result{nullptr}, m_calculationRunning{false}, m_entity{nullptr}, m_paused{false}, m_autoCalc{true},
+        m_waitForResult{false}
 {
         
         connect(m_conn.data(), SIGNAL(resultReceived(QString)), this, SLOT(resultReceived(QString)));
@@ -114,7 +115,7 @@ void EgcCalculation::resumeCalculation(void)
 
 void EgcCalculation::handleCalculation(EgcFormulaEntity& entity)
 {
-        m_waitForResult = nullptr;
+        m_result = nullptr;
         EgcNode* node = entity.getRootElement();
         if (!node) { //process next formula -> prevent recursion with event
                 triggerNextCalcualtion();
@@ -125,12 +126,14 @@ void EgcCalculation::handleCalculation(EgcFormulaEntity& entity)
         switch(type) {
         //send the formula to the cas kernel if it's a definition
         case EgcNodeType::DefinitionNode:
+                m_waitForResult = true;
                 m_conn->sendCommand(entity.getCASKernelCommand());
                 break;
 
         case EgcNodeType::EqualNode:
                 entity.resetResult();
-                m_waitForResult = &entity;
+                m_waitForResult = true;
+                m_result = &entity;
                 m_conn->sendCommand(entity.getCASKernelCommand());
                 break;
         default:
@@ -141,20 +144,22 @@ void EgcCalculation::handleCalculation(EgcFormulaEntity& entity)
 
 void EgcCalculation::triggerNextCalcualtion(void)
 {
-        QTimer::singleShot(0, this, SLOT(nextCalculation()));
+        if (!m_waitForResult)
+                QTimer::singleShot(0, this, SLOT(nextCalculation()));
 }
 
 void EgcCalculation::resultReceived(QString result)
 {
-        if (m_waitForResult) {
+        m_waitForResult = false;
+        if (m_result) {
                 EgcNode* tree = m_parser->parseKernelOutput(result);
                 if (tree) {
-                        m_waitForResult->setResult(tree);
+                        m_result->setResult(tree);
                 } else {
-                        m_waitForResult->setErrorMessage(m_parser->getErrorMessage());
+                        m_result->setErrorMessage(m_parser->getErrorMessage());
                 }
                 if (m_updateInstantly)
-                        m_waitForResult->updateView();                
+                        m_result->updateView();
         }
         
         //go on to next calculation
@@ -164,11 +169,12 @@ void EgcCalculation::resultReceived(QString result)
 void EgcCalculation::errorReceived(QString errorMsg)
 {
         m_calculationRunning = false;
+        m_waitForResult = false;
         
-        if (m_waitForResult) {
-                m_waitForResult->setErrorMessage(errorMsg);
+        if (m_result) {
+                m_result->setErrorMessage(errorMsg);
                 if (m_updateInstantly)
-                        m_waitForResult->updateView();
+                        m_result->updateView();
         }
 
         //go on to next calculation (even after an error with the current calculation)
@@ -178,6 +184,7 @@ void EgcCalculation::errorReceived(QString errorMsg)
 void EgcCalculation::kernelStarted(void)
 {
         m_kernelStarted = true;
+        m_waitForResult = false;
         if (m_computeWhenStarted) {
                 m_computeWhenStarted = false;
                 nextCalculation();
@@ -187,6 +194,7 @@ void EgcCalculation::kernelStarted(void)
 void EgcCalculation::kernelTerminated(void)
 {
         m_calculationRunning = false;
+        m_waitForResult = false;
         
         emit errorOccurred(EgcKernelErrorType::kernelTerminated, tr("The CAS Kernel has terminated!"));
 }
@@ -194,6 +202,7 @@ void EgcCalculation::kernelTerminated(void)
 void EgcCalculation::kernelErrorOccurred(QProcess::ProcessError error)
 {
         m_calculationRunning = false;
+        m_waitForResult = false;
 
         switch(error) {
         case QProcess::Crashed:
@@ -217,6 +226,8 @@ void EgcCalculation::kernelErrorOccurred(QProcess::ProcessError error)
 
 void EgcCalculation::handleTimeout(void)
 {
+        m_waitForResult = false;
+
         emit errorOccurred(EgcKernelErrorType::timeout, tr("The CAS kernel did not respond within 30s."));
 }
 
