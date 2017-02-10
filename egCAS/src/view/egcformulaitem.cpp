@@ -158,7 +158,9 @@ int EgcFormulaItem::getFontSize(void)
 }
 
 void EgcFormulaItem::mousePressEvent(QGraphicsSceneMouseEvent*event)
-{
+{        
+        m_entity->setCursorAt(event->pos());
+
         //update();
         QGraphicsItem::mousePressEvent(event);
 }
@@ -173,6 +175,14 @@ void EgcFormulaItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
                 if (m_entity)
                         m_entity->itemChanged(EgcItemChangeType::posChanged);
         }
+
+}
+
+void EgcFormulaItem::setCursorAt(QPointF pos)
+{
+        EgRenderingPosition pos = m_screenPos->getMathmlIdAtPos(pos);
+
+        m_entity->setCursorPos(pos.m_nodeId);
 
 }
 

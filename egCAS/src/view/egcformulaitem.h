@@ -176,6 +176,11 @@ public:
          * @return true if empty, false otherwise
          */
         bool isEmpty(void);
+        /**
+         * @brief setCursorAt set the cursor position near the given position
+         * @param pos the position where to set the cursor
+         */
+        void setCursorAt(QPointF pos);
 
 protected:
         /**
