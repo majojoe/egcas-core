@@ -68,6 +68,24 @@ EgcScrPosIterator::EgcScrPosIterator(const EgcScrPosIterator& orig) : m_lookup(o
 
 }
 
+void EgcScrPosIterator::setCursorAt(EgcNode* node, quint32 subInd, bool rSide)
+{
+        if (!node)
+                return;
+
+        m_nodeIter->setAtNode(*node, rSide);
+        m_subIdIter->toFront();
+        if (&m_nodeIter->getNode() == node) {
+                for (int i = m_subIdIter->peekNext(); m_subIdIter->peekNext() < subInd; i++) {
+                        if (!m_subIdIter->hasNext())
+                                break;
+                        m_subIdIter->next();
+                }
+                if (!rSide && m_subIdIter->hasPrevious())
+                        m_subIdIter->previous();
+        }
+}
+
 bool EgcScrPosIterator::hasNext(void) const
 {
         if (m_nodeIter->hasNext() || m_subIdIter->hasNext())

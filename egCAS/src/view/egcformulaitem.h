@@ -260,6 +260,8 @@ private:
         QScopedPointer<EgcScreenPos> m_screenPos;       ///< screen positions of the rendered formula characters
         static QRegularExpression s_alnumKeyFilter;     ///< regex for checking if a key is an alnum key
         static bool s_regexInitialized;                 ///< check if regex is already initialized
+        QPointF m_startPoint;                           ///< point where move operation started
+        bool m_movePossible;                            ///< move is possible at the moment
 
         Q_DISABLE_COPY(EgcFormulaItem)
 };

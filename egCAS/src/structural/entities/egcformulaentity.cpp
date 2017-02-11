@@ -1070,5 +1070,10 @@ EgcAbstractFormulaItem* EgcFormulaEntity::getItem(void) const
 
 void EgcFormulaEntity::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
 {
+        EgcNode* node = m_mathmlLookup.findNode(nodeId);
+        if (node == nullptr)
+                return;
 
+        m_scrIter->setCursorAt(node, subPos, rightSide);
+        showCurrentCursor();
 }

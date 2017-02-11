@@ -43,7 +43,8 @@ QRegularExpression EgcFormulaItem::s_alnumKeyFilter = QRegularExpression("[._0-9
 bool EgcFormulaItem::s_regexInitialized = false;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
-    QGraphicsItem{parent}, m_fontSize{0}, m_posChanged{false}, m_contentChanged{false}, m_entity{nullptr}
+    QGraphicsItem{parent}, m_fontSize{0}, m_posChanged{false}, m_contentChanged{false}, m_entity{nullptr},
+    m_startPoint{QPointF(0.0, 0.0)}, m_movePossible{false}
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         m_mathMlDoc.reset(new EgMathMLDocument());
@@ -160,14 +161,17 @@ int EgcFormulaItem::getFontSize(void)
 void EgcFormulaItem::mousePressEvent(QGraphicsSceneMouseEvent*event)
 {        
         setCursorAt(event->pos());
+        if (!m_movePossible) {
+                m_startPoint = pos();
+                m_movePossible = true;
+        }
 
-        //update();
         QGraphicsItem::mousePressEvent(event);
 }
 
 void EgcFormulaItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 {
-        //update();
+        m_movePossible = false;
         QGraphicsItem::mouseReleaseEvent(event);
         if (m_posChanged) {
                 m_posChanged = false;
@@ -190,14 +194,19 @@ void EgcFormulaItem::setCursorAt(QPointF pos)
 
 QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-        if (change == ItemPositionChange && scene()) {
-                // hide the cursors
-                hideCursors();
-                m_posChanged = true;
+        EgCasScene* scn = getEgcScene();
+        if (change == ItemPositionChange && scn) {
                 // value is the new position.
                 QPointF point = value.toPointF();
-                ensureVisible(point.x(), point.y(), 0.0, 0.0);
-                return snap(point);
+                if ((m_startPoint - point).manhattanLength() > (scn->grid().grid().width() / 2)) {
+                        // hide the cursors
+                        hideCursors();
+                        m_posChanged = true;
+                        ensureVisible(point.x(), point.y(), 0.0, 0.0);
+                        return snap(point);
+                } else {
+                        return m_startPoint;
+                }
         }
 
         return QGraphicsItem::itemChange(change, value);

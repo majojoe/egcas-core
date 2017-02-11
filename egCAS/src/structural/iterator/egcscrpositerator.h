@@ -197,6 +197,14 @@ public:
          * @param baseNode the base node of the formula must be given here
          */
         void invalidateCursor(EgcNode& baseNode);
+        /**
+         * @brief setCursorAt set the cursor at the given position
+         * @param node the node where to set the cursor at
+         * @param subInd the sub index where to position the cursor
+         * @param rSide true if cursor shall be positioned at the right side, if false cursor will be positioned at left
+         * side.
+         */
+        void setCursorAt(EgcNode* node, quint32 subInd, bool rSide);
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula
