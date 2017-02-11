@@ -327,6 +327,14 @@ public:
          * @return true if empty, false otherwise
          */
         virtual bool isEmpty(void) const;
+        /**
+         * @brief setCursorPos set the cursor position at the given nodeId and sub position location
+         * @param nodeId the node Id where to set the cursor
+         * @param subPos the sub position where to set the cursor
+         * @param rightSide set it at the right side or at the left of the given instance
+         */
+        virtual void setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide) override;
+
 private:
         /**
          * @brief moveCursor move the screen formula cursor back- or forward

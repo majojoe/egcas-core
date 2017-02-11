@@ -1067,3 +1067,8 @@ EgcAbstractFormulaItem* EgcFormulaEntity::getItem(void) const
 {
         return m_item;
 }
+
+void EgcFormulaEntity::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
+{
+
+}

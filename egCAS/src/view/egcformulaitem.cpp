@@ -159,7 +159,7 @@ int EgcFormulaItem::getFontSize(void)
 
 void EgcFormulaItem::mousePressEvent(QGraphicsSceneMouseEvent*event)
 {        
-        m_entity->setCursorAt(event->pos());
+        setCursorAt(event->pos());
 
         //update();
         QGraphicsItem::mousePressEvent(event);
@@ -180,10 +180,12 @@ void EgcFormulaItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 
 void EgcFormulaItem::setCursorAt(QPointF pos)
 {
-        EgRenderingPosition pos = m_screenPos->getMathmlIdAtPos(pos);
+        EgRenderingPosition rendPos = m_screenPos->getMathmlIdAtPos(pos);
+        bool rightSide = false;
+        if (pos.x() > rendPos.m_itemRect.x() + (rendPos.m_itemRect.width() / 2.0))
+                rightSide = true;
 
-        m_entity->setCursorPos(pos.m_nodeId);
-
+        m_entity->setCursorPos(rendPos.m_nodeId, rendPos.m_subPos, rightSide);
 }
 
 QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &value)
