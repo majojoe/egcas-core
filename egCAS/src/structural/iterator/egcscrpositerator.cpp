@@ -74,6 +74,7 @@ void EgcScrPosIterator::setCursorAt(EgcNode* node, quint32 subInd, bool rSide)
                 return;
 
         m_nodeIter->setAtNode(*node, rSide);
+        m_subIdIter->setNode(*node);
         m_subIdIter->toFront();
         if (&m_nodeIter->getNode() == node) {
                 for (int i = m_subIdIter->peekNext(); m_subIdIter->peekNext() < subInd; i++) {
