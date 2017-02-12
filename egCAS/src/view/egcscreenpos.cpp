@@ -60,6 +60,10 @@ EgRenderingPosition EgcScreenPos::getMathmlIdAtPos(const QPointF &pos)
                                 w = i.m_itemRect.width();
                                 h = i.m_itemRect.height();
                                 retval = i;
+                        } else if (qFuzzyCompare( i.m_itemRect.width() + i.m_itemRect.height(), w + h )) {
+                                //sub positions other than 0 are prefered
+                                if ( (retval.m_subPos == 0) && (i.m_subPos != 0))
+                                        retval = i;
                         }
         }
 
