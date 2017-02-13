@@ -73,8 +73,26 @@ void EgcScrPosIterator::setCursorAt(EgcNode* node, quint32 subInd, bool rSide)
         if (!node)
                 return;
 
+        if (node->isBinaryNode()) {
+                if (    node->isOperation()
+                     && node->visibleSigns(EgcNodeSide::middle)
+                     && !node->visibleSigns(EgcNodeSide::left)
+                     && !node->visibleSigns(EgcNodeSide::right)) {
+                        EgcContainerNode* container = static_cast<EgcContainerNode*>(node);
+                        EgcNode* child;
+                        if (!rSide)
+                                child = container->getChild(0);
+                        else
+                                child = container->getChild(1);
+                        if (child) {
+                                node = child;
+                                rSide = !rSide;
+                        }
+                }
+        }
+
         m_nodeIter->setAtNode(*node, rSide);
-        m_subIdIter->setNode(*node);
+        m_subIdIter->setNode(m_nodeIter->getNode());
         m_subIdIter->toFront();
         if (&m_nodeIter->getNode() == node) {
                 for (int i = m_subIdIter->peekNext(); m_subIdIter->peekNext() < subInd; i++) {
