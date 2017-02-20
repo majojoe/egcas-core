@@ -100,6 +100,7 @@ protected:
         QScopedPointer<QProcess> m_casKernelProcess;    ///< pointer to the kernel QProcess object
         EgcKernelStart m_startState;                    ///< marks the starting state of the CAS kernel
         QRegularExpression m_startRegex;                ///< regex for filtering kernel output at startup
+        QRegularExpression m_startedRegex;              ///< regex for filtering kernel output at startup (startup finished)
         QRegularExpression m_errRegex;                  ///< regex for filtering kernel errors
         QRegularExpression m_regex;                     ///< regex for filtering regular kernel output
         QRegularExpression m_unwantedErrors;            ///< regex for filtering errors that are not really errors

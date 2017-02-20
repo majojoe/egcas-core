@@ -61,6 +61,7 @@ EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{"maxima", parent},
                 regexFilterStr.remove(-1, 1);
 
         m_startRegex = QRegularExpression(".*\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
+        m_startedRegex = QRegularExpression(".*\n\\(%i[2-9]{1}\\)", QRegularExpression::DotMatchesEverythingOption);
         m_errRegex = QRegularExpression("(.*)\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
         m_regex = QRegularExpression("\\(%o[0-9]+\\)(.*?)\n\\(%i[0-9]+\\)", QRegularExpression::DotMatchesEverythingOption);
         m_errUnwantedRegex = QRegularExpression("(.*)(" + regexFilterStr + ").*", QRegularExpression::DotMatchesEverythingOption);
@@ -77,12 +78,19 @@ EgcMaximaConn::~EgcMaximaConn()
         quit();
 }
 
+void EgcMaximaConn::clearKernelOutQueue(void)
+{
+        // read all rests of the output of the kernel
+        (void) m_casKernelProcess->readAllStandardOutput();
+}
+
 void EgcMaximaConn::sendCommand(QString cmd)
 {
         cmd += "\n";
 #ifdef DEBUG_MAXIMA_KERNEL
         qDebug() << cmd.toUtf8();
 #endif //DEBUG_MAXIMA_KERNEL
+        clearKernelOutQueue();
         m_casKernelProcess->write(cmd.toUtf8());
 }
 
@@ -105,7 +113,7 @@ void EgcMaximaConn::stdOutput(void)
                 }
                 break;
         case EgcKernelStart::Starting:
-                match = m_startRegex.match(m_result);
+                match = m_startedRegex.match(m_result);
                 if (match.hasMatch()) {
                         emit kernelStarted();
                         m_result.clear();
@@ -161,6 +169,7 @@ void EgcMaximaConn::quit(void)
 
 void EgcMaximaConn::reset(void)
 {
+        clearKernelOutQueue();
         this->sendCommand("kill(all)$");
 }
 

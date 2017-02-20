@@ -40,13 +40,8 @@ BISON_TARGET(cas_parser casKernel/parser/parser.y ${CMAKE_CURRENT_BINARY_DIR}/pa
 FLEX_TARGET(cas_scanner casKernel/parser/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp )
 ADD_FLEX_BISON_DEPENDENCY(cas_scanner cas_parser)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        add_definitions(-std=c++11)
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-#        set(CMAKE_EXE_LINKER_FLAGS "-s")  ## Strip binary
-        add_definitions(-std=c++11)
-endif()
-
+set_property(TARGET mathmlview PROPERTY CXX_STANDARD 11)
+set_property(TARGET mathmlview PROPERTY CXX_STANDARD_REQUIRED ON)
 
 #copy license file to res directory
 file(COPY ${CMAKE_SOURCE_DIR}/egCAS/LICENSE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/res)
@@ -58,7 +53,7 @@ include_directories(casKernel)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(structural)
 include_directories(view)
-include_directories(${mmlegcas_BINARY_DIR})
+include_directories(${CMAKE_BINARY_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #this is for showing up abstract interfaces and other sources in the IDE
@@ -173,19 +168,19 @@ add_dependencies(egCAS mmlegcas)
 target_link_libraries(egCAS mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
 install (TARGETS egCAS RUNTIME DESTINATION bin)
 
-add_custom_target(egcas_generate_node_list COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} 
+add_custom_target(egcas_generate_node_list COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}
                   ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h
-                  DEPENDS structural/specialNodes/egcnode_gen.h COMMENT "generate node list" )
+                  COMMENT "generate node list" )
 add_dependencies(egCAS egcas_generate_node_list)
 
 add_custom_target(egcas_generate_node_creator COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}
                   ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp
-                  DEPENDS structural/egcnodecreator.cpp COMMENT "generate node creator" )
+                  COMMENT "generate node creator" )
 add_dependencies(egCAS egcas_generate_node_creator)
 
 add_custom_target(egcas_generate_node_headers COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}
                   ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h
-                  DEPENDS structural/egcnodes.h COMMENT "generate node header file" )
+                  COMMENT "generate node header file" )
 add_dependencies(egCAS egcas_generate_node_headers)
 
 set(CPACK_GENERATOR "DEB")

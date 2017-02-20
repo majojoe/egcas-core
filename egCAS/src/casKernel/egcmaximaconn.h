@@ -77,6 +77,11 @@ protected slots:
          */
         virtual void errorOutput(void) override;
 protected:
+        /**
+         * @brief clearKernelOutQueue clears the output queue of the kernel
+         */
+        void clearKernelOutQueue(void);
+
         static QString s_startupConfig;         ///< startup configuration for CAS kernel
         QRegularExpression m_errUnwantedRegex;  ///< regex for filtering kernel unwanted information from error message
         QMap<QString, QString> m_wordsToReplace;///< words that schould be replaced
