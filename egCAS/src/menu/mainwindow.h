@@ -57,6 +57,11 @@ private:
          * @brief setupConnections setup all connections to slots that are neccessary
          */
         void setupConnections(void);
+        /**
+         * @brief setupToolbar setup the toolbar
+         */
+        void setupToolbar(void);
+
         QScopedPointer<Ui::MainWindow> m_ui;
         QScopedPointer<EgcDocument> m_document;
 };

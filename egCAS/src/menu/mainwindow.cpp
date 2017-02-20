@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
     setupConnections();
+    setupToolbar();
     m_ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     m_ui->graphicsView->setScene(m_document->getScene());
 
@@ -104,9 +105,12 @@ MainWindow::MainWindow(QWidget *parent) :
                                                                                      QPointF(750.0, 180.0)));
     pixmap->setFilePath(":res/plane.png");
 
-    QRectF rect(0,0,2100, 2900);
+    QRectF rect(0,0,2100, 2900);    
     m_document->getScene()->setSceneRect(rect);
-    calculate();
+    //show the window maximized
+    showMaximized();
+
+    calculate();    
 }
 
 MainWindow::~MainWindow()
@@ -127,6 +131,8 @@ void MainWindow::calculate(void)
 void MainWindow::autoCalculation(bool on)
 {
         m_document->setAutoCalculation(on);
+        if (on)
+                calculate();
 }
 
 void MainWindow::setupConnections(void)
@@ -134,4 +140,9 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_show_license, SIGNAL(triggered()), this, SLOT(showLicense()));
         connect(m_ui->mnu_autoCalc, SIGNAL(triggered(bool)), this, SLOT(autoCalculation(bool)));
         connect(m_ui->mnu_CalculateDocument, SIGNAL(triggered()), this, SLOT(calculate()));
+}
+
+void MainWindow::setupToolbar()
+{
+        m_ui->mathToolBar->addAction(m_ui->mnu_autoCalc);
 }
