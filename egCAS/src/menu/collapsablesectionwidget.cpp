@@ -40,6 +40,7 @@ CollapsableSectionWidget::CollapsableSectionWidget(CollapsableSectionLayout layo
         btn_collapse->setCheckable(true);
         btn_collapse->setChecked(false);
         btn_collapse->setStyleSheet("Text-align:left;padding:3px");
+        btn_collapse->setFocusPolicy(Qt::FocusPolicy::NoFocus);
         vLayout->addWidget(btn_collapse);
 
         sectionWidget = new QWidget(this);
