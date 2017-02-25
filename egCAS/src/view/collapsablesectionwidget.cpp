@@ -29,9 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QVBoxLayout>
 #include <QPushButton>
-#include "collapsablebuttonmatrix.h"
+#include "collapsablesectionwidget.h"
 
-CollapsableButtonMatrix::CollapsableButtonMatrix(QWidget* parent) : QWidget(parent)
+CollapsableSectionWidget::CollapsableSectionWidget(CollapsableSectionLayout layout, QWidget* parent) : QWidget(parent)
 {
         vLayout = new QVBoxLayout(this);
         vLayout->setSpacing(0);
@@ -42,32 +42,59 @@ CollapsableButtonMatrix::CollapsableButtonMatrix(QWidget* parent) : QWidget(pare
         btn_collapse->setStyleSheet("Text-align:left;padding:3px");
         vLayout->addWidget(btn_collapse);
 
-        matrixWidget = new QWidget(this);
-        gridLayout = new QGridLayout(matrixWidget);
-        gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(0, 0, 0, 0);
+        sectionWidget = new QWidget(this);
+        if (layout == CollapsableSectionLayout::grid) {
+                gridLayout = new QGridLayout(sectionWidget);
+                gridLayout->setSpacing(6);
+                gridLayout->setContentsMargins(0, 0, 0, 0);
+                boxLayout = nullptr;
+        } else if (layout == CollapsableSectionLayout::vertical) {
+                boxLayout = new QVBoxLayout(sectionWidget);
+                boxLayout->setSpacing(6);
+                boxLayout->setContentsMargins(0, 0, 0, 0);
+                gridLayout = nullptr;
+        } else {
+                boxLayout = new QHBoxLayout(sectionWidget);
+                boxLayout->setSpacing(6);
+                boxLayout->setContentsMargins(0, 0, 0, 0);
+                gridLayout = nullptr;
+        }
 
-        vLayout->addWidget(matrixWidget);
+        vLayout->addWidget(sectionWidget);
 
-        matrixWidget->hide();
+        sectionWidget->hide();
 
         connect(this->btn_collapse, SIGNAL(clicked(bool)), this, SLOT(setVisibility(bool)));
 }
 
-void CollapsableButtonMatrix::setVisibility(bool visible)
+CollapsableSectionWidget::~CollapsableSectionWidget()
 {
-        if (visible)
-                matrixWidget->show();
-        else
-                matrixWidget->hide();
+
 }
 
-void CollapsableButtonMatrix::setText(const QString & text)
+void CollapsableSectionWidget::setVisibility(bool visible)
+{
+        if (visible)
+                sectionWidget->show();
+        else
+                sectionWidget->hide();
+}
+
+void CollapsableSectionWidget::setText(const QString & text)
 {
         btn_collapse->setText(text);
 }
 
-void CollapsableButtonMatrix::addWidget(QWidget *widget, int fromRow, int fromColumn, int rowSpan, int columnSpan)
+void CollapsableSectionWidget::addWidget(QWidget *widget, int fromRow, int fromColumn, int rowSpan, int columnSpan)
 {
+        if (!gridLayout)
+                return;
         gridLayout->addWidget(widget, fromRow, fromColumn, rowSpan, columnSpan);
+}
+
+void CollapsableSectionWidget::addWidget(QWidget *widget, int stretch)
+{
+        if (!boxLayout)
+                return;
+        gridLayout->addWidget(widget);
 }

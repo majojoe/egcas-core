@@ -147,6 +147,7 @@ set(egCAS_SOURCES
         view/egcworksheet.cpp
         view/grid.cpp
         menu/egcgraphicsview.cpp
+        view/collapsablesectionwidget.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS
