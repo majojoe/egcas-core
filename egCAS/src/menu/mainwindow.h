@@ -62,6 +62,11 @@ private:
          */
         void setupToolbar(void);
 
+        /**
+         * @brief setupElementBar setup the left bar with the math buttons
+         */
+        void setupElementBar(void);
+
         QScopedPointer<Ui::MainWindow> m_ui;
         QScopedPointer<EgcDocument> m_document;
 };

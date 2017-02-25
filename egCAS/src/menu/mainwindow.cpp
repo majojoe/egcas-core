@@ -27,6 +27,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QMessageBox>
+#include <QSpacerItem>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "view/egcformulaitem.h"
@@ -38,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egctextentity.h"
 #include "entities/egcpixmapentity.h"
 #include "menu/egclicenseinfo.h"
+#include "menu/collapsablesectionwidget.h"
 
 #warning remove this after formula input via user interface is available
 #include "formulagenerator.h"
@@ -49,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->setupUi(this);
     setupConnections();
     setupToolbar();
+    setupElementBar();
     m_ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     m_ui->graphicsView->setScene(m_document->getScene());
 
@@ -145,4 +148,24 @@ void MainWindow::setupConnections(void)
 void MainWindow::setupToolbar()
 {
         m_ui->mathToolBar->addAction(m_ui->mnu_autoCalc);
+}
+
+void MainWindow::setupElementBar(void)
+{
+        CollapsableSectionWidget *cSection1 = new CollapsableSectionWidget(CollapsableSectionWidget::CollapsableSectionLayout::grid, this);
+        cSection1->setText(tr("Algebra"));
+        m_ui->elmentBarLayout->addWidget(cSection1);
+
+        //Analysis
+        //Matrix
+        //Graphics
+        //Greek
+        //Symbolic
+        //Logic
+        //Common
+
+
+        // add a spacer at the end of the bar
+        QSpacerItem *spacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        m_ui->elmentBarLayout->addItem(spacer);
 }
