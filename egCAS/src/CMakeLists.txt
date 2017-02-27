@@ -71,6 +71,7 @@ add_custom_target(egCAS_other_srcs ALL SOURCES
         view/egcabstractpixmapitem.h
         casKernel/parser/scanner.l
         casKernel/parser/parser.y
+        menu/mathelement.h
 )
 
 set(egCAS_concrete_node_SOURCES
@@ -149,6 +150,7 @@ set(egCAS_SOURCES
         menu/egcgraphicsview.cpp
         menu/collapsablesectionwidget.cpp
         menu/elementbar.cpp
+        menu/algebrasection.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS

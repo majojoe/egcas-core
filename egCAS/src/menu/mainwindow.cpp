@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egctextentity.h"
 #include "entities/egcpixmapentity.h"
 #include "menu/egclicenseinfo.h"
-#include "menu/collapsablesectionwidget.h"
+#include "menu/algebrasection.h"
 
 #warning remove this after formula input via user interface is available
 #include "formulagenerator.h"
@@ -152,9 +152,14 @@ void MainWindow::setupToolbar()
 
 void MainWindow::setupElementBar(void)
 {
-        CollapsableSectionWidget *cSection1 = new CollapsableSectionWidget(CollapsableSectionWidget::CollapsableSectionLayout::grid, this);
+        AlgebraSection *cSection1 = new AlgebraSection(this);
         cSection1->setText(tr("Algebra"));
+        cSection1->setChecked();
         m_ui->elmentBarLayout->addWidget(cSection1);
+
+        AlgebraSection *cSection2 = new AlgebraSection(this);
+        cSection2->setText(tr("Algebra"));
+        m_ui->elmentBarLayout->addWidget(cSection2);
 
         //Analysis
         //Matrix

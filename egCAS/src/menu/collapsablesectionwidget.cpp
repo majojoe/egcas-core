@@ -39,25 +39,28 @@ CollapsableSectionWidget::CollapsableSectionWidget(CollapsableSectionLayout layo
         btn_collapse = new QPushButton(this);
         btn_collapse->setCheckable(true);
         btn_collapse->setChecked(false);
-        btn_collapse->setStyleSheet("Text-align:left;padding:3px");
+        btn_collapse->setStyleSheet("QPushButton {Text-align:left;padding:3px;background-color: rgb(64, 66, 68);"
+                                    "color: rgb(255, 255, 255);border-radius: 1px;}"
+                                    "QPushButton:checked{background-color: rgb(100, 100, 100);"
+                                    "color: rgb(255, 255, 255);}");
         btn_collapse->setFocusPolicy(Qt::FocusPolicy::NoFocus);
         vLayout->addWidget(btn_collapse);
 
         sectionWidget = new QWidget(this);
         if (layout == CollapsableSectionLayout::grid) {
                 gridLayout = new QGridLayout(sectionWidget);
-                gridLayout->setSpacing(6);
-                gridLayout->setContentsMargins(0, 0, 0, 0);
+                gridLayout->setSpacing(3);
+                gridLayout->setContentsMargins(0, 3, 0, 3);
                 boxLayout = nullptr;
         } else if (layout == CollapsableSectionLayout::vertical) {
                 boxLayout = new QVBoxLayout(sectionWidget);
-                boxLayout->setSpacing(6);
-                boxLayout->setContentsMargins(0, 0, 0, 0);
+                boxLayout->setSpacing(3);
+                boxLayout->setContentsMargins(0, 3, 0, 3);
                 gridLayout = nullptr;
         } else {
                 boxLayout = new QHBoxLayout(sectionWidget);
-                boxLayout->setSpacing(6);
-                boxLayout->setContentsMargins(0, 0, 0, 0);
+                boxLayout->setSpacing(3);
+                boxLayout->setContentsMargins(0, 3, 0, 3);
                 gridLayout = nullptr;
         }
 
@@ -98,4 +101,9 @@ void CollapsableSectionWidget::addWidget(QWidget *widget, int stretch)
         if (!boxLayout)
                 return;
         gridLayout->addWidget(widget);
+}
+
+void CollapsableSectionWidget::setChecked(bool checked)
+{
+        btn_collapse->setChecked(checked);
 }

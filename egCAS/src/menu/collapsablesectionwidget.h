@@ -72,6 +72,11 @@ public:
          * @param stretch if the widget shall be stretched with the given stretch factor
          */
         virtual void addWidget(QWidget *widget, int stretch = 0);
+        /**
+         * @brief setChecked set the group button checked
+         * @param checked set the group button checked or unchecked
+         */
+        void setChecked(bool checked);
 
 private slots:
         /**
@@ -85,6 +90,8 @@ private:
         QPushButton *btn_collapse;                  ///< group button of this widget (shows/hides the widgets added)
         QGridLayout *gridLayout;                    ///< layout of the collapsable section
         QBoxLayout *boxLayout;                      ///< layout of the collapsable section
+
+        Q_DISABLE_COPY(CollapsableSectionWidget)
 };
 
 #endif // COLLAPSABLESECTIONWIDGET_H
