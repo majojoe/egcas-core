@@ -106,4 +106,5 @@ void CollapsableSectionWidget::addWidget(QWidget *widget, int stretch)
 void CollapsableSectionWidget::setChecked(bool checked)
 {
         btn_collapse->setChecked(checked);
+        sectionWidget->show();
 }
