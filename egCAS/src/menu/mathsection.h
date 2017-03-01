@@ -26,8 +26,8 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
-#ifndef ALGEBRASECTION_H
-#define ALGEBRASECTION_H
+#ifndef MATHSECTION_H
+#define MATHSECTION_H
 
 #include <QWidget>
 #include <QVector>
@@ -36,11 +36,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class QSignalMapper;
 
-class AlgebraSection : public QWidget
+class MathSection : public QWidget
 {
         Q_OBJECT
 public:
-        explicit AlgebraSection(QWidget *parent = 0);
+        explicit MathSection(QWidget *parent = 0);
         /**
          * @brief setText set text for group button
          * @param text the text in the group button to display
@@ -50,6 +50,16 @@ public:
          * @brief setChecked set the group button checked
          */
         void setChecked(void);
+        /**
+         * @brief setNrColumns set the number of columns to be used by the buttons must be called before setElements
+         * @param columns the number of columns to use
+         */
+        void setNrColumns(quint32 columns);
+        /**
+         * @brief addElement add a math element to be shown in the list must be called before showing any section
+         * @param element to add to the button list
+         */
+        void addElement(MathElement element);
 signals:
 
 private slots:
@@ -59,14 +69,9 @@ private slots:
          */
         void clicked(QString cmd);
 private:
-        /**
-         * @brief initCommandVector initializes the command vector
-         */
-        static QVector<MathElement> initCommandVector(void);
-        static QVector<MathElement> s_buttonVect;       ///< button vector
         CollapsableSectionWidget* m_section;            ///< pointer to the algebra section
         QSignalMapper *m_signalMapper;                  ///< pointer to signal mapper
         quint32 m_nrCoulumns;                           ///< the number of columns in the button section
 };
 
-#endif // ALGEBRASECTION_H
+#endif // MATHSECTION_H

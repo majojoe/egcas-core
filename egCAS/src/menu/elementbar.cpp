@@ -26,14 +26,74 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
-#include "elementbar.h"
 
-ElementBar::ElementBar(QObject *parent) : QObject(parent)
+#include "elementbar.h"
+#include "menu/mathsection.h"
+#include "menu/mathsection.h"
+
+
+ElementBar::ElementBar()
 {
 
 }
 
 ElementBar::~ElementBar()
 {
+
+}
+
+MathSection* ElementBar::getNewSection(QWidget* parent, QVBoxLayout* barLayout, QString title)
+{
+        MathSection *section = new (std::nothrow) MathSection(parent);
+        if (section) {
+                section->setText(title);
+                section->setNrColumns(7);
+                barLayout->addWidget(section);
+        }
+
+        return section;
+}
+
+void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout)
+{
+        setupAlgebraSection(parent, barLayout);
+        setupAnalysisSection(parent, barLayout);
+}
+
+void ElementBar::setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout)
+{
+        MathSection* section = getNewSection(parent, barLayout, tr("Algebra"));
+        if (section) {
+                section->setChecked();
+
+                section->addElement(MathElement("+", "+"));
+                section->addElement(MathElement("-", "-"));
+                section->addElement(MathElement("/", "/"));
+                section->addElement(MathElement("*", "*"));
+                section->addElement(MathElement("( )", "("));
+                section->addElement(MathElement("( )", "("));
+                section->addElement(MathElement("( )", "("));
+                section->addElement(MathElement("( )", "("));
+        }
+}
+
+void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout)
+{
+        MathSection* section = getNewSection(parent, barLayout, tr("Analysis"));
+        if (section) {
+                section->addElement(MathElement("*", "*"));
+                section->addElement(MathElement("( )", "("));
+                section->addElement(MathElement("( )", "("));
+                section->addElement(MathElement("( )", "("));
+                section->addElement(MathElement("( )", "("));
+        }
+
+        //Analysis
+        //Matrix
+        //Graphics
+        //Greek
+        //Symbolic
+        //Logic
+        //Common
 
 }

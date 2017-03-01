@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egctextentity.h"
 #include "entities/egcpixmapentity.h"
 #include "menu/egclicenseinfo.h"
-#include "menu/algebrasection.h"
+#include "menu/elementbar.h"
 
 #warning remove this after formula input via user interface is available
 #include "formulagenerator.h"
@@ -152,23 +152,7 @@ void MainWindow::setupToolbar()
 
 void MainWindow::setupElementBar(void)
 {
-        AlgebraSection *cSection1 = new AlgebraSection(this);
-        cSection1->setText(tr("Algebra"));
-        cSection1->setChecked();
-        m_ui->elmentBarLayout->addWidget(cSection1);
-
-        AlgebraSection *cSection2 = new AlgebraSection(this);
-        cSection2->setText(tr("Algebra"));
-        m_ui->elmentBarLayout->addWidget(cSection2);
-
-        //Analysis
-        //Matrix
-        //Graphics
-        //Greek
-        //Symbolic
-        //Logic
-        //Common
-
+        ElementBar::setupBar(this, m_ui->elmentBarLayout);
 
         // add a spacer at the end of the bar
         QSpacerItem *spacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);

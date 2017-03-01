@@ -30,17 +30,46 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define ELEMENTBAR_H
 
 #include <QObject>
+#include <QVBoxLayout>
+#include <QString>
 
+class MathSection;
+
+/**
+ * @brief The ElementBar class is to setup the element bar of the main window
+ */
 class ElementBar : public QObject
 {
         Q_OBJECT
 public:
-        explicit ElementBar(QObject *parent = 0);
-        virtual ~ElementBar();
-
+        /**
+         * @brief setupBar setup the bar layout of the main window
+         * @param barLayout the layout where to insert the sections in
+         */
+        static void setupBar(QWidget* parent, QVBoxLayout* barLayout);
 signals:
 
 public slots:
+private:
+        /**
+         * @brief getNewSection prepares a new section
+         * @param parent pointer to parent
+         * @param barLayout pointer to the layout where the section is inserted in
+         * @param title the title of the section
+         * @return nullptr in case anything went wrong, or a pointer to the new section if successful
+         */
+        static MathSection* getNewSection(QWidget* parent, QVBoxLayout* barLayout, QString title);
+        /**
+         * @brief setupAlgebraSection setup algebra section
+         */
+        static void setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout);
+        /**
+         * @brief setupAnalysisSection setup alnalysis section
+         */
+        static void setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout);
+
+        explicit ElementBar();
+        virtual ~ElementBar();
 };
 
 #endif // ELEMENTBAR_H

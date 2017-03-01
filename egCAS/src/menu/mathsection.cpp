@@ -30,11 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QSignalMapper>
-#include "algebrasection.h"
+#include "mathsection.h"
 
-QVector<MathElement> AlgebraSection::s_buttonVect = AlgebraSection::initCommandVector();
-
-AlgebraSection::AlgebraSection(QWidget *parent) : QWidget(parent), m_nrCoulumns{6}
+MathSection::MathSection(QWidget *parent) : QWidget(parent), m_nrCoulumns{7}
 {
         m_section = new CollapsableSectionWidget(CollapsableSectionWidget::CollapsableSectionLayout::grid, this);
         m_signalMapper = new QSignalMapper(this);
@@ -44,56 +42,44 @@ AlgebraSection::AlgebraSection(QWidget *parent) : QWidget(parent), m_nrCoulumns{
         vLayout->setContentsMargins(0, 0, 0, 0);
         vLayout->addWidget(m_section);
 
-        MathElement element;
-        QPushButton *btn;
-        quint32 index = 0;
-        foreach (element, s_buttonVect) {
-                btn = new QPushButton(m_section);
-                btn->setStyleSheet("padding:0px;background-color:rgb(64, 66, 68);");
-                btn->setFlat(true);
-                if (element.m_isIcon)
-                        btn->setIcon(QIcon(element.m_designator));
-                else
-                        btn->setText(element.m_designator);
-                btn->setFocusPolicy(Qt::FocusPolicy::NoFocus);
-//                btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-//                btn->setMaximumWidth(40);
-                connect(btn, SIGNAL(clicked()), m_signalMapper, SLOT(map()));
-                m_signalMapper->setMapping(btn, element.m_command);
-                m_section->addWidget(btn, index / m_nrCoulumns, index % m_nrCoulumns, 1, 1);
-                index++;
-        }
-
         connect(m_signalMapper, SIGNAL(mapped(QString)), this, SIGNAL(clicked(QString)));
 }
 
-QVector<MathElement> AlgebraSection::initCommandVector(void)
-{
-
-        QVector<MathElement> vect;
-
-        vect.append(MathElement("+", "+"));
-        vect.append(MathElement("-", "-"));
-        vect.append(MathElement("/", "/"));
-        vect.append(MathElement("*", "*"));
-        vect.append(MathElement("( )", "("));
-        vect.append(MathElement("( )", "("));
-        vect.append(MathElement("( )", "("));
-
-        return vect;
-}
-
-void AlgebraSection::clicked(QString cmd)
+void MathSection::clicked(QString cmd)
 {
 
 }
 
-void AlgebraSection::setText(const QString & text)
+void MathSection::setText(const QString & text)
 {
         m_section->setText(text);
 }
 
-void AlgebraSection::setChecked(void)
+void MathSection::setChecked(void)
 {
         m_section->setChecked(true);
+}
+
+void MathSection::setNrColumns(quint32 columns)
+{
+        m_nrCoulumns = columns;
+}
+
+void MathSection::addElement(MathElement element)
+{
+        static quint32 index = 0;
+        QPushButton *btn;
+
+        btn = new QPushButton(m_section);
+        btn->setStyleSheet("padding:0px;background-color:rgb(64, 66, 68);");
+        btn->setFlat(true);
+        if (element.m_isIcon)
+                btn->setIcon(QIcon(element.m_designator));
+        else
+                btn->setText(element.m_designator);
+        btn->setFocusPolicy(Qt::FocusPolicy::NoFocus);
+        connect(btn, SIGNAL(clicked()), m_signalMapper, SLOT(map()));
+        m_signalMapper->setMapping(btn, element.m_command);
+        m_section->addWidget(btn, index / m_nrCoulumns, index % m_nrCoulumns, 1, 1);
+        index++;
 }
