@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCACTION_H
 
 #include <QChar>
+#include <QMetaType>
 #include "egcoperations.h"
 
 /**
@@ -47,11 +48,16 @@ public:
                                                                                                          m_additionalData{addDat}
         {}
 
+        EgcAction(const EgcAction &rhs) {}
+        ~EgcAction() {}
+
         EgcOperations m_op;               ///< the operation to do
         QChar m_character;                ///< any character that comes along with this action (e.g. user pressed any key)
         quint32 m_elementId;              ///< any element id. Must be interpreted by receiver class
         quint32 m_subId;                  ///< additional id data. Must be interpreted by the receiver class
         quint64 m_additionalData;         ///< any further additional user data. The receiver class must interpret this.
 };
+
+Q_DECLARE_METATYPE(EgcAction);
 
 #endif // EGCACTION_H

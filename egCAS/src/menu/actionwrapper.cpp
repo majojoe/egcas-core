@@ -39,16 +39,6 @@ ActionWrapper::ActionWrapper(EgcAction action, QObject *parent) : m_action{actio
 
 }
 
-ActionWrapper::ActionWrapper(QObject *parent, EgcOperations op, QChar character,
-              quint32 elementId, quint32 subId, quint64 additionalData) : QObject(parent)
-{
-        m_action.m_op = op;
-        m_action.m_character = character;
-        m_action.m_elementId = elementId;
-        m_action.m_subId = subId;
-        m_action.m_additionalData = additionalData;
-}
-
 ActionWrapper::~ActionWrapper()
 {
 
@@ -59,3 +49,7 @@ EgcAction ActionWrapper::getAction(void)
         return m_action;
 }
 
+ActionWrapper::ActionWrapper(const ActionWrapper& rhs)
+{
+
+}

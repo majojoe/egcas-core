@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QObject>
 #include <QChar>
+#include <QMetaType>
 #include "structural/actions/egcaction.h"
 #include "structural/actions/egcoperations.h"
 
@@ -44,8 +45,7 @@ class ActionWrapper : public QObject
 public:
         ActionWrapper(QObject *parent = 0);
         ActionWrapper(EgcAction action, QObject *parent = 0);
-        ActionWrapper(QObject *parent = 0, EgcOperations op = EgcOperations::formulaActivated, QChar character = QChar(),
-                         quint32 elementId = 0, quint32 subId = 0, quint64 additionalData = 0);
+        ActionWrapper(const ActionWrapper& rhs);
         virtual ~ActionWrapper();
         /**
          * @brief getAction returns the wrapped action
@@ -56,5 +56,8 @@ public:
 private:
         EgcAction m_action;     ///< the wrapped action
 };
+
+
+Q_DECLARE_METATYPE(ActionWrapper);
 
 #endif // ACTIONWRAPPER_H
