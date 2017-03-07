@@ -312,9 +312,9 @@ void EgCasScene::itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem&
         setFocusItem(m_cross);
 }
 
-void EgCasScene::triggerFormulaCreation(QPointF point, QKeyEvent *event)
+void EgCasScene::triggerFormulaCreation(QPointF point, EgcAction action)
 {
-        emit createFormula(point, EgcActionMapper::map(event));
+        emit createFormula(point, action);
 }
 
 void EgCasScene::moveDown(QGraphicsItem* item, bool useItemPos)
@@ -521,4 +521,21 @@ EgcWorksheet& EgCasScene::worksheet(void)
 EgcAbstractDocument& EgCasScene::document(void) const
 {
         return m_document;
+}
+
+void EgCasScene::routeAction(EgcAction action)
+{
+        if (m_cross->isVisible()) {
+                if (    action.m_op == EgcOperations::mathOperator
+                     || action.m_op == EgcOperations::alnumKeyPressed) {
+                        triggerFormulaCreation(m_cross->scenePos(), action);
+                }
+        } else {
+                EgcFormulaItem* formula = dynamic_cast<EgcFormulaItem*>(focusItem());
+                if (formula) {
+                        EgcAbstractFormulaEntity *entity = formula->getEnity();
+                        if (entity)
+                                entity->handleAction(action);
+                }
+        }
 }

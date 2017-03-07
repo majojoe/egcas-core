@@ -133,7 +133,7 @@ void EgcCrossItem::keyPressEvent(QKeyEvent *keyEvent)
                 EgcOperations op = EgcActionMapper::map(keyEvent).m_op;
                 if (    !selectedItem()
                      && (op == EgcOperations::mathOperator || op == EgcOperations::alnumKeyPressed)) {
-                        escn->triggerFormulaCreation(scenePos(), keyEvent);
+                        escn->triggerFormulaCreation(scenePos(), EgcActionMapper::map(keyEvent));
                 }
                 break;
         }

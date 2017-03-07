@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "elementbar.h"
 #include "menu/mathsection.h"
 #include "menu/mathsection.h"
-
+#include "view/egcasscene.h"
 
 ElementBar::ElementBar()
 {
@@ -54,38 +54,43 @@ MathSection* ElementBar::getNewSection(QWidget* parent, QVBoxLayout* barLayout, 
         return section;
 }
 
-void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout)
+void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
 {
-        setupAlgebraSection(parent, barLayout);
-        setupAnalysisSection(parent, barLayout);
+        setupAlgebraSection(parent, barLayout, scene);
+        setupAnalysisSection(parent, barLayout, scene);
 }
 
-void ElementBar::setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout)
+void ElementBar::setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
 {
         MathSection* section = getNewSection(parent, barLayout, tr("Algebra"));
         if (section) {
                 section->setChecked();
 
-                section->addElement(MathElement("+", "+"));
-                section->addElement(MathElement("-", "-"));
-                section->addElement(MathElement("/", "/"));
-                section->addElement(MathElement("*", "*"));
-                section->addElement(MathElement("( )", "("));
-                section->addElement(MathElement("( )", "("));
-                section->addElement(MathElement("( )", "("));
-                section->addElement(MathElement("( )", "("));
+                section->addElement(MathElement("+", EgcAction(EgcOperations::alnumKeyPressed, QChar('+'))));
+                section->addElement(MathElement("-", EgcAction(EgcOperations::alnumKeyPressed, QChar('-'))));
+                section->addElement(MathElement("/", EgcAction(EgcOperations::alnumKeyPressed, QChar('/'))));
+                section->addElement(MathElement("*", EgcAction(EgcOperations::alnumKeyPressed, QChar('*'))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
         }
+
+        bool ass_ret;
+        ass_ret = connect(section, SIGNAL(actionTriggered(EgcAction)), scene, SLOT(routeAction(EgcAction)));
+        Q_ASSERT(ass_ret == true);
 }
 
-void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout)
+void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
 {
         MathSection* section = getNewSection(parent, barLayout, tr("Analysis"));
         if (section) {
-                section->addElement(MathElement("*", "*"));
-                section->addElement(MathElement("( )", "("));
-                section->addElement(MathElement("( )", "("));
-                section->addElement(MathElement("( )", "("));
-                section->addElement(MathElement("( )", "("));
+                section->addElement(MathElement("*", EgcAction(EgcOperations::alnumKeyPressed, QChar('*'))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
+
         }
 
         //Analysis
@@ -96,4 +101,7 @@ void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout)
         //Logic
         //Common
 
+        bool ass_ret;
+        connect(section, SIGNAL(actionTriggered(EgcAction)), scene, SLOT(routeAction(EgcAction)));
+        Q_ASSERT(ass_ret == true);
 }

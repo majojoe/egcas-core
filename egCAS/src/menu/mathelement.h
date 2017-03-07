@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define MATHELEMENT_H
 
 #include <QString>
+#include "structural/actions/egcaction.h"
 
 /**
  * @brief The MathElement is a class for describing button -> command relation for math operators
@@ -38,10 +39,10 @@ class MathElement
 {
 public:
         MathElement() : m_isIcon{false} {}
-        MathElement(QString designator, QString command, bool isIcon = false) : m_designator{designator},
-                                                                                m_command{command}, m_isIcon{isIcon} {}
+        MathElement(QString designator, EgcAction action, bool isIcon = false) : m_designator{designator},
+                                                                                m_action{action}, m_isIcon{isIcon} {}
         QString m_designator;           ///< can be a button text or icon ressource path
-        QString m_command;              ///< action command
+        EgcAction m_action;             ///< action command
         bool m_isIcon;                  ///< when m_designator is a icon ressource this is true
 };
 

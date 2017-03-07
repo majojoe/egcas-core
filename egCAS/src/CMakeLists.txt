@@ -151,6 +151,7 @@ set(egCAS_SOURCES
         menu/collapsablesectionwidget.cpp
         menu/elementbar.cpp
         menu/mathsection.cpp
+        menu/actionwrapper.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS

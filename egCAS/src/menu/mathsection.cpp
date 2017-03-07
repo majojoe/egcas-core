@@ -34,6 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 MathSection::MathSection(QWidget *parent) : QWidget(parent), m_nrCoulumns{7}
 {
+        bool ass_ret;
+
         m_section = new CollapsableSectionWidget(CollapsableSectionWidget::CollapsableSectionLayout::grid, this);
         m_signalMapper = new QSignalMapper(this);
 
@@ -42,12 +44,13 @@ MathSection::MathSection(QWidget *parent) : QWidget(parent), m_nrCoulumns{7}
         vLayout->setContentsMargins(0, 0, 0, 0);
         vLayout->addWidget(m_section);
 
-        connect(m_signalMapper, SIGNAL(mapped(QString)), this, SIGNAL(clicked(QString)));
+        ass_ret = connect(m_signalMapper, SIGNAL(mapped(ActionWrapper*)), this, SIGNAL(clicked(ActionWrapper*)));
+        Q_ASSERT(ass_ret == true);
 }
 
-void MathSection::clicked(QString cmd)
+void MathSection::clicked(ActionWrapper* action)
 {
-
+        emit actionTriggered(action->getAction());
 }
 
 void MathSection::setText(const QString & text)
@@ -69,6 +72,7 @@ void MathSection::addElement(MathElement element)
 {
         static quint32 index = 0;
         QPushButton *btn;
+        bool retval;
 
         btn = new QPushButton(m_section);
         btn->setStyleSheet("padding:0px;background-color:rgb(64, 66, 68);");
@@ -78,8 +82,10 @@ void MathSection::addElement(MathElement element)
         else
                 btn->setText(element.m_designator);
         btn->setFocusPolicy(Qt::FocusPolicy::NoFocus);
-        connect(btn, SIGNAL(clicked()), m_signalMapper, SLOT(map()));
-        m_signalMapper->setMapping(btn, element.m_command);
+        retval = connect(btn, SIGNAL(clicked()), m_signalMapper, SLOT(map()));
+        Q_ASSERT(retval == true);
+        ActionWrapper* wrapper = new (std::nothrow) ActionWrapper(element.m_action, this);
+        m_signalMapper->setMapping(btn, wrapper);
         m_section->addWidget(btn, index / m_nrCoulumns, index % m_nrCoulumns, 1, 1);
         index++;
 }

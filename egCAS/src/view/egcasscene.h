@@ -133,9 +133,9 @@ public:
         /**
          * @brief triggerFormulaCreation
          * @param point the position where to create a formula
-         * @param event the event emitted when a key has been pressed
+         * @param action the action emitted when a key has been pressed
          */
-        void triggerFormulaCreation(QPointF point, QKeyEvent* event);
+        void triggerFormulaCreation(QPointF point, EgcAction action);
         /**
          * @brief deleteItem removes the given item from the scene and deletes it
          * @param item item to delete
@@ -203,6 +203,14 @@ public:
          * @return the document that is associated with this scene
          */
         EgcAbstractDocument& document(void) const;
+
+public slots:
+        /**
+         * @brief routeAction the given action (from any source) is routed to an active formula or the crosshair to
+         * trigger a formula creation
+         * @param action the action to route
+         */
+        void routeAction(EgcAction action);
 
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);

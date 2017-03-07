@@ -30,9 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define MATHSECTION_H
 
 #include <QWidget>
-#include <QVector>
 #include "collapsablesectionwidget.h"
 #include "mathelement.h"
+#include "structural/actions/egcaction.h"
+#include "actionwrapper.h"
 
 class QSignalMapper;
 
@@ -61,13 +62,18 @@ public:
          */
         void addElement(MathElement element);
 signals:
-
+        /**
+         * @brief actionTriggered an action has been triggered (e.g. by a click on a button on one of the elements of
+         * this section)
+         * @param action the action that has been triggered
+         */
+        void actionTriggered(EgcAction action);
 private slots:
         /**
          * @brief clicked clicked signal remapped from signal mapper
          * @param cmd the command to execute
          */
-        void clicked(QString cmd);
+        void clicked(ActionWrapper* action);
 private:
         CollapsableSectionWidget* m_section;            ///< pointer to the algebra section
         QSignalMapper *m_signalMapper;                  ///< pointer to signal mapper

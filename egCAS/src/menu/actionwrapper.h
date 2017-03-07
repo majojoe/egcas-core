@@ -27,31 +27,34 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCACTION_H
-#define EGCACTION_H
+#ifndef ACTIONWRAPPER_H
+#define ACTIONWRAPPER_H
 
+#include <QObject>
 #include <QChar>
-#include "egcoperations.h"
+#include "structural/actions/egcaction.h"
+#include "structural/actions/egcoperations.h"
 
 /**
- * @brief The EgcAction struct describes an operation to do
+ * @brief The EgcActionWrapper class is a wrapper for EgcAction to be able to transport it via QSignalMapper
  */
-class EgcAction
+class ActionWrapper : public QObject
 {
+        Q_OBJECT
 public:
-        EgcAction() : m_op{EgcOperations::formulaActivated}, m_elementId{0}, m_subId{0}, m_additionalData{0} {}
-        EgcAction(EgcOperations op, QChar ch = QChar(), quint32 elId = 0, quint32 subId = 0, quint64 addDat = 0) : m_op{op},
-                                                                                                         m_character{ch},
-                                                                                                         m_elementId{elId},
-                                                                                                         m_subId{subId},
-                                                                                                         m_additionalData{addDat}
-        {}
+        ActionWrapper(QObject *parent = 0);
+        ActionWrapper(EgcAction action, QObject *parent = 0);
+        ActionWrapper(QObject *parent = 0, EgcOperations op = EgcOperations::formulaActivated, QChar character = QChar(),
+                         quint32 elementId = 0, quint32 subId = 0, quint64 additionalData = 0);
+        virtual ~ActionWrapper();
+        /**
+         * @brief getAction returns the wrapped action
+         * @return the action wrapped
+         */
+        EgcAction getAction(void);
 
-        EgcOperations m_op;               ///< the operation to do
-        QChar m_character;                ///< any character that comes along with this action (e.g. user pressed any key)
-        quint32 m_elementId;              ///< any element id. Must be interpreted by receiver class
-        quint32 m_subId;                  ///< additional id data. Must be interpreted by the receiver class
-        quint64 m_additionalData;         ///< any further additional user data. The receiver class must interpret this.
+private:
+        EgcAction m_action;     ///< the wrapped action
 };
 
-#endif // EGCACTION_H
+#endif // ACTIONWRAPPER_H

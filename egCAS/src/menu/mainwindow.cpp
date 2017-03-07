@@ -152,7 +152,7 @@ void MainWindow::setupToolbar()
 
 void MainWindow::setupElementBar(void)
 {
-        ElementBar::setupBar(this, m_ui->elmentBarLayout);
+        ElementBar::setupBar(this, m_ui->elmentBarLayout, dynamic_cast<EgCasScene*>(m_ui->graphicsView->scene()));
 
         // add a spacer at the end of the bar
         QSpacerItem *spacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);

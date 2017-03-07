@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 
 class MathSection;
+class EgCasScene;
 
 /**
  * @brief The ElementBar class is to setup the element bar of the main window
@@ -45,8 +46,9 @@ public:
         /**
          * @brief setupBar setup the bar layout of the main window
          * @param barLayout the layout where to insert the sections in
+         * @param scene pointer to the scene where to send the actions
          */
-        static void setupBar(QWidget* parent, QVBoxLayout* barLayout);
+        static void setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
 signals:
 
 public slots:
@@ -62,11 +64,11 @@ private:
         /**
          * @brief setupAlgebraSection setup algebra section
          */
-        static void setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout);
+        static void setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
         /**
          * @brief setupAnalysisSection setup alnalysis section
          */
-        static void setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout);
+        static void setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
 
         explicit ElementBar();
         virtual ~ElementBar();

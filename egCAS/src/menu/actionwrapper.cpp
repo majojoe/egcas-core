@@ -27,31 +27,35 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCACTION_H
-#define EGCACTION_H
+#include "actionwrapper.h"
 
-#include <QChar>
-#include "egcoperations.h"
-
-/**
- * @brief The EgcAction struct describes an operation to do
- */
-class EgcAction
+ActionWrapper::ActionWrapper(QObject *parent) : QObject(parent)
 {
-public:
-        EgcAction() : m_op{EgcOperations::formulaActivated}, m_elementId{0}, m_subId{0}, m_additionalData{0} {}
-        EgcAction(EgcOperations op, QChar ch = QChar(), quint32 elId = 0, quint32 subId = 0, quint64 addDat = 0) : m_op{op},
-                                                                                                         m_character{ch},
-                                                                                                         m_elementId{elId},
-                                                                                                         m_subId{subId},
-                                                                                                         m_additionalData{addDat}
-        {}
 
-        EgcOperations m_op;               ///< the operation to do
-        QChar m_character;                ///< any character that comes along with this action (e.g. user pressed any key)
-        quint32 m_elementId;              ///< any element id. Must be interpreted by receiver class
-        quint32 m_subId;                  ///< additional id data. Must be interpreted by the receiver class
-        quint64 m_additionalData;         ///< any further additional user data. The receiver class must interpret this.
-};
+}
 
-#endif // EGCACTION_H
+ActionWrapper::ActionWrapper(EgcAction action, QObject *parent) : m_action{action}, QObject(parent)
+{
+
+}
+
+ActionWrapper::ActionWrapper(QObject *parent, EgcOperations op, QChar character,
+              quint32 elementId, quint32 subId, quint64 additionalData) : QObject(parent)
+{
+        m_action.m_op = op;
+        m_action.m_character = character;
+        m_action.m_elementId = elementId;
+        m_action.m_subId = subId;
+        m_action.m_additionalData = additionalData;
+}
+
+ActionWrapper::~ActionWrapper()
+{
+
+}
+
+EgcAction ActionWrapper::getAction(void)
+{
+        return m_action;
+}
+
