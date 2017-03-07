@@ -44,7 +44,7 @@ MathSection::MathSection(QWidget *parent) : QWidget(parent), m_nrCoulumns{7}
         vLayout->setContentsMargins(0, 0, 0, 0);
         vLayout->addWidget(m_section);
 
-        ass_ret = connect(m_signalMapper, SIGNAL(mapped(ActionWrapper*)), this, SIGNAL(clicked(ActionWrapper*)));
+        ass_ret = connect(m_signalMapper, SIGNAL(mapped(ActionWrapper*)), this, SLOT(clicked(ActionWrapper*)));
         Q_ASSERT(ass_ret == true);
 }
 
