@@ -51,5 +51,5 @@ EgcAction ActionWrapper::getAction(void)
 
 ActionWrapper::ActionWrapper(const ActionWrapper& rhs)
 {
-
+        m_action = rhs.m_action;
 }

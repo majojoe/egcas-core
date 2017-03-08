@@ -66,14 +66,14 @@ void ElementBar::setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout, Eg
         if (section) {
                 section->setChecked();
 
-                section->addElement(MathElement("+", EgcAction(EgcOperations::alnumKeyPressed, QChar('+'))));
-                section->addElement(MathElement("-", EgcAction(EgcOperations::alnumKeyPressed, QChar('-'))));
-                section->addElement(MathElement("/", EgcAction(EgcOperations::alnumKeyPressed, QChar('/'))));
-                section->addElement(MathElement("*", EgcAction(EgcOperations::alnumKeyPressed, QChar('*'))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
+                section->addElement(MathElement("+", EgcAction(EgcOperations::mathOperator, QChar('+'))));
+                section->addElement(MathElement("-", EgcAction(EgcOperations::mathOperator, QChar('-'))));
+                section->addElement(MathElement("/", EgcAction(EgcOperations::mathOperator, QChar('/'))));
+                section->addElement(MathElement("*", EgcAction(EgcOperations::mathOperator, QChar('*'))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
         }
 
         bool ass_ret;
@@ -85,11 +85,11 @@ void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, E
 {
         MathSection* section = getNewSection(parent, barLayout, tr("Analysis"));
         if (section) {
-                section->addElement(MathElement("*", EgcAction(EgcOperations::alnumKeyPressed, QChar('*'))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::alnumKeyPressed, QChar('('))));
+                section->addElement(MathElement("*", EgcAction(EgcOperations::mathOperator, QChar('*'))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
+                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
 
         }
 

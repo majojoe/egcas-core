@@ -44,15 +44,16 @@ MathSection::MathSection(QWidget *parent) : QWidget(parent), m_nrCoulumns{7}
         vLayout->setContentsMargins(0, 0, 0, 0);
         vLayout->addWidget(m_section);
 
-#warning
         qRegisterMetaType<ActionWrapper>("ActionWrapper");
-        ass_ret = connect(m_signalMapper, SIGNAL(mapped(ActionWrapper*)), this, SLOT(clicked(ActionWrapper*)));
+        ass_ret = connect(m_signalMapper, SIGNAL(mapped(QObject*)), this, SLOT(clicked(QObject*)));
         Q_ASSERT(ass_ret == true);
 }
 
-void MathSection::clicked(ActionWrapper* action)
+void MathSection::clicked(QObject* action)
 {
-        emit actionTriggered(action->getAction());
+        ActionWrapper* act = dynamic_cast<ActionWrapper*>(action);
+        if (act)
+                emit actionTriggered(act->getAction());
 }
 
 void MathSection::setText(const QString & text)

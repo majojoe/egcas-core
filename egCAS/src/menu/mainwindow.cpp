@@ -49,11 +49,13 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui{new Ui::MainWindow}, m_document{new EgcDocument}
 {
     m_ui->setupUi(this);
+    m_ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+    m_ui->graphicsView->setScene(m_document->getScene());
+
+    //setup toolbar and other stuff
     setupConnections();
     setupToolbar();
     setupElementBar();
-    m_ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-    m_ui->graphicsView->setScene(m_document->getScene());
 
     //add some formulas
     EgcFormulaItem::setBaseFontSize(18);

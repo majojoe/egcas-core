@@ -48,7 +48,8 @@ public:
                                                                                                          m_additionalData{addDat}
         {}
 
-        EgcAction(const EgcAction &rhs) {}
+        EgcAction(const EgcAction &rhs) {m_op = rhs.m_op; m_character = rhs.m_character; m_elementId = rhs.m_elementId;
+                                         m_subId = rhs.m_subId; m_additionalData = rhs.m_additionalData;}
         ~EgcAction() {}
 
         EgcOperations m_op;               ///< the operation to do

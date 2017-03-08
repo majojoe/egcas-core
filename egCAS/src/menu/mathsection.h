@@ -73,7 +73,7 @@ private slots:
          * @brief clicked clicked signal remapped from signal mapper
          * @param cmd the command to execute
          */
-        void clicked(ActionWrapper* action);
+        void clicked(QObject* action);
 private:
         CollapsableSectionWidget* m_section;            ///< pointer to the algebra section
         QSignalMapper *m_signalMapper;                  ///< pointer to signal mapper
