@@ -61,6 +61,10 @@ public:
          * @param element to add to the button list
          */
         void addElement(MathElement element);
+        /**
+         * @brief newRow jumps to a new row
+         */
+        void newRow(void);
 signals:
         /**
          * @brief actionTriggered an action has been triggered (e.g. by a click on a button on one of the elements of
@@ -78,6 +82,7 @@ private:
         CollapsableSectionWidget* m_section;            ///< pointer to the algebra section
         QSignalMapper *m_signalMapper;                  ///< pointer to signal mapper
         quint32 m_nrCoulumns;                           ///< the number of columns in the button section
+        quint32 m_index;                                ///< index to count rows and columns
 };
 
 #endif // MATHSECTION_H

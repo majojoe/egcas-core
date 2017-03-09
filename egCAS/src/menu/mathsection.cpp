@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QSignalMapper>
 #include "mathsection.h"
 
-MathSection::MathSection(QWidget *parent) : QWidget(parent), m_nrCoulumns{7}
+MathSection::MathSection(QWidget *parent) : QWidget(parent), m_nrCoulumns{7}, m_index{0}
 {
         bool ass_ret;
 
@@ -73,7 +73,6 @@ void MathSection::setNrColumns(quint32 columns)
 
 void MathSection::addElement(MathElement element)
 {
-        static quint32 index = 0;
         QPushButton *btn;
         bool retval;
 
@@ -89,6 +88,11 @@ void MathSection::addElement(MathElement element)
         Q_ASSERT(retval == true);
         ActionWrapper* wrapper = new (std::nothrow) ActionWrapper(element.m_action, this);
         m_signalMapper->setMapping(btn, wrapper);
-        m_section->addWidget(btn, index / m_nrCoulumns, index % m_nrCoulumns, 1, 1);
-        index++;
+        m_section->addWidget(btn, m_index / m_nrCoulumns, m_index % m_nrCoulumns, 1, 1);
+        m_index++;
+}
+
+void MathSection::newRow(void)
+{
+        m_index += m_nrCoulumns - (m_index % m_nrCoulumns);
 }

@@ -57,7 +57,7 @@ MathSection* ElementBar::getNewSection(QWidget* parent, QVBoxLayout* barLayout, 
 void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
 {
         setupAlgebraSection(parent, barLayout, scene);
-        setupAnalysisSection(parent, barLayout, scene);
+        setupGreekSection(parent, barLayout, scene);
 }
 
 void ElementBar::setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
@@ -81,16 +81,62 @@ void ElementBar::setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout, Eg
         Q_ASSERT(ass_ret == true);
 }
 
-void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
+void ElementBar::setupGreekSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
 {
-        MathSection* section = getNewSection(parent, barLayout, tr("Analysis"));
+        MathSection* section = getNewSection(parent, barLayout, tr("Greek"));
         if (section) {
-                section->addElement(MathElement("*", EgcAction(EgcOperations::mathOperator, QChar('*'))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
+                section->addElement(MathElement("Α", EgcAction(EgcOperations::alnumKeyPressed, QChar(913))));
+                section->addElement(MathElement("Β", EgcAction(EgcOperations::alnumKeyPressed, QChar(914))));
+                section->addElement(MathElement("Γ", EgcAction(EgcOperations::alnumKeyPressed, QChar(915))));
+                section->addElement(MathElement("Δ", EgcAction(EgcOperations::alnumKeyPressed, QChar(916))));
+                section->addElement(MathElement("Ε", EgcAction(EgcOperations::alnumKeyPressed, QChar(917))));
+                section->addElement(MathElement("Ζ", EgcAction(EgcOperations::alnumKeyPressed, QChar(918))));
+                section->addElement(MathElement("Η", EgcAction(EgcOperations::alnumKeyPressed, QChar(919))));
+                section->addElement(MathElement("Θ", EgcAction(EgcOperations::alnumKeyPressed, QChar(920))));
+                section->addElement(MathElement("Ι", EgcAction(EgcOperations::alnumKeyPressed, QChar(921))));
+                section->addElement(MathElement("Κ", EgcAction(EgcOperations::alnumKeyPressed, QChar(922))));
+                section->addElement(MathElement("Λ", EgcAction(EgcOperations::alnumKeyPressed, QChar(923))));
+                section->addElement(MathElement("Μ", EgcAction(EgcOperations::alnumKeyPressed, QChar(924))));
+                section->addElement(MathElement("Ν", EgcAction(EgcOperations::alnumKeyPressed, QChar(925))));
+                section->addElement(MathElement("Ξ", EgcAction(EgcOperations::alnumKeyPressed, QChar(926))));
+                section->addElement(MathElement("Ο", EgcAction(EgcOperations::alnumKeyPressed, QChar(927))));
+                section->addElement(MathElement("Π", EgcAction(EgcOperations::alnumKeyPressed, QChar(928))));
+                section->addElement(MathElement("Ρ", EgcAction(EgcOperations::alnumKeyPressed, QChar(929))));
+                section->addElement(MathElement("Σ", EgcAction(EgcOperations::alnumKeyPressed, QChar(931))));
+                section->addElement(MathElement("Τ", EgcAction(EgcOperations::alnumKeyPressed, QChar(932))));
+                section->addElement(MathElement("Υ", EgcAction(EgcOperations::alnumKeyPressed, QChar(933))));
+                section->addElement(MathElement("Φ", EgcAction(EgcOperations::alnumKeyPressed, QChar(934))));
+                section->addElement(MathElement("Χ", EgcAction(EgcOperations::alnumKeyPressed, QChar(935))));
+                section->addElement(MathElement("Ψ", EgcAction(EgcOperations::alnumKeyPressed, QChar(936))));
+                section->addElement(MathElement("Ω", EgcAction(EgcOperations::alnumKeyPressed, QChar(937))));
 
+                section->newRow();
+
+                section->addElement(MathElement("α", EgcAction(EgcOperations::alnumKeyPressed, QChar(945))));
+                section->addElement(MathElement("β", EgcAction(EgcOperations::alnumKeyPressed, QChar(946))));
+                section->addElement(MathElement("γ", EgcAction(EgcOperations::alnumKeyPressed, QChar(947))));
+                section->addElement(MathElement("δ", EgcAction(EgcOperations::alnumKeyPressed, QChar(948))));
+                section->addElement(MathElement("ε", EgcAction(EgcOperations::alnumKeyPressed, QChar(949))));
+                section->addElement(MathElement("ζ", EgcAction(EgcOperations::alnumKeyPressed, QChar(950))));
+                section->addElement(MathElement("η", EgcAction(EgcOperations::alnumKeyPressed, QChar(951))));
+                section->addElement(MathElement("θ", EgcAction(EgcOperations::alnumKeyPressed, QChar(952))));
+                section->addElement(MathElement("ι", EgcAction(EgcOperations::alnumKeyPressed, QChar(953))));
+                section->addElement(MathElement("κ", EgcAction(EgcOperations::alnumKeyPressed, QChar(954))));
+                section->addElement(MathElement("λ", EgcAction(EgcOperations::alnumKeyPressed, QChar(955))));
+                section->addElement(MathElement("μ", EgcAction(EgcOperations::alnumKeyPressed, QChar(956))));
+                section->addElement(MathElement("ν", EgcAction(EgcOperations::alnumKeyPressed, QChar(957))));
+                section->addElement(MathElement("ξ", EgcAction(EgcOperations::alnumKeyPressed, QChar(958))));
+                section->addElement(MathElement("ο", EgcAction(EgcOperations::alnumKeyPressed, QChar(959))));
+                section->addElement(MathElement("π", EgcAction(EgcOperations::alnumKeyPressed, QChar(960))));
+                section->addElement(MathElement("ρ", EgcAction(EgcOperations::alnumKeyPressed, QChar(961))));
+                section->addElement(MathElement("ς", EgcAction(EgcOperations::alnumKeyPressed, QChar(962))));
+                section->addElement(MathElement("σ", EgcAction(EgcOperations::alnumKeyPressed, QChar(963))));
+                section->addElement(MathElement("τ", EgcAction(EgcOperations::alnumKeyPressed, QChar(964))));
+                section->addElement(MathElement("υ", EgcAction(EgcOperations::alnumKeyPressed, QChar(965))));
+                section->addElement(MathElement("φ", EgcAction(EgcOperations::alnumKeyPressed, QChar(966))));
+                section->addElement(MathElement("χ", EgcAction(EgcOperations::alnumKeyPressed, QChar(967))));
+                section->addElement(MathElement("ψ", EgcAction(EgcOperations::alnumKeyPressed, QChar(968))));
+                section->addElement(MathElement("ω", EgcAction(EgcOperations::alnumKeyPressed, QChar(969))));
         }
 
         //Analysis
