@@ -27,6 +27,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QString>
 #include "elementbar.h"
 #include "menu/mathsection.h"
 #include "menu/mathsection.h"
@@ -56,28 +57,36 @@ MathSection* ElementBar::getNewSection(QWidget* parent, QVBoxLayout* barLayout, 
 
 void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
 {
-        setupAlgebraSection(parent, barLayout, scene);
+        setupCalcSection(parent, barLayout, scene);
         setupGreekSection(parent, barLayout, scene);
 }
 
-void ElementBar::setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
+void ElementBar::setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
 {
-        MathSection* section = getNewSection(parent, barLayout, tr("Algebra"));
+        MathSection* section = getNewSection(parent, barLayout, tr("Calc"));
         if (section) {
                 section->setChecked();
 
-                section->addElement(MathElement("+", EgcAction(EgcOperations::mathOperator, QChar('+'))));
-                section->addElement(MathElement("-", EgcAction(EgcOperations::mathOperator, QChar('-'))));
-                section->addElement(MathElement("/", EgcAction(EgcOperations::mathOperator, QChar('/'))));
-                section->addElement(MathElement("*", EgcAction(EgcOperations::mathOperator, QChar('*'))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
-                section->addElement(MathElement("( )", EgcAction(EgcOperations::mathOperator, QChar('('))));
+                section->addElement(MathElement("+", EgcAction(EgcOperations::mathCharOperator, QChar('+'))));
+                section->addElement(MathElement("-", EgcAction(EgcOperations::mathCharOperator, QChar('-'))));
+                section->addElement(MathElement("/", EgcAction(EgcOperations::mathCharOperator, QChar('/'))));
+                section->addElement(MathElement("*", EgcAction(EgcOperations::mathCharOperator, QChar('*'))));
+                section->addElement(MathElement("^", EgcAction(EgcOperations::mathCharOperator, QChar('^'))));
+                section->addElement(MathElement("±", EgcAction(EgcOperations::mathCharOperator, QChar(177))));
+                section->addElement(MathElement("√", EgcAction(EgcOperations::mathCharOperator, QChar(8730))));
+                section->addElement(MathElement("ln", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("ln"))));
+                section->addElement(MathElement("log", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("log"))));
+                section->addElement(MathElement("sin", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("sin"))));
+                section->addElement(MathElement("cos", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("cos"))));
+                section->addElement(MathElement("tan", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("tan"))));
+                section->addElement(MathElement("(", EgcAction(EgcOperations::mathCharOperator, QChar('('))));
+                section->addElement(MathElement(")", EgcAction(EgcOperations::mathCharOperator, QChar(')'))));
+                section->addElement(MathElement("=", EgcAction(EgcOperations::mathCharOperator, QChar('='))));
+                section->addElement(MathElement(":=", EgcAction(EgcOperations::mathCharOperator, QChar(':'))));
         }
 
         bool ass_ret;
-        ass_ret = connect(section, SIGNAL(actionTriggered(EgcAction)), scene, SLOT(routeAction(EgcAction)));
+        ass_ret = connect(section, &MathSection::actionTriggered, scene, &EgCasScene::routeAction);
         Q_ASSERT(ass_ret == true);
 }
 
@@ -142,12 +151,11 @@ void ElementBar::setupGreekSection(QWidget* parent, QVBoxLayout* barLayout, EgCa
         //Analysis
         //Matrix
         //Graphics
-        //Greek
         //Symbolic
         //Logic
         //Common
 
         bool ass_ret;
-        connect(section, SIGNAL(actionTriggered(EgcAction)), scene, SLOT(routeAction(EgcAction)));
+        ass_ret = connect(section, &MathSection::actionTriggered, scene, &EgCasScene::routeAction);
         Q_ASSERT(ass_ret == true);
 }

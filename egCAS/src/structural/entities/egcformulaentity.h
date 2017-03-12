@@ -356,9 +356,9 @@ private:
         void insertCharacter(QChar character);
         /**
          * @brief insertOperation insert a operation into the tree
-         * @param operations the operation to insert
+         * @param operation the operation action to insert
          */
-        void insertOperation(QChar operation);
+        void insertOperation(EgcAction operation);
         /**
          * @brief removeCharacter remove a character at the current cursor position
          * @param before if true the character before the current cursor position is remove, if false the character behind
@@ -394,17 +394,23 @@ private:
          */
         bool isEmptyNode(void);
         /**
-         * @brief insert insert any operation at current position of the iterator
-         * @param operations the operation to insert
+         * @brief insertOp insert any operation at current position of the iterator
+         * @param operations the operation action to insert
          * @return true if the insert operation was successful, false otherwise
          */
-        bool insertOp(QChar operations);
+        bool insertOp(EgcAction operations);
         /**
-         * @brief insertUnaryOp insert a unary node in the tree above the given node (position)
+         * @brief createAndInsertOp insert a unary node in the tree above the given node (position)
          * @param type the node type to insert
          * @return true if everything worked well, false otherwise.
          */
         bool createAndInsertOp(EgcNodeType type);
+        /**
+         * @brief createAndInsertOperation insert a unary node in the tree above the given node (position)
+         * @param type the node type to insert
+         * @return pointer to node inserted if everything worked well, nullptr otherwise.
+         */
+        EgcNode* createAndInsertOperation(EgcNodeType type);
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user

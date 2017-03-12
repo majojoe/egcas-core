@@ -64,7 +64,7 @@ private:
         /**
          * @brief setupAlgebraSection setup algebra section
          */
-        static void setupAlgebraSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
+        static void setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
         /**
          * @brief setupGreekSection setup greek section
          */

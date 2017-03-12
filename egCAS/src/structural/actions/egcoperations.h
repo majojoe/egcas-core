@@ -37,7 +37,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 enum class EgcOperations
 {
         // view based operations (e.g. s.th. happened on the view)
-        mathOperator,
+        mathCharOperator,               ///< math operator that can be determined by a char only
+        mathFunction,                   ///< a math function that can have an additional name
         formulaActivated,               ///< formula was activated (e.g. got focus on screen)
         formulaDeactivated,             ///< formula was deactivated (e.g. lost focus on screen)
         cursorForward,                  ///< user wants to iterate forward in a formula
@@ -49,6 +50,16 @@ enum class EgcOperations
         endPressed,                     ///< user pressed End key
         alnumKeyPressed,                ///< user pressed any digit or letter key
         noAction,
+
+};
+
+/**
+ * @brief The EgcOperations enum These are modificators for the above operations
+ */
+enum class EgcOpModificators
+{
+        standard,
+        definiteIntegral,
 
 };
 

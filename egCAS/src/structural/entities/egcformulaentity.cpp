@@ -437,8 +437,9 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         case EgcOperations::delPressed:
                 removeCharacter(false);
                 break;
-        case EgcOperations::mathOperator:
-                insertOperation(action.m_character);
+        case EgcOperations::mathCharOperator:
+        case EgcOperations::mathFunction:
+                insertOperation(action);
                 break;
         case EgcOperations::homePressed:
                 if (m_scrIter) {
@@ -485,7 +486,7 @@ bool EgcFormulaEntity::isEmptyNode(void)
         return false;
 }
 
-void EgcFormulaEntity::insertOperation(QChar operation)
+void EgcFormulaEntity::insertOperation(EgcAction operation)
 {
         if (!m_scrIter)
                 return;
@@ -501,36 +502,60 @@ void EgcFormulaEntity::insertOperation(QChar operation)
         showCurrentCursor();
 }
 
-bool EgcFormulaEntity::insertOp(QChar operations)
+bool EgcFormulaEntity::insertOp(EgcAction operations)
 {
         bool retval = false;
 
-        if (    operations == '('
-             || operations == ')') {
-                if (    operations == '('
-                     && (    !m_scrIter->rightSide() ))
-                        return createAndInsertOp(EgcNodeType::ParenthesisNode);
-                if (    operations == ')'
-                     && (    m_scrIter->rightSide()) )
-                        return createAndInsertOp(EgcNodeType::ParenthesisNode);
+        if (operations.m_op == EgcOperations::mathCharOperator) {
+                if (    operations.m_character == '('
+                                || operations.m_character == ')') {
+                        if (    operations.m_character == '('
+                                        && (    !m_scrIter->rightSide() ))
+                                return createAndInsertOp(EgcNodeType::ParenthesisNode);
+                        if (    operations.m_character == ')'
+                                        && (    m_scrIter->rightSide()) )
+                                return createAndInsertOp(EgcNodeType::ParenthesisNode);
+                }
+                if (operations.m_character == '+')
+                        return createAndInsertOp(EgcNodeType::PlusNode);
+                if (operations.m_character == '-')
+                        return createAndInsertOp(EgcNodeType::MinusNode);
+                if (operations.m_character == '/')
+                        return createAndInsertOp(EgcNodeType::DivisionNode);
+                if (operations.m_character == '*')
+                        return createAndInsertOp(EgcNodeType::MultiplicationNode);
+                if (operations.m_character == ':')
+                        return createAndInsertOp(EgcNodeType::DefinitionNode);
+                if (operations.m_character == '=')
+                        return createAndInsertOp(EgcNodeType::EqualNode);
+                if (operations.m_character == QChar(177))
+                        return createAndInsertOp(EgcNodeType::UnaryMinusNode);
+                if (operations.m_character == QChar(8730))
+                        return createAndInsertOp(EgcNodeType::RootNode);
+                if (operations.m_character == QChar('^'))
+                        return createAndInsertOp(EgcNodeType::ExponentNode);
+        } else if (operations.m_op == EgcOperations::mathFunction) { // functions
+                EgcFunctionNode* fnc = static_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
+                if (!fnc)
+                        return false;
+                if (!operations.m_additionalData.isNull()) {
+                        QString name = operations.m_additionalData.toString();
+                        fnc->setName(name);
+                }
         }
-        if (operations == '+')
-                return createAndInsertOp(EgcNodeType::PlusNode);
-        if (operations == '-')
-                return createAndInsertOp(EgcNodeType::MinusNode);
-        if (operations == '/')
-                return createAndInsertOp(EgcNodeType::DivisionNode);
-        if (operations == '*')
-                return createAndInsertOp(EgcNodeType::MultiplicationNode);
-        if (operations == ':')
-                return createAndInsertOp(EgcNodeType::DefinitionNode);
-        if (operations == '=')
-                return createAndInsertOp(EgcNodeType::EqualNode);
 
         return retval;
 }
 
 bool EgcFormulaEntity::createAndInsertOp(EgcNodeType type)
+{
+    if (createAndInsertOperation(type))
+            return true;
+
+    return false;
+}
+
+EgcNode* EgcFormulaEntity::createAndInsertOperation(EgcNodeType type)
 {
         const EgcNode* node = m_scrIter->node();
         if (node) {
@@ -539,18 +564,21 @@ bool EgcFormulaEntity::createAndInsertOp(EgcNodeType type)
         }
 
         if (!node)
-                return false;
+                return nullptr;
 
         if (type == EgcNodeType::BaseNode)
-                return false;
+                return nullptr;
 
+        EgcNode* nd;
         QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
         if (!tmp)
-                return false;
+                return nullptr;
+        else
+                nd = tmp.data();
 
         m_scrIter->insert(type);
 
-        return true;
+        return nd;
 }
 
 void EgcFormulaEntity::insertCharacter(QChar character)

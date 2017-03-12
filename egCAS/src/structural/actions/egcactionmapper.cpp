@@ -117,7 +117,7 @@ EgcAction EgcActionMapper::getMathOperationAction(QChar op)
 {
         EgcAction action;
 
-        action.m_op = EgcOperations::mathOperator;
+        action.m_op = EgcOperations::mathCharOperator;
         action.m_character = op;
 
         return action;
