@@ -128,6 +128,14 @@ void MainWindow::showLicense(void)
         licenseInfo.exec();
 }
 
+void MainWindow::showInfo(void)
+{
+        QMessageBox msgBox;
+        msgBox.setText("Version: 0.1 (pre-alpha)");
+        msgBox.exec();
+}
+
+
 void MainWindow::calculate(void)
 {
         m_document->startCalulation();
@@ -143,6 +151,7 @@ void MainWindow::autoCalculation(bool on)
 void MainWindow::setupConnections(void)
 {
         connect(m_ui->mnu_show_license, SIGNAL(triggered()), this, SLOT(showLicense()));
+        connect(m_ui->mnu_show_info, SIGNAL(triggered()), this, SLOT(showInfo()));
         connect(m_ui->mnu_autoCalc, SIGNAL(triggered(bool)), this, SLOT(autoCalculation(bool)));
         connect(m_ui->mnu_CalculateDocument, SIGNAL(triggered()), this, SLOT(calculate()));
 }

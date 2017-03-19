@@ -42,6 +42,14 @@
        <bool>true</bool>
       </property>
       <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>374</width>
+         <height>481</height>
+        </rect>
+       </property>
        <layout class="QVBoxLayout" name="elmentBarLayout">
         <property name="spacing">
          <number>6</number>
@@ -84,6 +92,7 @@
      <string>Help</string>
     </property>
     <addaction name="mnu_show_license"/>
+    <addaction name="mnu_show_info"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -159,7 +168,7 @@
   </widget>
   <action name="mnu_show_license">
    <property name="text">
-    <string>Info</string>
+    <string>License</string>
    </property>
   </action>
   <action name="mnu_autoCalc">
@@ -183,6 +192,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+F5</string>
+   </property>
+  </action>
+  <action name="mnu_show_info">
+   <property name="text">
+    <string>Info</string>
    </property>
   </action>
  </widget>
