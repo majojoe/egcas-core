@@ -550,23 +550,25 @@ bool EgcIdNodeIter::rightSide(EgcNodeIterator& iter, EgcNode& node) const
                 return false;
 }
 
-bool EgcIdNodeIter::insert(EgcNodeType type)
+EgcNode* EgcIdNodeIter::insert(EgcNodeType type)
 {
         EgcNode* node;
+        EgcNode* retval = nullptr;
         bool right = rightSide();
 
         if (!m_node)
-                return false;
+                return nullptr;
         if (m_node->isAtomicallyBoundChild()) {
                 if (!moveToAtomicNode(right))
-                        return false;
+                        return nullptr;
         }
 
         node = m_node;
 
         if (besideBinEmptyNode(right)) {
-                if (!replaceBinEmptyNodeBy(type, right))
-                        return false;
+                retval = replaceBinEmptyNodeBy(type, right);
+                if (!retval)
+                        return nullptr;
 
                 m_iterPosAfterUpdate = node;
                 m_atRightSideAfterUpdate = right;
@@ -576,8 +578,9 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
                 bool insertBeforeChild = false;
                 if (&m_nodeIter->peekNext() == m_node)
                         insertBeforeChild = true;
-                if(!m_nodeIter->insert(type, insertBeforeChild))
-                        return false;
+                retval = m_nodeIter->insert(type, insertBeforeChild);
+                if(!retval)
+                        return nullptr;
 
                 m_iterPosAfterUpdate = node;
                 m_atRightSideAfterUpdate = right;
@@ -585,7 +588,7 @@ bool EgcIdNodeIter::insert(EgcNodeType type)
 
         }
         
-        return true;
+        return retval;
 }
 
 bool EgcIdNodeIter::remove(bool before)
@@ -940,6 +943,7 @@ void EgcIdNodeIter::setAtNodeDelayed(EgcNode& node, bool atRightSide)
         if (m_lockDelayedUpdate == false && m_formula.isNodeInFormula(node)) {
                 m_iterPosAfterUpdate = &node;
                 m_atRightSideAfterUpdate = atRightSide;
+                m_isInsert = false;
         }
 }
 
@@ -1013,17 +1017,14 @@ bool EgcIdNodeIter::besideBinEmptyNode(bool right)
         return false;
 }
 
-bool EgcIdNodeIter::replaceBinEmptyNodeBy(EgcNodeType type, bool right)
+EgcNode* EgcIdNodeIter::replaceBinEmptyNodeBy(EgcNodeType type, bool right)
 {
         const EgcNode *node = m_node;
 
         if (!m_node)
-                return false;
+                return nullptr;
 
         (void) gotoNodeWithId(right, m_nodeIter.data(), *node, true, EgcSnapProperty::SnapModifyable);
 
-        if (m_nodeIter->replaceBinEmptyNodeBy(type))
-                return true;
-
-        return false;
+        return m_nodeIter->replaceBinEmptyNodeBy(type);
 }

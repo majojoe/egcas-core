@@ -281,7 +281,7 @@ bool EgcScrPosIterator::insert(QChar character)
         return retval;
 }
 
-bool EgcScrPosIterator::insert(EgcNodeType type)
+EgcNode* EgcScrPosIterator::insert(EgcNodeType type)
 {
         return m_nodeIter->insert(type);
 }
@@ -437,4 +437,10 @@ void EgcScrPosIterator::invalidateCursor(EgcNode& baseNode)
 {
         m_nodeIter->toFront();
         m_subIdIter->setNode(baseNode);
+}
+
+void EgcScrPosIterator::setCursorAtDelayed(EgcNode* node, bool rSide)
+{
+        if (node)
+                m_nodeIter->setAtNodeDelayed(*node, rSide);
 }

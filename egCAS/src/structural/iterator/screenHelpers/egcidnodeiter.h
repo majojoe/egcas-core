@@ -145,9 +145,9 @@ public:
         /**
          * @brief insert insert a node at the current position of the next or previous pointer
          * @param type the type of the node to insert
-         * @return true if everything went well, false otherwise
+         * @return pointer to the inserted node if everything went well, nullptr otherwise
          */
-        bool insert(EgcNodeType type);
+        EgcNode* insert(EgcNodeType type);
         /**
          * @brief finishModOperation finish any started operation that modifies the tree. Some operations (like inserts
          * and deletes) can only be finished if mathml lookup table had been updated. So correction of cursor positions
@@ -381,9 +381,9 @@ private:
          * @brief replaceBinEmptyNodeBy replace the empty binary node beside m_node
          * @param type the type of the node to replace the empty node
          * @param right if true, search on the right side of m_node, if false search on the left
-         * @return true if everything worked well, false otherwise
+         * @return pointer to the replaced node if everything worked well, nullptr otherwise
          */
-        bool replaceBinEmptyNodeBy(EgcNodeType type, bool right);
+        EgcNode* replaceBinEmptyNodeBy(EgcNodeType type, bool right);
 
         QScopedPointer<EgcNodeIterator> m_nodeIter;         ///< the node iterator that points to the current node with a mathml id
         EgcNode* m_node;                                    ///< currently active node (where the cursor is currently)

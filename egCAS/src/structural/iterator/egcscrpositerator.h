@@ -131,9 +131,9 @@ public:
         /**
          * @brief insert insert a new type at the cursors current position
          * @param type the type to insert at the current position
-         * @return true if the operation was successful, false otherwise
+         * @return pointer to inserted node if the operation was successful, nullptr otherwise
          */
-        bool insert(EgcNodeType type);
+        EgcNode* insert(EgcNodeType type);
         /**
          * @brief remove removes the element that is next to the current iterator position (forward direction)
          * @return true if the operation was successful, false otherwise
@@ -205,6 +205,13 @@ public:
          * side.
          */
         void setCursorAt(EgcNode* node, quint32 subInd, bool rSide);
+        /**
+         * @brief setCursorAtDelayed set the cursor at the given position
+         * @param node the node where to set the cursor at
+         * @param rSide true if cursor shall be positioned at the right side, if false cursor will be positioned at left
+         * side.
+         */
+        void setCursorAtDelayed(EgcNode* node, bool rSide);
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula

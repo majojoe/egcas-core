@@ -535,12 +535,17 @@ bool EgcFormulaEntity::insertOp(EgcAction operations)
                 if (operations.m_character == QChar('^'))
                         return createAndInsertOp(EgcNodeType::ExponentNode);
         } else if (operations.m_op == EgcOperations::mathFunction) { // functions
-                EgcFunctionNode* fnc = static_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
+                EgcFunctionNode* fnc = dynamic_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
                 if (!fnc)
                         return false;
                 if (!operations.m_additionalData.isNull()) {
                         QString name = operations.m_additionalData.toString();
-                        fnc->setName(name);
+                        if (!name.isEmpty()) {
+                                fnc->setName(name);
+                                m_scrIter->setCursorAtDelayed(fnc->getChild(0), true);
+                        } else {
+                                m_scrIter->setCursorAtDelayed(fnc, false);
+                        }
                 }
         }
 
@@ -569,16 +574,11 @@ EgcNode* EgcFormulaEntity::createAndInsertOperation(EgcNodeType type)
         if (type == EgcNodeType::BaseNode)
                 return nullptr;
 
-        EgcNode* nd;
         QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
         if (!tmp)
                 return nullptr;
-        else
-                nd = tmp.data();
 
-        m_scrIter->insert(type);
-
-        return nd;
+        return m_scrIter->insert(type);
 }
 
 void EgcFormulaEntity::insertCharacter(QChar character)
@@ -599,7 +599,7 @@ void EgcFormulaEntity::insertCharacter(QChar character)
                 m_item->updateView();
         }
 
-        m_scrIter->insert(character);
+        (void) m_scrIter->insert(character);
         m_item->hideCursors();
         m_item->updateView();        
 }

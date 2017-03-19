@@ -126,9 +126,10 @@ public:
          * @param type the node type to be inserted
          * @param insertBeforeChild if true the node to insert will have empty nodes before the current child, otherwise
          * afterwards
-         * @return false if insertiation in the tree is not possible (e.g. not a containter type), true otherwise
+         * @return nullptr if insertiation in the tree is not possible (e.g. not a containter type), pointer to inserted
+         * node otherwise
          */
-        virtual bool insert(EgcNodeType type, bool insertBeforeChild);
+        virtual EgcNode* insert(EgcNodeType type, bool insertBeforeChild);
         /**
          * @brief remove removes the next or previous item.
          * @param deleteNext if true, the following (next) node will be deleted, otherwise the previous
@@ -150,9 +151,9 @@ public:
         /**
          * @brief replaceBinEmptyNodeBy replaces a binary empty node the given type
          * @param type the type of the node that will replace the empty node
-         * @return true if everything went well, false otherwise
+         * @return pointer to the replacement if everything went well, nullptr otherwise
          */
-        bool replaceBinEmptyNodeBy(EgcNodeType type);
+        EgcNode* replaceBinEmptyNodeBy(EgcNodeType type);
 
 protected:
         /**

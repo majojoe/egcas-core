@@ -282,7 +282,7 @@ EgcNode& EgcNodeIterator::getPreviousElement(EgcNode& currentPrev, EgcNode& curr
         return *prev;
 }
 
-bool EgcNodeIterator::replaceBinEmptyNodeBy(EgcNodeType type)
+EgcNode* EgcNodeIterator::replaceBinEmptyNodeBy(EgcNodeType type)
 {
         EgcNode* nodeToReplace = nullptr;
 
@@ -292,24 +292,21 @@ bool EgcNodeIterator::replaceBinEmptyNodeBy(EgcNodeType type)
                 nodeToReplace = m_next;
 
         if (nodeToReplace == nullptr)
-                return false;
+                return nullptr;
 
         //check if new type is binary node
         QScopedPointer<EgcNode> node (EgcNodeCreator::create(type));
         if (!node.data())
-                return false;
+                return nullptr;
         if (!node->isBinaryNode())
-                return false;
+                return nullptr;
 
-        if (!replace(*nodeToReplace, type))
-                return false;
-
-        return true;
+        return replace(*nodeToReplace, type);
 }
 
-bool EgcNodeIterator::insert(EgcNodeType type, bool insertBeforeChild)
+EgcNode* EgcNodeIterator::insert(EgcNodeType type, bool insertBeforeChild)
 {
-        bool retval = false;
+        EgcNode* retval = nullptr;
 
         QScopedPointer<EgcNode> node (EgcNodeCreator::create(type));
 
@@ -340,14 +337,14 @@ bool EgcNodeIterator::insert(EgcNodeType type, bool insertBeforeChild)
                                 QScopedPointer<EgcNode> tempNode(EgcNodeCreator::
                                                                           create(EgcNodeType::EmptyNode));
                                 if (tempNode.data() == nullptr)
-                                        return false;
+                                        return nullptr;
                                 node_cont->setChild(i, *(tempNode.take()));
                         }
                 }
 
                 //insert the container into the tree
                 if (!m_next || !m_previous)
-                        return false;
+                        return retval;
 
                 QScopedPointer<EgcNode> childNode;
                 EgcNode* childNodePtr;
@@ -367,21 +364,21 @@ bool EgcNodeIterator::insert(EgcNodeType type, bool insertBeforeChild)
                         childNode.reset(parentNode->takeOwnership(*childNodePtr));
 
                 if (!parentNode || parentNode == childNode.data() || !indexOk)
-                        return false;
+                        return nullptr;
 
                 //set the parent
                 EgcContainerNode *nodePtr = static_cast<EgcContainerNode*>(node.data());
 
                 if (parentNode->setChild(parentIndex, *(node.take())))
-                        retval = true;
+                        retval = nodePtr;
 
                 //set the child if one
                 if (childNode.data()) {
                         if (!nodePtr->setChild(nodeIndex, *(childNode.take())))
-                                retval = false;
+                                retval = nullptr;
                 } else { // insert empty nodes if no child node is present
                         if (!nodePtr->setChild(nodeIndex, *EgcNodeCreator::create(EgcNodeType::EmptyNode)))
-                                retval = false;
+                                retval = nullptr;
                 }
 
                 //repair the node pointer organization data
