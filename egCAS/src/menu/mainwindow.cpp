@@ -131,10 +131,16 @@ void MainWindow::showLicense(void)
 void MainWindow::showInfo(void)
 {
         QMessageBox msgBox;
-        msgBox.setText("Version: 0.1 (pre-alpha)");
-        msgBox.exec();
-}
 
+        QResource ver(":/res/Version");
+        QFile verFile(ver.absoluteFilePath());
+
+        if (verFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QTextStream in(&verFile);
+                msgBox.setText(QString(tr("Version: ")) + in.readAll());
+                msgBox.exec();
+        }
+}
 
 void MainWindow::calculate(void)
 {
