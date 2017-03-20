@@ -28,6 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QMessageBox>
 #include <QSpacerItem>
+#include <QSpinBox>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "view/egcformulaitem.h"
@@ -154,6 +155,12 @@ void MainWindow::autoCalculation(bool on)
                 calculate();
 }
 
+void MainWindow::setPrecision(int prec)
+{
+        EgcFormulaEntity::setStdNrSignificantDigis(prec);
+        m_document->startCalulation();
+}
+
 void MainWindow::setupConnections(void)
 {
         connect(m_ui->mnu_show_license, SIGNAL(triggered()), this, SLOT(showLicense()));
@@ -165,6 +172,23 @@ void MainWindow::setupConnections(void)
 void MainWindow::setupToolbar()
 {
         m_ui->mathToolBar->addAction(m_ui->mnu_autoCalc);
+
+        m_ui->mathToolBar->addSeparator();
+        setupPrecisionSpinBox();
+}
+
+void MainWindow::setupPrecisionSpinBox(void)
+{
+        //add spin box for adjusting precision
+        QSpinBox *spinBox = new QSpinBox(this);
+        spinBox->setObjectName(QStringLiteral("precison"));
+        spinBox->setMinimum(2);
+        spinBox->setMaximum(16);
+        spinBox->setValue(10);
+        spinBox->setPrefix(QApplication::translate("MainWindow", "precision: ", 0));
+        m_ui->mathToolBar->addWidget(spinBox);
+        connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(setPrecision(int)));
+        emit spinBox->valueChanged(spinBox->value());
 }
 
 void MainWindow::setupElementBar(void)

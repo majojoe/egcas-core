@@ -53,6 +53,7 @@ public slots:
         void showInfo(void);
         void calculate(void);
         void autoCalculation(bool on);
+        void setPrecision(int prec);
 private:
         /**
          * @brief setupConnections setup all connections to slots that are neccessary
@@ -62,7 +63,10 @@ private:
          * @brief setupToolbar setup the toolbar
          */
         void setupToolbar(void);
-
+        /**
+         * @brief setupPrecisionSpinBox setup a spin Box for adjusting the precision for a calculation
+         */
+        void setupPrecisionSpinBox(void);
         /**
          * @brief setupElementBar setup the left bar with the math buttons
          */
