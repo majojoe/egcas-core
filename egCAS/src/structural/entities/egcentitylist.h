@@ -104,7 +104,7 @@ public:
          * @brief getIterator returns an iterator that operates on the enity list
          * @return returns a list iterator
          */
-        QListIterator<EgcEntity*> getIterator(void);
+        QMutableListIterator<EgcEntity*> getIterator(void);
 
 private:
         QList<EgcEntity*> m_list;               ///< holds a bunch of entities of a document

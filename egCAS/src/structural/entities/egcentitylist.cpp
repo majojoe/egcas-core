@@ -131,9 +131,9 @@ EgcEntity* EgcEntityList::cloneEntity(EgcEntity& entity2copy)
         }
 }
 
-QListIterator<EgcEntity*> EgcEntityList::getIterator(void)
+QMutableListIterator<EgcEntity*> EgcEntityList::getIterator(void)
 {
-        QListIterator<EgcEntity*> i(m_list);
+        QMutableListIterator<EgcEntity*> i(m_list);
 
         return i;
 }

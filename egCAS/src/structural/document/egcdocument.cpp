@@ -117,6 +117,9 @@ bool EgcDocument::deleteFormula(EgcAbstractFormulaEntity* formula)
                 return false;
         EgcFormulaEntity* entity = static_cast<EgcFormulaEntity*>(formula);
 
+        //inform calculation about deleting an entity
+        m_calc->deleteEntity(entity);
+
         EgcAbstractFormulaItem* item = entity->getItem();
         if (!item)
                 return false;

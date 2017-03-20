@@ -74,6 +74,11 @@ public:
          * @param on if true auto calculation is on ohterwise off.
          */
         void setAutoCalculation(bool on);
+        /**
+         * @brief deleteEntity must be called when any entity is deleted. So that calc class knows about that.
+         * @param entity the entity that is deleted.
+         */
+        void deleteEntity(EgcEntity* entity);
 signals:
         /**
          * @brief errorOccurred during calculation an error occurred
@@ -107,7 +112,7 @@ private:
         void triggerNextCalcualtion(void);
 
         QScopedPointer<EgcKernelConn> m_conn;   ///< the connection to the cas kernel
-        QScopedPointer<QListIterator<EgcEntity*>> m_iterator;   ///< iterator that operates on the entity list we are calculating on
+        QScopedPointer<QMutableListIterator<EgcEntity*>> m_iterator;   ///< iterator that operates on the entity list we are calculating on
         bool m_kernelStarted;   ///< indicates that cas kernel has started and can calculate formulas now
         bool m_computeWhenStarted;              ///< begin with computation when the kernel has started
         bool m_updateInstantly;                 ///< when true, update the view instantly, otherwise it's updated after resuming the calculation
