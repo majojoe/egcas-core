@@ -54,6 +54,7 @@ public slots:
         void calculate(void);
         void autoCalculation(bool on);
         void setPrecision(int prec);
+        void newPage(void);
 private:
         /**
          * @brief setupConnections setup all connections to slots that are neccessary

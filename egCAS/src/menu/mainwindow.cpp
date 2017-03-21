@@ -155,6 +155,11 @@ void MainWindow::autoCalculation(bool on)
                 calculate();
 }
 
+void MainWindow::newPage(void)
+{
+
+}
+
 void MainWindow::setPrecision(int prec)
 {
         EgcFormulaEntity::setStdNrSignificantDigis(prec);
@@ -167,12 +172,15 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_show_info, SIGNAL(triggered()), this, SLOT(showInfo()));
         connect(m_ui->mnu_autoCalc, SIGNAL(triggered(bool)), this, SLOT(autoCalculation(bool)));
         connect(m_ui->mnu_CalculateDocument, SIGNAL(triggered()), this, SLOT(calculate()));
+        connect(m_ui->mnu_new_page, SIGNAL(triggered()), this, SLOT(newPage()));
 }
 
 void MainWindow::setupToolbar()
 {
+        //setup main toolbar
+        m_ui->mainToolBar->addAction(m_ui->mnu_new_page);
+        //setup math toolbar
         m_ui->mathToolBar->addAction(m_ui->mnu_autoCalc);
-
         m_ui->mathToolBar->addSeparator();
         setupPrecisionSpinBox();
 }

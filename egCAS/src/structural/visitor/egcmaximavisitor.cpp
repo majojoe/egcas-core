@@ -169,6 +169,10 @@ QString EgcMaximaVisitor::getResult(void)
                 if (nrDigits == 1 || nrDigits > 16)
                         nrDigits = 0;
 
+                // use standard digits if nothing is set for the formula
+                if (nrDigits == 0)
+                        nrDigits = EgcFormulaEntity::getStdNrSignificantDigis();
+
                 QString tmpOptions = QString("fpprintprec:%1$").arg(nrDigits);
 
                 switch(m_formula->getNumberResultType()) {
@@ -188,8 +192,7 @@ QString EgcMaximaVisitor::getResult(void)
                         tmp = tmpOptions + tmp;
                         break;
                 }
-                //reset the precision again to standard type
-                tmp += QString(";fpprintprec:%1$").arg(EgcFormulaEntity::getStdNrSignificantDigis());
+                tmp += QString(";");
         }
 
 #ifdef DEBUG_KERNEL_COMMAND_GENERATION

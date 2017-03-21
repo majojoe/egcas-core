@@ -202,6 +202,14 @@
     <string>Info</string>
    </property>
   </action>
+  <action name="mnu_new_page">
+   <property name="text">
+    <string>new page</string>
+   </property>
+   <property name="toolTip">
+    <string>add a new page</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

@@ -42,7 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "iterator/egcscrpositerator.h"
 #include "document/egcabstractdocument.h"
 
-quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 15;
+quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 0;
 
 EgcFormulaEntity::EgcFormulaEntity(EgcNodeType type) : m_numberSignificantDigits(0),
                                                        m_numberResultType(EgcNumberResultType::StandardType),
