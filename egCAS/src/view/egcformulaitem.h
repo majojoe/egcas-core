@@ -164,8 +164,9 @@ public:
 
         /**
          * @brief selectFormula select the formula and grab focus
+         * @param selected if true formula gets selected, if false deselected
          */
-        virtual void selectFormula(void) override;
+        virtual void selectFormula(bool selected) override;
         /**
          * @brief type returns the type of the item
          * @return item type

@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "view/egcasscene.h"
 #include "egccalculation.h"
 #include "entities/egcformulaentity.h"
+#include "view/egcformulaitem.h"
 
 EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasScene(*this, nullptr)}, m_calc{new EgcCalculation()}
 {
@@ -107,7 +108,7 @@ EgcCalculation const* EgcDocument::getCalcClass(void)
 void EgcDocument::insertFormulaOnKeyPress(QPointF point, EgcAction action)
 {
         EgcFormulaEntity *formula = static_cast<EgcFormulaEntity*>(createEntity(EgcEntityType::Formula, point));
-        formula->setSelected();
+        formula->setSelected(true);
         formula->handleAction(action);
 }
 
@@ -163,4 +164,24 @@ void EgcDocument::setAutoCalculation(bool on)
                 return;
 
         m_calc->setAutoCalculation(on);
+}
+
+EgcFormulaEntity* EgcDocument::getActiveFormulaEntity(void)
+{
+        QGraphicsItem *item = m_scene->focusItem();
+        if (!item)
+                return nullptr;
+
+        EgcFormulaItem* formulaItem = dynamic_cast<EgcFormulaItem*>(item);
+        if (!formulaItem)
+                return nullptr;
+
+        EgcAbstractFormulaEntity *aFormulaEntity = formulaItem->getEnity();
+        if (!aFormulaEntity)
+                return nullptr;
+        EgcFormulaEntity* entity = dynamic_cast<EgcFormulaEntity*>(aFormulaEntity);
+        if (!entity)
+                return nullptr;
+
+        return entity;
 }

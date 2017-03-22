@@ -419,10 +419,15 @@ void EgcFormulaItem::keyCursorKeyHandler(QKeyEvent *keyEvent)
         }
 }
 
-void EgcFormulaItem::selectFormula(void)
+void EgcFormulaItem::selectFormula(bool selected)
 {
-        setSelected(true);
-        setFocus();
+        if (selected) {
+                setSelected(true);
+                setFocus();
+        } else {
+                setSelected(false);
+                clearFocus();
+        }
 }
 
 int EgcFormulaItem::type() const

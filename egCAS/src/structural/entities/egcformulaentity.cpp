@@ -1061,9 +1061,9 @@ bool EgcFormulaEntity::cursorAtEnd(void)
         return false;
 }
 
-void EgcFormulaEntity::setSelected(void)
+void EgcFormulaEntity::setSelected(bool selected)
 {
-        m_item->selectFormula();
+        m_item->selectFormula(selected);
 }
 
 bool EgcFormulaEntity::isEmpty(void) const

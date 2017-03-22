@@ -320,8 +320,9 @@ public:
         virtual bool cursorAtEnd(void) override;
         /**
          * @brief setSelected sets the formula selected
+         * @param selected if true the formula gets selected, if false deselected
          */
-        void setSelected(void);
+        void setSelected(bool selected);
         /**
          * @brief isEmpty check if the formula is an empty formula
          * @return true if empty, false otherwise

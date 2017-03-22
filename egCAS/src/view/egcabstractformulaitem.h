@@ -93,8 +93,9 @@ public:
         virtual void hideCursors(void) = 0;
         /**
          * @brief selectFormula select the formula and grab focus
+         * @param selected if true formula gets selected, if false deselected
          */
-        virtual void selectFormula(void) = 0;
+        virtual void selectFormula(bool selected) = 0;
 };
 
 #endif // EGCABSTRACTFORMULAITEM_H

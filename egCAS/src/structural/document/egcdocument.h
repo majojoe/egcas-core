@@ -117,6 +117,11 @@ public:
          * @param on if true auto calculation is on ohterwise off.
          */
         void setAutoCalculation(bool on);
+        /**
+         * @brief getActiveFormulaEntity returns a pointer to the active Formula entity (has Focus)
+         * @return pointer to active formula entity if any, or nullptr if none
+         */
+        EgcFormulaEntity* getActiveFormulaEntity(void);
 signals:
         /**
          * @brief startDeleletingEntity signal to be emitted when entity shall be deleted

@@ -162,7 +162,13 @@ void MainWindow::newPage(void)
 
 void MainWindow::setPrecision(int prec)
 {
-        EgcFormulaEntity::setStdNrSignificantDigis(prec);
+        EgcFormulaEntity* entity = m_document->getActiveFormulaEntity();
+        if (entity) {
+                entity->setNumberOfSignificantDigits(prec);
+                entity->setSelected(false);
+        } else {
+                EgcFormulaEntity::setStdNrSignificantDigis(prec);
+        }
         m_document->startCalulation();
 }
 
@@ -194,6 +200,7 @@ void MainWindow::setupPrecisionSpinBox(void)
         spinBox->setMaximum(16);
         spinBox->setValue(10);
         spinBox->setPrefix(QApplication::translate("MainWindow", "precision: ", 0));
+        spinBox->setFocusPolicy(Qt::NoFocus);
         m_ui->mathToolBar->addWidget(spinBox);
         connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(setPrecision(int)));
         emit spinBox->valueChanged(spinBox->value());
