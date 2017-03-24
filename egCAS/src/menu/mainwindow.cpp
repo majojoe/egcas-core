@@ -28,7 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QMessageBox>
 #include <QSpacerItem>
-#include <QSpinBox>
+#include <QComboBox>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "view/egcformulaitem.h"
@@ -162,6 +162,7 @@ void MainWindow::newPage(void)
 
 void MainWindow::setPrecision(int prec)
 {
+        prec += 1; // since precision starts at 2, but index 0 is for using standard
         EgcFormulaEntity* entity = m_document->getActiveFormulaEntity();
         if (entity) {
                 entity->setNumberOfSignificantDigits(prec);
@@ -170,6 +171,14 @@ void MainWindow::setPrecision(int prec)
                 EgcFormulaEntity::setStdNrSignificantDigis(prec);
         }
         m_document->startCalulation();
+}
+
+void MainWindow::precBox(int prec)
+{
+        if (prec == 0)
+                setPrecision(0);
+        else
+                setPrecision(prec + 2);
 }
 
 void MainWindow::setupConnections(void)
@@ -188,22 +197,38 @@ void MainWindow::setupToolbar()
         //setup math toolbar
         m_ui->mathToolBar->addAction(m_ui->mnu_autoCalc);
         m_ui->mathToolBar->addSeparator();
-        setupPrecisionSpinBox();
+        setupPrecisionComboBox();
 }
 
-void MainWindow::setupPrecisionSpinBox(void)
+void MainWindow::setupPrecisionComboBox(void)
 {
-        //add spin box for adjusting precision
-        QSpinBox *spinBox = new QSpinBox(this);
-        spinBox->setObjectName(QStringLiteral("precison"));
-        spinBox->setMinimum(2);
-        spinBox->setMaximum(16);
-        spinBox->setValue(10);
-        spinBox->setPrefix(QApplication::translate("MainWindow", "precision: ", 0));
-        spinBox->setFocusPolicy(Qt::NoFocus);
-        m_ui->mathToolBar->addWidget(spinBox);
-        connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(setPrecision(int)));
-        emit spinBox->valueChanged(spinBox->value());
+        //add combo box for adjusting precision
+        QComboBox *comboBox = new QComboBox(this);
+        comboBox->setObjectName(QStringLiteral("comboBox"));
+        comboBox->setFocusPolicy(Qt::NoFocus);
+        m_ui->mathToolBar->addWidget(comboBox);
+        comboBox->setCurrentIndex(0);
+        comboBox->clear();
+        comboBox->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "std", 0)
+         << QApplication::translate("MainWindow", "2", 0)
+         << QApplication::translate("MainWindow", "3", 0)
+         << QApplication::translate("MainWindow", "4", 0)
+         << QApplication::translate("MainWindow", "5", 0)
+         << QApplication::translate("MainWindow", "6", 0)
+         << QApplication::translate("MainWindow", "7", 0)
+         << QApplication::translate("MainWindow", "8", 0)
+         << QApplication::translate("MainWindow", "9", 0)
+         << QApplication::translate("MainWindow", "10", 0)
+         << QApplication::translate("MainWindow", "11", 0)
+         << QApplication::translate("MainWindow", "12", 0)
+         << QApplication::translate("MainWindow", "13", 0)
+         << QApplication::translate("MainWindow", "15", 0)
+         << QApplication::translate("MainWindow", "16", 0)
+        );
+        comboBox->setToolTip(QApplication::translate("MainWindow", "set number of significant digits", 0));
+        connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(precBox(int)));
+        emit comboBox->currentIndexChanged(comboBox->currentIndex());
 }
 
 void MainWindow::setupElementBar(void)

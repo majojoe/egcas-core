@@ -53,9 +53,14 @@ public slots:
         void showInfo(void);
         void calculate(void);
         void autoCalculation(bool on);
-        void setPrecision(int prec);
         void newPage(void);
+        void precBox(int prec);
 private:
+        /**
+         * @brief setPrecision set the precision of a formula or the document
+         * @param prec the precision to set 0 (standard), 2-16(number of digits)
+         */
+        void setPrecision(int prec);
         /**
          * @brief setupConnections setup all connections to slots that are neccessary
          */
@@ -67,7 +72,7 @@ private:
         /**
          * @brief setupPrecisionSpinBox setup a spin Box for adjusting the precision for a calculation
          */
-        void setupPrecisionSpinBox(void);
+        void setupPrecisionComboBox(void);
         /**
          * @brief setupElementBar setup the left bar with the math buttons
          */
