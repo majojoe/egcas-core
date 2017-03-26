@@ -162,15 +162,15 @@ void MainWindow::newPage(void)
 
 void MainWindow::setPrecision(int prec)
 {
-        prec += 1; // since precision starts at 2, but index 0 is for using standard
         EgcFormulaEntity* entity = m_document->getActiveFormulaEntity();
         if (entity) {
                 entity->setNumberOfSignificantDigits(prec);
                 entity->setSelected(false);
+                m_document->resumeCalculation();
         } else {
                 EgcFormulaEntity::setStdNrSignificantDigis(prec);
+                m_document->startCalulation();
         }
-        m_document->startCalulation();
 }
 
 void MainWindow::precBox(int prec)
@@ -178,7 +178,7 @@ void MainWindow::precBox(int prec)
         if (prec == 0)
                 setPrecision(0);
         else
-                setPrecision(prec + 2);
+                setPrecision(prec + 1);
 }
 
 void MainWindow::setupConnections(void)
@@ -209,23 +209,22 @@ void MainWindow::setupPrecisionComboBox(void)
         m_ui->mathToolBar->addWidget(comboBox);
         comboBox->setCurrentIndex(0);
         comboBox->clear();
-        comboBox->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "std", 0)
-         << QApplication::translate("MainWindow", "2", 0)
-         << QApplication::translate("MainWindow", "3", 0)
-         << QApplication::translate("MainWindow", "4", 0)
-         << QApplication::translate("MainWindow", "5", 0)
-         << QApplication::translate("MainWindow", "6", 0)
-         << QApplication::translate("MainWindow", "7", 0)
-         << QApplication::translate("MainWindow", "8", 0)
-         << QApplication::translate("MainWindow", "9", 0)
-         << QApplication::translate("MainWindow", "10", 0)
-         << QApplication::translate("MainWindow", "11", 0)
-         << QApplication::translate("MainWindow", "12", 0)
-         << QApplication::translate("MainWindow", "13", 0)
-         << QApplication::translate("MainWindow", "15", 0)
-         << QApplication::translate("MainWindow", "16", 0)
-        );
+        comboBox->insertItem(0, QApplication::translate("MainWindow", "std", 0));
+        comboBox->insertItem(1, QApplication::translate("MainWindow", "2", 0));
+        comboBox->insertItem(2, QApplication::translate("MainWindow", "3", 0));
+        comboBox->insertItem(3, QApplication::translate("MainWindow", "4", 0));
+        comboBox->insertItem(4, QApplication::translate("MainWindow", "5", 0));
+        comboBox->insertItem(5, QApplication::translate("MainWindow", "6", 0));
+        comboBox->insertItem(6, QApplication::translate("MainWindow", "7", 0));
+        comboBox->insertItem(7, QApplication::translate("MainWindow", "8", 0));
+        comboBox->insertItem(8, QApplication::translate("MainWindow", "9", 0));
+        comboBox->insertItem(9, QApplication::translate("MainWindow", "10", 0));
+        comboBox->insertItem(10, QApplication::translate("MainWindow", "11", 0));
+        comboBox->insertItem(11, QApplication::translate("MainWindow", "12", 0));
+        comboBox->insertItem(12, QApplication::translate("MainWindow", "13", 0));
+        comboBox->insertItem(13, QApplication::translate("MainWindow", "14", 0));
+        comboBox->insertItem(14, QApplication::translate("MainWindow", "15", 0));
+        comboBox->insertItem(15, QApplication::translate("MainWindow", "16", 0));
         comboBox->setToolTip(QApplication::translate("MainWindow", "set number of significant digits", 0));
         connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(precBox(int)));
         emit comboBox->currentIndexChanged(comboBox->currentIndex());
