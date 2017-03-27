@@ -168,7 +168,10 @@ void EgcDocument::setAutoCalculation(bool on)
 
 EgcFormulaEntity* EgcDocument::getActiveFormulaEntity(void)
 {
-        QGraphicsItem *item = m_scene->focusItem();
+        QList<QGraphicsItem*> list = m_scene->selectedItems();
+        if (list.empty())
+                return nullptr;
+        QGraphicsItem *item = list.at(0);
         if (!item)
                 return nullptr;
 
