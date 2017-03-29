@@ -90,6 +90,7 @@ void EgcCalculation::nextCalculation(void)
         if (m_iterator->hasNext()) {
                 if (    (m_iterator->peekNext() != dynamic_cast<EgcEntity*>(m_entity))
                      || m_paused) {
+                        m_paused = false;
                         entity = m_iterator->next();
                         if (entity) {
                                 if (entity->getEntityType() == EgcEntityType::Formula)
@@ -110,7 +111,8 @@ void EgcCalculation::nextCalculation(void)
 
 void EgcCalculation::resumeCalculation(void)
 {
-        triggerNextCalcualtion();
+        if (m_paused)
+                triggerNextCalcualtion();
 }
 
 void EgcCalculation::handleCalculation(EgcFormulaEntity& entity)

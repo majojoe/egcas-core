@@ -166,7 +166,6 @@ void MainWindow::setPrecision(int prec)
         if (entity) {
                 entity->setNumberOfSignificantDigits(prec);
                 entity->setSelected(false);
-                m_document->resumeCalculation();
         } else {
                 EgcFormulaEntity::setStdNrSignificantDigis(prec);
                 m_document->startCalulation();

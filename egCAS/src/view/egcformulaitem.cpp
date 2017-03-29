@@ -207,6 +207,16 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
                 } else {
                         return m_startPoint;
                 }
+        } else if (change == ItemSelectedHasChanged) {
+                bool selected = value.toBool();
+                if (selected) {
+                        if (scn)
+                                scn->document().startCalulation(m_entity);
+                } else {
+                        if (scn) {
+                                scn->document().resumeCalculation();
+                        }
+                }
         }
 
         return QGraphicsItem::itemChange(change, value);
@@ -273,8 +283,6 @@ void EgcFormulaItem::focusInEvent(QFocusEvent * event)
         action.m_op = EgcOperations::formulaActivated;
         m_entity->handleAction(action);
         EgCasScene* scn = getEgcScene();
-        if (scn)
-                scn->document().startCalulation(m_entity);
 }
 
 void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
@@ -289,7 +297,6 @@ void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
         EgCasScene* scn = getEgcScene();
         if (scn) {
                 scn->hideFormulaCursors();
-                scn->document().resumeCalculation();
         }
 }
 
