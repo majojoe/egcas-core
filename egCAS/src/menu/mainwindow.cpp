@@ -45,9 +45,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #warning remove this after formula input via user interface is available
 #include "formulagenerator.h"
 
+
+#define MAP_COMBO_TO_PRECISION(prec)  ((prec == 0) ? 0 : (prec + 1))
+#define MAP_PRECISION_TO_COMBO(prec)  ((prec == 0) ? 0 : (prec - 1))
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    m_ui{new Ui::MainWindow}, m_document{new EgcDocument}
+    m_ui{new Ui::MainWindow}, m_document{new EgcDocument}, m_digits{nullptr}
 {
     m_ui->setupUi(this);
     m_ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
@@ -174,10 +178,7 @@ void MainWindow::setPrecision(int prec)
 
 void MainWindow::precBox(int prec)
 {
-        if (prec == 0)
-                setPrecision(0);
-        else
-                setPrecision(prec + 1);
+        setPrecision(MAP_COMBO_TO_PRECISION(prec));
 }
 
 void MainWindow::setupConnections(void)
@@ -187,6 +188,7 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_autoCalc, SIGNAL(triggered(bool)), this, SLOT(autoCalculation(bool)));
         connect(m_ui->mnu_CalculateDocument, SIGNAL(triggered()), this, SLOT(calculate()));
         connect(m_ui->mnu_new_page, SIGNAL(triggered()), this, SLOT(newPage()));
+        connect(m_document.data(), &EgcDocument::selectionChanged, this, &MainWindow::onSelectionChange);
 }
 
 void MainWindow::setupToolbar()
@@ -203,6 +205,7 @@ void MainWindow::setupPrecisionComboBox(void)
 {
         //add combo box for adjusting precision
         QComboBox *comboBox = new QComboBox(this);
+        m_digits = comboBox;
         comboBox->setObjectName(QStringLiteral("comboBox"));
         comboBox->setFocusPolicy(Qt::NoFocus);
         m_ui->mathToolBar->addWidget(comboBox);
@@ -236,4 +239,20 @@ void MainWindow::setupElementBar(void)
         // add a spacer at the end of the bar
         QSpacerItem *spacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
         m_ui->elmentBarLayout->addItem(spacer);
+}
+
+void MainWindow::onSelectionChange(void)
+{
+        EgcFormulaEntity* formula = m_document->getActiveFormulaEntity();
+        quint8 digits;
+        if (formula) {
+                digits = formula->getNumberOfSignificantDigits();
+        } else {
+                digits = EgcFormulaEntity::getStdNrSignificantDigis();
+        }
+
+        //set number of digits
+        m_digits->blockSignals(true);
+        m_digits->setCurrentIndex(MAP_PRECISION_TO_COMBO(digits));
+        m_digits->blockSignals(false);
 }

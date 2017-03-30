@@ -40,6 +40,7 @@ EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasS
 {
         connect(m_scene.data(), SIGNAL(createFormula(QPointF, EgcAction)), this, SLOT(insertFormulaOnKeyPress(QPointF, EgcAction)));
         connect(this, SIGNAL(startDeleletingEntity(EgcEntity*)), this, SLOT(deleteLaterEntity(EgcEntity*)), Qt::QueuedConnection);
+        connect(m_scene.data(), &EgCasScene::selectionChanged, this, &EgcDocument::selectionChanged);
 }
 
 EgcEntityList* EgcDocument::getEntityList(void)
@@ -187,4 +188,9 @@ EgcFormulaEntity* EgcDocument::getActiveFormulaEntity(void)
                 return nullptr;
 
         return entity;
+}
+
+void EgcDocument::onSelectionChange(void)
+{
+        emit selectionChanged();
 }

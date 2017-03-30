@@ -128,6 +128,10 @@ signals:
          * @param entity the entity to delete
          */
         void startDeleletingEntity(EgcEntity* entity);
+        /**
+         * @brief selectionChanged signal that is emitted when the selection of an item changes
+         */
+        void selectionChanged(void);
 private slots:
         /**
          * @brief insertFormula insert a formula into the current document
@@ -141,7 +145,10 @@ private slots:
          * @return true if this has been successful, false otherwise
          */
         void deleteLaterEntity(EgcEntity* entity);
-
+        /**
+         * @brief onSelectionChange is called if the selection of an item changes
+         */
+        void onSelectionChange(void);
 private:
         virtual void sort(void) override {}
         

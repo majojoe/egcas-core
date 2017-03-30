@@ -39,6 +39,7 @@ namespace Ui {
 class MainWindow;
 }
 class EgcDocument;
+class QComboBox;
 
 class MainWindow : public QMainWindow
 {
@@ -55,6 +56,11 @@ public slots:
         void autoCalculation(bool on);
         void newPage(void);
         void precBox(int prec);
+private slots:
+        /**
+         * @brief onSelectionChange is called if the selection of a formula or any other entity changes
+         */
+        void onSelectionChange(void);
 private:
         /**
          * @brief setPrecision set the precision of a formula or the document
@@ -80,6 +86,7 @@ private:
 
         QScopedPointer<Ui::MainWindow> m_ui;
         QScopedPointer<EgcDocument> m_document;
+        QComboBox* m_digits;
 };
 
 #endif // MAINWINDOW_H
