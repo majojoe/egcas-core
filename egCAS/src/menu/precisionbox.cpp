@@ -40,10 +40,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 PrecisionBox::PrecisionBox(EgcDocument* doc, QToolBar* toolbar, QWidget* parent) : QWidget(parent), m_document{doc}
 {
         //add combo box for adjusting precision
-        m_box.reset(new QComboBox(this));
+        m_box = new QComboBox(this);
         m_box->setObjectName(QStringLiteral("comboBox"));
         m_box->setFocusPolicy(Qt::NoFocus);
-        toolbar->addWidget(m_box.data());
+        toolbar->addWidget(m_box);
         m_box->setCurrentIndex(0);
         m_box->clear();
         m_box->insertItem(0, QApplication::translate("PrecisionBox", "std", 0));
@@ -63,7 +63,7 @@ PrecisionBox::PrecisionBox(EgcDocument* doc, QToolBar* toolbar, QWidget* parent)
         m_box->insertItem(14, QApplication::translate("PrecisionBox", "15", 0));
         m_box->insertItem(15, QApplication::translate("PrecisionBox", "16", 0));
         m_box->setToolTip(QApplication::translate("PrecisionBox", "set number of significant digits", 0));
-        connect(m_box.data(), SIGNAL(currentIndexChanged(int)), this, SLOT(precBox(int)));
+        connect(m_box, SIGNAL(currentIndexChanged(int)), this, SLOT(precBox(int)));
         emit m_box->currentIndexChanged(m_box->currentIndex());
         connect(m_document, &EgcDocument::selectionChanged, this, &PrecisionBox::onSelectionChange);
 }

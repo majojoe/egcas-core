@@ -58,7 +58,7 @@ private:
          */
         void setPrecision(int prec);
 
-        QScopedPointer<QComboBox> m_box;
+        QComboBox* m_box;
         EgcDocument* m_document;
 };
 
