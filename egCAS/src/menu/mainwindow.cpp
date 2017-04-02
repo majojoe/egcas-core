@@ -41,6 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcpixmapentity.h"
 #include "menu/egclicenseinfo.h"
 #include "menu/elementbar.h"
+#include "menu/precisionbox.h"
 
 #warning remove this after formula input via user interface is available
 #include "formulagenerator.h"
@@ -51,7 +52,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    m_ui{new Ui::MainWindow}, m_document{new EgcDocument}, m_digits{nullptr}
+    m_ui{new Ui::MainWindow}, m_document{new EgcDocument}, m_precision{nullptr}
 {
     m_ui->setupUi(this);
     m_ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
@@ -164,23 +165,6 @@ void MainWindow::newPage(void)
 
 }
 
-void MainWindow::setPrecision(int prec)
-{
-        EgcFormulaEntity* entity = m_document->getActiveFormulaEntity();
-        if (entity) {
-                entity->setNumberOfSignificantDigits(prec);
-                entity->setSelected(false);
-        } else {
-                EgcFormulaEntity::setStdNrSignificantDigis(prec);
-                m_document->startCalulation();
-        }
-}
-
-void MainWindow::precBox(int prec)
-{
-        setPrecision(MAP_COMBO_TO_PRECISION(prec));
-}
-
 void MainWindow::setupConnections(void)
 {
         connect(m_ui->mnu_show_license, SIGNAL(triggered()), this, SLOT(showLicense()));
@@ -188,7 +172,6 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_autoCalc, SIGNAL(triggered(bool)), this, SLOT(autoCalculation(bool)));
         connect(m_ui->mnu_CalculateDocument, SIGNAL(triggered()), this, SLOT(calculate()));
         connect(m_ui->mnu_new_page, SIGNAL(triggered()), this, SLOT(newPage()));
-        connect(m_document.data(), &EgcDocument::selectionChanged, this, &MainWindow::onSelectionChange);
 }
 
 void MainWindow::setupToolbar()
@@ -198,39 +181,9 @@ void MainWindow::setupToolbar()
         //setup math toolbar
         m_ui->mathToolBar->addAction(m_ui->mnu_autoCalc);
         m_ui->mathToolBar->addSeparator();
-        setupPrecisionComboBox();
+        m_precision = new PrecisionBox(m_document.data(), m_ui->mathToolBar, this);
 }
 
-void MainWindow::setupPrecisionComboBox(void)
-{
-        //add combo box for adjusting precision
-        QComboBox *comboBox = new QComboBox(this);
-        m_digits = comboBox;
-        comboBox->setObjectName(QStringLiteral("comboBox"));
-        comboBox->setFocusPolicy(Qt::NoFocus);
-        m_ui->mathToolBar->addWidget(comboBox);
-        comboBox->setCurrentIndex(0);
-        comboBox->clear();
-        comboBox->insertItem(0, QApplication::translate("MainWindow", "std", 0));
-        comboBox->insertItem(1, QApplication::translate("MainWindow", "2", 0));
-        comboBox->insertItem(2, QApplication::translate("MainWindow", "3", 0));
-        comboBox->insertItem(3, QApplication::translate("MainWindow", "4", 0));
-        comboBox->insertItem(4, QApplication::translate("MainWindow", "5", 0));
-        comboBox->insertItem(5, QApplication::translate("MainWindow", "6", 0));
-        comboBox->insertItem(6, QApplication::translate("MainWindow", "7", 0));
-        comboBox->insertItem(7, QApplication::translate("MainWindow", "8", 0));
-        comboBox->insertItem(8, QApplication::translate("MainWindow", "9", 0));
-        comboBox->insertItem(9, QApplication::translate("MainWindow", "10", 0));
-        comboBox->insertItem(10, QApplication::translate("MainWindow", "11", 0));
-        comboBox->insertItem(11, QApplication::translate("MainWindow", "12", 0));
-        comboBox->insertItem(12, QApplication::translate("MainWindow", "13", 0));
-        comboBox->insertItem(13, QApplication::translate("MainWindow", "14", 0));
-        comboBox->insertItem(14, QApplication::translate("MainWindow", "15", 0));
-        comboBox->insertItem(15, QApplication::translate("MainWindow", "16", 0));
-        comboBox->setToolTip(QApplication::translate("MainWindow", "set number of significant digits", 0));
-        connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(precBox(int)));
-        emit comboBox->currentIndexChanged(comboBox->currentIndex());
-}
 
 void MainWindow::setupElementBar(void)
 {
@@ -241,18 +194,3 @@ void MainWindow::setupElementBar(void)
         m_ui->elmentBarLayout->addItem(spacer);
 }
 
-void MainWindow::onSelectionChange(void)
-{
-        EgcFormulaEntity* formula = m_document->getActiveFormulaEntity();
-        quint8 digits;
-        if (formula) {
-                digits = formula->getNumberOfSignificantDigits();
-        } else {
-                digits = EgcFormulaEntity::getStdNrSignificantDigis();
-        }
-
-        //set number of digits
-        m_digits->blockSignals(true);
-        m_digits->setCurrentIndex(MAP_PRECISION_TO_COMBO(digits));
-        m_digits->blockSignals(false);
-}

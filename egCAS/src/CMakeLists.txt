@@ -152,6 +152,7 @@ set(egCAS_SOURCES
         menu/elementbar.cpp
         menu/mathsection.cpp
         menu/actionwrapper.cpp
+        menu/precisionbox.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS

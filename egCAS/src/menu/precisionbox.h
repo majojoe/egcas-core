@@ -1,4 +1,5 @@
-/*Copyright (c) 2014, Johannes Maier <maier_jo@gmx.de>
+/*
+Copyright (c) 2015, Johannes Maier <maier_jo@gmx.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -11,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of egCAS nor the names of its
+* Neither the name of the egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -25,54 +26,40 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#ifndef PRECISIONBOX_H
+#define PRECISIONBOX_H
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
-#include <QMainWindow>
-#include <QtCore>
-#include <QtGui>
 #include <QScopedPointer>
-#include "view/egcasscene.h"
+#include <QWidget>
 
-namespace Ui {
-class MainWindow;
-}
-class EgcDocument;
 class QComboBox;
-class PrecisionBox;
+class EgcDocument;
+class QToolBar;
 
-class MainWindow : public QMainWindow
+
+class PrecisionBox : public QWidget
 {
-    Q_OBJECT
-
+        Q_OBJECT
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
+        PrecisionBox(EgcDocument* doc, QToolBar* toolbar, QWidget* parent = nullptr);
+        ~PrecisionBox();
 public slots:
-        void showLicense(void);
-        void showInfo(void);
-        void calculate(void);
-        void autoCalculation(bool on);
-        void newPage(void);
+        void precBox(int prec);
+private slots:
+        /**
+         * @brief onSelectionChange is called if the selection of a formula or any other entity changes
+         */
+        void onSelectionChange(void);
 private:
+        Q_DISABLE_COPY(PrecisionBox)
         /**
-         * @brief setupConnections setup all connections to slots that are neccessary
+         * @brief setPrecision set the precision of a formula or the document
+         * @param prec the precision to set 0 (standard), 2-16(number of digits)
          */
-        void setupConnections(void);
-        /**
-         * @brief setupToolbar setup the toolbar
-         */
-        void setupToolbar(void);
-        /**
-         * @brief setupElementBar setup the left bar with the math buttons
-         */
-        void setupElementBar(void);
+        void setPrecision(int prec);
 
-        QScopedPointer<Ui::MainWindow> m_ui;
-        QScopedPointer<EgcDocument> m_document;
-        PrecisionBox* m_precision;
+        QScopedPointer<QComboBox> m_box;
+        EgcDocument* m_document;
 };
 
-#endif // MAINWINDOW_H
+#endif // PRECISIONBOX_H
