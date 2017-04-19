@@ -182,17 +182,6 @@ public:
          */
         void updatePointer(EgcNode* newPointer, bool right);
         /**
-         * @brief lockDelayedCursorUpdate if the cursor update is locked, updatePointer has no effect. This can be
-         * useful, if there are some operations in between that shall have no effect. It is very unlikely that a user
-         * will need this function.
-         */
-        void lockDelayedCursorUpdate(void);
-        /**
-         * @brief unlockDelayedCursorUpdate after unlocking the cursor update will work as expected before. It is very
-         * unlikely that a user will need to use this.
-         */
-        void unlockDelayedCursorUpdate(void);
-        /**
          * @brief invalidateCursor make sure cursor is not valid anymore. Cursor must be updated upon next cursor update.
          * @param baseNode the base node of the formula must be given here
          */
@@ -204,14 +193,15 @@ public:
          * @param rSide true if cursor shall be positioned at the right side, if false cursor will be positioned at left
          * side.
          */
-        void setCursorAt(EgcNode* node, quint32 subInd, bool rSide);
+        void setCursorAt(EgcNode* node, bool rSide, quint32 subInd);
         /**
-         * @brief setCursorAtDelayed set the cursor at the given position
+         * @brief setCursorAt set the cursor at the given position
          * @param node the node where to set the cursor at
+         * @param subInd the sub index where to position the cursor
          * @param rSide true if cursor shall be positioned at the right side, if false cursor will be positioned at left
          * side.
          */
-        void setCursorAtDelayed(EgcNode* node, bool rSide);
+        void setCursorAt(EgcNode* node, bool rSide);
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula

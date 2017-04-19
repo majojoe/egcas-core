@@ -68,7 +68,21 @@ EgcScrPosIterator::EgcScrPosIterator(const EgcScrPosIterator& orig) : m_lookup(o
 
 }
 
-void EgcScrPosIterator::setCursorAt(EgcNode* node, quint32 subInd, bool rSide)
+void EgcScrPosIterator::setCursorAt(EgcNode* node, bool rSide, quint32 subInd)
+{
+        setCursorAt(node, rSide);
+        if (&m_nodeIter->getNode() == node) {
+                for (int i = m_subIdIter->peekNext(); m_subIdIter->peekNext() < subInd; i++) {
+                        if (!m_subIdIter->hasNext())
+                                break;
+                        m_subIdIter->next();
+                }
+                if (!rSide && m_subIdIter->hasPrevious())
+                        m_subIdIter->previous();
+        }
+}
+
+void EgcScrPosIterator::setCursorAt(EgcNode* node, bool rSide)
 {
         if (!node)
                 return;
@@ -94,16 +108,8 @@ void EgcScrPosIterator::setCursorAt(EgcNode* node, quint32 subInd, bool rSide)
         m_nodeIter->setAtNode(*node, rSide);
         m_subIdIter->setNode(m_nodeIter->getNode());
         m_subIdIter->toFront();
-        if (&m_nodeIter->getNode() == node) {
-                for (int i = m_subIdIter->peekNext(); m_subIdIter->peekNext() < subInd; i++) {
-                        if (!m_subIdIter->hasNext())
-                                break;
-                        m_subIdIter->next();
-                }
-                if (!rSide && m_subIdIter->hasPrevious())
-                        m_subIdIter->previous();
-        }
 }
+
 
 bool EgcScrPosIterator::hasNext(void) const
 {
@@ -374,17 +380,13 @@ bool EgcScrPosIterator::isUnderlineActive(void)
 
 void EgcScrPosIterator::finishFormulaChange(void)
 {
-        bool doStep;
-
         m_lastUnderlinedNode = nullptr;
-        doStep = m_nodeIter->finishModOperation();
+        m_nodeIter->finishModOperation();
         if (m_subIdIter->node() != &m_nodeIter->getNode()) {
                 m_subIdIter->setNode(m_nodeIter->getNode());        
                 if (!m_nodeIter->getNode().isContainer() && m_nodeIter->rightSide())
                         m_subIdIter->toBack();
         }
-        if (hasNext() && doStep)
-                next();
 
         if (m_checkForBinEmpty) {
                 if (m_nodeIter->besideBinEmptyNode(false) && hasPrevious())
@@ -408,7 +410,7 @@ void EgcScrPosIterator::updatePointer(EgcNode* newPointer, bool right)
         if (!newPointer)
                 return;
 
-        m_nodeIter->setAtNodeDelayed(*newPointer, right);
+        m_nodeIter->setAtNode(*newPointer, right);
 }
 
 void EgcScrPosIterator::balanceNodeIter(void)
@@ -423,24 +425,8 @@ void EgcScrPosIterator::balanceNodeIter(void)
         }        
 }
 
-void EgcScrPosIterator::lockDelayedCursorUpdate(void)
-{
-        m_nodeIter->lockDelayedCursorUpdate();
-}
-
-void EgcScrPosIterator::unlockDelayedCursorUpdate(void)
-{
-        m_nodeIter->unlockDelayedCursorUpdate();
-}
-
 void EgcScrPosIterator::invalidateCursor(EgcNode& baseNode)
 {
         m_nodeIter->toFront();
         m_subIdIter->setNode(baseNode);
-}
-
-void EgcScrPosIterator::setCursorAtDelayed(EgcNode* node, bool rSide)
-{
-        if (node)
-                m_nodeIter->setAtNodeDelayed(*node, rSide);
 }

@@ -80,14 +80,6 @@ public:
          */
         void setAtNode(EgcNode& node, bool atRightSide = true, EgcSnapProperty snapProperty = EgcSnapProperty::SnapVisibleCursor);
         /**
-         * @brief setAtNode set the iterator to a position on the right or left side of the given Node. Same as above,
-         * but at a later time when the mathml lookup has been updated.
-         * ATTENTION: the given node must be an element of the formula.
-         * @param node the node where to position the iterator (at the left or at the right side of the node)
-         * @param atRightSide true if the iterator shall be positioned at the right side (default), false otherwise
-         */
-        void setAtNodeDelayed(EgcNode& node, bool atRightSide = true);
-        /**
          * @brief hasNext Checks if there is at most one more item after the current item.
          * @return True if an item was found, false otherwise.
          */
@@ -152,9 +144,8 @@ public:
          * @brief finishModOperation finish any started operation that modifies the tree. Some operations (like inserts
          * and deletes) can only be finished if mathml lookup table had been updated. So correction of cursor positions
          * can only be done then.
-         * @return true if the screen iterator needs to step forward, false if not
          */
-        bool finishModOperation(void);
+        void finishModOperation(void);
         /**
          * @brief remove the node in the direction given
          * @param before if true remove the item in backward direction, if false the item in forward direction
@@ -174,17 +165,6 @@ public:
          * @return true if everything went well, false otherwise
          */
         bool replaceByEmtpy(bool cursorRight);
-        /**
-         * @brief lockDelayedCursorUpdate if the cursor update is locked, setAtNodeDelayed has no effect. This can be
-         * useful, if there are some operations in between that shall have no effect. It is very unlikely that a user
-         * will need this function.
-         */
-        void lockDelayedCursorUpdate(void);
-        /**
-         * @brief unlockDelayedCursorUpdate after unlocking the cursor update will work as expected before. It is very
-         * unlikely that a user will need to use this.
-         */
-        void unlockDelayedCursorUpdate(void);
         /**
          * @brief besideBinEmptyNode check if there is a empty binary node near the current cursor
          * @param right check if there is an empty node on the right side of m_node, if false check is done for left
@@ -384,14 +364,20 @@ private:
          * @return pointer to the replaced node if everything worked well, nullptr otherwise
          */
         EgcNode* replaceBinEmptyNodeBy(EgcNodeType type, bool right);
+        /**
+         * @brief isValid returns if iterator is currently valid
+         * @return true if iterator is valid (can be used), false otherwise
+         */
+        bool isValid(void) const;
+        /**
+         * @brief setInvalid sets the iterator to invalid. This means it cannot be used at the moment.
+         */
+        void setInvalid(void);
 
         QScopedPointer<EgcNodeIterator> m_nodeIter;         ///< the node iterator that points to the current node with a mathml id
         EgcNode* m_node;                                    ///< currently active node (where the cursor is currently)
-        EgcNode* m_iterPosAfterUpdate;                      ///< iterator should be at this position after mathml lookup table update
-        bool m_atRightSideAfterUpdate;                      ///< if cursor should be at the right side of m_iterPosAfterUpdate after update
-        bool m_isInsert;                                    ///< true if after an insert operation the iterator shall be incremented (that cursor is after inserted element)
         EgcFormulaEntity &m_formula;                        ///< reference to formula associated with
-        bool m_lockDelayedUpdate;                           ///< lock the delayed update via setAtNodeDelayed
+        bool m_valid;                                       ///< is true if iterator can be used normally, if false, it cannot be used at present
 };
 
 #endif // EGCIDNODEITER_H

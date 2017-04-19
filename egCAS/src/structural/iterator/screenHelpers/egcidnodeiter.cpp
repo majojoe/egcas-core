@@ -39,11 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcIdNodeIter::EgcIdNodeIter(EgcFormulaEntity& formula) : m_nodeIter{new EgcNodeIterator(formula)},
                                                                 m_node{&formula.getBaseElement()},
-                                                                m_iterPosAfterUpdate{nullptr},
-                                                                m_atRightSideAfterUpdate{false},
-                                                                m_isInsert{false},
                                                                 m_formula(formula),
-                                                                m_lockDelayedUpdate(false)
+                                                                m_valid{true}
 {
         toBack();
 }
@@ -54,11 +51,8 @@ EgcIdNodeIter::~EgcIdNodeIter()
 
 EgcIdNodeIter::EgcIdNodeIter(const EgcIdNodeIter& orig) : m_nodeIter{new EgcNodeIterator(*orig.m_nodeIter)},
         m_node{orig.m_node},
-        m_iterPosAfterUpdate{orig.m_iterPosAfterUpdate},
-        m_atRightSideAfterUpdate{orig.m_atRightSideAfterUpdate},
-        m_isInsert{orig.m_isInsert},
         m_formula(orig.m_formula),
-        m_lockDelayedUpdate{orig.m_lockDelayedUpdate}
+        m_valid{true}
 {
 
 }
@@ -106,6 +100,9 @@ bool EgcIdNodeIter::hasNext(EgcSnapProperty snapProperty) const
         EgcNodeIterator tempIter = *m_nodeIter;
         EgcNode* prev;
 
+        if (!isValid())
+                return false;
+
         prev = gotoNodeWithId(true, &tempIter, *m_node, true, snapProperty);
 
         if (prev)
@@ -122,6 +119,9 @@ bool EgcIdNodeIter::hasPrevious(EgcSnapProperty snapProperty) const
 {
         EgcNodeIterator tempIter = *m_nodeIter;
         EgcNode* next;
+
+        if (!isValid())
+                return false;
 
         next = gotoNodeWithId(false, &tempIter, *m_node, true, snapProperty);
 
@@ -233,11 +233,17 @@ void EgcIdNodeIter::toFront(void)
 
 EgcNode& EgcIdNodeIter::getNode(void)
 {
+        if (!isValid())
+                return m_formula.getBaseElement();
+
         return *m_node;
 }
 
 quint32 EgcIdNodeIter::id(void) const
 {
+        if (!isValid())
+                return 0;
+
         if (m_node == &m_nodeIter->peekNext())
                 return getMathmlId(m_node, getState(), &m_nodeIter->peekPrevious(), nullptr);
         else
@@ -569,11 +575,6 @@ EgcNode* EgcIdNodeIter::insert(EgcNodeType type)
                 retval = replaceBinEmptyNodeBy(type, right);
                 if (!retval)
                         return nullptr;
-
-                m_iterPosAfterUpdate = node;
-                m_atRightSideAfterUpdate = right;
-                m_isInsert = true;
-
         } else {
                 bool insertBeforeChild = false;
                 if (&m_nodeIter->peekNext() == m_node)
@@ -581,12 +582,10 @@ EgcNode* EgcIdNodeIter::insert(EgcNodeType type)
                 retval = m_nodeIter->insert(type, insertBeforeChild);
                 if(!retval)
                         return nullptr;
-
-                m_iterPosAfterUpdate = node;
-                m_atRightSideAfterUpdate = right;
-                m_isInsert = true;
-
         }
+
+        setAtNode(*node, right);
+        setInvalid();
         
         return retval;
 }
@@ -596,8 +595,6 @@ bool EgcIdNodeIter::remove(bool before)
         bool retval = false;
         EgcIteratorState state;
         EgcNode* node;
-
-        m_isInsert = false;
 
         node = getNodeToModify(before, state);
         if (!node) return false;
@@ -654,8 +651,10 @@ bool EgcIdNodeIter::removeBinary(bool before, EgcNode &node, EgcIteratorState st
         if (deleteAll) {
                 EgcNode* parent = node.getParent();
                 QScopedPointer<EgcNode> container(m_formula.cut(node));
-                if (!container.isNull())
-                        setAtNodeDelayed(*parent, before);
+                if (!container.isNull()) {
+                        setAtNode(*parent, before);
+                        setInvalid();
+                }
         } else if (removeType) {
                 QScopedPointer<EgcBinaryNode> orig(&bin);
                 QScopedPointer<EgcBinEmptyNode> empty(new EgcBinEmptyNode);
@@ -665,7 +664,8 @@ bool EgcIdNodeIter::removeBinary(bool before, EgcNode &node, EgcIteratorState st
                         (void) empty.take();
                 else
                         (void) orig.take();
-                setAtNodeDelayed(*m_node, !before);
+                setAtNode(*m_node, !before);
+                setInvalid();
         } else if(deleteChild) {
                 if (!m_node)
                         return false;
@@ -684,7 +684,8 @@ bool EgcIdNodeIter::removeBinary(bool before, EgcNode &node, EgcIteratorState st
                         return false;
                 m_formula.paste(*child.take(), node);
 
-                setAtNodeDelayed(*tmpChild, before);
+                setAtNode(*tmpChild, before);
+                setInvalid();
 
         } else {
                 return false;
@@ -723,8 +724,10 @@ bool EgcIdNodeIter::removeFlex(bool before, EgcNode &node, EgcIteratorState stat
                 if (!parent->getIndexOfChild(node, index))
                         return false;
                 QScopedPointer<EgcNode> container(m_formula.cut(node));
-                if (parent)
-                        setAtNodeDelayed(*(parent->getChild(index)), false);
+                if (parent) {
+                        setAtNode(*(parent->getChild(index)), false);
+                        setInvalid();
+                }
         } else if (deleteContainer) {
                 if (!flex.getChild(0))
                         return false;
@@ -732,7 +735,8 @@ bool EgcIdNodeIter::removeFlex(bool before, EgcNode &node, EgcIteratorState stat
                 if (child0.isNull())
                         return false;
                 m_formula.paste(*child0, node);
-                setAtNodeDelayed(*child0, before);
+                setAtNode(*child0, before);
+                setInvalid();
         } else if(deleteChild) {
                 if (!m_node)
                         return false;
@@ -755,7 +759,8 @@ bool EgcIdNodeIter::removeFlex(bool before, EgcNode &node, EgcIteratorState stat
                 if (!child)
                         child = &flex;
 
-                setAtNodeDelayed(*child, before);
+                setAtNode(*child, before);
+                setInvalid();
 
         } else {
                 return false;
@@ -779,6 +784,7 @@ bool EgcIdNodeIter::removeUnary(bool before, EgcNode& node, EgcIteratorState sta
 
         EgcIdNodeIter iter(m_formula);
         iter.setAtNode(node, before);
+        setInvalid();
         if (before) {
                 if (iter.hasPrevious())
                         iter.previous();
@@ -791,7 +797,8 @@ bool EgcIdNodeIter::removeUnary(bool before, EgcNode& node, EgcIteratorState sta
         if (child.isNull())
                 return false;
         m_formula.paste(*child.take(), node);
-        setAtNodeDelayed(nd, before);
+        setAtNode(nd, before);
+        setInvalid();
 
         return true;
 }
@@ -810,12 +817,15 @@ bool EgcIdNodeIter::removeLeaf(bool before, EgcNode& node, EgcIteratorState stat
              && parent->isFlexNode()) {
                 EgcFlexNode* flex = static_cast<EgcFlexNode*>(parent);
                 flex->remove(index);
-                setAtNodeDelayed(*parent, before);
+                setAtNode(*parent, before);
+                setInvalid();
         } else {
                 QScopedPointer<EgcNode> leaf(m_formula.cut(node));
                 EgcNode* child = parent->getChild(index);
-                if (child)
-                        setAtNodeDelayed(*child, before);
+                if (child) {
+                        setAtNode(*child, before);
+                        setInvalid();
+                }
         }
 
         return true;
@@ -841,7 +851,8 @@ bool EgcIdNodeIter::replaceByEmtpy(bool cursorRight)
                 return false;
         EgcNode* tmp = empty.data();
         m_formula.paste(*empty.take(), *node);
-        setAtNodeDelayed(*tmp, cursorRight);
+        setAtNode(*tmp, cursorRight);
+        setInvalid();
 
         return true;
 }
@@ -904,57 +915,13 @@ bool EgcIdNodeIter::deleteTree(bool before)
                         return false;
                 
                 setAtNode(*nodeToDelete, true, EgcSnapProperty::SnapAll);
+                setInvalid();
                 m_nodeIter->remove(false);
                 
-                setAtNodeDelayed(*cParent->getChild(index), atRightSide);
+                setAtNode(*cParent->getChild(index), atRightSide);
         }
 
         return true;
-}
-
-
-bool EgcIdNodeIter::finishModOperation(void)
-{
-        bool retval = false;
-
-        if (m_iterPosAfterUpdate) {
-                setAtNode(*m_iterPosAfterUpdate, m_atRightSideAfterUpdate);
-                //correct cursor for remove operations
-                if (m_isInsert) {
-                        if (m_atRightSideAfterUpdate)
-                                next();
-                        else
-                                previous();
-                }
-                m_iterPosAfterUpdate = nullptr;
-        }
-
-        if (!m_atRightSideAfterUpdate && m_isInsert)
-                retval = true;
-        else
-                retval = false;
-        m_isInsert = false;
-
-        return retval;
-}
-
-void EgcIdNodeIter::setAtNodeDelayed(EgcNode& node, bool atRightSide)
-{
-        if (m_lockDelayedUpdate == false && m_formula.isNodeInFormula(node)) {
-                m_iterPosAfterUpdate = &node;
-                m_atRightSideAfterUpdate = atRightSide;
-                m_isInsert = false;
-        }
-}
-
-void EgcIdNodeIter::lockDelayedCursorUpdate(void)
-{
-        m_lockDelayedUpdate = true;
-}
-
-void EgcIdNodeIter::unlockDelayedCursorUpdate(void)
-{
-        m_lockDelayedUpdate = false;
 }
 
 EgcNode* EgcIdNodeIter::findAtomicNode(EgcNode& node) const
@@ -1027,4 +994,19 @@ EgcNode* EgcIdNodeIter::replaceBinEmptyNodeBy(EgcNodeType type, bool right)
         (void) gotoNodeWithId(right, m_nodeIter.data(), *node, true, EgcSnapProperty::SnapModifyable);
 
         return m_nodeIter->replaceBinEmptyNodeBy(type);
+}
+
+bool EgcIdNodeIter::isValid(void) const
+{
+        return m_valid;
+}
+
+void EgcIdNodeIter::setInvalid(void)
+{
+        m_valid = false;
+}
+
+void EgcIdNodeIter::finishModOperation(void)
+{
+        m_valid = true;
 }

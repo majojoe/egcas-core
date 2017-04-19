@@ -296,13 +296,6 @@ public:
          */
         static bool isResultNode(const EgcNode& node);
         /**
-         * @brief rearrangePrecedence when a formula is modified (modify, insert or remove operators), the formula tree
-         * needs to be rearranged in a sense that the operator precedence of the mathematical operation is valid again.
-         * E.g. when changing a plus operator to a multiplication operator, the multiplication has a higher precedence.
-         * Therefore the formula structure has to be rearranged to reflect the changed operation.
-         */
-        void rearrangePrecedence(void);
-        /**
          * @brief isNodeInFormula checks if the given node is a node of this formula
          * @param node the node to check
          * @return true if the given node is a node of this formula, false otherwise
@@ -373,22 +366,6 @@ private:
          * @return true if screen iterator is in subtree, false otherwise
          */
         bool isScreenIterInSubtree(EgcNode& tree, bool &rightSide) const;
-        /**
-         * @brief rearrangeOnePrecedence rearanging the precedence of a formula tree needs to be done in an iterative
-         * way. This rearanges just one operation in the tree if there is s.th. to rearange.
-         * @return true if the end of the tree has been reached without rearrainging a node, false otherwise
-         */
-        bool rearrangeOnePrecedence(void);
-        /**
-         * @brief rotateTreeRight rotates the subtree of this node right (see tree threory -> discrete mathematics)
-         * @return true if right rotation was possible and done, false otherwise.
-         */
-        virtual bool rotateTreeRight(EgcNode& treeNodeToRotate);
-        /**
-         * @brief rotateTreeLeft rotates the subtree of this node left (see tree threory -> discrete mathematics)
-         * @return true if left rotation was possible and done, false otherwise.
-         */
-        virtual bool rotateTreeLeft(EgcNode& treeNodeToRotate);
         /**
          * @brief isEmptyNode check if current node where cursor is, is an empty node or not
          * @return true if it is an empty node, false otherwise
