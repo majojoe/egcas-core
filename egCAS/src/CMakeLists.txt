@@ -121,6 +121,7 @@ set(egCAS_SOURCES
         structural/specialNodes/egcbasenode.cpp
         structural/specialNodes/egcemptynode.cpp
         structural/visitor/egcmaximavisitor.cpp 
+        structural/visitor/restructurevisitor.cpp 
         ${egCAS_concrete_node_SOURCES}
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 

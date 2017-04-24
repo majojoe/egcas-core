@@ -101,6 +101,8 @@
 %token LEFTPARENTESIS "(";
 %token LEFTPARENTESISDBG "{";
 %token RIGHTPARENTHESIS ")";
+%token LBRACKET_OP;
+%token RBRACKET_OP;
 %token RIGHTPARENTHESISDBG "}";
 %token EXPONENT "^"
 %token SQROOT "sqrt"
@@ -149,6 +151,7 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | expr "/" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::DivisionNode, $1, $3);}
      | expr "^" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::ExponentNode, $1, $3);}
      | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
+     | LBRACKET_OP expr RBRACKET_OP {$$ = interpreter.addUnaryStructParenth($2);}
      | "-" expr %prec UMINUS {$$ = interpreter.addUnaryExpression(EgcNodeType::UnaryMinusNode, $2);}
      | expr "=" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::EqualNode, $1, $3);}
      | expr ":" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::DefinitionNode, $1, $3);}
