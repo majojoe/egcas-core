@@ -99,11 +99,9 @@
 %token DEFINE ":"
 %token COMMA ",";
 %token LEFTPARENTESIS "(";
-%token LEFTPARENTESISDBG "{";
 %token RIGHTPARENTHESIS ")";
 %token LBRACKET_OP;
 %token RBRACKET_OP;
-%token RIGHTPARENTHESISDBG "}";
 %token EXPONENT "^"
 %token SQROOT "sqrt"
 %token INTEGRAL "_integrate"
@@ -164,7 +162,6 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}
      | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}  //only for debugging purposes
      | "_empty"            {$$ = interpreter.addEmptyNode();}   //only for debug purposes
-     | "{" expr "}"      {$$ = interpreter.addUnaryStructParenth($2);}
 ;
     
 explist: expr            {$$ = interpreter.createArgList($1);}

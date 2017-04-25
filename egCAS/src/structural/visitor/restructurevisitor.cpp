@@ -110,12 +110,8 @@ void ReStructureVisitor::visit(EgcFlexNode* flex)
                         assembleResult(static_cast<EgcFunctionNode*>(flex)->getName() % "(", ",", ")", flex);
                 break;
         case EgcNodeType::IntegralNode:
-                if (flex->getNumberChildNodes() == 2) { // indefinite integral
-                        if (m_state == EgcIteratorState::RightIteration)
-                                assembleResult("integrate(", ",", ")", flex);
-                } else if (flex->getNumberChildNodes() == 4) {
-                        if (m_state == EgcIteratorState::RightIteration)
-                                assembleResult("romberg(", ",", ")", flex);
+                if (m_state == EgcIteratorState::RightIteration) {
+                                assembleResult("_integrate(", ",", ")", flex);
                 }
                 break;
         case EgcNodeType::DifferentialNode:
@@ -124,7 +120,7 @@ void ReStructureVisitor::visit(EgcFlexNode* flex)
                         quint32 indexD = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::differential);
                         quint32 indexV = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::variable);
 
-                        QString str = "diff(%" % QString::number(indexD + 1) % ",%" % QString::number(indexV + 1)
+                        QString str = "_diff(%" % QString::number(indexD + 1) % ",%" % QString::number(indexV + 1)
                                       % "," % QString::number(diff->getNrDerivative()) % ")";
                         assembleResult(str, flex);
                 }
@@ -163,10 +159,6 @@ QString ReStructureVisitor::getResult(void)
 {
         m_suppressList.clear();
         QString tmp = EgcNodeVisitor::getResult();
-
-        if (m_formula) {
-                tmp += QString(";");
-        }
 
 #ifdef DEBUG_KERNEL_COMMAND_GENERATION
         qDebug() << "formula output of visitor for reparsing structure: " << tmp;

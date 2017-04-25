@@ -89,16 +89,13 @@ EXPONENT     ([Eeb][-+]?[0-9]+)
 "**"    { return CASParser::MaximaParser::make_EXPONENT(CASParser::location()); }
 "sqrt"  { return CASParser::MaximaParser::make_SQROOT(CASParser::location()); }
  /*parenthesis to define operation borders*/
-"⟦"     { return CASParser::MaximaParser::make_LBRACKET_OP(CASParser::location()); }
+"⟦"     { return CASParser::MaximaParser::make_LBRACKET_OP(CASParser::location()); }        
 "⟧"     { return CASParser::MaximaParser::make_RBRACKET_OP(CASParser::location()); }
 
- /*debugging operators*/
 "_integrate"  { return CASParser::MaximaParser::make_INTEGRAL(CASParser::location()); }
 "_diff"  { return CASParser::MaximaParser::make_DIFFERENTIAL(CASParser::location()); }
 "_root" { return CASParser::MaximaParser::make_ROOT(CASParser::location()); }
 "_empty" { return CASParser::MaximaParser::make_EMPTY(CASParser::location()); }
-"{"     { return CASParser::MaximaParser::make_LEFTPARENTESISDBG(CASParser::location()); }
-"}"     { return CASParser::MaximaParser::make_RIGHTPARENTHESISDBG(CASParser::location()); }
 
  /*numbers*/
 [0-9]+"."[0-9]*{EXPONENT}? |
