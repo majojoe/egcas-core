@@ -67,10 +67,10 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcFormulaItem::setBaseFontSize(18);
     EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 480.0)));
-    FormulaGenerator::getFormulaTree(formula1, "{sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3))}/{ⅇ^π}=x^‴");
+    FormulaGenerator::getFormulaTree(formula1, "_{sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3))_}/_{ⅇ^π_}=x^‴");
     EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 350.0)));
-    FormulaGenerator::getFormulaTree(formula2, "{-1+sqrt(5)}/2=_empty");
+    FormulaGenerator::getFormulaTree(formula2, "_{-1+sqrt(5)_}/2=_empty");
     formula2->setNumberResultType(EgcNumberResultType::ScientificType);
     formula2->setNumberOfSignificantDigits(4);
     formula2->setFontSize(50);
@@ -81,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     EgcFormulaEntity* formula4 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 610.0)));
-    FormulaGenerator::getFormulaTree(formula4, "z_120:{x-1}/{x+5}");
+    FormulaGenerator::getFormulaTree(formula4, "z_120:_{x-1_}/_{x+5_}");
 
     EgcFormulaEntity* formula5 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 670.0)));

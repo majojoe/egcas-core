@@ -43,27 +43,27 @@ void ReStructureVisitor::visit(EgcBinaryNode* binary)
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("⟦%1⟧^⟦1/%2⟧", binary);
+                        assembleResult("%1^_{1/_{%2_}_}", binary);
                 break;
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("⟦%1⟧+⟦%2⟧", binary);
+                        assembleResult("%1+%2", binary);
                 break;
         case EgcNodeType::MinusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("⟦%1⟧-⟦%2⟧", binary);
+                        assembleResult("%1-%2", binary);
                 break;
         case EgcNodeType::MultiplicationNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("⟦%1⟧*⟦%2⟧", binary);
+                        assembleResult("%1*%2", binary);
                 break;
         case EgcNodeType::DivisionNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("⟦%1⟧/⟦%2⟧", binary);
+                        assembleResult("_{%1_}/_{%2_}", binary);
                 break;
         case EgcNodeType::ExponentNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("⟦%1⟧^⟦%2⟧", binary);
+                        assembleResult("%1^_{%2_}", binary);
                 break;
         case EgcNodeType::EqualNode: {
                 if (m_state == EgcIteratorState::RightIteration) {
@@ -77,7 +77,7 @@ void ReStructureVisitor::visit(EgcBinaryNode* binary)
                 break;
         case EgcNodeType::BinEmptyNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("(%1)()(%2)", binary);
+                        assembleResult("%1()%2", binary);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(binary->getNodeType())) ;
@@ -94,7 +94,7 @@ void ReStructureVisitor::visit(EgcUnaryNode* unary)
                 break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("-⟦%1⟧", unary);
+                        assembleResult("-%1", unary);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(unary->getNodeType())) ;

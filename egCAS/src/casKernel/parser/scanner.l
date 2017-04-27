@@ -72,6 +72,9 @@
 
 
 EXPONENT     ([Eeb][-+]?[0-9]+)
+VARSEPARATOR (_1)
+UNDERSCORE   (__)
+UNICODESIGN  (_2[0-9a-fA-F]+_3)
 
 %%
 
@@ -89,8 +92,8 @@ EXPONENT     ([Eeb][-+]?[0-9]+)
 "**"    { return CASParser::MaximaParser::make_EXPONENT(CASParser::location()); }
 "sqrt"  { return CASParser::MaximaParser::make_SQROOT(CASParser::location()); }
  /*parenthesis to define operation borders*/
-"⟦"     { return CASParser::MaximaParser::make_LBRACKET_OP(CASParser::location()); }        
-"⟧"     { return CASParser::MaximaParser::make_RBRACKET_OP(CASParser::location()); }
+"_{"     { return CASParser::MaximaParser::make_LBRACKET_OP(CASParser::location()); }
+"_}"     { return CASParser::MaximaParser::make_RBRACKET_OP(CASParser::location()); }
 
 "_integrate"  { return CASParser::MaximaParser::make_INTEGRAL(CASParser::location()); }
 "_diff"  { return CASParser::MaximaParser::make_DIFFERENTIAL(CASParser::location()); }
@@ -108,7 +111,9 @@ cos {
  }
 
  /*names*/
-[a-zA-Z_][a-zA-Z0-9_]* { return CASParser::MaximaParser::make_NAMES(yytext, CASParser::location());}
+([a-zA-Z]{1}|{UNICODESIGN})([a-zA-Z0-9]|{UNDERSCORE}|{VARSEPARATOR}|{UNICODESIGN})* {
+        return CASParser::MaximaParser::make_NAMES(yytext, CASParser::location());
+ }
 
 [\n\t ] { /*ignore whitechar*/ }
 
