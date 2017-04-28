@@ -35,12 +35,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "specialNodes/egcbasenode.h"
 #include "egcnodes.h"
 #include "visitor/egcmaximavisitor.h"
+#include "visitor/restructurevisitor.h"
 #include "visitor/egcmathmlvisitor.h"
 #include "egcabstractformulaitem.h"
 #include "egcabstractentitylist.h"
 #include "actions/egcaction.h"
 #include "iterator/egcscrpositerator.h"
 #include "document/egcabstractdocument.h"
+#include "casKernel/parser/egckernelparser.h"
 
 quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 0;
 
@@ -216,6 +218,14 @@ QString EgcFormulaEntity::getCASKernelCommand(void)
         m_errorMsg.clear();
         EgcMaximaVisitor maximaVisitor(*this);
         return maximaVisitor.getResult();
+}
+
+void EgcFormulaEntity::reStructureTree(void)
+{
+        ReStructureVisitor restructureVisitor(*this);
+        QString result = restructureVisitor.getResult();
+        EgcKernelParser parser;
+        setRootElement(parser.parseKernelOutput(result));
 }
 
 bool EgcFormulaEntity::isResult(void)

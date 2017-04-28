@@ -43,7 +43,7 @@ void ReStructureVisitor::visit(EgcBinaryNode* binary)
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("%1^_{1/_{%2_}_}", binary);
+                        assembleResult("_root(_{%1_},%2)", binary);
                 break;
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::RightIteration)
@@ -67,7 +67,7 @@ void ReStructureVisitor::visit(EgcBinaryNode* binary)
                 break;
         case EgcNodeType::EqualNode: {
                 if (m_state == EgcIteratorState::RightIteration) {
-                        assembleResult("%1", binary);
+                        assembleResult("_{%1_}=_{%2_}", binary);
                 }
                 break;
         }

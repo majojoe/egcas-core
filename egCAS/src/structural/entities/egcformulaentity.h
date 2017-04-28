@@ -130,6 +130,10 @@ public:
          */
         QString getCASKernelCommand(void);
         /**
+         * @brief reStructureTree restructure the tree e.g. after an insert or delete
+         */
+        void reStructureTree(void);
+        /**
          * @brief Is the formula a result of a calculation? (Has to be set by the formula(visitor) - when the formula
          * changes)
          * @return true if the formula is a result of a calculation
