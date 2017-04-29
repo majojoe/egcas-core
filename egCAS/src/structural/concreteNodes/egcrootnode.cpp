@@ -30,7 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcRootNode::EgcRootNode()
 {
-        allocReorderingProtector();
 }
 
 bool EgcRootNode::cursorSnaps(EgcNodeSide side) const
@@ -42,12 +41,3 @@ bool EgcRootNode::cursorSnaps(EgcNodeSide side) const
         return false;
 }
 
-qint32 EgcRootNode::getBindingPower(void) const
-{
-        return 60;
-}
-
-EgcBinaryOperator::ReordProtectSide EgcRootNode::getReordProtectSide(void) const
-{
-        return ReordProtectSide::leftProtector;
-}

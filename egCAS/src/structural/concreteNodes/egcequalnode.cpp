@@ -31,8 +31,3 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcEqualNode::EgcEqualNode()
 {
 }
-
-qint32 EgcEqualNode::getBindingPower(void) const
-{
-        return 1;
-}

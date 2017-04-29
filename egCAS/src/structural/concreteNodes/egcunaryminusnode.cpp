@@ -47,8 +47,3 @@ bool EgcUnaryMinusNode::visibleSigns(EgcNodeSide side) const
 
         return false;
 }
-
-qint32 EgcUnaryMinusNode::getBindingPower(void) const
-{
-        return 50;
-}

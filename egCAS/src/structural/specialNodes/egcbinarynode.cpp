@@ -265,10 +265,3 @@ bool EgcBinaryNode::visibleSigns(EgcNodeSide side) const
         
         return false;        
 }
-
-bool EgcBinaryNode::hasReorderingProtector(quint32 index) const
-{
-        (void) index;
-
-        return false;
-}

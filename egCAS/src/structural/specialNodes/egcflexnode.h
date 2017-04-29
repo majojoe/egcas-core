@@ -191,13 +191,6 @@ public:
 
 protected:
         /**
-         * @brief bindingPower returns the binding power of the this operation. Needs to be overridden by the user if
-         * this is an operation.
-         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
-         * the operation (number >= 0).
-         */
-        virtual qint32 getBindingPower(void) const override;
-        /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
          * ATTENTION: use this with care since the operation doesn't take care about the old childs. The caller must
          * assure that the old child will be properly deleted -> leak otherwise. It is very unlikely that you will need

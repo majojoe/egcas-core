@@ -89,15 +89,6 @@ EgcNode* Interpreter::addBinaryExpression(EgcNodeType type, EgcNode* node0,
         setNotDangling(node0);
         setNotDangling(node1);
         if (!node.isNull() && node0 && node1) {
-                //check for reordering protectors: if there are any invisible parenthesis e.g. with division nodes, and
-                //the cas kernel produces additional parenthesis, hide them also.
-                if (    node->hasReorderingProtector(0)
-                     && node0->getNodeType() == EgcNodeType::ParenthesisNode)
-                        static_cast<EgcParenthesisNode*>(node0)->setVisible(false);
-                if (    node->hasReorderingProtector(1)
-                     && node1->getNodeType() == EgcNodeType::ParenthesisNode)
-                        static_cast<EgcParenthesisNode*>(node1)->setVisible(false);
-
                 node->setChild(0, *node0Tmp.take());
                 node->setChild(1, *node1Tmp.take());
         } else {

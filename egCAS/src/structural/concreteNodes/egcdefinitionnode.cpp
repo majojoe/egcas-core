@@ -31,8 +31,3 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcDefinitionNode::EgcDefinitionNode()
 {
 }
-
-qint32 EgcDefinitionNode::getBindingPower(void) const
-{
-        return 2;
-}

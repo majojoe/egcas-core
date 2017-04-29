@@ -66,13 +66,6 @@ public:
          */
         virtual bool visibleSigns(EgcNodeSide side) const override;
 protected:
-        /**
-         * @brief bindingPower returns the binding power of the this operation. Needs to be overridden by the user if
-         * this is an operation.
-         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
-         * the operation (number >= 0).
-         */
-        virtual qint32 getBindingPower(void) const override;
 
         ///determines if the parenthesis are visible or not. If the parenthesis are not visible, these are reordering
         /// protectors against reordering childs to reflect new formula structure that depends on binding power.

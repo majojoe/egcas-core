@@ -141,18 +141,6 @@ public:
          */
         bool hasSubNode(const EgcNode& node, quint32 &index) const;
         /**
-         * @brief bindingPower returns the binding power of the this operation. Only applicable if this is a operation.
-         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
-         * the operation (number >= 0).
-         */
-        qint32 bindingPower(void) const;
-        /**
-         * @brief isLeftAssociative returns wether the operation is left or right associative. This is only applicable
-         * if it is an operation.
-         * @return returns true if the operation is left associative, false if it is right associative.
-         */
-        virtual bool isLeftAssociative(void) const;
-        /**
          * @brief determineIfChildIsAtomicallyBound normally a parent knows better if his child is atomically bound to the
          * parent. By implementing this the child can ask the parent whether it may be deleted (insert can take place)
          * or not. So the method isAtomicallyBoundChild can be easily implemented.
@@ -163,13 +151,6 @@ public:
         virtual bool determineIfChildIsAtomicallyBoundallyBound(const EgcNode* node) const;
 
 protected:
-        /**
-         * @brief bindingPower returns the binding power of the this operation. Needs to be overridden by the user if
-         * this is an operation.
-         * @return -1 if the binding power is not applicable (e.g. for Number or Variable Nodes) or the binding power of
-         * the operation (number >= 0).
-         */
-        virtual qint32 getBindingPower(void) const;
         /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
          * ATTENTION: use this with care since the operation doesn't take care about the old childs. The caller must

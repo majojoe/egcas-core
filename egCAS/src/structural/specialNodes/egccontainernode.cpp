@@ -112,12 +112,7 @@ bool EgcContainerNode::transferProperties(EgcContainerNode &from)
                 nd = this->getChild(i);
                 //check also if there is a reordering protector
                 if (nd != nullptr) {
-                        if (EgcBinaryOperator::isReorderingProtector(*nd)) {
-                                if (static_cast<EgcContainerNode*>(nd)->getChild(0) != nullptr)
-                                        return false;
-                        } else {
-                                return false;
-                        }
+                        return false;
                 }
         }
 
@@ -161,28 +156,6 @@ bool EgcContainerNode::hasSubNode(const EgcNode& node, quint32 &index) const
         const EgcContainerNode* container = static_cast<const EgcContainerNode*>(parent);
         (void) container->getIndexOfChild(*node_l, index);
 
-        return true;
-}
-
-qint32 EgcContainerNode::bindingPower(void) const
-{
-        if (isOperation()) {
-                qint32 power = getBindingPower();
-                if (power == -1)
-                        qDebug("no binding power defined for this operation, please define one.");
-                return power;
-        } else {
-                return -1;
-        }
-}
-
-qint32 EgcContainerNode::getBindingPower(void) const
-{
-        return -1;
-}
-
-bool EgcContainerNode::isLeftAssociative(void) const
-{
         return true;
 }
 

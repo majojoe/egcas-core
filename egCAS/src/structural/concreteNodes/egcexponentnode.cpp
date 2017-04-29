@@ -30,7 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcExponentNode::EgcExponentNode()
 {
-        allocReorderingProtector();
 }
 
 bool EgcExponentNode::cursorSnaps(EgcNodeSide side) const
@@ -54,19 +53,4 @@ bool EgcExponentNode::modifyableElement(EgcNodeSide side) const
                 return true;
 
         return false;
-}
-
-qint32 EgcExponentNode::getBindingPower(void) const
-{
-        return 60;
-}
-
-bool EgcExponentNode::isLeftAssociative(void) const
-{
-        return false;
-}
-
-EgcBinaryOperator::ReordProtectSide EgcExponentNode::getReordProtectSide(void) const
-{
-        return ReordProtectSide::rightProtector;
 }

@@ -50,53 +50,6 @@ public:
          * @return true if everything went well, false if index is > getNumberChildNodes() - 1
          */
         virtual bool setChild(quint32 index, EgcNode& expression) override;
-        /**
-         * @brief hasReorderingProtector checks if this binary operator has a reordering protector (invisible
-         * parenthesis) to protect against operator reordering e.g. for Divisor of a division operation
-         * @param index the child index to test left = 0, right = 1
-         * @return true if reordering protector is there, false otherwise
-         */
-        virtual bool hasReorderingProtector(quint32 index) const override;
-        /**
-         * @brief isLeftAssociative returns wether the operation is left or right associative. This is only applicable
-         * if it is an operation.
-         * @return returns true if the operation is left associative, false if it is right associative.
-         */
-        virtual bool isLeftAssociative(void) const;
-        /**
-         * @brief isReorderingProtector test if the given node is a reordering protector. A user will likely never need
-         * this function
-         * @param node the node to test for reordering protection functionality
-         * @return true if the given node is a reordering protection node, false otherwise
-         */
-        static bool isReorderingProtector(EgcNode& node);
-
-protected:
-        /**
-         * @brief The ReordProtectSide enum defines the sides on which reordering protectors can be
-         */
-        enum class ReordProtectSide {none = 0, leftProtector = 0x1, rightProtector = 0x2, rightAndLeftProtector = 0x3};
-
-        /**
-         * @brief allocReorderingProtector allocates invisible parenthesis for left and/or right childs. This is e.g.
-         * the case with Division Nodes. When reordering operations The childs of a division may contain suboperations
-         * such as Additions. These may not be put outside of the division operation (lower binding power) during
-         * reordering when the user typed them e.g. on the fraction sign. If reordering would be allowed for them, they
-         * would appear beside the fraction sign after reordering.
-         * @return true if everything went well, false otherwise
-         */
-        void allocReorderingProtector(void);
-        /**
-         * @brief getReordProtectSide returns the sides where reordering protectors of a special node are
-         * @return the sides where reordering protectors are
-         */
-        virtual ReordProtectSide getReordProtectSide(void) const;
-private:
-        /**
-         * @brief allocReorderProtChild allocate and set a reordering child for the given index
-         * @param index the index for which we want to allocate a reorder child
-         */
-        void allocReorderProtChild(quint32 index);
 };
 
 #endif // #ifndef EGCBINARYOPERATOR_H

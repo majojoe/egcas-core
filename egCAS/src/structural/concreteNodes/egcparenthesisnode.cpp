@@ -61,8 +61,3 @@ bool EgcParenthesisNode::visibleSigns(EgcNodeSide side) const
 
         return false;
 }
-
-qint32 EgcParenthesisNode::getBindingPower(void) const
-{
-        return 70;
-}

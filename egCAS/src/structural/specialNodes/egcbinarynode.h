@@ -159,13 +159,6 @@ public:
          * @return true if the given side of the node has visible signs.
          */
         virtual bool visibleSigns(EgcNodeSide side) const override;
-        /**
-         * @brief hasReorderingProtector checks if this binary operator has a reordering protector (invisible
-         * parenthesis) to protect against operator reordering e.g. for Divisor of a division operation
-         * @param index the child index to test left = 0, right = 1
-         * @return true if reordering protector is there, false otherwise
-         */
-        virtual bool hasReorderingProtector(quint32 index) const;
 
 protected:
         /**

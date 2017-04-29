@@ -31,8 +31,3 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcMinusNode::EgcMinusNode()
 {
 }
-
-qint32 EgcMinusNode::getBindingPower(void) const
-{
-        return 20;
-}

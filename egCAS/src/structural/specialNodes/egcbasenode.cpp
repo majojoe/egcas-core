@@ -32,8 +32,3 @@ EgcBaseNode::EgcBaseNode()
 {
         m_parent = nullptr;
 }
-
-qint32 EgcBaseNode::getBindingPower(void) const
-{
-        return 0;
-}
