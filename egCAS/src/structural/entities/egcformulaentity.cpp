@@ -970,3 +970,8 @@ void EgcFormulaEntity::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSi
         m_scrIter->setCursorAt(node, subPos, rightSide);
         showCurrentCursor();
 }
+
+EgcScrPosIterator* EgcFormulaEntity::getIterator(void)
+{
+        return m_scrIter.data();
+}

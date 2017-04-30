@@ -33,9 +33,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../egcnodes.h"
 #include "restructurevisitor.h"
 #include "../entities/egcformulaentity.h"
+#include <iterator/egcscrpositerator.h>
 
-ReStructureVisitor::ReStructureVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(formula)
+ReStructureVisitor::ReStructureVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(formula), m_iteratorPointer{nullptr}
 {
+        if (m_formula->getIterator())
+                m_iteratorPointer = m_formula->getIterator()->node();
 }
 
 void ReStructureVisitor::visit(EgcBinaryNode* binary)
@@ -182,4 +185,14 @@ void ReStructureVisitor::suppressCurrentIfChildType(const EgcNode* node, quint32
                         m_suppressList.insert(const_cast<EgcNode*>(node));
                 }
         }
+}
+
+QString& ReStructureVisitor::modifyNodeString(QString &nodeString, EgcNode* node)
+{
+        if (m_iteratorPointer == node) {
+                nodeString.prepend("_{");
+                return nodeString.append("_<_}");
+        }
+
+        return nodeString;
 }

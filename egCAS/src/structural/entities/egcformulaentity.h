@@ -332,6 +332,11 @@ public:
          * @param rightSide set it at the right side or at the left of the given instance
          */
         virtual void setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide) override;
+        /**
+         * @brief getIterator returns a pointer to the iterator of the formula
+         * @return the pointer to the iterator
+         */
+        EgcScrPosIterator* getIterator(void);
 
 private:
         /**

@@ -82,6 +82,18 @@ public:
          * @param type the type of the child to test and suppress
          */
         void suppressCurrentIfChildType(const EgcNode* node, quint32 index, EgcNodeType type);
+protected:
+        /**
+         * @brief modifyNodeString this function can be implemented in a subclass and modify the string assembled,
+         * before it is further processed
+         * @param nodeString the nodeString to be modified
+         * @param node the node associated with the nodeString to modify
+         * @return returns the modified string
+         */
+        virtual QString& modifyNodeString(QString &nodeString, EgcNode* node) override;
+
+private:
+        const EgcNode* m_iteratorPointer;             ///< node to which iterator of the formula points to
 };
 
 #endif // RESTRUCTUREVISITOR_H

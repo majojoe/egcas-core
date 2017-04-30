@@ -181,6 +181,11 @@ EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcArgument
         return static_cast<EgcNode*> (argList);
 }
 
+EgcNode* Interpreter::updateIterator(EgcNode* node0)
+{
+        return node0;
+}
+
 EgcArgumentsNode* Interpreter::createArgList(EgcNode* expression)
 {
         QScopedPointer<EgcArgumentsNode> node(static_cast<EgcArgumentsNode*>(EgcNodeCreator::create(EgcNodeType::ArgumentsNode)));

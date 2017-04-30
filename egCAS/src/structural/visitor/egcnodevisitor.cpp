@@ -138,6 +138,8 @@ void EgcNodeVisitor::assembleResult(QString formatString, EgcNode* node)
                         result = result.arg(args.at(i));
         }
 
+        result = modifyNodeString(result, node);
+
         if (!m_suppressList.contains(node))
                 m_stack.push(result);
 }
@@ -160,6 +162,8 @@ void EgcNodeVisitor::assembleResult(QString startString, QString seperationStrin
                         result += endString;
         }
 
+        result = modifyNodeString(result, node);
+
         if (!m_suppressList.contains(node))
                 m_stack.push(result);
 }
@@ -176,6 +180,8 @@ void EgcNodeVisitor::deleteFromStack(int nrStackObjects)
 
 void EgcNodeVisitor::pushToStack(QString str, EgcNode* node)
 {
+        str = modifyNodeString(str, node);
+
         if (m_suppressList.contains(node))
                 m_stack.push(QString(""));
         else
@@ -212,4 +218,10 @@ EgcNode* EgcNodeVisitor::getChildToSuppress(const EgcNode* node, quint32 index)
         }
 
         return chldNode;
+}
+
+QString& EgcNodeVisitor::modifyNodeString(QString &nodeString, EgcNode* node)
+{
+        (void) node;
+        return nodeString;
 }

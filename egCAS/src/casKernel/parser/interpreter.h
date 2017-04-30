@@ -147,6 +147,12 @@ private:
          * @return pointer to the new type
          */
         EgcNode* changeFlexExpressionType(EgcNodeType type, EgcArgumentsNode* argList);
+        /**
+         * @brief updateIterator to point to the given node
+         * @param node0 the node to update the iterator with
+         * @return node0
+         */
+        EgcNode* updateIterator(EgcNode* node0);
 
         /**
          * @brief createArgList creates an argument list that is integrated later on in the function where it is used in

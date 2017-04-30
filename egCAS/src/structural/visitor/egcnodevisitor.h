@@ -139,6 +139,14 @@ protected:
          * @return a vector with all the arguments
          */
         QVector<QString> getAssembleArguments(EgcNode* node);
+        /**
+         * @brief modifyNodeString this function can be implemented in a subclass and modify the string assembled,
+         * before it is further processed
+         * @param nodeString the nodeString to be modified
+         * @param node the node associated with the nodeString to modify
+         * @return returns the modified string
+         */
+        virtual QString& modifyNodeString(QString &nodeString, EgcNode* node);
 
         QString m_result;                       ///< saves the result of the information extracted.
         EgcFormulaEntity *m_formula;            ///< the formula to with the nodes to work on
