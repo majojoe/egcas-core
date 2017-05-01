@@ -76,6 +76,38 @@ EgcNode* EgcKernelParser::parseKernelOutput(const QString& strToParse)
         return m_i->getRootNode();
 }
 
+EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, EgcNode** iterPointer, int* errCode)
+{
+        stringstream ss;
+        *errCode = 0;
+
+        ss << strToParse.toStdString();
+        m_i->switchInputStream(&ss);
+        try {
+                if (m_i->parse()) {
+                        //common unspecified error while parsing input
+                        *errCode = 1;
+                        return nullptr;
+                }
+        } catch (const MaximaParser::syntax_error& e) {
+                //parsing error: e.what() at position: e.location.begin.line, e.location.begin.column
+                *errCode = 2;
+                return nullptr;
+        } catch (runtime_error& e) {
+                //runtime error: e.what(): Not enough memory?
+                *errCode = 3;
+                return nullptr;
+        } catch (...) {
+                //common unspecified exception while parsing input
+                *errCode = 4;
+                return nullptr;
+        }
+
+        *iterPointer = m_i->getIteratorNode();
+
+        return m_i->getRootNode();
+}
+
 QString EgcKernelParser::getErrorMessage()
 {
         return m_errMessage;

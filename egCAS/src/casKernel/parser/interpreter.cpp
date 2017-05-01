@@ -40,7 +40,8 @@ using namespace CASParser;
 Interpreter::Interpreter() :
         m_scanner(*this),
         m_parser(m_scanner, *this),
-        m_location(0)
+        m_location(0),
+        m_iterPointer(nullptr)
 {
 
 }
@@ -50,7 +51,9 @@ Interpreter::~Interpreter()
         deleteDanglingNodes();
 }
 
-int Interpreter::parse() {
+int Interpreter::parse()
+{
+        m_iterPointer = nullptr;
         m_location = 0;
         return m_parser.parse();
 }
@@ -183,6 +186,7 @@ EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcArgument
 
 EgcNode* Interpreter::updateIterator(EgcNode* node0)
 {
+        m_iterPointer = node0;
         return node0;
 }
 
@@ -285,4 +289,9 @@ EgcNode* Interpreter::addDifferentialExpression(EgcArgumentsNode* argList)
         diff->remove(2);
 
         return node;
+}
+
+EgcNode* Interpreter::getIteratorNode(void)
+{
+        return m_iterPointer;
 }

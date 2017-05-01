@@ -66,19 +66,18 @@ public:
          * Clear AST
          */
         void clear();
-
-        /**
-         * @brief setRootNode stores the root node inside the interpreter class.
-         * @param node root node of the parsed formula to remember.
-         */
-        void setRootNode(EgcNode* node);
-
         /**
          * @brief getRootNode returns the root node of the lastly parsed formula. ATTENTION: the caller takes ownership
          * of the root node returned.
          * @return a pointer to the root node of the lastly parsed formula
          */
         EgcNode* getRootNode(void);
+
+        /**
+         * @brief getIteratorNode after parsing the iterator of the formula must be updated if there was one.
+         * @return the node the iterator should point to after the parsing.
+         */
+        EgcNode* getIteratorNode(void);
 
         /**
          * Switch scanner input stream. Default is standard input (std::cin).
@@ -95,6 +94,12 @@ public:
 
 private:
         Q_DISABLE_COPY(Interpreter)
+
+        /**
+         * @brief setRootNode stores the root node inside the interpreter class.
+         * @param node root node of the parsed formula to remember.
+         */
+        void setRootNode(EgcNode* node);
 
         /**
          * @brief addBinaryExpression add binary Expression to the current AST
@@ -232,6 +237,7 @@ private:
         QScopedPointer<EgcNode> m_rootNode;             /// the base node of the formula
         unsigned int m_location;                        /// Used by scanner
         QSet<EgcNode*> m_danglingNodes;                 /// holds the dangling nodes during AST is built up
+        EgcNode* m_iterPointer;
 };
 
 }

@@ -225,7 +225,15 @@ void EgcFormulaEntity::reStructureTree(void)
         ReStructureVisitor restructureVisitor(*this);
         QString result = restructureVisitor.getResult();
         EgcKernelParser parser;
-        setRootElement(parser.parseKernelOutput(result));
+        EgcNode* iterPointer;
+        int errCode;
+        EgcNode* tree = parser.restructureFormula(result, &iterPointer, &errCode);
+        if (tree) {
+                setRootElement(tree);
+                if (iterPointer) {
+                        //m_scrIter->setCursorAt(iterPointer, m_scrIter->subIndex(), m_scrIter->rightSide());
+                }
+        }
 }
 
 bool EgcFormulaEntity::isResult(void)

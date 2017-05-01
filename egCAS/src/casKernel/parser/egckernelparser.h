@@ -54,6 +54,16 @@ public:
         EgcNode* parseKernelOutput(const QString& strToParse);
 
         /**
+         * @brief restructureFormula restructure the formula after an insert or delete of a operation with help of the
+         * parser
+         * @param strToParse the string to parse (of a formula to restructure)
+         * @param iterPointer pointer to pointer to the node where the iterator is after parsing the formula
+         * @param errCode if return value is a nullpointer, the errCode contains the reason of the error
+         * @return pointer to the root node of the formula if everything went well, a nullpointer otherwise
+         */
+        EgcNode* restructureFormula(const QString& strToParse, EgcNode** iterPointer, int* errCode);
+
+        /**
          * @brief getErrorMessage the error message if an error while parsing ocurred.
          * @return the error message if one.
          */
