@@ -1028,3 +1028,24 @@ EgcNode* EgcIdNodeIter::replaceBinEmptyNodeBy(EgcNodeType type, bool right)
 
         return m_nodeIter->replaceBinEmptyNodeBy(type);
 }
+
+NodeIterReStructData EgcIdNodeIter::getRestructureData(void) const
+{
+        NodeIterReStructData data;
+        data.m_node = m_node;
+        data.m_nodeIteratorReStructData = m_nodeIter->getRestructureData();
+
+        return data;
+}
+
+bool EgcIdNodeIter::setRestructureData(NodeIterReStructData& data)
+{
+        if (!data.m_node)
+                return false;
+
+        if (!m_nodeIter->setRestructureData(data.m_nodeIteratorReStructData))
+                return false;
+        m_node = data.m_node;
+
+        return true;
+}

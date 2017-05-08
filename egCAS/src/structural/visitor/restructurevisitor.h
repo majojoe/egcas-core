@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include <QSet>
 #include "egcnodevisitor.h"
+#include "iterator/egcscrpositerator.h"
 
 /**
  * @brief The EgcKernelVisitor class is a visitor class for parsing the tree and output expressions formatted for the
@@ -93,7 +94,7 @@ protected:
         virtual QString& modifyNodeString(QString &nodeString, EgcNode* node) override;
 
 private:
-        const EgcNode* m_iteratorPointer;             ///< node to which iterator of the formula points to
+        NodeIterReStructData m_restructureData;             ///< node to which iterator of the formula points to
 };
 
 #endif // RESTRUCTUREVISITOR_H

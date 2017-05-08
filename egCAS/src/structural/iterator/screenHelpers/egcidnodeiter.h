@@ -34,11 +34,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QScopedPointer>
 #include <QVector>
 #include <QRectF>
+#include "../egcnodeiterator.h"
 
 class EgcNode;
 class EgcFormulaEntity;
 class EgcMathmlLookup;
-class EgcNodeIterator;
 enum class EgcIteratorState;
 enum class EgcNodeType;
 
@@ -52,6 +52,17 @@ enum class EgcSnapProperty
         SnapVisibleCursor = 0x1,        ///< snap at visible cursor positions only e.g. not at any positons
         SnapVisibleSigns = 0x2,         ///< snap at nodes (and states) that have visible signs
         SnapModifyable = 0x4,           ///< snap at nodes (and states) that has modifyable elements
+};
+
+/**
+ * @brief The NodeIterReStructData class is intended for use during restructering a formula -> state does not change but
+ * node pointers
+ */
+class NodeIterReStructData {
+public:
+        NodeIterReStructData() : m_node{nullptr} {}
+        EgcNode* m_node;
+        NodeIteratorReStructData m_nodeIteratorReStructData;
 };
 
 /**
@@ -192,6 +203,18 @@ public:
          * @return true if empty binary node found, false otherwise
          */
         bool besideBinEmptyNode(bool right);
+        /**
+         * @brief getRestructureData get data that is influenced by restructing the formula (and this iterator)
+         * @return the restruct data
+         */
+        NodeIterReStructData getRestructureData(void) const;
+        /**
+         * @brief setRestructureData set data that is influenced by restructing the formula (and this iterator)
+         * @param data the restruct data
+         * @return false if data was invalid, true if new data has been assigned
+         */
+        bool setRestructureData(NodeIterReStructData& data);
+
 private:
         /**
          * @brief hasNext Checks if there is at most one more item after the current item.

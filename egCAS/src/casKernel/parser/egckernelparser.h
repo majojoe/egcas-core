@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCKERNELPARSER_H
 #define EGCKERNELPARSER_H
 
+class NodeIterReStructData;
 class EgcNode;
 namespace CASParser {
         class Interpreter;
@@ -36,6 +37,7 @@ namespace CASParser {
 
 #include <QString>
 #include <QScopedPointer>
+
 
 /**
  * @brief The EgcKernelParser class encapsulates the parsing of the cas kernel output and creates a node tree thereof.
@@ -61,7 +63,7 @@ public:
          * @param errCode if return value is a nullpointer, the errCode contains the reason of the error
          * @return pointer to the root node of the formula if everything went well, a nullpointer otherwise
          */
-        EgcNode* restructureFormula(const QString& strToParse, EgcNode** iterPointer, int* errCode);
+        EgcNode* restructureFormula(const QString& strToParse, NodeIterReStructData& iterData, int* errCode);
 
         /**
          * @brief getErrorMessage the error message if an error while parsing ocurred.

@@ -41,7 +41,9 @@ Interpreter::Interpreter() :
         m_scanner(*this),
         m_parser(m_scanner, *this),
         m_location(0),
-        m_iterPointer(nullptr)
+        m_iterPointer1(nullptr),
+        m_iterPointer2(nullptr),
+        m_iterPointer3(nullptr)
 {
 
 }
@@ -53,7 +55,9 @@ Interpreter::~Interpreter()
 
 int Interpreter::parse()
 {
-        m_iterPointer = nullptr;
+        m_iterPointer1 = nullptr;
+        m_iterPointer2 = nullptr;
+        m_iterPointer3 = nullptr;
         m_location = 0;
         return m_parser.parse();
 }
@@ -184,9 +188,15 @@ EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcArgument
         return static_cast<EgcNode*> (argList);
 }
 
-EgcNode* Interpreter::updateIterator(EgcNode* node0)
+EgcNode* Interpreter::updateIterator(EgcNode* node0, int i)
 {
-        m_iterPointer = node0;
+        if (i == 1)
+                m_iterPointer1 = node0;
+        if (i == 2)
+                m_iterPointer2 = node0;
+        if (i == 3)
+                m_iterPointer3 = node0;
+
         return node0;
 }
 
@@ -291,7 +301,14 @@ EgcNode* Interpreter::addDifferentialExpression(EgcArgumentsNode* argList)
         return node;
 }
 
-EgcNode* Interpreter::getIteratorNode(void)
+EgcNode* Interpreter::getIteratorNode(int i)
 {
-        return m_iterPointer;
+        if (i == 1)
+                return m_iterPointer1;
+        if (i == 2)
+                return m_iterPointer2;
+        if (i == 3)
+                return m_iterPointer3;
+
+        return nullptr;
 }

@@ -35,10 +35,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../entities/egcformulaentity.h"
 #include <iterator/egcscrpositerator.h>
 
-ReStructureVisitor::ReStructureVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(formula), m_iteratorPointer{nullptr}
+ReStructureVisitor::ReStructureVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(formula),
+                                                                    m_restructureData{NodeIterReStructData()}
 {
         if (m_formula->getIterator())
-                m_iteratorPointer = m_formula->getIterator()->node();
+                m_restructureData = m_formula->getIterator()->getRestructureData();
 }
 
 void ReStructureVisitor::visit(EgcBinaryNode* binary)
@@ -189,9 +190,26 @@ void ReStructureVisitor::suppressCurrentIfChildType(const EgcNode* node, quint32
 
 QString& ReStructureVisitor::modifyNodeString(QString &nodeString, EgcNode* node)
 {
-        if (m_iteratorPointer == node) {
+        bool pointer = false;
+
+        if (m_restructureData.m_node == node) {
+                pointer = true;
+                nodeString.append("_<1");
+        }
+
+        if (m_restructureData.m_nodeIteratorReStructData.m_Next == node) {
+                pointer = true;
+                nodeString.append("_<2");
+        }
+
+        if (m_restructureData.m_nodeIteratorReStructData.m_Previous == node) {
+                pointer = true;
+                nodeString.append("_<3");
+        }
+
+        if (pointer) {
                 nodeString.prepend("_{");
-                return nodeString.append("_<_}");
+                nodeString.append("_}");
         }
 
         return nodeString;

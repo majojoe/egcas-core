@@ -75,9 +75,10 @@ public:
 
         /**
          * @brief getIteratorNode after parsing the iterator of the formula must be updated if there was one.
+         * @param i iterator pointer to get
          * @return the node the iterator should point to after the parsing.
          */
-        EgcNode* getIteratorNode(void);
+        EgcNode* getIteratorNode(int i);
 
         /**
          * Switch scanner input stream. Default is standard input (std::cin).
@@ -155,9 +156,10 @@ private:
         /**
          * @brief updateIterator to point to the given node
          * @param node0 the node to update the iterator with
+         * @param i iterator data to update
          * @return node0
          */
-        EgcNode* updateIterator(EgcNode* node0);
+        EgcNode* updateIterator(EgcNode* node0, int i);
 
         /**
          * @brief createArgList creates an argument list that is integrated later on in the function where it is used in
@@ -237,7 +239,9 @@ private:
         QScopedPointer<EgcNode> m_rootNode;             /// the base node of the formula
         unsigned int m_location;                        /// Used by scanner
         QSet<EgcNode*> m_danglingNodes;                 /// holds the dangling nodes during AST is built up
-        EgcNode* m_iterPointer;
+        EgcNode* m_iterPointer1;
+        EgcNode* m_iterPointer2;
+        EgcNode* m_iterPointer3;
 };
 
 }

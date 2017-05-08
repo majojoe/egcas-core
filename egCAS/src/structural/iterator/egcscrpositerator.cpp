@@ -444,3 +444,8 @@ void EgcScrPosIterator::setCursorAtDelayed(EgcNode* node, bool rSide)
         if (node)
                 m_nodeIter->setAtNodeDelayed(*node, rSide);
 }
+
+NodeIterReStructData EgcScrPosIterator::getRestructureData() const
+{
+        return m_nodeIter->getRestructureData();
+}

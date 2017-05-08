@@ -94,7 +94,9 @@ UNICODESIGN  (_2[0-9a-fA-F]+_3)
  /*parenthesis to define operation borders*/
 "_{"     { return CASParser::MaximaParser::make_LBRACKET_OP(CASParser::location()); }
 "_}"     { return CASParser::MaximaParser::make_RBRACKET_OP(CASParser::location()); }
-"_<"     { return CASParser::MaximaParser::make_ITERATOR(CASParser::location()); }
+"_<1"     { return CASParser::MaximaParser::make_ITERATOR1(CASParser::location()); }
+"_<2"     { return CASParser::MaximaParser::make_ITERATOR2(CASParser::location()); }
+"_<3"     { return CASParser::MaximaParser::make_ITERATOR3(CASParser::location()); }
 
 "_integrate"  { return CASParser::MaximaParser::make_INTEGRAL(CASParser::location()); }
 "_diff"  { return CASParser::MaximaParser::make_DIFFERENTIAL(CASParser::location()); }

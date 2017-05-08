@@ -40,6 +40,17 @@ enum class EgcIteratorState {
 };
 
 /**
+ * @brief The NodeIteratorReStructData class is intended for use during restructering a formula -> state does not change
+ * but node pointers
+ */
+class NodeIteratorReStructData {
+public:
+        NodeIteratorReStructData() : m_Next{nullptr}, m_Previous{nullptr} {}
+        EgcNode* m_Next;
+        EgcNode* m_Previous;
+};
+
+/**
  * @brief The EgcNodeIterator class is a class to iterate over a (valid) node tree. A node tree must have a EgcBaseNode
  * node at the top of the tree and one or more childs below.
  */
@@ -154,6 +165,17 @@ public:
          * @return pointer to the replacement if everything went well, nullptr otherwise
          */
         EgcNode* replaceBinEmptyNodeBy(EgcNodeType type);
+        /**
+         * @brief getRestructureData get data that is influenced by restructing the formula (and this iterator)
+         * @return the restruct data
+         */
+        NodeIteratorReStructData getRestructureData(void) const;
+        /**
+         * @brief setRestructureData set data that is influenced by restructing the formula (and this iterator)
+         * @param data the restruct data
+         * @return false if data was invalid, true if new data has been assigned
+         */
+        bool setRestructureData(NodeIteratorReStructData& data);
 
 protected:
         /**

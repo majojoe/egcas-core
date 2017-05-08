@@ -34,11 +34,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QScopedPointer>
 #include <QVector>
 #include <QRectF>
+#include "screenHelpers/egcidnodeiter.h"
 
 class EgcNode;
 class EgcFormulaEntity;
 class EgcMathmlLookup;
-class EgcIdNodeIter;
 class EgcSubindNodeIter;
 enum class EgcOperations;
 enum class EgcNodeType;
@@ -212,6 +212,12 @@ public:
          * side.
          */
         void setCursorAtDelayed(EgcNode* node, bool rSide);
+        /**
+         * @brief getRestructureData get data that is influenced by restructing the formula (and this iterator)
+         * @return the restruct data
+         */
+        NodeIterReStructData getRestructureData(void) const;
+
 private:
         /**
          * @brief getNextVisibleParentNode returns the next visible parent in the formula
