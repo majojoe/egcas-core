@@ -145,7 +145,7 @@ void ReStructureVisitor::visit(EgcNode* node)
 {
         switch (node->getNodeType()) {
         case EgcNodeType::EmptyNode:
-                pushToStack(QString::null, node);
+                pushToStack("_empty", node);
                 break;
         case EgcNodeType::AlnumNode:  // normally we extract the AlnumNode's via their container classes
                 pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);

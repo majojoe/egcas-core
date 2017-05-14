@@ -96,21 +96,21 @@
 %token MULTIPLICATION "*";
 %token DIVISION "/";
 %token EQUAL "=";
-%token DEFINE ":"
+%token DEFINE ":";
 %token COMMA ",";
 %token LEFTPARENTESIS "(";
 %token RIGHTPARENTHESIS ")";
 %token LBRACKET_OP;
 %token RBRACKET_OP;
-%token EXPONENT "^"
-%token SQROOT "sqrt"
-%token INTEGRAL "_integrate"
-%token DIFFERENTIAL "_diff"
-%token ROOT "_root" //only for debugging purposes
-%token EMPTY "_empty" //only for debugging purposes
-%token ITERATOR1 "_<1"
-%token ITERATOR2 "_<2"
-%token ITERATOR3 "_<3"
+%token EXPONENT "^";
+%token SQROOT "sqrt";
+%token INTEGRAL "_integrate";
+%token DIFFERENTIAL "_diff";
+%token ROOT "_root"; //only for debugging purposes
+%token EMPTY "_empty"; //only for debugging purposes
+%token ITERATOR1;
+%token ITERATOR2;
+%token ITERATOR3;
 
 
 %right "=" ":"
@@ -164,9 +164,9 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}
      | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}  //only for debugging purposes
      | "_empty"            {$$ = interpreter.addEmptyNode();}   //only for debug purposes
-     | expr "_<1"           {$$ = interpreter.updateIterator($1, 1);}
-     | expr "_<2"           {$$ = interpreter.updateIterator($1, 2);}
-     | expr "_<3"           {$$ = interpreter.updateIterator($1, 3);}
+     | expr ITERATOR1      {$$ = interpreter.updateIterator($1, 1);}
+     | expr ITERATOR2      {$$ = interpreter.updateIterator($1, 2);}
+     | expr ITERATOR3      {$$ = interpreter.updateIterator($1, 3);}
 ;
     
 explist: expr            {$$ = interpreter.createArgList($1);}

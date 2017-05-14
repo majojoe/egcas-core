@@ -511,7 +511,7 @@ void EgcFormulaEntity::insertOperation(EgcAction operation)
 
         insertOp(operation);
 
-//        rearrangePrecedence();
+        reStructureTree();
 
         m_item->hideCursors();
         m_item->updateView();
@@ -642,7 +642,7 @@ void EgcFormulaEntity::removeCharacter(bool before)
                 m_scrIter->remove(structureChanged);
 
         if (structureChanged) {
-//                rearrangePrecedence();
+                reStructureTree();
         }
         //update m_scrIter since nothing is correct about the position
         m_item->updateView();
