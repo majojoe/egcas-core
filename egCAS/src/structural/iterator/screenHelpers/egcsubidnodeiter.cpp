@@ -205,3 +205,9 @@ const EgcNode* EgcSubindNodeIter::node(void)
 {
         return m_node;
 }
+
+void EgcSubindNodeIter::updateNode(EgcNode* node)
+{
+        if (node)
+                m_node = node;
+}

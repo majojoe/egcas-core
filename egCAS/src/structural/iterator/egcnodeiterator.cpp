@@ -313,7 +313,7 @@ NodeIteratorReStructData EgcNodeIterator::getRestructureData() const
         return data;
 }
 
-bool EgcNodeIterator::setRestructureData(NodeIteratorReStructData& data)
+bool EgcNodeIterator::updateRestructureData(NodeIteratorReStructData& data)
 {
         if (!data.m_Next || !data.m_Previous)
                 return false;

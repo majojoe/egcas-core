@@ -114,6 +114,13 @@ public:
          * @return true if a character has been removed, false otherwise.
          */
         bool remove(bool before);
+        /**
+         * @brief updateNode update the node the iterator points to. It is very unlikely that a user needs this
+         * function. So be careful when using this. May destroy the the iterator validity. It is primarily intended to
+         * be used during restruction of a formula.
+         * @param node the node the internal node needs to be updated with
+         */
+        void updateNode(EgcNode* node);
 
 private:
         EgcNode* m_node;                ///< reference to node the iterator has been initialized with

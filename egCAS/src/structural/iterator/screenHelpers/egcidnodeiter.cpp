@@ -1038,12 +1038,12 @@ NodeIterReStructData EgcIdNodeIter::getRestructureData(void) const
         return data;
 }
 
-bool EgcIdNodeIter::setRestructureData(NodeIterReStructData& data)
+bool EgcIdNodeIter::updateRestructureData(NodeIterReStructData& data)
 {
         if (!data.m_node)
                 return false;
 
-        if (!m_nodeIter->setRestructureData(data.m_nodeIteratorReStructData))
+        if (!m_nodeIter->updateRestructureData(data.m_nodeIteratorReStructData))
                 return false;
         m_node = data.m_node;
 

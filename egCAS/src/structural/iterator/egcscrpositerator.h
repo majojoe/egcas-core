@@ -217,6 +217,12 @@ public:
          * @return the restruct data
          */
         NodeIterReStructData getRestructureData(void) const;
+        /**
+         * @brief setRestructureData set data that is influenced by restructing the formula (and this iterator)
+         * @param data the restruct data
+         * @return false if data was invalid, true if new data has been assigned
+         */
+        bool updateRestructureData(NodeIterReStructData& data);
 
 private:
         /**

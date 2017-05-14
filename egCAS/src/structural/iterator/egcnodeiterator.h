@@ -175,7 +175,7 @@ public:
          * @param data the restruct data
          * @return false if data was invalid, true if new data has been assigned
          */
-        bool setRestructureData(NodeIteratorReStructData& data);
+        bool updateRestructureData(NodeIteratorReStructData& data);
 
 protected:
         /**
