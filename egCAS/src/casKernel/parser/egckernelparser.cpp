@@ -105,8 +105,7 @@ EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIter
         }
 
         iterData.m_node = m_i->getIteratorNode(1);
-        iterData.m_nodeIteratorReStructData.m_Next = m_i->getIteratorNode(2);
-        iterData.m_nodeIteratorReStructData.m_Previous = m_i->getIteratorNode(3);
+        iterData.m_iterPosAfterUpdate = m_i->getIteratorNode(2);
 
         return m_i->getRootNode();
 }

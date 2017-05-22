@@ -452,30 +452,11 @@ NodeIterReStructData EgcScrPosIterator::getRestructureData() const
 
 bool EgcScrPosIterator::updateRestructureData(NodeIterReStructData& data)
 {
-        NodeIterReStructData bak = m_nodeIter->getRestructureData();
-        if (m_lastUnderlinedNode == bak.m_node)
-                m_lastUnderlinedNode = data.m_node;
-        if (m_lastUnderlinedNode == bak.m_nodeIteratorReStructData.m_Next)
-                m_lastUnderlinedNode = data.m_nodeIteratorReStructData.m_Next;
-        if (m_lastUnderlinedNode == bak.m_nodeIteratorReStructData.m_Previous)
-                m_lastUnderlinedNode = data.m_nodeIteratorReStructData.m_Previous;
-        if (m_originNode == bak.m_node)
-                m_originNode = data.m_node;
-        if (m_originNode == bak.m_nodeIteratorReStructData.m_Next)
-                m_originNode = data.m_nodeIteratorReStructData.m_Next;
-        if (m_originNode == bak.m_nodeIteratorReStructData.m_Previous)
-                m_originNode = data.m_nodeIteratorReStructData.m_Previous;
+        m_lastUnderlinedNode = nullptr;
+        m_originNode = nullptr;
 
         if (!m_nodeIter->updateRestructureData(data))
                 return false;
-
-        const EgcNode* subNode = m_subIdIter->node();
-        if (subNode == bak.m_node)
-                m_subIdIter->updateNode(bak.m_node);
-        if (subNode == bak.m_nodeIteratorReStructData.m_Next)
-                m_subIdIter->updateNode(bak.m_nodeIteratorReStructData.m_Next);
-        if (subNode == bak.m_nodeIteratorReStructData.m_Previous)
-                m_subIdIter->updateNode(bak.m_nodeIteratorReStructData.m_Previous);
 
         return true;
 }

@@ -62,7 +62,7 @@ class NodeIterReStructData {
 public:
         NodeIterReStructData() : m_node{nullptr} {}
         EgcNode* m_node;
-        NodeIteratorReStructData m_nodeIteratorReStructData;
+        EgcNode* m_iterPosAfterUpdate;
 };
 
 /**

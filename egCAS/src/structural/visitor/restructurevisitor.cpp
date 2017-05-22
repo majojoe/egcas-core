@@ -197,14 +197,9 @@ QString& ReStructureVisitor::modifyNodeString(QString &nodeString, EgcNode* node
                 nodeString.append("_<1");
         }
 
-        if (m_restructureData.m_nodeIteratorReStructData.m_Next == node) {
+        if (m_restructureData.m_iterPosAfterUpdate == node) {
                 pointer = true;
                 nodeString.append("_<2");
-        }
-
-        if (m_restructureData.m_nodeIteratorReStructData.m_Previous == node) {
-                pointer = true;
-                nodeString.append("_<3");
         }
 
         if (pointer) {

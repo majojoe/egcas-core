@@ -1033,7 +1033,7 @@ NodeIterReStructData EgcIdNodeIter::getRestructureData(void) const
 {
         NodeIterReStructData data;
         data.m_node = m_node;
-        data.m_nodeIteratorReStructData = m_nodeIter->getRestructureData();
+        data.m_iterPosAfterUpdate = m_iterPosAfterUpdate;
 
         return data;
 }
@@ -1043,9 +1043,9 @@ bool EgcIdNodeIter::updateRestructureData(NodeIterReStructData& data)
         if (!data.m_node)
                 return false;
 
-        if (!m_nodeIter->updateRestructureData(data.m_nodeIteratorReStructData))
-                return false;
+        m_nodeIter->invalidate();
         m_node = data.m_node;
+        m_iterPosAfterUpdate = data.m_iterPosAfterUpdate;
 
         return true;
 }

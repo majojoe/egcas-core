@@ -304,26 +304,6 @@ EgcNode* EgcNodeIterator::replaceBinEmptyNodeBy(EgcNodeType type)
         return replace(*nodeToReplace, type);
 }
 
-NodeIteratorReStructData EgcNodeIterator::getRestructureData() const
-{
-        NodeIteratorReStructData data;
-        data.m_Next = m_next;
-        data.m_Previous = m_previous;
-
-        return data;
-}
-
-bool EgcNodeIterator::updateRestructureData(NodeIteratorReStructData& data)
-{
-        if (!data.m_Next || !data.m_Previous)
-                return false;
-
-        m_next = data.m_Next;
-        m_previous = data.m_Previous;
-
-        return true;
-}
-
 EgcNode* EgcNodeIterator::insert(EgcNodeType type, bool insertBeforeChild)
 {
         EgcNode* retval = nullptr;
@@ -628,4 +608,10 @@ bool EgcNodeIterator::insertChildSpace(void)
         }
 
         return true;
+}
+
+void EgcNodeIterator::invalidate(void)
+{
+        m_next = m_baseElement;
+        m_previous = m_baseElement;
 }

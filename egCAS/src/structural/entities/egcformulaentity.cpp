@@ -230,6 +230,7 @@ void EgcFormulaEntity::reStructureTree(void)
         EgcNode* tree = parser.restructureFormula(result, iterData, &errCode);
         if (tree) {
                 setRootElement(tree);
+                m_scrIter->invalidateCursor(getBaseElement());
                 m_scrIter->updateRestructureData(iterData);
         }
 }
