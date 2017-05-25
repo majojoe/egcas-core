@@ -179,5 +179,5 @@ bool EgcAlnumNode::isAtomicallyBoundChild(void) const
         if (!parent)
                 return false;
 
-        return parent->determineIfChildIsAtomicallyBoundallyBound(this);
+        return parent->determineIfChildIsAtomicallyBound(this);
 }

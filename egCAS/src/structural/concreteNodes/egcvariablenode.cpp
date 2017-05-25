@@ -299,7 +299,7 @@ bool EgcVariableNode::visibleSigns(EgcNodeSide side) const
         return false;
 }
 
-bool EgcVariableNode::determineIfChildIsAtomicallyBoundallyBound(const EgcNode* node) const
+bool EgcVariableNode::determineIfChildIsAtomicallyBound(const EgcNode* node) const
 {
         quint32 ind = 0;
 

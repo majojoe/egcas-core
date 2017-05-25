@@ -58,7 +58,7 @@ bool EgcFunctionNode::visibleSigns(EgcNodeSide side) const
         return true;
 }
 
-bool EgcFunctionNode::determineIfChildIsAtomicallyBoundallyBound(const EgcNode* node) const
+bool EgcFunctionNode::determineIfChildIsAtomicallyBound(const EgcNode* node) const
 {
         (void) node;
 

@@ -187,7 +187,7 @@ public:
          * @param node the node to check for.
          * @return true if child is atomically bound to its parent, false if not
          */
-        virtual bool determineIfChildIsAtomicallyBoundallyBound(const EgcNode* node) const;
+        virtual bool determineIfChildIsAtomicallyBound(const EgcNode* node) const;
 
 protected:
         /**

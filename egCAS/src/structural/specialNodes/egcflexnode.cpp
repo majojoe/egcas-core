@@ -444,7 +444,7 @@ bool EgcFlexNode::visibleSigns(EgcNodeSide side) const
         return false;        
 }
 
-bool EgcFlexNode::determineIfChildIsAtomicallyBoundallyBound(const EgcNode* node) const
+bool EgcFlexNode::determineIfChildIsAtomicallyBound(const EgcNode* node) const
 {
         (void) node;
 
