@@ -89,6 +89,9 @@ void EgcIdNodeIter::setAtNode(EgcNode& node, bool atRightSide, EgcSnapProperty s
 
         EgcNode* visible_node;
 
+        if (!m_node)
+                m_node = &node;
+
         if (atRightSide) {
                 visible_node = gotoNodeWithId(false, &iter, node, false, snapProperty);
         } else {
@@ -1040,9 +1043,6 @@ NodeIterReStructData EgcIdNodeIter::getRestructureData(void) const
 
 bool EgcIdNodeIter::updateRestructureData(NodeIterReStructData& data)
 {
-        if (!data.m_node)
-                return false;
-
         m_nodeIter->invalidate();
         m_node = data.m_node;
         m_iterPosAfterUpdate = data.m_iterPosAfterUpdate;
