@@ -118,14 +118,9 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* node)
 
         switch (node->getNodeType()) {
         case EgcNodeType::ParenthesisNode: {
-                if (static_cast<EgcParenthesisNode*>(node)->isVisible()) {
-                        if (m_state == EgcIteratorState::RightIteration) {
-                                id = getId(node);
-                                assembleResult("<mfenced "%id%" open=\"(\" close=\")\" separators=\",\"><mrow>%1</mrow></mfenced>", node);
-                        }
-                } else {
-                        suppressThis(node);
-                        //assembleResult("%1", node);
+                if (m_state == EgcIteratorState::RightIteration) {
+                        id = getId(node);
+                        assembleResult("<mfenced "%id%" open=\"(\" close=\")\" separators=\",\"><mrow>%1</mrow></mfenced>", node);
                 }
         }
         break;

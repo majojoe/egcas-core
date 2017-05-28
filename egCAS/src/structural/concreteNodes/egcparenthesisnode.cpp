@@ -28,25 +28,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcparenthesisnode.h"
 
-EgcParenthesisNode::EgcParenthesisNode() : m_visible{true}
+EgcParenthesisNode::EgcParenthesisNode()
 {
-}
-
-void EgcParenthesisNode::setVisible(bool visible)
-{
-        m_visible = visible;
-}
-
-bool EgcParenthesisNode::isVisible(void)
-{
-        return m_visible;
 }
 
 bool EgcParenthesisNode::cursorSnaps(EgcNodeSide side) const
 {
-        if (    m_visible
-             && (    side == EgcNodeSide::left
-                  || side == EgcNodeSide::right))
+        if (    side == EgcNodeSide::left
+             || side == EgcNodeSide::right)
                 return true;
 
         return false;
@@ -54,9 +43,8 @@ bool EgcParenthesisNode::cursorSnaps(EgcNodeSide side) const
 
 bool EgcParenthesisNode::visibleSigns(EgcNodeSide side) const
 {
-        if (    m_visible
-             && (    side == EgcNodeSide::left
-                  || side == EgcNodeSide::right))
+        if (    side == EgcNodeSide::left
+             || side == EgcNodeSide::right)
                 return true;
 
         return false;
