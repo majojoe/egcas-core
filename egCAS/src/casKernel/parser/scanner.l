@@ -109,7 +109,8 @@ UNICODESIGN  (_2[0-9a-fA-F]+_3)
 
  /*builtin functions*/
 sin |
-cos {
+cos |
+log  {
         return CASParser::MaximaParser::make_BUILTIN_FNCS(yytext, CASParser::location());
  }
 

@@ -206,7 +206,10 @@ EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcArgument
         if (argList) {
                 EgcNode* node = changeFlexExpressionType(EgcNodeType::FunctionNode, argList);
                 EgcFunctionNode* function = static_cast<EgcFunctionNode*>(node);
-                function->setName(QString::fromStdString(fncName));
+                QString name = QString::fromStdString(fncName);
+                if (name == QString("log"))
+                        name = QString("ln");
+                function->setName(name);
                 return static_cast<EgcNode*> (function);
         }
 
