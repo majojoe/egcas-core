@@ -58,9 +58,11 @@ public:
 
         /**
          * Run parser. Results are stored inside.
-         * \returns 0 on success, 1 on failure
+         * @param postProcessFormula if true some post processing takes place, e.g. removing some parenthesis where not
+         * neccessary.
+         * @return 0 on success, 1 on failure
          */
-        int parse();
+        int parse(bool parseKernelResult = false);
 
         /**
          * Clear AST
@@ -206,9 +208,6 @@ private:
         // Used to get last MaximaScanner location. Used in error messages.
         unsigned int location() const;
 
-        /***********************************************************************************************************/
-        /*  only for debugging purposes                                                                            */
-        /***********************************************************************************************************/
         /**
          * @brief addSqrtExpression add a square root to the tree. This is some sort of a hack, since a root node is a
          * binary node, but this is constructed with just one argument (unary), the second node (2) is constructed in
@@ -231,17 +230,31 @@ private:
          */
         EgcNode* addUnaryStructParenth(EgcNode* node);
 
+        /**
+         * @brief addDivisionExpression add a divison Expression to the current AST
+         * @param node0 the first node to add to the division expression (dividend)
+         * @param node1 the second (right) node to add to the division expression (divisor)
+         * @return a pointer to the binary expression created
+         */
+        EgcNode* addDivisionExpression(EgcNode* node0, EgcNode* node1);
 
+        /**
+         * @brief removeParenthesisChild cut out the child from the tree if the child is a parenthesis child. The
+         * grandchild becomes the child of the parent.
+         * @param parenthesisNode the child to cut out.
+         * @return true if everything worked well, false otherwise.
+         */
+        bool removeParenthesisChild(EgcNode& parenthesisNode);
 
-private:
-        MaximaScanner m_scanner;                        /// the scanner to use for parsing
-        MaximaParser m_parser;                          /// the parser to use
-        QScopedPointer<EgcNode> m_rootNode;             /// the base node of the formula
-        unsigned int m_location;                        /// Used by scanner
-        QSet<EgcNode*> m_danglingNodes;                 /// holds the dangling nodes during AST is built up
-        EgcNode* m_iterPointer1;
-        EgcNode* m_iterPointer2;
-        EgcNode* m_iterPointer3;
+        MaximaScanner m_scanner;                        ///< the scanner to use for parsing
+        MaximaParser m_parser;                          ///< the parser to use
+        QScopedPointer<EgcNode> m_rootNode;             ///< the base node of the formula
+        unsigned int m_location;                        ///< Used by scanner
+        QSet<EgcNode*> m_danglingNodes;                 ///< holds the dangling nodes during AST is built up
+        EgcNode* m_iterPointer1;                        ///< special pointer that is given by some visitors
+        EgcNode* m_iterPointer2;                        ///< special pointer that is given by some visitors
+        EgcNode* m_iterPointer3;                        ///< special pointer that is given by some visitors
+        bool m_parseKernelResult;                       ///< post process Formula  e.g. removing unneccessary parenthesis
 };
 
 }

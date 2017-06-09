@@ -41,17 +41,6 @@ class EgcParenthesisNode : public EgcUnaryNode
 public:
         EgcParenthesisNode();
         /**
-         * @brief setVisible set the parenthesis visible or invisible. This can be used in conjunction with containers
-         * that won't show the parenthesis, but internally uses them as structural element for managing tree rotation.
-         * @param visible if true the parenthesis will be visible, false makes it invisible.
-         */
-        void setVisible(bool visible);
-        /**
-         * @brief isVisible returns if the parenthesis is visible or not
-         * @return returns true if parenthesis are visible or false if not
-         */
-        bool isVisible(void);
-        /**
          * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
          * left side of the container)
          * @param side the side to test for cursor snap.

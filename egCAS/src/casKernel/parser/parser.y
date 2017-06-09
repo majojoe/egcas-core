@@ -118,6 +118,7 @@
 %left "*" "/"
 %right "^"
 %nonassoc "|" UMINUS
+%nonassoc ITERATOR1 ITERATOR2 ITERATOR3
 
 
 %type<EgcNode*> expr;
@@ -148,7 +149,7 @@ formula : /*nothing*/
 expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::PlusNode, $1, $3);}
      | expr "-" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::MinusNode, $1, $3);}
      | expr "*" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::MultiplicationNode, $1, $3);}
-     | expr "/" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::DivisionNode, $1, $3);}
+     | expr "/" expr       {$$ = interpreter.addDivisionExpression($1, $3);}
      | expr "^" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::ExponentNode, $1, $3);}
      | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
      | LBRACKET_OP expr RBRACKET_OP {$$ = interpreter.addUnaryStructParenth($2);}
@@ -162,8 +163,8 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | "sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}
      | INTEGRAL "(" explist ")" {$$ = interpreter.changeFlexExpressionType(EgcNodeType::IntegralNode, $3);}
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}
-     | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}  //only for debugging purposes
-     | "_empty"            {$$ = interpreter.addEmptyNode();}   //only for debug purposes
+     | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}
+     | "_empty"            {$$ = interpreter.addEmptyNode();}
      | expr ITERATOR1      {$$ = interpreter.updateIterator($1, 1);}
      | expr ITERATOR2      {$$ = interpreter.updateIterator($1, 2);}
      | expr ITERATOR3      {$$ = interpreter.updateIterator($1, 3);}

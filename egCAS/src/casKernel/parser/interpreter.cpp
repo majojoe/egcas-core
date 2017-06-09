@@ -53,8 +53,9 @@ Interpreter::~Interpreter()
         deleteDanglingNodes();
 }
 
-int Interpreter::parse()
+int Interpreter::parse(bool parseKernelResult)
 {
+        m_parseKernelResult = parseKernelResult;
         m_iterPointer1 = nullptr;
         m_iterPointer2 = nullptr;
         m_iterPointer3 = nullptr;
@@ -121,6 +122,30 @@ EgcNode* Interpreter::addUnaryExpression(EgcNodeType type, EgcNode* node0)
         addDanglingNode(node.take());
 
         return nodePtr;
+}
+
+bool Interpreter::removeParenthesisChild(EgcNode& parenthesisNode)
+{
+        if (parenthesisNode.getNodeType() != EgcNodeType::ParenthesisNode)
+                return false;
+        EgcContainerNode &pNode = static_cast<EgcContainerNode&>(parenthesisNode);
+
+        EgcContainerNode *parent = parenthesisNode.getParent();
+        if (!parent)
+                return false;
+        quint32 i;
+        if (!parent->getIndexOfChild(parenthesisNode, i))
+                return false;
+        EgcNode* child;
+        QScopedPointer<EgcNode> tempChild;
+        child = pNode.getChild(0);
+        if (child) {
+                tempChild.reset(pNode.takeOwnership(*child));
+                parent->setChild(i, *tempChild.take());
+        }
+        parent->setChild(i, *child);
+
+        return true;
 }
 
 EgcNode* Interpreter::addStringNode(EgcNodeType type, const std::string& value)
@@ -258,6 +283,29 @@ EgcNode* Interpreter::addSqrtExpression(EgcNode* node0)
 EgcNode* Interpreter::addUnaryStructParenth(EgcNode* node)
 {
         return node;
+}
+
+EgcNode* Interpreter::addDivisionExpression(EgcNode* node0, EgcNode* node1)
+{
+        EgcNode* retval;
+
+        if (!m_parseKernelResult) {
+                retval = addBinaryExpression(EgcNodeType::DivisionNode, node0, node1);
+        } else {
+                retval = addBinaryExpression(EgcNodeType::DivisionNode, node0, node1);
+                if (node0) {
+                        if (node0->getNodeType() == EgcNodeType::ParenthesisNode) {
+                                (void) removeParenthesisChild(*node0);
+                        }
+                }
+                if (node1) {
+                        if (node1->getNodeType() == EgcNodeType::ParenthesisNode) {
+                                (void) removeParenthesisChild(*node1);
+                        }
+                }
+        }
+
+        return retval;
 }
 
 EgcNode* Interpreter::addEmptyNode(void)

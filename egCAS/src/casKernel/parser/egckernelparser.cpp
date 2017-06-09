@@ -58,7 +58,7 @@ EgcNode* EgcKernelParser::parseKernelOutput(const QString& strToParse)
         ss << strToParse.toStdString();
         m_i->switchInputStream(&ss);
         try {
-                if (m_i->parse()) {
+                if (m_i->parse(true)) {
                         m_errMessage = "common unspecified error while parsing input";
                         return nullptr;
                 }
