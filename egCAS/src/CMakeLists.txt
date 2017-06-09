@@ -77,6 +77,8 @@ add_custom_target(egCAS_other_srcs ALL SOURCES
 set(egCAS_concrete_node_SOURCES
         structural/concreteNodes/egcnumbernode.cpp
         structural/concreteNodes/egcparenthesisnode.cpp
+        structural/concreteNodes/egclparenthesisnode.cpp
+        structural/concreteNodes/egcrparenthesisnode.cpp
         structural/concreteNodes/egcrootnode.cpp
         structural/concreteNodes/egcvariablenode.cpp
         structural/concreteNodes/egcfunctionnode.cpp

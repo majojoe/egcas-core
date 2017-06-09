@@ -528,10 +528,10 @@ bool EgcFormulaEntity::insertOp(EgcAction operations)
                                 || operations.m_character == ')') {
                         if (    operations.m_character == '('
                                         && (    !m_scrIter->rightSide() ))
-                                return createAndInsertOp(EgcNodeType::ParenthesisNode);
+                                return createAndInsertOp(EgcNodeType::LParenthesisNode);
                         if (    operations.m_character == ')'
                                         && (    m_scrIter->rightSide()) )
-                                return createAndInsertOp(EgcNodeType::ParenthesisNode);
+                                return createAndInsertOp(EgcNodeType::RParenthesisNode);
                 }
                 if (operations.m_character == '+')
                         return createAndInsertOp(EgcNodeType::PlusNode);

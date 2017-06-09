@@ -124,6 +124,20 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* node)
                 }
         }
         break;
+        case EgcNodeType::LParenthesisNode: {
+                if (m_state == EgcIteratorState::RightIteration) {
+                        id = getId(node);
+                        assembleResult("<mfenced "%id%" open=\"(\" close=\"\" separators=\",\"><mrow>%1</mrow></mfenced>", node);
+                }
+        }
+        break;
+        case EgcNodeType::RParenthesisNode: {
+                if (m_state == EgcIteratorState::RightIteration) {
+                        id = getId(node);
+                        assembleResult("<mfenced "%id%" open=\"\" close=\")\" separators=\",\"><mrow>%1</mrow></mfenced>", node);
+                }
+        }
+        break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);

@@ -111,6 +111,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::DivisionNode:
                 retval = new (std::nothrow) EgcDivisionNode();
                 break;
+        case EgcNodeType::LParenthesisNode:
+                retval = new (std::nothrow) LParenthesisNode();
+                break;
         case EgcNodeType::NumberNode:
                 retval = new (std::nothrow) EgcNumberNode();
                 break;
@@ -146,6 +149,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
                 break;
         case EgcNodeType::EqualNode:
                 retval = new (std::nothrow) EgcEqualNode();
+                break;
+        case EgcNodeType::RParenthesisNode:
+                retval = new (std::nothrow) RParenthesisNode();
                 break;
         //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.

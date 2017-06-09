@@ -68,6 +68,7 @@ for node in nodes:
 #include "concreteNodes/egcvariablenode.h"
 #include "concreteNodes/egcfunctionnode.h"
 #include "concreteNodes/egcdivisionnode.h"
+#include "concreteNodes/egclparenthesisnode.h"
 #include "concreteNodes/egcnumbernode.h"
 #include "concreteNodes/egcminusnode.h"
 #include "concreteNodes/egcintegralnode.h"
@@ -80,6 +81,7 @@ for node in nodes:
 #include "concreteNodes/egcplusnode.h"
 #include "concreteNodes/egcunaryminusnode.h"
 #include "concreteNodes/egcequalnode.h"
+#include "concreteNodes/egcrparenthesisnode.h"
 //[[[end]]]
 //The list is generated automatically. Do NOT change it manually.
 
