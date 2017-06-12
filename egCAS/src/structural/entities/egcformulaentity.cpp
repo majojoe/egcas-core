@@ -526,11 +526,9 @@ bool EgcFormulaEntity::insertOp(EgcAction operations)
         if (operations.m_op == EgcOperations::mathCharOperator) {
                 if (    operations.m_character == '('
                                 || operations.m_character == ')') {
-                        if (    operations.m_character == '('
-                                        && (    !m_scrIter->rightSide() ))
+                        if (    operations.m_character == '(')
                                 return createAndInsertOp(EgcNodeType::LParenthesisNode);
-                        if (    operations.m_character == ')'
-                                        && (    m_scrIter->rightSide()) )
+                        if (    operations.m_character == ')')
                                 return createAndInsertOp(EgcNodeType::RParenthesisNode);
                 }
                 if (operations.m_character == '+')
