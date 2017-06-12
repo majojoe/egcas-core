@@ -198,21 +198,13 @@ void ReStructureVisitor::suppressCurrentIfChildType(const EgcNode* node, quint32
 
 QString& ReStructureVisitor::modifyNodeString(QString &nodeString, EgcNode* node)
 {
-        bool pointer = false;
 
         if (m_restructureData.m_node == node) {
-                pointer = true;
                 nodeString.append("_<1");
         }
 
         if (m_restructureData.m_iterPosAfterUpdate == node) {
-                pointer = true;
                 nodeString.append("_<2");
-        }
-
-        if (pointer) {
-                nodeString.prepend("_{");
-                nodeString.append("_}");
         }
 
         return nodeString;
