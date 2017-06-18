@@ -30,17 +30,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCFUNCTIONNODE_H
 
 #include <QString>
-#include "../specialNodes/egcflexnode.h"
+#include "egcfnccontainernode.h"
 
 /**
  * @brief The EgcFuntionNode class is a class to model function calls. This manages e.g. something like calculation1(10, x + 3, 9.8234).
  */
-class EgcFunctionNode : public EgcFlexNode
+class EgcFunctionNode : public EgcFncContainerNode
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcFunctionNode, EgcNodeType::FunctionNode);
 public:
         EgcFunctionNode();
+        /**
+         * @brief transferArgs transfers all arguments to the new function container
+         * @param args the argument list to transfer
+         * @return true if everything went well, false otherwise
+         */
+        virtual bool transferArgs(EgcArgumentsNode& args) override;
         /**
          * @brief setName set the function name
          * @param fncName the variable name as a string
@@ -50,7 +56,7 @@ public:
          * @brief getName returns the function name
          * @return the function name
          */
-        QString& getName(void);
+        QString getName(void);
         /**
          * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
          * left side of the container)
@@ -74,10 +80,12 @@ public:
          * @return true if child is atomically bound to its parent, false if not
          */
         virtual bool determineIfChildIsAtomicallyBound(const EgcNode* node) const;
-
-protected:
-
-        QString m_name;
+        /**
+         * @brief valid returns true if the expression is valid and false otherwise.
+         * A variable expression is valid if the value is not empty.
+         * @return true if the expression is valid, false otherwise.
+         */
+        virtual bool valid(void);
 };
 
 #endif // EGCFUNCTIONNODE_H

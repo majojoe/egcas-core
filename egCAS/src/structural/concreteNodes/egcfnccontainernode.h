@@ -1,5 +1,4 @@
-/*
-Copyright (c) 2015, Johannes Maier <maier_jo@gmx.de>
+/*Copyright (c) 2014, Johannes Maier <maier_jo@gmx.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -12,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -27,22 +26,27 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCINTEGRALNODE_H
-#define EGCINTEGRALNODE_H
+#ifndef EGCFNCCONTAINERNODE_H
+#define EGCFNCCONTAINERNODE_H
 
 #include <QString>
-#include "egcfnccontainernode.h"
-
+#include "../specialNodes/egcargumentsnode.h"
 
 /**
- * @brief The EgcIntergralNode class represents integrals
+ * @brief The EgcFuntionNode class is a class to model function calls. This manages e.g. something like calculation1(10, x + 3, 9.8234).
  */
-class EgcIntegralNode : public EgcFncContainerNode
+class EgcFncContainerNode : public EgcArgumentsNode
 {
         //set the node type of this expression
-        EGC_SET_EXPRESSION_TYPE(EgcIntegralNode, EgcNodeType::IntegralNode);
+        EGC_SET_EXPRESSION_TYPE(EgcFncContainerNode, EgcNodeType::FncContainerNode);
 public:
-        EgcIntegralNode();
+        EgcFncContainerNode();
+        /**
+         * @brief transferArgs transfers all arguments to the new function container
+         * @param args the argument list to transfer
+         * @return true if everything went well, false otherwise
+         */
+        virtual bool transferArgs(EgcArgumentsNode& args);
         /**
          * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
          * left side of the container)
@@ -50,9 +54,13 @@ public:
          * @return true if the cursor will snap in at the given side, false otherwise
          */
         virtual bool cursorSnaps(EgcNodeSide side) const override;
-
-protected:
-
+        /**
+         * @brief visibleSigns find out where the node has visible signs (e.g. a division node has visible signs in the
+         * middle of the container)
+         * @param side the side to test for visible signs
+         * @return true if the given side of the node has visible signs.
+         */
+        virtual bool visibleSigns(EgcNodeSide side) const override;
 };
 
-#endif // EGCINTEGRALNODE_H
+#endif // EGCFNCCONTAINERNODE_H

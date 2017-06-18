@@ -31,13 +31,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCDIFFERENTIALNODE_H
 
 #include <QString>
-#include "structural/specialNodes/egcflexnode.h"
+#include "egcfnccontainernode.h"
 
 
 /**
  * @brief The EgcDifferentialNode class represents a differential
  */
-class EgcDifferentialNode : public EgcFlexNode
+class EgcDifferentialNode : public EgcFncContainerNode
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcDifferentialNode, EgcNodeType::DifferentialNode);

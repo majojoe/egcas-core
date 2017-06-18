@@ -135,6 +135,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::BinEmptyNode:
                 retval = new (std::nothrow) EgcBinEmptyNode();
                 break;
+        case EgcNodeType::FncContainerNode:
+                retval = new (std::nothrow) EgcFncContainerNode();
+                break;
         case EgcNodeType::ParenthesisNode:
                 retval = new (std::nothrow) EgcParenthesisNode();
                 break;

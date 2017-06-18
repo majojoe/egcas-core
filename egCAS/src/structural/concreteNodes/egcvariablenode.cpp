@@ -164,6 +164,11 @@ QString EgcVariableNode::getValue(void) const
 {
         QString retval = QString::null;
 
+        if (m_childs.size() == 0)
+                return retval;
+        if (!m_childs.at(0))
+                return retval;
+
         EgcAlnumNode *alnum;
         if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
                 alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));

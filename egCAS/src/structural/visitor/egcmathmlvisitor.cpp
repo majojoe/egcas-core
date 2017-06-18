@@ -46,7 +46,7 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
          * lowest one - in order execution of the id generation)*/
         QString id;
         switch (node->getNodeType()) {
-        case EgcNodeType::RootNode:                
+        case EgcNodeType::RootNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         // don't show the root exponent if it is "2" (square root)
                         suppressChildIfChildValue(node, 1, EgcNodeType::NumberNode, "2");
@@ -160,9 +160,9 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
         case EgcNodeType::FunctionNode:
                 if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
-                        QString startStr = QString("<mrow "%id%"><mi mathvariant=\"italic\">%1</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>")
-                                      .arg(static_cast<EgcFunctionNode*>(node)->getName());
-                        assembleResult(startStr, "<mo>,</mo>", "</mrow><mo>)</mo></mrow></mrow>", node);
+                        assembleResult("<mrow "%id%">",
+                                       "<mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>",
+                                       "<mo>,</mo>", "</mrow><mo>)</mo></mrow></mrow>", node);
                 }
                 break;
         case EgcNodeType::IntegralNode:
@@ -252,7 +252,10 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                 pushToStack("<mn" %id%">" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>", node);
                 break;
         case EgcNodeType::AlnumNode:
-                pushToStack("<mi mathvariant=\"normal\"" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue() % "</mi>", node);
+                if (node->getParent()->getNodeType() == EgcNodeType::FunctionNode)
+                        pushToStack("<mi mathvariant=\"italic\"" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue() % "</mi>", node);
+                else
+                        pushToStack("<mi mathvariant=\"normal\"" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue() % "</mi>", node);
                 break;
         case EgcNodeType::EmptyNode:
                 pushToStack("<mi" %id%">&#x2B1A;</mi>", node);
@@ -275,7 +278,7 @@ QString EgcMathMlVisitor::getResult(void)
 
         temp = "<math>";
         temp += EgcNodeVisitor::getResult();
-                
+
         if (m_formula) {
                 if (!m_formula->getErrorMessage().isEmpty()) {
                         temp += "<mi mathcolor='#cc0000'>";
@@ -325,7 +328,7 @@ void EgcMathMlVisitor::suppressChildIfChildValue(const EgcNode* node, quint32 in
 {
         EgcNode* chldNode = getChildToSuppress(node, index);
         if (chldNode) {
-                if (chldNode->getNodeType() == type) {                        
+                if (chldNode->getNodeType() == type) {
                         QString value;
                         switch (type) {
                         case EgcNodeType::NumberNode:
@@ -341,8 +344,8 @@ void EgcMathMlVisitor::suppressChildIfChildValue(const EgcNode* node, quint32 in
 
                         if (value == val)
                                 m_suppressList.insert(chldNode);
-                }                                
-        }        
+                }
+        }
 }
 
 QString EgcMathMlVisitor::getId(EgcNode* node)

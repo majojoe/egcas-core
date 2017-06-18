@@ -144,6 +144,34 @@ void EgcNodeVisitor::assembleResult(QString formatString, EgcNode* node)
                 m_stack.push(result);
 }
 
+void EgcNodeVisitor::assembleResult(QString lStartString, QString rStartString, QString seperationString,
+                                    QString endString, EgcNode* node)
+{
+        QString result = lStartString;
+        quint32 nrArguments = 0;
+
+        QVector<QString> args = getAssembleArguments(node);
+        nrArguments = args.size();
+        if (nrArguments == 0)
+                return;
+
+        result += args.at(0);
+        result += rStartString;
+
+        for (int i = 1; i < nrArguments; i++) {
+                result += args.at(i);
+                if (i != nrArguments - 1)
+                        result += seperationString;
+                else
+                        result += endString;
+        }
+
+        result = modifyNodeString(result, node);
+
+        if (!m_suppressList.contains(node))
+                m_stack.push(result);
+}
+
 void EgcNodeVisitor::assembleResult(QString startString, QString seperationString, QString endString, EgcNode* node)
 {
         QString result = startString;

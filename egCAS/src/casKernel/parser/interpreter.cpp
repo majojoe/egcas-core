@@ -325,10 +325,11 @@ EgcNode* Interpreter::addEmptyNode(void)
 
 EgcNode* Interpreter::changeFlexExpressionType(EgcNodeType type, EgcArgumentsNode* argList)
 {
-        QScopedPointer<EgcFlexNode> node(static_cast<EgcFunctionNode*>(EgcNodeCreator::create(type)));
+        QScopedPointer<EgcFncContainerNode> node(static_cast<EgcFncContainerNode*>(EgcNodeCreator::create(type)));
         assert(node->isFlexNode());
         if (node->isFlexNode()) {
-                *node = std::move(*argList);
+                if (argList)
+                        node->transferArgs(*argList);
                 delete argList;
                 setNotDangling(argList);
                 EgcFlexNode *nodePtr = node.data();

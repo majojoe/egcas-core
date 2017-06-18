@@ -76,6 +76,7 @@ for node in nodes:
 #include "concreteNodes/egcexponentnode.h"
 #include "concreteNodes/egcrootnode.h"
 #include "concreteNodes/egcbinemptynode.h"
+#include "concreteNodes/egcfnccontainernode.h"
 #include "concreteNodes/egcparenthesisnode.h"
 #include "concreteNodes/egcdifferentialnode.h"
 #include "concreteNodes/egcplusnode.h"

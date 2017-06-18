@@ -102,6 +102,23 @@ public:
          */
         virtual void assembleResult(QString startString, QString seperationString, QString endString, EgcNode* node);
         /**
+         * @brief assembleResult assemble the result string of a node. This is a version e.g. for functions where the
+         * first node contains the name of the function. The left part of the start string would be given as first
+         * argument, the right part of the start string as second argument.
+         * E.g. it can be used with the following mathml function:
+         * assembleResult("<mrow><mi>FNC_NAME</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>", "<mo>,</mo>",
+         * "</mrow><mo>)</mo></mrow></mrow>", node);
+         * @param lStartString the left part of the start string of a node
+         * @param rStartString the right part of the start string of a node (e.g. part starting with
+         * </mi><mo>&ApplyFunction;) in above example
+         * @param seperationString the separation string that is used as seperation of each child node
+         * @param endString the end string of the node
+         * @param node the node we are currently operating on
+         */
+        void assembleResult(QString lStartString, QString rStartString, QString seperationString,
+                                            QString endString, EgcNode* node);
+
+        /**
          * @brief pushToStack push results to the stack. This function (and not the QStack push function) must be used
          * to push stuff onto the stack, since here also suppression conditions will be checked.
          * @param str the string to push
