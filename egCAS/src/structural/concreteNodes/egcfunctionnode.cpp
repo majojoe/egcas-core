@@ -33,8 +33,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcFunctionNode::EgcFunctionNode()
 {
+        QScopedPointer<EgcEmptyNode> name(new EgcEmptyNode());
+        setChild(0, *name.take());
         QScopedPointer<EgcEmptyNode> val(new EgcEmptyNode());
-        setChild(0, *val.take());
+        if (val) {
+                if (insert(1, *val.data()))
+                        (void) val.take();
+        }
 }
 
 bool EgcFunctionNode::transferArgs(EgcArgumentsNode& args)
@@ -88,8 +93,7 @@ QString EgcFunctionNode::getName(void)
 
 bool EgcFunctionNode::cursorSnaps(EgcNodeSide side) const
 {
-        if (   side == EgcNodeSide::left
-            || side == EgcNodeSide::right)
+        if (side == EgcNodeSide::right)
                 return true;
 
         return false;

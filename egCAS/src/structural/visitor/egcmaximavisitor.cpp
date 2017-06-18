@@ -115,7 +115,7 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
         switch (flex->getNodeType()) {
         case EgcNodeType::FunctionNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult(static_cast<EgcFunctionNode*>(flex)->getName() % "(", ",", ")", flex);
+                        assembleResult("", "(", ",", ")", flex);
                 break;
         case EgcNodeType::IntegralNode:
                 if (flex->getNumberChildNodes() == 2) { // indefinite integral

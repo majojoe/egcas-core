@@ -162,9 +162,9 @@ void EgcNodeVisitor::assembleResult(QString lStartString, QString rStartString, 
                 result += args.at(i);
                 if (i != nrArguments - 1)
                         result += seperationString;
-                else
-                        result += endString;
         }
+
+        result += endString;
 
         result = modifyNodeString(result, node);
 
