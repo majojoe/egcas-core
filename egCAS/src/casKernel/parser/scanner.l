@@ -72,9 +72,10 @@
 
 
 EXPONENT     ([Eeb][-+]?[0-9]+)
-VARSEPARATOR (_1)
+VARSEP       (_1)
 UNDERSCORE   (__)
 UNICODESIGN  (_2[0-9a-fA-F]+_3)
+ALNUMNODE    ([a-zA-Z]{1}|{UNICODESIGN})([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*
 
 %%
 
@@ -115,9 +116,15 @@ log  {
  }
 
  /*names*/
-([a-zA-Z]{1}|{UNICODESIGN})([a-zA-Z0-9]|{UNDERSCORE}|{VARSEPARATOR}|{UNICODESIGN})* {
+ALNUMNODE {
         return CASParser::MaximaParser::make_NAMES(yytext, CASParser::location());
  }
+
+ /*variable separator*/
+VARSEP {
+        return CASParser::MaximaParser::make_VARSEP(yytext, CASParser::location());
+ }
+
 
 [\n\t ] { /*ignore whitechar*/ }
 

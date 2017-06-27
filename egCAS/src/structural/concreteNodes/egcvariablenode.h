@@ -82,6 +82,11 @@ public:
          */
         virtual QString getStuffedVar(void);
         /**
+         * @brief getStuffedVarSeparator returns the stuffed var separator
+         * @return returns the variable separator
+         */
+        static QString getStuffedVarSeparator(void);
+        /**
          * @brief valid returns true if the expression is valid and false otherwise.
          * A variable expression is valid if the value is not empty.
          * @return true if the expression is valid, false otherwise.

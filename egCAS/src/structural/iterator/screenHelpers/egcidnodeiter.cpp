@@ -930,6 +930,9 @@ bool EgcIdNodeIter::finishModOperation(void)
                                 previous();
                 }
                 m_iterPosAfterUpdate = nullptr;
+        } else { //in case of an error during deletion of any element of the formula
+                if (!m_node)
+                        toBack();
         }
 
         if (!m_atRightSideAfterUpdate && m_isInsert)

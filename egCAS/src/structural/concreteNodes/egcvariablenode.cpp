@@ -37,7 +37,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 //ATTENTION: as of now egCAS and even Qt does not support non bmp characters (unicode caracters > 0xFFFF)
 
-QRegularExpression EgcVariableNode::s_varSubSeparator = QRegularExpression("(.*[^_]+)_1([^_]+.*)");
+QRegularExpression EgcVariableNode::s_varSubSeparator = QRegularExpression("(.*[^_]+)"
+                                                                           % EgcVariableNode::getStuffedVarSeparator()
+                                                                           % "([^_]+.*)");
 bool EgcVariableNode::s_initializeRegex = true;
 
 EgcVariableNode::EgcVariableNode() 
@@ -220,9 +222,14 @@ QString EgcVariableNode::getStuffedVar(void)
         if (sub.isEmpty())
                 tmp = var;
         else
-                tmp = var % "_1" % sub;
+                tmp = var % getStuffedVarSeparator() % sub;
 
         return tmp;
+}
+
+QString EgcVariableNode::getStuffedVarSeparator(void)
+{
+        return "_1";
 }
 
 bool EgcVariableNode::valid(void)

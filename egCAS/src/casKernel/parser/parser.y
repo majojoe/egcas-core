@@ -90,6 +90,7 @@
 %token <std::string> NUMBER "number";
 %token <char> OPERATOR "operator";
 %token <std::string> NAMES "names";
+%token <std::string> VARSEP "varsep";
 %token <std::string> BUILTIN_FNCS "builtin_fncs";
 %token PLUS "+";
 %token MINUS "-";
@@ -158,6 +159,7 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | expr ":" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::DefinitionNode, $1, $3);}
      | NUMBER              {$$ = interpreter.addStringNode(EgcNodeType::NumberNode, $1);}
      | NAMES               {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1);}
+     | NAMES VARSEP NAMES  {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1 + $2 + $3);}
      | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}
      | BUILTIN_FNCS "(" explist ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
      | "sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}

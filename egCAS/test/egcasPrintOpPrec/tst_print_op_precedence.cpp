@@ -139,6 +139,10 @@ void EgcasPrintOpPrec::createList(void)
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "DivisionNode");
         delete(obj);
+        obj = new (std::nothrow) LParenthesisNode();
+        if (obj->isContainer())
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "LParenthesisNode");
+        delete(obj);
         obj = new (std::nothrow) EgcNumberNode();
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "NumberNode");
@@ -167,6 +171,10 @@ void EgcasPrintOpPrec::createList(void)
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "BinEmptyNode");
         delete(obj);
+        obj = new (std::nothrow) EgcFncContainerNode();
+        if (obj->isContainer())
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "FncContainerNode");
+        delete(obj);
         obj = new (std::nothrow) EgcParenthesisNode();
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "ParenthesisNode");
@@ -186,6 +194,10 @@ void EgcasPrintOpPrec::createList(void)
         obj = new (std::nothrow) EgcEqualNode();
         if (obj->isContainer())
                 m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "EqualNode");
+        delete(obj);
+        obj = new (std::nothrow) RParenthesisNode();
+        if (obj->isContainer())
+                m_list.insertMulti(static_cast<EgcContainerNode*>(obj)->bindingPower(), "RParenthesisNode");
         delete(obj);
         //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.

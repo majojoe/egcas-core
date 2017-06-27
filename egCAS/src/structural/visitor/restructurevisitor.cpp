@@ -139,8 +139,13 @@ void ReStructureVisitor::visit(EgcFlexNode* flex)
                 break;
         case EgcNodeType::VariableNode:
                 if (m_state == EgcIteratorState::RightIteration) { //there are no subsequent nodes but the Alnum nodes -> so push to stack
-                        deleteFromStack(flex->getNumberChildNodes());
-                        pushToStack(static_cast<EgcVariableNode*>(flex)->getStuffedVar(), flex);
+                        if (flex->getNumberChildNodes() == 2) {
+                                EgcVariableNode *var = static_cast<EgcVariableNode*>(flex);
+                                QString str = "%1" % var->getStuffedVarSeparator() % "%2";
+                                assembleResult(str, flex);
+                        } else if (flex->getNumberChildNodes() == 1) {
+                               assembleResult("%1", flex);
+                        }
                 }
                 break;
         default:
@@ -156,7 +161,7 @@ void ReStructureVisitor::visit(EgcNode* node)
                 pushToStack("_empty", node);
                 break;
         case EgcNodeType::AlnumNode:  // normally we extract the AlnumNode's via their container classes
-                pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);
+                pushToStack(static_cast<EgcAlnumNode*>(node)->getStuffedValue(), node);
                 break;
         case EgcNodeType::NumberNode:
                 pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);
