@@ -8,9 +8,6 @@ add_subdirectory(egcasTestCalculations)
 add_subdirectory(egcasTestScreenIterators)
 add_subdirectory(egcasTestUtf)
 add_subdirectory(egcasTestAdvancedTreeOps)
-add_subdirectory(egcasPrintOpPrec)
-add_subdirectory(egcasRearrangePrec)
-
 
 #add here all tests to execute
 set(tests-to-execute

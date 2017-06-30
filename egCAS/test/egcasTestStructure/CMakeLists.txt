@@ -22,6 +22,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 
+
 file(GLOB_RECURSE tst_egcastest_structural_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")
 
 set(tst_egcastest_structural_SOURCES
@@ -48,6 +49,7 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
         ../../src/utils/egcutfcodepoint.cpp
+        ../../src/structural/visitor/restructurevisitor.cpp
 )
 
 add_executable(tst_egcastest_structural ${tst_egcastest_structural_SOURCES} )

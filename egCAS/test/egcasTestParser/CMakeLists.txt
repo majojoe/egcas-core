@@ -65,6 +65,7 @@ set(tst_egcastest_parser_SOURCES
         ../../src/structural/visitor/egcmathmllookup.cpp
         ../../src/structural/specialNodes/egcbinaryoperator.cpp
         ../../src/utils/egcutfcodepoint.cpp
+        ../../src/structural/visitor/restructurevisitor.cpp
 )
 
 #set the verbosity level of the scanner and parser

@@ -80,6 +80,7 @@ set(tst_egcas_advanced_tree_ops_SOURCES
         ../../src/view/egcworksheet.cpp
         ../../src/view/grid.cpp
         ../../src/menu/egcgraphicsview.cpp
+        ../../src/structural/visitor/restructurevisitor.cpp
 )
 
 #set the verbosity level of the scanner and parser

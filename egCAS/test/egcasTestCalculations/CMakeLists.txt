@@ -68,6 +68,7 @@ set(tst_egcastest_calculations_SOURCES
         ../../src/casKernel/egcmaximaconn.cpp
         ../../src/casKernel/egckernelconn.cpp
         ../../src/utils/egcutfcodepoint.cpp
+        ../../src/structural/visitor/restructurevisitor.cpp
 )
 
 #set the verbosity level of the scanner and parser
