@@ -172,7 +172,40 @@ qt5_add_resources(EGCAS_RCCS res/ressources.qrc)
 add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
 
-add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS} )
+set(EGC_GEN_NODE_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h)
+set(EGC_GEN_NODE_HEADER_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnode_gen.txt)
+add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED}
+        COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${EGC_GEN_NODE_HEADER}
+        COMMAND ${CMAKE_COMMAND} -E touch ${EGC_GEN_NODE_HEADER_GENERATED}
+        DEPENDS ${EGC_GEN_NODE_HEADER}
+        COMMENT "generate node list"
+        VERBATIM
+)
+
+set(EGC_GEN_NODE_CREATOR ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp)
+set(EGC_GEN_NODE_CREATOR_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnodecreator.txt)
+add_custom_command(OUTPUT ${EGC_GEN_NODE_CREATOR_GENERATED}
+        COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${EGC_GEN_NODE_CREATOR}
+        COMMAND ${CMAKE_COMMAND} -E touch ${EGC_GEN_NODE_CREATOR_GENERATED}
+        DEPENDS ${EGC_GEN_NODE_CREATOR}
+        COMMENT "generate node creator"
+        VERBATIM
+)
+
+set(EGC_GEN_NODES ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h)
+set(EGC_GEN_NODES_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnodes.txt)
+add_custom_command(OUTPUT ${EGC_GEN_NODES_GENERATED}
+        COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${EGC_GEN_NODES}
+        COMMAND ${CMAKE_COMMAND} -E touch ${EGC_GEN_NODES_GENERATED}
+        DEPENDS ${EGC_GEN_NODES}
+        COMMENT "generate node header file"
+        VERBATIM
+)
+
+add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
+                     ${EGC_GEN_NODE_HEADER_GENERATED}
+                     ${EGC_GEN_NODE_CREATOR_GENERATED}
+                     ${EGC_GEN_NODES_GENERATED})
 add_dependencies(egCAS mmlegcas)
 #only for cmake >= 3.1
 #set_property(TARGET egCAS PROPERTY CXX_STANDARD 11)
@@ -180,19 +213,4 @@ add_dependencies(egCAS mmlegcas)
 
 target_link_libraries(egCAS mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
 install (TARGETS egCAS RUNTIME DESTINATION bin)
-
-add_custom_target(egcas_generate_node_list COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}
-                  ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h
-                  COMMENT "generate node list" )
-add_dependencies(egCAS egcas_generate_node_list)
-
-add_custom_target(egcas_generate_node_creator COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}
-                  ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp
-                  COMMENT "generate node creator" )
-add_dependencies(egCAS egcas_generate_node_creator)
-
-add_custom_target(egcas_generate_node_headers COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}
-                  ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h
-                  COMMENT "generate node header file" )
-add_dependencies(egCAS egcas_generate_node_headers)
 

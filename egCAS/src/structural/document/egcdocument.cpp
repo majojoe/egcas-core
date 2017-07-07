@@ -200,6 +200,11 @@ void EgcDocument::onSelectionChange(void)
 void EgcDocument::handleKernelMessages(EgcKernelErrorType type, QString message)
 {
         (void) type;
+
+        //supress error when quit program -> fix that
+        if (type == EgcKernelErrorType::kernelTerminated)
+                return;
+
         QMessageBox msgBox;
         msgBox.setText(tr("Kernel warning"));
         msgBox.setInformativeText(message);
