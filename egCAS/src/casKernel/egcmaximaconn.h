@@ -91,6 +91,7 @@ protected:
         QRegularExpression m_errUnwantedRegex;  ///< regex for filtering kernel unwanted information from error message
         QMap<QString, QString> m_wordsToReplace;///< words that schould be replaced
         QTimer* m_timer;                        ///< a timer to be able to fire a cas kernel reset if a error condition exists
+        bool m_isInitialized;                   ///< checks if class is completely initialized
 };
 
 #endif // EGCMAXIMACONN_H

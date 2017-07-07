@@ -149,6 +149,12 @@ private slots:
          * @brief onSelectionChange is called if the selection of an item changes
          */
         void onSelectionChange(void);
+        /**
+         * @brief handleKernelMessages handles kernel messages
+         * @param type error type
+         * @param message message associated with type
+         */
+        void handleKernelMessages(EgcKernelErrorType type, QString message);
 private:
         virtual void sort(void) override {}
         

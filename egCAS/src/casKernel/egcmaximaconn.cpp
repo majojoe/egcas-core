@@ -38,13 +38,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 QString EgcMaximaConn::s_startupConfig = QString("set_display(none)$display2d:false$");
 
-EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{parent}, m_timer{new QTimer(this)}
+EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{parent}, m_timer{new QTimer(this)}, m_isInitialized{false}
 {
 
         QString startCmd = findMaximaExecutable();
         if (startCmd.isEmpty()) {
-#warning test emitting this error
-                emit kernelErrorOccurred(QProcess::FailedToStart);
                 return;
         }
         startKernel(startCmd);
@@ -83,6 +81,7 @@ EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{parent}, m_timer{n
         m_regex.optimize();
         m_errUnwantedRegex.optimize();
         m_unwantedErrors.optimize();
+        m_isInitialized = true;
 }
 
 QString EgcMaximaConn::findMaximaExecutable(void)
@@ -127,6 +126,11 @@ void EgcMaximaConn::clearKernelOutQueue(void)
 
 void EgcMaximaConn::sendCommand(QString cmd)
 {
+        if (!m_isInitialized) {
+                emit kernelErrorOccurred(QProcess::FailedToStart);
+                return;
+        }
+
         cmd += "\n";
 #ifdef DEBUG_MAXIMA_KERNEL
         qDebug() << cmd.toUtf8();
@@ -204,12 +208,20 @@ void EgcMaximaConn::stdOutput(void)
 
 void EgcMaximaConn::quit(void)
 {
+        if (!m_isInitialized)
+                return;
+
         this->sendCommand("quit();");
         m_casKernelProcess->waitForFinished(1000);
 }
 
 void EgcMaximaConn::reset(void)
 {
+        if (!m_isInitialized) {
+                emit kernelErrorOccurred(QProcess::FailedToStart);
+                return;
+        }
+
         clearKernelOutQueue();
         this->sendCommand("kill(all)$");
 }

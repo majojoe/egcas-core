@@ -27,6 +27,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QMessageBox>
 #include "egcasscene.h"
 #include "../entities/egcentitylist.h"
 #include "egcdocument.h"
@@ -41,6 +42,7 @@ EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasS
         connect(m_scene.data(), SIGNAL(createFormula(QPointF, EgcAction)), this, SLOT(insertFormulaOnKeyPress(QPointF, EgcAction)));
         connect(this, SIGNAL(startDeleletingEntity(EgcEntity*)), this, SLOT(deleteLaterEntity(EgcEntity*)), Qt::QueuedConnection);
         connect(m_scene.data(), &EgCasScene::selectionChanged, this, &EgcDocument::selectionChanged);
+        connect(m_calc.data(), SIGNAL(errorOccurred(EgcKernelErrorType,QString)),  this, SLOT(handleKernelMessages(EgcKernelErrorType,QString)));
 }
 
 EgcEntityList* EgcDocument::getEntityList(void)
@@ -193,4 +195,16 @@ EgcFormulaEntity* EgcDocument::getActiveFormulaEntity(void)
 void EgcDocument::onSelectionChange(void)
 {
         emit selectionChanged();
+}
+
+void EgcDocument::handleKernelMessages(EgcKernelErrorType type, QString message)
+{
+        (void) type;
+        QMessageBox msgBox;
+        msgBox.setText(tr("Kernel warning"));
+        msgBox.setInformativeText(message);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.setIcon(QMessageBox::Warning);
+        (void) msgBox.exec();
 }
