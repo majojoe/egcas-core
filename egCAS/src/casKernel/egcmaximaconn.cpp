@@ -28,6 +28,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QVector>
 #include <QMap>
+#include <QCoreApplication>
+#include <QFileInfo>
+#include <QDir>
 #ifdef DEBUG_MAXIMA_KERNEL
 #include <QDebug>
 #endif //DEBUG_MAXIMA_KERNEL
@@ -35,8 +38,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 QString EgcMaximaConn::s_startupConfig = QString("set_display(none)$display2d:false$");
 
-EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{"maxima", parent}, m_timer{new QTimer(this)}
+EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{parent}, m_timer{new QTimer(this)}
 {
+
+        QString startCmd = findMaximaExecutable();
+        if (startCmd.isEmpty()) {
+#warning test emitting this error
+                emit kernelErrorOccurred(QProcess::FailedToStart);
+                return;
+        }
+        startKernel(startCmd);
+
         m_timer->setSingleShot(true);
         connect(m_timer, SIGNAL(timeout()), this, SLOT(casKernelTimeoutError()));
 
@@ -71,6 +83,35 @@ EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{"maxima", parent},
         m_regex.optimize();
         m_errUnwantedRegex.optimize();
         m_unwantedErrors.optimize();
+}
+
+QString EgcMaximaConn::findMaximaExecutable(void)
+{
+        QString path = QFileInfo(QCoreApplication::applicationFilePath() ).absolutePath();
+        QString startCmd = QString("");
+        QString maximaExecutable = QString("egcas-maxima");
+        QFileInfo maxima;
+        //search for maxima binary in the same dir as egcas
+        maxima.setFile(path, maximaExecutable);
+        if (maxima.exists() && maxima.isExecutable()) {
+                startCmd = maxima.absoluteFilePath();
+        } else {
+                //search for maxima binary in maxima installation path for development
+                maxima.setFile(QDir::cleanPath(MAXIMA_BINARY_PATH) , maximaExecutable);
+                if (maxima.exists() && maxima.isExecutable()) {
+                        startCmd = maxima.absoluteFilePath();
+                } else {
+                        //third possibility is to check environment variables to find maxima executable
+                        if (qEnvironmentVariableIsSet("MAXIMA_BINARY_PATH")) {
+                                QString p = QString(qgetenv("MAXIMA_BINARY_PATH").constData());
+                                maxima.setFile(p);
+                                if (maxima.exists() && maxima.isExecutable())
+                                        startCmd = maxima.absoluteFilePath();
+                        }
+                }
+        }
+
+        return startCmd;
 }
 
 EgcMaximaConn::~EgcMaximaConn()

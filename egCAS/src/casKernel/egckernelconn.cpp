@@ -31,6 +31,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #endif //#ifdef DEBUG_MAXIMA_KERNEL
 #include "egckernelconn.h"
 
+EgcKernelConn::EgcKernelConn(QObject *parent) : QObject(parent), m_result(QString()),
+                                                                          m_error(QString()),
+                                                                          m_startState(EgcKernelStart::beforeStart),
+                                                                          m_executeCommand(QString(""))
+{
+}
+
 EgcKernelConn::EgcKernelConn(QString executeCmd, QObject *parent) : QObject(parent), m_result(QString()),
                                                                           m_error(QString()),
                                                                           m_startState(EgcKernelStart::beforeStart),
@@ -42,6 +49,12 @@ EgcKernelConn::EgcKernelConn(QString executeCmd, QObject *parent) : QObject(pare
 EgcKernelConn::~EgcKernelConn()
 {
         
+}
+
+void EgcKernelConn::startKernel(QString binaryStartCmd)
+{
+        m_executeCommand = binaryStartCmd;
+        restart();
 }
 
 void EgcKernelConn::sendCommand(QString cmd)

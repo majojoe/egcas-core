@@ -95,6 +95,8 @@ void ElementBar::setupGreekSection(QWidget* parent, QVBoxLayout* barLayout, EgCa
 {
         MathSection* section = getNewSection(parent, barLayout, tr("Greek"));
         if (section) {
+                section->setChecked();
+
                 section->addElement(MathElement("Α", EgcAction(EgcOperations::alnumKeyPressed, QChar(913))));
                 section->addElement(MathElement("Β", EgcAction(EgcOperations::alnumKeyPressed, QChar(914))));
                 section->addElement(MathElement("Γ", EgcAction(EgcOperations::alnumKeyPressed, QChar(915))));

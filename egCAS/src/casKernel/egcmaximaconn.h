@@ -81,6 +81,11 @@ protected:
          * @brief clearKernelOutQueue clears the output queue of the kernel
          */
         void clearKernelOutQueue(void);
+        /**
+         * @brief findMaximaExecutable finds the maxima executable
+         * @return the found maxima executable
+         */
+        QString findMaximaExecutable(void);
 
         static QString s_startupConfig;         ///< startup configuration for CAS kernel
         QRegularExpression m_errUnwantedRegex;  ///< regex for filtering kernel unwanted information from error message

@@ -56,6 +56,9 @@ include_directories(view)
 include_directories(${CMAKE_BINARY_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+set(MAXIMA_BINARY_PATH ${CMAKE_BINARY_DIR}/${MAXIMA_INST_PATH}/usr/bin/)
+add_definitions(-DMAXIMA_BINARY_PATH="${MAXIMA_BINARY_PATH}")
+
 #this is for showing up abstract interfaces and other sources in the IDE
 add_custom_target(egCAS_other_srcs ALL SOURCES
         structural/entities/egcabstractformulaentity.h

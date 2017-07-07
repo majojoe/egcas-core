@@ -50,6 +50,10 @@ class EgcKernelConn: public QObject
         Q_OBJECT
 public:
         /**
+         * @brief EgcKernelConn creates a connection to a CAS kernel.
+         */
+        EgcKernelConn(QObject *parent = 0);
+        /**
          * @brief EgcKernelConn creates a connection to a CAS kernel. This is done by starting the kernel.
          * It waits for commands then and will bring back the results.
          * @param executeCmd the path to the maxima executable including arguments.
@@ -57,6 +61,11 @@ public:
         EgcKernelConn(QString executeCmd, QObject *parent = 0);
         ///destructor
         virtual ~EgcKernelConn();
+        /**
+         * @brief startKernel start the Kernel
+         * @param binaryStartCmd the kernel command to execute for starting the kernel
+         */
+        virtual void startKernel(QString binaryStartCmd);
         /**
          * @brief sendCommand send a command to the kernel
          * @param cmd command to be sent to the kernel
