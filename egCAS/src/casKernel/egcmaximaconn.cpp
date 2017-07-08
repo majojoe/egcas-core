@@ -115,6 +115,7 @@ QString EgcMaximaConn::findMaximaExecutable(void)
 
 EgcMaximaConn::~EgcMaximaConn()
 {
+        disconnectKernelError();
         quit();
 }
 
@@ -127,7 +128,7 @@ void EgcMaximaConn::clearKernelOutQueue(void)
 void EgcMaximaConn::sendCommand(QString cmd)
 {
         if (!m_isInitialized) {
-                emit kernelErrorOccurred(QProcess::FailedToStart);
+                kernelError(QProcess::FailedToStart);
                 return;
         }
 
@@ -218,7 +219,7 @@ void EgcMaximaConn::quit(void)
 void EgcMaximaConn::reset(void)
 {
         if (!m_isInitialized) {
-                emit kernelErrorOccurred(QProcess::FailedToStart);
+                kernelError(QProcess::FailedToStart);
                 return;
         }
 

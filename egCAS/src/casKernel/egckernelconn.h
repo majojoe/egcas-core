@@ -104,6 +104,11 @@ protected slots:
         void kernelError(QProcess::ProcessError error);
 
 protected:
+        /**
+         * @brief disconnectKernelError disconnects kernel error signal, so that no errors can be sent by kernel anymore
+         */
+        void disconnectKernelError(void);
+
         QString m_result;                               ///< stores the result until the result is complete
         QString m_error;                                ///< stores the error message until the message is complete
         QScopedPointer<QProcess> m_casKernelProcess;    ///< pointer to the kernel QProcess object

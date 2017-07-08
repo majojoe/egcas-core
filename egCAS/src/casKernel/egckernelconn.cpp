@@ -92,3 +92,8 @@ void EgcKernelConn::restart(void)
         connect(m_casKernelProcess.data(), SIGNAL(error(QProcess::ProcessError)), this, SLOT(kernelError(QProcess::ProcessError)) );
         connect(m_casKernelProcess.data(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(kernelTerm()) );
 }
+
+void EgcKernelConn::disconnectKernelError(void)
+{
+        disconnect(m_casKernelProcess.data(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(kernelTerm()) );
+}
