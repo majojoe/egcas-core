@@ -11,7 +11,6 @@ add_subdirectory(egcasTestAdvancedTreeOps)
 
 #add here all tests to execute
 set(tests-to-execute
-        tst_print_op_precedence 
         tst_egcas_advanced_tree_ops 
         tst_egcastest_calculations 
         tst_egcastest_parser 
@@ -19,7 +18,6 @@ set(tests-to-execute
         tst_egcastest_structural 
         tst_egcastest_utf_encoding 
         tst_egcastest_view
-        tst_rearrange_precedence
 )
 
 add_custom_target(egcas-tests-all COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test-executer.sh "${CMAKE_BINARY_DIR}/bin" ${tests-to-execute}
