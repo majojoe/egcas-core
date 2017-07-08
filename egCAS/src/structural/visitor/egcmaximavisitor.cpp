@@ -191,21 +191,20 @@ QString EgcMaximaVisitor::getResult(void)
                 switch(m_formula->getNumberResultType()) {
                 case EgcNumberResultType::IntegerType:
                         tmp = tmpOptions + "round(" + tmp + ")";
+                        tmp += QString(";");
                         break;
                 case EgcNumberResultType::ScientificType:
                         tmp = tmpOptions + "float(" + tmp + ")";
+                        tmp += QString(";");
                         break;
                 case EgcNumberResultType::EngineeringType:
-#ifdef EGC_PROJ_NAME
-#warning maxima function for engineering type is missing (load lisp function "engineering-format" from share/contrib/engineering-format.lisp)
-#endif //#ifdef EGC_PROJ_NAME
-                        tmp = tmpOptions + tmp;
+                        tmp = tmpOptions + "engineering_format_floats:true$float(" + tmp + ");engineering_format_floats:false$";
                         break;
                 default:
                         tmp = tmpOptions + tmp;
+                        tmp += QString(";");
                         break;
                 }
-                tmp += QString(";");
         }
 
 #ifdef DEBUG_KERNEL_COMMAND_GENERATION

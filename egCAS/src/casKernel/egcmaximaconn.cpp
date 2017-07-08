@@ -36,7 +36,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #endif //DEBUG_MAXIMA_KERNEL
 #include "egcmaximaconn.h"
 
-QString EgcMaximaConn::s_startupConfig = QString("set_display(none)$display2d:false$");
+QString EgcMaximaConn::s_startupConfig = QString("set_display(none)$"
+                                                 "display2d:false$"
+                                                 "load(\"engineering-format\")$"
+                                                 "engineering_format_floats:false$");
 
 EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{parent}, m_timer{new QTimer(this)}, m_isInitialized{false}
 {

@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcFormulaEntity* formula3 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(330.0, 300.0)));
     FormulaGenerator::getFormulaTree(formula3, "(1+38)=_empty");
+    formula3->setNumberResultType(EgcNumberResultType::EngineeringType);
 
     EgcFormulaEntity* formula4 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 610.0)));
