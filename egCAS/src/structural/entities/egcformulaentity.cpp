@@ -42,7 +42,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "actions/egcaction.h"
 #include "iterator/egcscrpositerator.h"
 #include "document/egcabstractdocument.h"
-#include "casKernel/parser/egckernelparser.h"
+#include "casKernel/parser/abstractkernelparser.h"
+#include "casKernel/parser/restructparserprovider.h"
 
 quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 0;
 
@@ -222,12 +223,12 @@ QString EgcFormulaEntity::getCASKernelCommand(void)
 
 void EgcFormulaEntity::reStructureTree(void)
 {
+        RestructParserProvider pp;
         ReStructureVisitor restructureVisitor(*this);
         QString result = restructureVisitor.getResult();
-        EgcKernelParser parser;
         NodeIterReStructData iterData;
         int errCode;
-        EgcNode* tree = parser.restructureFormula(result, iterData, &errCode);
+        EgcNode* tree = pp.getRestructParser()->restructureFormula(result, iterData, &errCode);
         if (tree) {
                 setRootElement(tree);
                 m_scrIter->invalidateCursor(getBaseElement());

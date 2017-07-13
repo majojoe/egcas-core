@@ -43,6 +43,7 @@ class EgcAbstractFormulaItem;
 class EgcScreenPos;
 class EgcScrPosIterator;
 enum class EgcOperations;
+class AbstractKernelParser;
 
 /**
  * @brief The EgcNumberResultType defines different types of number results

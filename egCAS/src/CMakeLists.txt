@@ -74,7 +74,9 @@ add_custom_target(egCAS_other_srcs ALL SOURCES
         view/egcabstractpixmapitem.h
         casKernel/parser/scanner.l
         casKernel/parser/parser.y
+        casKernel/parser/abstractkernelparser.h
         menu/mathelement.h
+
 )
 
 set(egCAS_concrete_node_SOURCES
@@ -134,6 +136,7 @@ set(egCAS_SOURCES
         casKernel/egckernelconn.cpp
         casKernel/parser/interpreter.cpp
         casKernel/parser/egckernelparser.cpp
+        casKernel/parser/restructparserprovider.cpp
         ${BISON_cas_parser_OUTPUTS}
         ${FLEX_cas_scanner_OUTPUTS}
         structural/entities/egcentitylist.cpp

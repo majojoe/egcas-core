@@ -112,5 +112,8 @@ EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIter
 
 QString EgcKernelParser::getErrorMessage()
 {
-        return m_errMessage;
+        QString temp = m_errMessage;
+        m_errMessage = QString::null;
+
+        return temp;
 }

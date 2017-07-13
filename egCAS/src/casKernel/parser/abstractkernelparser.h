@@ -1,4 +1,5 @@
-/*Copyright (c) 2014, Johannes Maier <maier_jo@gmx.de>
+/*
+Copyright (c) 2015, Johannes Maier <maier_jo@gmx.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -11,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of egCAS nor the names of its
+* Neither the name of the egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -25,37 +26,20 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
-
-#ifndef EGCKERNELPARSER_H
-#define EGCKERNELPARSER_H
-
-class NodeIterReStructData;
-class EgcNode;
-namespace CASParser {
-        class Interpreter;
-}
+#ifndef ABSTRACTKERNELPARSER_H
+#define ABSTRACTKERNELPARSER_H
 
 #include <QString>
-#include <QScopedPointer>
-#include "abstractkernelparser.h"
 
+class NodeIterReStructData;
 
 /**
- * @brief The EgcKernelParser class encapsulates the parsing of the cas kernel output and creates a node tree thereof.
+ * @brief The AbstractKernelParser class
  */
-class EgcKernelParser : public AbstractKernelParser
+class AbstractKernelParser
 {
 public:
-        EgcKernelParser();
-        virtual ~EgcKernelParser();
-
-        /**
-         * @brief parseKernelOutput parse the cas kernel output and generate a expression tree from it.
-         * @param strToParse the output of the cas kernel to generate a tree from
-         * @return the result (tree) of the parsing of the cas kernel output
-         */
-        EgcNode* parseKernelOutput(const QString& strToParse);
-
+        virtual ~AbstractKernelParser() {}
         /**
          * @brief restructureFormula restructure the formula after an insert or delete of a operation with help of the
          * parser
@@ -64,18 +48,8 @@ public:
          * @param errCode if return value is a nullpointer, the errCode contains the reason of the error
          * @return pointer to the root node of the formula if everything went well, a nullpointer otherwise
          */
-        virtual EgcNode* restructureFormula(const QString& strToParse, NodeIterReStructData& iterData, int* errCode) override;
+        virtual EgcNode* restructureFormula(const QString& strToParse, NodeIterReStructData& iterData, int* errCode) = 0;
 
-        /**
-         * @brief getErrorMessage the error message if an error while parsing ocurred.
-         * @return the error message if one.
-         */
-        QString getErrorMessage();
-private:
-        QString m_errMessage;   /// stores a error message if an error ocurred while parsing
-        QScopedPointer<CASParser::Interpreter> m_i;        ///< stores an interpreter
-
-        Q_DISABLE_COPY(EgcKernelParser);
 };
 
-#endif // EGCKERNELPARSER_H
+#endif // ABSTRACTKERNELPARSER_H
