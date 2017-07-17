@@ -36,6 +36,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #endif //DEBUG_MAXIMA_KERNEL
 #include "egcmaximaconn.h"
 
+#ifndef MAXIMA_BINARY_PATH
+#define MAXIMA_BINARY_PATH ""
+#endif //#ifndef MAXIMA_BINARY_PATH
+
 QString EgcMaximaConn::s_startupConfig = QString("set_display(none)$"
                                                  "display2d:false$"
                                                  "load(\"engineering-format\")$"

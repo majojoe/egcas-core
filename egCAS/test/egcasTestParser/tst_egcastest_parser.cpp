@@ -37,6 +37,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "visitor/egcnodevisitor.h"
 #include "visitor/egcmaximavisitor.h"
 #include "visitor/egcmathmlvisitor.h"
+#include "casKernel/parser/abstractkernelparser.h"
+#include "casKernel/parser/restructparserprovider.h"
+
+//implementation of some mock classes for restruct parser
+class EgcTestKernelParser : public AbstractKernelParser
+{
+public:
+        EgcTestKernelParser() {}
+        virtual ~EgcTestKernelParser() {}
+        virtual EgcNode* restructureFormula(const QString& strToParse, NodeIterReStructData& iterData, int* errCode) override {return nullptr;};
+};
+
+AbstractKernelParser* RestructParserProvider::s_parser = nullptr;
+RestructParserProvider::RestructParserProvider()
+{
+        if (s_parser == nullptr)
+                s_parser = new EgcTestKernelParser();
+}
+RestructParserProvider::~RestructParserProvider() {}
+AbstractKernelParser* RestructParserProvider::getRestructParser(void) { return s_parser;}
+
 
 
 class EgcasTest_Parser : public QObject
