@@ -205,10 +205,13 @@ add_custom_command(OUTPUT ${EGC_GEN_NODES_GENERATED}
         VERBATIM
 )
 
+set(WIN_RESOURCE_FILE res/egcas.rc)
+ 
 add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
                      ${EGC_GEN_NODE_HEADER_GENERATED}
                      ${EGC_GEN_NODE_CREATOR_GENERATED}
-                     ${EGC_GEN_NODES_GENERATED})
+                     ${EGC_GEN_NODES_GENERATED}
+                     ${WIN_RESOURCE_FILE})
 add_dependencies(egCAS mmlegcas)
 #only for cmake >= 3.1
 #set_property(TARGET egCAS PROPERTY CXX_STANDARD 11)
