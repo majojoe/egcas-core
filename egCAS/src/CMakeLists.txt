@@ -214,8 +214,8 @@ add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
                      ${WIN_RESOURCE_FILE})
 add_dependencies(egCAS mmlegcas)
 #only for cmake >= 3.1
-#set_property(TARGET egCAS PROPERTY CXX_STANDARD 11)
-#set_property(TARGET egCAS PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET egCAS PROPERTY CXX_STANDARD 11)
+set_property(TARGET egCAS PROPERTY CXX_STANDARD_REQUIRED ON)
 
 target_link_libraries(egCAS mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
 install (TARGETS egCAS RUNTIME DESTINATION bin)
