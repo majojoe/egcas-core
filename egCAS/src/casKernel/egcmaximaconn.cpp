@@ -94,8 +94,10 @@ EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{parent}, m_timer{n
 QString EgcMaximaConn::findMaximaExecutable(void)
 {
         QString path = QFileInfo(QCoreApplication::applicationFilePath() ).absolutePath();
+        path = QDir(path).filePath("egcas-maxima");
+        path = QDir(path).filePath("bin");
         QString startCmd = QString("");
-        QString maximaExecutable = QString("egcas-maxima");
+        QString maximaExecutable = QString("maxima");
         QFileInfo maxima;
         //search for maxima binary in the same dir as egcas
         maxima.setFile(path, maximaExecutable);
