@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8.11)
 
-project(egCAS)
+project(egcas)
 
 #set the project name
-add_definitions(-DEGC_PROJ_NAME=egCAS)
+add_definitions(-DEGC_PROJ_NAME=egcas)
 
 # Tell CMake to run moc when necessary:
 set(CMAKE_AUTOMOC ON)
@@ -60,7 +60,7 @@ set(MAXIMA_BINARY_PATH ${CMAKE_BINARY_DIR}/${MAXIMA_INST_PATH}/bin/)
 add_definitions(-DMAXIMA_BINARY_PATH="${MAXIMA_BINARY_PATH}")
 
 #this is for showing up abstract interfaces and other sources in the IDE
-add_custom_target(egCAS_other_srcs ALL SOURCES
+add_custom_target(egcas_other_srcs ALL SOURCES
         structural/entities/egcabstractformulaentity.h
         structural/entities/egcabstracttextentity.h
         structural/entities/egcabstractpixmapentity.h
@@ -79,7 +79,7 @@ add_custom_target(egCAS_other_srcs ALL SOURCES
 
 )
 
-set(egCAS_concrete_node_SOURCES
+set(egcas_concrete_node_SOURCES
         structural/concreteNodes/egcnumbernode.cpp
         structural/concreteNodes/egcparenthesisnode.cpp
         structural/concreteNodes/egclparenthesisnode.cpp
@@ -102,7 +102,7 @@ set(egCAS_concrete_node_SOURCES
         structural/concreteNodes/egcfnccontainernode.cpp
 )
 
-set(egCAS_SOURCES
+set(egcas_SOURCES
         main.cpp
         menu/mainwindow.cpp
         view/egcasscene.cpp 
@@ -130,7 +130,7 @@ set(egCAS_SOURCES
         structural/specialNodes/egcemptynode.cpp
         structural/visitor/egcmaximavisitor.cpp 
         structural/visitor/restructurevisitor.cpp 
-        ${egCAS_concrete_node_SOURCES}
+        ${egcas_concrete_node_SOURCES}
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 
         casKernel/egckernelconn.cpp
@@ -207,16 +207,16 @@ add_custom_command(OUTPUT ${EGC_GEN_NODES_GENERATED}
 
 set(WIN_RESOURCE_FILE res/egcas.rc)
  
-add_executable(egCAS ${egCAS_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
+add_executable(egcas ${egcas_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
                      ${EGC_GEN_NODE_HEADER_GENERATED}
                      ${EGC_GEN_NODE_CREATOR_GENERATED}
                      ${EGC_GEN_NODES_GENERATED}
                      ${WIN_RESOURCE_FILE})
-add_dependencies(egCAS mmlegcas)
+add_dependencies(egcas mmlegcas)
 #only for cmake >= 3.1
-set_property(TARGET egCAS PROPERTY CXX_STANDARD 11)
-set_property(TARGET egCAS PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET egcas PROPERTY CXX_STANDARD 11)
+set_property(TARGET egcas PROPERTY CXX_STANDARD_REQUIRED ON)
 
-target_link_libraries(egCAS mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
-install (TARGETS egCAS RUNTIME DESTINATION bin)
+target_link_libraries(egcas mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
+install (TARGETS egcas RUNTIME DESTINATION bin)
 

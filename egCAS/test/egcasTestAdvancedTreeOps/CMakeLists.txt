@@ -88,7 +88,7 @@ add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(tst_egcas_advanced_tree_ops ${tst_egcas_advanced_tree_ops_SOURCES} )
-add_dependencies(tst_egcas_advanced_tree_ops mmlegcas egCAS)
+add_dependencies(tst_egcas_advanced_tree_ops mmlegcas egcas)
 target_link_libraries(tst_egcas_advanced_tree_ops mmlegcas Qt5::Widgets Qt5::Core Qt5::Test)
 
 

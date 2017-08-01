@@ -73,7 +73,7 @@ add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(tst_egcastest_parser ${tst_egcastest_parser_SOURCES} )
-add_dependencies(tst_egcastest_parser egCAS)
+add_dependencies(tst_egcastest_parser egcas)
 target_link_libraries(tst_egcastest_parser Qt5::Widgets Qt5::Core Qt5::Test)
 
 

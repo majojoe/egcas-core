@@ -30,7 +30,7 @@ set(tst_egcastest_utf_encoding_SOURCES
 )
 
 add_executable(tst_egcastest_utf_encoding ${tst_egcastest_utf_encoding_SOURCES} )
-add_dependencies(tst_egcastest_utf_encoding egCAS)
+add_dependencies(tst_egcastest_utf_encoding egcas)
 target_link_libraries(tst_egcastest_utf_encoding Qt5::Widgets Qt5::Core Qt5::Test)
 
 

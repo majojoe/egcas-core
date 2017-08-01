@@ -53,6 +53,6 @@ set(tst_egcastest_structural_SOURCES
 )
 
 add_executable(tst_egcastest_structural ${tst_egcastest_structural_SOURCES} )
-add_dependencies(tst_egcastest_structural egCAS)
+add_dependencies(tst_egcastest_structural egcas)
 
 target_link_libraries(tst_egcastest_structural mmlegcas Qt5::Widgets Qt5::Core Qt5::Test)

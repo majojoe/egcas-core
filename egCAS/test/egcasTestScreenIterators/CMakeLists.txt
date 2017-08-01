@@ -73,7 +73,7 @@ add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(tst_egcastest_scriters ${tst_egcastest_scriters_SOURCES} )
-add_dependencies(tst_egcastest_scriters egCAS)
+add_dependencies(tst_egcastest_scriters egcas)
 target_link_libraries(tst_egcastest_scriters Qt5::Widgets Qt5::Core Qt5::Test)
 
 
