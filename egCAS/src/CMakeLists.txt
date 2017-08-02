@@ -206,7 +206,42 @@ add_custom_command(OUTPUT ${EGC_GEN_NODES_GENERATED}
 )
 
 set(WIN_RESOURCE_FILE res/egcas.rc)
- 
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+                if(${CMAKE_FIND_ROOT_PATH} MATCHES "/mxe/") # mxe environment
+                        set(RUNTIME_PATH ${CMAKE_FIND_ROOT_PATH}/../../../runtime/)
+                        if(NOT "${CMAKE_SIZEOF_VOID_P}" EQUAL "8") # 32 bit platform
+                                set( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS
+                                        ${RUNTIME_PATH}/libbz2.dll
+                                        ${RUNTIME_PATH}/libgcc_s_sjlj-1.dll
+                                        ${RUNTIME_PATH}/libharfbuzz-0.dll
+                                        ${RUNTIME_PATH}/libiconv-2.dll
+                                        ${RUNTIME_PATH}/libpcre16-0.dll
+                                        ${RUNTIME_PATH}/libpng16-16.dll
+                                        ${RUNTIME_PATH}/Qt5Gui.dll
+                                        ${RUNTIME_PATH}/Qt5Test.dll
+                                        ${RUNTIME_PATH}/Qt5Xml.dll
+                                        ${RUNTIME_PATH}/libfreetype-6.dll
+                                        ${RUNTIME_PATH}/libglib-2.0-0.dll
+                                        ${RUNTIME_PATH}/libharfbuzz-icu-0.dll
+                                        ${RUNTIME_PATH}/libintl-8.dll
+                                        ${RUNTIME_PATH}/libpcre-1.dll
+                                        ${RUNTIME_PATH}/libstdc++-6.dll
+                                        ${RUNTIME_PATH}/Qt5Core.dll
+                                        ${RUNTIME_PATH}/Qt5Svg.dll
+                                        ${RUNTIME_PATH}/Qt5Widgets.dll
+                                        ${RUNTIME_PATH}/zlib1.dll
+                                        ${RUNTIME_PATH}/libpcre2-16-0.dll
+                                )
+                                install(FILES ${RUNTIME_PATH}/platforms/qminimal.dll ${RUNTIME_PATH}/platforms/qoffscreen.dll ${RUNTIME_PATH}/platforms/qwindows.dll DESTINATION bin/platforms)
+                        endif()
+                endif()
+        endif()
+        INCLUDE(InstallRequiredSystemLibraries)
+        INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION bin)
+endif()
+
 add_executable(egcas ${egcas_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
                      ${EGC_GEN_NODE_HEADER_GENERATED}
                      ${EGC_GEN_NODE_CREATOR_GENERATED}
