@@ -242,7 +242,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION bin)
 endif()
 
-add_executable(egcas ${egcas_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
+add_executable(egcas WIN32 ${egcas_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
                      ${EGC_GEN_NODE_HEADER_GENERATED}
                      ${EGC_GEN_NODE_CREATOR_GENERATED}
                      ${EGC_GEN_NODES_GENERATED}
@@ -251,6 +251,9 @@ add_dependencies(egcas mmlegcas)
 #only for cmake >= 3.1
 set_property(TARGET egcas PROPERTY CXX_STANDARD 11)
 set_property(TARGET egcas PROPERTY CXX_STANDARD_REQUIRED ON)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MinGW")
+        set_target_properties(egcas PROPERTIES LINK_FLAGS "-mwindows")
+endif()
 
 target_link_libraries(egcas mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
 install (TARGETS egcas RUNTIME DESTINATION bin)
