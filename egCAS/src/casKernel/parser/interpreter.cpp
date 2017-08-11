@@ -28,7 +28,6 @@
  */
 
 #include <sstream>
-#include <boost/concept_check.hpp>
 #include <QVector>
 #include <QScopedPointer>
 #include "interpreter.h"

@@ -97,7 +97,11 @@ QString EgcMaximaConn::findMaximaExecutable(void)
         path = QDir(path).filePath("egcas-maxima");
         path = QDir(path).filePath("bin");
         QString startCmd = QString("");
+#ifdef Q_OS_WIN
+        QString maximaExecutable = QString("maxima.bat");
+#else //#ifdef Q_OS_WIN
         QString maximaExecutable = QString("maxima");
+#endif //#ifdef Q_OS_WIN
         QFileInfo maxima;
         //search for maxima binary in the same dir as egcas
         maxima.setFile(path, maximaExecutable);
@@ -118,6 +122,12 @@ QString EgcMaximaConn::findMaximaExecutable(void)
                         }
                 }
         }
+
+#ifdef Q_OS_WIN
+        if (!startCmd.isEmpty()) {
+                startCmd = QString("cmd.exe /C \"") + startCmd + QString("\"");
+        }
+#endif //#ifdef Q_OS_WIN
 
         return startCmd;
 }
