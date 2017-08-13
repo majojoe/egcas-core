@@ -94,6 +94,9 @@ EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{parent}, m_timer{n
 QString EgcMaximaConn::findMaximaExecutable(void)
 {
         QString path = QFileInfo(QCoreApplication::applicationFilePath() ).absolutePath();
+#ifdef Q_OS_WIN
+        path = QDir(path).filePath("..");
+#endif //#ifdef Q_OS_WIN
         path = QDir(path).filePath("egcas-maxima");
         path = QDir(path).filePath("bin");
         QString startCmd = QString("");
