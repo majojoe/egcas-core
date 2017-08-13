@@ -139,14 +139,8 @@ void MainWindow::showInfo(void)
 {
         QMessageBox msgBox;
 
-        QResource ver(":/res/Version");
-        QFile verFile(ver.absoluteFilePath());
-
-        if (verFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                QTextStream in(&verFile);
-                msgBox.setText(QString(tr("Version: ")) + in.readAll());
-                msgBox.exec();
-        }
+        msgBox.setText(QString(tr("Version: ")) + QString(EGCAS_VERSION) + QString(" (pre-alpha)"));
+        msgBox.exec();
 }
 
 void MainWindow::calculate(void)
