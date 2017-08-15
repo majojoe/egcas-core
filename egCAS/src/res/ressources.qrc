@@ -3,5 +3,6 @@
         <file>plane.png</file>
         <file>LICENSE</file>
         <file>calculator.png</file>
+        <file>egcas.png</file>
     </qresource>
 </RCC>
