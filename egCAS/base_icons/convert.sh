@@ -1,4 +1,7 @@
 #!/bin/bash
 RESSORCE_DIR="../src/res/"
 convert -density 200 calculator.svg -resize 32x32 -transparent white "${RESSORCE_DIR}/calculator.png" 
-convert -density 200 egcas.svg -resize 32x32 -transparent white "${RESSORCE_DIR}/egcas.png" 
+convert -density 200 egcas.svg -resize 32x32 -transparent white "${RESSORCE_DIR}/egcas.png"
+convert -density 200 egcas.svg -resize 256x256 -transparent white "${RESSORCE_DIR}/egcas_tmp.png" 
+convert "${RESSORCE_DIR}/egcas_tmp.png"  -bordercolor white -border 0 \( -clone 0 -resize 16x16 \) \( -clone 0 -resize 32x32 \) \( -clone 0 -resize 48x48 \) \( -clone 0 -resize 64x64 \) -delete 0 -alpha off -colors 256 "${RESSORCE_DIR}/egcas.ico"
+rm "${RESSORCE_DIR}/egcas_tmp.png"
