@@ -17,10 +17,10 @@
    <iconset resource="../res/ressources.qrc">
     <normaloff>:/res/egcas.png</normaloff>:/res/egcas.png</iconset>
   </property>
-  <property name="styleSheet">
-   <string notr="true">QMainWindow {background-color: rgb(64, 66, 68);}</string>
-  </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="styleSheet">
+    <string notr="true">.QWidget {background-color: rgb(64, 66, 68);}</string>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QScrollArea" name="scrollArea">
@@ -85,6 +85,11 @@
      <width>1032</width>
      <height>19</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QMainWindow {background-color: lightgray;}
+QToolButton:hover {background-color: lightgray; }
+ QToolBar {background: lightgray; }</string>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
