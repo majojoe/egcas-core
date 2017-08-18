@@ -180,7 +180,8 @@ void EgcCalculation::errorReceived(QString errorMsg)
         }
 
         //go on to next calculation (even after an error with the current calculation)
-        nextCalculation();
+        if (m_waitForResult)
+                nextCalculation();
 }
 
 void EgcCalculation::kernelStarted(void)
