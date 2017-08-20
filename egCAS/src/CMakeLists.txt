@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11)
 
-project(egcas)
-
 #set the project name
 add_definitions(-DEGC_PROJ_NAME=egcas)
 
@@ -58,7 +56,7 @@ set_property(TARGET mathmlview PROPERTY CXX_STANDARD 11)
 set_property(TARGET mathmlview PROPERTY CXX_STANDARD_REQUIRED ON)
 
 #copy license file to res directory
-file(COPY ${CMAKE_SOURCE_DIR}/egCAS/LICENSE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/res)
+file(COPY ${PROJECT_SOURCE_DIR}/LICENSE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/res)
 
 # Widgets finds its own dependencies.
 find_package(Qt5 COMPONENTS Widgets Xml PrintSupport Gui Core)
