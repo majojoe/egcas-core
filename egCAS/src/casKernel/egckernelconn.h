@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
  */
 enum class EgcKernelStart
 {
-        beforeStart = 0, Starting, Started
+        beforeStart = 0, Starting, ModulesLoading, Started
 };
 
 /**

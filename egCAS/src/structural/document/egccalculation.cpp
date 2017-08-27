@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcCalculation::EgcCalculation(QObject *parent) : QObject{parent}, m_conn{new EgcMaximaConn()}, m_iterator{nullptr},
         m_kernelStarted{false}, m_computeWhenStarted{false}, m_updateInstantly{true}, m_parser{new EgcKernelParser()},
         m_result{nullptr}, m_calculationRunning{false}, m_entity{nullptr}, m_paused{false}, m_autoCalc{true},
-        m_waitForResult{false}
+        m_waitForResult{false}, m_restartAfterResume{false}
 {
         
         connect(m_conn.data(), SIGNAL(resultReceived(QString)), this, SLOT(resultReceived(QString)));
@@ -78,6 +78,24 @@ bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly, EgcAbs
         return true;
 }
 
+bool EgcCalculation::restart(void)
+{
+        m_paused = false;
+        m_restartAfterResume = false;
+        m_iterator->toFront();
+        m_entity = nullptr;
+        if (m_calculationRunning)
+                return false;
+        if (!m_autoCalc && m_entity) // only if auto calculation is active
+                return false;
+
+        m_conn->reset();
+
+        nextCalculation();
+
+        return true;
+}
+
 void EgcCalculation::nextCalculation(void)
 {
         if (!m_calculationRunning)
@@ -111,6 +129,11 @@ void EgcCalculation::nextCalculation(void)
 
 void EgcCalculation::resumeCalculation(void)
 {
+        if (m_restartAfterResume) {
+                restart();
+                return;
+        }
+
         if (m_paused)
                 triggerNextCalcualtion();
 }
@@ -180,8 +203,13 @@ void EgcCalculation::errorReceived(QString errorMsg)
         }
 
         //go on to next calculation (even after an error with the current calculation)
-        if (m_waitForResult)
+        if (m_waitForResult) {
                 nextCalculation();
+        } else if (m_kernelStarted) {
+                //if an error occurred where it makes no sense to go on with calculation, wait for the user to change
+                //s.th.
+                m_restartAfterResume = true;
+        }
 }
 
 void EgcCalculation::kernelStarted(void)

@@ -88,6 +88,7 @@ protected:
         QString findMaximaExecutable(void);
 
         static QString s_startupConfig;         ///< startup configuration for CAS kernel
+        static QString s_modulesLoadingConfig;  ///< modules are loading
         QRegularExpression m_errUnwantedRegex;  ///< regex for filtering kernel unwanted information from error message
         QMap<QString, QString> m_wordsToReplace;///< words that schould be replaced
         QTimer* m_timer;                        ///< a timer to be able to fire a cas kernel reset if a error condition exists

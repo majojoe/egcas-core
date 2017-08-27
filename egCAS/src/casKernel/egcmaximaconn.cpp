@@ -45,6 +45,8 @@ QString EgcMaximaConn::s_startupConfig = QString("set_display(none)$"
                                                  "load(\"engineering-format\")$"
                                                  "engineering_format_floats:false$");
 
+QString EgcMaximaConn::s_modulesLoadingConfig = QString("ev(1)$");
+
 EgcMaximaConn::EgcMaximaConn(QObject *parent) : EgcKernelConn{parent}, m_timer{new QTimer(this)}, m_isInitialized{false}
 {
 
@@ -181,10 +183,18 @@ void EgcMaximaConn::stdOutput(void)
                 }
                 break;
         case EgcKernelStart::Starting:
-                match = m_startedRegex.match(m_result);
+                match = m_startRegex.match(m_result);
                 if (match.hasMatch()) {
-                        emit kernelStarted();
                         m_result.clear();
+                        sendCommand(s_modulesLoadingConfig);
+                        m_startState = EgcKernelStart::ModulesLoading;
+                }
+                break;
+        case EgcKernelStart::ModulesLoading:
+                match = m_startRegex.match(m_result);
+                if (match.hasMatch()) {
+                        m_result.clear();
+                        emit kernelStarted();
                         m_startState = EgcKernelStart::Started;
                 }
                 break;
