@@ -540,3 +540,12 @@ void EgCasScene::routeAction(EgcAction action)
                 }
         }
 }
+
+QPointF EgCasScene::getLastCursorPositon(void)
+{
+        if (m_cross) {
+                return m_cross->getLastPosition();
+        }
+
+        return QPointF();
+}

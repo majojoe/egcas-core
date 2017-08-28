@@ -203,6 +203,11 @@ public:
          * @return the document that is associated with this scene
          */
         EgcAbstractDocument& document(void) const;
+        /**
+         * @brief getLastCursorPositon returns the last cursor position
+         * @return the last cursor position
+         */
+        QPointF getLastCursorPositon(void);
 
 public slots:
         /**

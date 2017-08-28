@@ -56,6 +56,7 @@ public slots:
         void calculate(void);
         void autoCalculation(bool on);
         void newPage(void);
+        void insertGraphic(void);
 private:
         /**
          * @brief setupConnections setup all connections to slots that are neccessary

@@ -122,6 +122,11 @@ public:
          * @return pointer to active formula entity if any, or nullptr if none
          */
         EgcFormulaEntity* getActiveFormulaEntity(void);
+        /**
+         * @brief getLastCursorPosition returns the last cursor positon in the document
+         * @return the last cursor position
+         */
+        QPointF getLastCursorPosition(void);
 signals:
         /**
          * @brief startDeleletingEntity signal to be emitted when entity shall be deleted

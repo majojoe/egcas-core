@@ -110,7 +110,14 @@ QToolButton:hover {background-color: lightgray; }
     <addaction name="mnu_autoCalc"/>
     <addaction name="mnu_CalculateDocument"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="mnu_insert_graphic"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -217,6 +224,15 @@ QToolButton:hover {background-color: lightgray; }
    </property>
    <property name="toolTip">
     <string>add a new page</string>
+   </property>
+  </action>
+  <action name="mnu_insert_graphic">
+   <property name="icon">
+    <iconset resource="../res/ressources.qrc">
+     <normaloff>:/res/insert_graphic.png</normaloff>:/res/insert_graphic.png</iconset>
+   </property>
+   <property name="text">
+    <string>insert Graphic</string>
    </property>
   </action>
  </widget>

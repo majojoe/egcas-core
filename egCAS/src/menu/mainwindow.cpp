@@ -139,7 +139,7 @@ void MainWindow::showInfo(void)
 {
         QMessageBox msgBox;
 
-        msgBox.setText(QString(tr("Version: ")) + QString(EGCAS_VERSION) + QString(" (pre-alpha)"));
+        msgBox.setText(QString(tr("Version: ")) + QString(EGCAS_VERSION) + QString(" (pre-alpha - non-production)"));
         msgBox.exec();
 }
 
@@ -167,12 +167,14 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_autoCalc, SIGNAL(triggered(bool)), this, SLOT(autoCalculation(bool)));
         connect(m_ui->mnu_CalculateDocument, SIGNAL(triggered()), this, SLOT(calculate()));
         connect(m_ui->mnu_new_page, SIGNAL(triggered()), this, SLOT(newPage()));
+        connect(m_ui->mnu_insert_graphic, SIGNAL(triggered()), this, SLOT(insertGraphic()));
 }
 
 void MainWindow::setupToolbar()
 {
         //setup main toolbar
         m_ui->mainToolBar->addAction(m_ui->mnu_new_page);
+        m_ui->mainToolBar->addAction(m_ui->mnu_insert_graphic);
         //setup math toolbar
         m_ui->mathToolBar->addAction(m_ui->mnu_autoCalc);
         m_ui->mathToolBar->addSeparator();
@@ -187,5 +189,10 @@ void MainWindow::setupElementBar(void)
         // add a spacer at the end of the bar
         QSpacerItem *spacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
         m_ui->elmentBarLayout->addItem(spacer);
+}
+
+void MainWindow::insertGraphic(void)
+{
+        QPointF lastPos = m_document->getLastCursorPosition();
 }
 

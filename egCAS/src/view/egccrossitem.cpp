@@ -67,6 +67,8 @@ QVariant EgcCrossItem::itemChange(GraphicsItemChange change, const QVariant &val
          // value is the new position.
          QPointF newPos = snapCursor(value.toPointF());
 
+         m_lastPosition = newPos;
+
          return newPos;
      }
      return QGraphicsItem::itemChange(change, value);
@@ -175,7 +177,7 @@ void EgcCrossItem::focusInEvent(QFocusEvent * event)
         QGraphicsItem::focusInEvent(event);
 }
 
-QPointF EgcCrossItem::snapCursor(const QPointF& pos)
+QPointF EgcCrossItem::snapCursor(const QPointF& pos) const
 {
         QPointF newPos = pos;
         QGraphicsScene *scene = this->scene();
@@ -323,4 +325,9 @@ void EgcCrossItem::right(qreal xCoord)
         show();
         if (point.x() <= xCoord)
                 right();
+}
+
+QPointF EgcCrossItem::getLastPosition(void) const
+{
+        return snapCursor(m_lastPosition);
 }

@@ -78,6 +78,11 @@ public:
          * @param xCoord the coordinate where to start with snapping to the right -> direction infinity
          */
         void right(qreal xCoord);
+        /**
+         * @brief getLastPosition returns the last position of the crosshair
+         * @return the last position
+         */
+        QPointF getLastPosition(void) const;
 
 protected:
         /**
@@ -112,7 +117,7 @@ private:
          * @param pos the position to snap to grid
          * @return the new position that is snapped to the grid
          */
-        QPointF snapCursor(const QPointF& pos);
+        QPointF snapCursor(const QPointF& pos) const;
         /**
          * @brief getGrid needs to be implemented by the subclasses since we cannot inherit from QGraphicsitem (the
          * subclasses already inherit from it - and we don't want to make it complicated)
@@ -144,6 +149,8 @@ private:
         const QSize m_size = QSize(40,40);     ///< size of the cross
 
         Q_DISABLE_COPY(EgcCrossItem)
+
+        QPointF m_lastPosition;         //the last position of the crosshair
 
 };
 

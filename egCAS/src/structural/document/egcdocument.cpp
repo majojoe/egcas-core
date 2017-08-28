@@ -209,3 +209,8 @@ void EgcDocument::handleKernelMessages(EgcKernelErrorType type, QString message)
         msgBox.setIcon(QMessageBox::Warning);
         (void) msgBox.exec();
 }
+
+QPointF EgcDocument::getLastCursorPosition(void)
+{
+        return m_scene.data()->getLastCursorPositon();
+}
