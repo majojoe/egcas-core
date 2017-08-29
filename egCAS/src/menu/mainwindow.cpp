@@ -26,9 +26,6 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include <QMessageBox>
-#include <QSpacerItem>
-#include <QComboBox>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "view/egcformulaitem.h"
@@ -42,6 +39,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "menu/egclicenseinfo.h"
 #include "menu/elementbar.h"
 #include "menu/precisionbox.h"
+#include <QMessageBox>
+#include <QSpacerItem>
+#include <QComboBox>
+#include <QFileDialog>
+#include <QDir>
 
 #warning remove this after formula input via user interface is available
 #include "formulagenerator.h"
@@ -193,6 +195,17 @@ void MainWindow::setupElementBar(void)
 
 void MainWindow::insertGraphic(void)
 {
+        static QString directory = QDir::homePath();
         QPointF lastPos = m_document->getLastCursorPosition();
+        QString fileName = QFileDialog::getOpenFileName(this, tr("insert graphic"), directory,
+                                                        tr("Images (*.gif *.bmp *.jpg *.jpeg *.png)"));
+
+        if (!fileName.isNull()) {
+                QFileInfo fileInfo(fileName);
+                directory = fileInfo.absolutePath();
+                EgcPixmapEntity* pixmap = static_cast<EgcPixmapEntity*>(m_document->createEntity(EgcEntityType::Picture,
+                                                                                                 lastPos));
+                pixmap->setFilePath(fileName);
+        }
 }
 
