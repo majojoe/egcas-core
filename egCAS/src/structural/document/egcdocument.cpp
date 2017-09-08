@@ -214,3 +214,8 @@ QPointF EgcDocument::getLastCursorPosition(void)
 {
         return m_scene.data()->getLastCursorPositon();
 }
+
+QSizeF EgcDocument::getMaxItemSize(QPointF point) const
+{
+        return m_scene.data()->worksheet().getMaxItemSize(point);
+}

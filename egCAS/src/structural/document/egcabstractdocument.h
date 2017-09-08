@@ -59,7 +59,13 @@ public:
          * @param entity the entity where to pause calculation
          */
         virtual void startCalulation(EgcAbstractFormulaEntity* entity) = 0;
-
+        /**
+         * @brief getMaxSize get the maximum size a rectangular item can have with the given starting point in order
+         * to fit into the current worksheet
+         * @param point the point at which the item should be
+         * @return the maximum size the item can have
+         */
+        virtual QSizeF getMaxItemSize(QPointF point) const = 0;
 };
 
 #endif //#ifndef EGCABSTRACTDOCUMENT_H

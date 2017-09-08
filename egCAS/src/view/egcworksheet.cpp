@@ -246,3 +246,12 @@ bool EgcWorksheet::onLastPage(QPointF point) const
 
         return false;
 }
+
+QSizeF EgcWorksheet::getMaxItemSize(QPointF point) const
+{
+        point = snapWorksheet(point);
+        QRectF area = activeArea(pageAtPoint(point));
+        QRectF rect(point, area.bottomRight());
+
+        return rect.size();
+}

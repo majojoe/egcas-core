@@ -66,7 +66,7 @@ QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &va
         if (change == ItemPositionChange && scene()) {
                 // value is the new position.
                 QPointF point = value.toPointF();
-                ensureVisible(point.x(), point.y(), 0.0, 0.0);
+                ensureVisible(boundingRect());
                 return snap(point);
         }
 

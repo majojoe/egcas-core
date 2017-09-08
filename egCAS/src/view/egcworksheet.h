@@ -89,6 +89,13 @@ public:
          */
         qreal getBottomMargin(void) const;
         /**
+         * @brief getMaxSize get the maximum size a rectangular item can have with the given starting point in order
+         * to fit into the current worksheet
+         * @param point the point at which the item should be
+         * @return the maximum size the item can have
+         */
+        QSizeF getMaxItemSize(QPointF point) const;
+        /**
          * @brief setBottomMargin sets the bottom margin of the worksheet
          * @param margin the margin to set
          */

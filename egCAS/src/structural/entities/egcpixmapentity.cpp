@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QBuffer>
 #include "egcpixmapentity.h"
 #include "egcabstractpixmapitem.h"
+#include "document/egcabstractdocument.h"
 
 EgcPixmapEntity::EgcPixmapEntity(void) : m_item(nullptr)
 {
@@ -116,7 +117,19 @@ void EgcPixmapEntity::setFilePath(QString file)
                 return;
 
         m_path = file;
-        m_item->setPixmap(QPixmap(file));
+        QPixmap pixmap(file);
+        EgcAbstractDocument* doc = getDocument();
+        if (!doc)
+                return;
+        QSizeF size = doc->getMaxItemSize(getPosition());
+        QSize pixSize = pixmap.size();
+        qreal xFactor = pixSize.width() / size.width();
+        qreal yFactor = pixSize.height() / size.height();
+        qreal factor = qMax(xFactor, yFactor);
+        if (factor > 1.0)
+                m_item->setScaleFactor(1.0/factor);
+
+        m_item->setPixmap(pixmap);
 }
 
 void EgcPixmapEntity::itemChanged(EgcItemChangeType changeType)

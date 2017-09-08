@@ -127,6 +127,13 @@ public:
          * @return the last cursor position
          */
         QPointF getLastCursorPosition(void);
+        /**
+         * @brief getMaxSize get the maximum size a rectangular item can have with the given starting point in order
+         * to fit into the current worksheet
+         * @param point the point at which the item should be
+         * @return the maximum size the item can have
+         */
+        QSizeF getMaxItemSize(QPointF point) const override;
 signals:
         /**
          * @brief startDeleletingEntity signal to be emitted when entity shall be deleted
