@@ -232,7 +232,7 @@ QToolButton:hover {background-color: lightgray; }
      <normaloff>:/res/insert_graphic.png</normaloff>:/res/insert_graphic.png</iconset>
    </property>
    <property name="text">
-    <string>insert Graphic</string>
+    <string>insert Picture</string>
    </property>
   </action>
  </widget>

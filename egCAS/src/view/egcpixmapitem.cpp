@@ -66,14 +66,13 @@ QVariant EgcPixmapItem::itemChange(GraphicsItemChange change, const QVariant &va
         if (change == ItemPositionChange && scene()) {
                 // value is the new position.
                 QPointF point = value.toPointF();
-                ensureVisible(boundingRect());
                 return snap(point);
         }
 
         m_resizeHandle->itemChangeInfo(change, value, scene());
 
         return QGraphicsItem::itemChange(change, value);
- }
+}
 
 void EgcPixmapItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 {
@@ -176,7 +175,7 @@ int EgcPixmapItem::type() const
 
 QRectF EgcPixmapItem::bRect(void) const
 {
-        return boundingRect();
+        return sceneBoundingRect();
 }
 
 QPointF EgcPixmapItem::getPos()
