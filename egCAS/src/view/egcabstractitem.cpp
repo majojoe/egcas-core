@@ -49,6 +49,9 @@ QPointF EgcAbstractItem::snap(const QPointF& pos)
                 iRect.moveTopLeft(newPos);
                 newPos = sheet.snapWorksheet(iRect);
                 newPos = scn->grid().snap(newPos);
+                if (    newPos.x() < 0
+                     || newPos.y() < 0)
+                        newPos = getPos();
         }
 
         return newPos;

@@ -178,3 +178,8 @@ QRectF EgcPixmapItem::bRect(void) const
 {
         return boundingRect();
 }
+
+QPointF EgcPixmapItem::getPos()
+{
+        return pos();
+}

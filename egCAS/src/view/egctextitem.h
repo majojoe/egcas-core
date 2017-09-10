@@ -147,6 +147,11 @@ protected:
          * @return bounding rect rectangle
          */
         virtual QRectF bRect(void) const override;
+        /**
+         * @brief getPos return the current position of the item
+         * @return the current position of the item
+         */
+        virtual QPointF getPos(void) override;
 
 signals:
 

@@ -55,13 +55,18 @@ protected:
          * @brief bRect returns the bounding rect of the abstract item (interface to concrete item)
          * @return bounding rect rectangle
          */
-        QRectF virtual bRect(void) const = 0;
+        virtual QRectF bRect(void) const = 0;
         /**
          * @brief snapGrid snap to scene grid
          * @param pos the position to snap to grid
          * @return the new position that is snapped to the grid
          */
         QPointF snap(const QPointF& pos);
+        /**
+         * @brief getPos return the current position of the item
+         * @return the current position of the item
+         */
+        virtual QPointF getPos(void) = 0;
 };
 
 #endif // EGCABSTRACTITEM_H

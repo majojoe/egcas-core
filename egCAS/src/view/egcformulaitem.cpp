@@ -459,3 +459,8 @@ QRectF EgcFormulaItem::bRect(void) const
 {
         return boundingRect();
 }
+
+QPointF EgcFormulaItem::getPos()
+{
+        return pos();
+}

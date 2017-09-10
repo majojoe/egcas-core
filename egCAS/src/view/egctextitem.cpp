@@ -245,3 +245,8 @@ QRectF EgcTextItem::bRect(void) const
 {
         return boundingRect();
 }
+
+QPointF EgcTextItem::getPos()
+{
+        return pos();
+}
