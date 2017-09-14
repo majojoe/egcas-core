@@ -65,6 +65,7 @@ include_directories(casKernel)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(structural)
 include_directories(view)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_BINARY_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

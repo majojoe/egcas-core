@@ -54,7 +54,7 @@ QVariant EgcTextItem::itemChange(GraphicsItemChange change, const QVariant &valu
      if (change == ItemPositionChange && scene()) {
              // value is the new position.
              QPointF point = value.toPointF();
-             ensureVisible(point.x(), point.y(), 0.0, 0.0);
+             ensureVisibility();
              return snap(point);
      }
      return QGraphicsItem::itemChange(change, value);

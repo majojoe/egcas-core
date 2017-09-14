@@ -30,6 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QSizeF>
 #include <QPointF>
 #include <QtMath>
+#include <QGraphicsView>
+#include <QTimer>
+#include <menu/egcgraphicsview.h>
 #include "egcabstractitem.h"
 #include "egcasscene.h"
 
@@ -55,5 +58,15 @@ QPointF EgcAbstractItem::snap(const QPointF& pos)
         }
 
         return newPos;
+}
+
+void EgcAbstractItem::ensureVisibility(void)
+{
+        EgCasScene* scn = getEgcScene();
+        QGraphicsView* view = scn->views().at(0);
+        if (view) {
+                EgcGraphicsView* v = static_cast<EgcGraphicsView*>(view);
+                QTimer::singleShot(0, v, SLOT(ensureVisibility()) );
+        }
 }
 

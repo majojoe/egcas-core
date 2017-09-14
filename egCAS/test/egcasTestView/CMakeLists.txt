@@ -21,6 +21,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_BINARY_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 
 set(tst_egcastest_view_SOURCES
         tst_egcastest_view.cpp 

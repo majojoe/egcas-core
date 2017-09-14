@@ -29,9 +29,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QGraphicsView>
 #include <QWheelEvent>
 #include <QScrollBar>
+#include <QTimer>
 #include "egcgraphicsview.h"
 
-EgcGraphicsView::EgcGraphicsView(QWidget *parent) : QGraphicsView(parent)
+EgcGraphicsView::EgcGraphicsView(QWidget *parent) : QGraphicsView(parent), m_visibilityLocked{false}
 {
 
 }
@@ -39,6 +40,19 @@ EgcGraphicsView::EgcGraphicsView(QWidget *parent) : QGraphicsView(parent)
 EgcGraphicsView::~EgcGraphicsView()
 {
 
+}
+
+void EgcGraphicsView::ensureVisibility(void)
+{
+        QGraphicsScene* scn = scene();
+        if (scn) {
+                QGraphicsItem* item = scn->focusItem();
+                if (item && !m_visibilityLocked) {
+                        m_visibilityLocked = true;
+                        ensureVisible(item);
+                        QTimer::singleShot(50, this, SLOT(unlockVisibility()) );
+                }
+        }
 }
 
 void EgcGraphicsView::wheelEvent(QWheelEvent *event)
@@ -57,4 +71,9 @@ void EgcGraphicsView::wheelEvent(QWheelEvent *event)
         } else {
                 return QGraphicsView::wheelEvent(event);
         }
+}
+
+void EgcGraphicsView::unlockVisibility()
+{
+        m_visibilityLocked = false;
 }

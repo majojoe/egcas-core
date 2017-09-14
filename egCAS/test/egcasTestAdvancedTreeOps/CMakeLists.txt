@@ -35,6 +35,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 include_directories(${CMAKE_BINARY_DIR}/include)
 
 file(GLOB_RECURSE tst_egcas_advanced_tree_ops_concrete_SOURCES "../../src/structural/concreteNodes/*.cpp")

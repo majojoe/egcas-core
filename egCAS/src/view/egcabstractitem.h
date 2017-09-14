@@ -67,6 +67,11 @@ protected:
          * @return the current position of the item
          */
         virtual QPointF getPos(void) = 0;
+        /**
+         * @brief ensureVisibility does everything that needs to be done to ensure visibility of the current item
+         */
+        void ensureVisibility(void);
+
 };
 
 #endif // EGCABSTRACTITEM_H

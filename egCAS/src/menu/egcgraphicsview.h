@@ -40,12 +40,25 @@ class EgcGraphicsView : public QGraphicsView
     public:
         explicit EgcGraphicsView(QWidget *parent = 0);
         virtual ~EgcGraphicsView();
+public slots:
+        /**
+         * @brief ensureVisibility ensure visibility of the given item
+         * @param item the item that should be visible
+         */
+        void ensureVisibility(void);
 protected:
         /**
         * @brief wheelEvent reimplements wheel event
          * @param event the wheel event
         */
         virtual void wheelEvent(QWheelEvent *event) override;
+private slots:
+        /**
+         * @brief unlockVisibility unlock ensuring visibility
+         */
+        void unlockVisibility(void);
+private:
+        bool m_visibilityLocked;                ///< ensuring visibility is locked
 };
 
 #endif // EGCGRAPHICSVIEW_H

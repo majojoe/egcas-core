@@ -202,7 +202,7 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
                         // hide the cursors
                         hideCursors();
                         m_posChanged = true;
-                        ensureVisible(point.x(), point.y(), 0.0, 0.0);
+                        ensureVisibility();
                         return snap(point);
                 } else {
                         return m_startPoint;
