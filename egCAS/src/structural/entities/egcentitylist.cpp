@@ -57,7 +57,7 @@ void EgcEntityList::addEntity(EgcEntity* entity)
 bool EgcEntityList::deleteEntity(EgcEntity* entity)
 {
         int i = m_list.indexOf(entity);
-        if (i > 0) {
+        if (i >= 0) {
                 delete m_list.takeAt(i);
         }
 }
