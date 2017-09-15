@@ -70,3 +70,11 @@ void EgcAbstractItem::ensureVisibility(void)
         }
 }
 
+void EgcAbstractItem::deleteCurrentItem()
+{
+        EgCasScene* scn = getEgcScene();
+        if (scn) {
+                scn->deleteActiveItem();
+        }
+}
+

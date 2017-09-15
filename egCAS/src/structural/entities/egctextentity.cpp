@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QFont>
 #include "egctextentity.h"
 #include "egctextitem.h"
+#include "../document/egcabstractdocument.h"
 
 QFont EgcTextEntity::s_genericFont = QFont();
 
@@ -110,5 +111,9 @@ QFont& EgcTextEntity::getGenericFont(void)
 
 void EgcTextEntity::itemChanged(EgcItemChangeType changeType)
 {
-
+        if (changeType == EgcItemChangeType::itemDeleted) {
+                EgcAbstractDocument* doc = getDocument();
+                if (doc)
+                        doc->deleteEntity(this);
+        }
 }

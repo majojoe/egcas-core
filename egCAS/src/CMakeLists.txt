@@ -74,6 +74,7 @@ add_definitions(-DMAXIMA_BINARY_PATH="${MAXIMA_BINARY_PATH}")
 
 #this is for showing up abstract interfaces and other sources in the IDE
 add_custom_target(egcas_other_srcs ALL SOURCES
+        structural/document/egcabstractdocument.h
         structural/entities/egcabstractformulaentity.h
         structural/entities/egcabstracttextentity.h
         structural/entities/egcabstractpixmapentity.h

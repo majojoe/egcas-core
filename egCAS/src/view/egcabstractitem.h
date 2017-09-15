@@ -71,7 +71,10 @@ protected:
          * @brief ensureVisibility does everything that needs to be done to ensure visibility of the current item
          */
         void ensureVisibility(void);
-
+        /**
+         * @brief deleteCurrentItem deletes the current item
+         */
+        void deleteCurrentItem(void);
 };
 
 #endif // EGCABSTRACTITEM_H

@@ -51,6 +51,8 @@ EgcPixmapItem::EgcPixmapItem(const QPointF point, QGraphicsItem *parent) : EgcPi
 
 EgcPixmapItem::~EgcPixmapItem()
 {        
+        if (m_entity)
+                m_entity->itemChanged(EgcItemChangeType::itemDeleted);
 }
 
 void EgcPixmapItem::focusInEvent(QFocusEvent * event)
@@ -158,6 +160,10 @@ void EgcPixmapItem::keyPressEvent(QKeyEvent *keyEvent)
         case Qt::Key_Down:
                 accepted = true;
                 scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
+                break;
+        case Qt::Key_Delete:
+                accepted = true;
+                deleteCurrentItem();
                 break;
         }
 

@@ -49,6 +49,12 @@ EgcTextItem::EgcTextItem(const QPointF point, QGraphicsItem *parent) : EgcTextIt
         QGraphicsTextItem::setPos(point);
 }
 
+EgcTextItem::~EgcTextItem()
+{
+        if (m_entity)
+                m_entity->itemChanged(EgcItemChangeType::itemDeleted);
+}
+
 QVariant EgcTextItem::itemChange(GraphicsItemChange change, const QVariant &value)
  {
      if (change == ItemPositionChange && scene()) {
@@ -177,6 +183,10 @@ void EgcTextItem::keyPressEvent(QKeyEvent *keyEvent)
                         accepted = true;
                         scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
                 }
+                break;
+        case Qt::Key_Delete:
+                accepted = true;
+                deleteCurrentItem();
                 break;
         }
 

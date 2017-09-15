@@ -439,6 +439,25 @@ bool EgCasScene::deleteItem(EgcAbstractTextItem* item)
         return deleteItem(qitem);
 }
 
+bool EgCasScene::deleteActiveItem()
+{
+        if (focusItem()) {
+                QTimer::singleShot(0, this, SLOT(deleteActiveItemSlot()));
+
+                return true;
+        }
+
+        return false;
+}
+
+void EgCasScene::deleteActiveItemSlot(void)
+{
+        QGraphicsItem* item = focusItem();
+        if (item) {
+                (void) deleteItem(item);
+        }
+}
+
 bool EgCasScene::deleteItem(QGraphicsItem *item)
 {
         if (!item)

@@ -45,7 +45,7 @@ public:
         /// point constructor
         explicit EgcTextItem(const QPointF point, QGraphicsItem *parent = 0);
         ///std destructor
-        virtual ~EgcTextItem() { }
+        virtual ~EgcTextItem();
         /**
          * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
          * @param entity a pointer to the entity that is associated with this object

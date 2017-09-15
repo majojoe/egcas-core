@@ -134,5 +134,9 @@ void EgcPixmapEntity::setFilePath(QString file)
 
 void EgcPixmapEntity::itemChanged(EgcItemChangeType changeType)
 {
-
+        if (changeType == EgcItemChangeType::itemDeleted) {
+                EgcAbstractDocument* doc = getDocument();
+                if (doc)
+                        doc->deleteEntity(this);
+        }
 }
