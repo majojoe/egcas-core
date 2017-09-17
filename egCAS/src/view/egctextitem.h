@@ -82,6 +82,11 @@ public:
          * @return the text of this item
          */
         virtual QString getText(void) override;
+        /**
+         * @brief setEditMode sets this item in edit mode, so that the user can start to write text
+         */
+        virtual void setEditMode(void) override;
+
 
 protected:
         /**

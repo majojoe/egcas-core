@@ -105,6 +105,10 @@ public:
          * @brief itemChanged is called when the item that is associated with the enity has changed
          */
         virtual void itemChanged(EgcItemChangeType changeType) override;
+        /**
+         * @brief setEditMode sets this item in edit mode, so that the user can start to write text
+         */
+        void setEditMode(void);
 
 private:
         EgcAbstractTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene

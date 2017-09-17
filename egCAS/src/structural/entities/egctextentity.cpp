@@ -31,7 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egctextitem.h"
 #include "../document/egcabstractdocument.h"
 
-QFont EgcTextEntity::s_genericFont = QFont();
+#if defined( Q_OS_WIN )
+QFont EgcTextEntity::s_genericFont = QFont(QString("Times New Roman"), 14);
+#else //#if defined( Q_OS_WIN )
+QFont EgcTextEntity::s_genericFont = QFont(QString("Century Schoolbook L"), 14);
+#endif //#if defined( Q_OS_WIN )
+
 
 EgcTextEntity::EgcTextEntity(void) : m_item(nullptr)
 {
@@ -117,3 +122,10 @@ void EgcTextEntity::itemChanged(EgcItemChangeType changeType)
                         doc->deleteEntity(this);
         }
 }
+
+void EgcTextEntity::setEditMode()
+{
+        if (m_item)
+                m_item->setEditMode();
+}
+

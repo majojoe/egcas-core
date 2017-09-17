@@ -5,3 +5,4 @@ file                                    origin
 calculator.svg                          openclipart.org
 egcas.svg                               jm
 insert_graphic.svg                      openclipart.org
+insert_text.svg                         openclipart.org

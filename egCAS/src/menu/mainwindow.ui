@@ -115,6 +115,7 @@ QToolButton:hover {background-color: lightgray; }
      <string>Edit</string>
     </property>
     <addaction name="mnu_insert_graphic"/>
+    <addaction name="mnu_insert_text"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -233,6 +234,18 @@ QToolButton:hover {background-color: lightgray; }
    </property>
    <property name="text">
     <string>insert Picture</string>
+   </property>
+  </action>
+  <action name="mnu_insert_text">
+   <property name="icon">
+    <iconset resource="../res/ressources.qrc">
+     <normaloff>:/res/insert_text.png</normaloff>:/res/insert_text.png</iconset>
+   </property>
+   <property name="text">
+    <string>insert Text</string>
+   </property>
+   <property name="toolTip">
+    <string>insert Textbox</string>
    </property>
   </action>
  </widget>

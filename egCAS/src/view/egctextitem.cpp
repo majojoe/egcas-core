@@ -77,15 +77,22 @@ void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
         m_editingActivated = true;
 }
 
+void EgcTextItem::setEditMode(void)
+{
+        setTextInteractionFlags(Qt::TextEditorInteraction);
+        if (!hasCursor())
+                setCursor(QCursor(Qt::IBeamCursor));
+        QTextCursor cursor = textCursor();
+        cursor.movePosition(QTextCursor::End);
+        setTextCursor(cursor);
+        setFocus();
+        m_editingActivated = true;
+}
+
 void EgcTextItem::focusInEvent(QFocusEvent* event)
 {
         if (event->reason() == Qt::OtherFocusReason) {
-                setTextInteractionFlags(Qt::TextEditorInteraction);
-                if (!hasCursor())
-                        setCursor(QCursor(Qt::IBeamCursor));
-                QTextCursor cursor = textCursor();
-                cursor.movePosition(QTextCursor::End);
-                setTextCursor(cursor);
+                setEditMode();
         }
 
         QGraphicsTextItem::focusInEvent(event);
@@ -185,7 +192,13 @@ void EgcTextItem::keyPressEvent(QKeyEvent *keyEvent)
                 }
                 break;
         case Qt::Key_Delete:
-                if (!m_editingActivated) {
+                if (!m_editingActivated || toPlainText().isEmpty()) {
+                        accepted = true;
+                        deleteCurrentItem();
+                }
+                break;
+        case Qt::Key_Backspace:
+                if (m_editingActivated && toPlainText().isEmpty()) {
                         accepted = true;
                         deleteCurrentItem();
                 }

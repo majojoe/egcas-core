@@ -5,5 +5,6 @@
         <file>calculator.png</file>
         <file>egcas.png</file>
         <file>insert_graphic.png</file>
+        <file>insert_text.png</file>
     </qresource>
 </RCC>

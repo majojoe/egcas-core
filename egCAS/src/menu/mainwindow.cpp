@@ -170,6 +170,7 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_CalculateDocument, SIGNAL(triggered()), this, SLOT(calculate()));
         connect(m_ui->mnu_new_page, SIGNAL(triggered()), this, SLOT(newPage()));
         connect(m_ui->mnu_insert_graphic, SIGNAL(triggered()), this, SLOT(insertGraphic()));
+        connect(m_ui->mnu_insert_text, SIGNAL(triggered()), this, SLOT(insertText()));
 }
 
 void MainWindow::setupToolbar()
@@ -177,6 +178,7 @@ void MainWindow::setupToolbar()
         //setup main toolbar
         m_ui->mainToolBar->addAction(m_ui->mnu_new_page);
         m_ui->mainToolBar->addAction(m_ui->mnu_insert_graphic);
+        m_ui->mainToolBar->addAction(m_ui->mnu_insert_text);
         //setup math toolbar
         m_ui->mathToolBar->addAction(m_ui->mnu_autoCalc);
         m_ui->mathToolBar->addSeparator();
@@ -209,3 +211,12 @@ void MainWindow::insertGraphic(void)
         }
 }
 
+void MainWindow::insertText(void)
+{
+        QPointF lastPos = m_document->getLastCursorPosition();
+
+        EgcTextEntity* txt = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text,
+                                                                                                 lastPos));
+        txt->setEditMode();
+
+}
