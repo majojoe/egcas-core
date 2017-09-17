@@ -185,8 +185,10 @@ void EgcTextItem::keyPressEvent(QKeyEvent *keyEvent)
                 }
                 break;
         case Qt::Key_Delete:
-                accepted = true;
-                deleteCurrentItem();
+                if (!m_editingActivated) {
+                        accepted = true;
+                        deleteCurrentItem();
+                }
                 break;
         }
 
