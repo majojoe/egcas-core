@@ -158,6 +158,14 @@ void EgcDocument::resumeCalculation(void)
         m_calc->resumeCalculation();
 }
 
+void EgcDocument::restartCalculation(void)
+{
+        if (m_calc.isNull())
+                return;
+
+        m_calc->restart();
+}
+
 void EgcDocument::startCalulation(EgcAbstractFormulaEntity* entity)
 {
         if (m_calc.isNull())

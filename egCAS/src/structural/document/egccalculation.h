@@ -69,6 +69,11 @@ public:
          */
         void resumeCalculation(void);
         /**
+         * @brief restart the current calculation e.g. after an error
+         * @return true if calculation could be started, false if a calculation is already running
+         */
+        bool restart(void);
+        /**
          * @brief setAutoCalculation set autocalculation on or off. This means that if a formula is changed, the kernel
          * calculates the document in the background and updates all formulas as needed.
          * @param on if true auto calculation is on ohterwise off.
@@ -110,11 +115,6 @@ private:
          * @brief triggerNextCalcualtion triggers the next calculation
          */
         void triggerNextCalcualtion(void);
-        /**
-         * @brief restart the current calculation e.g. after an error
-         * @return true if calculation could be started, false if a calculation is already running
-         */
-        bool restart(void);
 
         QScopedPointer<EgcKernelConn> m_conn;   ///< the connection to the cas kernel
         QScopedPointer<QMutableListIterator<EgcEntity*>> m_iterator;   ///< iterator that operates on the entity list we are calculating on

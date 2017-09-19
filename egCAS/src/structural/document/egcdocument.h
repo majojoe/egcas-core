@@ -107,6 +107,11 @@ public:
          */
         virtual void resumeCalculation(void) override;
         /**
+         * @brief restartCalculation starts the calculation from the beginning of the document, e.g. after position
+         * change of a formula.
+         */
+        virtual void restartCalculation(void) override;
+        /**
          * @brief startCalulation start the calculation of the document
          * @param entity the entity where to pause calculation
          */

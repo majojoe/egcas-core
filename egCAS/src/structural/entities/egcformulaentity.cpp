@@ -410,6 +410,9 @@ void EgcFormulaEntity::itemChanged(EgcItemChangeType changeType)
                 if (m_list)
                         m_list->sort();
                 showCurrentCursor();
+                if (getDocument()) {
+                        getDocument()->restartCalculation();
+                }
         }
 
         if (changeType == EgcItemChangeType::contentChanged) {
@@ -631,8 +634,10 @@ void EgcFormulaEntity::removeCharacter(bool before)
 
         if (m_scrIter->node()->getNodeType() == EgcNodeType::EmptyNode) {
                 if (isEmpty()) {
-                        getDocument()->deleteEntity(this);
-                        return;
+                        if (getDocument()) {
+                                getDocument()->deleteEntity(this);
+                                return;
+                        }
                 }
         }
 
