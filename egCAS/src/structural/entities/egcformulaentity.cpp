@@ -476,6 +476,31 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
                         showCurrentCursor();
                 }
                 break;
+        case EgcOperations::createSubId:
+                createSubId();
+                break;
+        }
+}
+
+void EgcFormulaEntity::createSubId(void)
+{
+        EgcNode* node = const_cast<EgcNode*>(m_scrIter->node());
+        if (node) {
+                if (node->isAtomicallyBoundChild()) {
+                        node = node->getParent();
+                        if (!node)
+                                return;
+                }
+                if (node->getNodeType() == EgcNodeType::VariableNode) {
+                        EgcVariableNode* var = static_cast<EgcVariableNode*>(node);
+                        if (var->getNumberChildNodes() != 1)
+                                return;
+                        var->insertSubscript();
+                        m_item->hideCursors();
+                        m_item->updateView();
+                        m_scrIter->next();
+                        showCurrentCursor();
+                }
         }
 }
 

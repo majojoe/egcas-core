@@ -399,6 +399,10 @@ private:
          * @return pointer to node inserted if everything worked well, nullptr otherwise.
          */
         EgcNode* createAndInsertOperation(EgcNodeType type);
+        /**
+         * @brief createSubId create sub id if current node is a variable node and has no sub id yet.
+         */
+        void createSubId(void);
 
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user

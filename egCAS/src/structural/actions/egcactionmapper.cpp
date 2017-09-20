@@ -58,7 +58,17 @@ EgcAction EgcActionMapper::map(QKeyEvent *event)
                 return action;
         }
 
-        //qDebug() << "key: " << static_cast<int>(event->key());
+        if (event->modifiers()==Qt::ControlModifier) {
+                switch(event->key()) {
+                case Qt::Key_Minus:
+                        action.m_op = EgcOperations::createSubId;
+                        break;
+                default:
+                        action.m_op = EgcOperations::noAction;
+                        break;
+                }
+                return action;
+        }
 
         switch(event->key()) {
         case Qt::Key_Right:
