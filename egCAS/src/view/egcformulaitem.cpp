@@ -38,12 +38,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "actions/egcactionmapper.h"
 #include "egcitemtypes.h"
 
-quint8 EgcFormulaItem::s_baseFontSize = 14;
+quint8 EgcFormulaItem::s_baseFontSize = 20;
 QRegularExpression EgcFormulaItem::s_alnumKeyFilter = QRegularExpression("[._0-9a-zA-ZΆ-ώ]+");
 bool EgcFormulaItem::s_regexInitialized = false;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
-    QGraphicsItem{parent}, m_fontSize{0}, m_posChanged{false}, m_contentChanged{false}, m_entity{nullptr},
+    QGraphicsItem{parent}, m_posChanged{false}, m_contentChanged{false}, m_entity{nullptr},
     m_startPoint{QPointF(0.0, 0.0)}, m_movePossible{false}
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
@@ -61,12 +61,11 @@ EgcFormulaItem::~EgcFormulaItem()
 
 }
 
-EgcFormulaItem::EgcFormulaItem(const QString &formula, QPointF point, int size, QGraphicsItem *parent) :
+EgcFormulaItem::EgcFormulaItem(const QString &formula, QPointF point, QGraphicsItem *parent) :
         EgcFormulaItem{parent}
 {
         setFormulaText(formula);
         QGraphicsItem::setPos(point);
-        setFontSize(size);
 }
 
 EgcFormulaItem::EgcFormulaItem(const QPointF point, QGraphicsItem *parent) :
@@ -80,10 +79,10 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
         (void) option;
         (void) widget;
 
-        if (!m_fontSize)
+        if (!m_entity)
                 m_mathMlDoc->setBaseFontPixelSize(static_cast<qreal>(s_baseFontSize));
         else
-                m_mathMlDoc->setBaseFontPixelSize(static_cast<qreal>(m_fontSize));
+                m_mathMlDoc->setBaseFontPixelSize(static_cast<qreal>(m_entity->getFontSize()));
 
         QRectF formulaRect(QPointF(0,0), m_mathMlDoc->size());
         m_mathMlDoc->paint( painter, formulaRect.topLeft() );
@@ -140,22 +139,6 @@ QRectF EgcFormulaItem::boundingRect() const
 void EgcFormulaItem::setFormulaText(const QString &formula)
 {
         m_mathMlDoc->setContent(formula);
-}
-
-void EgcFormulaItem::setBaseFontSize(int size)
-{
-        s_baseFontSize = size;
-}
-
-void EgcFormulaItem::setFontSize(int size)
-{
-        m_fontSize = size;
-        m_mathMlDoc->setBaseFontPixelSize(size);
-}
-
-int EgcFormulaItem::getFontSize(void)
-{
-        return m_fontSize;
 }
 
 void EgcFormulaItem::mousePressEvent(QGraphicsSceneMouseEvent*event)
@@ -235,16 +218,6 @@ QPointF EgcFormulaItem::getPosition( void ) const
 void EgcFormulaItem::setPos(const QPointF &pos)
 {
         QGraphicsItem::setPos(snap(pos));
-}
-
-void EgcFormulaItem::setGenericFontSize(int size)
-{
-        setBaseFontSize(size);
-}
-
-int EgcFormulaItem::getGenericFontSize(void)
-{
-        return s_baseFontSize;
 }
 
 void EgcFormulaItem::updateView(void)

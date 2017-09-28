@@ -1,4 +1,5 @@
-/*Copyright (c) 2014, Johannes Maier <maier_jo@gmx.de>
+/*
+Copyright (c) 2015, Johannes Maier <maier_jo@gmx.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -11,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of egCAS nor the names of its
+* Neither the name of the egCAS nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -25,60 +26,36 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#include <QSpinBox>
+#include <QToolBar>
+#include <QApplication>
+#include <QVBoxLayout>
+#include <QLabel>
+#include "document/egcdocument.h"
+#include "mathfont.h"
+#include "entities/egcformulaentity.h"
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QtCore>
-#include <QtGui>
-#include <QScopedPointer>
-#include "view/egcasscene.h"
-
-namespace Ui {
-class MainWindow;
-}
-class EgcDocument;
-class QComboBox;
-class PrecisionBox;
-class ResultType;
-class MathFont;
-
-class MainWindow : public QMainWindow
+MathFont::MathFont(EgcDocument* doc, QToolBar* toolbar, QWidget* parent) : QWidget(parent), m_document{doc}
 {
-    Q_OBJECT
+        //add combo box for adjusting precision
+        m_box = new QSpinBox (parent);
+        m_box->setObjectName(QStringLiteral("spinBox"));
+        setLayout(new QHBoxLayout());
+        layout()->addWidget(new QLabel(QString(tr("Size:")), parent));
+        layout()->addWidget(m_box);
+        toolbar->addWidget(this);
+        m_box->setValue(EgcFormulaEntity::getGenericFontSize());
+        m_box->setToolTip(QApplication::translate("MathFont", "set font size of formulas", 0));
+        connect(m_box, SIGNAL(valueChanged(int)), this, SLOT(changeSize(int)));
+}
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+MathFont::~MathFont()
+{
 
-public slots:
-        void showLicense(void);
-        void showInfo(void);
-        void calculate(void);
-        void autoCalculation(bool on);
-        void newPage(void);
-        void insertGraphic(void);
-        void insertText(void);
-private:
-        /**
-         * @brief setupConnections setup all connections to slots that are neccessary
-         */
-        void setupConnections(void);
-        /**
-         * @brief setupToolbar setup the toolbar
-         */
-        void setupToolbar(void);
-        /**
-         * @brief setupElementBar setup the left bar with the math buttons
-         */
-        void setupElementBar(void);
+}
 
-        QScopedPointer<Ui::MainWindow> m_ui;
-        QScopedPointer<EgcDocument> m_document;
-        PrecisionBox* m_precision;
-        ResultType* m_resulttype;
-        MathFont* m_mathFont;
-};
-
-#endif // MAINWINDOW_H
+void MathFont::changeSize(int size)
+{
+        EgcFormulaEntity::setGenericFontSize(size);
+}

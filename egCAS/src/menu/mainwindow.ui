@@ -165,6 +165,11 @@ QToolButton:hover {background-color: lightgray; }
    </widget>
   </widget>
   <widget class="QToolBar" name="mathToolBar">
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
    <property name="windowTitle">
     <string>Math Toolbar</string>
    </property>

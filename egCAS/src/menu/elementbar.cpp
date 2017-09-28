@@ -67,6 +67,8 @@ void ElementBar::setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCas
         if (section) {
                 section->setChecked();
 
+                section->addElement(MathElement("=", EgcAction(EgcOperations::mathCharOperator, QChar('='))));
+                section->addElement(MathElement(":=", EgcAction(EgcOperations::mathCharOperator, QChar(':'))));
                 section->addElement(MathElement("+", EgcAction(EgcOperations::mathCharOperator, QChar('+'))));
                 section->addElement(MathElement("-", EgcAction(EgcOperations::mathCharOperator, QChar('-'))));
                 section->addElement(MathElement("/", EgcAction(EgcOperations::mathCharOperator, QChar('/'))));
@@ -79,11 +81,9 @@ void ElementBar::setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCas
                 section->addElement(MathElement("sin", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("sin"))));
                 section->addElement(MathElement("cos", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("cos"))));
                 section->addElement(MathElement("tan", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("tan"))));
-                section->addElement(MathElement("f(x)", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString(""))));
                 section->addElement(MathElement("(", EgcAction(EgcOperations::mathCharOperator, QChar('('))));
                 section->addElement(MathElement(")", EgcAction(EgcOperations::mathCharOperator, QChar(')'))));
-                section->addElement(MathElement("=", EgcAction(EgcOperations::mathCharOperator, QChar('='))));
-                section->addElement(MathElement(":=", EgcAction(EgcOperations::mathCharOperator, QChar(':'))));
+                section->addElement(MathElement("f(x)", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString(""))));
         }
 
         bool ass_ret;

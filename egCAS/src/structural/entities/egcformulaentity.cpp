@@ -46,6 +46,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "casKernel/parser/restructparserprovider.h"
 
 quint8 EgcFormulaEntity::s_stdNrSignificantDigits = 0;
+int EgcFormulaEntity::s_fontSize = 20;
 
 EgcFormulaEntity::EgcFormulaEntity(EgcNodeType type) : m_numberSignificantDigits(0),
                                                        m_numberResultType(EgcNumberResultType::StandardType),
@@ -372,28 +373,17 @@ void EgcFormulaEntity::setPosition(QPointF pos)
 
 void EgcFormulaEntity::setGenericFontSize(int size)
 {
-        setGenericFontSize(size);
-}
-
-void EgcFormulaEntity::setFontSize(int size)
-{
-        if (!m_item)
-                return;
-
-        m_item->setFontSize(size);
+        s_fontSize = size;
 }
 
 int EgcFormulaEntity::getGenericFontSize(void)
 {
-        return getGenericFontSize();
+        return s_fontSize;
 }
 
-int EgcFormulaEntity::getFontSize(void)
+int EgcFormulaEntity::getFontSize(void) const
 {
-        if (!m_item)
-                return 0;
-
-        return m_item->getFontSize();
+        return s_fontSize;
 }
 
 void EgcFormulaEntity::updateView(void)

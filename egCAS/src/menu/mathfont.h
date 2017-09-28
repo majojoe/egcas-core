@@ -26,58 +26,35 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#ifndef MATHFONT_H
+#define MATHFONT_H
 
 #include <QScopedPointer>
-#include "egcformulacreator.h"
-#include "entities/egcentitylist.h"
+#include <QWidget>
 #include "entities/egcformulaentity.h"
-#include "view/egcasiteminterface.h"
-#include "view/egcasscene.h"
-#include "document/egcdocument.h"
-#include "egcformulaitem.h"
 
-EgcFormulaCreator::EgcFormulaCreator()
+class QSpinBox;
+class EgcDocument;
+class QToolBar;
+
+
+class MathFont : public QWidget
 {
-}
+        Q_OBJECT
+public:
+        MathFont(EgcDocument* doc, QToolBar* toolbar, QWidget* parent = nullptr);
+        ~MathFont();
+private slots:
+        /**
+         * @brief changeSize change the font size of the formulas
+         */
+        void changeSize(int size);
+private:
 
-EgcFormulaCreator::~EgcFormulaCreator()
-{
-}
+        Q_DISABLE_COPY(MathFont)
 
-EgcEntity* EgcFormulaCreator::create(EgcEntityList &list, QPointF point)
-{
-        QScopedPointer<EgcFormulaEntity> entity(new EgcFormulaEntity());
-        if (entity.isNull())
-                return nullptr;
-        EgcDocument* doc = list.getDocument();
-        EgCasScene* scene = doc->getScene();
-        if (scene->addFormula(*entity, point)) {
-                list.addEntity(entity.data());
-                entity->updateView();
+        QSpinBox* m_box;
+        EgcDocument* m_document;
+};
 
-                return entity.take();
-        }
-
-        return nullptr;
-}
-
-EgcEntity* EgcFormulaCreator::clone(EgcEntityList& list, EgcEntity& entity2copy)
-{
-        if (entity2copy.getEntityType() != EgcEntityType::Formula)
-                return nullptr;
-        EgcFormulaEntity& entityCopyRef = static_cast<EgcFormulaEntity&>(entity2copy);
-        QScopedPointer<EgcFormulaEntity> entity(new EgcFormulaEntity(entityCopyRef));
-        if (entity.isNull())
-                return nullptr;
-        EgcDocument* doc = list.getDocument();
-        EgCasScene* scene = doc->getScene();
-        if (scene->addFormula(*entity, entity2copy.getPosition())) {
-                list.addEntity(entity.data());
-                //set the item properties
-                entity->updateView();
-
-                return entity.take();
-        }
-
-        return nullptr;
-}
+#endif // MATHFONT_H

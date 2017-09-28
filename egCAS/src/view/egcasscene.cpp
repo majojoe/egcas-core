@@ -198,9 +198,9 @@ QGraphicsPixmapItem * EgCasScene::addPixmap(const QPixmap & pixmap)
 }
 
 
-EgcFormulaItem * EgCasScene::addFormula(const QString & formula, int size, QPointF point)
+EgcFormulaItem * EgCasScene::addFormula(const QString & formula, QPointF point)
 {
-        EgcFormulaItem *formulaItem = new (std::nothrow) EgcFormulaItem(formula, point, size);
+        EgcFormulaItem *formulaItem = new (std::nothrow) EgcFormulaItem(formula, point);
         if (formulaItem)
                 addItem(formulaItem);
 

@@ -78,6 +78,11 @@ public:
          * @param rightSide set it at the right side or at the left of the given instance
          */
         virtual void setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide) = 0;
+        /**
+         * @brief getFontSize returns the font size for this formula
+         * @return the font size that should be used for this formula
+         */
+        virtual int getFontSize(void) const = 0;
 
 };
 

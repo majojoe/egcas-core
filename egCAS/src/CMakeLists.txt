@@ -177,6 +177,8 @@ set(egcas_SOURCES
         menu/mathsection.cpp
         menu/actionwrapper.cpp
         menu/precisionbox.cpp
+        menu/resulttype.cpp
+        menu/mathfont.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS

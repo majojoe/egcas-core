@@ -44,28 +44,6 @@ public:
          */
         virtual ~EgcAbstractFormulaItem() {}
         /**
-         * @brief set the generic font size for all formulas (changes the overall font size of all formulas in a document).
-         * If the font size of a specific formula should be changed, use the function setFontSize.
-         * @param size the font size in points
-         */
-        virtual void setGenericFontSize(int size) = 0;
-        /**
-         * @brief getBaseFontSize returns the base font size of all formulas in a document
-         * @return the base font size of all formulas
-         */
-        virtual int getGenericFontSize(void) = 0;
-        /**
-         * @brief set the font size for a formula (changes only the font size of this formula).
-         * If the overall font size of all formulas should be changed, use the function setBaseFontSize.
-         * @param size the font size in points
-         */
-        virtual void setFontSize(int size) = 0;
-        /**
-         * @brief getFontSize returns the font size of the current formula
-         * @return the font size of the current formula
-         */
-        virtual int getFontSize(void) = 0;
-        /**
          * @brief updateView update the view with the new mathml representation if anything changes
          */
         virtual void updateView(void) = 0;

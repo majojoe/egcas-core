@@ -203,27 +203,21 @@ public:
          */
         virtual void setPosition(QPointF pos) override;
         /**
-         * @brief set the generic font size for all formulas (changes the overall font size of all formulas in a document).
-         * If the font size of a specific formula should be changed, use the function setFontSize.
-         * @param size the font size in points
-         */
-        static void setGenericFontSize(int size);
-        /**
-         * @brief getBaseFontSize returns the base font size of all formulas in a document
-         * @return the base font size of all formulas
-         */
-        static int getGenericFontSize(void);
-        /**
          * @brief set the font size for a formula (changes only the font size of this formula).
          * If the overall font size of all formulas should be changed, use the function setBaseFontSize.
          * @param size the font size in points
          */
-        void setFontSize(int size);
+        static void setGenericFontSize(int size);
+        /**
+         * @brief getGenericFontSize returns the generic font size of the current formula
+         * @return the font size of the current formula
+         */
+        static int getGenericFontSize(void);
         /**
          * @brief getFontSize returns the font size of the current formula
          * @return the font size of the current formula
          */
-        int getFontSize(void);
+        virtual int getFontSize(void) const override;
         /**
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)
@@ -404,10 +398,11 @@ private:
          */
         void createSubId(void);
 
+        static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
+        static int s_fontSize;                  ///< the font size of all formulas
         quint8 m_numberSignificantDigits;       ///< number of significant digits of a number result
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
         EgcBaseNode m_data;                     ///< holds a pointer to the root element of the formula tree
-        static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
         EgcAbstractFormulaItem* m_item;         ///< pointer to the formula item interface on the scene
         QString m_errorMsg;                     ///< the error message for this formula, if one
         EgcMathmlLookup m_mathmlLookup;         ///< mathml id lookup table

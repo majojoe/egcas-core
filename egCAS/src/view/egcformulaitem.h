@@ -60,10 +60,9 @@ public:
          * @brief constructor for instantiating a formula with xml representation already available
          * @param formula the mathml representation of the formula to render
          * @param point the left bottom start point for rendering the formula
-         * @param size the font size in pixel of the formula to be rendered
          * @param parent pointer to parent widget
          */
-        explicit EgcFormulaItem(const QString &formula, QPointF point, int size, QGraphicsItem *parent = 0);
+        explicit EgcFormulaItem(const QString &formula, QPointF point, QGraphicsItem *parent = 0);
         /**
          * @brief override paint from QGraphicsItem
          * @param painter pointer to painter
@@ -88,17 +87,6 @@ public:
          */
         static void setBaseFontSize(int size);
         /**
-         * @brief set the font size for a formula (changes only the font size of this formula).
-         * If the overall font size of all formulas should be changed, use the function setBaseFontSize.
-         * @param size the font size in points
-         */
-        void setFontSize(int size) override;
-        /**
-         * @brief getFontSize returns the font size of the current formula
-         * @return the font size of the current formula
-         */
-        virtual int getFontSize(void) override;
-        /**
          * @brief setEntity set a pointer to the entity that contains the logical structure / frontend for the view
          * @param entity a pointer to the entity that is associated with this object
          */
@@ -118,17 +106,6 @@ public:
          * @param point the position to set.
          */
         virtual void setPos(const QPointF &pos) override;
-        /**
-         * @brief set the generic font size for all formulas (changes the overall font size of all formulas in a document).
-         * If the font size of a specific formula should be changed, use the function setFontSize.
-         * @param size the font size in points
-         */
-        virtual void setGenericFontSize(int size) override;
-        /**
-         * @brief getBaseFontSize returns the base font size of all formulas in a document
-         * @return the base font size of all formulas
-         */
-        virtual int getGenericFontSize(void) override;
         /**
          * @brief updateView update the view with the new mathml representation if anything changes
          */
@@ -259,7 +236,6 @@ public slots:
 private:                
         QScopedPointer<EgMathMLDocument> m_mathMlDoc;
         static quint8 s_baseFontSize;
-        quint8 m_fontSize;
         EgcAbstractFormulaEntity* m_entity;             ///< pointer to formula entity
         bool m_posChanged;                              ///< helper variable indicating that the position has changed
         bool m_contentChanged;                          ///< helper variable indicating that the content of the formula has changed

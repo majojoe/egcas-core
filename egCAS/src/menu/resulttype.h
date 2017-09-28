@@ -26,58 +26,54 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#ifndef RESULTTYPE_H
+#define RESULTTYPE_H
 
 #include <QScopedPointer>
-#include "egcformulacreator.h"
-#include "entities/egcentitylist.h"
+#include <QWidget>
 #include "entities/egcformulaentity.h"
-#include "view/egcasiteminterface.h"
-#include "view/egcasscene.h"
-#include "document/egcdocument.h"
-#include "egcformulaitem.h"
 
-EgcFormulaCreator::EgcFormulaCreator()
+class QComboBox;
+class EgcDocument;
+class QToolBar;
+
+
+class ResultType : public QWidget
 {
-}
+        Q_OBJECT
+public:
+        ResultType(EgcDocument* doc, QToolBar* toolbar, QWidget* parent = nullptr);
+        ~ResultType();
+public slots:
+        void resultTypeBox(QString text);
+private slots:
+        /**
+         * @brief onSelectionChange is called if the selection of a formula or any other entity changes
+         */
+        void onSelectionChange(void);
+private:
+        /**
+         * @brief mapToType map the given text to an result type
+         * @param text the text to map to the result type
+         * @return the result type mapped
+         */
+        EgcNumberResultType mapToType(QString text);
+        /**
+         * @brief mapToIndex map the given type to an box index
+         * @param type the result type to map to an index
+         * @return the index mapped
+         */
+        int mapToIndex(EgcNumberResultType type);
 
-EgcFormulaCreator::~EgcFormulaCreator()
-{
-}
+        Q_DISABLE_COPY(ResultType)
+        /**
+         * @brief setResultType set the number result type of a formula
+         * @param result the type to set (StandardType, IntegerType, EngineeringType or ScientificType)
+         */
+        void setResultType(EgcNumberResultType result);
 
-EgcEntity* EgcFormulaCreator::create(EgcEntityList &list, QPointF point)
-{
-        QScopedPointer<EgcFormulaEntity> entity(new EgcFormulaEntity());
-        if (entity.isNull())
-                return nullptr;
-        EgcDocument* doc = list.getDocument();
-        EgCasScene* scene = doc->getScene();
-        if (scene->addFormula(*entity, point)) {
-                list.addEntity(entity.data());
-                entity->updateView();
+        QComboBox* m_box;
+        EgcDocument* m_document;
+};
 
-                return entity.take();
-        }
-
-        return nullptr;
-}
-
-EgcEntity* EgcFormulaCreator::clone(EgcEntityList& list, EgcEntity& entity2copy)
-{
-        if (entity2copy.getEntityType() != EgcEntityType::Formula)
-                return nullptr;
-        EgcFormulaEntity& entityCopyRef = static_cast<EgcFormulaEntity&>(entity2copy);
-        QScopedPointer<EgcFormulaEntity> entity(new EgcFormulaEntity(entityCopyRef));
-        if (entity.isNull())
-                return nullptr;
-        EgcDocument* doc = list.getDocument();
-        EgCasScene* scene = doc->getScene();
-        if (scene->addFormula(*entity, entity2copy.getPosition())) {
-                list.addEntity(entity.data());
-                //set the item properties
-                entity->updateView();
-
-                return entity.take();
-        }
-
-        return nullptr;
-}
+#endif // RESULTTYPE_H

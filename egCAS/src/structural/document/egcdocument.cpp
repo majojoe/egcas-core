@@ -28,6 +28,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QMessageBox>
+#include <QGraphicsView>
 #include "egcasscene.h"
 #include "../entities/egcentitylist.h"
 #include "egcdocument.h"
@@ -231,4 +232,12 @@ QPointF EgcDocument::getLastCursorPosition(void)
 QSizeF EgcDocument::getMaxItemSize(QPointF point) const
 {
         return m_scene.data()->worksheet().getMaxItemSize(point);
+}
+
+void EgcDocument::updateView()
+{
+        QGraphicsView* view = m_scene->views().at(0);
+        if (view) {
+                view->viewport()->update();
+        }
 }

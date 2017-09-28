@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QToolBar>
 #include <QApplication>
 #include <QVBoxLayout>
+#include <QLabel>
 #include "document/egcdocument.h"
 #include "entities/egcformulaentity.h"
 #include "precisionbox.h"
@@ -44,8 +45,9 @@ PrecisionBox::PrecisionBox(EgcDocument* doc, QToolBar* toolbar, QWidget* parent)
         m_box = new QComboBox(parent);
         m_box->setObjectName(QStringLiteral("comboBox"));
         m_box->setFocusPolicy(Qt::NoFocus);
-        setLayout(new QVBoxLayout());
+        setLayout(new QHBoxLayout());
         layout()->setMargin(0);
+        layout()->addWidget(new QLabel(QString(tr("0,0:")), parent));
         layout()->addWidget(m_box);
         toolbar->addWidget(this);
         m_box->setCurrentIndex(0);

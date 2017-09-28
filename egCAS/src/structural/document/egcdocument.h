@@ -139,6 +139,10 @@ public:
          * @return the maximum size the item can have
          */
         QSizeF getMaxItemSize(QPointF point) const override;
+        /**
+         * @brief updateView update the view and rerender all items in the view
+         */
+        void updateView(void);
 signals:
         /**
          * @brief startDeleletingEntity signal to be emitted when entity shall be deleted

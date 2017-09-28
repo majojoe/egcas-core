@@ -39,6 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "menu/egclicenseinfo.h"
 #include "menu/elementbar.h"
 #include "menu/precisionbox.h"
+#include "menu/resulttype.h"
+#include "menu/mathfont.h"
 #include <QMessageBox>
 #include <QSpacerItem>
 #include <QComboBox>
@@ -66,7 +68,6 @@ MainWindow::MainWindow(QWidget *parent) :
     setupElementBar();
 
     //add some formulas
-    EgcFormulaItem::setBaseFontSize(18);
     EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 480.0)));
     FormulaGenerator::getFormulaTree(formula1, "_{sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3))_}/_{ⅇ^π_}=x^‴");
@@ -75,7 +76,6 @@ MainWindow::MainWindow(QWidget *parent) :
     FormulaGenerator::getFormulaTree(formula2, "_{-1+sqrt(5)_}/2=_empty");
     formula2->setNumberResultType(EgcNumberResultType::ScientificType);
     formula2->setNumberOfSignificantDigits(4);
-    formula2->setFontSize(50);
     
     EgcFormulaEntity* formula3 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(330.0, 300.0)));
@@ -176,13 +176,17 @@ void MainWindow::setupConnections(void)
 void MainWindow::setupToolbar()
 {
         //setup main toolbar
-        m_ui->mainToolBar->addAction(m_ui->mnu_new_page);
+        m_ui->mainToolBar->layout()->setContentsMargins(0,0,5,0);
+        //m_ui->mainToolBar->addAction(m_ui->mnu_new_page);
         m_ui->mainToolBar->addAction(m_ui->mnu_insert_graphic);
         m_ui->mainToolBar->addAction(m_ui->mnu_insert_text);
         //setup math toolbar
+        m_ui->mathToolBar->layout()->setContentsMargins(0,0,5,0);
         m_ui->mathToolBar->addAction(m_ui->mnu_autoCalc);
         m_ui->mathToolBar->addSeparator();
         m_precision = new PrecisionBox(m_document.data(), m_ui->mathToolBar, this);
+        m_resulttype = new ResultType(m_document.data(), m_ui->mathToolBar, this);
+        m_mathFont = new MathFont(m_document.data(), m_ui->mathToolBar, this);
 }
 
 
