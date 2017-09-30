@@ -62,17 +62,6 @@ public:
          */
         virtual void setPos(const QPointF& point) override;
         /**
-         * @brief set the font size for a text (changes only the font size of this text).
-         * If the overall font size of all texts should be changed, use the function setBaseFontSize.
-         * @param size the font size in points
-         */
-        virtual void setFont(const QFont& font) override;
-        /**
-         * @brief getFontSize returns the font size of the current text
-         * @return the font size of the current text
-         */
-        virtual QFont getFont(void) const override;
-        /**
          * @brief setText set the given text
          * @param text the text to set
          */
@@ -86,6 +75,13 @@ public:
          * @brief setEditMode sets this item in edit mode, so that the user can start to write text
          */
         virtual void setEditMode(void) override;
+        /**
+         * @brief override paint from QGraphicsItem
+         * @param painter pointer to painter
+         * @param option pointer to style options
+         * @param widget pointer to parent widget
+         */
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 
 protected:

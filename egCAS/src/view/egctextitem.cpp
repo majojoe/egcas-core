@@ -55,6 +55,16 @@ EgcTextItem::~EgcTextItem()
                 m_entity->itemChanged(EgcItemChangeType::itemDeleted);
 }
 
+void EgcTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+        if (m_entity) {
+                if (m_entity->getEntityFont() != font()) {
+                        setFont(m_entity->getEntityFont());
+                }
+        }
+        QGraphicsTextItem::paint(painter, option, widget);
+}
+
 QVariant EgcTextItem::itemChange(GraphicsItemChange change, const QVariant &value)
  {
      if (change == ItemPositionChange && scene()) {
@@ -128,24 +138,14 @@ void EgcTextItem::setPos(const QPointF &point)
         QGraphicsTextItem::setPos(snap(point));
 }
 
-void EgcTextItem::setFont(const QFont& font)
-{
-        QGraphicsTextItem::setFont(font);
-}
-
-QFont EgcTextItem::getFont(void) const
-{
-        return font();
-}
-
 void EgcTextItem::setText(QString text)
 {
-        setPlainText(text);
+        setHtml(text);
 }
 
 QString EgcTextItem::getText(void)
 {
-        return toPlainText();
+        return toHtml();
 }
 
 EgCasScene* EgcTextItem::getEgcScene(void)

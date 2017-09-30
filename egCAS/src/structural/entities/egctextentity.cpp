@@ -38,12 +38,13 @@ QFont EgcTextEntity::s_genericFont = QFont(QString("Century Schoolbook L"), 14);
 #endif //#if defined( Q_OS_WIN )
 
 
-EgcTextEntity::EgcTextEntity(void) : m_item(nullptr)
+EgcTextEntity::EgcTextEntity(void) : m_item(nullptr), m_font{nullptr}
 {
 }
 
 EgcTextEntity::~EgcTextEntity()
 {
+        delete m_font;
 }
 
 EgcEntityType EgcTextEntity::getEntityType(void) const
@@ -67,14 +68,6 @@ QString EgcTextEntity::getText(void) const
         m_item->getText();
 }
 
-QFont EgcTextEntity::getFont(void) const
-{
-        if (!m_item)
-                return s_genericFont;
-
-        return m_item->getFont();
-}
-
 void EgcTextEntity::setItem(EgcAbstractTextItem* item)
 {
         m_item = item;
@@ -96,15 +89,30 @@ void EgcTextEntity::setText(QString text)
         m_item->setText(text);
 }
 
-void EgcTextEntity::setFont(const QFont& font)
+QFont EgcTextEntity::getFont(void) const
 {
-        if (!m_item)
-                return;
-
-        m_item->setFont(font);
+        if (!m_font)
+                return s_genericFont;
+        else
+                return *m_font;
 }
 
-void EgcTextEntity::setGenericFont(QFont& font)
+void EgcTextEntity::setFont(const QFont& font)
+{
+        if (m_font)
+                delete m_font;
+        m_font = new QFont(font);
+}
+
+QFont& EgcTextEntity::getEntityFont()
+{
+        if (m_font)
+                return *m_font;
+        else
+                return s_genericFont;
+}
+
+void EgcTextEntity::setGenericFont(const QFont& font)
 {
         s_genericFont = font;
 }
