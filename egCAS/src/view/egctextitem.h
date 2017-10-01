@@ -82,7 +82,11 @@ public:
          * @param widget pointer to parent widget
          */
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
+        /**
+         * @brief getEnity returns a pointer to the entity that contains the logical structure for the text
+         * @return the entity that is associated with the text item
+         */
+        EgcAbstractTextEntity* getEnity(void) const;
 
 protected:
         /**

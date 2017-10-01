@@ -49,6 +49,11 @@ private slots:
          * @brief changeSize change the font size of the formulas
          */
         void changeSize(int size);
+        /**
+         * @brief onSelectionChange is called if the selection of a formula or any other entity changes
+         */
+        void onSelectionChange(void);
+
 private:
 
         Q_DISABLE_COPY(TextFont)

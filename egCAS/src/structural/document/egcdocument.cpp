@@ -37,6 +37,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egccalculation.h"
 #include "entities/egcformulaentity.h"
 #include "view/egcformulaitem.h"
+#include "entities/egctextentity.h"
+#include "view/egctextitem.h"
 
 EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasScene(*this, nullptr)}, m_calc{new EgcCalculation()}
 {
@@ -200,6 +202,29 @@ EgcFormulaEntity* EgcDocument::getActiveFormulaEntity(void)
         if (!aFormulaEntity)
                 return nullptr;
         EgcFormulaEntity* entity = dynamic_cast<EgcFormulaEntity*>(aFormulaEntity);
+        if (!entity)
+                return nullptr;
+
+        return entity;
+}
+
+EgcTextEntity* EgcDocument::getActiveTextEntity()
+{
+        QList<QGraphicsItem*> list = m_scene->selectedItems();
+        if (list.empty())
+                return nullptr;
+        QGraphicsItem *item = list.at(0);
+        if (!item)
+                return nullptr;
+
+        EgcTextItem* textItem = dynamic_cast<EgcTextItem*>(item);
+        if (!textItem)
+                return nullptr;
+
+        EgcAbstractTextEntity *aTextEntity = textItem->getEnity();
+        if (!aTextEntity)
+                return nullptr;
+        EgcTextEntity* entity = dynamic_cast<EgcTextEntity*>(aTextEntity);
         if (!entity)
                 return nullptr;
 

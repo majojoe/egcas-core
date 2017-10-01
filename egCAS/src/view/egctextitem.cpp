@@ -65,6 +65,11 @@ void EgcTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         QGraphicsTextItem::paint(painter, option, widget);
 }
 
+EgcAbstractTextEntity*EgcTextItem::getEnity() const
+{
+        return m_entity;
+}
+
 QVariant EgcTextItem::itemChange(GraphicsItemChange change, const QVariant &value)
  {
      if (change == ItemPositionChange && scene()) {

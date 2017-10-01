@@ -49,6 +49,7 @@ TextFont::TextFont(EgcDocument* doc, QToolBar* toolbar, QWidget* parent) : QWidg
         m_box->setValue(pointSize);
         m_box->setToolTip(QApplication::translate("TextFont", "set font size of text", 0));
         connect(m_box, SIGNAL(valueChanged(int)), this, SLOT(changeSize(int)));
+        connect(m_document, &EgcDocument::selectionChanged, this, &TextFont::onSelectionChange);
 }
 
 TextFont::~TextFont()
@@ -58,8 +59,34 @@ TextFont::~TextFont()
 
 void TextFont::changeSize(int size)
 {
-        QFont font = EgcTextEntity::getGenericFont();
+        QFont font;
+        EgcAbstractTextEntity *entity;
+        entity = m_document->getActiveTextEntity();
+        if (entity)
+                font = m_document->getActiveTextEntity()->getFont();
+        else
+                font = EgcTextEntity::getGenericFont();
         font.setPointSize(size);
-        EgcTextEntity::setGenericFont(font);
+        if (entity) {
+                EgcTextEntity* text = static_cast<EgcTextEntity*>(entity);
+                text->setFont(font);
+        } else {
+                EgcTextEntity::setGenericFont(font);
+        }
         m_document->updateView();
+}
+
+void TextFont::onSelectionChange()
+{
+        EgcTextEntity* text = m_document->getActiveTextEntity();
+        QFont font;
+        if (text) {
+                font = text->getFont();
+        } else {
+                font = EgcTextEntity::getGenericFont();
+        }
+        //set font properties
+        m_box->blockSignals(true);
+        m_box->setValue(font.pointSize());
+        m_box->blockSignals(false);
 }

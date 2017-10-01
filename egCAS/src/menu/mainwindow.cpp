@@ -111,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text,
                                                                                QPointF(60.0, 30.0)));
     QFont font_text(QString("Century Schoolbook L"));
-    font_text.setPixelSize(50);
+    font_text.setPointSize(50);
     text->setFont(font_text);
     text->setText("This is a test text");
 
