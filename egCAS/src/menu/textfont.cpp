@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QApplication>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QFontComboBox>
 #include "document/egcdocument.h"
 #include "textfont.h"
 #include "entities/egctextentity.h"
@@ -41,14 +42,20 @@ TextFont::TextFont(EgcDocument* doc, QToolBar* toolbar, QWidget* parent) : QWidg
         //add combo box for adjusting text size
         m_box = new QSpinBox (parent);
         m_box->setObjectName(QStringLiteral("spinBox"));
+        m_fontBox = new QFontComboBox(parent);
+        m_fontBox->setObjectName(QStringLiteral("fontComboBox"));
         setLayout(new QHBoxLayout());
         layout()->addWidget(new QLabel(QString(tr("Text:")), parent));
         layout()->addWidget(m_box);
+        layout()->addWidget(m_fontBox);
         toolbar->addWidget(this);
         int pointSize = EgcTextEntity::getGenericFont().pointSize();
         m_box->setValue(pointSize);
         m_box->setToolTip(QApplication::translate("TextFont", "set font size of text", 0));
+        m_fontBox->setToolTip(QApplication::translate("TextFont", "set font of text", 0));
+        m_fontBox->setCurrentFont(EgcTextEntity::getGenericFont());
         connect(m_box, SIGNAL(valueChanged(int)), this, SLOT(changeSize(int)));
+        connect(m_fontBox, SIGNAL(currentFontChanged(QFont)), this, SLOT(changeFont(QFont)));
         connect(m_document, &EgcDocument::selectionChanged, this, &TextFont::onSelectionChange);
 }
 
@@ -76,6 +83,25 @@ void TextFont::changeSize(int size)
         m_document->updateView();
 }
 
+void TextFont::changeFont(QFont font)
+{
+        QFont oldFont;
+        EgcAbstractTextEntity *entity;
+        entity = m_document->getActiveTextEntity();
+        if (entity)
+                oldFont = m_document->getActiveTextEntity()->getFont();
+        else
+                oldFont = EgcTextEntity::getGenericFont();
+        oldFont.setFamily(font.family());
+        if (entity) {
+                EgcTextEntity* text = static_cast<EgcTextEntity*>(entity);
+                text->setFont(oldFont);
+        } else {
+                EgcTextEntity::setGenericFont(oldFont);
+        }
+        m_document->updateView();
+}
+
 void TextFont::onSelectionChange()
 {
         EgcTextEntity* text = m_document->getActiveTextEntity();
@@ -88,5 +114,6 @@ void TextFont::onSelectionChange()
         //set font properties
         m_box->blockSignals(true);
         m_box->setValue(font.pointSize());
+        m_fontBox->setCurrentFont(font);
         m_box->blockSignals(false);
 }

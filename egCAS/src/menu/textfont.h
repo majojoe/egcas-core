@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class QSpinBox;
 class EgcDocument;
 class QToolBar;
+class QFontComboBox;
 
 
 class TextFont : public QWidget
@@ -46,9 +47,13 @@ public:
         ~TextFont();
 private slots:
         /**
-         * @brief changeSize change the font size of the formulas
+         * @brief changeSize change the font size of the text
          */
         void changeSize(int size);
+        /**
+         * @brief changeFont change the font of the text
+         */
+        void changeFont(QFont font);
         /**
          * @brief onSelectionChange is called if the selection of a formula or any other entity changes
          */
@@ -60,6 +65,7 @@ private:
 
         QSpinBox* m_box;
         EgcDocument* m_document;
+        QFontComboBox* m_fontBox;
 };
 
 #endif // TEXTFONT_H
