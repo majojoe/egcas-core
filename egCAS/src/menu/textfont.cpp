@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QFontComboBox>
+#include <QAction>
 #include "document/egcdocument.h"
 #include "textfont.h"
 #include "entities/egctextentity.h"
@@ -57,7 +58,38 @@ TextFont::TextFont(EgcDocument* doc, QToolBar* toolbar, QWidget* parent) : QWidg
         connect(m_box, SIGNAL(valueChanged(int)), this, SLOT(changeSize(int)));
         connect(m_fontBox, SIGNAL(currentFontChanged(QFont)), this, SLOT(changeFont(QFont)));
         connect(m_document, &EgcDocument::selectionChanged, this, &TextFont::onSelectionChange);
+
+        //qaction for bold text
+        mnu_bold_text = new QAction(parent);
+        mnu_bold_text->setObjectName(QStringLiteral("mnu_bold_text"));
+        mnu_bold_text->setIcon(QIcon(":/res/bold_text.png"));
+        mnu_bold_text->setText(QApplication::translate("TextFont", "bold Text", 0));
+        mnu_bold_text->setToolTip(QApplication::translate("TextFont", "bold Text style", 0));
+        mnu_bold_text->setCheckable(true);
+        connect(mnu_bold_text, SIGNAL(triggered(bool)), this, SLOT(boldText(bool)));
+        toolbar->addAction(mnu_bold_text);
+
+        //qaction for underlined text
+        mnu_underlined_text = new QAction(parent);
+        mnu_underlined_text->setObjectName(QStringLiteral("mnu_underlined_text"));
+        mnu_underlined_text->setIcon(QIcon(":/res/underlined_text.png"));
+        mnu_underlined_text->setText(QApplication::translate("TextFont", "underlined Text", 0));
+        mnu_underlined_text->setToolTip(QApplication::translate("TextFont", "underlined Text style", 0));
+        mnu_underlined_text->setCheckable(true);
+        connect(mnu_underlined_text, SIGNAL(triggered(bool)), this, SLOT(underlinedText(bool)));
+        toolbar->addAction(mnu_underlined_text);
+
+        //qaction for italic text
+        mnu_italic_text = new QAction(parent);
+        mnu_italic_text->setObjectName(QStringLiteral("mnu_italic_text"));
+        mnu_italic_text->setIcon(QIcon(":/res/italic_text.png"));
+        mnu_italic_text->setText(QApplication::translate("TextFont", "italic Text", 0));
+        mnu_italic_text->setToolTip(QApplication::translate("TextFont", "italic Text style", 0));
+        mnu_italic_text->setCheckable(true);
+        connect(mnu_italic_text, SIGNAL(triggered(bool)), this, SLOT(italicText(bool)));
+        toolbar->addAction(mnu_italic_text);
 }
+
 
 TextFont::~TextFont()
 {
@@ -115,5 +147,65 @@ void TextFont::onSelectionChange()
         m_box->blockSignals(true);
         m_box->setValue(font.pointSize());
         m_fontBox->setCurrentFont(font);
+        mnu_bold_text->setChecked(font.bold());
+        mnu_underlined_text->setChecked(font.underline());
+        mnu_italic_text->setChecked(font.italic());
         m_box->blockSignals(false);
+}
+
+void TextFont::boldText(bool bold)
+{
+        QFont font;
+        EgcAbstractTextEntity *entity;
+        entity = m_document->getActiveTextEntity();
+        if (entity)
+                font = m_document->getActiveTextEntity()->getFont();
+        else
+                font = EgcTextEntity::getGenericFont();
+        font.setBold(bold);
+        if (entity) {
+                EgcTextEntity* text = static_cast<EgcTextEntity*>(entity);
+                text->setFont(font);
+        } else {
+                EgcTextEntity::setGenericFont(font);
+        }
+        m_document->updateView();
+}
+
+void TextFont::underlinedText(bool underlined)
+{
+        QFont font;
+        EgcAbstractTextEntity *entity;
+        entity = m_document->getActiveTextEntity();
+        if (entity)
+                font = m_document->getActiveTextEntity()->getFont();
+        else
+                font = EgcTextEntity::getGenericFont();
+        font.setUnderline(underlined);
+        if (entity) {
+                EgcTextEntity* text = static_cast<EgcTextEntity*>(entity);
+                text->setFont(font);
+        } else {
+                EgcTextEntity::setGenericFont(font);
+        }
+        m_document->updateView();
+}
+
+void TextFont::italicText(bool italic)
+{
+        QFont font;
+        EgcAbstractTextEntity *entity;
+        entity = m_document->getActiveTextEntity();
+        if (entity)
+                font = m_document->getActiveTextEntity()->getFont();
+        else
+                font = EgcTextEntity::getGenericFont();
+        font.setItalic(italic);
+        if (entity) {
+                EgcTextEntity* text = static_cast<EgcTextEntity*>(entity);
+                text->setFont(font);
+        } else {
+                EgcTextEntity::setGenericFont(font);
+        }
+        m_document->updateView();
 }

@@ -58,6 +58,18 @@ private slots:
          * @brief onSelectionChange is called if the selection of a formula or any other entity changes
          */
         void onSelectionChange(void);
+        /**
+         * @brief change the font of the text to bold style
+         */
+        void boldText(bool bold);
+        /**
+         * @brief change the font of the text to underlined style
+         */
+        void underlinedText(bool underlined);
+        /**
+         * @brief change the font of the text to italic style
+         */
+        void italicText(bool italic);
 
 private:
 
@@ -66,6 +78,9 @@ private:
         QSpinBox* m_box;
         EgcDocument* m_document;
         QFontComboBox* m_fontBox;
+        QAction *mnu_bold_text;
+        QAction *mnu_italic_text;
+        QAction *mnu_underlined_text;
 };
 
 #endif // TEXTFONT_H
