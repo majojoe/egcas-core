@@ -102,6 +102,11 @@ void EgcTextEntity::setFont(const QFont& font)
         if (m_font)
                 delete m_font;
         m_font = new QFont(font);
+        //delete font for this entity if it is the same as the generic font
+        if (*m_font == s_genericFont) {
+                delete m_font;
+                m_font = nullptr;
+        }
 }
 
 QFont& EgcTextEntity::getEntityFont()
