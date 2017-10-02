@@ -86,21 +86,25 @@ public:
          */
         void setFont(const QFont& font);
         /**
+         * @brief getGenericFont returns the font used by this class if nothing else is set for the object
+         * @return the font used
+         */
+        static QFont& getGenericFont(void);
+        /**
+         * @brief setGenericFont set the font used by this class if nothing else is set for the object
+         * @param font the font to set
+         */
+        static void setGenericFont(const QFont& font);
+        /**
+         * @brief getEntityFont returns the base font of all texts in a document
+         * @return the base font of all texts
+         */
+        virtual QFont& getEntityFont(void) override;
+        /**
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)
          */
         void setItem(EgcAbstractTextItem* item);
-        /**
-         * @brief set the generic font for all texts (changes the overall font of all texts in a document).
-         * If the font size of a specific text should be changed, use the function setFont.
-         * @param size the font in points
-         */
-        virtual void setGenericFont(QFont& font);
-        /**
-         * @brief getBaseFontSize returns the base font size of all texts in a document
-         * @return the base font size of all texts
-         */
-        virtual QFont& getGenericFont(void) override;
         /**
          * @brief itemChanged is called when the item that is associated with the enity has changed
          */
@@ -113,6 +117,7 @@ public:
 private:
         EgcAbstractTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene
         static QFont s_genericFont;                     ///< the generic font to use for all text entities
+        QFont* m_font;                                  ///< pointer to font chosen for this object
 };
 
 #endif // EGCTEXTENTITY_H

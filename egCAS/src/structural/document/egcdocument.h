@@ -44,6 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class EgcEntityList;
 class EgCasScene;
+class EgcTextEntity;
 
 class EgcDocument : public QObject, EgcAbstractEntityList, public EgcAbstractDocument
 {
@@ -127,6 +128,11 @@ public:
          * @return pointer to active formula entity if any, or nullptr if none
          */
         EgcFormulaEntity* getActiveFormulaEntity(void);
+        /**
+         * @brief getActiveTextEntity returns a pointer to the active text entity (has Focus)
+         * @return pointer to active text entity if any, or nullptr if none
+         */
+        EgcTextEntity* getActiveTextEntity(void);
         /**
          * @brief getLastCursorPosition returns the last cursor positon in the document
          * @return the last cursor position

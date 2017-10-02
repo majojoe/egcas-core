@@ -45,10 +45,10 @@ public:
          */
         virtual void setItem(EgcAbstractTextItem* item) = 0;
         /**
-         * @brief getBaseFont returns the base font of all texts in a document
+         * @brief getEntityFont returns the base font of all texts in a document
          * @return the base font of all texts
          */
-        virtual QFont& getGenericFont(void) = 0;
+        virtual QFont& getEntityFont(void) = 0;
 };
 
 #endif // EGCABSTRACTTEXTENTITY_H

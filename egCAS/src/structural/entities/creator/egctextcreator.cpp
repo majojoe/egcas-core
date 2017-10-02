@@ -55,8 +55,6 @@ EgcEntity* EgcTextCreator::create(EgcEntityList& list, QPointF point)
         EgCasScene* scene = doc->getScene();
         if (scene->addText(*entity, point)) {
                 list.addEntity(entity.data());
-                QFont font_text(entity->getGenericFont());
-                entity->setFont(font_text);
                 return entity.take();
         }
 

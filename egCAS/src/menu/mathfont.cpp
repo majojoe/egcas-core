@@ -58,4 +58,5 @@ MathFont::~MathFont()
 void MathFont::changeSize(int size)
 {
         EgcFormulaEntity::setGenericFontSize(size);
+        m_document->updateView();
 }

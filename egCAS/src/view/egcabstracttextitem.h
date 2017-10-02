@@ -42,17 +42,6 @@ public:
          */
         virtual ~EgcAbstractTextItem() {}
         /**
-         * @brief set the font size for a text (changes only the font size of this text).
-         * If the overall font size of all texts should be changed, use the function setBaseFontSize.
-         * @param font the font of the text item
-         */
-        virtual void setFont(const QFont& font) = 0;
-        /**
-         * @brief getFontSize returns the font size of the current text
-         * @return the font size of the current text
-         */
-        virtual QFont getFont(void) const = 0;
-        /**
          * @brief setText set the given text
          * @param text the text to set
          */

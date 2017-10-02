@@ -233,7 +233,6 @@ EgcTextItem* EgCasScene::addText(EgcAbstractTextEntity& text, QPointF point)
 
         addItem(item.data());
         item->setPos(point);
-        item->setFont(text.getGenericFont());
 
         return item.take();
 }

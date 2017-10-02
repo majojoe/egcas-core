@@ -41,6 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "menu/precisionbox.h"
 #include "menu/resulttype.h"
 #include "menu/mathfont.h"
+#include "menu/textfont.h"
 #include <QMessageBox>
 #include <QSpacerItem>
 #include <QComboBox>
@@ -110,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
     EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text,
                                                                                QPointF(60.0, 30.0)));
     QFont font_text(QString("Century Schoolbook L"));
-    font_text.setPixelSize(50);
+    font_text.setPointSize(50);
     text->setFont(font_text);
     text->setText("This is a test text");
 
@@ -187,6 +188,7 @@ void MainWindow::setupToolbar()
         m_precision = new PrecisionBox(m_document.data(), m_ui->mathToolBar, this);
         m_resulttype = new ResultType(m_document.data(), m_ui->mathToolBar, this);
         m_mathFont = new MathFont(m_document.data(), m_ui->mathToolBar, this);
+        m_textFont = new TextFont(m_document.data(), m_ui->mainToolBar, this);
 }
 
 

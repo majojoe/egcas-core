@@ -50,7 +50,7 @@ ResultType::ResultType(EgcDocument* doc, QToolBar* toolbar, QWidget* parent) : Q
         m_box->insertItem(0, QApplication::translate("ResultType", "standard", 0));
         m_box->insertItem(1, QApplication::translate("ResultType", "scientific", 0));
         m_box->insertItem(2, QApplication::translate("ResultType", "engineering", 0));
-        m_box->insertItem(3, QApplication::translate("ResultType", "integer ", 0));
+        m_box->insertItem(3, QApplication::translate("ResultType", "integer", 0));
         m_box->setToolTip(QApplication::translate("ResultType", "set result type of a formula", 0));
         connect(m_box, SIGNAL(currentIndexChanged(QString)), this, SLOT(resultTypeBox(QString)));
         emit m_box->currentIndexChanged(m_box->currentIndex());
