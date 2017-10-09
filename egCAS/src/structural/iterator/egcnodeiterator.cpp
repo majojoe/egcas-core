@@ -583,9 +583,7 @@ bool EgcNodeIterator::insertChildSpace(EgcNodeType type)
                 node = static_cast<EgcFlexNode*>(m_next);
                 child = m_previous;
                 forward = true;
-        }
-
-        if (m_previous->isFlexNode() && m_previous->getNodeType() == type) {
+        } else  if (m_previous->isFlexNode() && m_previous->getNodeType() == type) {
                 node = static_cast<EgcFlexNode*>(m_previous);
                 child = m_next;
                 forward = false;
