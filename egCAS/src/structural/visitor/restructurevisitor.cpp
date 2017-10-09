@@ -71,7 +71,7 @@ void ReStructureVisitor::visit(EgcBinaryNode* binary)
                 break;
         case EgcNodeType::EqualNode: {
                 if (m_state == EgcIteratorState::RightIteration) {
-                        assembleResult("_{%1_}=_{%2_}", binary);
+                        assembleResult("%1=%2", binary);
                 }
                 break;
         }
