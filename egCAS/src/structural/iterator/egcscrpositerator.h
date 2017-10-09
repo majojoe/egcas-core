@@ -223,6 +223,12 @@ public:
          * @return false if data was invalid, true if new data has been assigned
          */
         bool updateRestructureData(NodeIterReStructData& data);
+        /**
+         * @brief insertChildSpace insert an EgcEmpty child node at position where m_next or m_previous points to
+         * (this works e.g. with EgcFlexNode)
+         * @return true if everything went well, false otherwise
+         */
+        virtual bool insertChildSpace(void);
 
 private:
         /**

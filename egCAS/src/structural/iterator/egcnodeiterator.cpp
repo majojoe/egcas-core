@@ -572,20 +572,20 @@ EgcIteratorState EgcNodeIterator::getStatePreviousNode(void) const
 }
 
 
-bool EgcNodeIterator::insertChildSpace(void)
+bool EgcNodeIterator::insertChildSpace(EgcNodeType type)
 {
         EgcFlexNode* node = nullptr;
         EgcNode* child = nullptr;
         bool forward;
         quint32 index;
 
-        if (m_next->isFlexNode()) {
+        if (m_next->isFlexNode() && m_next->getNodeType() == type) {
                 node = static_cast<EgcFlexNode*>(m_next);
                 child = m_previous;
                 forward = true;
         }
 
-        if (m_previous->isFlexNode()) {
+        if (m_previous->isFlexNode() && m_previous->getNodeType() == type) {
                 node = static_cast<EgcFlexNode*>(m_previous);
                 child = m_next;
                 forward = false;
@@ -594,7 +594,8 @@ bool EgcNodeIterator::insertChildSpace(void)
         if (!node || !child)
                 return false;
 
-        node->getIndexOfChild(*child, index);
+        if (!node->getIndexOfChild(*child, index))
+                return false;
 
         if (forward) {
                 QScopedPointer<EgcNode> tempNode(EgcNodeCreator::create(EgcNodeType::EmptyNode));

@@ -460,3 +460,25 @@ bool EgcScrPosIterator::updateRestructureData(NodeIterReStructData& data)
 
         return true;
 }
+
+bool EgcScrPosIterator::insertChildSpace()
+{
+        if (!node())
+                return false;
+        EgcNodeIterator iter(*node());
+        if (node()->getNodeType() == EgcNodeType::FunctionNode)
+                (void) iter.next();
+
+        if (!iter.findNext(EgcNodeType::FunctionNode))
+                return false;
+        (void) iter.previous();
+        if (!iter.insertChildSpace(EgcNodeType::FunctionNode))
+                return false;
+        if (!iter.findNext(EgcNodeType::FunctionNode))
+                return false;
+        EgcNode& nd = iter.peekNext();
+
+        setCursorAtDelayed(&nd, true);
+
+        return true;
+}

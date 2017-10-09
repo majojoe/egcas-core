@@ -568,6 +568,9 @@ bool EgcFormulaEntity::insertOp(EgcAction operations)
                         return createAndInsertOp(EgcNodeType::RootNode);
                 if (operations.m_character == QChar('^'))
                         return createAndInsertOp(EgcNodeType::ExponentNode);
+                if (operations.m_character == QChar(',')) {
+                        return insertFunctionContainer();
+                }
         } else if (operations.m_op == EgcOperations::mathFunction) { // functions
                 EgcFunctionNode* fnc = dynamic_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
                 if (!fnc)
@@ -668,6 +671,12 @@ void EgcFormulaEntity::removeCharacter(bool before)
         m_item->updateView();
         m_item->hideCursors();
         showCurrentCursor();
+}
+
+bool EgcFormulaEntity::insertFunctionContainer(void)
+{
+
+        return m_scrIter->insertChildSpace();
 }
 
 void EgcFormulaEntity::moveCursor(bool forward)
