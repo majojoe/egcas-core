@@ -124,6 +124,22 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* node)
                 }
         }
         break;
+        case EgcNodeType::LogNode: {
+                if (m_state == EgcIteratorState::RightIteration) {
+                        id = getId(node);
+                        assembleResult("<mrow "%id%"><mi mathvariant=\"italic\">log</mi><mo>&ApplyFunction;</mo><mrow>"
+                                       "<mo>(</mo><mrow>%1</mrow><mo>)</mo></mrow></mrow>", node);
+                }
+        }
+        break;
+        case EgcNodeType::NatLogNode: {
+                if (m_state == EgcIteratorState::RightIteration) {
+                        id = getId(node);
+                        assembleResult("<mrow "%id%"><mi mathvariant=\"italic\">ln</mi><mo>&ApplyFunction;</mo><mrow>"
+                                       "<mo>(</mo><mrow>%1</mrow><mo>)</mo></mrow></mrow>", node);
+                }
+        }
+        break;
         case EgcNodeType::LParenthesisNode: {
                 if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);

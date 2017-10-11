@@ -96,6 +96,14 @@ void ReStructureVisitor::visit(EgcUnaryNode* unary)
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("(%1)", unary);
                 break;
+        case EgcNodeType::LogNode:
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("_log(%1)", unary);
+                break;
+        case EgcNodeType::NatLogNode:
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("log(%1)", unary);
+                break;
         case EgcNodeType::LParenthesisNode:
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("(%1", unary);

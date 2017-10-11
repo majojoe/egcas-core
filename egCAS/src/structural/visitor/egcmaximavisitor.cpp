@@ -100,6 +100,14 @@ void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("%1)", unary);
                 break;
+        case EgcNodeType::LogNode:
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("(log(%1)/log(10))", unary);
+                break;
+        case EgcNodeType::NatLogNode:
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("log(%1)", unary);
+                break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("-(%1)", unary);

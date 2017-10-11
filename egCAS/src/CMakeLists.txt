@@ -102,6 +102,8 @@ set(egcas_concrete_node_SOURCES
         structural/concreteNodes/egcvariablenode.cpp
         structural/concreteNodes/egcfunctionnode.cpp
         structural/concreteNodes/egcunaryminusnode.cpp
+        structural/concreteNodes/egclognode.cpp
+        structural/concreteNodes/egcnatlognode.cpp
         structural/concreteNodes/egcplusnode.cpp
         structural/concreteNodes/egcminusnode.cpp
         structural/concreteNodes/egcexponentnode.cpp

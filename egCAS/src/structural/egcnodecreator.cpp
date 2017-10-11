@@ -96,6 +96,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::ArgumentsNode:
                 retval = new (std::nothrow) EgcArgumentsNode();
                 break;
+        case EgcNodeType::NatLogNode:
+                retval = new (std::nothrow) EgcNatLogNode();
+                break;
         case EgcNodeType::AlnumNode:
                 retval = new (std::nothrow) EgcAlnumNode();
                 break;
@@ -128,6 +131,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
                 break;
         case EgcNodeType::ExponentNode:
                 retval = new (std::nothrow) EgcExponentNode();
+                break;
+        case EgcNodeType::LogNode:
+                retval = new (std::nothrow) EgcLogNode();
                 break;
         case EgcNodeType::RootNode:
                 retval = new (std::nothrow) EgcRootNode();
