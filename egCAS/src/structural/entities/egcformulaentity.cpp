@@ -450,6 +450,7 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
                 break;
         case EgcOperations::mathCharOperator:
         case EgcOperations::mathFunction:
+        case EgcOperations::internalFunction:
                 insertOperation(action);
                 break;
         case EgcOperations::homePressed:
@@ -582,6 +583,23 @@ bool EgcFormulaEntity::insertOp(EgcAction operations)
                                 m_scrIter->setCursorAtDelayed(fnc->getChild(0), true);
                         } else {
                                 m_scrIter->setCursorAtDelayed(fnc, false);
+                        }
+                }
+        } else if (operations.m_op == EgcOperations::internalFunction) { // internal functions
+                QString name;
+                if (!operations.m_additionalData.isNull())
+                        name = operations.m_additionalData.toString();
+
+                if (name == "ln")
+                        retval = createAndInsertOp(EgcNodeType::NatLogNode);
+                else if (name == "log")
+                        retval = createAndInsertOp(EgcNodeType::LogNode);
+
+                if (retval) {
+                        const EgcNode *nd = nullptr;
+                        if (m_scrIter->node()) {
+                                nd = m_scrIter->node();
+                                m_scrIter->setCursorAtDelayed(const_cast<EgcNode*>(nd), true);
                         }
                 }
         }

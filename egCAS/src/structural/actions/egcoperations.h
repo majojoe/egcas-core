@@ -39,6 +39,7 @@ enum class EgcOperations
         // view based operations (e.g. s.th. happened on the view)
         mathCharOperator,               ///< math operator that can be determined by a char only
         mathFunction,                   ///< a math function that can have an additional name
+        internalFunction,               ///< a internal math function that has an additional name
         formulaActivated,               ///< formula was activated (e.g. got focus on screen)
         formulaDeactivated,             ///< formula was deactivated (e.g. lost focus on screen)
         cursorForward,                  ///< user wants to iterate forward in a formula
