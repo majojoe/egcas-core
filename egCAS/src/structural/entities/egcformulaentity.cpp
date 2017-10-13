@@ -569,9 +569,28 @@ bool EgcFormulaEntity::insertOp(EgcAction operations)
                         return createAndInsertOp(EgcNodeType::RootNode);
                 if (operations.m_character == QChar('^'))
                         return createAndInsertOp(EgcNodeType::ExponentNode);
-                if (operations.m_character == QChar(',')) {
+                if (operations.m_character == QChar(','))
                         return insertFunctionContainer();
+                if (operations.m_character == QChar(8747)) {
+                        bool ret = createAndInsertOp(EgcNodeType::IntegralNode);
+                        if (ret) {
+                                const EgcNode *nd = nullptr;
+                                if (m_scrIter->node()) {
+                                        nd = m_scrIter->node();
+                                        EgcContainerNode *par = nullptr;
+                                        par = nd->getParent();
+                                        if (par->getNodeType() == EgcNodeType::IntegralNode) {
+                                                static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+                                                if (operations.m_modificators == EgcOpModificators::definiteIntegral) {
+                                                        static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+                                                        static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+                                                }
+                                        }
+                                }
+                        }
+                        return ret;
                 }
+
         } else if (operations.m_op == EgcOperations::mathFunction) { // functions
                 EgcFunctionNode* fnc = dynamic_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
                 if (!fnc)

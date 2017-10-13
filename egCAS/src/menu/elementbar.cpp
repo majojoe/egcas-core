@@ -59,6 +59,7 @@ void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* s
 {
         setupCalcSection(parent, barLayout, scene);
         setupGreekSection(parent, barLayout, scene);
+        setupAnalysisSection(parent, barLayout, scene);
 }
 
 void ElementBar::setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
@@ -153,6 +154,24 @@ void ElementBar::setupGreekSection(QWidget* parent, QVBoxLayout* barLayout, EgCa
                 section->addElement(MathElement("χ", EgcAction(EgcOperations::alnumKeyPressed, QChar(967))));
                 section->addElement(MathElement("ψ", EgcAction(EgcOperations::alnumKeyPressed, QChar(968))));
                 section->addElement(MathElement("ω", EgcAction(EgcOperations::alnumKeyPressed, QChar(969))));
+        }
+
+        bool ass_ret;
+        ass_ret = connect(section, &MathSection::actionTriggered, scene, &EgCasScene::routeAction);
+        Q_ASSERT(ass_ret == true);
+}
+
+void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
+{
+        MathSection* section = getNewSection(parent, barLayout, tr("Analysis"));
+        if (section) {
+                section->setChecked();
+
+                section->addElement(MathElement("∫", EgcAction(EgcOperations::mathCharOperator, QChar(8747), 0, 0, EgcOpModificators::standard)));
+                section->addElement(MathElement("∫(a,b)", EgcAction(EgcOperations::mathCharOperator, QChar(8747), 0, 0, EgcOpModificators::definiteIntegral)));
+
+                section->newRow();
+
         }
 
         //Analysis
