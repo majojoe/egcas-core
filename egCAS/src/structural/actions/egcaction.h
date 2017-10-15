@@ -42,28 +42,61 @@ class EgcAction
 {
 public:
         EgcAction() : m_op{EgcOperations::formulaActivated}, m_elementId{0}, m_subId{0},
-                      m_modificators{EgcOpModificators::standard} {}
-        EgcAction(EgcOperations op, QChar ch = QChar(), quint32 elId = 0, quint32 subId = 0,
-                  EgcOpModificators mod = EgcOpModificators::standard, QVariant addDat = QVariant()) :
+                      m_intType{InternalFunctionType::undefined},
+                      m_OpModificators{OpModificators::standard}, m_lookModificatiors{LookModificators::standard} {}
+        EgcAction(EgcOperations op, QChar ch, quint32 elId = 0, quint32 subId = 0,
+                  OpModificators mod = OpModificators::standard, LookModificators look = LookModificators::standard,
+                  QVariant addDat = QVariant(), InternalFunctionType intType = InternalFunctionType::undefined) :
                                                                             m_op{op},
                                                                             m_character{ch},
                                                                             m_elementId{elId},
                                                                             m_subId{subId},
-                                                                            m_modificators{mod},
+                                                                            m_intType{intType},
+                                                                            m_OpModificators{mod},
+                                                                            m_lookModificatiors{look},
                                                                             m_additionalData{addDat}
 
         {}
 
+        EgcAction(EgcOperations op,
+                  InternalFunctionType intType,
+                  OpModificators mod = OpModificators::standard,
+                  LookModificators look = LookModificators::standard,
+                  QVariant addDat = QVariant()) :
+                                      m_op{op}, m_character{QChar()},
+                                      m_elementId{0}, m_subId{0},
+                                      m_intType{intType},
+                                      m_OpModificators{mod},
+                                      m_lookModificatiors{look},
+                                      m_additionalData{addDat}
+        {}
+
+        EgcAction(EgcOperations op,
+                  OpModificators mod = OpModificators::standard,
+                  LookModificators look = LookModificators::standard,
+                  QVariant addDat = QVariant()) :
+                                      m_op{op}, m_character{QChar()},
+                                      m_elementId{0}, m_subId{0},
+                                      m_intType{InternalFunctionType::undefined},
+                                      m_OpModificators{mod},
+                                      m_lookModificatiors{look},
+                                      m_additionalData{addDat}
+        {}
+
         EgcAction(const EgcAction &rhs) {m_op = rhs.m_op; m_character = rhs.m_character; m_elementId = rhs.m_elementId;
-                                         m_subId = rhs.m_subId; m_modificators = rhs.m_modificators;
-                                                                  m_additionalData = rhs.m_additionalData;}
+                                         m_subId = rhs.m_subId; m_intType = rhs.m_intType ;
+                                         m_OpModificators = rhs.m_OpModificators;
+                                         m_lookModificatiors = rhs.m_lookModificatiors;
+                                         m_additionalData = rhs.m_additionalData;}
         ~EgcAction() {}
 
         EgcOperations m_op;               ///< the operation to do
         QChar m_character;                ///< any character that comes along with this action (e.g. user pressed any key)
         quint32 m_elementId;              ///< any element id. Must be interpreted by receiver class
         quint32 m_subId;                  ///< additional id data. Must be interpreted by the receiver class
-        EgcOpModificators m_modificators; ///< any modificators of the action/operation
+        InternalFunctionType m_intType;   ///< type of the internal function
+        OpModificators m_OpModificators;  ///< any modificators of the action/operation
+        LookModificators m_lookModificatiors; ///< modificators for the look of an operator
         QVariant m_additionalData;        ///< an action can have some additional data
 };
 

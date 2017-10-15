@@ -56,13 +56,36 @@ enum class EgcOperations
 };
 
 /**
- * @brief The EgcOperations enum These are modificators for the above operations
+ * @brief The OpModificators enum These are modificators for the above operations
  */
-enum class EgcOpModificators
+enum class OpModificators
 {
         standard,
-        definiteIntegral,
+        definiteIntegral,                       ///< if the integral is a definite one (with limits)
+};
 
+/**
+ * @brief The LookModificators enum These are modificators for the above operations
+ */
+enum class LookModificators
+{
+        standard,
+        differential_lagrange_notation_1,       ///< default is leibnitz notation dn(f(x))/dxn
+        differential_lagrange_notation_2,       ///< default is leibnitz notation dn(f(x))/dxn
+        differential_lagrange_notation_3,       ///< default is leibnitz notation dn(f(x))/dxn
+
+};
+
+/**
+ * @brief The InternalFunctionType enum denotes the type of the internal function
+ */
+enum class InternalFunctionType
+{
+        undefined,
+        logarithm,
+        natLogarithm,
+        integral,
+        differential,
 };
 
 #endif // EGCOPERATIONS_H

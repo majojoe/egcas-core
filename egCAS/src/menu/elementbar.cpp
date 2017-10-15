@@ -77,18 +77,18 @@ void ElementBar::setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCas
                 section->addElement(MathElement("^", EgcAction(EgcOperations::mathCharOperator, QChar('^'))));
                 section->addElement(MathElement("±", EgcAction(EgcOperations::mathCharOperator, QChar(177))));
                 section->addElement(MathElement("√", EgcAction(EgcOperations::mathCharOperator, QChar(8730))));
-                section->addElement(MathElement("ln", EgcAction(EgcOperations::internalFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("ln"))));
-                section->addElement(MathElement("log", EgcAction(EgcOperations::internalFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("log"))));
-                section->addElement(MathElement("sin", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("sin"))));
-                section->addElement(MathElement("cos", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("cos"))));                
-                section->addElement(MathElement("tan", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("tan"))));
+                section->addElement(MathElement("ln", EgcAction(EgcOperations::internalFunction, InternalFunctionType::natLogarithm)));
+                section->addElement(MathElement("log", EgcAction(EgcOperations::internalFunction, InternalFunctionType::logarithm)));
+                section->addElement(MathElement("sin", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("sin"))));
+                section->addElement(MathElement("cos", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("cos"))));
+                section->addElement(MathElement("tan", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("tan"))));
                 section->addElement(MathElement("(", EgcAction(EgcOperations::mathCharOperator, QChar('('))));
                 section->addElement(MathElement(")", EgcAction(EgcOperations::mathCharOperator, QChar(')'))));
-                section->addElement(MathElement("f(x)", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString(""))));
+                section->addElement(MathElement("f(x)", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString(""))));
                 section->addElement(MathElement(",", EgcAction(EgcOperations::mathCharOperator, QChar(','))));
-                section->addElement(MathElement("asin", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("asin"))));
-                section->addElement(MathElement("acos", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("acos"))));
-                section->addElement(MathElement("atan", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("atan"))));
+                section->addElement(MathElement("asin", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("asin"))));
+                section->addElement(MathElement("acos", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("acos"))));
+                section->addElement(MathElement("atan", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("atan"))));
         }
 
         bool ass_ret;
@@ -167,9 +167,13 @@ void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, E
         if (section) {
                 section->setChecked();
 
-                section->addElement(MathElement("∫", EgcAction(EgcOperations::mathCharOperator, QChar(8747), 0, 0, EgcOpModificators::standard)));
-                section->addElement(MathElement("∫(a,b)", EgcAction(EgcOperations::mathCharOperator, QChar(8747), 0, 0, EgcOpModificators::definiteIntegral)));
-
+                section->addElement(MathElement("∫", EgcAction(EgcOperations::internalFunction, InternalFunctionType::integral)));
+                section->addElement(MathElement(":/res/fnc/integral_definite.png", EgcAction(EgcOperations::internalFunction, InternalFunctionType::integral, OpModificators::definiteIntegral), true));
+                section->addElement(MathElement("f'(x)", EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential, OpModificators::standard, LookModificators::differential_lagrange_notation_1)));
+                section->addElement(MathElement("f''(x)", EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential, OpModificators::standard, LookModificators::differential_lagrange_notation_2)));
+                section->newRow();
+                section->addElement(MathElement("f'''(x)", EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential, OpModificators::standard, LookModificators::differential_lagrange_notation_3)));
+                section->addElement(MathElement("dn(f(x))/dxn", EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential)));
                 section->newRow();
 
         }
