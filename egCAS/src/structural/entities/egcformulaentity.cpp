@@ -617,7 +617,29 @@ bool EgcFormulaEntity::insertOp(EgcAction operations)
                                 }
                         }
                         return ret;
+                } else if (operations.m_intType == InternalFunctionType::differential) {
+                        bool ret = createAndInsertOp(EgcNodeType::DifferentialNode);
+                        if (ret) {
+                                const EgcNode *nd = nullptr;
+                                if (m_scrIter->node()) {
+                                        nd = m_scrIter->node();
+                                        EgcContainerNode *par = nullptr;
+                                        par = nd->getParent();
+                                        if (par->getNodeType() == EgcNodeType::DifferentialNode) {
+                                                EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(par);
+                                                static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_1)
+                                                        diff->setNrDerivative(1);
+                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_2)
+                                                        diff->setNrDerivative(2);
+                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_3)
+                                                        diff->setNrDerivative(3);
+                                        }
+                                }
+                        }
+                        return ret;
                 }
+
         }
         return retval;
 }
