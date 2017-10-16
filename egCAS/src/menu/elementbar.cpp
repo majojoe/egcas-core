@@ -166,14 +166,24 @@ void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, E
         MathSection* section = getNewSection(parent, barLayout, tr("Analysis"));
         if (section) {
                 section->setChecked();
-
-                section->addElement(MathElement("∫", EgcAction(EgcOperations::internalFunction, InternalFunctionType::integral)));
-                section->addElement(MathElement(":/res/fnc/integral_definite.png", EgcAction(EgcOperations::internalFunction, InternalFunctionType::integral, OpModificators::definiteIntegral), true));
-                section->addElement(MathElement("f'(x)", EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential, OpModificators::standard, LookModificators::differential_lagrange_notation_1)));
-                section->addElement(MathElement("f''(x)", EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential, OpModificators::standard, LookModificators::differential_lagrange_notation_2)));
+                section->addElement(MathElement(":/res/fnc/integral.png",
+                                                EgcAction(EgcOperations::internalFunction, InternalFunctionType::integral, OpModificators::standard),
+                                                true));
+                section->addElement(MathElement(":/res/fnc/integral_definite.png",
+                                                EgcAction(EgcOperations::internalFunction, InternalFunctionType::integral,
+                                                          OpModificators::definiteIntegral), true));
+                section->addElement(MathElement(":/res/fnc/differential_lagrange_1.png",
+                                                EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential,
+                                                          OpModificators::standard, LookModificators::differential_lagrange_notation_1), true));
                 section->newRow();
-                section->addElement(MathElement("f'''(x)", EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential, OpModificators::standard, LookModificators::differential_lagrange_notation_3)));
-                section->addElement(MathElement("dn(f(x))/dxn", EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential)));
+                section->addElement(MathElement(":/res/fnc/differential_lagrange_2.png",
+                                                EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential,
+                                                          OpModificators::standard, LookModificators::differential_lagrange_notation_2), true));
+                section->addElement(MathElement(":/res/fnc/differential_lagrange_3.png",
+                                                EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential,
+                                                          OpModificators::standard, LookModificators::differential_lagrange_notation_3), true));
+                section->addElement(MathElement(":/res/fnc/differential_leibnitz.png", EgcAction(EgcOperations::internalFunction,
+                                                                          InternalFunctionType::differential), true));
                 section->newRow();
 
         }
