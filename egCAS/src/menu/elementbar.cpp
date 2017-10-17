@@ -59,7 +59,7 @@ void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* s
 {
         setupCalcSection(parent, barLayout, scene);
         setupGreekSection(parent, barLayout, scene);
-        setupAnalysisSection(parent, barLayout, scene);
+        //setupAnalysisSection(parent, barLayout, scene);
 }
 
 void ElementBar::setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
