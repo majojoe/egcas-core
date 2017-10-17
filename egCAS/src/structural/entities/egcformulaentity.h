@@ -394,6 +394,11 @@ private:
          */
         EgcNode* createAndInsertOperation(EgcNodeType type);
         /**
+         * @brief insertFunctionContainer insert any function node at current position of the iterator
+         * @return true if the insert operation was successful, false otherwise
+         */
+        bool insertFunctionContainer(void);
+        /**
          * @brief createSubId create sub id if current node is a variable node and has no sub id yet.
          */
         void createSubId(void);

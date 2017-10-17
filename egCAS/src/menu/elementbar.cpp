@@ -59,6 +59,7 @@ void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* s
 {
         setupCalcSection(parent, barLayout, scene);
         setupGreekSection(parent, barLayout, scene);
+        //setupAnalysisSection(parent, barLayout, scene);
 }
 
 void ElementBar::setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
@@ -76,14 +77,18 @@ void ElementBar::setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCas
                 section->addElement(MathElement("^", EgcAction(EgcOperations::mathCharOperator, QChar('^'))));
                 section->addElement(MathElement("±", EgcAction(EgcOperations::mathCharOperator, QChar(177))));
                 section->addElement(MathElement("√", EgcAction(EgcOperations::mathCharOperator, QChar(8730))));
-                section->addElement(MathElement("ln", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("ln"))));
-                section->addElement(MathElement("log", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("log"))));
-                section->addElement(MathElement("sin", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("sin"))));
-                section->addElement(MathElement("cos", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("cos"))));
-                section->addElement(MathElement("tan", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString("tan"))));
+                section->addElement(MathElement("ln", EgcAction(EgcOperations::internalFunction, InternalFunctionType::natLogarithm)));
+                section->addElement(MathElement("log", EgcAction(EgcOperations::internalFunction, InternalFunctionType::logarithm)));
+                section->addElement(MathElement("sin", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("sin"))));
+                section->addElement(MathElement("cos", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("cos"))));
+                section->addElement(MathElement("tan", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("tan"))));
                 section->addElement(MathElement("(", EgcAction(EgcOperations::mathCharOperator, QChar('('))));
                 section->addElement(MathElement(")", EgcAction(EgcOperations::mathCharOperator, QChar(')'))));
-                section->addElement(MathElement("f(x)", EgcAction(EgcOperations::mathFunction, QChar(), 0, 0, EgcOpModificators::standard, QString(""))));
+                section->addElement(MathElement("f(x)", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString(""))));
+                section->addElement(MathElement(",", EgcAction(EgcOperations::mathCharOperator, QChar(','))));
+                section->addElement(MathElement("asin", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("asin"))));
+                section->addElement(MathElement("acos", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("acos"))));
+                section->addElement(MathElement("atan", EgcAction(EgcOperations::mathFunction, OpModificators::standard, LookModificators::standard, QString("atan"))));
         }
 
         bool ass_ret;
@@ -149,6 +154,38 @@ void ElementBar::setupGreekSection(QWidget* parent, QVBoxLayout* barLayout, EgCa
                 section->addElement(MathElement("χ", EgcAction(EgcOperations::alnumKeyPressed, QChar(967))));
                 section->addElement(MathElement("ψ", EgcAction(EgcOperations::alnumKeyPressed, QChar(968))));
                 section->addElement(MathElement("ω", EgcAction(EgcOperations::alnumKeyPressed, QChar(969))));
+        }
+
+        bool ass_ret;
+        ass_ret = connect(section, &MathSection::actionTriggered, scene, &EgCasScene::routeAction);
+        Q_ASSERT(ass_ret == true);
+}
+
+void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
+{
+        MathSection* section = getNewSection(parent, barLayout, tr("Analysis"));
+        if (section) {
+                section->setChecked();
+                section->addElement(MathElement(":/res/fnc/integral.png",
+                                                EgcAction(EgcOperations::internalFunction, InternalFunctionType::integral, OpModificators::standard),
+                                                true));
+                section->addElement(MathElement(":/res/fnc/integral_definite.png",
+                                                EgcAction(EgcOperations::internalFunction, InternalFunctionType::integral,
+                                                          OpModificators::definiteIntegral), true));
+                section->addElement(MathElement(":/res/fnc/differential_lagrange_1.png",
+                                                EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential,
+                                                          OpModificators::standard, LookModificators::differential_lagrange_notation_1), true));
+                section->newRow();
+                section->addElement(MathElement(":/res/fnc/differential_lagrange_2.png",
+                                                EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential,
+                                                          OpModificators::standard, LookModificators::differential_lagrange_notation_2), true));
+                section->addElement(MathElement(":/res/fnc/differential_lagrange_3.png",
+                                                EgcAction(EgcOperations::internalFunction, InternalFunctionType::differential,
+                                                          OpModificators::standard, LookModificators::differential_lagrange_notation_3), true));
+                section->addElement(MathElement(":/res/fnc/differential_leibnitz.png", EgcAction(EgcOperations::internalFunction,
+                                                                          InternalFunctionType::differential), true));
+                section->newRow();
+
         }
 
         //Analysis

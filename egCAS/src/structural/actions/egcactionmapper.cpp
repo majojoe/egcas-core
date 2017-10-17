@@ -116,6 +116,9 @@ EgcAction EgcActionMapper::map(QKeyEvent *event)
         case Qt::Key_Colon:
                 action = getMathOperationAction(':');
                 break;
+        case Qt::Key_Comma:
+                action = getMathOperationAction(',');
+                break;
 
         default:
                 action.m_op = EgcOperations::noAction;

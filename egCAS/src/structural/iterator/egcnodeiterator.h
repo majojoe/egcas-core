@@ -145,9 +145,10 @@ public:
         /**
          * @brief insertChildSpace insert an EgcEmpty child node at position where m_next or m_previous points to
          * (this works e.g. with EgcFlexNode)
+         * @param type the node type where the child shall be inserted
          * @return true if everything went well, false otherwise
          */
-        virtual bool insertChildSpace(void);
+        virtual bool insertChildSpace(EgcNodeType type);
         /**
          * @brief replaceBinEmptyNodeBy replaces a binary empty node the given type
          * @param type the type of the node that will replace the empty node

@@ -63,6 +63,7 @@ for node in nodes:
     cog.outl("#include \"concreteNodes/egc%s.h\"" % node[1].lower())
 
 ]]]*/
+#include "concreteNodes/egcnatlognode.h"
 #include "concreteNodes/egcalnumnode.h"
 #include "concreteNodes/egcmultiplicationnode.h"
 #include "concreteNodes/egcvariablenode.h"
@@ -74,6 +75,7 @@ for node in nodes:
 #include "concreteNodes/egcintegralnode.h"
 #include "concreteNodes/egcdefinitionnode.h"
 #include "concreteNodes/egcexponentnode.h"
+#include "concreteNodes/egclognode.h"
 #include "concreteNodes/egcrootnode.h"
 #include "concreteNodes/egcbinemptynode.h"
 #include "concreteNodes/egcfnccontainernode.h"

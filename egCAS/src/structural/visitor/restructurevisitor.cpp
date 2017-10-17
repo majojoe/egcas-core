@@ -71,7 +71,7 @@ void ReStructureVisitor::visit(EgcBinaryNode* binary)
                 break;
         case EgcNodeType::EqualNode: {
                 if (m_state == EgcIteratorState::RightIteration) {
-                        assembleResult("_{%1_}=_{%2_}", binary);
+                        assembleResult("%1=%2", binary);
                 }
                 break;
         }
@@ -95,6 +95,14 @@ void ReStructureVisitor::visit(EgcUnaryNode* unary)
         case EgcNodeType::ParenthesisNode:
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("(%1)", unary);
+                break;
+        case EgcNodeType::LogNode:
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("_log(%1)", unary);
+                break;
+        case EgcNodeType::NatLogNode:
+                if (m_state == EgcIteratorState::RightIteration)
+                        assembleResult("log(%1)", unary);
                 break;
         case EgcNodeType::LParenthesisNode:
                 if (m_state == EgcIteratorState::RightIteration)

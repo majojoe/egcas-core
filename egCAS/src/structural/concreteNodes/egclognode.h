@@ -26,49 +26,35 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#include <QString>
-#include <QtTest>
-#include "../../src/view/egcformulaitem.h"
+#ifndef EGCLOGNODE_H
+#define EGCLOGNODE_H
 
-class EgcasTest_View : public QObject
+#include "../specialNodes/egcunarynode.h"
+
+/**
+ * @brief The LogNode class is a class that reflects the logarithmus with base 10
+ */
+class EgcLogNode : public EgcUnaryNode
 {
-        Q_OBJECT
-
+        //set the node type of this expression
+        EGC_SET_EXPRESSION_TYPE(EgcLogNode, EgcNodeType::LogNode);
 public:
-        EgcasTest_View();
-
-private Q_SLOTS:
-        void testSceneItemSorting();
+        EgcLogNode();
+        /**
+         * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
+         * left side of the container)
+         * @param side the side to test for cursor snap.
+         * @return true if the cursor will snap in at the given side, false otherwise
+         */
+        virtual bool cursorSnaps(EgcNodeSide side) const override;
+        /**
+         * @brief visibleSigns find out where the node has visible signs (e.g. a division node has visible signs in the
+         * middle of the container)
+         * @param side the side to test for visible signs
+         * @return true if the given side of the node has visible signs.
+         */
+        virtual bool visibleSigns(EgcNodeSide side) const override;
+protected:
 };
 
-EgcasTest_View::EgcasTest_View()
-{
-}
-
-void EgcasTest_View::testSceneItemSorting()
-{
-        QString dummy("");
-        EgcFormulaItem *item1 = new EgcFormulaItem(dummy, QPointF(120.001, 2000.00003));
-        EgcFormulaItem *item2 = new EgcFormulaItem(dummy, QPointF(120.001, 2000.00004));
-        //test the bigger and smaller operator overload of the items (for y coordinates)
-        QVERIFY(*item1 < *item2);
-        QVERIFY(!(*item2 < *item1));
-
-        item1->setPos(QPointF(65665465.21565, 6516.32115610));
-        item2->setPos(QPointF(65665465.21566, 6516.32115610));
-        //test the bigger and smaller operator overload of the items (for x coordinates)
-        QVERIFY(item1->pos().x() == 65665465.21565);
-        QVERIFY(item1->pos().y() == 6516.32115610);
-        QVERIFY(item2->pos().x() == 65665465.21566);
-        QVERIFY(item2->pos().y() == 6516.32115610);
-
-        QVERIFY(*item1 < *item2);
-        QVERIFY(!(*item2 < *item1));
-
-        delete(item1);
-        delete(item2);
-}
-
-QTEST_MAIN(EgcasTest_View)
-
-#include "tst_egcastest_view.moc"
+#endif // EGCLOGNODE_H

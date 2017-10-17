@@ -1275,9 +1275,9 @@ void EgcasTest_Structural::testFlexNode()
         QVERIFY(nodePointer != nullptr);
         static_cast<EgcNumberNode*>(nodePointer)->setValue("3");
         node3 = nodePointer;
-        QVERIFY(iter9.insertChildSpace() == true);
-        QVERIFY(iter9.insertChildSpace() == true);
-        QVERIFY(iter9.insertChildSpace() == true);
+        QVERIFY(iter9.insertChildSpace(EgcNodeType::FunctionNode) == true);
+        QVERIFY(iter9.insertChildSpace(EgcNodeType::FunctionNode) == true);
+        QVERIFY(iter9.insertChildSpace(EgcNodeType::FunctionNode) == true);
         nodePointer = &(iter9.next());
         QVERIFY(nodePointer->isFlexNode() == true);
         nodePointer = &(iter9.next());
@@ -1376,9 +1376,9 @@ void EgcasTest_Structural::testFlexNodeVisitors()
         QVERIFY(nodePointer != nullptr);
         static_cast<EgcNumberNode*>(nodePointer)->setValue("3");
         node3 = nodePointer;
-        QVERIFY(iter9.insertChildSpace() == true);
-        QVERIFY(iter9.insertChildSpace() == true);
-        QVERIFY(iter9.insertChildSpace() == true);
+        QVERIFY(iter9.insertChildSpace(EgcNodeType::FunctionNode) == true);
+        QVERIFY(iter9.insertChildSpace(EgcNodeType::FunctionNode) == true);
+        QVERIFY(iter9.insertChildSpace(EgcNodeType::FunctionNode) == true);
         nodePointer = &(iter9.next());
         QVERIFY(nodePointer->isFlexNode() == true);
         nodePointer = &(iter9.next());

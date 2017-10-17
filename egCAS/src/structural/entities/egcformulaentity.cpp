@@ -450,6 +450,7 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
                 break;
         case EgcOperations::mathCharOperator:
         case EgcOperations::mathFunction:
+        case EgcOperations::internalFunction:
                 insertOperation(action);
                 break;
         case EgcOperations::homePressed:
@@ -568,6 +569,8 @@ bool EgcFormulaEntity::insertOp(EgcAction operations)
                         return createAndInsertOp(EgcNodeType::RootNode);
                 if (operations.m_character == QChar('^'))
                         return createAndInsertOp(EgcNodeType::ExponentNode);
+                if (operations.m_character == QChar(','))
+                        return insertFunctionContainer();
         } else if (operations.m_op == EgcOperations::mathFunction) { // functions
                 EgcFunctionNode* fnc = dynamic_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
                 if (!fnc)
@@ -581,8 +584,63 @@ bool EgcFormulaEntity::insertOp(EgcAction operations)
                                 m_scrIter->setCursorAtDelayed(fnc, false);
                         }
                 }
-        }
+        } else if (operations.m_op == EgcOperations::internalFunction) { // internal functions
+                if (operations.m_intType == InternalFunctionType::natLogarithm
+                     || operations.m_intType == InternalFunctionType::logarithm) {
+                        if (operations.m_intType == InternalFunctionType::natLogarithm)
+                                retval = createAndInsertOp(EgcNodeType::NatLogNode);
+                        else if (operations.m_intType == InternalFunctionType::logarithm)
+                                retval = createAndInsertOp(EgcNodeType::LogNode);
 
+                        if (retval) {
+                                const EgcNode *nd = nullptr;
+                                if (m_scrIter->node()) {
+                                        nd = m_scrIter->node();
+                                        m_scrIter->setCursorAtDelayed(const_cast<EgcNode*>(nd), true);
+                                }
+                        }
+                } else if (operations.m_intType == InternalFunctionType::integral) {
+                        bool ret = createAndInsertOp(EgcNodeType::IntegralNode);
+                        if (ret) {
+                                const EgcNode *nd = nullptr;
+                                if (m_scrIter->node()) {
+                                        nd = m_scrIter->node();
+                                        EgcContainerNode *par = nullptr;
+                                        par = nd->getParent();
+                                        if (par->getNodeType() == EgcNodeType::IntegralNode) {
+                                                static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+                                                if (operations.m_OpModificators == OpModificators::definiteIntegral) {
+                                                        static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+                                                        static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+                                                }
+                                        }
+                                }
+                        }
+                        return ret;
+                } else if (operations.m_intType == InternalFunctionType::differential) {
+                        bool ret = createAndInsertOp(EgcNodeType::DifferentialNode);
+                        if (ret) {
+                                const EgcNode *nd = nullptr;
+                                if (m_scrIter->node()) {
+                                        nd = m_scrIter->node();
+                                        EgcContainerNode *par = nullptr;
+                                        par = nd->getParent();
+                                        if (par->getNodeType() == EgcNodeType::DifferentialNode) {
+                                                EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(par);
+                                                static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_1)
+                                                        diff->setNrDerivative(1);
+                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_2)
+                                                        diff->setNrDerivative(2);
+                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_3)
+                                                        diff->setNrDerivative(3);
+                                        }
+                                }
+                        }
+                        return ret;
+                }
+
+        }
         return retval;
 }
 
@@ -668,6 +726,12 @@ void EgcFormulaEntity::removeCharacter(bool before)
         m_item->updateView();
         m_item->hideCursors();
         showCurrentCursor();
+}
+
+bool EgcFormulaEntity::insertFunctionContainer(void)
+{
+
+        return m_scrIter->insertChildSpace();
 }
 
 void EgcFormulaEntity::moveCursor(bool forward)

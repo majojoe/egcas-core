@@ -79,10 +79,14 @@ void MathSection::addElement(MathElement element)
         btn = new QPushButton(m_section);
         btn->setStyleSheet("padding:0px;background-color:rgb(64, 66, 68);");
         btn->setFlat(true);
-        if (element.m_isIcon)
+        if (element.m_isIcon) {
+                QPixmap pix = QPixmap(element.m_designator);
+                QSize size = pix.size();
                 btn->setIcon(QIcon(element.m_designator));
-        else
+                btn->setIconSize(size);
+        } else {
                 btn->setText(element.m_designator);
+        }
         btn->setFocusPolicy(Qt::FocusPolicy::NoFocus);
         retval = connect(btn, SIGNAL(clicked()), m_signalMapper, SLOT(map()));
         Q_ASSERT(retval == true);

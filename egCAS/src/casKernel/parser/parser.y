@@ -107,8 +107,10 @@
 %token SQROOT "sqrt";
 %token INTEGRAL "_integrate";
 %token DIFFERENTIAL "_diff";
-%token ROOT "_root"; //only for debugging purposes
-%token EMPTY "_empty"; //only for debugging purposes
+%token ROOT "_root";
+%token EMPTY "_empty";
+%token LOGARITHM "_log";
+%token NATLOGARITHM "_ln";
 %token ITERATOR1;
 %token ITERATOR2;
 %token ITERATOR3;
@@ -162,6 +164,8 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | NAMES VARSUB        {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1 + $2);}
      | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}
      | BUILTIN_FNCS "(" explist ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
+     | LOGARITHM "(" explist ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::LogNode, $3);}
+     | NATLOGARITHM "(" explist ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::NatLogNode, $3);}
      | "sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}
      | INTEGRAL "(" explist ")" {$$ = interpreter.changeFlexExpressionType(EgcNodeType::IntegralNode, $3);}
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}

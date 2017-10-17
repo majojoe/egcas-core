@@ -69,6 +69,10 @@ private:
          * @brief setupGreekSection setup greek section
          */
         static void setupGreekSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
+        /**
+         * @brief setupAnalysisSection setup analysis section
+         */
+        static void setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
 
         explicit ElementBar();
         virtual ~ElementBar();
