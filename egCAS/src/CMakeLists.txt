@@ -136,10 +136,13 @@ set(egcas_SOURCES
         structural/egcnodecreator.cpp
         structural/visitor/egcnodevisitor.cpp 
         structural/visitor/egcmathmllookup.cpp
+        structural/visitor/formulascrvector.cpp
+        structural/visitor/formulascrelement.cpp
         structural/specialNodes/egccontainernode.cpp 
         structural/entities/egcformulaentity.cpp
         structural/iterator/egcnodeiterator.cpp
         structural/iterator/egcscrpositerator.cpp
+        structural/iterator/formulascriter.cpp
         structural/iterator/screenHelpers/egcidnodeiter.cpp
         structural/iterator/screenHelpers/egcsubidnodeiter.cpp
         structural/specialNodes/egcbasenode.cpp
