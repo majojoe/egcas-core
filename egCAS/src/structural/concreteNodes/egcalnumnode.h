@@ -120,6 +120,21 @@ public:
          * @return true if node is a child of a atomic node, false if NOT a child of a atomic node (majority).
          */
         virtual bool isAtomicallyBoundChild(void) const override;
+        /**
+         * @brief encode encodes a string that contains unicode signs as html escape sequences + replaces single _ with
+         * __ and also the start and end of the html escape sequences with sequences the calculation kernel can work
+         * with
+         * @param str the string to encode
+         * @return the encoded string
+         */
+        static QString encode(const QString& str);
+        /**
+         * @brief decode decodes the given string from escape sequences the calculation kernel can work with back to
+         * unicode signs.
+         * @param str the string to decode
+         * @return the string decoded to human readable signs
+         */
+        static QString decode(const QString& str);
 
 protected:
         /**
@@ -137,6 +152,11 @@ protected:
         virtual bool remove(int position);
 
 private:
+        /**
+         * @brief optimizeRegex optimizes the regeges
+         */
+        static void optimizeRegexes(void);
+
         QString m_value;                                ///< the value of the number
         bool m_firstCharMightBeNumber;                  ///< if true, first char can also be a number
         static QRegularExpression s_validator;          ///< a validator for character inputs

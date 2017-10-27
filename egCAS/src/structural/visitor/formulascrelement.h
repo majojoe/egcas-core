@@ -37,7 +37,7 @@ class FormulaScrElement
 {
 public:
         FormulaScrElement();
-public:
+
         QString m_value;        ///< formula element that is visible as entity on the screen
         quint32 m_id;           ///< id that describes formula elements that belong to each other
         EgcNode* m_node;        ///< pointer to the node that created this element

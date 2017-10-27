@@ -136,7 +136,7 @@ set(egcas_SOURCES
         structural/egcnodecreator.cpp
         structural/visitor/egcnodevisitor.cpp 
         structural/visitor/egcmathmllookup.cpp
-        structural/visitor/formulascrvector.cpp
+        structural/visitor/formulascrvisitor.cpp
         structural/visitor/formulascrelement.cpp
         structural/specialNodes/egccontainernode.cpp 
         structural/entities/egcformulaentity.cpp
