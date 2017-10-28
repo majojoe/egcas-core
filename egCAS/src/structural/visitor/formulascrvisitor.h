@@ -73,6 +73,19 @@ public:
          */
         virtual QString getResult(void) override;
 private:
+        /**
+         * @brief append append a formula element to the internal vector
+         * @param str the formula element to add
+         * @param node the node that is associated with this element
+         */
+        void append(QString str, EgcNode* node);
+        /**
+         * @brief append append a number of formula signs to the internal vector (e.g. a variable name)
+         * @param str the formula element to add
+         * @param node the node that is associated with this the signs
+         */
+        void appendSigns(QString str, EgcNode* node);
+
         EgcFormulaEntity *m_formula;            ///< the formula to with the nodes to work on
         quint32 m_childIndex;                   ///< stores the last child index
         QVector<FormulaScrElement>* m_vector;   ///< stores all elements visible on the screen

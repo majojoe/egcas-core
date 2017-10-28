@@ -48,8 +48,12 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
 {
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("_root(_{%1_},%2)", binary);
+                if (m_state == EgcIteratorState::LeftIteration)
+                        append("_root_{_{", binary);
+                else if (m_state == EgcIteratorState::MiddleIteration)
+                        append("_},", binary);
+                else
+                        append("_}", binary);
                 break;
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::RightIteration)
@@ -128,33 +132,33 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
 {
         switch (flex->getNodeType()) {
         case EgcNodeType::FunctionNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("", "(", ",", ")", flex);
-                break;
-        case EgcNodeType::IntegralNode:
-                if (m_state == EgcIteratorState::RightIteration) {
-                                assembleResult("_integrate(", ",", ")", flex);
-                }
-                break;
-        case EgcNodeType::DifferentialNode:
-                if (m_state == EgcIteratorState::RightIteration) {
-                        EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(flex);
-                        quint32 indexD = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::differential);
-                        quint32 indexV = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::variable);
+//                if (m_state == EgcIteratorState::LeftIteration)
+//                        append("_{", flex);
+//                else if (m_state == EgcIteratorState::MiddleIteration)
+//                        append("");
+//                        assembleResult("", "(", ",", ")", flex);
+//                break;
+//        case EgcNodeType::IntegralNode:
+//                if (m_state == EgcIteratorState::RightIteration) {
+//                                assembleResult("_integrate(", ",", ")", flex);
+//                }
+//                break;
+//        case EgcNodeType::DifferentialNode:
+//                if (m_state == EgcIteratorState::RightIteration) {
+//                        EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(flex);
+//                        quint32 indexD = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::differential);
+//                        quint32 indexV = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::variable);
 
-                        QString str = "_diff(%" % QString::number(indexD + 1) % ",%" % QString::number(indexV + 1)
-                                      % "," % QString::number(diff->getNrDerivative()) % ")";
-                        assembleResult(str, flex);
-                }
-                break;
+//                        QString str = "_diff(%" % QString::number(indexD + 1) % ",%" % QString::number(indexV + 1)
+//                                      % "," % QString::number(diff->getNrDerivative()) % ")";
+//                        assembleResult(str, flex);
+//                }
+//                break;
         case EgcNodeType::VariableNode:
-                if (m_state == EgcIteratorState::RightIteration) { //there are no subsequent nodes but the Alnum nodes -> so push to stack
+                if (m_state == EgcIteratorState::MiddleIteration) {
                         if (flex->getNumberChildNodes() == 2) {
                                 EgcVariableNode *var = static_cast<EgcVariableNode*>(flex);
-                                QString str = "%1" % var->getStuffedVarSeparator() % "%2";
-                                assembleResult(str, flex);
-                        } else if (flex->getNumberChildNodes() == 1) {
-                               assembleResult("%1", flex);
+                                append(var->getStuffedVarSeparator(), flex);
                         }
                 }
                 break;
@@ -170,19 +174,11 @@ void FormulaScrVisitor::visit(EgcNode* node)
         case EgcNodeType::EmptyNode:
                 append("_empty", node);
                 break;
-        case EgcNodeType::AlnumNode:  // normally we extract the AlnumNode's via their container classes
-                QString val = static_cast<EgcAlnumNode*>(node)->getValue();
-                QString i;
-                foreach (i, val) {
-                        append(EgcAlnumNode::encode(i), node);
-                }
+        case EgcNodeType::AlnumNode:
+                appendSigns(static_cast<EgcAlnumNode*>(node)->getValue(), node);
                 break;
         case EgcNodeType::NumberNode:
-                QString val = static_cast<EgcNumberNode*>(node)->getValue();
-                QString i;
-                foreach (i, val) {
-                        append(i, node);
-                }
+                appendSigns(static_cast<EgcNumberNode*>(node)->getValue(), node);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(node->getNodeType())) ;
@@ -197,6 +193,14 @@ void FormulaScrVisitor::append(QString str, EgcNode* node)
         el.m_node = node;
         el.m_value = str;
         m_vector->append(el);
+}
+
+void FormulaScrVisitor::appendSigns(QString str, EgcNode* node)
+{
+        QString i;
+        foreach (i, str) {
+                append(EgcAlnumNode::encode(i), node);
+        }
 }
 
 QString FormulaScrVisitor::getResult(void)
