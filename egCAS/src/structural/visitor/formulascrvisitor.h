@@ -29,12 +29,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef FORMULASCRVISITOR_H
 #define FORMULASCRVISITOR_H
 
+#include "../iterator/egcnodeiterator.h"
+#include "egcnodevisitor.h"
 #include <QtGlobal>
+#include <QHash>
 
 class EgcFormulaEntity;
 class FormulaScrElement;
+class EgcNode;
 
-class FormulaScrVisitor
+class FormulaScrVisitor : public EgcNodeVisitor
 {
 public:
         /**
@@ -73,6 +77,20 @@ public:
          */
         virtual QString getResult(void) override;
 private:
+#warning let the absolute neccessary functions in the EgcNodeVisitor class and put the implementation specific functions in a implementation class later (EgcNodeVisitor->accept is needed in this class, so we have to inherit from EgcNodeVisitor)
+        /** hide all of the following functions* /
+        virtual void assembleResult(QString formatString, EgcNode* node);
+        virtual void assembleResult(QString startString, QString seperationString, QString endString, EgcNode* node);
+        virtual void assembleResult(QString lStartString, QString rStartString, QString seperationString,
+                                            QString endString, EgcNode* node);
+        virtual void pushToStack(QString str, EgcNode* node);
+        virtual void suppressChild(const EgcNode* node, quint32 index);
+        virtual void suppressThis(const EgcNode* node);
+        virtual EgcNode* getChildToSuppress(const EgcNode* node, quint32 index);
+        virtual void deleteFromStack(int nrStackObjects);
+        virtual QVector<QString> getAssembleArguments(EgcNode* node);
+        virtual QString& modifyNodeString(QString &nodeString, EgcNode* node);
+
         /**
          * @brief append append a formula element to the internal vector
          * @param str the formula element to add
@@ -80,16 +98,29 @@ private:
          */
         void append(QString str, EgcNode* node);
         /**
+         * @brief appendRaw append a formula element to the internal vector without incrementing the id
+         * @param str the formula element to add
+         * @param node the node that is associated with this element
+         * @param id the id to use for the given node
+         */
+        void appendRaw(QString str, EgcNode* node, quint32 id);
+        /**
          * @brief append append a number of formula signs to the internal vector (e.g. a variable name)
          * @param str the formula element to add
          * @param node the node that is associated with this the signs
          */
         void appendSigns(QString str, EgcNode* node);
+        /**
+         * @brief append append a formula element that is segmented in several parts to the internal vector. When
+         * deleting one of the parts later, appended here, the all parts of the node will be deleted
+         * @param str the formula element to add
+         * @param node the node that is associated with this element
+         */
+        void appendSegmented(QString str, EgcNode* node);
 
-        EgcFormulaEntity *m_formula;            ///< the formula to with the nodes to work on
-        quint32 m_childIndex;                   ///< stores the last child index
         QVector<FormulaScrElement>* m_vector;   ///< stores all elements visible on the screen
         quint32 m_id;                           ///< id counter during visitor run
+        QHash<EgcNode*, quint32> m_hash;        ///< hash for lookup of id's of parts of a node
 
 };
 

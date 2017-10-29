@@ -26,7 +26,9 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
-#include "formulascrvector.h"
+#include "formulascrelement.h"
+#include "../entities/egcformulaentity.h"
+#include "../egcnodes.h"
 #ifdef DEBUG_KERNEL_COMMAND_GENERATION
 #include <QDebug>
 #endif //#ifdef DEBUG_KERNEL_COMMAND_GENERATION
@@ -38,10 +40,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 
-FormulaScrVisitor::FormulaScrVisitor(EgcFormulaEntity& formula, QVector<FormulaScrElement>& vector) :  m_formula{&formula}, m_childIndex{0}, m_vector{&vector}, m_id{0}
+FormulaScrVisitor::FormulaScrVisitor(EgcFormulaEntity& formula, QVector<FormulaScrElement>& vector) :  EgcNodeVisitor(formula), m_vector{&vector}, m_id{0}
 {
-        if (m_formula->getIterator())
-                m_restructureData = m_formula->getIterator()->getRestructureData();
 }
 
 void FormulaScrVisitor::visit(EgcBinaryNode* binary)
@@ -49,27 +49,31 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode:
                 if (m_state == EgcIteratorState::LeftIteration)
-                        append("_root_{_{", binary);
+                        appendSegmented("_root_{_{", binary);
                 else if (m_state == EgcIteratorState::MiddleIteration)
-                        append("_},", binary);
+                        appendSegmented("_},", binary);
                 else
-                        append("_}", binary);
+                        appendSegmented("_}", binary);
                 break;
         case EgcNodeType::PlusNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("%1+%2", binary);
+                if (m_state == EgcIteratorState::MiddleIteration)
+                        append("+", binary);
                 break;
         case EgcNodeType::MinusNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("%1-%2", binary);
+                if (m_state == EgcIteratorState::MiddleIteration)
+                        append("-", binary);
                 break;
         case EgcNodeType::MultiplicationNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("%1*%2", binary);
+                if (m_state == EgcIteratorState::MiddleIteration)
+                        append("*", binary);
                 break;
         case EgcNodeType::DivisionNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("_{%1_}/_{%2_}", binary);
+//                if (m_state == EgcIteratorState::LeftIteration)
+//                        append("_{", binary);
+//                else if (m_state == EgcIteratorState::MiddleIteration)
+//                        append("_}/_{", binary);
+//                else
+//                        append("_}", binary);
                 break;
         case EgcNodeType::ExponentNode:
                 if (m_state == EgcIteratorState::RightIteration)
@@ -188,8 +192,14 @@ void FormulaScrVisitor::visit(EgcNode* node)
 
 void FormulaScrVisitor::append(QString str, EgcNode* node)
 {
+        ++m_id;
+        appendRaw(str, node, m_id);
+}
+
+void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, quint32 id)
+{
         FormulaScrElement el;
-        el.m_id = m_id++;
+        el.m_id = id;
         el.m_node = node;
         el.m_value = str;
         m_vector->append(el);
@@ -201,6 +211,18 @@ void FormulaScrVisitor::appendSigns(QString str, EgcNode* node)
         foreach (i, str) {
                 append(EgcAlnumNode::encode(i), node);
         }
+}
+
+void FormulaScrVisitor::appendSegmented(QString str, EgcNode* node)
+{
+        quint32 id;
+        if (m_hash.contains(node)) {
+                id = m_hash.value(node);
+        } else {
+                id = ++m_id;
+                m_hash.insert(node, id);
+        }
+        appendRaw(str, node, id);
 }
 
 QString FormulaScrVisitor::getResult(void)
@@ -235,8 +257,8 @@ QString FormulaScrVisitor::getResult(void)
 
         QString result;
         FormulaScrElement i;
-        foreach (i, m_vector) {
-                result %= i.m_value;
+        foreach (i, *m_vector) {
+                result = result % i.m_value;
         }
 
         return result;

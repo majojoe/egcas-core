@@ -115,7 +115,7 @@ public:
          * @param endString the end string of the node
          * @param node the node we are currently operating on
          */
-        void assembleResult(QString lStartString, QString rStartString, QString seperationString,
+        virtual void assembleResult(QString lStartString, QString rStartString, QString seperationString,
                                             QString endString, EgcNode* node);
 
         /**
@@ -130,12 +130,12 @@ public:
          * @param node the parent node we of the childs we want to supress
          * @param index the index of the child we want to suppress
          */
-        void suppressChild(const EgcNode* node, quint32 index);
+        virtual void suppressChild(const EgcNode* node, quint32 index);
         /**
          * @brief suppressThis supress the current node given
          * @param node the node we want to supress
          */
-        void suppressThis(const EgcNode* node);
+        virtual void suppressThis(const EgcNode* node);
 protected:
         /**
          * @brief getChildToSuppress returns a pointer to the child to suppress
@@ -149,13 +149,13 @@ protected:
          * its child values
          * @param nrStackObjects the number of stack objects to remove from stack
          */
-        void deleteFromStack(int nrStackObjects);
+        virtual void deleteFromStack(int nrStackObjects);
         /**
          * @brief getAssembleArguments get the arguments for the node to assemble the result
          * @param node the node for witch to find the arguments to assemble
          * @return a vector with all the arguments
          */
-        QVector<QString> getAssembleArguments(EgcNode* node);
+        virtual QVector<QString> getAssembleArguments(EgcNode* node);
         /**
          * @brief modifyNodeString this function can be implemented in a subclass and modify the string assembled,
          * before it is further processed
