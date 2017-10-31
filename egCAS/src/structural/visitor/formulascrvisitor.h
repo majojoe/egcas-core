@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "../iterator/egcnodeiterator.h"
 #include "egcnodevisitor.h"
+#include "formulascrelement.h"
 #include <QtGlobal>
 #include <QHash>
 
@@ -118,7 +119,7 @@ private:
          */
         void appendSegmented(QString str, EgcNode* node);
 
-        QVector<FormulaScrElement>* m_vector;   ///< stores all elements visible on the screen
+        FormulaScrVector* m_vector;   ///< stores all elements visible on the screen
         quint32 m_id;                           ///< id counter during visitor run
         QHash<EgcNode*, quint32> m_hash;        ///< hash for lookup of id's of parts of a node
 

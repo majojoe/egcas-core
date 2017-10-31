@@ -68,30 +68,28 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                         append("*", binary);
                 break;
         case EgcNodeType::DivisionNode:
-//                if (m_state == EgcIteratorState::LeftIteration)
-//                        append("_{", binary);
-//                else if (m_state == EgcIteratorState::MiddleIteration)
-//                        append("_}/_{", binary);
-//                else
-//                        append("_}", binary);
+                if (m_state == EgcIteratorState::LeftIteration)
+                        appendSegmented("_{", binary);
+                else if (m_state == EgcIteratorState::MiddleIteration)
+                        appendSegmented("_}/_{", binary);
+                else
+                        appendSegmented("_}", binary);
                 break;
         case EgcNodeType::ExponentNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("%1^_{%2_}", binary);
+                if (m_state == EgcIteratorState::MiddleIteration)
+                        appendSegmented("^_{", binary);
+                else if (m_state == EgcIteratorState::RightIteration)
+                        appendSegmented("_}", binary);
                 break;
         case EgcNodeType::EqualNode: {
-                if (m_state == EgcIteratorState::RightIteration) {
-                        assembleResult("%1=%2", binary);
+                if (m_state == EgcIteratorState::MiddleIteration) {
+                        append("=", binary);
                 }
                 break;
         }
         case EgcNodeType::DefinitionNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("%1:%2", binary);
-                break;
-        case EgcNodeType::BinEmptyNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("%1()%2", binary);
+                if (m_state == EgcIteratorState::MiddleIteration)
+                        append(":", binary);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(binary->getNodeType())) ;
@@ -103,28 +101,38 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
 {
         switch (unary->getNodeType()) {
         case EgcNodeType::ParenthesisNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("(%1)", unary);
+                if (m_state == EgcIteratorState::LeftIteration)
+                        append("(", unary);
+                else if (m_state == EgcIteratorState::RightIteration)
+                        append(")", unary);
                 break;
         case EgcNodeType::LogNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("_log(%1)", unary);
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        append("_log", unary);
+                        append("(", unary);
+                } else if (m_state == EgcIteratorState::RightIteration) {
+                        append(")", unary);
+                }
                 break;
         case EgcNodeType::NatLogNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("log(%1)", unary);
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        append("log", unary);
+                        append("(", unary);
+                } else if (m_state == EgcIteratorState::RightIteration) {
+                        append(")", unary);
+                }
                 break;
-        case EgcNodeType::LParenthesisNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("(%1", unary);
-                break;
-        case EgcNodeType::RParenthesisNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("%1)", unary);
-                break;
+//        case EgcNodeType::LParenthesisNode:
+//                if (m_state == EgcIteratorState::RightIteration)
+//                        assembleResult("(%1", unary);
+//                break;
+//        case EgcNodeType::RParenthesisNode:
+//                if (m_state == EgcIteratorState::RightIteration)
+//                        assembleResult("%1)", unary);
+//                break;
         case EgcNodeType::UnaryMinusNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("-%1", unary);
+                if (m_state == EgcIteratorState::LeftIteration)
+                        assembleResult("-", unary);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(unary->getNodeType())) ;

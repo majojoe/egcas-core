@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define FORMULASCRELEMENT_H
 
 #include <QString>
+#include <QVector>
 
 class EgcNode;
 
@@ -42,5 +43,10 @@ public:
         quint32 m_id;           ///< id that describes formula elements that belong to each other
         EgcNode* m_node;        ///< pointer to the node that created this element
 };
+
+/**
+ * @brief FormulaScrVector defines a vector of type FormulaScrElement
+ */
+typedef QVector<FormulaScrElement> FormulaScrVector;
 
 #endif // FORMULASCRELEMENT_H
