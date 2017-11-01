@@ -38,10 +38,8 @@ class EgcNode;
 class FormulaScrIter
 {
 public:
-        FormulaScrIter();
-
         /// constructor for initialization with formula
-        FormulaScrIter(const EgcFormulaEntity& formula);
+        FormulaScrIter(EgcFormulaEntity& formula);
         /// std destructor
         virtual ~FormulaScrIter();
         /**
@@ -55,17 +53,17 @@ public:
          */
         virtual bool hasPrevious(void) const;
         /**
-         * @brief findPrevious find the next occurence of the given formula element
+         * @brief findNext find the next occurence of the given QString m_value element in the formula
          * @param value the value to search for
          * @return true if found
          */
-        bool findNext(const FormulaScrElement &value);
+        bool findNext(const QString& value);
         /**
-         * @brief findPrevious find the previous occurence of the given formula element
+         * @brief findPrevious find the previous occurence of the given  QString m_value element in the formula
          * @param value the value to search for
          * @return true if found
          */
-        bool findPrevious(const FormulaScrElement &value);
+        bool findPrevious(const QString &value);
         /**
          * @brief next Returns the next node and increments the iterator by one.
          * @return a reference to the next item.
@@ -97,11 +95,36 @@ public:
         /**
          * @brief insert inserts the given item at the current position.
          */
-        virtual void insert(FormulaScrElement type);
+        virtual void insert(FormulaScrElement element);
         /**
          * @brief remove removes the next or previous item.
          */
         virtual void remove();
+        /**
+         * @brief update the formula AST has changed, so update the internal references
+         */
+        void update(void);
+
+private:
+        /**
+         * @brief setIterPos set the iterator position.
+         * @param pos the position where to set the java style iterator. 0 is the same as toFront() and size() is the
+         * same as toBack(). Use with care since this operation has complexity is O(n) where n is the vector size. If
+         * given position is larger than size() of the vector, position will be set to toBack()
+         */
+        void setIterPos(quint32 pos);
+        /**
+         * @brief getIterPos returns the iterator position.
+         * @return the position where the java style iterator is. 0 is the same as toFront() position and size() is the
+         * same as toBack() position. Use with care since this operation has complexity is O(n) where n is the vector
+         * size.
+         */
+        quint32 getIterPos(void);
+
+        FormulaScrVector m_vector;              ///< vector that contains the all the formula elements
+        EgcFormulaEntity& m_formula;            ///< reference associated with the given formula
+        QMutableVectorIterator<FormulaScrElement> m_iter;  ///< iterator for the formula vector above
+        quint32 m_pos;                          ///< it's the iterator position as an index. Be careful since this can break very easiliy since we are using a Java Style iterator also!!!
 };
 
 #endif // FORMULASCRITER_H
