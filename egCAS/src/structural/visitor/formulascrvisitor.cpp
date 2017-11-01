@@ -233,13 +233,15 @@ void FormulaScrVisitor::appendSegmented(QString str, EgcNode* node)
         appendRaw(str, node, id);
 }
 
-QString FormulaScrVisitor::getResult(void)
+void FormulaScrVisitor::updateVector(void)
 {
         EgcNodeIterator iter(*m_formula);
         EgcNode *node;
         EgcNode *previousChildNode;
 
         m_id = 0;
+
+        m_vector->clear();
 
         while(iter.hasNext()) {
                 previousChildNode = &iter.peekPrevious();
@@ -262,7 +264,10 @@ QString FormulaScrVisitor::getResult(void)
                 }
                 node->accept(this);
         };
+}
 
+QString FormulaScrVisitor::getResult(void)
+{
         QString result;
         FormulaScrElement i;
         foreach (i, *m_vector) {

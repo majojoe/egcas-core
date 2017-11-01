@@ -77,6 +77,11 @@ public:
          * @return the result of the traversion as string
          */
         virtual QString getResult(void) override;
+        /**
+         * @brief updateVector update the vector the visitor is referencing. This must be done after the AST of the
+         * formula has been updated.
+         */
+        void updateVector(void);
 private:
 #warning let the absolute neccessary functions in the EgcNodeVisitor class and put the implementation specific functions in a implementation class later (EgcNodeVisitor->accept is needed in this class, so we have to inherit from EgcNodeVisitor)
         /** hide all of the following functions* /

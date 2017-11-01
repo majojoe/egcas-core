@@ -39,7 +39,7 @@ class FormulaScrIter
 {
 public:
         /// constructor for initialization with formula
-        FormulaScrIter(EgcFormulaEntity& formula);
+        FormulaScrIter(EgcFormulaEntity& formula, FormulaScrVector& vector);
         /// std destructor
         virtual ~FormulaScrIter();
         /**
@@ -121,7 +121,7 @@ private:
          */
         quint32 getIterPos(void);
 
-        FormulaScrVector m_vector;              ///< vector that contains the all the formula elements
+        FormulaScrVector& m_vector;             ///< vector that contains the all the formula elements
         EgcFormulaEntity& m_formula;            ///< reference associated with the given formula
         QMutableVectorIterator<FormulaScrElement> m_iter;  ///< iterator for the formula vector above
         quint32 m_pos;                          ///< it's the iterator position as an index. Be careful since this can break very easiliy since we are using a Java Style iterator also!!!

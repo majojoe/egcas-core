@@ -3,7 +3,8 @@
 #include "../visitor/formulascrelement.h"
 #include <structural/entities/egcformulaentity.h>
 
-FormulaScrIter::FormulaScrIter(EgcFormulaEntity& formula) : m_formula{formula},
+FormulaScrIter::FormulaScrIter(EgcFormulaEntity& formula, FormulaScrVector& vector) : m_formula{formula},
+                                                            m_vector{vector},
                                                             m_iter{QMutableVectorIterator<FormulaScrElement>(m_vector)},
                                                             m_pos{0}
 {
