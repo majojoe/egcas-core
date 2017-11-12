@@ -50,7 +50,7 @@ enum class EgcOperations
         homePressed,                    ///< user pressed home key
         endPressed,                     ///< user pressed End key
         alnumKeyPressed,                ///< user pressed any digit or letter key
-        createSubId,                    ///< create subid of a variable
+        createSubscript,                ///< create subid of a variable
         noAction,
 
 };

@@ -467,7 +467,7 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
                         showCurrentCursor();
                 }
                 break;
-        case EgcOperations::createSubId:
+        case EgcOperations::createSubscript:
                 createSubId();
                 break;
         }

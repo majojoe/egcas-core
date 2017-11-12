@@ -104,17 +104,22 @@ public:
          * @brief update the formula AST has changed, so update the internal references
          */
         void update(void);
+        /**
+         * @brief nodeAtCursor returns the node at the current cursor position
+         * @return the node
+         */
+        EgcNode& nodeAtCursor(void);
 
 private:
         /**
-         * @brief setIterPos set the iterator position.
+         * @brief setIterPos set the iterator position. ATTENTION: use only for internal purposes (DO NOT MAKE PUBLIC)
          * @param pos the position where to set the java style iterator. 0 is the same as toFront() and size() is the
          * same as toBack(). Use with care since this operation has complexity is O(n) where n is the vector size. If
          * given position is larger than size() of the vector, position will be set to toBack()
          */
         void setIterPos(quint32 pos);
         /**
-         * @brief getIterPos returns the iterator position.
+         * @brief getIterPos returns the iterator position. ATTENTION: use only for internal purposes (DO NOT MAKE PUBLIC)
          * @return the position where the java style iterator is. 0 is the same as toFront() position and size() is the
          * same as toBack() position. Use with care since this operation has complexity is O(n) where n is the vector
          * size.

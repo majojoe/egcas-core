@@ -166,6 +166,7 @@ set(egcas_SOURCES
         structural/entities/creator/egcformulacreator.cpp
         structural/entities/creator/egctextcreator.cpp
         structural/entities/creator/egcpixmapcreator.cpp
+        structural/entities/formulamodificator.cpp
         formulagenerator.cpp
         menu/egclicenseinfo.cpp
         structural/document/egccalculation.cpp
