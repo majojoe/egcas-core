@@ -34,6 +34,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class EgcNode;
 
+/**
+ * @brief The CursorAdhesion enum reflects the cursor adhesion of a symbol. If the cursor is between e.g. a normal and a
+ * strong node, the cursor will be shown with the dimensions of the node with the strong adhesion
+ */
+enum class CursorAdhesion {
+        low,            ///< low cursor adhesion
+        normal,         ///< standard (for most other symbols)
+        strong,         ///< strong is e.g. for alpha numeric symbols
+        ultra,          ///< to override strong adhesion of alpha numeric symbols
+};
+
 class FormulaScrElement
 {
 public:
@@ -42,6 +53,8 @@ public:
         QString m_value;        ///< formula element that is visible as entity on the screen
         quint32 m_id;           ///< id that describes formula elements that belong to each other
         EgcNode* m_node;        ///< pointer to the node that created this element
+        CursorAdhesion m_cAdh;  ///< cursor adhesion of the node
+        quint32 m_subpos;       ///< saves the subposition of the element, normally 0
 };
 
 /**

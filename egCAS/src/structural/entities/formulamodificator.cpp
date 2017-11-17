@@ -50,37 +50,37 @@ void FormulaModificator::handleAction(const EgcAction& action)
 //        case EgcOperations::spacePressed:
 //                markParent();
 //                break;
-        case EgcOperations::alnumKeyPressed:
-                insertCharacter(action.m_character);
-                break;
-        case EgcOperations::backspacePressed:
-                removeCharacter(true);
-                break;
-        case EgcOperations::delPressed:
-                removeCharacter(false);
-                break;
-        case EgcOperations::mathCharOperator:
-        case EgcOperations::mathFunction:
-        case EgcOperations::internalFunction:
-                insertOperation(action);
-                break;
-        case EgcOperations::homePressed:
-                if (m_scrIter) {
-                        m_scrIter->toFront();
-                        m_scrIter->resetUnderline();
-                        showCurrentCursor();
-                }
-                break;
-        case EgcOperations::endPressed:
-                if (m_scrIter) {
-                        m_scrIter->toBack();
-                        m_scrIter->resetUnderline();
-                        showCurrentCursor();
-                }
-                break;
-        case EgcOperations::createSubscript:
-                createSubId();
-                break;
+//        case EgcOperations::alnumKeyPressed:
+//                insertCharacter(action.m_character);
+//                break;
+//        case EgcOperations::backspacePressed:
+//                removeCharacter(true);
+//                break;
+//        case EgcOperations::delPressed:
+//                removeCharacter(false);
+//                break;
+//        case EgcOperations::mathCharOperator:
+//        case EgcOperations::mathFunction:
+//        case EgcOperations::internalFunction:
+//                insertOperation(action);
+//                break;
+//        case EgcOperations::homePressed:
+//                if (m_scrIter) {
+//                        m_scrIter->toFront();
+//                        m_scrIter->resetUnderline();
+//                        showCurrentCursor();
+//                }
+//                break;
+//        case EgcOperations::endPressed:
+//                if (m_scrIter) {
+//                        m_scrIter->toBack();
+//                        m_scrIter->resetUnderline();
+//                        showCurrentCursor();
+//                }
+//                break;
+//        case EgcOperations::createSubscript:
+//                createSubId();
+//                break;
         }
 }
 
@@ -136,7 +136,7 @@ void FormulaModificator::showCurrentCursor(void)
                 return;
 
         id = this->id();
-        ind = subIndex();
+        ind = subPosition();
         if (ind < 0) { //this is a container
                 ind = 0;
         } else { //this is a glyph
@@ -156,8 +156,18 @@ bool FormulaModificator::rightSide(void) const
 {
         bool retval = true;
 
-        if (!m_iter.hasPrevious()) //is at front
+        if (!m_iter.hasPrevious()) { //is at front
                 retval = false;
+        } else {
+                if (m_iter.hasNext()) {
+                        FormulaScrElement lel = m_iter.peekPrevious();
+                        FormulaScrElement rel = m_iter.peekNext();
+                        if ((int)lel.m_cAdh > (int)rel.m_cAdh)
+                                retval = false;
+                        else
+                                retval = true;
+                }
+        }
 
         return retval;
 }
@@ -177,5 +187,17 @@ EgcNode& FormulaModificator::nodeAtCursor(void) const
 
 
         return *node;
+}
+
+quint32 FormulaModificator::subPosition(void) const
+{
+        qint32 retval;
+
+        if (rightSide())
+                retval = m_iter.peekPrevious().m_subpos;
+        else
+                retval = m_iter.peekNext().m_subpos;
+
+        return retval;
 }
 

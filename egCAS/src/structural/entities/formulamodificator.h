@@ -79,6 +79,11 @@ private:
          * @return the node at the current cursor
          */
         EgcNode& nodeAtCursor(void) const;
+        /**
+         * @brief subPosition returns the subPosition of the current mathml id
+         * @return the subPosition of the current mathml id
+         */
+        quint32 subPosition(void) const;
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula

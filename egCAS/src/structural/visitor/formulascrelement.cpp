@@ -30,6 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "formulascrelement.h"
 
 
-FormulaScrElement::FormulaScrElement() : m_id{0}, m_node{nullptr}
+FormulaScrElement::FormulaScrElement() : m_id{0}, m_node{nullptr}, m_cAdh{CursorAdhesion::normal}, m_subpos{0}
 {
 }

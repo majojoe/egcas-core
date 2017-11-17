@@ -101,28 +101,32 @@ private:
          * @brief append append a formula element to the internal vector
          * @param str the formula element to add
          * @param node the node that is associated with this element
+         * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
          */
-        void append(QString str, EgcNode* node);
+        void append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::normal);
         /**
          * @brief appendRaw append a formula element to the internal vector without incrementing the id
          * @param str the formula element to add
          * @param node the node that is associated with this element
          * @param id the id to use for the given node
+         * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
          */
-        void appendRaw(QString str, EgcNode* node, quint32 id);
+        void appendRaw(QString str, EgcNode* node, quint32 id, CursorAdhesion cursorAdhesion = CursorAdhesion::normal);
         /**
          * @brief append append a number of formula signs to the internal vector (e.g. a variable name)
          * @param str the formula element to add
          * @param node the node that is associated with this the signs
+         * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
          */
-        void appendSigns(QString str, EgcNode* node);
+        void appendSigns(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::normal);
         /**
          * @brief append append a formula element that is segmented in several parts to the internal vector. When
          * deleting one of the parts later, appended here, the all parts of the node will be deleted
          * @param str the formula element to add
          * @param node the node that is associated with this element
+         * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
          */
-        void appendSegmented(QString str, EgcNode* node);
+        void appendSegmented(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::normal);
 
         FormulaScrVector* m_vector;   ///< stores all elements visible on the screen
         quint32 m_id;                           ///< id counter during visitor run

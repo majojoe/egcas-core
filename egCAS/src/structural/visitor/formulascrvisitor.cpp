@@ -184,13 +184,13 @@ void FormulaScrVisitor::visit(EgcNode* node)
 {
         switch (node->getNodeType()) {
         case EgcNodeType::EmptyNode:
-                append("_empty", node);
+                append("_empty", node, CursorAdhesion::strong);
                 break;
         case EgcNodeType::AlnumNode:
-                appendSigns(static_cast<EgcAlnumNode*>(node)->getValue(), node);
+                appendSigns(static_cast<EgcAlnumNode*>(node)->getValue(), node, CursorAdhesion::strong);
                 break;
         case EgcNodeType::NumberNode:
-                appendSigns(static_cast<EgcNumberNode*>(node)->getValue(), node);
+                appendSigns(static_cast<EgcNumberNode*>(node)->getValue(), node, CursorAdhesion::strong);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(node->getNodeType())) ;
@@ -198,30 +198,33 @@ void FormulaScrVisitor::visit(EgcNode* node)
         }
 }
 
-void FormulaScrVisitor::append(QString str, EgcNode* node)
+void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion)
 {
         ++m_id;
-        appendRaw(str, node, m_id);
+        appendRaw(str, node, m_id, cursorAdhesion);
 }
 
-void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, quint32 id)
+void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, quint32 id, CursorAdhesion cursorAdhesion)
 {
         FormulaScrElement el;
         el.m_id = id;
         el.m_node = node;
         el.m_value = str;
+        el.m_cAdh = cursorAdhesion;
         m_vector->append(el);
 }
 
-void FormulaScrVisitor::appendSigns(QString str, EgcNode* node)
+void FormulaScrVisitor::appendSigns(QString str, EgcNode* node, CursorAdhesion cursorAdhesion)
 {
         QString i;
+        quint32 n = 1;
         foreach (i, str) {
-                append(EgcAlnumNode::encode(i), node);
+                append(EgcAlnumNode::encode(i), node, cursorAdhesion);
+                m_vector->last().m_subpos = n++;
         }
 }
 
-void FormulaScrVisitor::appendSegmented(QString str, EgcNode* node)
+void FormulaScrVisitor::appendSegmented(QString str, EgcNode* node, CursorAdhesion cursorAdhesion)
 {
         quint32 id;
         if (m_hash.contains(node)) {
@@ -230,7 +233,7 @@ void FormulaScrVisitor::appendSegmented(QString str, EgcNode* node)
                 id = ++m_id;
                 m_hash.insert(node, id);
         }
-        appendRaw(str, node, id);
+        appendRaw(str, node, id, cursorAdhesion);
 }
 
 void FormulaScrVisitor::updateVector(void)
