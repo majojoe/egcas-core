@@ -37,7 +37,7 @@ FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{fo
                                                                     m_lastUnderlinedNode{nullptr}
 {
         //m_iter = FormulaScrIter(m_formula, m_vector);
-        FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_vector);
+        FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_iter);
         visitor.updateVector();
 }
 

@@ -109,6 +109,10 @@ public:
          * @return the node
          */
         EgcNode& nodeAtCursor(void);
+        /**
+         * @brief clear all elements from the underlying container and set the iterator appropriately
+         */
+        void clear(void);
 
 private:
         /**

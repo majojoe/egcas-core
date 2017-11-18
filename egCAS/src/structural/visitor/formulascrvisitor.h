@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class EgcFormulaEntity;
 class FormulaScrElement;
 class EgcNode;
+class FormulaScrIter;
 
 class FormulaScrVisitor : public EgcNodeVisitor
 {
@@ -47,7 +48,7 @@ public:
          * @param formula the formula to be parsed
          * @param vector the vector where the result shall be saved
          */
-        FormulaScrVisitor(EgcFormulaEntity& formula, QVector<FormulaScrElement>& vector);
+        FormulaScrVisitor(EgcFormulaEntity& formula, FormulaScrIter& iter);
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.
@@ -128,7 +129,7 @@ private:
          */
         void appendSegmented(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::normal);
 
-        FormulaScrVector* m_vector;   ///< stores all elements visible on the screen
+        FormulaScrIter& m_iter;                 ///< iterator for iterating and modifying all FormulaScrElement elements
         quint32 m_id;                           ///< id counter during visitor run
         QHash<EgcNode*, quint32> m_hash;        ///< hash for lookup of id's of parts of a node
 

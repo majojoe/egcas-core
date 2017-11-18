@@ -8,7 +8,7 @@ FormulaScrIter::FormulaScrIter(EgcFormulaEntity& formula, FormulaScrVector& vect
                                                             m_iter{QMutableVectorIterator<FormulaScrElement>(m_vector)},
                                                             m_pos{0}
 {
-        FormulaScrVisitor visitor = FormulaScrVisitor(formula, m_vector);
+        FormulaScrVisitor visitor = FormulaScrVisitor(formula, *this);
         (void) visitor.getResult();
         toBack();
 }
@@ -108,8 +108,15 @@ void FormulaScrIter::remove()
 
 void FormulaScrIter::update()
 {
-        FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_vector);
+        FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, *this);
         (void) visitor.getResult();
+        m_iter = QMutableVectorIterator<FormulaScrElement>(m_vector);
+        setIterPos(m_pos);
+}
+
+void FormulaScrIter::clear()
+{
+        m_vector.clear();
         m_iter = QMutableVectorIterator<FormulaScrElement>(m_vector);
         setIterPos(m_pos);
 }

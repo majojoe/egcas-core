@@ -36,11 +36,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "formulascrvisitor.h"
 #include "../entities/egcformulaentity.h"
 #include <iterator/egcscrpositerator.h>
+#include <structural/iterator/formulascriter.h>
 #include <QStringBuilder>
 
 
 
-FormulaScrVisitor::FormulaScrVisitor(EgcFormulaEntity& formula, QVector<FormulaScrElement>& vector) :  EgcNodeVisitor(formula), m_vector{&vector}, m_id{0}
+
+FormulaScrVisitor::FormulaScrVisitor(EgcFormulaEntity& formula, FormulaScrIter& iter) :  EgcNodeVisitor(formula), m_iter{iter}, m_id{0}
 {
 }
 
@@ -211,7 +213,7 @@ void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, quint32 id, Cursor
         el.m_node = node;
         el.m_value = str;
         el.m_cAdh = cursorAdhesion;
-        m_vector->append(el);
+        m_iter.insert(el);
 }
 
 void FormulaScrVisitor::appendSigns(QString str, EgcNode* node, CursorAdhesion cursorAdhesion)
@@ -220,7 +222,7 @@ void FormulaScrVisitor::appendSigns(QString str, EgcNode* node, CursorAdhesion c
         quint32 n = 1;
         foreach (i, str) {
                 append(EgcAlnumNode::encode(i), node, cursorAdhesion);
-                m_vector->last().m_subpos = n++;
+                m_iter.peekPrevious().m_subpos = n++;
         }
 }
 
@@ -244,7 +246,7 @@ void FormulaScrVisitor::updateVector(void)
 
         m_id = 0;
 
-        m_vector->clear();
+        m_iter.clear();
 
         while(iter.hasNext()) {
                 previousChildNode = &iter.peekPrevious();
@@ -273,9 +275,10 @@ QString FormulaScrVisitor::getResult(void)
 {
         QString result;
         FormulaScrElement i;
-        foreach (i, *m_vector) {
-                result = result % i.m_value;
-        }
+        FormulaScrIter iter = m_iter;
+        iter.toFront();
+        while(iter.hasNext())
+                result = result % iter.next().m_value;
 
         return result;
 }
