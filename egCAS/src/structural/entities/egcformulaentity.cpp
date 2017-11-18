@@ -426,15 +426,20 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
         case EgcOperations::formulaActivated:
                 m_scrIter.reset(new EgcScrPosIterator(*this));
                 showCurrentCursor();
+                m_mod.reset(new FormulaModificator(*this));
                 break;
         case EgcOperations::formulaDeactivated:
                 m_scrIter.reset();
                 break;
         case EgcOperations::cursorForward:
                 moveCursor(true);
+                if (m_mod)
+                        m_mod->handleAction(action);
                 break;
         case EgcOperations::cursorBackward:
                 moveCursor(false);
+                if (m_mod)
+                        m_mod->handleAction(action);
                 break;
         case EgcOperations::spacePressed:
                 markParent();

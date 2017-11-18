@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcentity.h"
 #include "egcabstractformulaentity.h"
 #include "../visitor/egcmathmllookup.h"
+#include <structural/entities/formulamodificator.h>
 
 class EgcNode;
 class EgcBaseNode;
@@ -412,6 +413,7 @@ private:
         QString m_errorMsg;                     ///< the error message for this formula, if one
         EgcMathmlLookup m_mathmlLookup;         ///< mathml id lookup table
         QScopedPointer<EgcScrPosIterator> m_scrIter; ///< iterator for screen positions
+        QScopedPointer<FormulaModificator> m_mod; ///< formula modificator class
 };
 
 #endif // EGCFORMULAENTITY_H

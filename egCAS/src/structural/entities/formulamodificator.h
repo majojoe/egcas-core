@@ -29,16 +29,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef FORMULAMODIFICATOR_H
 #define FORMULAMODIFICATOR_H
 
-#include "egcformulaentity.h"
 #include "../visitor/formulascrelement.h"
 #include "../iterator/formulascriter.h"
 #include <structural/actions/egcaction.h>
+
+class EgcFormulaEntity;
 
 class FormulaModificator
 {
 public:
         ///std constructor
         FormulaModificator(EgcFormulaEntity& formula);
+        virtual ~FormulaModificator();
         /**
          * @brief handleAction handles the given action
          * @param action the action to execute

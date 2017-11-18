@@ -26,16 +26,24 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+
+#include "egcformulaentity.h"
 #include "formulamodificator.h"
 #include "../visitor/formulascrvisitor.h"
 #include "egcabstractformulaitem.h"
 
 FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{formula},
-                                                                    m_iter{FormulaScrIter(m_formula, m_vector)},
+                                                                    m_iter(FormulaScrIter(m_formula, m_vector)),
                                                                     m_lastUnderlinedNode{nullptr}
 {
+        //m_iter = FormulaScrIter(m_formula, m_vector);
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_vector);
         visitor.updateVector();
+}
+
+FormulaModificator::~FormulaModificator()
+{
+
 }
 
 void FormulaModificator::handleAction(const EgcAction& action)
@@ -137,11 +145,6 @@ void FormulaModificator::showCurrentCursor(void)
 
         id = this->id();
         ind = subPosition();
-        if (ind < 0) { //this is a container
-                ind = 0;
-        } else { //this is a glyph
-                ind++;
-        }
         rSide = rightSide();
 
         item->hideCursors();
@@ -160,8 +163,8 @@ bool FormulaModificator::rightSide(void) const
                 retval = false;
         } else {
                 if (m_iter.hasNext()) {
-                        FormulaScrElement lel = m_iter.peekPrevious();
-                        FormulaScrElement rel = m_iter.peekNext();
+                        FormulaScrElement& lel = m_iter.peekPrevious();
+                        FormulaScrElement& rel = m_iter.peekNext();
                         if ((int)lel.m_cAdh > (int)rel.m_cAdh)
                                 retval = false;
                         else
