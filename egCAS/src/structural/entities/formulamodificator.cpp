@@ -36,7 +36,6 @@ FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{fo
                                                                     m_iter(FormulaScrIter(m_formula, m_vector)),
                                                                     m_lastUnderlinedNode{nullptr}
 {
-        //m_iter = FormulaScrIter(m_formula, m_vector);
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_iter);
         visitor.updateVector();
 }
@@ -165,7 +164,7 @@ bool FormulaModificator::rightSide(void) const
                 if (m_iter.hasNext()) {
                         FormulaScrElement& lel = m_iter.peekPrevious();
                         FormulaScrElement& rel = m_iter.peekNext();
-                        if ((int)lel.m_cAdh > (int)rel.m_cAdh)
+                        if ((int)lel.m_cAdh < (int)rel.m_cAdh)
                                 retval = false;
                         else
                                 retval = true;

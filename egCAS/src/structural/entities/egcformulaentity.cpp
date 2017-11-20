@@ -432,12 +432,10 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
                 m_scrIter.reset();
                 break;
         case EgcOperations::cursorForward:
-                moveCursor(true);
                 if (m_mod)
                         m_mod->handleAction(action);
                 break;
         case EgcOperations::cursorBackward:
-                moveCursor(false);
                 if (m_mod)
                         m_mod->handleAction(action);
                 break;
