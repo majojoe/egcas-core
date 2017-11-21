@@ -104,7 +104,7 @@ private:
          * @param node the node that is associated with this element
          * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
          */
-        void append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::normal);
+        void append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::low);
         /**
          * @brief appendRaw append a formula element to the internal vector without incrementing the id
          * @param str the formula element to add
@@ -112,14 +112,14 @@ private:
          * @param id the id to use for the given node
          * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
          */
-        void appendRaw(QString str, EgcNode* node, quint32 id, CursorAdhesion cursorAdhesion = CursorAdhesion::normal);
+        void appendRaw(QString str, EgcNode* node, quint32 id, CursorAdhesion cursorAdhesion = CursorAdhesion::low);
         /**
          * @brief append append a number of formula signs to the internal vector (e.g. a variable name)
          * @param str the formula element to add
          * @param node the node that is associated with this the signs
          * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
          */
-        void appendSigns(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::normal);
+        void appendSigns(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::low);
         /**
          * @brief append append a formula element that is segmented in several parts to the internal vector. When
          * deleting one of the parts later, appended here, the all parts of the node will be deleted
@@ -127,11 +127,17 @@ private:
          * @param node the node that is associated with this element
          * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
          */
-        void appendSegmented(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::normal);
+        void appendSegmented(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::low);
+        /**
+         * @brief suppressNode suppress the given node (cursor will not react on it)
+         * @param node the node to supress
+         */
+        void suppressNode(const EgcNode* node);
 
         FormulaScrIter& m_iter;                 ///< iterator for iterating and modifying all FormulaScrElement elements
         quint32 m_id;                           ///< id counter during visitor run
         QHash<EgcNode*, quint32> m_hash;        ///< hash for lookup of id's of parts of a node
+        QSet<const EgcNode*> m_suppressList;          ///< a list with pointers EgcNode elements that shall not be rendered
 
 };
 

@@ -49,14 +49,28 @@ FormulaScrVisitor::FormulaScrVisitor(EgcFormulaEntity& formula, FormulaScrIter& 
 void FormulaScrVisitor::visit(EgcBinaryNode* binary)
 {
         switch (binary->getNodeType()) {
-        case EgcNodeType::RootNode:
-                if (m_state == EgcIteratorState::LeftIteration)
-                        appendSegmented("_root_{_{", binary);
-                else if (m_state == EgcIteratorState::MiddleIteration)
-                        appendSegmented("_},", binary);
-                else
-                        appendSegmented("_}", binary);
+        case EgcNodeType::RootNode: {
+                EgcNode* child = binary->getChild(1);
+                bool isSquaredRoot = false;
+                if (child->getNodeType() == EgcNodeType::NumberNode) {
+                        if (static_cast<EgcNumberNode*>(child)->getValue() == QString("2"))
+                                isSquaredRoot = true;
+                }
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        if (isSquaredRoot) {
+                                m_suppressList.insert(binary); //exponent of squared roots are not shown
+                                appendSegmented("_root_{", binary, CursorAdhesion::normal);
+                        } else {
+                                appendSegmented("_root_{_{", binary, CursorAdhesion::normal);
+                        }
+                } else if (m_state == EgcIteratorState::MiddleIteration) {
+                        if (!isSquaredRoot)
+                                appendSegmented("_},", binary, CursorAdhesion::normal);
+                } else {
+                        appendSegmented("_}", binary, CursorAdhesion::normal);
+                }
                 break;
+        }
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
                         append("+", binary);
@@ -134,7 +148,7 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
 //                break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::LeftIteration)
-                        assembleResult("-", unary);
+                        append("-", unary, CursorAdhesion::normal);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(unary->getNodeType())) ;
@@ -267,7 +281,8 @@ void FormulaScrVisitor::updateVector(void)
                 } else {
                         m_childIndex = 0;
                 }
-                node->accept(this);
+                if (!m_suppressList.contains(node))
+                        node->accept(this);
         };
 }
 
@@ -283,3 +298,7 @@ QString FormulaScrVisitor::getResult(void)
         return result;
 }
 
+void FormulaScrVisitor::suppressNode(const EgcNode* node)
+{
+        m_suppressList.insert(node);
+}
