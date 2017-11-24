@@ -149,9 +149,9 @@ void FormulaModificator::showCurrentCursor(void)
         item->hideCursors();
 
         if (rSide)
-                item->showRightCursor(id, ind);
-        else
                 item->showLeftCursor(id, ind);
+        else
+                item->showRightCursor(id, ind);
 }
 
 bool FormulaModificator::rightSide(void) const
@@ -159,15 +159,17 @@ bool FormulaModificator::rightSide(void) const
         bool retval = true;
 
         if (!m_iter.hasPrevious()) { //is at front
-                retval = false;
+                retval = true;
         } else {
                 if (m_iter.hasNext()) {
                         FormulaScrElement& lel = m_iter.peekPrevious();
                         FormulaScrElement& rel = m_iter.peekNext();
                         if ((int)lel.m_cAdh < (int)rel.m_cAdh)
-                                retval = false;
-                        else
                                 retval = true;
+                        else
+                                retval = false;
+                } else {
+                        retval = false;
                 }
         }
 
@@ -176,13 +178,13 @@ bool FormulaModificator::rightSide(void) const
 
 EgcNode& FormulaModificator::nodeAtCursor(void) const
 {
-        EgcNode* node;
+        EgcNode* node = nullptr;
 
 
-        if (rightSide() && m_iter.hasPrevious())
-                node = m_iter.peekPrevious().m_node;
-        else
+        if (rightSide() && m_iter.hasNext())
                 node = m_iter.peekNext().m_node;
+        else if (m_iter.hasPrevious())
+                node = m_iter.peekPrevious().m_node;
 
         if (!node)
                 node = &m_formula.getBaseElement();
@@ -196,9 +198,9 @@ quint32 FormulaModificator::subPosition(void) const
         qint32 retval;
 
         if (rightSide())
-                retval = m_iter.peekPrevious().m_subpos;
-        else
                 retval = m_iter.peekNext().m_subpos;
+        else
+                retval = m_iter.peekPrevious().m_subpos;
 
         return retval;
 }

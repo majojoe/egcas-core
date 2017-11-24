@@ -72,7 +72,8 @@ private:
          */
         void showCurrentCursor(void);
         /**
-         * @brief rightSide checks if cursor is on the right side of the current node or on the left
+         * @brief rightSide checks if node for representing the cursor is on the right side of the current cursor or
+         * node or on the left side (Cursor is a Java Style cursor and has left and a right node).
          * @return true if on the right side, false if on the left
          */
         bool rightSide(void) const;
