@@ -118,9 +118,9 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
         switch (unary->getNodeType()) {
         case EgcNodeType::ParenthesisNode:
                 if (m_state == EgcIteratorState::LeftIteration)
-                        append("(", unary);
+                        append("(", unary, CursorAdhesion::low, 1);
                 else if (m_state == EgcIteratorState::RightIteration)
-                        append(")", unary);
+                        append(")", unary, CursorAdhesion::low, 2);
                 break;
         case EgcNodeType::LogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
@@ -214,19 +214,20 @@ void FormulaScrVisitor::visit(EgcNode* node)
         }
 }
 
-void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion)
+void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos)
 {
         ++m_id;
-        appendRaw(str, node, m_id, cursorAdhesion);
+        appendRaw(str, node, m_id, cursorAdhesion, subpos);
 }
 
-void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, quint32 id, CursorAdhesion cursorAdhesion)
+void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, quint32 id, CursorAdhesion cursorAdhesion, quint32 subpos)
 {
         FormulaScrElement el;
         el.m_id = id;
         el.m_node = node;
         el.m_value = str;
         el.m_cAdh = cursorAdhesion;
+        el.m_subpos = subpos;
         m_iter.insert(el);
 }
 

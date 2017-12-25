@@ -103,16 +103,18 @@ private:
          * @param str the formula element to add
          * @param node the node that is associated with this element
          * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
+         * @param subpos subposition that can be set to reflect the correct position rectangle
          */
-        void append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::low);
+        void append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::low, quint32 subpos = 0);
         /**
          * @brief appendRaw append a formula element to the internal vector without incrementing the id
          * @param str the formula element to add
          * @param node the node that is associated with this element
          * @param id the id to use for the given node
          * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
+         * @param subpos subposition that can be set to reflect the correct position rectangle
          */
-        void appendRaw(QString str, EgcNode* node, quint32 id, CursorAdhesion cursorAdhesion = CursorAdhesion::low);
+        void appendRaw(QString str, EgcNode* node, quint32 id, CursorAdhesion cursorAdhesion = CursorAdhesion::low, quint32 subpos = 0);
         /**
          * @brief append append a number of formula signs to the internal vector (e.g. a variable name)
          * @param str the formula element to add
