@@ -91,6 +91,21 @@ void FormulaModificator::handleAction(const EgcAction& action)
         }
 }
 
+bool FormulaModificator::cursorAtBegin()
+{
+        if (!m_iter.hasPrevious())
+                return true;
+
+        return false;
+}
+
+bool FormulaModificator::cursorAtEnd()
+{
+        if (!m_iter.hasNext())
+                return true;
+
+        return false;
+}
 
 void FormulaModificator::moveCursor(bool forward)
 {

@@ -46,6 +46,17 @@ public:
          * @param action the action to execute
          */
         void handleAction(const EgcAction& action);
+        /**
+         * @brief cursorAtBegin checks if the cursor is at the beginning of a formula
+         * @return true if the cursor is at the beginning of the formula, false otherwise
+         */
+        bool cursorAtBegin(void);
+        /**
+         * @brief cursorAtEnd checks if the cursor is at the end of the formula
+         * @return true if the cursor is at the end of the formula, false otherwise
+         */
+        bool cursorAtEnd(void);
+
 
 private:
         /**

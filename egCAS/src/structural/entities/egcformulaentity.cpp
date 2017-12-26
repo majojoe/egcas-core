@@ -1005,16 +1005,18 @@ bool EgcFormulaEntity::isResultNode(const EgcNode& node)
 
 bool EgcFormulaEntity::cursorAtBegin(void)
 {
-        if (!m_scrIter->hasPrevious())
-                return true;
+        if (m_mod) {
+                return m_mod->cursorAtBegin();
+        }
 
         return false;
 }
 
 bool EgcFormulaEntity::cursorAtEnd(void)
 {
-        if (!m_scrIter->hasNext())
-                return true;
+        if (m_mod) {
+                return m_mod->cursorAtEnd();
+        }
 
         return false;
 }
