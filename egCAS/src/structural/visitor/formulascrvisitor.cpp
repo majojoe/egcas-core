@@ -58,7 +58,7 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                 }
                 if (m_state == EgcIteratorState::LeftIteration) {
                         if (isSquaredRoot) {
-                                m_suppressList.insert(binary); //exponent of squared roots are not shown
+                                m_suppressList.insert(child); //exponent of squared roots are not shown
                                 appendSegmented("_root_{", binary, CursorAdhesion::normal);
                         } else {
                                 appendSegmented("_root_{_{", binary, CursorAdhesion::normal);
