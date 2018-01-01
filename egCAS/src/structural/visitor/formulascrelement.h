@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QString>
 #include <QVector>
+#include <QLineF>
 
 class EgcNode;
 
@@ -39,22 +40,33 @@ class EgcNode;
  * strong node, the cursor will be shown with the dimensions of the node with the strong adhesion
  */
 enum class CursorAdhesion {
+        invisible,      ///< if the cursor at the current element position is invisible
         low,            ///< low cursor adhesion
         normal,         ///< standard (for most other symbols)
         strong,         ///< strong is e.g. for alpha numeric symbols
         ultra,          ///< to override strong adhesion of alpha numeric symbols
 };
 
+
+class TempDataScrIter
+{
+public:
+        TempDataScrIter();
+        quint32 m_id;           ///< id that describes formula elements that belong to each other
+        EgcNode* m_node;        ///< pointer to the node that created this element
+        quint32 m_subpos;       ///< saves the subposition of the element, normally 0
+};
+
 class FormulaScrElement
 {
 public:
         FormulaScrElement();
-
         QString m_value;        ///< formula element that is visible as entity on the screen
-        quint32 m_id;           ///< id that describes formula elements that belong to each other
-        EgcNode* m_node;        ///< pointer to the node that created this element
+        QLineF rCursor;         ///< cursor dimensions on right side of the element cursor
+        QLineF lCursor;         ///< cursor dimensions on left side of the element cursor
         CursorAdhesion m_cAdh;  ///< cursor adhesion of the node
-        quint32 m_subpos;       ///< saves the subposition of the element, normally 0
+        TempDataScrIter lTemp;  ///< temporary data for left side of cursor element
+        TempDataScrIter rTemp;  ///< temporary data for right side of cursor element
 };
 
 /**

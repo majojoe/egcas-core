@@ -59,15 +59,15 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                 if (m_state == EgcIteratorState::LeftIteration) {
                         if (isSquaredRoot) {
                                 m_suppressList.insert(child); //exponent of squared roots are not shown
-                                appendSegmented("_root_{", binary, CursorAdhesion::normal);
+                                append("_root_{", binary, CursorAdhesion::normal);
                         } else {
-                                appendSegmented("_root_{_{", binary, CursorAdhesion::normal);
+                                append("_root_{_{", binary, CursorAdhesion::normal);
                         }
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         if (!isSquaredRoot)
-                                appendSegmented("_},", binary, CursorAdhesion::normal);
+                                append("_},", binary, CursorAdhesion::normal);
                 } else {
-                        appendSegmented("_}", binary, CursorAdhesion::normal);
+                        append("_}", binary, CursorAdhesion::normal);
                 }
                 break;
         }
@@ -85,17 +85,17 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                 break;
         case EgcNodeType::DivisionNode:
                 if (m_state == EgcIteratorState::LeftIteration)
-                        appendSegmented("_{", binary);
+                        append("_{", binary);
                 else if (m_state == EgcIteratorState::MiddleIteration)
-                        appendSegmented("_}/_{", binary);
+                        append("_}/_{", binary);
                 else
-                        appendSegmented("_}", binary);
+                        append("_}", binary);
                 break;
         case EgcNodeType::ExponentNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
-                        appendSegmented("^_{", binary);
+                        append("^_{", binary);
                 else if (m_state == EgcIteratorState::RightIteration)
-                        appendSegmented("_}", binary);
+                        append("_}", binary);
                 break;
         case EgcNodeType::EqualNode: {
                 if (m_state == EgcIteratorState::MiddleIteration) {
@@ -214,20 +214,28 @@ void FormulaScrVisitor::visit(EgcNode* node)
         }
 }
 
-void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos)
+void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos,
+                               EgcNode* rNode, quint32 rSubpos)
 {
-        ++m_id;
-        appendRaw(str, node, m_id, cursorAdhesion, subpos);
+        assignIdToNode(node);
+        appendRaw(str, node, cursorAdhesion, subpos, rNode, rSubpos);
 }
 
-void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, quint32 id, CursorAdhesion cursorAdhesion, quint32 subpos)
+void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos,
+                                  EgcNode* rNode, quint32 rSubpos)
 {
         FormulaScrElement el;
-        el.m_id = id;
-        el.m_node = node;
         el.m_value = str;
         el.m_cAdh = cursorAdhesion;
-        el.m_subpos = subpos;
+        el.lTemp.m_node = node;
+        el.lTemp.m_subpos = subpos;
+        if (rNode) {
+                el.rTemp.m_node = rNode;
+                el.rTemp.m_subpos = rSubpos;
+        } else {
+                el.rTemp.m_node = node;
+                el.rTemp.m_subpos = subpos;
+        }
         m_iter.insert(el);
 }
 
@@ -241,16 +249,13 @@ void FormulaScrVisitor::appendSigns(QString str, EgcNode* node, CursorAdhesion c
         }
 }
 
-void FormulaScrVisitor::appendSegmented(QString str, EgcNode* node, CursorAdhesion cursorAdhesion)
+void FormulaScrVisitor::assignIdToNode(EgcNode* node)
 {
         quint32 id;
-        if (m_hash.contains(node)) {
-                id = m_hash.value(node);
-        } else {
+        if (!m_hash.contains(node)) {
                 id = ++m_id;
                 m_hash.insert(node, id);
         }
-        appendRaw(str, node, id, cursorAdhesion);
 }
 
 void FormulaScrVisitor::updateVector(void)
@@ -285,6 +290,20 @@ void FormulaScrVisitor::updateVector(void)
                 if (!m_suppressList.contains(node))
                         node->accept(this);
         };
+}
+
+void FormulaScrVisitor::doPostprocessing(void)
+{
+        FormulaScrElement i;
+        FormulaScrIter iter = m_iter;
+        iter.toFront();
+        while(iter.hasNext()) {
+                i = iter.next();
+                if (m_hash.contains(i.lTemp.m_node))
+                        i.lTemp.m_id = m_hash.value(i.lTemp.m_node);
+                if (m_hash.contains(i.rTemp.m_node))
+                        i.rTemp.m_id = m_hash.value(i.rTemp.m_node);
+        }
 }
 
 QString FormulaScrVisitor::getResult(void)

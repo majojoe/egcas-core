@@ -30,6 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "formulascrelement.h"
 
 
-FormulaScrElement::FormulaScrElement() : m_id{0}, m_node{nullptr}, m_cAdh{CursorAdhesion::low}, m_subpos{0}
+TempDataScrIter::TempDataScrIter() : m_id{0}, m_node{nullptr}, m_subpos{0}
+{
+
+}
+
+FormulaScrElement::FormulaScrElement() : m_cAdh{CursorAdhesion::low}
 {
 }
