@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "formulascrelement.h"
 
 
-TempDataScrIter::TempDataScrIter() : m_id{0}, m_node{nullptr}, m_subpos{0}
+TempDataScrIter::TempDataScrIter() : m_id{0}, m_node{nullptr}, m_subpos{0}, m_left_side{true}
 {
 
 }

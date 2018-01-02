@@ -55,6 +55,7 @@ public:
         quint32 m_id;           ///< id that describes formula elements that belong to each other
         EgcNode* m_node;        ///< pointer to the node that created this element
         quint32 m_subpos;       ///< saves the subposition of the element, normally 0
+        bool m_left_side;       ///< if true, cursor data shall be taken from left edge of boundary rect, if false from right one
 };
 
 class FormulaScrElement
