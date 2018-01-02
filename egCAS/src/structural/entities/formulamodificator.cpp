@@ -197,9 +197,9 @@ EgcNode& FormulaModificator::nodeAtCursor(void) const
 
 
         if (rightSide() && m_iter.hasNext())
-                node = m_iter.peekNext().m_node;
+                node = m_iter.peekNext().lTemp.m_node;
         else if (m_iter.hasPrevious())
-                node = m_iter.peekPrevious().m_node;
+                node = m_iter.peekPrevious().rTemp.m_node;
 
         if (!node)
                 node = &m_formula.getBaseElement();
@@ -213,9 +213,9 @@ quint32 FormulaModificator::subPosition(void) const
         qint32 retval;
 
         if (rightSide())
-                retval = m_iter.peekNext().m_subpos;
+                retval = m_iter.peekNext().lTemp.m_subpos;
         else
-                retval = m_iter.peekPrevious().m_subpos;
+                retval = m_iter.peekPrevious().rTemp.m_subpos;
 
         return retval;
 }

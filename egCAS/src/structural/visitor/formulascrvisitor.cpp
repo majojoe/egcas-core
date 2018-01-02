@@ -245,7 +245,10 @@ void FormulaScrVisitor::appendSigns(QString str, EgcNode* node, CursorAdhesion c
         quint32 n = 1;
         foreach (i, str) {
                 append(EgcAlnumNode::encode(i), node, cursorAdhesion);
-                m_iter.peekPrevious().m_subpos = n++;
+                FormulaScrElement& tmp = m_iter.peekPrevious();
+                tmp.lTemp.m_subpos = n;
+                tmp.rTemp.m_subpos = n;
+                n++;
         }
 }
 
@@ -290,15 +293,17 @@ void FormulaScrVisitor::updateVector(void)
                 if (!m_suppressList.contains(node))
                         node->accept(this);
         };
+
+        // do post processing lookup id's from node's
+        doPostprocessing();
 }
 
 void FormulaScrVisitor::doPostprocessing(void)
 {
-        FormulaScrElement i;
         FormulaScrIter iter = m_iter;
         iter.toFront();
         while(iter.hasNext()) {
-                i = iter.next();
+                FormulaScrElement& i = iter.next();
                 if (m_hash.contains(i.lTemp.m_node))
                         i.lTemp.m_id = m_hash.value(i.lTemp.m_node);
                 if (m_hash.contains(i.rTemp.m_node))
