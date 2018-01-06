@@ -27,6 +27,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QRectF>
+#include <QLineF>
 #include "egcformulaentity.h"
 #include "formulamodificator.h"
 #include "../visitor/formulascrvisitor.h"
@@ -149,24 +151,44 @@ quint32 FormulaModificator::id(void) const
 
 void FormulaModificator::showCurrentCursor(void)
 {
-        quint32 id;
-        qint32 ind;
         bool rSide;
         EgcAbstractFormulaItem* item = m_formula.getItem();
 
         if (!item)
                 return;
 
-        id = this->id();
-        ind = subPosition();
         rSide = rightSide();
+
+        if (rSide && !m_iter.hasNext())
+                return;
+        if (!rSide && !m_iter.hasPrevious())
+                return;
+
+        TempDataScrIter tmp;
+        if (rSide) {
+                FormulaScrElement& el = m_iter.peekNext();
+                tmp = el.lTemp;
+        } else {
+                FormulaScrElement& el = m_iter.peekPrevious();
+                tmp = el.rTemp;
+        }
+
+        if (tmp.m_id == 0)
+                return;
+
+        QRectF rect = item->getElementRect(tmp.m_id, tmp.m_subpos);
+        if (rect.isEmpty())
+                return;
+
+        QLineF cursor;
+        if (tmp.m_left_side)
+                cursor = QLineF(rect.topLeft(), rect.bottomLeft());
+        else
+                cursor = QLineF(rect.topRight(), rect.bottomRight());
 
         item->hideCursors();
 
-        if (rSide)
-                item->showLeftCursor(id, ind);
-        else
-                item->showRightCursor(id, ind);
+        item->showCursor(cursor);
 }
 
 bool FormulaModificator::rightSide(void) const

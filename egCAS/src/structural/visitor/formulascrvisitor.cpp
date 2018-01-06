@@ -48,6 +48,13 @@ FormulaScrVisitor::FormulaScrVisitor(EgcFormulaEntity& formula, FormulaScrIter& 
 
 void FormulaScrVisitor::visit(EgcBinaryNode* binary)
 {
+        EgcNode* lnode = binary->getChild(0);
+        if (!lnode)
+                lnode = binary;
+        EgcNode* rnode = binary->getChild(1);
+        if (!rnode)
+                rnode = binary;
+
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode: {
                 EgcNode* child = binary->getChild(1);
@@ -73,7 +80,7 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
         }
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
-                        append("+", binary);
+                        append("+", lnode, CursorAdhesion::ultra, 0, false, rnode, 0, true);
                 break;
         case EgcNodeType::MinusNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
@@ -214,25 +221,28 @@ void FormulaScrVisitor::visit(EgcNode* node)
         }
 }
 
-void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos,
-                               EgcNode* rNode, quint32 rSubpos)
+void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos, bool leftSide,
+                               EgcNode* rNode, quint32 rSubpos, bool rLeftSide)
 {
         assignIdToNode(node);
-        appendRaw(str, node, cursorAdhesion, subpos, rNode, rSubpos);
+        appendRaw(str, node, cursorAdhesion, subpos, leftSide, rNode, rSubpos, rLeftSide);
 }
 
-void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos,
-                                  EgcNode* rNode, quint32 rSubpos)
+void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos, bool leftSide,
+                                  EgcNode* rNode, quint32 rSubpos, bool rLeftSide)
 {
         FormulaScrElement el;
         el.m_value = str;
         el.m_cAdh = cursorAdhesion;
         el.lTemp.m_node = node;
         el.lTemp.m_subpos = subpos;
+        el.lTemp.m_left_side = leftSide;
         if (rNode) {
                 el.rTemp.m_node = rNode;
                 el.rTemp.m_subpos = rSubpos;
+                el.rTemp.m_left_side = rLeftSide;
         } else {
+                el.rTemp.m_left_side = false;
                 el.rTemp.m_node = node;
                 el.rTemp.m_subpos = subpos;
         }
