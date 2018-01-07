@@ -63,8 +63,6 @@ class FormulaScrElement
 public:
         FormulaScrElement();
         QString m_value;        ///< formula element that is visible as entity on the screen
-        QLineF rCursor;         ///< cursor dimensions on right side of the element cursor
-        QLineF lCursor;         ///< cursor dimensions on left side of the element cursor
         CursorAdhesion m_cAdh;  ///< cursor adhesion of the node
         TempDataScrIter lTemp;  ///< temporary data for left side of cursor element
         TempDataScrIter rTemp;  ///< temporary data for right side of cursor element

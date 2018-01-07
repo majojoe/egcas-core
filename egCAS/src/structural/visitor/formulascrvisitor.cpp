@@ -224,13 +224,6 @@ void FormulaScrVisitor::visit(EgcNode* node)
 void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos, bool leftSide,
                                EgcNode* rNode, quint32 rSubpos, bool rLeftSide)
 {
-        assignIdToNode(node);
-        appendRaw(str, node, cursorAdhesion, subpos, leftSide, rNode, rSubpos, rLeftSide);
-}
-
-void FormulaScrVisitor::appendRaw(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos, bool leftSide,
-                                  EgcNode* rNode, quint32 rSubpos, bool rLeftSide)
-{
         FormulaScrElement el;
         el.m_value = str;
         el.m_cAdh = cursorAdhesion;
@@ -259,15 +252,6 @@ void FormulaScrVisitor::appendSigns(QString str, EgcNode* node, CursorAdhesion c
                 tmp.lTemp.m_subpos = n;
                 tmp.rTemp.m_subpos = n;
                 n++;
-        }
-}
-
-void FormulaScrVisitor::assignIdToNode(EgcNode* node)
-{
-        quint32 id;
-        if (!m_hash.contains(node)) {
-                id = ++m_id;
-                m_hash.insert(node, id);
         }
 }
 
@@ -310,14 +294,22 @@ void FormulaScrVisitor::updateVector(void)
 
 void FormulaScrVisitor::doPostprocessing(void)
 {
+        const EgcMathmlLookup lookup = m_formula->getMathmlMappingCRef();
+        quint32 id;
         FormulaScrIter iter = m_iter;
         iter.toFront();
         while(iter.hasNext()) {
                 FormulaScrElement& i = iter.next();
-                if (m_hash.contains(i.lTemp.m_node))
-                        i.lTemp.m_id = m_hash.value(i.lTemp.m_node);
-                if (m_hash.contains(i.rTemp.m_node))
-                        i.rTemp.m_id = m_hash.value(i.rTemp.m_node);
+                if (i.lTemp.m_node) {
+                        id = lookup.getIdFrame(*i.lTemp.m_node);
+                        if (id)
+                                i.lTemp.m_id = id;
+                }
+                if (i.rTemp.m_node) {
+                        id = lookup.getIdFrame(*i.rTemp.m_node);
+                        if (id)
+                                i.rTemp.m_id = id;
+                }
         }
 }
 
