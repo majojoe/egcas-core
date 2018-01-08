@@ -117,6 +117,25 @@ private:
         void append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::low, quint32 subpos = 0,
                     bool leftSide = true, EgcNode* rNode = nullptr, quint32 rSubpos = 0, bool rLeftSide = false);
         /**
+         * @brief append append a formula element to the internal vector. Same as above, but this element is segmented
+         * in multiple ones. So if deleting such an element later, all of the others will also be deleted.
+         * @param str the formula element to add
+         * @param node whose bounding rect describes in combination with the subpos parameter the left cursor of the
+         * element. If the rNode parameter is not given it also describes the right cursor.
+         * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
+         * @param subpos subposition that can be set to reflect the correct position rectangle. Some nodes have multiple
+         * bounding rects to describe an element.
+         * @param leftSide true if left edge of the given bounding rect (associated with node) shall be used as left
+         * cursor of the element, false otherwise
+         * @param rNode if this parameter is given the right cursor is determined by the bounding rect of the given node.
+         * @param rSubpos subposition that can be set to reflect the correct position rectangle. Some nodes have multiple
+         * bounding rects to describe an element.
+         * @param rLeftSide true if the left side of the given bounding rect (associated with rNode) shall be used as
+         * right cursor of the element, false otherwise
+         */
+        void appendSegmented(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::low, quint32 subpos = 0,
+                    bool leftSide = true, EgcNode* rNode = nullptr, quint32 rSubpos = 0, bool rLeftSide = false);
+        /**
          * @brief append append a number of formula signs to the internal vector (e.g. a variable name)
          * @param str the formula element to add
          * @param node the node that is associated with this the signs
@@ -136,7 +155,8 @@ private:
         FormulaScrIter& m_iter;                 ///< iterator for iterating and modifying all FormulaScrElement elements
         quint32 m_id;                           ///< id counter during visitor run
         QHash<EgcNode*, quint32> m_hash;        ///< hash for lookup of id's of parts of a node
-        QSet<const EgcNode*> m_suppressList;          ///< a list with pointers EgcNode elements that shall not be rendered
+        QSet<const EgcNode*> m_suppressList;    ///< a list with pointers EgcNode elements that shall not be rendered
+        EgcNode* m_currNode;                    ///< node that currently is in processing
 
 };
 

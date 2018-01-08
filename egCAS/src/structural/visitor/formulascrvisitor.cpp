@@ -42,12 +42,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 
-FormulaScrVisitor::FormulaScrVisitor(EgcFormulaEntity& formula, FormulaScrIter& iter) :  EgcNodeVisitor(formula), m_iter{iter}, m_id{0}
+FormulaScrVisitor::FormulaScrVisitor(EgcFormulaEntity& formula, FormulaScrIter& iter) :  EgcNodeVisitor(formula),
+        m_iter{iter}, m_id{0}, m_currNode{nullptr}
 {
 }
 
 void FormulaScrVisitor::visit(EgcBinaryNode* binary)
 {
+        m_currNode = binary;
         EgcNode* lnode = binary->getChild(0);
         if (!lnode)
                 lnode = binary;
@@ -66,53 +68,53 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                 if (m_state == EgcIteratorState::LeftIteration) {
                         if (isSquaredRoot) {
                                 m_suppressList.insert(child); //exponent of squared roots are not shown
-                                append("_root_{", binary, CursorAdhesion::normal);
+                                appendSegmented("_root_{", binary, CursorAdhesion::normal);
                         } else {
-                                append("_root_{_{", binary, CursorAdhesion::normal);
+                                appendSegmented("_root_{_{", binary, CursorAdhesion::normal);
                         }
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         if (!isSquaredRoot)
-                                append("_},", binary, CursorAdhesion::normal);
+                                appendSegmented("_},", binary, CursorAdhesion::normal);
                 } else {
-                        append("_}", binary, CursorAdhesion::normal);
+                        appendSegmented("_}", binary, CursorAdhesion::normal);
                 }
                 break;
         }
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
-                        append("+", lnode, CursorAdhesion::ultra, 0, false, rnode, 0, true);
+                        append("+", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
                 break;
         case EgcNodeType::MinusNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
-                        append("-", binary);
+                        append("-", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
                 break;
         case EgcNodeType::MultiplicationNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
-                        append("*", binary);
+                        append("*", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
                 break;
         case EgcNodeType::DivisionNode:
                 if (m_state == EgcIteratorState::LeftIteration)
-                        append("_{", binary);
+                        appendSegmented("_{", binary, CursorAdhesion::low, 0, true, lnode, 0, true);
                 else if (m_state == EgcIteratorState::MiddleIteration)
-                        append("_}/_{", binary);
+                        appendSegmented("_}/_{", lnode, CursorAdhesion::low, 0, true, rnode, 0, true);
                 else
-                        append("_}", binary);
+                        appendSegmented("_}", rnode, CursorAdhesion::low, 0, false, binary, 0, false);
                 break;
         case EgcNodeType::ExponentNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
-                        append("^_{", binary);
+                        appendSegmented("^_{", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
                 else if (m_state == EgcIteratorState::RightIteration)
-                        append("_}", binary);
+                        appendSegmented("_}", rnode, CursorAdhesion::low, 0, false, binary, 0, false);
                 break;
         case EgcNodeType::EqualNode: {
                 if (m_state == EgcIteratorState::MiddleIteration) {
-                        append("=", binary);
+                        append("=", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
                 }
                 break;
         }
         case EgcNodeType::DefinitionNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
-                        append(":", binary);
+                        append(":", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(binary->getNodeType())) ;
@@ -122,27 +124,32 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
 
 void FormulaScrVisitor::visit(EgcUnaryNode* unary)
 {
+        m_currNode = unary;
+        EgcNode* node = unary->getChild(0);
+        if (!node)
+                node = unary;
+
         switch (unary->getNodeType()) {
         case EgcNodeType::ParenthesisNode:
                 if (m_state == EgcIteratorState::LeftIteration)
-                        append("(", unary, CursorAdhesion::low, 1);
+                        append("(", unary, CursorAdhesion::low, 0, true, node, 0, true);
                 else if (m_state == EgcIteratorState::RightIteration)
-                        append(")", unary, CursorAdhesion::low, 2);
+                        append(")", node, CursorAdhesion::low, 0, false, unary, 0, false);
                 break;
         case EgcNodeType::LogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         append("_log", unary);
-                        append("(", unary);
+                        append("(", unary, CursorAdhesion::low, 0, true, node, 0, true);
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        append(")", unary);
+                        append(")", node, CursorAdhesion::low, 0, false, unary, 0, false);
                 }
                 break;
         case EgcNodeType::NatLogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         append("log", unary);
-                        append("(", unary);
+                        append("(", unary, CursorAdhesion::low, 0, true, node, 0, true);
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        append(")", unary);
+                        append(")", node, CursorAdhesion::low, 0, false, unary, 0, false);
                 }
                 break;
 //        case EgcNodeType::LParenthesisNode:
@@ -165,6 +172,7 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
 
 void FormulaScrVisitor::visit(EgcFlexNode* flex)
 {
+        m_currNode = flex;
         switch (flex->getNodeType()) {
         case EgcNodeType::FunctionNode:
 //                if (m_state == EgcIteratorState::LeftIteration)
@@ -205,6 +213,7 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
 
 void FormulaScrVisitor::visit(EgcNode* node)
 {
+        m_currNode = node;
         switch (node->getNodeType()) {
         case EgcNodeType::EmptyNode:
                 append("_empty", node, CursorAdhesion::strong);
@@ -221,12 +230,21 @@ void FormulaScrVisitor::visit(EgcNode* node)
         }
 }
 
+void FormulaScrVisitor::appendSegmented(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos, bool leftSide,
+                               EgcNode* rNode, quint32 rSubpos, bool rLeftSide)
+{
+        append(str, node, cursorAdhesion, subpos, leftSide, rNode, rSubpos, rLeftSide);
+        FormulaScrElement& tmp = m_iter.peekPrevious();
+        tmp.m_isSegmented = true;
+}
+
 void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subpos, bool leftSide,
                                EgcNode* rNode, quint32 rSubpos, bool rLeftSide)
 {
         FormulaScrElement el;
         el.m_value = str;
         el.m_cAdh = cursorAdhesion;
+        el.m_node = m_currNode;
         el.lTemp.m_node = node;
         el.lTemp.m_subpos = subpos;
         el.lTemp.m_left_side = leftSide;
