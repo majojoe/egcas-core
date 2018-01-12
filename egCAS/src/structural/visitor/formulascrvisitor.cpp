@@ -43,7 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 FormulaScrVisitor::FormulaScrVisitor(EgcFormulaEntity& formula, FormulaScrIter& iter) :  EgcNodeVisitor(formula),
-        m_iter{iter}, m_id{0}, m_currNode{nullptr}
+        m_iter{iter}, m_currNode{nullptr}
 {
 }
 
@@ -138,18 +138,18 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
                 break;
         case EgcNodeType::LogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        append("_log", unary);
-                        append("(", unary, CursorAdhesion::low, 0, true, node, 0, true);
+                        append("_log", unary, CursorAdhesion::low, 0, true, unary, 3, false);
+                        append("(", unary, CursorAdhesion::low, 4, true, node, 0, true);
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        append(")", node, CursorAdhesion::low, 0, false, unary, 0, false);
+                        append(")", node, CursorAdhesion::low, 0, false, unary, 5, false);
                 }
                 break;
         case EgcNodeType::NatLogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        append("log", unary);
-                        append("(", unary, CursorAdhesion::low, 0, true, node, 0, true);
+                        append("log", unary, CursorAdhesion::low, 0, true, unary, 2, false);
+                        append("(", unary, CursorAdhesion::low, 3, true, node, 0, true);
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        append(")", node, CursorAdhesion::low, 0, false, unary, 0, false);
+                        append(")", node, CursorAdhesion::low, 0, false, unary, 4, false);
                 }
                 break;
 //        case EgcNodeType::LParenthesisNode:
@@ -278,8 +278,6 @@ void FormulaScrVisitor::updateVector(void)
         EgcNodeIterator iter(*m_formula);
         EgcNode *node;
         EgcNode *previousChildNode;
-
-        m_id = 0;
 
         m_iter.clear();
 

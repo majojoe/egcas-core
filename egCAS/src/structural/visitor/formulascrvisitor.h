@@ -153,8 +153,6 @@ private:
         void doPostprocessing(void);
 
         FormulaScrIter& m_iter;                 ///< iterator for iterating and modifying all FormulaScrElement elements
-        quint32 m_id;                           ///< id counter during visitor run
-        QHash<EgcNode*, quint32> m_hash;        ///< hash for lookup of id's of parts of a node
         QSet<const EgcNode*> m_suppressList;    ///< a list with pointers EgcNode elements that shall not be rendered
         EgcNode* m_currNode;                    ///< node that currently is in processing
 

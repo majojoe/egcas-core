@@ -200,19 +200,22 @@ EgcNode* Interpreter::addFunction(const std::string& fncName, EgcArgumentsNode* 
         return static_cast<EgcNode*> (argList);
 }
 
-EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcArgumentsNode* argList)
+EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcNode* node0)
 {
-        if (argList) {
-                EgcNode* node = changeFlexExpressionType(EgcNodeType::FunctionNode, argList);
-                EgcFunctionNode* function = static_cast<EgcFunctionNode*>(node);
-                QString name = QString::fromStdString(fncName);
-                if (name == QString("log"))
-                        name = QString("ln");
-                function->setName(name);
-                return static_cast<EgcNode*> (function);
+        QScopedPointer<EgcFunctionNode> node(static_cast<EgcFunctionNode*>(EgcNodeCreator::create(EgcNodeType::FunctionNode)));
+        QScopedPointer<EgcNode> node0Tmp(node0);
+        setNotDangling(node0);
+        QString name = QString::fromStdString(fncName);
+        node->setName(name);
+        if (!node.isNull() && node0) {
+                node->setChild(0, *node0Tmp.take());
+        } else {
+                throw std::runtime_error("Not enough memory to complete operation!");
         }
+        EgcNode *nodePtr = node.data();
+        addDanglingNode(node.take());
 
-        return static_cast<EgcNode*> (argList);
+        return nodePtr;
 }
 
 EgcNode* Interpreter::updateIterator(EgcNode* node0, int i)
