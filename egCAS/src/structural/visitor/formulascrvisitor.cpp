@@ -59,24 +59,23 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
 
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode: {
-                EgcNode* child = binary->getChild(1);
                 bool isSquaredRoot = false;
-                if (child->getNodeType() == EgcNodeType::NumberNode) {
-                        if (static_cast<EgcNumberNode*>(child)->getValue() == QString("2"))
+                if (lnode->getNodeType() == EgcNodeType::NumberNode) {
+                        if (static_cast<EgcNumberNode*>(lnode)->getValue() == QString("2"))
                                 isSquaredRoot = true;
                 }
                 if (m_state == EgcIteratorState::LeftIteration) {
                         if (isSquaredRoot) {
-                                m_suppressList.insert(child); //exponent of squared roots are not shown
-                                appendSegmented("_root_{", binary, CursorAdhesion::normal);
+                                m_suppressList.insert(lnode); //exponent of squared roots are not shown
+                                appendSegmented("_root_{", binary, CursorAdhesion::low, 0, true, rnode, 0, true);
                         } else {
-                                appendSegmented("_root_{_{", binary, CursorAdhesion::normal);
+                                appendSegmented("_root_{_{", binary, CursorAdhesion::low, 0, true, lnode, 0, true);
                         }
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         if (!isSquaredRoot)
-                                appendSegmented("_},", binary, CursorAdhesion::normal);
+                                appendSegmented("_},", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
                 } else {
-                        appendSegmented("_}", binary, CursorAdhesion::normal);
+                        appendSegmented("_}", rnode, CursorAdhesion::low, 0, false, binary, 0, false);
                 }
                 break;
         }

@@ -49,10 +49,10 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
         case EgcNodeType::RootNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         // don't show the root exponent if it is "2" (square root)
-                        suppressChildIfChildValue(node, 1, EgcNodeType::NumberNode, "2");
+                        suppressChildIfChildValue(node, 0, EgcNodeType::NumberNode, "2");
                 } else if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
-                        assembleResult("<mroot" %id%"><mrow>%1</mrow><mrow>%2</mrow></mroot>", node);
+                        assembleResult("<mroot" %id%"><mrow>%2</mrow><mrow>%1</mrow></mroot>", node);
                 }
                 break;
         case EgcNodeType::EqualNode:
