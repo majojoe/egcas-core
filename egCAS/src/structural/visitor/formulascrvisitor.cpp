@@ -151,14 +151,14 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
                         append(")", node, CursorAdhesion::low, 0, false, unary, 4, false);
                 }
                 break;
-//        case EgcNodeType::LParenthesisNode:
-//                if (m_state == EgcIteratorState::RightIteration)
-//                        assembleResult("(%1", unary);
-//                break;
-//        case EgcNodeType::RParenthesisNode:
-//                if (m_state == EgcIteratorState::RightIteration)
-//                        assembleResult("%1)", unary);
-//                break;
+        case EgcNodeType::LParenthesisNode:
+                if (m_state == EgcIteratorState::LeftIteration)
+                        append("(", unary, CursorAdhesion::low, 0, true, node, 0, true);
+                break;
+        case EgcNodeType::RParenthesisNode:
+                if (m_state == EgcIteratorState::RightIteration)
+                        append(")", node, CursorAdhesion::low, 0, false, unary, 0, false);
+                break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::LeftIteration)
                         append("-", unary, CursorAdhesion::normal);
@@ -174,12 +174,16 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
         m_currNode = flex;
         switch (flex->getNodeType()) {
         case EgcNodeType::FunctionNode:
-//                if (m_state == EgcIteratorState::LeftIteration)
-//                        append("_{", flex);
-//                else if (m_state == EgcIteratorState::MiddleIteration)
-//                        append("");
-//                        assembleResult("", "(", ",", ")", flex);
-//                break;
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        QString name = static_cast<EgcFunctionNode*>(flex)->getName();
+                        appendSigns(name, flex, CursorAdhesion::strong);
+                        append("(", flex, CursorAdhesion::ultra, name.length() + 1, true, flex->getChild(0), 0, true);
+                } else if (m_state == EgcIteratorState::MiddleIteration) {
+                        //append("", "(", ",", ")", flex);
+                } else {
+                        append(")", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::ultra, 0, false, flex, 0, false);
+                }
+                break;
 //        case EgcNodeType::IntegralNode:
 //                if (m_state == EgcIteratorState::RightIteration) {
 //                                assembleResult("_integrate(", ",", ")", flex);
