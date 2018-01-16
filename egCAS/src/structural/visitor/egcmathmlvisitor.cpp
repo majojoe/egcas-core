@@ -176,9 +176,10 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
         case EgcNodeType::FunctionNode:
                 if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
-                        assembleResult("<mrow "%id%">",
-                                       "<mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>",
-                                       "<mo>,</mo>", "</mrow><mo>)</mo></mrow></mrow>", node);
+                        assembleResult("<mrow "%id%"><mi mathvariant=\"italic\"" %id%">" %
+                                       static_cast<EgcFunctionNode*>(node)->getName() % "</mi>"
+                                       "<mo>&ApplyFunction;</mo><mrow><mo" %id%">(</mo><mrow>",
+                                       "<mo" %id%">,</mo>", "</mrow><mo" %id%">)</mo></mrow></mrow>", node);
                 }
                 break;
         case EgcNodeType::IntegralNode:
@@ -268,9 +269,6 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                 pushToStack("<mn" %id%">" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>", node);
                 break;
         case EgcNodeType::AlnumNode:
-                if (node->getParent()->getNodeType() == EgcNodeType::FunctionNode)
-                        pushToStack("<mi mathvariant=\"italic\"" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue() % "</mi>", node);
-                else
                         pushToStack("<mi mathvariant=\"normal\"" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue() % "</mi>", node);
                 break;
         case EgcNodeType::EmptyNode:

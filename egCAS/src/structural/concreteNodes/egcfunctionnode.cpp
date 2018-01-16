@@ -33,12 +33,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcFunctionNode::EgcFunctionNode()
 {
-        QScopedPointer<EgcEmptyNode> name(new EgcEmptyNode());
-        setChild(0, *name.take());
         QScopedPointer<EgcEmptyNode> val(new EgcEmptyNode());
         if (val) {
-                if (insert(1, *val.data()))
-                        (void) val.take();
+                setChild(0, *val.take());
         }
 }
 
@@ -46,49 +43,18 @@ bool EgcFunctionNode::transferArgs(EgcArgumentsNode& args)
 {
         EgcFlexNode& node = *this;
         node = std::move(args);
-        QScopedPointer<EgcEmptyNode> val(new EgcEmptyNode());
-        if (val) {
-                if (insert(0, *val.data()))
-                        (void) val.take();
-        }
+
+        return true;
 }
 
 void EgcFunctionNode::setName(const QString& fncName)
 {
-        if (m_childs.size() == 0)
-                return;
-        if (!m_childs.at(0))
-                return;
-
-        EgcAlnumNode *alnum;
-        if (m_childs.at(0)->getNodeType() == EgcNodeType::EmptyNode) {
-                QScopedPointer<EgcAlnumNode> val(new EgcAlnumNode());
-                if (setChild(0, *val.data()))
-                        (void) val.take();
-        }
-
-        if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
-                alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
-                alnum->setValue(fncName);
-        }
+        m_fncName = fncName;
 }
 
 QString EgcFunctionNode::getName(void)
 {
-        QString retval = QString::null;
-
-        if (m_childs.size() == 0)
-                return retval;
-        if (!m_childs.at(0))
-                return retval;
-
-        EgcAlnumNode *alnum;
-        if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
-                alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
-                retval = alnum->getValue();
-        }
-
-        return retval;
+        return m_fncName;
 }
 
 bool EgcFunctionNode::cursorSnaps(EgcNodeSide side) const
@@ -115,24 +81,23 @@ bool EgcFunctionNode::determineIfChildIsAtomicallyBound(const EgcNode* node) con
 
         (void) getIndexOfChild(*const_cast<EgcNode*>(node), ind);
 
-        if (ind == 0)
-                return true;
-
         return false;
 }
 
 bool EgcFunctionNode::valid(void)
 {
-        QString val;
-        EgcAlnumNode *alnum;
-
-        if (m_childs.at(0)->getNodeType() == EgcNodeType::AlnumNode) {
-                alnum = static_cast<EgcAlnumNode*>(m_childs.at(0));
-                val = alnum->getValue();
-        }
-
-        if (val.isEmpty())
+        if (m_fncName.isEmpty())
                 return false;
         else
                 return true;
+}
+
+void EgcFunctionNode::setStuffedName(const QString& fncName)
+{
+        m_fncName = EgcAlnumNode::decode(fncName);
+}
+
+QString EgcFunctionNode::getStuffedName()
+{
+        return EgcAlnumNode::encode(m_fncName);
 }

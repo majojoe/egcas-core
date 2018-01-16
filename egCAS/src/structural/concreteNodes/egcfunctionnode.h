@@ -86,6 +86,25 @@ public:
          * @return true if the expression is valid, false otherwise.
          */
         virtual bool valid(void);
+        /**
+         * @brief setStuffedName set the stuffed function name
+         * @param fncName the variable name as a string. This can include the stuffed special signs (a "_" in the
+         * variable name is stuffed into "__", and special signs are encoded with html escapes where 'ampersand'&'
+         * and ';' are again encoded with '_2' and '_3'. As a result all characters will be ASCII conform then and can
+         * be used by the calc kernel).
+         */
+        virtual void setStuffedName(const QString& fncName);
+        /**
+         * @brief getStuffedName returns the stuffed name (with stuffed special signs)
+         * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
+         * and special signs are encoded with html escapes where 'ampersand'&' and ';' are again encoded with '_2' and
+         * '_3'. As a result all characters will be ASCII conform then and can be used by the calc kernel).
+         */
+        virtual QString getStuffedName(void);
+
+
+private:
+        QString m_fncName;               ///< function name of the function
 };
 
 #endif // EGCFUNCTIONNODE_H

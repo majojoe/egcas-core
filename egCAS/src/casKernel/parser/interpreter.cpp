@@ -193,7 +193,7 @@ EgcNode* Interpreter::addFunction(const std::string& fncName, EgcArgumentsNode* 
         if (argList) {
                 EgcNode* node = changeFlexExpressionType(EgcNodeType::FunctionNode, argList);
                 EgcFunctionNode* function = static_cast<EgcFunctionNode*>(node);
-                function->setName(QString::fromStdString(fncName));
+                function->setStuffedName(QString::fromStdString(fncName));
                 return static_cast<EgcNode*> (function);
         }
 
@@ -206,7 +206,7 @@ EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcNode* no
         QScopedPointer<EgcNode> node0Tmp(node0);
         setNotDangling(node0);
         QString name = QString::fromStdString(fncName);
-        node->setName(name);
+        node->setStuffedName(name);
         if (!node.isNull() && node0) {
                 node->setChild(0, *node0Tmp.take());
         } else {

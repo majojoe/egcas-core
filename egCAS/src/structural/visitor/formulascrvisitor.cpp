@@ -177,11 +177,11 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
                 if (m_state == EgcIteratorState::LeftIteration) {
                         QString name = static_cast<EgcFunctionNode*>(flex)->getName();
                         appendSigns(name, flex, CursorAdhesion::strong);
-                        append("(", flex, CursorAdhesion::ultra, name.length() + 1, true, flex->getChild(0), 0, true);
+                        append("(", flex, CursorAdhesion::low, name.length() + 1, true, flex->getChild(0), 0, true);
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
-                        //append("", "(", ",", ")", flex);
+                        append(",", flex->getChild(m_childIndex), CursorAdhesion::low, 0, false, flex->getChild(m_childIndex + 1), 0, true);
                 } else {
-                        append(")", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::ultra, 0, false, flex, 0, false);
+                        append(")", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::low, 0, false, flex, 0, false);
                 }
                 break;
 //        case EgcNodeType::IntegralNode:
