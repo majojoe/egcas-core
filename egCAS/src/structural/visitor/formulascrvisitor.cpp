@@ -177,18 +177,22 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
                 if (m_state == EgcIteratorState::LeftIteration) {
                         QString name = static_cast<EgcFunctionNode*>(flex)->getName();
                         appendSigns(name, flex, CursorAdhesion::strong);
-                        append("(", flex, CursorAdhesion::low, name.length() + 1, true, flex->getChild(0), 0, true);
+                        appendSegmented("(", flex, CursorAdhesion::low, name.length() + 1, true, flex->getChild(0), 0, true);
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         append(",", flex->getChild(m_childIndex), CursorAdhesion::low, 0, false, flex->getChild(m_childIndex + 1), 0, true);
                 } else {
-                        append(")", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::low, 0, false, flex, 0, false);
+                        appendSegmented(")", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::low, 0, false, flex, 0, false);
                 }
                 break;
-//        case EgcNodeType::IntegralNode:
-//                if (m_state == EgcIteratorState::RightIteration) {
-//                                assembleResult("_integrate(", ",", ")", flex);
-//                }
-//                break;
+        case EgcNodeType::IntegralNode:
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        appendSegmented("_integrate_{", flex, CursorAdhesion::low, 0, true, flex->getChild(0), 0, true);
+                } else if (m_state == EgcIteratorState::MiddleIteration) {
+                        append(",", flex->getChild(m_childIndex), CursorAdhesion::low, 0, false, flex->getChild(m_childIndex + 1), 0, true);
+                } else {
+                        appendSegmented("_}", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::low, 0, false, flex, 0, false);
+                }
+                break;
 //        case EgcNodeType::DifferentialNode:
 //                if (m_state == EgcIteratorState::RightIteration) {
 //                        EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(flex);
