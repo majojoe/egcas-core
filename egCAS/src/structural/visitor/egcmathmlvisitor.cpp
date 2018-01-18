@@ -232,7 +232,7 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                                                  % "</mfenced></mrow><mrow><mi>d</mi>%" % QString::number(indexV + 1)
                                                  % "</mrow></mfrac>";
                                 else
-                                        result = "<mfrac "%id%"><mrow><msup><mi>d</mi><mn>" % QString::number(der)
+                                        result = "<mfrac "%id%"><mrow><msup><mi>d</mi><mn "%id%">" % QString::number(der)
                                                  % "</mn></msup><mfenced>%" % QString::number(indexD + 1)
                                                  % "</mfenced></mrow><msup><mrow><mi>d</mi>%"
                                                  % QString::number(indexV + 1) % "</mrow><mn>"
