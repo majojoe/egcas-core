@@ -193,17 +193,21 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
                         appendSegmented("_}", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::low, 0, false, flex, 0, false);
                 }
                 break;
-//        case EgcNodeType::DifferentialNode:
-//                if (m_state == EgcIteratorState::RightIteration) {
-//                        EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(flex);
-//                        quint32 indexD = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::differential);
-//                        quint32 indexV = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::variable);
-
-//                        QString str = "_diff(%" % QString::number(indexD + 1) % ",%" % QString::number(indexV + 1)
-//                                      % "," % QString::number(diff->getNrDerivative()) % ")";
-//                        assembleResult(str, flex);
-//                }
-//                break;
+        case EgcNodeType::DifferentialNode:
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        if (static_cast<EgcDifferentialNode*>(flex)->getNrDerivative() <= 3) {
+                                appendSegmented("_diff_{", flex, CursorAdhesion::low, 0, true, flex->getChild(0), 0, true);
+                        } else {
+                                appendSegmented("_diff_{", flex, CursorAdhesion::ultra, 0, true, flex, 1, true);
+                                appendSigns(QString::number(static_cast<EgcDifferentialNode*>(flex)->getNrDerivative()), flex, CursorAdhesion::strong);
+                                appendSegmented(",", flex, CursorAdhesion::ultra, 1, false, flex->getChild(0), 0, true);
+                        }
+                } else if (m_state == EgcIteratorState::MiddleIteration) {
+                        appendSegmented(",", flex->getChild(m_childIndex), CursorAdhesion::ultra, 0, false, flex->getChild(m_childIndex + 1), 0, true);
+                } else {
+                        appendSegmented("_}", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::ultra, 0, false, flex, 0, false);
+                }
+                break;
         case EgcNodeType::VariableNode:
                 if (m_state == EgcIteratorState::MiddleIteration) {
                         if (flex->getNumberChildNodes() == 2) {
