@@ -56,6 +56,11 @@ public:
          * @return true if the cursor is at the end of the formula, false otherwise
          */
         bool cursorAtEnd(void);
+        /**
+         * @brief insertCharacter insert a character at the current cursor position
+         * @param character the character to insert
+         */
+        void insertCharacter(QChar character);
 
 
 private:
@@ -98,6 +103,11 @@ private:
          * @return the subPosition of the current mathml id
          */
         quint32 subPosition(void) const;
+        /**
+         * @brief reStructureTree restructure the tree e.g. after an insert or delete
+         */
+        void reStructureTree(void);
+
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula

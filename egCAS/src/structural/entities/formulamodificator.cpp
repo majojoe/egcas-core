@@ -59,9 +59,9 @@ void FormulaModificator::handleAction(const EgcAction& action)
 //        case EgcOperations::spacePressed:
 //                markParent();
 //                break;
-//        case EgcOperations::alnumKeyPressed:
-//                insertCharacter(action.m_character);
-//                break;
+        case EgcOperations::alnumKeyPressed:
+                insertCharacter(action.m_character);
+                break;
 //        case EgcOperations::backspacePressed:
 //                removeCharacter(true);
 //                break;
@@ -107,6 +107,15 @@ bool FormulaModificator::cursorAtEnd()
                 return true;
 
         return false;
+}
+
+void FormulaModificator::insertCharacter(QChar character)
+{
+        FormulaScrElement el;
+        el.m_value = character;
+
+        m_iter.insert(el);
+        reStructureTree();
 }
 
 void FormulaModificator::moveCursor(bool forward)
@@ -240,5 +249,23 @@ quint32 FormulaModificator::subPosition(void) const
                 retval = m_iter.peekPrevious().rTemp.m_subpos;
 
         return retval;
+}
+
+void FormulaModificator::reStructureTree()
+{
+
+
+        RestructParserProvider pp;
+        ReStructureVisitor restructureVisitor(*this);
+        QString result = restructureVisitor.getResult();
+        NodeIterReStructData iterData;
+        int errCode;
+        EgcNode* tree = pp.getRestructParser()->restructureFormula(result, iterData, &errCode);
+        if (tree) {
+                setRootElement(tree);
+                m_scrIter->invalidateCursor(getBaseElement());
+                m_scrIter->updateRestructureData(iterData);
+        }
+
 }
 
