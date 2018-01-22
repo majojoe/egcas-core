@@ -67,15 +67,15 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                 if (m_state == EgcIteratorState::LeftIteration) {
                         if (isSquaredRoot) {
                                 m_suppressList.insert(lnode); //exponent of squared roots are not shown
-                                appendSegmented("_root_{", binary, CursorAdhesion::low, 0, true, rnode, 0, true);
+                                appendSegmented("sqrt(", binary, CursorAdhesion::low, 0, true, rnode, 0, true);
                         } else {
-                                appendSegmented("_root_{_{", binary, CursorAdhesion::low, 0, true, lnode, 0, true);
+                                appendSegmented("_root(_{", binary, CursorAdhesion::low, 0, true, lnode, 0, true);
                         }
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         if (!isSquaredRoot)
                                 appendSegmented("_},", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
                 } else {
-                        appendSegmented("_}", rnode, CursorAdhesion::low, 0, false, binary, 0, false);
+                        appendSegmented(")", rnode, CursorAdhesion::low, 0, false, binary, 0, false);
                 }
                 break;
         }

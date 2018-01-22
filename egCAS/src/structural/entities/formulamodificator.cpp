@@ -129,7 +129,8 @@ void FormulaModificator::insertCharacter(QChar character)
         el.m_value = character;
 
         m_iter.insert(el);
-        reStructureTree();
+        if (!reStructureTree())
+                moveCursor(false);
         m_iter.update();
         showCurrentCursor();
 }
@@ -267,8 +268,10 @@ quint32 FormulaModificator::subPosition(void) const
         return retval;
 }
 
-void FormulaModificator::reStructureTree()
+bool FormulaModificator::reStructureTree()
 {
+        bool retval = true;
+
         RestructParserProvider pp;
         FormulaScrVisitor restructVisitor(m_formula, m_iter);
         QString result = restructVisitor.getResult();
@@ -278,6 +281,10 @@ void FormulaModificator::reStructureTree()
         if (tree) {
                 m_formula.setRootElement(tree);
                 m_formula.updateView();
+        } else {
+                retval = false;
         }
+
+        return retval;
 }
 

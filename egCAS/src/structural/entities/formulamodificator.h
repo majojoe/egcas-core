@@ -105,8 +105,9 @@ private:
         quint32 subPosition(void) const;
         /**
          * @brief reStructureTree restructure the tree e.g. after an insert or delete
+         * @return true if restructing the tree was successful (insert or delete was successful)
          */
-        void reStructureTree(void);
+        bool reStructureTree(void);
 
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
