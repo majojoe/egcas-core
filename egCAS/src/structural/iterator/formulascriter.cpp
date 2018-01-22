@@ -108,17 +108,17 @@ void FormulaScrIter::remove()
 
 void FormulaScrIter::update()
 {
+        quint32 pos = m_pos;
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, *this);
-        (void) visitor.getResult();
+        visitor.updateVector();
         m_iter = QMutableVectorIterator<FormulaScrElement>(m_vector);
-        setIterPos(m_pos);
+        setIterPos(pos);
 }
 
 void FormulaScrIter::clear()
 {
         m_vector.clear();
         m_iter = QMutableVectorIterator<FormulaScrElement>(m_vector);
-        setIterPos(m_pos);
 }
 
 void FormulaScrIter::setIterPos(quint32 pos)

@@ -412,7 +412,7 @@ private:
         EgcAbstractFormulaItem* m_item;         ///< pointer to the formula item interface on the scene
         QString m_errorMsg;                     ///< the error message for this formula, if one
         EgcMathmlLookup m_mathmlLookup;         ///< mathml id lookup table
-        QScopedPointer<EgcScrPosIterator> m_scrIter; ///< iterator for screen positions
+//        QScopedPointer<EgcScrPosIterator> m_scrIter; ///< iterator for screen positions
         QScopedPointer<FormulaModificator> m_mod; ///< formula modificator class
 };
 

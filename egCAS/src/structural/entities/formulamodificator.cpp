@@ -33,6 +33,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "formulamodificator.h"
 #include "../visitor/formulascrvisitor.h"
 #include "egcabstractformulaitem.h"
+#include "casKernel/parser/restructparserprovider.h"
+#include "casKernel/parser/abstractkernelparser.h"
+
+/**
+ * @brief The NodeIterReStructData class is intended for use during restructering a formula -> state does not change but
+ * node pointers
+ */
+class NodeIterReStructData {
+public:
+        NodeIterReStructData() : m_node{nullptr} {}
+        EgcNode* m_node;
+        EgcNode* m_iterPosAfterUpdate;
+};
+
 
 FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{formula},
                                                                     m_iter(FormulaScrIter(m_formula, m_vector)),
@@ -116,6 +130,8 @@ void FormulaModificator::insertCharacter(QChar character)
 
         m_iter.insert(el);
         reStructureTree();
+        m_iter.update();
+        showCurrentCursor();
 }
 
 void FormulaModificator::moveCursor(bool forward)
@@ -253,19 +269,15 @@ quint32 FormulaModificator::subPosition(void) const
 
 void FormulaModificator::reStructureTree()
 {
-
-
         RestructParserProvider pp;
-        ReStructureVisitor restructureVisitor(*this);
-        QString result = restructureVisitor.getResult();
-        NodeIterReStructData iterData;
+        FormulaScrVisitor restructVisitor(m_formula, m_iter);
+        QString result = restructVisitor.getResult();
         int errCode;
+        NodeIterReStructData iterData;
         EgcNode* tree = pp.getRestructParser()->restructureFormula(result, iterData, &errCode);
         if (tree) {
-                setRootElement(tree);
-                m_scrIter->invalidateCursor(getBaseElement());
-                m_scrIter->updateRestructureData(iterData);
+                m_formula.setRootElement(tree);
+                m_formula.updateView();
         }
-
 }
 
