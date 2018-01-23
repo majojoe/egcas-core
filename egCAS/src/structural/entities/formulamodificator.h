@@ -61,7 +61,14 @@ public:
          * @param character the character to insert
          */
         void insertCharacter(QChar character);
-
+        /**
+         * @brief showCurrentCursor show the cursor of the currently active formula at current position
+         */
+        void showCurrentCursor(void);
+        /**
+         * @brief viewHasChanged is to be called when view has changed to complete insert or remove operation
+         */
+        void viewHasChanged(void);
 
 private:
         /**
@@ -84,10 +91,6 @@ private:
          */
         void moveCursor(bool forward);
         /**
-         * @brief showCurrentCursor show the cursor of the currently active formula at current position
-         */
-        void showCurrentCursor(void);
-        /**
          * @brief rightSide checks if node for representing the cursor is on the right side of the current cursor or
          * node or on the left side (Cursor is a Java Style cursor and has left and a right node).
          * @return true if on the right side, false if on the left
@@ -108,12 +111,18 @@ private:
          * @return true if restructing the tree was successful (insert or delete was successful)
          */
         bool reStructureTree(void);
+        /**
+         * @brief updateFormula updates everything needed (view and structure) to reflect the changes
+         * @return true if the change was successful, false if not
+         */
+        bool updateFormula(void);
 
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula
         FormulaScrIter m_iter;                  ///< the iterator associated with this modificator
         EgcNode* m_lastUnderlinedNode;          ///< the last visible parent node that was given back
+        bool m_changeAwaited;                     ///< is set if a change in the view is awaited. If this has happened we can complete the change operation
 };
 
 #endif // FORMULAMODIFICATOR_H

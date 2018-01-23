@@ -50,7 +50,7 @@ public:
 
 FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{formula},
                                                                     m_iter(FormulaScrIter(m_formula, m_vector)),
-                                                                    m_lastUnderlinedNode{nullptr}
+                                                                    m_lastUnderlinedNode{nullptr}, m_changeAwaited{false}
 {
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_iter);
         visitor.updateVector();
@@ -129,10 +129,7 @@ void FormulaModificator::insertCharacter(QChar character)
         el.m_value = character;
 
         m_iter.insert(el);
-        if (!reStructureTree())
-                moveCursor(false);
-        m_iter.update();
-        showCurrentCursor();
+        updateFormula();
 }
 
 void FormulaModificator::moveCursor(bool forward)
@@ -217,6 +214,15 @@ void FormulaModificator::showCurrentCursor(void)
         item->showCursor(cursor);
 }
 
+void FormulaModificator::viewHasChanged()
+{
+        if (m_changeAwaited) {
+                m_changeAwaited = false;
+                m_iter.update();
+                showCurrentCursor();
+        }
+}
+
 bool FormulaModificator::rightSide(void) const
 {
         bool retval = true;
@@ -283,6 +289,21 @@ bool FormulaModificator::reStructureTree()
                 m_formula.updateView();
         } else {
                 retval = false;
+        }
+
+        return retval;
+}
+
+bool FormulaModificator::updateFormula(void)
+{
+        bool retval = true;
+
+        if (!reStructureTree()) {
+                retval = false;
+                m_iter.revert();
+        } else {
+                m_changeAwaited = true;
+                m_formula.updateView();
         }
 
         return retval;

@@ -406,6 +406,8 @@ void EgcFormulaEntity::itemChanged(EgcItemChangeType changeType)
         }
 
         if (changeType == EgcItemChangeType::contentChanged) {
+                if (m_mod)
+                        m_mod->viewHasChanged();
                 showCurrentCursor();
         }
 }
@@ -788,6 +790,9 @@ void EgcFormulaEntity::showCurrentCursor(void)
 //                m_item->showRightCursor(id, ind);
 //        else
 //                m_item->showLeftCursor(id, ind);
+
+        if (m_mod)
+                m_mod->showCurrentCursor();
 }
 
 EgcMathmlLookup& EgcFormulaEntity::getMathmlMappingRef(void)

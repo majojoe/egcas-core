@@ -113,6 +113,10 @@ public:
          * @brief clear all elements from the underlying container and set the iterator appropriately
          */
         void clear(void);
+        /**
+         * @brief revert reverts to the state before the last insert or delete operation
+         */
+        void revert(void);
 
 private:
         /**
@@ -134,6 +138,8 @@ private:
         EgcFormulaEntity& m_formula;            ///< reference associated with the given formula
         QMutableVectorIterator<FormulaScrElement> m_iter;  ///< iterator for the formula vector above
         quint32 m_pos;                          ///< it's the iterator position as an index. Be careful since this can break very easiliy since we are using a Java Style iterator also!!!
+        FormulaScrVector m_tmpVector;           ///< temporary vector to be able to revert last operation (insert or delete)
+        quint32 m_tmpPos;                       ///< temporary positon to be able to revert last operation (insert or delete)
 };
 
 #endif // FORMULASCRITER_H

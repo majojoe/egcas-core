@@ -6,7 +6,9 @@
 FormulaScrIter::FormulaScrIter(EgcFormulaEntity& formula, FormulaScrVector& vector) : m_formula{formula},
                                                             m_vector{vector},
                                                             m_iter{QMutableVectorIterator<FormulaScrElement>(m_vector)},
-                                                            m_pos{0}
+                                                            m_pos{0},
+                                                            m_tmpPos{0}
+
 {
         FormulaScrVisitor visitor = FormulaScrVisitor(formula, *this);
         (void) visitor.getResult();
@@ -96,12 +98,16 @@ void FormulaScrIter::toFront()
 
 void FormulaScrIter::insert(FormulaScrElement element)
 {
+        m_tmpVector = m_vector;
+        m_tmpPos = m_pos;
         m_iter.insert(element);
         m_pos = getIterPos();
 }
 
 void FormulaScrIter::remove()
 {
+        m_tmpVector = m_vector;
+        m_tmpPos = m_pos;
         m_iter.remove();
         m_pos = getIterPos();
 }
@@ -119,6 +125,12 @@ void FormulaScrIter::clear()
 {
         m_vector.clear();
         m_iter = QMutableVectorIterator<FormulaScrElement>(m_vector);
+}
+
+void FormulaScrIter::revert()
+{
+        m_vector = m_tmpVector;
+        setIterPos(m_tmpPos);
 }
 
 void FormulaScrIter::setIterPos(quint32 pos)
