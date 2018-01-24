@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QRectF>
 #include <QLineF>
+#include <QtMultimedia/QSound>
 #include "egcformulaentity.h"
 #include "formulamodificator.h"
 #include "../visitor/formulascrvisitor.h"
@@ -301,6 +302,7 @@ bool FormulaModificator::updateFormula(void)
         if (!reStructureTree()) {
                 retval = false;
                 m_iter.revert();
+                QSound::play(":/res/sound/error.wav");
         } else {
                 m_changeAwaited = true;
                 m_formula.updateView();

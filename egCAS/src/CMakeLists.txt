@@ -59,7 +59,7 @@ set_property(TARGET mathmlview PROPERTY CXX_STANDARD_REQUIRED ON)
 file(COPY ${PROJECT_SOURCE_DIR}/LICENSE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/res)
 
 # Widgets finds its own dependencies.
-find_package(Qt5 COMPONENTS Widgets Xml PrintSupport Gui Core)
+find_package(Qt5 COMPONENTS Widgets Xml PrintSupport Gui Core Multimedia)
 
 include_directories(casKernel)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -243,6 +243,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
                                         ${RUNTIME_PATH}/libpcre16-0.dll
                                         ${RUNTIME_PATH}/libpng16-16.dll
                                         ${RUNTIME_PATH}/Qt5Gui.dll
+                                        ${RUNTIME_PATH}/Qt5Multimedia.dll
                                         ${RUNTIME_PATH}/Qt5Test.dll
                                         ${RUNTIME_PATH}/Qt5Xml.dll
                                         ${RUNTIME_PATH}/libfreetype-6.dll
@@ -278,6 +279,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MinGW")
         set_target_properties(egcas PROPERTIES LINK_FLAGS "-mwindows")
 endif()
 
-target_link_libraries(egcas mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
+target_link_libraries(egcas mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core Qt5::Multimedia)
 install (TARGETS egcas RUNTIME DESTINATION bin)
 
