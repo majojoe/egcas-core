@@ -42,11 +42,6 @@ public:
         FormulaModificator(EgcFormulaEntity& formula);
         virtual ~FormulaModificator();
         /**
-         * @brief handleAction handles the given action
-         * @param action the action to execute
-         */
-        void handleAction(const EgcAction& action);
-        /**
          * @brief cursorAtBegin checks if the cursor is at the beginning of a formula
          * @return true if the cursor is at the beginning of the formula, false otherwise
          */
@@ -69,6 +64,26 @@ public:
          * @brief viewHasChanged is to be called when view has changed to complete insert or remove operation
          */
         void viewHasChanged(void);
+        /**
+         * @brief insertOperation insert a operation into the tree
+         * @param operation the operation action to insert
+         */
+        void insertOperation(EgcAction operation);
+        /**
+         * @brief moveCursor move cursor forward or backward
+         * @param forward if true, cursor will be moved forward, backward otherwise
+         */
+        void moveCursor(bool forward);
+        /**
+         * @brief insertBinaryOperation insert a binary operation
+         * @param op the binary operation to insert as ASCII string that can be interpreted by the parser
+         */
+        void insertBinaryOperation(QString op);
+        /**
+         * @brief removeElement remove a character or operation at the current cursor position
+         * @param previous if true the character before the current cursor position is remove, if false the character behind
+         */
+        void removeElement(bool previous);
 
 private:
         /**
@@ -85,11 +100,6 @@ private:
          * @return the mathml id
          */
         quint32 id(void) const;
-        /**
-         * @brief moveCursor move cursor forward or backward
-         * @param forward if true, cursor will be moved forward, backward otherwise
-         */
-        void moveCursor(bool forward);
         /**
          * @brief rightSide checks if node for representing the cursor is on the right side of the current cursor or
          * node or on the left side (Cursor is a Java Style cursor and has left and a right node).

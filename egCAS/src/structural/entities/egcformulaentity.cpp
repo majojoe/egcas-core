@@ -426,37 +426,41 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
 {
         switch (action.m_op) {
         case EgcOperations::formulaActivated:
-                //m_scrIter.reset(new EgcScrPosIterator(*this));
                 showCurrentCursor();
                 m_mod.reset(new FormulaModificator(*this));
                 break;
         case EgcOperations::formulaDeactivated:
-                m_mod.reset();
+                if (m_mod)
+                        m_mod.reset();
                 break;
         case EgcOperations::cursorForward:
-                if (m_mod)
-                        m_mod->handleAction(action);
+                if (m_mod && m_item)
+                        m_mod->moveCursor(true);
                 break;
         case EgcOperations::cursorBackward:
-                if (m_mod)
-                        m_mod->handleAction(action);
+                if (m_mod && m_item)
+                        m_mod->moveCursor(false);
                 break;
         case EgcOperations::spacePressed:
                 markParent();
                 break;
         case EgcOperations::alnumKeyPressed:
-                m_mod->insertCharacter(action.m_character);
+                if (m_mod && m_item)
+                        m_mod->insertCharacter(action.m_character);
                 break;
         case EgcOperations::backspacePressed:
-                removeCharacter(true);
+                if (m_mod && m_item)
+                        m_mod->removeElement(true);
                 break;
         case EgcOperations::delPressed:
-                removeCharacter(false);
+                if (m_mod && m_item)
+                        m_mod->removeElement(false);
                 break;
         case EgcOperations::mathCharOperator:
         case EgcOperations::mathFunction:
         case EgcOperations::internalFunction:
-                insertOperation(action);
+                if (m_mod && m_item)
+                        m_mod->insertOperation(action);
                 break;
 //        case EgcOperations::homePressed:
 //                if (m_scrIter) {

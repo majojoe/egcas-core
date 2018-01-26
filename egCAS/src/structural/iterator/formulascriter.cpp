@@ -104,10 +104,17 @@ void FormulaScrIter::insert(FormulaScrElement element)
         m_pos = getIterPos();
 }
 
-void FormulaScrIter::remove()
+void FormulaScrIter::remove(bool previous)
 {
         m_tmpVector = m_vector;
         m_tmpPos = m_pos;
+        if (previous) {
+                m_iter.previous();
+                m_iter.next();
+        } else {
+                m_iter.next();
+                m_iter.previous();
+        }
         m_iter.remove();
         m_pos = getIterPos();
 }

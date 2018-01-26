@@ -98,8 +98,9 @@ public:
         virtual void insert(FormulaScrElement element);
         /**
          * @brief remove removes the next or previous item.
+         * @param previous if true the next element is removed, otherwise the previous one is removed
          */
-        virtual void remove();
+        virtual void remove(bool previous = false);
         /**
          * @brief update the formula AST has changed, so update the internal references
          */

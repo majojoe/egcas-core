@@ -62,52 +62,6 @@ FormulaModificator::~FormulaModificator()
 
 }
 
-void FormulaModificator::handleAction(const EgcAction& action)
-{
-        switch (action.m_op) {
-        case EgcOperations::cursorForward:
-                moveCursor(true);
-                break;
-        case EgcOperations::cursorBackward:
-                moveCursor(false);
-                break;
-//        case EgcOperations::spacePressed:
-//                markParent();
-//                break;
-        case EgcOperations::alnumKeyPressed:
-                insertCharacter(action.m_character);
-                break;
-//        case EgcOperations::backspacePressed:
-//                removeCharacter(true);
-//                break;
-//        case EgcOperations::delPressed:
-//                removeCharacter(false);
-//                break;
-//        case EgcOperations::mathCharOperator:
-//        case EgcOperations::mathFunction:
-//        case EgcOperations::internalFunction:
-//                insertOperation(action);
-//                break;
-//        case EgcOperations::homePressed:
-//                if (m_scrIter) {
-//                        m_scrIter->toFront();
-//                        m_scrIter->resetUnderline();
-//                        showCurrentCursor();
-//                }
-//                break;
-//        case EgcOperations::endPressed:
-//                if (m_scrIter) {
-//                        m_scrIter->toBack();
-//                        m_scrIter->resetUnderline();
-//                        showCurrentCursor();
-//                }
-//                break;
-//        case EgcOperations::createSubscript:
-//                createSubId();
-//                break;
-        }
-}
-
 bool FormulaModificator::cursorAtBegin()
 {
         if (!m_iter.hasPrevious())
@@ -222,6 +176,150 @@ void FormulaModificator::viewHasChanged()
                 m_iter.update();
                 showCurrentCursor();
         }
+}
+
+void FormulaModificator::insertBinaryOperation(QString op)
+{
+        FormulaScrElement el;
+        el.m_value = op;
+
+        m_iter.insert(el);
+        updateFormula();
+}
+
+void FormulaModificator::removeElement(bool previous)
+{
+        m_iter.remove(previous);
+        updateFormula();
+
+        //        bool structureChanged;
+
+        //        if (!m_scrIter)
+        //                return;
+        //        if (!m_item)
+        //                return;
+
+        //        if (m_scrIter->node()->getNodeType() == EgcNodeType::EmptyNode) {
+        //                if (isEmpty()) {
+        //                        if (getDocument()) {
+        //                                getDocument()->deleteEntity(this);
+        //                                return;
+        //                        }
+        //                }
+        //        }
+
+        //        if (before)
+        //                m_scrIter->backspace(structureChanged);
+        //        else
+        //                m_scrIter->remove(structureChanged);
+
+        //        if (structureChanged) {
+        //                reStructureTree();
+        //        }
+        //        //update m_scrIter since nothing is correct about the position
+        //        m_item->updateView();
+        //        m_item->hideCursors();
+        //        showCurrentCursor();
+}
+
+void FormulaModificator::insertOperation(EgcAction operation)
+{
+        if (operation.m_op == EgcOperations::mathCharOperator) {
+                if (    operation.m_character == '+'
+                     || operation.m_character == '-'
+                     || operation.m_character == '/'
+                     || operation.m_character == '*'
+                     || operation.m_character == ':'
+                     || operation.m_character == '=')
+                        insertBinaryOperation(operation.m_character);
+        }
+
+
+//                if (    operations.m_character == '('
+//                                || operations.m_character == ')') {
+//                        if (    operations.m_character == '(')
+//                                return createAndInsertOp(EgcNodeType::LParenthesisNode);
+//                        if (    operations.m_character == ')')
+//                                return createAndInsertOp(EgcNodeType::RParenthesisNode);
+//                }
+//                if (operations.m_character == QChar(177))
+//                        return createAndInsertOp(EgcNodeType::UnaryMinusNode);
+//                if (operations.m_character == QChar(8730))
+//                        return createAndInsertOp(EgcNodeType::RootNode);
+//                if (operations.m_character == QChar('^'))
+//                        return createAndInsertOp(EgcNodeType::ExponentNode);
+//                if (operations.m_character == QChar(','))
+//                        return insertFunctionContainer();
+//        } else if (operations.m_op == EgcOperations::mathFunction) { // functions
+//                EgcFunctionNode* fnc = dynamic_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
+//                if (!fnc)
+//                        return false;
+//                if (!operations.m_additionalData.isNull()) {
+//                        QString name = operations.m_additionalData.toString();
+//                        if (!name.isEmpty()) {
+//                                fnc->setName(name);
+//                                m_scrIter->setCursorAtDelayed(fnc->getChild(0), true);
+//                        } else {
+//                                m_scrIter->setCursorAtDelayed(fnc, false);
+//                        }
+//                }
+//        } else if (operations.m_op == EgcOperations::internalFunction) { // internal functions
+//                if (operations.m_intType == InternalFunctionType::natLogarithm
+//                     || operations.m_intType == InternalFunctionType::logarithm) {
+//                        if (operations.m_intType == InternalFunctionType::natLogarithm)
+//                                retval = createAndInsertOp(EgcNodeType::NatLogNode);
+//                        else if (operations.m_intType == InternalFunctionType::logarithm)
+//                                retval = createAndInsertOp(EgcNodeType::LogNode);
+
+//                        if (retval) {
+//                                const EgcNode *nd = nullptr;
+//                                if (m_scrIter->node()) {
+//                                        nd = m_scrIter->node();
+//                                        m_scrIter->setCursorAtDelayed(const_cast<EgcNode*>(nd), true);
+//                                }
+//                        }
+//                } else if (operations.m_intType == InternalFunctionType::integral) {
+//                        bool ret = createAndInsertOp(EgcNodeType::IntegralNode);
+//                        if (ret) {
+//                                const EgcNode *nd = nullptr;
+//                                if (m_scrIter->node()) {
+//                                        nd = m_scrIter->node();
+//                                        EgcContainerNode *par = nullptr;
+//                                        par = nd->getParent();
+//                                        if (par->getNodeType() == EgcNodeType::IntegralNode) {
+//                                                static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+//                                                if (operations.m_OpModificators == OpModificators::definiteIntegral) {
+//                                                        static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+//                                                        static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+//                                                }
+//                                        }
+//                                }
+//                        }
+//                        return ret;
+//                } else if (operations.m_intType == InternalFunctionType::differential) {
+//                        bool ret = createAndInsertOp(EgcNodeType::DifferentialNode);
+//                        if (ret) {
+//                                const EgcNode *nd = nullptr;
+//                                if (m_scrIter->node()) {
+//                                        nd = m_scrIter->node();
+//                                        EgcContainerNode *par = nullptr;
+//                                        par = nd->getParent();
+//                                        if (par->getNodeType() == EgcNodeType::DifferentialNode) {
+//                                                EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(par);
+//                                                static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
+//                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_1)
+//                                                        diff->setNrDerivative(1);
+//                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_2)
+//                                                        diff->setNrDerivative(2);
+//                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_3)
+//                                                        diff->setNrDerivative(3);
+//                                        }
+//                                }
+//                        }
+//                        return ret;
+//                }
+
+//        }
 }
 
 bool FormulaModificator::rightSide(void) const
