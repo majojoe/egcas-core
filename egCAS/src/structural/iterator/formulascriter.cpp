@@ -22,12 +22,12 @@ FormulaScrIter::~FormulaScrIter()
 
 bool FormulaScrIter::hasNext() const
 {
-        m_iter.hasNext();
+        return m_iter.hasNext();
 }
 
 bool FormulaScrIter::hasPrevious() const
 {
-        m_iter.hasPrevious();
+        return m_iter.hasPrevious();
 }
 
 bool FormulaScrIter::findNext(const QString& value)

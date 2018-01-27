@@ -126,6 +126,10 @@ private:
          * @return true if the change was successful, false if not
          */
         bool updateFormula(void);
+        /**
+         * @brief insertEmptyNode insert an empty node at the current cursor position
+         */
+        void insertEmptyNode(void);
 
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with

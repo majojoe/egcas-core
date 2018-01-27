@@ -180,10 +180,37 @@ void FormulaModificator::viewHasChanged()
 
 void FormulaModificator::insertBinaryOperation(QString op)
 {
+        bool insertEmptyLeft = false;
+        bool insertEmptyRight = false;
         FormulaScrElement el;
         el.m_value = op;
 
+        if (!m_iter.hasPrevious()) {
+                insertEmptyLeft = true;
+        } else {
+                EgcNode* lNode = m_iter.peekPrevious().m_node;
+                if (lNode) {
+                        if (lNode->isOperation())
+                                insertEmptyLeft = true;
+                }
+        }
+        if (!m_iter.hasNext()) {
+                insertEmptyRight = true;
+        } else {
+                EgcNode* rNode = m_iter.peekNext().m_node;
+                if (rNode) {
+                        if (rNode->isOperation())
+                                insertEmptyRight = true;
+                }
+        }
+
+
+        if (insertEmptyLeft)
+                insertEmptyNode();
         m_iter.insert(el);
+        if (insertEmptyRight)
+                insertEmptyNode();
+
         updateFormula();
 }
 
@@ -407,5 +434,12 @@ bool FormulaModificator::updateFormula(void)
         }
 
         return retval;
+}
+
+void FormulaModificator::insertEmptyNode(void)
+{
+        FormulaScrElement el;
+        el.m_value = "_empty";
+        m_iter.insert(el);
 }
 
