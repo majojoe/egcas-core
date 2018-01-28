@@ -268,6 +268,12 @@ void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursor
                 el.rTemp.m_node = node;
                 el.rTemp.m_subpos = subpos;
         }
+        if (m_state == EgcIteratorState::LeftIteration)
+                el.m_sideNode = FormulaScrElement::nodeLeftSide;
+        else if (m_state == EgcIteratorState::MiddleIteration)
+                el.m_sideNode = FormulaScrElement::nodeMiddle;
+        else // (m_state == EgcIteratorState::RightIteration)
+                el.m_sideNode = FormulaScrElement::nodeRightSide;
         m_iter.insert(el);
 }
 

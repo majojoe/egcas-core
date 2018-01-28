@@ -188,18 +188,24 @@ void FormulaModificator::insertBinaryOperation(QString op)
         if (!m_iter.hasPrevious()) {
                 insertEmptyLeft = true;
         } else {
-                EgcNode* lNode = m_iter.peekPrevious().m_node;
+                FormulaScrElement &l_el = m_iter.peekPrevious();
+                EgcNode* lNode = l_el.m_node;
                 if (lNode) {
-                        if (lNode->isOperation())
+                        if (    lNode->isOperation()
+                             && (    l_el.m_sideNode == FormulaScrElement::nodeLeftSide
+                                  || l_el.m_sideNode == FormulaScrElement::nodeMiddle))
                                 insertEmptyLeft = true;
                 }
         }
         if (!m_iter.hasNext()) {
                 insertEmptyRight = true;
         } else {
-                EgcNode* rNode = m_iter.peekNext().m_node;
+                FormulaScrElement &r_el = m_iter.peekNext();
+                EgcNode* rNode = r_el.m_node;
                 if (rNode) {
-                        if (rNode->isOperation())
+                        if (    rNode->isOperation()
+                             && (    r_el.m_sideNode == FormulaScrElement::nodeRightSide
+                                  || r_el.m_sideNode == FormulaScrElement::nodeMiddle))
                                 insertEmptyRight = true;
                 }
         }

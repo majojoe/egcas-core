@@ -58,13 +58,16 @@ public:
         bool m_left_side;       ///< if true, cursor data shall be taken from left edge of boundary rect, if false from right one
 };
 
+
 class FormulaScrElement
 {
-public:
+public:      
+        enum SideNode{nodeLeftSide, nodeRightSide, nodeMiddle}; ///< at which section of the associated nodes the visible element belongs to
         FormulaScrElement();
         QString m_value;        ///< formula element that is visible as entity on the screen
         CursorAdhesion m_cAdh;  ///< cursor adhesion of the node
         EgcNode* m_node;        ///< pointer to node this element is directly associated with
+        enum SideNode m_sideNode; ///< which section of the node this visible element is associated to
         bool m_isSegmented;     ///< true if this element is segmented over more elements, meaning if this element is deleted, the others (pointing to the same m_node) will also be deleted
         TempDataScrIter lTemp;  ///< temporary data for left side of cursor element
         TempDataScrIter rTemp;  ///< temporary data for right side of cursor element
