@@ -130,6 +130,18 @@ private:
          * @brief insertEmptyNode insert an empty node at the current cursor position
          */
         void insertEmptyNode(void);
+        /**
+         * @brief isEmpty checks if formula is currently empty (contains just an empty element)
+         * @return true if formula is empty, false if not
+         */
+        bool isEmpty(void) const;
+        /**
+         * @brief isEmptyElement checks if the previous or next element is an empty element
+         * @param previous if true the previous element will be checked, if false the next element will be checked. If
+         * there is no element at all, the result is false.
+         * @return true if the checked element is an empty element
+         */
+        bool isEmptyElement(bool previous) const;
 
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with

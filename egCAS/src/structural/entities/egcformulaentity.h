@@ -31,11 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QString>
 #include <QScopedPointer>
-#include "../specialNodes/egcbasenode.h"
+#include <structural/specialNodes/egcbasenode.h>
 #include "egcentity.h"
 #include "egcabstractformulaentity.h"
-#include "../visitor/egcmathmllookup.h"
+#include <structural/visitor/egcmathmllookup.h>
 #include <structural/entities/formulamodificator.h>
+#include <structural/document/egcabstractdocument.h>
 
 class EgcNode;
 class EgcBaseNode;

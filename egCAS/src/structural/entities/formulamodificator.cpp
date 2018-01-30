@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcabstractformulaitem.h"
 #include "casKernel/parser/restructparserprovider.h"
 #include "casKernel/parser/abstractkernelparser.h"
+#include "../concreteNodes/egcalnumnode.h"
 
 /**
  * @brief The NodeIterReStructData class is intended for use during restructering a formula -> state does not change but
@@ -76,15 +77,6 @@ bool FormulaModificator::cursorAtEnd()
                 return true;
 
         return false;
-}
-
-void FormulaModificator::insertCharacter(QChar character)
-{
-        FormulaScrElement el;
-        el.m_value = character;
-
-        m_iter.insert(el);
-        updateFormula();
 }
 
 void FormulaModificator::moveCursor(bool forward)
@@ -220,39 +212,35 @@ void FormulaModificator::insertBinaryOperation(QString op)
         updateFormula();
 }
 
+void FormulaModificator::insertCharacter(QChar character)
+{
+        FormulaScrElement el;
+        el.m_value = EgcAlnumNode::encode(character);
+
+        if (isEmptyElement(true)) {
+                m_iter.remove(true);
+        }
+        if (isEmptyElement(false)) {
+                m_iter.remove(false);
+        }
+
+        m_iter.insert(el);
+        updateFormula();
+}
+
 void FormulaModificator::removeElement(bool previous)
 {
-        m_iter.remove(previous);
+        if (isEmpty() || m_vector.size() == 1) {
+                if (m_formula.getDocument()) {
+                        m_formula.getDocument()->deleteEntity(&m_formula);
+                }
+        } else {
+                m_iter.remove(previous);
+                if (m_vector.isEmpty())
+                        insertEmptyNode();
+        }
+
         updateFormula();
-
-        //        bool structureChanged;
-
-        //        if (!m_scrIter)
-        //                return;
-        //        if (!m_item)
-        //                return;
-
-        //        if (m_scrIter->node()->getNodeType() == EgcNodeType::EmptyNode) {
-        //                if (isEmpty()) {
-        //                        if (getDocument()) {
-        //                                getDocument()->deleteEntity(this);
-        //                                return;
-        //                        }
-        //                }
-        //        }
-
-        //        if (before)
-        //                m_scrIter->backspace(structureChanged);
-        //        else
-        //                m_scrIter->remove(structureChanged);
-
-        //        if (structureChanged) {
-        //                reStructureTree();
-        //        }
-        //        //update m_scrIter since nothing is correct about the position
-        //        m_item->updateView();
-        //        m_item->hideCursors();
-        //        showCurrentCursor();
 }
 
 void FormulaModificator::insertOperation(EgcAction operation)
@@ -447,5 +435,32 @@ void FormulaModificator::insertEmptyNode(void)
         FormulaScrElement el;
         el.m_value = "_empty";
         m_iter.insert(el);
+}
+
+bool FormulaModificator::isEmpty() const
+{
+        if (m_vector.size() == 1 && m_vector.at(0).m_value == QString("_empty"))
+                return true;
+
+        return false;
+}
+
+bool FormulaModificator::isEmptyElement(bool previous) const
+{
+        bool retval = false;
+
+        if (previous) {
+                if (m_iter.hasPrevious()) {
+                        if (m_iter.peekPrevious().m_value == QString("_empty"))
+                                retval = true;
+                }
+        } else {
+                if (m_iter.hasNext()) {
+                        if (m_iter.peekNext().m_value == QString("_empty"))
+                                retval = true;
+                }
+        }
+
+        return retval;
 }
 

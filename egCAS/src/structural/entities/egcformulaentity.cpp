@@ -41,7 +41,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcabstractentitylist.h"
 #include "actions/egcaction.h"
 #include "iterator/egcscrpositerator.h"
-#include "document/egcabstractdocument.h"
 #include "casKernel/parser/abstractkernelparser.h"
 #include "casKernel/parser/restructparserprovider.h"
 
