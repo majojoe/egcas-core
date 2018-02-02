@@ -84,7 +84,16 @@ public:
          * @param previous if true the character before the current cursor position is remove, if false the character behind
          */
         void removeElement(bool previous);
-
+        /**
+         * @brief insertSegment inserts a complete segment of elements. This does not need to be done in a per elements
+         * way, since the parser will split that up again correctly.
+         * @param segment the segment to be insert (can consist of many elements)
+         */
+        void insertUnaryOperation(QString segment);
+        /**
+         * @brief createSubscript create a subscipt for a formula variable at the current cursor position
+         */
+        void createSubscript(void);
 private:
         /**
          * @brief resetUnderline reset the underline

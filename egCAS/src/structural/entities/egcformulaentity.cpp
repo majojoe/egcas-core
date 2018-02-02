@@ -425,8 +425,8 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
 {
         switch (action.m_op) {
         case EgcOperations::formulaActivated:
-                showCurrentCursor();
                 m_mod.reset(new FormulaModificator(*this));
+                showCurrentCursor();
                 break;
         case EgcOperations::formulaDeactivated:
                 if (m_mod)
@@ -476,7 +476,8 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
 //                }
 //                break;
         case EgcOperations::createSubscript:
-                createSubId();
+                if (m_mod && m_item)
+                        m_mod->createSubscript();
                 break;
         }
 }

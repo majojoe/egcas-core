@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QRectF>
 #include <QLineF>
 #include <QtMultimedia/QSound>
+#include <QStringBuilder>
 #include "egcformulaentity.h"
 #include "formulamodificator.h"
 #include "../visitor/formulascrvisitor.h"
@@ -37,6 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "casKernel/parser/restructparserprovider.h"
 #include "casKernel/parser/abstractkernelparser.h"
 #include "../concreteNodes/egcalnumnode.h"
+
+const char emptyElement[] = "_empty";
 
 /**
  * @brief The NodeIterReStructData class is intended for use during restructering a formula -> state does not change but
@@ -304,6 +307,31 @@ void FormulaModificator::removeElement(bool previous)
         updateFormula();
 }
 
+void FormulaModificator::insertUnaryOperation(QString segment)
+{
+        FormulaScrElement el;
+        el.m_value = segment;
+
+        if (isEmptyElement(true)) {
+                m_iter.remove(true);
+        }
+        if (isEmptyElement(false)) {
+                m_iter.remove(false);
+        }
+
+        m_iter.insert(el);
+        updateFormula();
+}
+
+void FormulaModificator::createSubscript()
+{
+        FormulaScrElement el;
+        el.m_value = QString("_1");
+
+        m_iter.insert(el);
+        updateFormula();
+}
+
 void FormulaModificator::insertOperation(EgcAction operation)
 {
         if (operation.m_op == EgcOperations::mathCharOperator) {
@@ -312,8 +340,18 @@ void FormulaModificator::insertOperation(EgcAction operation)
                      || operation.m_character == '/'
                      || operation.m_character == '*'
                      || operation.m_character == ':'
-                     || operation.m_character == '=')
+                     || operation.m_character == '='
+                     || operation.m_character == '^'
+                     || operation.m_character == ','
+                )
                         insertBinaryOperation(operation.m_character);
+
+                if (operation.m_character == QChar(177))
+                        insertUnaryOperation("-");
+                if (operation.m_character == QChar(8730)) {
+                        QString tmp = QString("_root(") % emptyElement % QString(",") % emptyElement % QString(")");
+                        insertUnaryOperation(tmp);
+                }
         }
 
 
@@ -324,14 +362,8 @@ void FormulaModificator::insertOperation(EgcAction operation)
 //                        if (    operations.m_character == ')')
 //                                return createAndInsertOp(EgcNodeType::RParenthesisNode);
 //                }
-//                if (operations.m_character == QChar(177))
-//                        return createAndInsertOp(EgcNodeType::UnaryMinusNode);
 //                if (operations.m_character == QChar(8730))
 //                        return createAndInsertOp(EgcNodeType::RootNode);
-//                if (operations.m_character == QChar('^'))
-//                        return createAndInsertOp(EgcNodeType::ExponentNode);
-//                if (operations.m_character == QChar(','))
-//                        return insertFunctionContainer();
 //        } else if (operations.m_op == EgcOperations::mathFunction) { // functions
 //                EgcFunctionNode* fnc = dynamic_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
 //                if (!fnc)
@@ -494,13 +526,13 @@ bool FormulaModificator::updateFormula(void)
 void FormulaModificator::insertEmptyNode(void)
 {
         FormulaScrElement el;
-        el.m_value = "_empty";
+        el.m_value = emptyElement;
         m_iter.insert(el);
 }
 
 bool FormulaModificator::isEmpty() const
 {
-        if (m_vector.size() == 1 && m_vector.at(0).m_value == QString("_empty"))
+        if (m_vector.size() == 1 && m_vector.at(0).m_value == QString(emptyElement))
                 return true;
 
         return false;
@@ -512,12 +544,12 @@ bool FormulaModificator::isEmptyElement(bool previous) const
 
         if (previous) {
                 if (m_iter.hasPrevious()) {
-                        if (m_iter.peekPrevious().m_value == QString("_empty"))
+                        if (m_iter.peekPrevious().m_value == QString(emptyElement))
                                 retval = true;
                 }
         } else {
                 if (m_iter.hasNext()) {
-                        if (m_iter.peekNext().m_value == QString("_empty"))
+                        if (m_iter.peekNext().m_value == QString(emptyElement))
                                 retval = true;
                 }
         }

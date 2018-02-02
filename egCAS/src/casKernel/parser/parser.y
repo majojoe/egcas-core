@@ -125,6 +125,7 @@
 
 
 %type<EgcNode*> expr;
+%type<EgcNode*> equation;
 %type<EgcArgumentsNode*> explist;
 
 %start formula
@@ -147,6 +148,17 @@ formula : /*nothing*/
                 #endif //#if (EGC_PARSER_DEBUG >= 1)
                 interpreter.setRootNode($2);
         }
+  | formula equation END
+      {
+              #if (EGC_PARSER_DEBUG >= 1)
+              cout << "***end" << endl;
+              #endif //#if (EGC_PARSER_DEBUG >= 1)
+              interpreter.setRootNode($2);
+      }
+;
+
+equation: expr "=" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::EqualNode, $1, $3);}
+        | expr ":" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::DefinitionNode, $1, $3);}
 ;
 
 expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::PlusNode, $1, $3);}
@@ -157,8 +169,6 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
      | LBRACKET_OP expr RBRACKET_OP {$$ = interpreter.addUnaryStructParenth($2);}
      | "-" expr %prec UMINUS {$$ = interpreter.addUnaryExpression(EgcNodeType::UnaryMinusNode, $2);}
-     | expr "=" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::EqualNode, $1, $3);}
-     | expr ":" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::DefinitionNode, $1, $3);}
      | NUMBER              {$$ = interpreter.addStringNode(EgcNodeType::NumberNode, $1);}
      | NAMES               {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1);}
      | NAMES VARSUB        {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1 + $2);}
