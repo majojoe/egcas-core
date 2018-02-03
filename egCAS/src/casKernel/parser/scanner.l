@@ -70,13 +70,13 @@
 %option yyclass="MaximaScanner"
 %option prefix="CASParser_"
 
-
+EMPTY        (_empty)
 EXPONENT     ([Eeb][-+]?[0-9]+)
 VARSEP       (_1)
 UNDERSCORE   (__)
 UNICODESIGN  (_2[0-9a-fA-F]+_3)
 ALNUMNODE    (([a-zA-Z]{1}|{UNICODESIGN})([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*)
-ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*)
+ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*{EMPTY}{0,1})
 
 %%
 
@@ -103,7 +103,7 @@ ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*)
 "_integrate"  { return CASParser::MaximaParser::make_INTEGRAL(CASParser::location()); }
 "_diff"  { return CASParser::MaximaParser::make_DIFFERENTIAL(CASParser::location()); }
 "_root" { return CASParser::MaximaParser::make_ROOT(CASParser::location()); }
-"_empty" { return CASParser::MaximaParser::make_EMPTY(CASParser::location()); }
+{EMPTY} { return CASParser::MaximaParser::make_EMPTY(CASParser::location()); }
 "_log" { return CASParser::MaximaParser::make_LOGARITHM(CASParser::location()); }
 "log" { return CASParser::MaximaParser::make_NATLOGARITHM(CASParser::location()); }
 

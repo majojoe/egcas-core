@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 QRegularExpression EgcVariableNode::s_varSubSeparator = QRegularExpression("(.*[^_]+)"
                                                                            % EgcVariableNode::getStuffedVarSeparator()
-                                                                           % "([^_]+.*)");
+                                                                           % "([^_]+.*)|(_empty)");
 bool EgcVariableNode::s_initializeRegex = true;
 
 EgcVariableNode::EgcVariableNode() 
