@@ -304,6 +304,14 @@ void FormulaModificator::removeElement(bool previous)
                 }
         }
 
+        //sanetize subscripts
+        if (m_iter.hasPrevious() && !m_iter.hasNext()) {
+                if (isVarsubscriptSeparator()) {
+                        insertEmptyNode();
+                }
+        }
+
+
         updateFormula();
 }
 
@@ -329,6 +337,7 @@ void FormulaModificator::createSubscript()
         el.m_value = QString("_1");
 
         m_iter.insert(el);
+        insertEmptyNode();
         updateFormula();
 }
 
@@ -540,16 +549,26 @@ bool FormulaModificator::isEmpty() const
 
 bool FormulaModificator::isEmptyElement(bool previous) const
 {
+        return isSpecificElement(emptyElement, previous);
+}
+
+bool FormulaModificator::isVarsubscriptSeparator(bool previous) const
+{
+        return isSpecificElement("_1", previous);
+}
+
+bool FormulaModificator::isSpecificElement(QString element, bool previous) const
+{
         bool retval = false;
 
         if (previous) {
                 if (m_iter.hasPrevious()) {
-                        if (m_iter.peekPrevious().m_value == QString(emptyElement))
+                        if (m_iter.peekPrevious().m_value == QString(element))
                                 retval = true;
                 }
         } else {
                 if (m_iter.hasNext()) {
-                        if (m_iter.peekNext().m_value == QString(emptyElement))
+                        if (m_iter.peekNext().m_value == QString(element))
                                 retval = true;
                 }
         }

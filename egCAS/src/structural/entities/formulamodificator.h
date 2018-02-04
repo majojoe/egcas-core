@@ -150,7 +150,22 @@ private:
          * there is no element at all, the result is false.
          * @return true if the checked element is an empty element
          */
-        bool isEmptyElement(bool previous) const;
+        bool isEmptyElement(bool previous = true) const;
+        /**
+         * @brief isVarsubscriptSeparator checks if the previous formula element is a variable subscript separator element
+         * @param previous if true (default) the previous element will be checked, if false the next element will be
+         * checked. If there is no element at all, the result is false.
+         * @return true if the checked element is an empty element
+         */
+        bool isVarsubscriptSeparator(bool previous = true) const;
+        /**
+         * @brief isSpecificElement checks if the previous or next element is the element given with parameter element
+         * @param previous if true (default) the previous element will be checked, if false the next element will be
+         * checked. If there is no element at all, the result is false.
+         * @param element the element to check for
+         * @return true if the checked element is an empty element
+         */
+        bool isSpecificElement(QString element, bool previous = true) const;
 
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with

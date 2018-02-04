@@ -46,6 +46,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
  */
 class EgcVariableNode : public EgcFlexNode
 {
+#warning rebuild EgcVariableNode so, that is is based on EgcNode (no container class like EgcNumber)
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcVariableNode, EgcNodeType::VariableNode);
 

@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 QRegularExpression EgcVariableNode::s_varSubSeparator = QRegularExpression("(.*[^_]+)"
                                                                            % EgcVariableNode::getStuffedVarSeparator()
-                                                                           % "([^_]+.*)|(_empty)");
+                                                                           % "(.+)");
 bool EgcVariableNode::s_initializeRegex = true;
 
 EgcVariableNode::EgcVariableNode() 
@@ -136,9 +136,15 @@ void EgcVariableNode::setStuffedVar(const QString& varName)
                 }
 
                 if (this->nrSubindexes() <= 1) {
-                        QScopedPointer<EgcAlnumNode> sub(new (std::nothrow) EgcAlnumNode(true));
-                        if (!sub.isNull())
-                                this->insert(1, *sub.take());
+                        if (subscript == QString("_empty")) {
+                                QScopedPointer<EgcEmptyNode> sub(new (std::nothrow) EgcEmptyNode());
+                                if (!sub.isNull())
+                                        this->insert(1, *sub.take());
+                        } else {
+                                QScopedPointer<EgcAlnumNode> sub(new (std::nothrow) EgcAlnumNode(true));
+                                if (!sub.isNull())
+                                        this->insert(1, *sub.take());
+                        }
                 }
 
                 if (m_childs.size() <= 1)
