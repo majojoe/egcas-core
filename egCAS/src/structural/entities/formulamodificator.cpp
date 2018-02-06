@@ -238,87 +238,27 @@ void FormulaModificator::removeElement(bool previous)
                         m_formula.getDocument()->deleteEntity(&m_formula);
                 }
         } else {
-                m_iter.remove(previous);
+                bool segmented = false;
+                if (previous && m_iter.hasPrevious()) {
+                        if (m_iter.peekPrevious().m_isSegmented)
+                                segmented = true;
+                }
+                if (!previous && m_iter.hasNext()) {
+                        if (m_iter.peekNext().m_isSegmented)
+                                segmented = true;
+                }
+
+                if (segmented)
+                        rmSegmented(previous);
+                else
+                        m_iter.remove(previous);
                 if (m_vector.isEmpty())
                         insertEmptyNode();
         }
 
-        // insert empty node if left and right nodes are binary nodes
-        if (m_iter.hasPrevious() && m_iter.hasNext()) {
-                EgcNode *lnode = m_iter.peekPrevious().m_node;
-                EgcNode *rnode = m_iter.peekNext().m_node;
-                if (lnode && rnode) {
-                        if (lnode->isBinaryNode() && rnode->isBinaryNode()) {
-                                insertEmptyNode();
-                                m_iter.previous();
-                        }
-                }
-        }
-
-        // insert empty node if left node is a binary node and right does not exist
-        if (m_iter.hasPrevious() && !m_iter.hasNext()) {
-                EgcNode *lnode = m_iter.peekPrevious().m_node;
-                if (lnode) {
-                        if (lnode->isBinaryNode()) {
-                                insertEmptyNode();
-                                m_iter.previous();
-                        }
-                }
-        }
-
-        // insert empty node if right node is a binary node and left does not exist
-        if (!m_iter.hasPrevious() && m_iter.hasNext()) {
-                EgcNode *rnode = m_iter.peekNext().m_node;
-                if (rnode) {
-                        if (rnode->isBinaryNode()) {
-                                insertEmptyNode();
-                                m_iter.previous();
-                        }
-                }
-        }
-
-        // remove double empty elements
-        if (m_iter.hasNext() && m_iter.hasPrevious()) {
-                if (isEmptyElement(false) && isEmptyElement(true))
-                        m_iter.remove(true);
-        }
-
-        //sanetize empty elements that come direct after numbers or variables
-        if (m_iter.hasNext() && m_iter.hasPrevious()) {
-                EgcNode *lnode = m_iter.peekPrevious().m_node;
-                EgcNode *rnode = m_iter.peekNext().m_node;
-                if (lnode && rnode) {
-                        EgcNodeType ltype = lnode->getNodeType();
-                        EgcNodeType rtype = rnode->getNodeType();
-                        if (    (    ltype == EgcNodeType::NumberNode
-                                  || ltype == EgcNodeType::VariableNode
-                                  || ltype == EgcNodeType::AlnumNode)
-                             && isEmptyElement(false))
-                                m_iter.remove(false);
-                        if (    (    rtype == EgcNodeType::NumberNode
-                                  || rtype == EgcNodeType::VariableNode
-                                  || rtype == EgcNodeType::AlnumNode)
-                             && isEmptyElement(true))
-                                m_iter.remove(true);
-
-                }
-        }
-
-        //sanetize subscripts
-        if (m_iter.hasPrevious()) {
-                if (isVarsubscriptSeparator()) {
-                        if (m_iter.hasNext()) {
-                                EgcNode* n = m_iter.peekNext().m_node;
-                                if (n) {
-                                        if (    n->getNodeType() != EgcNodeType::VariableNode
-                                                        && n->getNodeType() != EgcNodeType::AlnumNode)
-                                                insertEmptyNode();
-                                }
-                        } else {
-                                insertEmptyNode();
-                        }
-                }
-        }
+        //sanitize formulas after removing elements
+        sanitizeBinary();
+        sanitizeMisc();
 
         updateFormula();
 }
@@ -582,5 +522,93 @@ bool FormulaModificator::isSpecificElement(QString element, bool previous) const
         }
 
         return retval;
+}
+
+void FormulaModificator::sanitizeBinary()
+{
+        // insert empty node if left and right nodes are binary nodes
+        if (m_iter.hasPrevious() && m_iter.hasNext()) {
+                EgcNode *lnode = m_iter.peekPrevious().m_node;
+                EgcNode *rnode = m_iter.peekNext().m_node;
+                if (lnode && rnode) {
+                        if (lnode->isBinaryNode() && rnode->isBinaryNode()) {
+                                insertEmptyNode();
+                                m_iter.previous();
+                        }
+                }
+        }
+
+        // insert empty node if left node is a binary node and right does not exist
+        if (m_iter.hasPrevious() && !m_iter.hasNext()) {
+                EgcNode *lnode = m_iter.peekPrevious().m_node;
+                if (lnode) {
+                        if (lnode->isBinaryNode()) {
+                                insertEmptyNode();
+                                m_iter.previous();
+                        }
+                }
+        }
+
+        // insert empty node if right node is a binary node and left does not exist
+        if (!m_iter.hasPrevious() && m_iter.hasNext()) {
+                EgcNode *rnode = m_iter.peekNext().m_node;
+                if (rnode) {
+                        if (rnode->isBinaryNode()) {
+                                insertEmptyNode();
+                                m_iter.previous();
+                        }
+                }
+        }
+}
+
+void FormulaModificator::sanitizeMisc()
+{
+        // remove double empty elements
+        if (m_iter.hasNext() && m_iter.hasPrevious()) {
+                if (isEmptyElement(false) && isEmptyElement(true))
+                        m_iter.remove(true);
+        }
+
+        //sanitize empty elements that come direct after numbers or variables
+        if (m_iter.hasNext() && m_iter.hasPrevious()) {
+                EgcNode *lnode = m_iter.peekPrevious().m_node;
+                EgcNode *rnode = m_iter.peekNext().m_node;
+                if (lnode && rnode) {
+                        EgcNodeType ltype = lnode->getNodeType();
+                        EgcNodeType rtype = rnode->getNodeType();
+                        if (    (    ltype == EgcNodeType::NumberNode
+                                  || ltype == EgcNodeType::VariableNode
+                                  || ltype == EgcNodeType::AlnumNode)
+                             && isEmptyElement(false))
+                                m_iter.remove(false);
+                        if (    (    rtype == EgcNodeType::NumberNode
+                                  || rtype == EgcNodeType::VariableNode
+                                  || rtype == EgcNodeType::AlnumNode)
+                             && isEmptyElement(true))
+                                m_iter.remove(true);
+
+                }
+        }
+
+        //sanitize subscripts
+        if (m_iter.hasPrevious()) {
+                if (isVarsubscriptSeparator()) {
+                        if (m_iter.hasNext()) {
+                                EgcNode* n = m_iter.peekNext().m_node;
+                                if (n) {
+                                        if (    n->getNodeType() != EgcNodeType::VariableNode
+                                                        && n->getNodeType() != EgcNodeType::AlnumNode)
+                                                insertEmptyNode();
+                                }
+                        } else {
+                                insertEmptyNode();
+                        }
+                }
+        }
+}
+
+void FormulaModificator::rmSegmented(bool previous)
+{
+
 }
 

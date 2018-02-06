@@ -166,7 +166,20 @@ private:
          * @return true if the checked element is an empty element
          */
         bool isSpecificElement(QString element, bool previous = true) const;
-
+        /**
+         * @brief sanitizeBinary sanitize binary operations after removing elements
+         */
+        void sanitizeBinary(void);
+        /**
+         * @brief sanitizeMisc sanitize misc operations and other stuff after especially after removing elements
+         */
+        void sanitizeMisc(void);
+        /**
+         * @brief rmSegmented
+         * @param previous if true (default) the previous element will be removed, if false the next element will be
+         * removed. If there is no segmented element at all, none will be removed.
+         */
+        void rmSegmented(bool previous = true);
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula
