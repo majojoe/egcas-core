@@ -305,12 +305,20 @@ void FormulaModificator::removeElement(bool previous)
         }
 
         //sanetize subscripts
-        if (m_iter.hasPrevious() && !m_iter.hasNext()) {
+        if (m_iter.hasPrevious()) {
                 if (isVarsubscriptSeparator()) {
-                        insertEmptyNode();
+                        if (m_iter.hasNext()) {
+                                EgcNode* n = m_iter.peekNext().m_node;
+                                if (n) {
+                                        if (    n->getNodeType() != EgcNodeType::VariableNode
+                                                        && n->getNodeType() != EgcNodeType::AlnumNode)
+                                                insertEmptyNode();
+                                }
+                        } else {
+                                insertEmptyNode();
+                        }
                 }
         }
-
 
         updateFormula();
 }
