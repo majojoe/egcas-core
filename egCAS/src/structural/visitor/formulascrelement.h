@@ -69,6 +69,7 @@ public:
         EgcNode* m_node;        ///< pointer to node this element is directly associated with
         enum SideNode m_sideNode; ///< which section of the node this visible element is associated to
         bool m_isSegmented;     ///< true if this element is segmented over more elements, meaning if this element is deleted, the others (pointing to the same m_node) will also be deleted
+        bool m_isPositionMarker;///< marker for position
         TempDataScrIter lTemp;  ///< temporary data for left side of cursor element
         TempDataScrIter rTemp;  ///< temporary data for right side of cursor element
 };

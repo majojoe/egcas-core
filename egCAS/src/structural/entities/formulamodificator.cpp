@@ -609,6 +609,48 @@ void FormulaModificator::sanitizeMisc()
 
 void FormulaModificator::rmSegmented(bool previous)
 {
+        FormulaScrElement *el = nullptr;
+        bool deleteAll = false;  // if true all elements between segmented element nodes are deleted
+        EgcNode *node = nullptr;
 
+        if (previous && m_iter.hasPrevious()) {
+                el = &m_iter.peekPrevious();
+                if (!el->m_isSegmented)
+                        return;
+                el->m_isPositionMarker = true;
+        } else if (!previous && m_iter.hasNext()) {
+                el = &m_iter.peekNext();
+                if (!el->m_isSegmented)
+                        return;
+                el->m_isPositionMarker = true;
+        } else {
+                return;
+        }
+
+        if (!el)
+                return;
+        if (    el->m_sideNode == FormulaScrElement::nodeLeftSide
+             || el->m_sideNode == FormulaScrElement::nodeRightSide)
+                deleteAll = true;
+
+        node = el->m_node;
+        if (!node)
+                return;
+
+        m_iter.toFront();
+        FormulaScrElement *i;
+        while(m_iter.hasNext()) {
+                i = &m_iter.next();
+                if (i->m_node == node && i->m_isSegmented && !i->m_isPositionMarker)
+                        m_iter.remove(previous);
+        }
+        m_iter.toFront();
+        while(m_iter.hasNext()) {
+                i = &m_iter.next();
+                if (i->m_isPositionMarker) {
+                        m_iter.remove(previous);
+                        break;
+                }
+        }
 }
 
