@@ -88,7 +88,7 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
         case EgcNodeType::BinEmptyNode:
                 if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
-                        assembleResult("<mrow "%id%">%1<mo" % getId(node) % ">&compfn;</mo>%2</mrow>", node);
+                        assembleResult("<mrow "%id%">%1<mo mathcolor=\"#7F7F7F\"" % getId(node) % ">&compfn;</mo>%2</mrow>", node);
                 }
                 break;
         case EgcNodeType::DivisionNode:
@@ -272,7 +272,7 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                         pushToStack("<mi mathvariant=\"normal\"" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue() % "</mi>", node);
                 break;
         case EgcNodeType::EmptyNode:
-                pushToStack("<mi" %id%">&#x2B1A;</mi>", node);
+                pushToStack("<mi mathcolor=\"#7F7F7F\"" %id%">&#x2B1A;</mi>", node);
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType()));

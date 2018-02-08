@@ -109,6 +109,7 @@
 %token DIFFERENTIAL "_diff";
 %token ROOT "_root";
 %token EMPTY "_empty";
+%token EMPTYBINOP "_emptybinop";
 %token LOGARITHM "_log";
 %token NATLOGARITHM "_ln";
 %token ITERATOR1;
@@ -117,7 +118,7 @@
 
 
 %right "=" ":"
-%left "+" "-"
+%left "+" "-" "_emptybinop"
 %left "*" "/"
 %right "^"
 %nonassoc "|" UMINUS
@@ -166,6 +167,7 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | expr "*" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::MultiplicationNode, $1, $3);}
      | expr "/" expr       {$$ = interpreter.addDivisionExpression($1, $3);}
      | expr "^" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::ExponentNode, $1, $3);}
+     | expr EMPTYBINOP expr {$$ = interpreter.addBinaryExpression(EgcNodeType::BinEmptyNode, $1, $3);}
      | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
      | LBRACKET_OP expr RBRACKET_OP {$$ = interpreter.addUnaryStructParenth($2);}
      | "-" expr %prec UMINUS {$$ = interpreter.addUnaryExpression(EgcNodeType::UnaryMinusNode, $2);}

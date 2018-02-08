@@ -40,6 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../concreteNodes/egcalnumnode.h"
 
 const char emptyElement[] = "_empty";
+const char emptyBinElement[] = "_emptybinop";
 
 /**
  * @brief The NodeIterReStructData class is intended for use during restructering a formula -> state does not change but
@@ -220,6 +221,8 @@ void FormulaModificator::insertCharacter(QChar character)
         FormulaScrElement el;
         el.m_value = EgcAlnumNode::encode(character);
 
+        m_iter.save();
+
         if (isEmptyElement(true)) {
                 m_iter.remove(true);
         }
@@ -233,6 +236,8 @@ void FormulaModificator::insertCharacter(QChar character)
 
 void FormulaModificator::removeElement(bool previous)
 {
+        m_iter.save();
+
         if (isEmpty() || m_vector.size() == 1) {
                 if (m_formula.getDocument()) {
                         m_formula.getDocument()->deleteEntity(&m_formula);
@@ -259,6 +264,7 @@ void FormulaModificator::removeElement(bool previous)
         //sanitize formulas after removing elements
         sanitizeBinary();
         sanitizeMisc();
+        sanitizeWithEmptyBinaryOps();
 
         updateFormula();
 }
@@ -291,6 +297,9 @@ void FormulaModificator::createSubscript()
 
 void FormulaModificator::insertOperation(EgcAction operation)
 {
+        // save iterator state
+        m_iter.save();
+
         if (operation.m_op == EgcOperations::mathCharOperator) {
                 if (    operation.m_character == '+'
                      || operation.m_character == '-'
@@ -487,6 +496,13 @@ void FormulaModificator::insertEmptyNode(void)
         m_iter.insert(el);
 }
 
+void FormulaModificator::insertBinEmptyNode(void)
+{
+        FormulaScrElement el;
+        el.m_value = emptyBinElement;
+        m_iter.insert(el);
+}
+
 bool FormulaModificator::isEmpty() const
 {
         if (m_vector.size() == 1 && m_vector.at(0).m_value == QString(emptyElement))
@@ -558,6 +574,24 @@ void FormulaModificator::sanitizeBinary()
                                 m_iter.previous();
                         }
                 }
+        }
+}
+
+void FormulaModificator::sanitizeWithEmptyBinaryOps()
+{
+
+        if (m_iter.hasNext() && m_iter.hasPrevious()) {
+                EgcNode *l = m_iter.peekPrevious().m_node;
+                EgcNode *r = m_iter.peekNext().m_node;
+                if (!l || !r)
+                        return;
+
+                EgcNodeType rtype = r->getNodeType();
+                EgcNodeType ltype = l->getNodeType();
+
+                if (    ltype == EgcNodeType::NumberNode
+                     && (rtype == EgcNodeType::AlnumNode || rtype == EgcNodeType::VariableNode))
+                                insertBinEmptyNode();
         }
 }
 
@@ -637,6 +671,7 @@ void FormulaModificator::rmSegmented(bool previous)
         if (!node)
                 return;
 
+        //remove all segmented elements
         m_iter.toFront();
         FormulaScrElement *i;
         while(m_iter.hasNext()) {
@@ -644,6 +679,7 @@ void FormulaModificator::rmSegmented(bool previous)
                 if (i->m_node == node && i->m_isSegmented && !i->m_isPositionMarker)
                         m_iter.remove(previous);
         }
+        //remove element with iterator marker
         m_iter.toFront();
         while(m_iter.hasNext()) {
                 i = &m_iter.next();

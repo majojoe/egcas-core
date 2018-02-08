@@ -118,6 +118,10 @@ public:
          * @brief revert reverts to the state before the last insert or delete operation
          */
         void revert(void);
+        /**
+         * @brief saves the state of the iterator to be able to revert the operation in between later on.
+         */
+        void save(void);
 
 private:
         /**

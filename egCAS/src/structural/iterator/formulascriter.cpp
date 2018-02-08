@@ -98,16 +98,12 @@ void FormulaScrIter::toFront()
 
 void FormulaScrIter::insert(FormulaScrElement element)
 {
-        m_tmpVector = m_vector;
-        m_tmpPos = m_pos;
         m_iter.insert(element);
         m_pos = getIterPos();
 }
 
 void FormulaScrIter::remove(bool previous)
 {
-        m_tmpVector = m_vector;
-        m_tmpPos = m_pos;
         if (previous) {
                 m_iter.previous();
                 m_iter.next();
@@ -138,6 +134,12 @@ void FormulaScrIter::revert()
 {
         m_vector = m_tmpVector;
         setIterPos(m_tmpPos);
+}
+
+void FormulaScrIter::save()
+{
+        m_tmpVector = m_vector;
+        m_tmpPos = m_pos;
 }
 
 void FormulaScrIter::setIterPos(quint32 pos)

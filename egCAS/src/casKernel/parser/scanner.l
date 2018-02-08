@@ -99,11 +99,11 @@ ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*{EMPTY}{0,1})
 "_<1"     { return CASParser::MaximaParser::make_ITERATOR1(CASParser::location()); }
 "_<2"     { return CASParser::MaximaParser::make_ITERATOR2(CASParser::location()); }
 "_<3"     { return CASParser::MaximaParser::make_ITERATOR3(CASParser::location()); }
-
 "_integrate"  { return CASParser::MaximaParser::make_INTEGRAL(CASParser::location()); }
 "_diff"  { return CASParser::MaximaParser::make_DIFFERENTIAL(CASParser::location()); }
 "_root" { return CASParser::MaximaParser::make_ROOT(CASParser::location()); }
 {EMPTY} { return CASParser::MaximaParser::make_EMPTY(CASParser::location()); }
+"_emptybinop" { return CASParser::MaximaParser::make_EMPTYBINOP(CASParser::location()); }
 "_log" { return CASParser::MaximaParser::make_LOGARITHM(CASParser::location()); }
 "log" { return CASParser::MaximaParser::make_NATLOGARITHM(CASParser::location()); }
 

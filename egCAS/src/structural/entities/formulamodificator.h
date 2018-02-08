@@ -140,6 +140,10 @@ private:
          */
         void insertEmptyNode(void);
         /**
+         * @brief insertEmptyNode insert an empty binary node at the current cursor position
+         */
+        void insertBinEmptyNode(void);
+        /**
          * @brief isEmpty checks if formula is currently empty (contains just an empty element)
          * @return true if formula is empty, false if not
          */
@@ -170,6 +174,11 @@ private:
          * @brief sanitizeBinary sanitize binary operations after removing elements
          */
         void sanitizeBinary(void);
+        /**
+         * @brief sanitizeWithEmptyBinaryOps sanitize unary, number and variable elements after removing binary
+         * operations
+         */
+        void sanitizeWithEmptyBinaryOps(void);
         /**
          * @brief sanitizeMisc sanitize misc operations and other stuff after especially after removing elements
          */
