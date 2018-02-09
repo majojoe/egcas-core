@@ -99,6 +99,10 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                 else
                         appendSegmented("_}", rnode, CursorAdhesion::low, 0, false, binary, 0, false);
                 break;
+        case EgcNodeType::BinEmptyNode:
+                if (m_state == EgcIteratorState::MiddleIteration)
+                        append("_emptybinop", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
+                break;
         case EgcNodeType::ExponentNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
                         appendSegmented("^_{", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);

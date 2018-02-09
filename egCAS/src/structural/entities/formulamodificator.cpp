@@ -589,9 +589,16 @@ void FormulaModificator::sanitizeWithEmptyBinaryOps()
                 EgcNodeType rtype = r->getNodeType();
                 EgcNodeType ltype = l->getNodeType();
 
+                // number nodes followed by variable nodes -> not allowed by parser
                 if (    ltype == EgcNodeType::NumberNode
                      && (rtype == EgcNodeType::AlnumNode || rtype == EgcNodeType::VariableNode))
                                 insertBinEmptyNode();
+
+                // two unary nodes that are not nested and need therefore a "binding node"
+                if (    !l->isBinaryNode() && !r->isBinaryNode()
+                     && m_iter.peekPrevious().m_sideNode == FormulaScrElement::nodeRightSide
+                     && m_iter.peekNext().m_sideNode == FormulaScrElement::nodeLeftSide)
+                        insertBinEmptyNode();
         }
 }
 
@@ -674,11 +681,24 @@ void FormulaModificator::rmSegmented(bool previous)
         //remove all segmented elements
         m_iter.toFront();
         FormulaScrElement *i;
+        bool deletingInProgress = false;
         while(m_iter.hasNext()) {
                 i = &m_iter.next();
-                if (i->m_node == node && i->m_isSegmented && !i->m_isPositionMarker)
-                        m_iter.remove(previous);
+                if (!deleteAll) {
+                        if (i->m_node == node && i->m_isSegmented && !i->m_isPositionMarker)
+                                m_iter.remove(previous);
+                } else {
+                        if (i->m_node == node && i->m_sideNode == FormulaScrElement::nodeLeftSide)
+                                deletingInProgress = true;
+                        if (deletingInProgress && !i->m_isPositionMarker)
+                                m_iter.remove(previous);
+                        if (i->m_node == node && i->m_sideNode == FormulaScrElement::nodeRightSide) {
+                                deletingInProgress = false;
+                                break;
+                        }
+                }
         }
+
         //remove element with iterator marker
         m_iter.toFront();
         while(m_iter.hasNext()) {
