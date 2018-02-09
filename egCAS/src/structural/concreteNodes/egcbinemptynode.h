@@ -40,6 +40,13 @@ class EgcBinEmptyNode : public EgcBinaryOperator
         EGC_SET_EXPRESSION_TYPE(EgcBinEmptyNode, EgcNodeType::BinEmptyNode);
 public:
         EgcBinEmptyNode();
+        /**
+         * @brief valid returns true if the expression is valid and false otherwise.
+         * An expression is valid if all nodes are valid.
+         * @return true if the expression is valid, false otherwise.
+         */
+        virtual bool valid(void);
+
 protected:
 };
 

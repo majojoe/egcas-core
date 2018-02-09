@@ -260,6 +260,7 @@ bool EgcBinaryNode::operator==(const EgcNode& node) const
 
 bool EgcBinaryNode::visibleSigns(EgcNodeSide side) const
 {
+#warning remove this function after refactoring of screen iterator
         if (   side == EgcNodeSide::middle)
                 return true;
         

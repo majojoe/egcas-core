@@ -31,3 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcEqualNode::EgcEqualNode()
 {
 }
+
+bool EgcEqualNode::valid()
+{
+        if (m_leftChild && m_rightChild)
+                if (m_leftChild->valid()) // a equal node is valid if only the left child contains no empty nodes
+                        return true;
+
+        return false;
+}

@@ -146,6 +146,11 @@ void EgcCalculation::handleCalculation(EgcFormulaEntity& entity)
                 return;
         }
 
+        if (!node->valid()) { //process next formula -> prevent recursion with event
+                triggerNextCalcualtion();
+                return;
+        }
+
         EgcNodeType type = node->getNodeType();
         switch(type) {
         //send the formula to the cas kernel if it's a definition
