@@ -181,6 +181,22 @@ void FormulaModificator::insertBinaryOperation(QString op)
         FormulaScrElement el;
         el.m_value = op;
 
+        // check if there is an empty binary operation at the left or at the right
+        if (m_iter.hasPrevious()) {
+                EgcNode* l = m_iter.peekPrevious().m_node;
+                if (l) {
+                        if (l->getNodeType() == EgcNodeType::BinEmptyNode)
+                                m_iter.remove(true);
+                }
+        }
+        if (m_iter.hasNext()) {
+                EgcNode* r = m_iter.peekNext().m_node;
+                if (r) {
+                        if (r->getNodeType() == EgcNodeType::BinEmptyNode)
+                                m_iter.remove(false);
+                }
+        }
+
         if (!m_iter.hasPrevious()) {
                 insertEmptyLeft = true;
         } else {
