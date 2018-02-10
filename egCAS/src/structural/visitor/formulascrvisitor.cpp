@@ -190,26 +190,26 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
                 break;
         case EgcNodeType::IntegralNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        appendSegmented("_integrate_{", flex, CursorAdhesion::low, 0, true, flex->getChild(0), 0, true);
+                        appendSegmented("_integrate(", flex, CursorAdhesion::low, 0, true, flex->getChild(0), 0, true);
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         append(",", flex->getChild(m_childIndex), CursorAdhesion::low, 0, false, flex->getChild(m_childIndex + 1), 0, true);
                 } else {
-                        appendSegmented("_}", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::low, 0, false, flex, 0, false);
+                        appendSegmented(")", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::low, 0, false, flex, 0, false);
                 }
                 break;
         case EgcNodeType::DifferentialNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         if (static_cast<EgcDifferentialNode*>(flex)->getNrDerivative() <= 3) {
-                                appendSegmented("_diff_{", flex, CursorAdhesion::low, 0, true, flex->getChild(0), 0, true);
+                                appendSegmented("_diff(", flex, CursorAdhesion::low, 0, true, flex->getChild(0), 0, true);
                         } else {
-                                appendSegmented("_diff_{", flex, CursorAdhesion::ultra, 0, true, flex, 1, true);
+                                appendSegmented("_diff(", flex, CursorAdhesion::ultra, 0, true, flex, 1, true);
                                 appendSigns(QString::number(static_cast<EgcDifferentialNode*>(flex)->getNrDerivative()), flex, CursorAdhesion::strong);
                                 appendSegmented(",", flex, CursorAdhesion::ultra, 1, false, flex->getChild(0), 0, true);
                         }
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         appendSegmented(",", flex->getChild(m_childIndex), CursorAdhesion::ultra, 0, false, flex->getChild(m_childIndex + 1), 0, true);
                 } else {
-                        appendSegmented("_}", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::ultra, 0, false, flex, 0, false);
+                        appendSegmented(")", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::ultra, 0, false, flex, 0, false);
                 }
                 break;
         case EgcNodeType::VariableNode:
