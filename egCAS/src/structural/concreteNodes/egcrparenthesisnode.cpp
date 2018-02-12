@@ -47,3 +47,8 @@ bool RParenthesisNode::visibleSigns(EgcNodeSide side) const
 
         return false;
 }
+
+bool RParenthesisNode::valid()
+{
+        return false;
+}

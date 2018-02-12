@@ -112,11 +112,13 @@
 %token EMPTYBINOP "_emptybinop";
 %token LOGARITHM "_log";
 %token NATLOGARITHM "_ln";
+%token RED_PARENTHESIS_R "_red_parenth_r";
+%token RED_PARENTHESIS_L "_red_parenth_l";
 %token ITERATOR1;
 %token ITERATOR2;
 %token ITERATOR3;
 
-
+%nonassoc RED_PARENTHESIS_L RED_PARENTHESIS_R
 %right "=" ":"
 %left "+" "-" "_emptybinop"
 %left "*" "/"
@@ -186,6 +188,8 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | expr ITERATOR1      {$$ = interpreter.updateIterator($1, 1);}
      | expr ITERATOR2      {$$ = interpreter.updateIterator($1, 2);}
      | expr ITERATOR3      {$$ = interpreter.updateIterator($1, 3);}
+     | "_red_parenth_l" expr {$$ = interpreter.addUnaryExpression(EgcNodeType::LParenthesisNode, $2);}
+     | expr "_red_parenth_r" {$$ = interpreter.addUnaryExpression(EgcNodeType::RParenthesisNode, $1);}
 ;
     
 explist: expr            {$$ = interpreter.createArgList($1);}

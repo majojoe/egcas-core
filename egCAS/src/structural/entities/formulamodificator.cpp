@@ -336,14 +336,11 @@ void FormulaModificator::insertOperation(EgcAction operation)
                 }
         }
 
+        if (operation.m_character == '(')
+                insertUnaryOperation("_red_parenth_l");
+        if (operation.m_character == ')')
+                insertUnaryOperation("_red_parenth_r");
 
-//                if (    operations.m_character == '('
-//                                || operations.m_character == ')') {
-//                        if (    operations.m_character == '(')
-//                                return createAndInsertOp(EgcNodeType::LParenthesisNode);
-//                        if (    operations.m_character == ')')
-//                                return createAndInsertOp(EgcNodeType::RParenthesisNode);
-//                }
 //                if (operations.m_character == QChar(8730))
 //                        return createAndInsertOp(EgcNodeType::RootNode);
 //        } else if (operations.m_op == EgcOperations::mathFunction) { // functions

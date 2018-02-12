@@ -106,6 +106,8 @@ ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*{EMPTY}{0,1})
 "_emptybinop" { return CASParser::MaximaParser::make_EMPTYBINOP(CASParser::location()); }
 "_log" { return CASParser::MaximaParser::make_LOGARITHM(CASParser::location()); }
 "log" { return CASParser::MaximaParser::make_NATLOGARITHM(CASParser::location()); }
+"_red_parenth_r" { return CASParser::MaximaParser::make_RED_PARENTHESIS_R(CASParser::location()); }
+"_red_parenth_l" { return CASParser::MaximaParser::make_RED_PARENTHESIS_L(CASParser::location()); }
 
  /*numbers*/
 [0-9]+"."[0-9]*{EXPONENT}? |
