@@ -285,7 +285,64 @@ void FormulaModificator::removeElement(bool previous)
         updateFormula();
 }
 
-void FormulaModificator::insertUnaryOperation(QString segment)
+void FormulaModificator::insertRedParenthesis(bool left)
+{
+        if (left)
+                insertElement("_red_parenth_l");
+        else
+                insertElement("_red_parenth_r");
+
+        m_iter.peekPrevious().m_isPositionMarker = true;
+        bool pendantFound = false;
+
+        if (!left) {
+                (void) m_iter.previous();
+                while(m_iter.hasPrevious()) {
+                        FormulaScrElement& i = m_iter.previous();
+                        if (!i.m_node)
+                                continue;
+                        EgcNodeType type = i.m_node->getNodeType();
+                        if (type == EgcNodeType::LParenthesisNode) {
+                                i.m_node = nullptr;
+                                i.m_value = QString("(");
+                                pendantFound = true;
+                                break;
+                        }
+                }
+        } else {
+                while(m_iter.hasNext()) {
+                        FormulaScrElement& i = m_iter.next();
+                        if (!i.m_node)
+                                continue;
+                        EgcNodeType type = i.m_node->getNodeType();
+                        if (type == EgcNodeType::RParenthesisNode) {
+                                i.m_node = nullptr;
+                                i.m_value = QString(")");
+                                pendantFound = true;
+                                break;
+                        }
+                }
+        }
+
+        m_iter.toFront();
+        while(m_iter.hasNext()) {
+                FormulaScrElement& i = m_iter.next();
+                if (i.m_isPositionMarker) {
+                        i.m_isPositionMarker = false;
+                        if (pendantFound) {
+                                if (!left)
+                                        i.m_value = QString(")");
+                                else
+                                        i.m_value = QString("(");
+                        }
+                        break;
+                }
+        }
+
+        updateFormula();
+}
+
+void FormulaModificator::insertElement(QString segment)
 {
         FormulaScrElement el;
         el.m_value = segment;
@@ -298,6 +355,11 @@ void FormulaModificator::insertUnaryOperation(QString segment)
         }
 
         m_iter.insert(el);
+}
+
+void FormulaModificator::insertUnaryOperation(QString segment)
+{
+        insertElement(segment);
         updateFormula();
 }
 
@@ -337,12 +399,10 @@ void FormulaModificator::insertOperation(EgcAction operation)
         }
 
         if (operation.m_character == '(')
-                insertUnaryOperation("_red_parenth_l");
+                insertRedParenthesis(true);
         if (operation.m_character == ')')
-                insertUnaryOperation("_red_parenth_r");
+                insertRedParenthesis(false);
 
-//                if (operations.m_character == QChar(8730))
-//                        return createAndInsertOp(EgcNodeType::RootNode);
 //        } else if (operations.m_op == EgcOperations::mathFunction) { // functions
 //                EgcFunctionNode* fnc = dynamic_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
 //                if (!fnc)
@@ -569,9 +629,10 @@ void FormulaModificator::sanitizeBinary()
 
         // insert empty node if left node is a binary node and right does not exist
         if (m_iter.hasPrevious() && !m_iter.hasNext()) {
-                EgcNode *lnode = m_iter.peekPrevious().m_node;
+                FormulaScrElement& el = m_iter.peekPrevious();
+                EgcNode *lnode = el.m_node;
                 if (lnode) {
-                        if (lnode->isBinaryNode()) {
+                        if (lnode->isBinaryNode() && el.m_sideNode == FormulaScrElement::nodeMiddle) {
                                 insertEmptyNode();
                                 m_iter.previous();
                         }
@@ -580,9 +641,10 @@ void FormulaModificator::sanitizeBinary()
 
         // insert empty node if right node is a binary node and left does not exist
         if (!m_iter.hasPrevious() && m_iter.hasNext()) {
-                EgcNode *rnode = m_iter.peekNext().m_node;
+                FormulaScrElement& el = m_iter.peekNext();
+                EgcNode *rnode = el.m_node;
                 if (rnode) {
-                        if (rnode->isBinaryNode()) {
+                        if (rnode->isBinaryNode() && el.m_sideNode == FormulaScrElement::nodeMiddle) {
                                 insertEmptyNode();
                                 m_iter.previous();
                         }

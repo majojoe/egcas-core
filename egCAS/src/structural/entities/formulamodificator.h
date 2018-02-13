@@ -91,6 +91,16 @@ public:
          */
         void insertUnaryOperation(QString segment);
         /**
+         * @brief insertElement insert an element
+         * @param segment the segment to insert
+         */
+        void insertElement(QString segment);
+        /**
+         * @brief insertParenthesis insert red parenthesis and change them to normal parenthesis as needed
+         * @param left true if the left parenthesis is to insert, false otherwise
+         */
+        void insertRedParenthesis(bool left);
+        /**
          * @brief createSubscript create a subscipt for a formula variable at the current cursor position
          */
         void createSubscript(void);

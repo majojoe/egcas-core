@@ -118,8 +118,9 @@
 %token ITERATOR2;
 %token ITERATOR3;
 
-%nonassoc RED_PARENTHESIS_L RED_PARENTHESIS_R
+
 %right "=" ":"
+%nonassoc RED_PARENTHESIS_L RED_PARENTHESIS_R
 %left "+" "-" "_emptybinop"
 %left "*" "/"
 %right "^"
