@@ -135,9 +135,9 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
         switch (unary->getNodeType()) {
         case EgcNodeType::ParenthesisNode:
                 if (m_state == EgcIteratorState::LeftIteration)
-                        append("(", unary, CursorAdhesion::low, 0, true, node, 0, true);
+                        appendSegmented("(", unary, CursorAdhesion::low, 0, true, node, 0, true);
                 else if (m_state == EgcIteratorState::RightIteration)
-                        append(")", node, CursorAdhesion::low, 0, false, unary, 0, false);
+                        appendSegmented(")", node, CursorAdhesion::low, 0, false, unary, 0, false);
                 break;
         case EgcNodeType::LogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
@@ -157,11 +157,11 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
                 break;
         case EgcNodeType::LParenthesisNode:
                 if (m_state == EgcIteratorState::LeftIteration)
-                        append("(", unary, CursorAdhesion::low, 0, true, node, 0, true);
+                        append("_red_parenth_l", unary, CursorAdhesion::low, 0, true, node, 0, true);
                 break;
         case EgcNodeType::RParenthesisNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        append(")", node, CursorAdhesion::low, 0, false, unary, 0, false);
+                        append("_red_parenth_r", node, CursorAdhesion::low, 0, false, unary, 0, false);
                 break;
         case EgcNodeType::UnaryMinusNode:
                 if (m_state == EgcIteratorState::LeftIteration)

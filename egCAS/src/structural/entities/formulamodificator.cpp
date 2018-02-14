@@ -222,6 +222,13 @@ void FormulaModificator::insertBinaryOperation(QString op)
                 }
         }
 
+        // since a minus can also be a unary minus -> delete the empty node here
+        if (op == QString("-")) {
+                if (insertEmptyLeft)
+                        insertEmptyLeft = false;
+                else if (isEmptyElement(true))
+                        m_iter.remove(true);
+        }
 
         if (insertEmptyLeft)
                 insertEmptyNode();
@@ -287,10 +294,15 @@ void FormulaModificator::removeElement(bool previous)
 
 void FormulaModificator::insertRedParenthesis(bool left)
 {
-        if (left)
-                insertElement("_red_parenth_l");
-        else
-                insertElement("_red_parenth_r");
+        if (left) {
+                insertUnaryElement("_red_parenth_l");
+                if (!m_iter.hasNext())
+                        insertEmptyNode();
+        } else {
+                if (!m_iter.hasPrevious())
+                        insertEmptyNode();
+                insertUnaryElement("_red_parenth_r", false);
+        }
 
         m_iter.peekPrevious().m_isPositionMarker = true;
         bool pendantFound = false;
@@ -342,16 +354,18 @@ void FormulaModificator::insertRedParenthesis(bool left)
         updateFormula();
 }
 
-void FormulaModificator::insertElement(QString segment)
+void FormulaModificator::insertUnaryElement(QString segment, bool left)
 {
         FormulaScrElement el;
         el.m_value = segment;
 
-        if (isEmptyElement(true)) {
-                m_iter.remove(true);
+        if (left) {
+                if (isEmptyElement(true))
+                        m_iter.remove(true);
         }
-        if (isEmptyElement(false)) {
-                m_iter.remove(false);
+        if (!left) {
+                if (isEmptyElement(false))
+                        m_iter.remove(false);
         }
 
         m_iter.insert(el);
@@ -359,7 +373,7 @@ void FormulaModificator::insertElement(QString segment)
 
 void FormulaModificator::insertUnaryOperation(QString segment)
 {
-        insertElement(segment);
+        insertUnaryElement(segment);
         updateFormula();
 }
 
@@ -752,6 +766,9 @@ void FormulaModificator::rmSegmented(bool previous)
         node = el->m_node;
         if (!node)
                 return;
+
+        if (node->isUnaryNode())
+                deleteAll = false;
 
         //remove all segmented elements
         m_iter.toFront();

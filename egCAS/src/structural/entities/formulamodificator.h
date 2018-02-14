@@ -93,8 +93,9 @@ public:
         /**
          * @brief insertElement insert an element
          * @param segment the segment to insert
+         * @param left true if the element is on the left side, false otherwise
          */
-        void insertElement(QString segment);
+        void insertUnaryElement(QString segment, bool left = true);
         /**
          * @brief insertParenthesis insert red parenthesis and change them to normal parenthesis as needed
          * @param left true if the left parenthesis is to insert, false otherwise
