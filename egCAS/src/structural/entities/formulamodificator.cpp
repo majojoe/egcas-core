@@ -268,11 +268,13 @@ void FormulaModificator::removeElement(bool previous)
         } else {
                 bool segmented = false;
                 if (previous && m_iter.hasPrevious()) {
-                        if (m_iter.peekPrevious().m_isSegmented)
+                        FormulaScrElement& el = m_iter.peekPrevious();
+                        if (el.m_isSegmented)
                                 segmented = true;
                 }
                 if (!previous && m_iter.hasNext()) {
-                        if (m_iter.peekNext().m_isSegmented)
+                        FormulaScrElement& el = m_iter.peekNext();
+                        if (el.m_isSegmented)
                                 segmented = true;
                 }
 
@@ -286,6 +288,7 @@ void FormulaModificator::removeElement(bool previous)
 
         //sanitize formulas after removing elements
         sanitizeBinary();
+        sanitizeUnary();
         sanitizeMisc();
         sanitizeWithEmptyBinaryOps();
 
@@ -659,6 +662,33 @@ void FormulaModificator::sanitizeBinary()
                 EgcNode *rnode = el.m_node;
                 if (rnode) {
                         if (rnode->isBinaryNode() && el.m_sideNode == FormulaScrElement::nodeMiddle) {
+                                insertEmptyNode();
+                                m_iter.previous();
+                        }
+                }
+        }
+}
+
+void FormulaModificator::sanitizeUnary()
+{
+        // insert empty node if left node is a unary node and right does not exist
+        if (m_iter.hasPrevious() && !m_iter.hasNext()) {
+                FormulaScrElement& el = m_iter.peekPrevious();
+                EgcNode *lnode = el.m_node;
+                if (lnode) {
+                        if (lnode->isUnaryNode() && el.m_sideNode == FormulaScrElement::nodeLeftSide) {
+                                insertEmptyNode();
+                                m_iter.previous();
+                        }
+                }
+        }
+
+        // insert empty node if right node is a unary node and left does not exist
+        if (!m_iter.hasPrevious() && m_iter.hasNext()) {
+                FormulaScrElement& el = m_iter.peekNext();
+                EgcNode *rnode = el.m_node;
+                if (rnode) {
+                        if (rnode->isUnaryNode() && el.m_sideNode == FormulaScrElement::nodeRightSide) {
                                 insertEmptyNode();
                                 m_iter.previous();
                         }

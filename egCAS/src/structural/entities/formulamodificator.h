@@ -186,6 +186,10 @@ private:
          */
         void sanitizeBinary(void);
         /**
+         * @brief sanitizeUnary sanitize unary operations after removing elements
+         */
+        void sanitizeUnary(void);
+        /**
          * @brief sanitizeWithEmptyBinaryOps sanitize unary, number and variable elements after removing binary
          * operations
          */
