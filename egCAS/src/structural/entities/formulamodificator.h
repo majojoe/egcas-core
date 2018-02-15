@@ -105,6 +105,14 @@ public:
          * @brief createSubscript create a subscipt for a formula variable at the current cursor position
          */
         void createSubscript(void);
+        /**
+         * @brief toFront positions the cursor at the front of the formula
+         */
+        void toFront(void);
+        /**
+         * @brief toBack positions the cursor at the back of the formula
+         */
+        void toBack(void);
 private:
         /**
          * @brief resetUnderline reset the underline

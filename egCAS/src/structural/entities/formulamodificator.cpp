@@ -390,6 +390,20 @@ void FormulaModificator::createSubscript()
         updateFormula();
 }
 
+void FormulaModificator::toFront()
+{
+        resetUnderline();
+        m_iter.toFront();
+        showCurrentCursor();
+}
+
+void FormulaModificator::toBack()
+{
+        resetUnderline();
+        m_iter.toBack();
+        showCurrentCursor();
+}
+
 void FormulaModificator::insertOperation(EgcAction operation)
 {
         // save iterator state

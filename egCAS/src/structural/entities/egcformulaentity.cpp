@@ -461,20 +461,14 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
                 if (m_mod && m_item)
                         m_mod->insertOperation(action);
                 break;
-//        case EgcOperations::homePressed:
-//                if (m_scrIter) {
-//                        m_scrIter->toFront();
-//                        m_scrIter->resetUnderline();
-//                        showCurrentCursor();
-//                }
-//                break;
-//        case EgcOperations::endPressed:
-//                if (m_scrIter) {
-//                        m_scrIter->toBack();
-//                        m_scrIter->resetUnderline();
-//                        showCurrentCursor();
-//                }
-//                break;
+        case EgcOperations::homePressed:
+                if (m_mod && m_item)
+                        m_mod->toFront();
+                break;
+        case EgcOperations::endPressed:
+                if (m_mod && m_item)
+                        m_mod->toBack();
+                break;
         case EgcOperations::createSubscript:
                 if (m_mod && m_item)
                         m_mod->createSubscript();
