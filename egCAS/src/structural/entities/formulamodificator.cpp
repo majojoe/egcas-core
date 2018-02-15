@@ -762,6 +762,7 @@ void FormulaModificator::sanitizeMisc()
                                 }
                         } else {
                                 insertEmptyNode();
+                                (void) m_iter.previous();
                         }
                 }
         }
