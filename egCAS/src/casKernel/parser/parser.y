@@ -178,6 +178,7 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | NAMES               {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1);}
      | NAMES VARSUB        {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1 + $2);}
      | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}
+     | EMPTY "(" explist ")"{$$ = interpreter.addFunction("", $3);}
      | BUILTIN_FNCS "(" expr ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
      | LOGARITHM "(" expr ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::LogNode, $3);}
      | NATLOGARITHM "(" expr ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::NatLogNode, $3);}

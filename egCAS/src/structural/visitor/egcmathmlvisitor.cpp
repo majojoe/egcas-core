@@ -176,8 +176,13 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
         case EgcNodeType::FunctionNode:
                 if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
-                        assembleResult("<mrow "%id%"><mi mathvariant=\"italic\"" %id%">" %
-                                       static_cast<EgcFunctionNode*>(node)->getName() % "</mi>"
+                        QString name = static_cast<EgcFunctionNode*>(node)->getName();
+                        QString color;
+                        if (name.isEmpty()) {
+                                name = "&#x2B1A;";
+                                color = "mathcolor=\"#7F7F7F\"";
+                        }
+                        assembleResult("<mrow "%id%"><mi " %color% " mathvariant=\"italic\"" %id%">" % name % "</mi>"
                                        "<mo>&ApplyFunction;</mo><mrow><mo" %id%">(</mo><mrow>",
                                        "<mo" %id%">,</mo>", "</mrow><mo" %id%">)</mo></mrow></mrow>", node);
                 }

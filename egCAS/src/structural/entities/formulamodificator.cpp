@@ -434,19 +434,30 @@ void FormulaModificator::insertOperation(EgcAction operation)
         if (operation.m_character == ')')
                 insertRedParenthesis(false);
 
-//        } else if (operations.m_op == EgcOperations::mathFunction) { // functions
-//                EgcFunctionNode* fnc = dynamic_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
-//                if (!fnc)
-//                        return false;
-//                if (!operations.m_additionalData.isNull()) {
-//                        QString name = operations.m_additionalData.toString();
-//                        if (!name.isEmpty()) {
-//                                fnc->setName(name);
-//                                m_scrIter->setCursorAtDelayed(fnc->getChild(0), true);
-//                        } else {
-//                                m_scrIter->setCursorAtDelayed(fnc, false);
-//                        }
-//                }
+        if (operation.m_op == EgcOperations::mathFunction) { // functions
+                QString name;
+                bool nameGiven = false;
+                if (!operation.m_additionalData.isNull())  {
+                        name = operation.m_additionalData.toString();
+                }
+                if (name.isEmpty() && !isEmptyElement()) {
+                        name = emptyElement;
+                        insertEmptyNode();
+                }
+                // insertUnaryElement is wrong here, since that would remove the empty node for the name
+                FormulaScrElement el;
+                el.m_value = "(";
+                m_iter.insert(el);
+                insertEmptyNode();
+                insertUnaryElement(")", false);
+                (void) m_iter.previous();
+                if (nameGiven) {
+                        (void) m_iter.previous();
+                        (void) m_iter.previous();
+                }
+                updateFormula();
+        }
+
 //        } else if (operations.m_op == EgcOperations::internalFunction) { // internal functions
 //                if (operations.m_intType == InternalFunctionType::natLogarithm
 //                     || operations.m_intType == InternalFunctionType::logarithm) {

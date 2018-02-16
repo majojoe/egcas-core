@@ -180,7 +180,10 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
         case EgcNodeType::FunctionNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         QString name = static_cast<EgcFunctionNode*>(flex)->getName();
-                        appendSigns(name, flex, CursorAdhesion::strong);
+                        if (name.isEmpty())
+                                append("_empty", flex, CursorAdhesion::strong);
+                        else
+                                appendSigns(name, flex, CursorAdhesion::strong);
                         appendSegmented("(", flex, CursorAdhesion::low, name.length() + 1, true, flex->getChild(0), 0, true);
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         append(",", flex->getChild(m_childIndex), CursorAdhesion::low, 0, false, flex->getChild(m_childIndex + 1), 0, true);
