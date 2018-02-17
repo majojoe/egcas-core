@@ -250,7 +250,10 @@ QToolButton:hover {background-color: lightgray; }
     <string>insert Text</string>
    </property>
    <property name="toolTip">
-    <string>insert Textbox</string>
+    <string>insert Textbox (Ctrl+T)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
  </widget>
