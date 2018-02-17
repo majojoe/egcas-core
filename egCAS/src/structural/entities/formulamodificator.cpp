@@ -785,16 +785,45 @@ void FormulaModificator::sanitizeWithEmptyBinaryOps()
 
 void FormulaModificator::sanitizeMisc()
 {
+        EgcNode* lnode = nullptr;
+        EgcNode* rnode = nullptr;
+        enum FormulaScrElement::SideNode rside;
+        enum FormulaScrElement::SideNode lside;
+        if (m_iter.hasNext()) {
+                FormulaScrElement &el = m_iter.peekNext();
+                rnode = el.m_node;
+                rside = el.m_sideNode;
+        }
+        if (m_iter.hasPrevious()) {
+                FormulaScrElement &el = m_iter.peekPrevious();
+                lnode = el.m_node;
+                lside = el.m_sideNode;
+        }
+
         // remove double empty elements
         if (m_iter.hasNext() && m_iter.hasPrevious()) {
                 if (isEmptyElement(false) && isEmptyElement(true))
                         m_iter.remove(true);
         }
 
+        // remove empty elements that follow direct after the right side of any operation
+        if (m_iter.hasNext() && m_iter.hasPrevious()) {
+                if (isEmptyElement(false) && lnode) {
+                        if (lnode->isOperation() && lside == FormulaScrElement::nodeRightSide)
+                                m_iter.remove(false);
+                }
+        }
+
+        // also remove empty elements that are followed direct after the left side of any operation
+        if (m_iter.hasNext() && m_iter.hasPrevious()) {
+                if (isEmptyElement(true) && rnode) {
+                        if (rnode->isOperation() && rside == FormulaScrElement::nodeLeftSide)
+                                m_iter.remove(false);
+                }
+        }
+
         //sanitize empty elements that come direct after numbers or variables
         if (m_iter.hasNext() && m_iter.hasPrevious()) {
-                EgcNode *lnode = m_iter.peekPrevious().m_node;
-                EgcNode *rnode = m_iter.peekNext().m_node;
                 if (lnode && rnode) {
                         EgcNodeType ltype = lnode->getNodeType();
                         EgcNodeType rtype = rnode->getNodeType();
