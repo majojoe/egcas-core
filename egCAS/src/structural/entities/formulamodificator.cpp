@@ -259,21 +259,25 @@ void FormulaModificator::insertCharacter(QChar character)
 
 void FormulaModificator::removeElement(bool previous)
 {
+        FormulaScrElement element;
         m_iter.save();
 
         if (isEmpty() || m_vector.size() == 1) {
                 if (m_formula.getDocument()) {
                         m_formula.getDocument()->deleteEntity(&m_formula);
                 }
+                return;
         } else {
                 bool segmented = false;
                 if (previous && m_iter.hasPrevious()) {
                         FormulaScrElement& el = m_iter.peekPrevious();
+                        element = el;
                         if (el.m_isSegmented)
                                 segmented = true;
                 }
                 if (!previous && m_iter.hasNext()) {
                         FormulaScrElement& el = m_iter.peekNext();
+                        element = el;
                         if (el.m_isSegmented)
                                 segmented = true;
                 }
@@ -291,6 +295,8 @@ void FormulaModificator::removeElement(bool previous)
         sanitizeUnary();
         sanitizeMisc();
         sanitizeWithEmptyBinaryOps();
+        sanitizeFlex();
+        sanitizeSpecials(element, previous);
 
         updateFormula();
 }
@@ -451,7 +457,7 @@ void FormulaModificator::insertOperation(EgcAction operation)
                 insertEmptyNode();
                 insertUnaryElement(")", false);
                 (void) m_iter.previous();
-                if (nameGiven) {
+                if (!nameGiven) {
                         (void) m_iter.previous();
                         (void) m_iter.previous();
                 }
@@ -696,6 +702,18 @@ void FormulaModificator::sanitizeBinary()
 
 void FormulaModificator::sanitizeUnary()
 {
+        // insert empty node if left and right nodes are binary nodes
+        if (m_iter.hasPrevious() && m_iter.hasNext()) {
+                EgcNode *lnode = m_iter.peekPrevious().m_node;
+                EgcNode *rnode = m_iter.peekNext().m_node;
+                if (lnode && rnode) {
+                        if (lnode->isUnaryNode() && rnode->isUnaryNode() && lnode == rnode) {
+                                insertEmptyNode();
+                                m_iter.previous();
+                        }
+                }
+        }
+
         // insert empty node if left node is a unary node and right does not exist
         if (m_iter.hasPrevious() && !m_iter.hasNext()) {
                 FormulaScrElement& el = m_iter.peekPrevious();
@@ -714,6 +732,25 @@ void FormulaModificator::sanitizeUnary()
                 EgcNode *rnode = el.m_node;
                 if (rnode) {
                         if (rnode->isUnaryNode() && el.m_sideNode == FormulaScrElement::nodeRightSide) {
+                                insertEmptyNode();
+                                m_iter.previous();
+                        }
+                }
+        }
+}
+
+void FormulaModificator::sanitizeFlex()
+{
+        // insert empty node if left and right nodes are binary nodes
+        if (m_iter.hasPrevious() && m_iter.hasNext()) {
+                EgcNode *lnode = m_iter.peekPrevious().m_node;
+                EgcNode *rnode = m_iter.peekNext().m_node;
+                enum FormulaScrElement::SideNode lside = m_iter.peekPrevious().m_sideNode;
+                enum FormulaScrElement::SideNode rside = m_iter.peekNext().m_sideNode;
+                if (lnode && rnode) {
+                        if (    lnode->isFlexNode() && rnode->isFlexNode()
+                             && lnode == rnode
+                             && lside == FormulaScrElement::nodeLeftSide && rside == FormulaScrElement::nodeRightSide) {
                                 insertEmptyNode();
                                 m_iter.previous();
                         }
@@ -790,6 +827,33 @@ void FormulaModificator::sanitizeMisc()
                                 (void) m_iter.previous();
                         }
                 }
+        }
+}
+
+void FormulaModificator::sanitizeSpecials(FormulaScrElement el, bool previous)
+{
+        if (!el.m_node)
+                return;
+
+        EgcNodeType type = el.m_node->getNodeType();
+        EgcNode* previousNode = nullptr;
+        EgcNodeType previousType = EgcNodeType::NodeUndefined;
+        if (m_iter.hasPrevious()) {
+                previousNode = m_iter.peekPrevious().m_node;
+                if (previousNode)
+                        previousType = previousNode->getNodeType();
+        }
+
+        switch(type) {
+        case EgcNodeType::FunctionNode:
+                if (    (!m_iter.hasPrevious() || previousType != EgcNodeType::FunctionNode)
+                     && (m_iter.hasNext())) {
+                        if (m_iter.peekNext().m_value == "(") {
+                                insertEmptyNode();
+                                (void) m_iter.previous();
+                        }
+                }
+                break;
         }
 }
 

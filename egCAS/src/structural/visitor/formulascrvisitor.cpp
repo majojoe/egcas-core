@@ -181,7 +181,7 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
                 if (m_state == EgcIteratorState::LeftIteration) {
                         QString name = static_cast<EgcFunctionNode*>(flex)->getName();
                         if (name.isEmpty())
-                                append("_empty", flex, CursorAdhesion::strong);
+                                appendSegmented("_empty", flex, CursorAdhesion::strong, 1, true, flex, 1, false);
                         else
                                 appendSigns(name, flex, CursorAdhesion::strong);
                         appendSegmented("(", flex, CursorAdhesion::low, name.length() + 1, true, flex->getChild(0), 0, true);

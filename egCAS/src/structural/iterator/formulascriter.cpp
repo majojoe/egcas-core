@@ -104,6 +104,11 @@ void FormulaScrIter::insert(FormulaScrElement element)
 
 void FormulaScrIter::remove(bool previous)
 {
+        if (previous && !m_iter.hasPrevious())
+                return;
+        if (!previous && !m_iter.hasNext())
+                return;
+
         if (previous) {
                 m_iter.previous();
                 m_iter.next();

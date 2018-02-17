@@ -198,6 +198,10 @@ private:
          */
         void sanitizeUnary(void);
         /**
+         * @brief sanitizeFlex sanitize flex operations after removing elements
+         */
+        void sanitizeFlex(void);
+        /**
          * @brief sanitizeWithEmptyBinaryOps sanitize unary, number and variable elements after removing binary
          * operations
          */
@@ -206,6 +210,12 @@ private:
          * @brief sanitizeMisc sanitize misc operations and other stuff after especially after removing elements
          */
         void sanitizeMisc(void);
+        /**
+         * @brief sanitizeSpecials
+         * @param el the element that has been deleted
+         * @param previous true if the element has been in front of the current cursor or false if behind
+         */
+        void sanitizeSpecials(FormulaScrElement el, bool previous);
         /**
          * @brief rmSegmented
          * @param previous if true (default) the previous element will be removed, if false the next element will be
