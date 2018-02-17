@@ -892,30 +892,32 @@ void FormulaModificator::rmSegmented(bool previous)
 
         //remove all segmented elements
         m_iter.toFront();
-        FormulaScrElement *i;
         bool deletingInProgress = false;
+        bool toDelete = false;
         while(m_iter.hasNext()) {
-                i = &m_iter.next();
+                toDelete = false;
+                FormulaScrElement &i = m_iter.next();
                 if (!deleteAll) {
-                        if (i->m_node == node && i->m_isSegmented && !i->m_isPositionMarker)
-                                m_iter.remove(previous);
+                        if (i.m_node == node && i.m_isSegmented && !i.m_isPositionMarker)
+                                m_iter.remove(true);
                 } else {
-                        if (i->m_node == node && i->m_sideNode == FormulaScrElement::nodeLeftSide)
+                        if (i.m_node == node && i.m_sideNode == FormulaScrElement::nodeLeftSide)
                                 deletingInProgress = true;
-                        if (deletingInProgress && !i->m_isPositionMarker)
-                                m_iter.remove(previous);
-                        if (i->m_node == node && i->m_sideNode == FormulaScrElement::nodeRightSide) {
+                        if (deletingInProgress && !i.m_isPositionMarker)
+                                toDelete = true;
+                        if (i.m_node == node && i.m_sideNode == FormulaScrElement::nodeRightSide) {
                                 deletingInProgress = false;
-                                break;
                         }
+                        if (toDelete)
+                                m_iter.remove(true);
                 }
         }
 
         //remove element with iterator marker
         m_iter.toFront();
         while(m_iter.hasNext()) {
-                i = &m_iter.next();
-                if (i->m_isPositionMarker) {
+                FormulaScrElement &i = m_iter.next();
+                if (i.m_isPositionMarker) {
                         m_iter.remove(previous);
                         break;
                 }
