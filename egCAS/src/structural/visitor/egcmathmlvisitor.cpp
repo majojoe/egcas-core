@@ -47,10 +47,7 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
         QString id;
         switch (node->getNodeType()) {
         case EgcNodeType::RootNode:
-                if (m_state == EgcIteratorState::LeftIteration) {
-                        // don't show the root exponent if it is "2" (square root)
-                        suppressChildIfChildValue(node, 0, EgcNodeType::NumberNode, "2");
-                } else if (m_state == EgcIteratorState::RightIteration) {
+                if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
                         assembleResult("<mroot" %id%"><mrow>%2</mrow><mrow>%1</mrow></mroot>", node);
                 }

@@ -71,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //add some formulas
     EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 480.0)));
-    FormulaGenerator::getFormulaTree(formula1, "_{sqrt(1+_root(2 + _root(3+ _root(4+ _root(5+_root(6+_root(7+_root(A,19),17), 13),11), 7),5),3))_}/_{ⅇ^π_}=x^‴");
+    FormulaGenerator::getFormulaTree(formula1, "_{sqrt(1+_root(3,2 + _root(5,3+ _root(7,4+ _root(11,5+_root(13,6+_root(17,7+_root(19,A))))))))_}/_{ⅇ^π_}=x^‴");
     EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 350.0)));
     FormulaGenerator::getFormulaTree(formula2, "_{-1+sqrt(5)_}/2=_empty");

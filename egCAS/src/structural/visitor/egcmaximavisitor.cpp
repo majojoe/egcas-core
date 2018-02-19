@@ -42,8 +42,18 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
 {
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("(%2)^(1/%1)", binary);
+                if (m_state == EgcIteratorState::RightIteration) {
+                        bool sqrt = false;
+                        EgcNode *rootexp = binary->getChild(0);
+                        if (rootexp) {
+                                if (rootexp->getNodeType() == EgcNodeType::EmptyNode)
+                                        sqrt = true;
+                        }
+                        if (sqrt)
+                                assembleResult("(%2)^(1/(2%1))", binary);
+                        else
+                                assembleResult("(%2)^(1/%1)", binary);
+                }
                 break;
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::RightIteration)

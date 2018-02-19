@@ -47,6 +47,13 @@ public:
          * @return true if the cursor will snap in at the given side, false otherwise
          */
         virtual bool cursorSnaps(EgcNodeSide side) const override;
+        /**
+         * @brief valid returns true if the expression is valid and false otherwise.
+         * An expression is valid if all nodes are valid.
+         * @return true if the expression is valid, false otherwise.
+         */
+        virtual bool valid(void) override;
+
 };
 
 #endif // EGCROOTNODE_H

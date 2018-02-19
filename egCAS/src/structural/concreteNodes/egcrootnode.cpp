@@ -41,3 +41,12 @@ bool EgcRootNode::cursorSnaps(EgcNodeSide side) const
         return false;
 }
 
+bool EgcRootNode::valid()
+{
+        if (m_leftChild && m_rightChild)
+                if (m_rightChild->valid()) // a equal node is valid if only the right child contains no empty nodes
+                        return true;
+
+        return false;
+}
+

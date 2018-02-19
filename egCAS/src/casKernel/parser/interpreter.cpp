@@ -278,8 +278,7 @@ void Interpreter::deleteDanglingNodes(void)
 
 EgcNode* Interpreter::addSqrtExpression(EgcNode* node0)
 {
-        QScopedPointer<EgcNumberNode> nExp(static_cast<EgcNumberNode*>(EgcNodeCreator::create(EgcNodeType::NumberNode)));
-        nExp->setValue("2");
+        QScopedPointer<EgcEmptyNode> nExp(static_cast<EgcEmptyNode*>(EgcNodeCreator::create(EgcNodeType::EmptyNode)));
         QScopedPointer<EgcNode> sqrt(addBinaryExpression(EgcNodeType::RootNode, nExp.take(), node0));
         
         return sqrt.take();        

@@ -59,21 +59,10 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
 
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode: {
-                bool isSquaredRoot = false;
-                if (lnode->getNodeType() == EgcNodeType::NumberNode) {
-                        if (static_cast<EgcNumberNode*>(lnode)->getValue() == QString("2"))
-                                isSquaredRoot = true;
-                }
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        if (isSquaredRoot) {
-                                m_suppressList.insert(lnode); //exponent of squared roots are not shown
-                                appendSegmented("sqrt(", binary, CursorAdhesion::low, 0, true, rnode, 0, true);
-                        } else {
-                                appendSegmented("_root(_{", binary, CursorAdhesion::low, 0, true, lnode, 0, true);
-                        }
+                        appendSegmented("_root(_{", binary, CursorAdhesion::low, 0, true, lnode, 0, true);
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
-                        if (!isSquaredRoot)
-                                appendSegmented("_},", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
+                        appendSegmented("_},", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
                 } else {
                         appendSegmented(")", rnode, CursorAdhesion::low, 0, false, binary, 0, false);
                 }
