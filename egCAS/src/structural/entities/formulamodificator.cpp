@@ -610,6 +610,21 @@ bool FormulaModificator::updateFormula(void)
         return retval;
 }
 
+void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
+{
+        FormulaScrIter iter = m_iter;
+        iter.toFront();
+        const EgcMathmlLookup lookup = m_formula.getMathmlMappingCRef();
+        EgcNode* node = lookup.findNode(nodeId);
+        while(iter.hasNext()) {
+                FormulaScrElement& el = iter.peekNext();
+                if (el.m_node == node) {
+                        m_iter = iter;
+                        showCurrentCursor();
+                }
+        }
+}
+
 void FormulaModificator::insertEmptyNode(void)
 {
         FormulaScrElement el;

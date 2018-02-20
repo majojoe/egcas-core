@@ -118,6 +118,13 @@ public:
          * @return true if the change was successful, false if not
          */
         bool updateFormula(void);
+        /**
+         * @brief setCursorPos set the cursor position at the given node and subposition
+         * @param nodeId the node where to set the cursor at
+         * @param subPos the subposition where to set the subposition at
+         * @param rightSide true if the cursor shall be set at the right side of the element, false if on the left side
+         */
+        void setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide);
 
 private:
         /**

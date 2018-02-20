@@ -38,8 +38,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 ReStructureVisitor::ReStructureVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(formula),
                                                                     m_restructureData{NodeIterReStructData()}
 {
-        if (m_formula->getIterator())
-                m_restructureData = m_formula->getIterator()->getRestructureData();
+//        if (m_formula->getIterator())
+//                m_restructureData = m_formula->getIterator()->getRestructureData();
 }
 
 void ReStructureVisitor::visit(EgcBinaryNode* binary)
