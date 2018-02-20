@@ -34,7 +34,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../egcnodes.h"
 #include "egcmathmlvisitor.h"
 
-EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{formula}, m_prettyPrint{true},
+EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula, bool formulaActive) : EgcNodeVisitor{formula},
+                                                                m_formulaActive{formulaActive},
+                                                                m_prettyPrint{true},
                                                                 m_idCounter{1},
                                                                 m_lookup(formula.getMathmlMappingRef()) //gcc bug
 {
@@ -47,7 +49,11 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
         QString id;
         switch (node->getNodeType()) {
         case EgcNodeType::RootNode:
-                if (m_state == EgcIteratorState::RightIteration) {
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        // don't show the root exponent if it is empty
+                        if (!m_formulaActive)
+                                suppressChildIfChildValue(node, 0, EgcNodeType::EmptyNode, "");
+                } else if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
                         assembleResult("<mroot" %id%"><mrow>%2</mrow><mrow>%1</mrow></mroot>", node);
                 }
@@ -355,6 +361,9 @@ void EgcMathMlVisitor::suppressChildIfChildValue(const EgcNode* node, quint32 in
                                 break;
                         case EgcNodeType::AlnumNode:
                                 value = static_cast<EgcAlnumNode*>(chldNode)->getValue();
+                                break;
+                        case EgcNodeType::EmptyNode:
+                                value = "";
                                 break;
                         }
 

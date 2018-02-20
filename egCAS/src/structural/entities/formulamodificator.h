@@ -113,6 +113,12 @@ public:
          * @brief toBack positions the cursor at the back of the formula
          */
         void toBack(void);
+        /**
+         * @brief updateFormula updates everything needed (view and structure) to reflect the changes
+         * @return true if the change was successful, false if not
+         */
+        bool updateFormula(void);
+
 private:
         /**
          * @brief resetUnderline reset the underline
@@ -149,11 +155,6 @@ private:
          * @return true if restructing the tree was successful (insert or delete was successful)
          */
         bool reStructureTree(void);
-        /**
-         * @brief updateFormula updates everything needed (view and structure) to reflect the changes
-         * @return true if the change was successful, false if not
-         */
-        bool updateFormula(void);
         /**
          * @brief insertEmptyNode insert an empty node at the current cursor position
          */

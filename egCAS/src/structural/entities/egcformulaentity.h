@@ -415,6 +415,7 @@ private:
         EgcMathmlLookup m_mathmlLookup;         ///< mathml id lookup table
 //        QScopedPointer<EgcScrPosIterator> m_scrIter; ///< iterator for screen positions
         QScopedPointer<FormulaModificator> m_mod; ///< formula modificator class
+        bool m_isActive;                        ///< true if formula is activated, false otherwise
 };
 
 #endif // EGCFORMULAENTITY_H

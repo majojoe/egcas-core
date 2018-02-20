@@ -45,8 +45,9 @@ public:
         /**
          * @brief EgcNodeVisitor std constructor for the visitor
          * @param formula the formula to be parsed
+         * @param formulaActive true if the formula is currently edited
          */
-        EgcMathMlVisitor(EgcFormulaEntity& formula);
+        EgcMathMlVisitor(EgcFormulaEntity& formula, bool formulaActive);
         /**
          * @brief visit this method is called from the current node and implements the code that extracts the
          * necessary information from the node given.
@@ -125,7 +126,8 @@ private:
 
         bool m_prettyPrint;             ///< activates pretty printing e.g. in case of a fraction remove the parenthesis
         quint32 m_idCounter;            ///< the id counter
-        EgcMathmlLookup& m_lookup;       ///< lookup for mapping id's in node pointers
+        EgcMathmlLookup& m_lookup;      ///< lookup for mapping id's in node pointers
+        bool m_formulaActive;           ///< if formula is in editing mode
 };
 
 #endif // EGCMATHMLVISITOR_H

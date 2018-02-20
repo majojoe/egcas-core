@@ -50,7 +50,8 @@ int EgcFormulaEntity::s_fontSize = 20;
 EgcFormulaEntity::EgcFormulaEntity(EgcNodeType type) : m_numberSignificantDigits(0),
                                                        m_numberResultType(EgcNumberResultType::StandardType),
                                                        m_item(nullptr),
-                                                       m_errorMsg(QString::null)
+                                                       m_errorMsg(QString::null),
+                                                       m_isActive(false)
 {
         QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
         if (tmp.data()) {
@@ -203,7 +204,7 @@ void EgcFormulaEntity::setRootElement(EgcNode* rootElement)
 
 QString EgcFormulaEntity::getMathMlCode(void)
 {
-        EgcMathMlVisitor mathMlVisitor(*this);        
+        EgcMathMlVisitor mathMlVisitor(*this, m_isActive);
         QString tmp = mathMlVisitor.getResult();
 
         // any started formula change must be finalized when the mathml lookup table has been populated, so do this
@@ -425,10 +426,13 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
 {
         switch (action.m_op) {
         case EgcOperations::formulaActivated:
+                m_isActive = true;
+                updateView();
                 m_mod.reset(new FormulaModificator(*this));
                 showCurrentCursor();
                 break;
         case EgcOperations::formulaDeactivated:
+                m_isActive = false;
                 if (m_mod)
                         m_mod.reset();
                 break;
