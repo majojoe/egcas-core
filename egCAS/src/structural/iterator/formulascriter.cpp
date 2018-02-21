@@ -3,9 +3,9 @@
 #include "../visitor/formulascrelement.h"
 #include <structural/entities/egcformulaentity.h>
 
-FormulaScrIter::FormulaScrIter(EgcFormulaEntity& formula, FormulaScrVector& vector) : m_formula{formula},
-                                                            m_vector{vector},
-                                                            m_iter{QMutableVectorIterator<FormulaScrElement>(m_vector)},
+FormulaScrIter::FormulaScrIter(EgcFormulaEntity& formula, FormulaScrVector& vector) : m_formula{&formula},
+                                                            m_vector{&vector},
+                                                            m_iter{QMutableVectorIterator<FormulaScrElement>(vector)},
                                                             m_pos{0},
                                                             m_tmpPos{0}
 
@@ -87,7 +87,7 @@ FormulaScrElement&FormulaScrIter::peekPrevious() const
 void FormulaScrIter::toBack()
 {
         m_iter.toBack();
-        m_pos = m_vector.size();
+        m_pos = m_vector->size();
 }
 
 void FormulaScrIter::toFront()
@@ -123,33 +123,33 @@ void FormulaScrIter::remove(bool previous)
 void FormulaScrIter::update()
 {
         quint32 pos = m_pos;
-        FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, *this);
+        FormulaScrVisitor visitor = FormulaScrVisitor(*m_formula, *this);
         visitor.updateVector();
-        m_iter = QMutableVectorIterator<FormulaScrElement>(m_vector);
+        m_iter = QMutableVectorIterator<FormulaScrElement>(*m_vector);
         setIterPos(pos);
 }
 
 void FormulaScrIter::clear()
 {
-        m_vector.clear();
-        m_iter = QMutableVectorIterator<FormulaScrElement>(m_vector);
+        m_vector->clear();
+        m_iter = QMutableVectorIterator<FormulaScrElement>(*m_vector);
 }
 
 void FormulaScrIter::revert()
 {
-        m_vector = m_tmpVector;
+        *m_vector = m_tmpVector;
         setIterPos(m_tmpPos);
 }
 
 void FormulaScrIter::save()
 {
-        m_tmpVector = m_vector;
+        m_tmpVector = *m_vector;
         m_tmpPos = m_pos;
 }
 
 void FormulaScrIter::setIterPos(quint32 pos)
 {
-        if (pos <= m_vector.size())
+        if (pos <= m_vector->size())
                 m_pos = pos;
         m_iter.toFront();
         int i;

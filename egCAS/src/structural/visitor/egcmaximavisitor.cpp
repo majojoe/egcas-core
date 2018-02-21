@@ -50,7 +50,7 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                                         sqrt = true;
                         }
                         if (sqrt)
-                                assembleResult("(%2)^(1/(2%1))", binary);
+                                assembleResult("(%2)^(1/(2%1))", binary); //%1 is a hack here and just works since an empty node has no signs (must be fixed)
                         else
                                 assembleResult("(%2)^(1/%1)", binary);
                 }

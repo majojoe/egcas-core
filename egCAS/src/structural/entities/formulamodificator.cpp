@@ -617,10 +617,12 @@ void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool right
         const EgcMathmlLookup lookup = m_formula.getMathmlMappingCRef();
         EgcNode* node = lookup.findNode(nodeId);
         while(iter.hasNext()) {
-                FormulaScrElement& el = iter.peekNext();
+                FormulaScrElement& el = iter.next();
                 if (el.m_node == node) {
+                        if (!rightSide)
+                                iter.previous();
                         m_iter = iter;
-                        showCurrentCursor();
+                        break;
                 }
         }
 }
