@@ -67,6 +67,8 @@ public:
         QString m_value;        ///< formula element that is visible as entity on the screen
         CursorAdhesion m_cAdh;  ///< cursor adhesion of the node
         EgcNode* m_node;        ///< pointer to node this element is directly associated with
+        quint32 m_subpos_min;   ///< subposition of this element (minimum subposition if more elements)
+        quint32 m_subpos_max;   ///< maximum subposition of this element
         enum SideNode m_sideNode; ///< which section of the node this visible element is associated to
         bool m_isSegmented;     ///< true if this element is segmented over more elements, meaning if this element is deleted, the others (pointing to the same m_node) will also be deleted
         bool m_isPositionMarker;///< marker for position

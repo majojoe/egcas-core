@@ -35,6 +35,8 @@ TempDataScrIter::TempDataScrIter() : m_id{0}, m_node{nullptr}, m_subpos{0}, m_le
 
 }
 
-FormulaScrElement::FormulaScrElement() : m_cAdh{CursorAdhesion::low}, m_node{nullptr}, m_isSegmented{false}, m_isPositionMarker{false}
+FormulaScrElement::FormulaScrElement() : m_cAdh{CursorAdhesion::low}, m_node{nullptr},
+                                         m_subpos_min{0}, m_subpos_max{0},
+                                         m_isSegmented{false}, m_isPositionMarker{false}
 {
 }
