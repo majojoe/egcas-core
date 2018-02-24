@@ -612,13 +612,25 @@ bool FormulaModificator::updateFormula(void)
 
 void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
 {
+        bool sideNodeMatters = false;
+        FormulaScrElement::SideNode sideNode;
         FormulaScrIter iter = m_iter;
         iter.toFront();
         const EgcMathmlLookup lookup = m_formula.getMathmlMappingCRef();
         EgcNode* node = lookup.findNode(nodeId);
+        if (   subPos == 0
+            && (node->isBinaryNode() || node->isUnaryNode() || node->isFlexNode())) {
+                sideNodeMatters = true;
+                if (rightSide)
+                        sideNode = FormulaScrElement::nodeRightSide;
+                else
+                        sideNode = FormulaScrElement::nodeLeftSide;
+        }
         while(iter.hasNext()) {
                 FormulaScrElement& el = iter.next();
                 if (el.m_node == node) {
+                        if (sideNodeMatters && el.m_sideNode != sideNode)
+                                continue;
                         if (!rightSide)
                                 iter.previous();
                         m_iter = iter;
