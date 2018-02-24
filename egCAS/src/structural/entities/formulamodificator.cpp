@@ -610,12 +610,17 @@ bool FormulaModificator::updateFormula(void)
         return retval;
 }
 
+bool FormulaModificator::searchCursorPos(FormulaScrIter& iter, EgcNode& node, quint32 subPos, bool rightSide,
+                                         bool sideMatters, FormulaScrElement::SideNode side)
+{
+
+}
+
 void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
 {
         bool sideNodeMatters = false;
         FormulaScrElement::SideNode sideNode;
-        FormulaScrIter iter = m_iter;
-        iter.toFront();
+        bool found = false;
         const EgcMathmlLookup lookup = m_formula.getMathmlMappingCRef();
         EgcNode* node = lookup.findNode(nodeId);
         if (   subPos == 0
@@ -626,6 +631,8 @@ void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool right
                 else
                         sideNode = FormulaScrElement::nodeLeftSide;
         }
+        FormulaScrIter iter = m_iter;
+        iter.toFront();
         while(iter.hasNext()) {
                 FormulaScrElement& el = iter.next();
                 if (el.m_node == node) {
@@ -636,8 +643,13 @@ void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool right
                         if (!rightSide)
                                 iter.previous();
                         m_iter = iter;
+                        found = true;
                         break;
                 }
+        }
+        //element not found so far, so use other position
+        if (!found) {
+
         }
 }
 

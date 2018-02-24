@@ -230,6 +230,19 @@ private:
          * removed. If there is no segmented element at all, none will be removed.
          */
         void rmSegmented(bool previous = true);
+        /**
+         * @brief searchCursorPos search for a valid and suitable cursor position
+         * @param iter the iterator to use to search for the cursor position
+         * @param node the node to search for
+         * @param subPos the subposition that shall match
+         * @param rightSide true if cursor position shall be on the right side of the element
+         * @param sideMatters if side of the node (left, middle, right) matters e.g. for container nodes
+         * @param side if side matters the side to look for
+         * @return true if a valid cursor position has been found
+         */
+        bool searchCursorPos(FormulaScrIter& iter, EgcNode& node, quint32 subPos, bool rightSide,
+                                                 bool sideMatters, FormulaScrElement::SideNode side);
+
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula
