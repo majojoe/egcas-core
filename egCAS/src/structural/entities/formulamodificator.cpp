@@ -631,6 +631,8 @@ void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool right
                 if (el.m_node == node) {
                         if (sideNodeMatters && el.m_sideNode != sideNode)
                                 continue;
+                        if (subPos < el.m_subpos_min || subPos > el.m_subpos_max)
+                                continue;
                         if (!rightSide)
                                 iter.previous();
                         m_iter = iter;

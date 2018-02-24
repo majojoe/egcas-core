@@ -69,12 +69,16 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                 break;
         }
         case EgcNodeType::PlusNode:
-                if (m_state == EgcIteratorState::MiddleIteration)
+                if (m_state == EgcIteratorState::MiddleIteration) {
                         append("+", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
+                        setElementSubposition(1);
+                }
                 break;
         case EgcNodeType::MinusNode:
-                if (m_state == EgcIteratorState::MiddleIteration)
+                if (m_state == EgcIteratorState::MiddleIteration) {
                         append("-", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
+                        setElementSubposition(1);
+                }
                 break;
         case EgcNodeType::MultiplicationNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
@@ -282,6 +286,8 @@ void FormulaScrVisitor::appendSigns(QString str, EgcNode* node, CursorAdhesion c
                 FormulaScrElement& tmp = m_iter.peekPrevious();
                 tmp.lTemp.m_subpos = n;
                 tmp.rTemp.m_subpos = n;
+                tmp.m_subpos_min = n;
+                tmp.m_subpos_max = n;
                 n++;
         }
 }
@@ -319,6 +325,16 @@ void FormulaScrVisitor::updateVector(void)
 
         // do post processing lookup id's from node's
         doPostprocessing();
+}
+
+void FormulaScrVisitor::setElementSubposition(quint32 subposition, quint32 maxSubposition)
+{
+        FormulaScrElement& tmp = m_iter.peekPrevious();
+        tmp.m_subpos_min = subposition;
+        if (maxSubposition < subposition)
+                tmp.m_subpos_max = subposition;
+        else
+                tmp.m_subpos_max = maxSubposition;
 }
 
 void FormulaScrVisitor::doPostprocessing(void)

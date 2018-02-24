@@ -83,6 +83,14 @@ public:
          * formula has been updated.
          */
         void updateVector(void);
+        /**
+         * @brief setElementSubposition set the subpostion of the current element. This is neccessary to be able to find
+         * the cursor positions by clicking at an element. Warning: This function must be called right after the element
+         * has been added e.g. by calling append.
+         * @param subposition the (minimum) subposition of a sign that can be mapped to the current element.
+         * @param maxSubposition the maximum subposition of a sign that can be mapped to the current element.
+         */
+        void setElementSubposition(quint32 subposition, quint32 maxSubposition = 0);
 private:
 #warning let the absolute neccessary functions in the EgcNodeVisitor class and put the implementation specific functions in a implementation class later (EgcNodeVisitor->accept is needed in this class, so we have to inherit from EgcNodeVisitor)
         /** hide all of the following functions* /
