@@ -81,8 +81,10 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                 }
                 break;
         case EgcNodeType::MultiplicationNode:
-                if (m_state == EgcIteratorState::MiddleIteration)
+                if (m_state == EgcIteratorState::MiddleIteration) {
                         append("*", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
+                        setElementSubposition(1);
+                }
                 break;
         case EgcNodeType::DivisionNode:
                 if (m_state == EgcIteratorState::LeftIteration)
@@ -93,8 +95,10 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                         appendSegmented("_}", rnode, CursorAdhesion::low, 0, false, binary, 0, false);
                 break;
         case EgcNodeType::BinEmptyNode:
-                if (m_state == EgcIteratorState::MiddleIteration)
+                if (m_state == EgcIteratorState::MiddleIteration) {
                         append("_emptybinop", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
+                        setElementSubposition(1);
+                }
                 break;
         case EgcNodeType::ExponentNode:
                 if (m_state == EgcIteratorState::MiddleIteration)
@@ -109,8 +113,10 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                 break;
         }
         case EgcNodeType::DefinitionNode:
-                if (m_state == EgcIteratorState::MiddleIteration)
+                if (m_state == EgcIteratorState::MiddleIteration) {
                         append(":", lnode, CursorAdhesion::low, 0, false, rnode, 0, true);
+                        setElementSubposition(1, 2);
+                }
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(binary->getNodeType())) ;
@@ -127,10 +133,13 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
 
         switch (unary->getNodeType()) {
         case EgcNodeType::ParenthesisNode:
-                if (m_state == EgcIteratorState::LeftIteration)
+                if (m_state == EgcIteratorState::LeftIteration) {
                         appendSegmented("(", unary, CursorAdhesion::low, 0, true, node, 0, true);
-                else if (m_state == EgcIteratorState::RightIteration)
+                        setElementSubposition(1);
+                } else if (m_state == EgcIteratorState::RightIteration) {
                         appendSegmented(")", node, CursorAdhesion::low, 0, false, unary, 0, false);
+                        setElementSubposition(2);
+                }
                 break;
         case EgcNodeType::LogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
@@ -143,22 +152,31 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
         case EgcNodeType::NatLogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         append("log", unary, CursorAdhesion::low, 0, true, unary, 2, false);
+                        setElementSubposition(1, 2);
                         append("(", unary, CursorAdhesion::low, 3, true, node, 0, true);
+                        setElementSubposition(3);
                 } else if (m_state == EgcIteratorState::RightIteration) {
                         append(")", node, CursorAdhesion::low, 0, false, unary, 4, false);
+                        setElementSubposition(4);
                 }
                 break;
         case EgcNodeType::LParenthesisNode:
-                if (m_state == EgcIteratorState::LeftIteration)
+                if (m_state == EgcIteratorState::LeftIteration) {
                         append("_red_parenth_l", unary, CursorAdhesion::low, 0, true, node, 0, true);
+                        setElementSubposition(1);
+                }
                 break;
         case EgcNodeType::RParenthesisNode:
-                if (m_state == EgcIteratorState::RightIteration)
+                if (m_state == EgcIteratorState::RightIteration) {
                         append("_red_parenth_r", node, CursorAdhesion::low, 0, false, unary, 0, false);
+                        setElementSubposition(1);
+                }
                 break;
         case EgcNodeType::UnaryMinusNode:
-                if (m_state == EgcIteratorState::LeftIteration)
+                if (m_state == EgcIteratorState::LeftIteration) {
                         append("-", unary, CursorAdhesion::normal);
+                        setElementSubposition(1);
+                }
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(unary->getNodeType())) ;
@@ -173,10 +191,11 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
         case EgcNodeType::FunctionNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         QString name = static_cast<EgcFunctionNode*>(flex)->getName();
-                        if (name.isEmpty())
+                        if (name.isEmpty()) {
                                 appendSegmented("_empty", flex, CursorAdhesion::strong, 1, true, flex, 1, false);
-                        else
+                        } else {
                                 appendSigns(name, flex, CursorAdhesion::strong);
+                        }
                         appendSegmented("(", flex, CursorAdhesion::low, name.length() + 1, true, flex->getChild(0), 0, true);
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         append(",", flex->getChild(m_childIndex), CursorAdhesion::low, 0, false, flex->getChild(m_childIndex + 1), 0, true);
@@ -228,6 +247,7 @@ void FormulaScrVisitor::visit(EgcNode* node)
         switch (node->getNodeType()) {
         case EgcNodeType::EmptyNode:
                 append("_empty", node, CursorAdhesion::strong);
+                setElementSubposition(1);
                 break;
         case EgcNodeType::AlnumNode:
                 appendSigns(static_cast<EgcAlnumNode*>(node)->getValue(), node, CursorAdhesion::strong);

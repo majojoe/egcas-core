@@ -238,10 +238,11 @@ private:
          * @param rightSide true if cursor position shall be on the right side of the element
          * @param sideMatters if side of the node (left, middle, right) matters e.g. for container nodes
          * @param side if side matters the side to look for
+         * @param subposRelevant if true the subposition must match
          * @return true if a valid cursor position has been found
          */
         bool searchCursorPos(FormulaScrIter& iter, EgcNode& node, quint32 subPos, bool rightSide,
-                                                 bool sideMatters, FormulaScrElement::SideNode side);
+                             bool sideMatters, FormulaScrElement::SideNode side, bool subposRelevant = true);
 
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with

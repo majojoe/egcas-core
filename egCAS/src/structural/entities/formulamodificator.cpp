@@ -611,21 +611,48 @@ bool FormulaModificator::updateFormula(void)
 }
 
 bool FormulaModificator::searchCursorPos(FormulaScrIter& iter, EgcNode& node, quint32 subPos, bool rightSide,
-                                         bool sideMatters, FormulaScrElement::SideNode side)
+                                         bool sideMatters, FormulaScrElement::SideNode side, bool subposRelevant)
 {
+        while(iter.hasNext()) {
+                FormulaScrElement& el = iter.next();
+                if (el.m_node == &node) {
+                        if (sideMatters && el.m_sideNode != side)
+                                continue;
+                        if (subposRelevant) {
+                                if (subPos < el.m_subpos_min || subPos > el.m_subpos_max)
+                                        continue;
+                                if (subPos != 0) { // e.g. for builtin function names
+                                        if (el.m_subpos_min != el.m_subpos_max) {
+                                                quint32 mid = subPos - el.m_subpos_min;
+                                                if (mid > (el.m_subpos_max - el.m_subpos_min) / 2 )
+                                                        rightSide = true;
+                                                else
+                                                        rightSide = false;
+                                        }
+                                }
+                        }
+                        if (!rightSide)
+                                iter.previous();
+                        m_iter = iter;
+                        return true;
+                }
+        }
 
+        return false;
 }
 
 void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
 {
-        bool sideNodeMatters = false;
+        bool sideMatters = false;
         FormulaScrElement::SideNode sideNode;
         bool found = false;
         const EgcMathmlLookup lookup = m_formula.getMathmlMappingCRef();
         EgcNode* node = lookup.findNode(nodeId);
+        if (!node)
+                return;
         if (   subPos == 0
             && (node->isBinaryNode() || node->isUnaryNode() || node->isFlexNode())) {
-                sideNodeMatters = true;
+                sideMatters = true;
                 if (rightSide)
                         sideNode = FormulaScrElement::nodeRightSide;
                 else
@@ -633,23 +660,14 @@ void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool right
         }
         FormulaScrIter iter = m_iter;
         iter.toFront();
-        while(iter.hasNext()) {
-                FormulaScrElement& el = iter.next();
-                if (el.m_node == node) {
-                        if (sideNodeMatters && el.m_sideNode != sideNode)
-                                continue;
-                        if (subPos < el.m_subpos_min || subPos > el.m_subpos_max)
-                                continue;
-                        if (!rightSide)
-                                iter.previous();
-                        m_iter = iter;
-                        found = true;
-                        break;
-                }
-        }
-        //element not found so far, so use other position
-        if (!found) {
+        found = searchCursorPos(iter, *node, subPos, rightSide, sideMatters, sideNode);
 
+        //element not found so far, so use other position
+        if (found)
+                return;
+        iter.toFront();
+        if (node->isBinaryNode() || node->isFlexNode()) {
+                (void) searchCursorPos(iter, *node, subPos, rightSide, false, sideNode, false);
         }
 }
 
