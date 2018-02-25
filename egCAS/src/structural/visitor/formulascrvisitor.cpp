@@ -193,14 +193,30 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
                         QString name = static_cast<EgcFunctionNode*>(flex)->getName();
                         if (name.isEmpty()) {
                                 appendSegmented("_empty", flex, CursorAdhesion::strong, 1, true, flex, 1, false);
+                                setElementSubposition(1);
                         } else {
                                 appendSigns(name, flex, CursorAdhesion::strong);
+                                setElementSubposition(1, name.length());
                         }
                         appendSegmented("(", flex, CursorAdhesion::low, name.length() + 1, true, flex->getChild(0), 0, true);
+                        if (name.isEmpty())
+                                setElementSubposition(2);
+                        else
+                                setElementSubposition(name.length() + 1);
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         append(",", flex->getChild(m_childIndex), CursorAdhesion::low, 0, false, flex->getChild(m_childIndex + 1), 0, true);
-                } else {
+                } else {                        
                         appendSegmented(")", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::low, 0, false, flex, 0, false);
+                        QString name = static_cast<EgcFunctionNode*>(flex)->getName();
+                        quint32 i = 0;
+                        if (name.isEmpty())
+                                i = 1;
+                        else
+                                i = name.length();
+                        i++; // first parenthesis
+                        i += flex->getNumberChildNodes() - 1;
+                        i++; // this is the last parenthesis
+                        setElementSubposition(i);
                 }
                 break;
         case EgcNodeType::IntegralNode:
