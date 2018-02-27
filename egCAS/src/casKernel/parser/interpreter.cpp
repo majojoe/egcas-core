@@ -30,6 +30,7 @@
 #include <sstream>
 #include <QVector>
 #include <QScopedPointer>
+#include <QString>
 #include "interpreter.h"
 #include "../../structural/egcnodecreator.h"
 #include "../../structural/egcnodes.h"
@@ -187,9 +188,28 @@ EgcNode* Interpreter::getRootNode(void)
         return m_rootNode.take();
 }
 
+EgcNode* Interpreter::isBuiltinOperation(const std::string& fncName, EgcNode* node)
+{
+        EgcNode* retval = nullptr;
+
+        if (fncName == "log")
+                retval = addUnaryExpression(EgcNodeType::NatLogNode, node);
+        else if (fncName == "sqrt")
+                retval = addSqrtExpression(node);
+
+        return retval;
+}
 
 EgcNode* Interpreter::addFunction(const std::string& fncName, EgcArgumentsNode* argList)
 {
+
+        EgcNode* builtinOp;
+        if (argList->getNumberChildNodes() == 1) {
+                builtinOp = isBuiltinOperation(fncName, static_cast<EgcNode*>(argList));
+                if (builtinOp)
+                        return builtinOp;
+        }
+
         if (argList) {
                 EgcNode* node = changeFlexExpressionType(EgcNodeType::FunctionNode, argList);
                 EgcFunctionNode* function = static_cast<EgcFunctionNode*>(node);

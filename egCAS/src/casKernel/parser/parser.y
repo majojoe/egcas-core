@@ -104,7 +104,7 @@
 %token LBRACKET_OP;
 %token RBRACKET_OP;
 %token EXPONENT "^";
-%token SQROOT "sqrt";
+%token SQROOT "_sqrt";
 %token INTEGRAL "_integrate";
 %token DIFFERENTIAL "_diff";
 %token ROOT "_root";
@@ -182,7 +182,7 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | BUILTIN_FNCS "(" expr ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
      | LOGARITHM "(" expr ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::LogNode, $3);}
      | NATLOGARITHM "(" expr ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::NatLogNode, $3);}
-     | "sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}
+     | "_sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}
      | INTEGRAL "(" explist ")" {$$ = interpreter.changeFlexExpressionType(EgcNodeType::IntegralNode, $3);}
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}
      | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}

@@ -138,7 +138,14 @@ private:
          * @return pointer to the function created
          */
         EgcNode* addFunction(const std::string& fncName, EgcArgumentsNode* argList);
-
+        /**
+         * @brief isBuiltinOperation checks if a builtin operation of the maxima kernel was given which must be handled
+         * separately
+         * @param fncName name of the function
+         * @param node the node to use for the special operation
+         * @return pointer to the operation created
+         */
+        EgcNode* isBuiltinOperation(const std::string& fncName, EgcNode* node);
         /**
          * @brief addBuiltinFunction add a builtin function to the formula
          * @param fncName the function name of the function to create

@@ -151,7 +151,7 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
                 break;
         case EgcNodeType::NatLogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        appendSegmented("log", unary, CursorAdhesion::low, 0, true, unary, 2, false);
+                        appendSegmented("_ln", unary, CursorAdhesion::low, 0, true, unary, 2, false);
                         setElementSubposition(1, 2);
                         appendSegmented("(", unary, CursorAdhesion::low, 3, true, node, 0, true);
                         setElementSubposition(3);
