@@ -143,20 +143,20 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
                 break;
         case EgcNodeType::LogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        append("_log", unary, CursorAdhesion::low, 0, true, unary, 3, false);
-                        append("(", unary, CursorAdhesion::low, 4, true, node, 0, true);
+                        appendSegmented("_log", unary, CursorAdhesion::low, 0, true, unary, 3, false);
+                        appendSegmented("(", unary, CursorAdhesion::low, 4, true, node, 0, true);
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        append(")", node, CursorAdhesion::low, 0, false, unary, 5, false);
+                        appendSegmented(")", node, CursorAdhesion::low, 0, false, unary, 5, false);
                 }
                 break;
         case EgcNodeType::NatLogNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        append("log", unary, CursorAdhesion::low, 0, true, unary, 2, false);
+                        appendSegmented("log", unary, CursorAdhesion::low, 0, true, unary, 2, false);
                         setElementSubposition(1, 2);
-                        append("(", unary, CursorAdhesion::low, 3, true, node, 0, true);
+                        appendSegmented("(", unary, CursorAdhesion::low, 3, true, node, 0, true);
                         setElementSubposition(3);
                 } else if (m_state == EgcIteratorState::RightIteration) {
-                        append(")", node, CursorAdhesion::low, 0, false, unary, 4, false);
+                        appendSegmented(")", node, CursorAdhesion::low, 0, false, unary, 4, false);
                         setElementSubposition(4);
                 }
                 break;

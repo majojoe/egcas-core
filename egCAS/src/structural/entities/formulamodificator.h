@@ -97,6 +97,11 @@ public:
          */
         void insertUnaryElement(QString segment, bool left = true);
         /**
+         * @brief insertSigns insert signs in the vector
+         * @param segment the signs (text) to insert
+         */
+        void insertSigns(QString signs);
+        /**
          * @brief insertParenthesis insert red parenthesis and change them to normal parenthesis as needed
          * @param left true if the left parenthesis is to insert, false otherwise
          */

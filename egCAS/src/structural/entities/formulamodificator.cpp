@@ -380,6 +380,21 @@ void FormulaModificator::insertUnaryElement(QString segment, bool left)
         m_iter.insert(el);
 }
 
+void FormulaModificator::insertSigns(QString signs)
+{
+        FormulaScrElement el;
+        el.m_value = signs;
+
+        if (isEmptyElement(true))
+                m_iter.remove(true);
+
+        QChar c;
+        foreach(c, signs) {
+                el.m_value = c;
+                m_iter.insert(el);
+        }
+}
+
 void FormulaModificator::insertUnaryOperation(QString segment)
 {
         insertUnaryElement(segment);
@@ -433,22 +448,24 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         QString tmp = QString("_root(") % emptyElement % QString(",") % emptyElement % QString(")");
                         insertUnaryOperation(tmp);
                 }
-        }
-
-        if (operation.m_character == '(')
+        } if (operation.m_character == '(') {
                 insertRedParenthesis(true);
-        if (operation.m_character == ')')
+        } else if (operation.m_character == ')') {
                 insertRedParenthesis(false);
-
-        if (operation.m_op == EgcOperations::mathFunction) { // functions
+        } else if (operation.m_op == EgcOperations::mathFunction) { // functions
                 QString name;
                 bool nameGiven = false;
                 if (!operation.m_additionalData.isNull())  {
                         name = operation.m_additionalData.toString();
                 }
-                if (name.isEmpty() && !isEmptyElement()) {
-                        name = emptyElement;
-                        insertEmptyNode();
+                if (name.isEmpty()) {
+                        if (!isEmptyElement()) {
+                                name = emptyElement;
+                                insertEmptyNode();
+                        }
+                } else {
+                        insertSigns(name);
+                        nameGiven = true;
                 }
                 // insertUnaryElement is wrong here, since that would remove the empty node for the name
                 FormulaScrElement el;
@@ -462,6 +479,8 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         (void) m_iter.previous();
                 }
                 updateFormula();
+        } else if (operation.m_op == EgcOperations::internalFunction) {
+
         }
 
 //        } else if (operations.m_op == EgcOperations::internalFunction) { // internal functions
