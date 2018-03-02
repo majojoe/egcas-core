@@ -426,7 +426,8 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
                         m_mod->moveCursor(false);
                 break;
         case EgcOperations::spacePressed:
-                markParent();
+                if (m_mod && m_item)
+                        m_mod->markParent();
                 break;
         case EgcOperations::alnumKeyPressed:
                 if (m_mod && m_item)

@@ -690,6 +690,33 @@ void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool right
         }
 }
 
+void FormulaModificator::markParent()
+{
+        EgcNode* node;
+
+        if (!m_formula)
+                return;
+        if (!m_formula.getItem())
+                return;
+
+        if (rightSide())
+                node = m_iter.peekNext().m_node;
+        else
+                node = m_iter.peekPrevious().m_node;
+
+        if (!m_lastUnderlinedNode)
+                m_lastUnderlinedNode = node;
+        else
+                m_lastUnderlinedNode = getParent(node);
+
+        showCurrentCursor();
+        if (isUnderlineActive()) {
+                const EgcMathmlLookup lookup = m_formula.getMathmlMappingCRef();
+                quint32 id = lookup.getIdFrame(m_lastUnderlinedNode);
+                m_formula.getItem()->showUnderline(id);
+        }
+}
+
 void FormulaModificator::insertEmptyNode(void)
 {
         FormulaScrElement el;

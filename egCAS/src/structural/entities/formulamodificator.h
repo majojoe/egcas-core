@@ -130,6 +130,10 @@ public:
          * @param rightSide true if the cursor shall be set at the right side of the element, false if on the left side
          */
         void setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide);
+        /**
+         * @brief markParent highlight the next parent upwards in the tree and move the cursor to that position.
+         */
+        void markParent(void);
 
 private:
         /**
