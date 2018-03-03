@@ -147,6 +147,19 @@ void FormulaScrIter::save()
         m_tmpPos = m_pos;
 }
 
+bool FormulaScrIter::contains(EgcNode& node)
+{
+        QVectorIterator<FormulaScrElement> iter(*m_vector);
+        iter.toFront();
+        while(iter.hasNext()) {
+                if (iter.next().m_node == &node) {
+                        return true;
+                }
+        }
+
+        return false;
+}
+
 void FormulaScrIter::setIterPos(quint32 pos)
 {
         if (pos <= m_vector->size())

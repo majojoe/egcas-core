@@ -252,13 +252,35 @@ private:
          */
         bool searchCursorPos(FormulaScrIter& iter, EgcNode& node, quint32 subPos, bool rightSide,
                              bool sideMatters, FormulaScrElement::SideNode side, bool subposRelevant = true);
-
+        /**
+         * @brief getParent get the next visible parent of the given node
+         * @param node the node to search the parent for
+         * @return nullptr if there is no visible parent anymore, otherwise the visible parent of the given node
+         */
+        EgcNode* getParent(EgcNode& node);
+        /**
+         * @brief isCursorNearLeftSideParent returns true if the current cursor is near the left side of the given
+         * parent
+         * @return true if current cursor is near the left side of the given parent, false otherwise
+         */
+        bool isCursorNearLeftSideParent(EgcNode& node) const;
+        /**
+         * @brief moveCursorToLastOccurence move cursor behind the last occurence of the given node
+         * @param node the node to where the cursor to move
+         */
+        void moveCursorToLastOccurence(EgcNode& node);
+        /**
+         * @brief moveCursorToFirstOccurence move cursor before the first occurence of the given node
+         * @param node the node to where the cursor to move
+         */
+        void moveCursorToFirstOccurence(EgcNode& node);
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula
         FormulaScrIter m_iter;                  ///< the iterator associated with this modificator
-        EgcNode* m_lastUnderlinedNode;          ///< the last visible parent node that was given back
-        bool m_changeAwaited;                     ///< is set if a change in the view is awaited. If this has happened we can complete the change operation
+        EgcNode* m_underlinedNode;              ///< the last visible parent node that was given back
+        EgcNode* m_startUnderlinedNode;         ///< node where underining started
+        bool m_changeAwaited;                   ///< is set if a change in the view is awaited. If this has happened we can complete the change operation
 };
 
 #endif // FORMULAMODIFICATOR_H

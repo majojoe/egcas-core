@@ -122,6 +122,12 @@ public:
          * @brief saves the state of the iterator to be able to revert the operation in between later on.
          */
         void save(void);
+        /**
+         * @brief contains checks if vector contains an element that references the given node
+         * @param node the node to check for
+         * @return true if the vector contains the node, false otherwise
+         */
+        bool contains(EgcNode& node);
 
 private:
         /**

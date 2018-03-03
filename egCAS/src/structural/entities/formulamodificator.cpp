@@ -56,7 +56,9 @@ public:
 
 FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{formula},
                                                                     m_iter(FormulaScrIter(m_formula, m_vector)),
-                                                                    m_lastUnderlinedNode{nullptr}, m_changeAwaited{false}
+                                                                    m_underlinedNode{nullptr},
+                                                                    m_startUnderlinedNode{nullptr},
+                                                                    m_changeAwaited{false}
 {
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_iter);
         visitor.updateVector();
@@ -106,12 +108,12 @@ void FormulaModificator::moveCursor(bool forward)
 
 void FormulaModificator::resetUnderline(void)
 {
-        m_lastUnderlinedNode = nullptr;
+        m_underlinedNode = nullptr;
 }
 
 bool FormulaModificator::isUnderlineActive(void)
 {
-        if (m_lastUnderlinedNode)
+        if (m_underlinedNode)
                 return true;
         else
                 return false;
@@ -660,6 +662,73 @@ bool FormulaModificator::searchCursorPos(FormulaScrIter& iter, EgcNode& node, qu
         return false;
 }
 
+EgcNode* FormulaModificator::getParent(EgcNode& node)
+{
+        EgcNode* parent;
+        do {
+                parent = node.getParent();
+                if (!parent)
+                        return nullptr;
+        } while (!m_iter.contains(*parent));
+
+        return parent;
+}
+
+bool FormulaModificator::isCursorNearLeftSideParent(EgcNode& node) const
+{
+        FormulaScrIter iter = m_iter;
+        int i = 0;
+        int rDist = 0;
+        int lDist = 0;
+        while (iter.hasNext()) {
+                i++;
+                FormulaScrElement& el = iter.next();
+                if (el.m_node == &node)
+                        rDist = i;
+        }
+
+        iter = m_iter;
+        while (iter.hasPrevious()) {
+                i++;
+                FormulaScrElement& el = iter.previous();
+                if (el.m_node == &node)
+                        lDist = i;
+        }
+
+        if (lDist < rDist && lDist != 0)
+                return true;
+        else
+                return false;
+}
+
+void FormulaModificator::moveCursorToLastOccurence(EgcNode& node)
+{
+        FormulaScrIter iter = m_iter;
+        iter.toBack();
+        while (iter.hasPrevious()) {
+                FormulaScrElement& el = iter.previous();
+                if (el.m_node == &node) {
+                        (void) iter.next();
+                        m_iter = iter;
+                        break;
+                }
+        }
+}
+
+void FormulaModificator::moveCursorToFirstOccurence(EgcNode& node)
+{
+        FormulaScrIter iter = m_iter;
+        iter.toFront();
+        while (iter.hasNext()) {
+                FormulaScrElement& el = iter.next();
+                if (el.m_node == &node) {
+                        (void) iter.previous();
+                        m_iter = iter;
+                        break;
+                }
+        }
+}
+
 void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
 {
         bool sideMatters = false;
@@ -694,8 +763,6 @@ void FormulaModificator::markParent()
 {
         EgcNode* node;
 
-        if (!m_formula)
-                return;
         if (!m_formula.getItem())
                 return;
 
@@ -704,15 +771,27 @@ void FormulaModificator::markParent()
         else
                 node = m_iter.peekPrevious().m_node;
 
-        if (!m_lastUnderlinedNode)
-                m_lastUnderlinedNode = node;
+        if (!node)
+                return;
+
+        if (!m_underlinedNode) {
+                m_underlinedNode = node;
+                m_startUnderlinedNode = node;
+        } else {
+                m_underlinedNode = getParent(*node);
+                if (!m_underlinedNode)
+                        m_underlinedNode = m_startUnderlinedNode;
+        }
+
+        if(isCursorNearLeftSideParent(*m_underlinedNode))
+                moveCursorToLastOccurence(*node);
         else
-                m_lastUnderlinedNode = getParent(node);
+                moveCursorToFirstOccurence(*node);
 
         showCurrentCursor();
         if (isUnderlineActive()) {
                 const EgcMathmlLookup lookup = m_formula.getMathmlMappingCRef();
-                quint32 id = lookup.getIdFrame(m_lastUnderlinedNode);
+                quint32 id = lookup.getIdFrame(*m_underlinedNode);
                 m_formula.getItem()->showUnderline(id);
         }
 }
