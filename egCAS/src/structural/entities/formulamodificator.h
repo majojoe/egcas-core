@@ -265,15 +265,27 @@ private:
          */
         bool isCursorNearLeftSideParent(EgcNode& node) const;
         /**
-         * @brief moveCursorToLastOccurence move cursor behind the last occurence of the given node
+         * @brief moveCursorToRightVisibleBorder move cursor to the right visible border of the container node given.
          * @param node the node to where the cursor to move
          */
-        void moveCursorToLastOccurence(EgcNode& node);
+        void moveCursorToRightVisibleBorder(EgcNode& node);
         /**
-         * @brief moveCursorToFirstOccurence move cursor before the first occurence of the given node
+         * @brief moveCursorToLeftVisibleBorder move cursor to the left visible border of the container node given.
          * @param node the node to where the cursor to move
          */
-        void moveCursorToFirstOccurence(EgcNode& node);
+        void moveCursorToLeftVisibleBorder(EgcNode& node);
+        /**
+         * @brief rightSideVisible check if right side of the given node is visible
+         * @param node the given node to check
+         * @return true if visible, false otherwise
+         */
+        bool rightSideVisible(EgcNode& node);
+        /**
+         * @brief leftSideVisible check if left side of the given node is visible
+         * @param node the given node to check
+         * @return true if visible, false otherwise
+         */
+        bool leftSideVisible(EgcNode& node);
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula
