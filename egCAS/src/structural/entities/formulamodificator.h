@@ -275,17 +275,19 @@ private:
          */
         void moveCursorToLeftVisibleBorder(EgcNode& node);
         /**
-         * @brief rightSideVisible check if right side of the given node is visible
+         * @brief getRightVisibleSide check if right side of the given node is visible
          * @param node the given node to check
+         * @param iter if the return value is true, this iterator contains the position found.
          * @return true if visible, false otherwise
          */
-        bool rightSideVisible(EgcNode& node);
+        bool getRightVisibleSide(EgcNode& node, FormulaScrIter& iter);
         /**
-         * @brief leftSideVisible check if left side of the given node is visible
+         * @brief getLeftVisibleSide check if left side of the given node is visible
          * @param node the given node to check
+         * @param iter if the return value is true, this iterator contains the position found.
          * @return true if visible, false otherwise
          */
-        bool leftSideVisible(EgcNode& node);
+        bool getLeftVisibleSide(EgcNode& node, FormulaScrIter& iter);
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula

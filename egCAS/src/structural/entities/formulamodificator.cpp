@@ -683,49 +683,77 @@ bool FormulaModificator::isCursorNearLeftSideParent(EgcNode& node) const
         int i = 0;
         int rDist = 0;
         int lDist = 0;
-        while (iter.hasNext()) {
-                i++;
-                FormulaScrElement& el = iter.next();
-                if (el.m_node == &node)
-                        rDist = i;
-        }
 
-        iter = m_iter;
-        while (iter.hasPrevious()) {
-                i++;
-                FormulaScrElement& el = iter.previous();
-                if (el.m_node == &node)
-                        lDist = i;
-        }
+        if (node.isBinaryNode()) {
 
-        if (lDist < rDist && lDist != 0)
-                return true;
-        else
-                return false;
+        } else if (node.isFlexNode()) {
+
+        } else {
+                while (iter.hasNext()) {
+                        i++;
+                        FormulaScrElement& el = iter.next();
+                        if (el.m_node == &node)
+                                rDist = i;
+                }
+
+                iter = m_iter;
+                i = 0;
+                while (iter.hasPrevious()) {
+                        i++;
+                        FormulaScrElement& el = iter.previous();
+                        if (el.m_node == &node)
+                                lDist = i;
+                }
+
+                if (lDist < rDist && lDist != 0)
+                        return true;
+                else
+                        return false;
+        }
 }
 
 void FormulaModificator::moveCursorToRightVisibleBorder(EgcNode& node)
 {
-        if(!rightSideVisible(node)) {
-                if (node.isBinaryNode()) {
+        FormulaScrIter iter = m_iter;
+        EgcNode* child = nullptr;
+        EgcNode* nd = &node;
 
-                } else if (node.isUnaryNode()) {
-
-                } else if (node.isFlexNode()) {
-
-                }
+        while(!getRightVisibleSide(*nd, iter)) {
+                if (!node.isContainer())
+                        return;
+                EgcContainerNode* container = static_cast<EgcContainerNode*>(nd);
+                quint32 nrChilds = container->getNumberChildNodes();
+                if (nrChilds)
+                        child = container->getChild(container->getNumberChildNodes() - 1);
+                if (!child)
+                        return;
+                nd = child;
         }
+        m_iter = iter;
 }
 
 void FormulaModificator::moveCursorToLeftVisibleBorder(EgcNode& node)
 {
+        FormulaScrIter iter = m_iter;
+        EgcNode* child = nullptr;
+        EgcNode* nd = &node;
 
+        while(!getLeftVisibleSide(*nd, iter)) {
+                if (!node.isContainer())
+                        return;
+                EgcContainerNode* container = static_cast<EgcContainerNode*>(nd);
+                child = container->getChild(0);
+                if (!child)
+                        return;
+                nd = child;
+        }
+        m_iter = iter;
 }
 
-bool FormulaModificator::rightSideVisible(EgcNode& node)
+bool FormulaModificator::getRightVisibleSide(EgcNode& node, FormulaScrIter& iter)
 {
         bool found = false;
-        FormulaScrIter iter = m_iter;
+        iter = m_iter;
         iter.toBack();
         while (iter.hasPrevious()) {
                 FormulaScrElement& el = iter.previous();
@@ -733,7 +761,6 @@ bool FormulaModificator::rightSideVisible(EgcNode& node)
                         if (node.isContainer() && el.m_sideNode != FormulaScrElement::nodeRightSide)
                                 break;
                         (void) iter.next();
-                        m_iter = iter;
                         found = true;
                         break;
                 }
@@ -742,10 +769,10 @@ bool FormulaModificator::rightSideVisible(EgcNode& node)
         return found;
 }
 
-bool FormulaModificator::leftSideVisible(EgcNode& node)
+bool FormulaModificator::getLeftVisibleSide(EgcNode& node, FormulaScrIter& iter)
 {
         bool found = false;
-        FormulaScrIter iter = m_iter;
+        iter = m_iter;
         iter.toFront();
         while (iter.hasNext()) {
                 FormulaScrElement& el = iter.next();
@@ -753,7 +780,6 @@ bool FormulaModificator::leftSideVisible(EgcNode& node)
                         if (node.isContainer() && el.m_sideNode != FormulaScrElement::nodeLeftSide)
                                 break;
                         (void) iter.previous();
-                        m_iter = iter;
                         found = true;
                         break;
                 }
@@ -817,9 +843,9 @@ void FormulaModificator::markParent()
         }
 
         if(isCursorNearLeftSideParent(*m_underlinedNode))
-                moveCursorToRightVisibleBorder(*m_underlinedNode);
-        else
                 moveCursorToLeftVisibleBorder(*m_underlinedNode);
+        else
+                moveCursorToRightVisibleBorder(*m_underlinedNode);
 
         showCurrentCursor();
         if (isUnderlineActive()) {
