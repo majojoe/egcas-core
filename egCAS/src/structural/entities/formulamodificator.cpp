@@ -61,7 +61,8 @@ FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{fo
                                                                     m_iter(FormulaScrIter(m_formula, m_vector)),
                                                                     m_underlinedNode{nullptr},
                                                                     m_startUnderlinedNode{nullptr},
-                                                                    m_changeAwaited{false}
+                                                                    m_changeAwaited{false},
+                                                                    m_underlineCursorLeft{false}
 {
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_iter);
         visitor.updateVector();
@@ -92,21 +93,30 @@ void FormulaModificator::moveCursor(bool forward)
 {
         if (!m_formula.getItem())
                 return;
-        if (forward) {
-                if (m_iter.hasNext())
-                        (void) m_iter.next();
-                else
-                        resetUnderline();
+
+        if (!m_underlinedNode) {
+                if (forward) {
+                        if (m_iter.hasNext())
+                                (void) m_iter.next();
+                } else {
+                        if (m_iter.hasPrevious())
+                                (void) m_iter.previous();
+                }
         } else {
-                if (m_iter.hasPrevious())
-                        (void) m_iter.previous();
-                else
+                if (forward && m_underlineCursorLeft) {
+                        moveCursorToRightVisibleBorder(*m_underlinedNode);
+                        m_underlineCursorLeft = false;
+                } else if (!forward && !m_underlineCursorLeft) {
+                        moveCursorToLeftVisibleBorder(*m_underlinedNode);
+                        m_underlineCursorLeft = true;
+                } else {
                         resetUnderline();
+                }
         }
 
         showCurrentCursor();
         if (isUnderlineActive())
-                m_formula.getItem()->showUnderline(id());
+                m_formula.getItem()->showUnderline(id(m_underlinedNode));
 }
 
 void FormulaModificator::resetUnderline(void)
@@ -122,10 +132,13 @@ bool FormulaModificator::isUnderlineActive(void)
                 return false;
 }
 
-quint32 FormulaModificator::id(void) const
+quint32 FormulaModificator::id(EgcNode* node) const
 {
         const EgcMathmlLookup lookup = m_formula.getMathmlMappingCRef();
-        return lookup.getIdFrame(nodeAtCursor());
+        if (node)
+                return lookup.getIdFrame(*node);
+        else
+                return lookup.getIdFrame(nodeAtCursor());
 }
 
 void FormulaModificator::showCurrentCursor(void)
@@ -859,10 +872,13 @@ void FormulaModificator::markParent()
                         m_underlinedNode = m_startUnderlinedNode;
         }
 
-        if(isCursorNearLeftSideParent(*m_underlinedNode))
+        if(isCursorNearLeftSideParent(*m_underlinedNode)) {
                 moveCursorToLeftVisibleBorder(*m_underlinedNode);
-        else
+                m_underlineCursorLeft = true;
+        } else {
                 moveCursorToRightVisibleBorder(*m_underlinedNode);
+                m_underlineCursorLeft = false;
+        }
 
         showCurrentCursor();
         if (isUnderlineActive()) {

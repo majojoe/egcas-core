@@ -149,7 +149,7 @@ private:
          * @brief id the mathml id of the currently active node
          * @return the mathml id
          */
-        quint32 id(void) const;
+        quint32 id(EgcNode* node = nullptr) const;
         /**
          * @brief rightSide checks if node for representing the cursor is on the right side of the current cursor or
          * node or on the left side (Cursor is a Java Style cursor and has left and a right node).
@@ -300,6 +300,7 @@ private:
         EgcNode* m_underlinedNode;              ///< the last visible parent node that was given back
         EgcNode* m_startUnderlinedNode;         ///< node where underining started
         bool m_changeAwaited;                   ///< is set if a change in the view is awaited. If this has happened we can complete the change operation
+        bool m_underlineCursorLeft;             ///< if true the cursor is at left side of underline, if false on the right side
 };
 
 #endif // FORMULAMODIFICATOR_H
