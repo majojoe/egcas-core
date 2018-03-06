@@ -33,6 +33,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QStringBuilder>
 #include "egcformulaentity.h"
 #include "formulamodificator.h"
+#include "../specialNodes/egcbinarynode.h"
+#include "../specialNodes/egcunarynode.h"
+#include "../specialNodes/egcflexnode.h"
 #include "../visitor/formulascrvisitor.h"
 #include "egcabstractformulaitem.h"
 #include "casKernel/parser/restructparserprovider.h"
@@ -586,6 +589,14 @@ EgcNode& FormulaModificator::nodeAtCursor(void) const
         return *node;
 }
 
+FormulaScrElement&FormulaModificator::elementAtCursor() const
+{
+        if (rightSide() && m_iter.hasNext())
+                return m_iter.peekNext();
+        else if (m_iter.hasPrevious())
+                return m_iter.peekPrevious();
+}
+
 quint32 FormulaModificator::subPosition(void) const
 {
         qint32 retval;
@@ -679,37 +690,43 @@ EgcNode* FormulaModificator::getParent(EgcNode& node)
 
 bool FormulaModificator::isCursorNearLeftSideParent(EgcNode& node) const
 {
-        FormulaScrIter iter = m_iter;
-        int i = 0;
-        int rDist = 0;
-        int lDist = 0;
+        bool leftSide = true;
+        EgcNode& curr = nodeAtCursor();
+        EgcNode* child = &curr;
 
-        if (node.isBinaryNode()) {
+        EgcContainerNode* parent = curr.getParent();
+        if (!parent)
+                return leftSide;
 
-        } else if (node.isFlexNode()) {
+        while(parent != nullptr) {
+                if (parent->isBinaryNode()) {
+                        if (parent->isLastChild(*child))
+                                leftSide = false;
+                } else if (parent->isFlexNode()) {
+                        EgcFlexNode& flex = static_cast<EgcFlexNode&>(*parent);
+                        quint32 index = 0;
+                        quint32 nr_childs;
+                        (void) flex.getIndexOfChild(*child, index);
+                        nr_childs = flex.getNumberChildNodes();
+                        if (index >= nr_childs/2)
+                                leftSide = false;
+                } else if (parent->isUnaryNode()) {
+                        if (elementAtCursor().m_sideNode == FormulaScrElement::nodeRightSide)
+                                leftSide = false;
+                } else {
+                        quint32 pos = subPosition();
+                        quint32 subind = curr.nrSubindexes();
 
-        } else {
-                while (iter.hasNext()) {
-                        i++;
-                        FormulaScrElement& el = iter.next();
-                        if (el.m_node == &node)
-                                rDist = i;
+                        if (pos >= (subind/2))
+                                leftSide = false;
                 }
-
-                iter = m_iter;
-                i = 0;
-                while (iter.hasPrevious()) {
-                        i++;
-                        FormulaScrElement& el = iter.previous();
-                        if (el.m_node == &node)
-                                lDist = i;
-                }
-
-                if (lDist < rDist && lDist != 0)
-                        return true;
-                else
-                        return false;
+                if (parent == &node)
+                        break;
+                child = parent;
+                parent = child->getParent();
         }
+
+        return leftSide;
 }
 
 void FormulaModificator::moveCursorToRightVisibleBorder(EgcNode& node)

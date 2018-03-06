@@ -162,6 +162,11 @@ private:
          */
         EgcNode& nodeAtCursor(void) const;
         /**
+         * @brief elementAtCursor returns the element at the current cursor
+         * @return the formula element at current cursor position
+         */
+        FormulaScrElement& elementAtCursor(void) const;
+        /**
          * @brief subPosition returns the subPosition of the current mathml id
          * @return the subPosition of the current mathml id
          */
