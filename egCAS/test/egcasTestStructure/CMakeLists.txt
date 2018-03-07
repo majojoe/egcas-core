@@ -39,7 +39,6 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/iterator/screenHelpers/egcidnodeiter.cpp
         ../../src/structural/iterator/screenHelpers/egcsubidnodeiter.cpp
         ../../src/structural/iterator/egcnodeiterator.cpp
-        ../../src/structural/iterator/egcscrpositerator.cpp
         ../../src/structural/entities/egcformulaentity.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp
         ../../src/structural/specialNodes/egcemptynode.cpp
@@ -49,7 +48,6 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
         ../../src/utils/egcutfcodepoint.cpp
-        ../../src/structural/visitor/restructurevisitor.cpp
 )
 
 add_executable(tst_egcastest_structural ${tst_egcastest_structural_SOURCES} )

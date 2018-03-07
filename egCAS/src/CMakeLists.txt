@@ -141,14 +141,12 @@ set(egcas_SOURCES
         structural/specialNodes/egccontainernode.cpp 
         structural/entities/egcformulaentity.cpp
         structural/iterator/egcnodeiterator.cpp
-        structural/iterator/egcscrpositerator.cpp
         structural/iterator/formulascriter.cpp
         structural/iterator/screenHelpers/egcidnodeiter.cpp
         structural/iterator/screenHelpers/egcsubidnodeiter.cpp
         structural/specialNodes/egcbasenode.cpp
         structural/specialNodes/egcemptynode.cpp
         structural/visitor/egcmaximavisitor.cpp 
-        structural/visitor/restructurevisitor.cpp 
         ${egcas_concrete_node_SOURCES}
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 

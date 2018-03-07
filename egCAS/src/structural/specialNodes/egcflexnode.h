@@ -64,11 +64,6 @@ public:
          */
         virtual bool valid(void);
         /**
-         * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
-         * @param child a pointer to the child that will be deleted soon
-         */
-        virtual void notifyContainerOnChildDeletion(EgcNode* child);
-        /**
          * @brief takeOwnership takes ownership of the child given. The user is responsible for deleting the child.
          * If the user doesn't handle the child properly a leak will occur.
          * @param child the child to take ownership over.
@@ -190,6 +185,11 @@ public:
         virtual bool determineIfChildIsAtomicallyBound(const EgcNode* node) const;
 
 protected:
+        /**
+         * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
+         * @param child a pointer to the child that will be deleted soon
+         */
+        virtual void notifyContainerOnChildDeletion(EgcNode* child);
         /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
          * ATTENTION: It is very unlikely that you will need this function outside the container classes.

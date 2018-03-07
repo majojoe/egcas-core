@@ -43,7 +43,6 @@ class EgcBaseNode;
 enum class EgcNodeType;
 class EgcAbstractFormulaItem;
 class EgcScreenPos;
-class EgcScrPosIterator;
 enum class EgcOperations;
 class AbstractKernelParser;
 
@@ -324,18 +323,6 @@ private:
          * @brief showCurrentCursor shows the current cursor the iterator points to
          */
         void showCurrentCursor(void);
-        /**
-         * @brief markParent highlight the next parent upwards in the tree and move the cursor to that position.
-         */
-        void markParent(void);
-        /**
-         * @brief isScreenIterInSubtree check if screen iterator is in the given subtree.
-         * @param tree subtree to check if screen iterator is anywhere below.
-         * @param rightSide if screen iterator is in given subtree, return the side that is nearer. True if right is 
-         * nearer, false if left side is nearer
-         * @return true if screen iterator is in subtree, false otherwise
-         */
-        bool isScreenIterInSubtree(EgcNode& tree, bool &rightSide) const;
 
         static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
         static int s_fontSize;                  ///< the font size of all formulas
@@ -345,7 +332,6 @@ private:
         EgcAbstractFormulaItem* m_item;         ///< pointer to the formula item interface on the scene
         QString m_errorMsg;                     ///< the error message for this formula, if one
         EgcMathmlLookup m_mathmlLookup;         ///< mathml id lookup table
-//        QScopedPointer<EgcScrPosIterator> m_scrIter; ///< iterator for screen positions
         QScopedPointer<FormulaModificator> m_mod; ///< formula modificator class
         bool m_isActive;                        ///< true if formula is activated, false otherwise
 };

@@ -69,10 +69,6 @@ public:
         virtual QString getNodeName(void) const {return QString("EgcNodeType::NodeUndefined");}
         virtual EgcNode* copy(void) {return nullptr;}
         static EgcNode* create() {return nullptr;}
-protected:
-        static const EgcNodeType s_nodeType = EgcNodeType::NodeUndefined;
-
-public:
         EgcNode();
         virtual ~EgcNode() = 0;
         /**
@@ -118,11 +114,6 @@ public:
          * @param parent a pointer to the parent of this node. This must be a container pointer.
          */
         void provideParent(EgcContainerNode* parent);
-        /**
-         * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
-         * @param child a pointer to the child that will be deleted soon
-         */
-        virtual void notifyContainerOnChildDeletion(EgcNode* child) { (void)child; }
         /**
          * @brief accept takes a visitor and calls the given visitor back to be able to extract data from this node
          * @param visitor the visitor to call back
@@ -181,6 +172,14 @@ public:
         virtual bool isAtomicallyBoundChild(void) const;
 
 protected:
+
+        static const EgcNodeType s_nodeType = EgcNodeType::NodeUndefined;
+        /**
+         * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
+         * @param child a pointer to the child that will be deleted soon
+         */
+        virtual void notifyContainerOnChildDeletion(EgcNode* child) { (void)child; }
+
         EgcContainerNode *m_parent;    ///< pointer to the parent (is needed for traversing the tree)
 };
 

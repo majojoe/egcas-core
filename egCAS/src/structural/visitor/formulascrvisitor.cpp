@@ -35,7 +35,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../egcnodes.h"
 #include "formulascrvisitor.h"
 #include "../entities/egcformulaentity.h"
-#include <iterator/egcscrpositerator.h>
 #include <structural/iterator/formulascriter.h>
 #include <QStringBuilder>
 

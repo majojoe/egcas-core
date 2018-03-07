@@ -58,7 +58,6 @@ set(tst_egcas_advanced_tree_ops_SOURCES
         ../../src/structural/iterator/screenHelpers/egcidnodeiter.cpp
         ../../src/structural/iterator/screenHelpers/egcsubidnodeiter.cpp
         ../../src/structural/iterator/egcnodeiterator.cpp
-        ../../src/structural/iterator/egcscrpositerator.cpp
         ../../src/structural/entities/egcformulaentity.cpp
         ../../src/structural/entities/egcentity.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp
@@ -81,7 +80,6 @@ set(tst_egcas_advanced_tree_ops_SOURCES
         ../../src/view/egcworksheet.cpp
         ../../src/view/grid.cpp
         ../../src/menu/egcgraphicsview.cpp
-        ../../src/structural/visitor/restructurevisitor.cpp
 )
 
 #set the verbosity level of the scanner and parser

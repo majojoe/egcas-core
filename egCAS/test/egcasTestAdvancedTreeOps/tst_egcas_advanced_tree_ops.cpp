@@ -38,7 +38,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "visitor/egcmaximavisitor.h"
 #include "visitor/egcmathmlvisitor.h"
 #include "actions/egcaction.h"
-#include "iterator/egcscrpositerator.h"
 #include "view/egcformulaitem.h"
 #include "casKernel/parser/abstractkernelparser.h"
 #include "casKernel/parser/restructparserprovider.h"

@@ -35,12 +35,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "specialNodes/egcbasenode.h"
 #include "egcnodes.h"
 #include "visitor/egcmaximavisitor.h"
-#include "visitor/restructurevisitor.h"
 #include "visitor/egcmathmlvisitor.h"
 #include "egcabstractformulaitem.h"
 #include "egcabstractentitylist.h"
 #include "actions/egcaction.h"
-#include "iterator/egcscrpositerator.h"
 #include "casKernel/parser/abstractkernelparser.h"
 #include "casKernel/parser/restructparserprovider.h"
 
@@ -478,34 +476,6 @@ const EgcMathmlLookup& EgcFormulaEntity::getMathmlMappingCRef(void) const
         return m_mathmlLookup;
 }
 
-void EgcFormulaEntity::markParent(void)
-{
-//        quint32 id;
-//        qint32 ind;
-//        bool rightSide;
-
-//        if (!m_scrIter)
-//                return;
-//        if (!m_item)
-//                return;
-
-//        rightSide = m_scrIter->rightSide();
-
-//        id = m_scrIter->getNextVisibleParent();
-//        ind = m_scrIter->subIndex();
-//        if (ind < 0) { //this is a container
-//                ind = 0;
-//        } else { //this is a glyph
-//                ind++;
-//        }
-//        if (rightSide)
-//                m_item->showRightCursor(id, ind);
-//        else
-//                m_item->showLeftCursor(id, ind);
-
-//        m_item->showUnderline(id);
-}
-
 EgcNode* EgcFormulaEntity::copy(EgcNode& node)
 {
         if (!isNodeInFormula(node))
@@ -540,24 +510,11 @@ EgcNode* EgcFormulaEntity::cut(EgcNode& node)
         if (emtpyNode.isNull())
                 return nullptr;
 
-        //replace all references to node with the references to emptyNode in this class and its subclasses
-//        bool rightSide;
-//        EgcNode* newCursorPos;
-//        if (isScreenIterInSubtree(node, rightSide)) {
-//                newCursorPos = emtpyNode.data();
-//        } else if (!m_scrIter.isNull()) {
-//                newCursorPos = const_cast<EgcNode*>(m_scrIter->node());
-//                rightSide = m_scrIter->rightSide();
-//        }
-
         cutTree.reset(cParent->takeOwnership(node));
 
         if (!cParent->setChild(index, *emtpyNode.take()))
                 return nullptr;
         cParent->getChild(index)->provideParent(cParent);
-
-//        if (!m_scrIter.isNull())
-//                m_scrIter->updatePointer(newCursorPos, rightSide);
 
         return cutTree.take();
 }
@@ -584,16 +541,6 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
         if (!isChild)
                 return false;
 
-        //replace all references to node with the references to emptyNode in this class and its subclasses
-//        bool rightSide;
-//        EgcNode* newCursorPos;
-//        if (isScreenIterInSubtree(whereToPaste, rightSide)) {
-//                newCursorPos = &treeToPaste;
-//        } else if (!m_scrIter.isNull()) {
-//                newCursorPos = const_cast<EgcNode*>(m_scrIter->node());
-//                rightSide = m_scrIter->rightSide();
-//        }
-
         QScopedPointer<EgcNode> cutTree;
         cutTree.reset(cParent->takeOwnership(whereToPaste));
         cutTree.reset();
@@ -601,9 +548,6 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
         if (!cParent->setChild(index, treeToPaste))
                         return false;
         treeToPaste.provideParent(cParent);
-
-//        if (!m_scrIter.isNull())
-//                m_scrIter->updatePointer(newCursorPos, rightSide);
 
         return true;
 }
@@ -614,39 +558,6 @@ bool EgcFormulaEntity::isNodeInFormula(EgcNode& node)
 
         if (m_data.hasSubNode(node, index))
                 return true;
-
-        return false;
-}
-
-bool EgcFormulaEntity::isScreenIterInSubtree(EgcNode& tree, bool &rightSide) const
-{
-//        EgcNode* node = nullptr;
-        
-//        if (!m_scrIter.isNull())
-//                node = const_cast<EgcNode*>(m_scrIter->node());
-//        else
-//                return false;
-
-//        if (!node)
-//                return false;
-
-//        rightSide = m_scrIter->rightSide();
-
-//        if (node == &tree)
-//                return true;
-
-//        if (tree.isContainer()) {
-//                quint32 index;
-//                EgcContainerNode* container = static_cast<EgcContainerNode*>(&tree);
-//                if (container->hasSubNode(*node, index)) {
-//                        if ((container->getNumberChildNodes() / 2) >= index)
-//                                rightSide = true;
-//                        else
-//                                rightSide = false;
-
-//                        return true;
-//                }
-//        }
 
         return false;
 }
