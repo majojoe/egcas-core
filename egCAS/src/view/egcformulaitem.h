@@ -163,11 +163,6 @@ public:
          */
         virtual int type() const override;
         /**
-         * @brief isEmpty check if the formula is an empty formula
-         * @return true if empty, false otherwise
-         */
-        bool isEmpty(void);
-        /**
          * @brief setCursorAt set the cursor position near the given position
          * @param pos the position where to set the cursor
          */

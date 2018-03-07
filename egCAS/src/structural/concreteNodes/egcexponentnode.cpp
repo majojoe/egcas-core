@@ -32,25 +32,3 @@ EgcExponentNode::EgcExponentNode()
 {
 }
 
-bool EgcExponentNode::cursorSnaps(EgcNodeSide side) const
-{
-        if (side == EgcNodeSide::right)
-                return true;
-
-        return false;
-}
-
-bool EgcExponentNode::visibleSigns(EgcNodeSide side) const
-{
-        (void) side;
-
-        return false;
-}
-
-bool EgcExponentNode::modifyableElement(EgcNodeSide side) const
-{
-        if (side == EgcNodeSide::middle)
-                return true;
-
-        return false;
-}

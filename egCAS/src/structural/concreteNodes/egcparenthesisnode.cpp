@@ -32,20 +32,3 @@ EgcParenthesisNode::EgcParenthesisNode()
 {
 }
 
-bool EgcParenthesisNode::cursorSnaps(EgcNodeSide side) const
-{
-        if (    side == EgcNodeSide::left
-             || side == EgcNodeSide::right)
-                return true;
-
-        return false;
-}
-
-bool EgcParenthesisNode::visibleSigns(EgcNodeSide side) const
-{
-        if (    side == EgcNodeSide::left
-             || side == EgcNodeSide::right)
-                return true;
-
-        return false;
-}

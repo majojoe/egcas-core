@@ -103,21 +103,6 @@ public:
          */
         virtual bool valid(void);
         /**
-         * @brief visibleSigns find out where the node has visible signs (e.g. a division node has visible signs in the
-         * middle of the container)
-         * @param side the side to test for visible signs
-         * @return true if the given side of the node has visible signs.
-         */
-        virtual bool visibleSigns(EgcNodeSide side) const override;
-        /**
-         * @brief isAtomicallyBoundChild if a node is a child of a atomic node it may not be deleted seperately. There may be a
-         * parent that is marked as atomic (is deleteable), then the parent must be deleted in order to delete the not
-         * deleteable sub-node. This functionality is in some ways comparable to a composition. The also must not be
-         * inserted a node in between (this would change the structure).
-         * @return true if node is a child of a atomic node, false if NOT a child of a atomic node (majority).
-         */
-        virtual bool isAtomicallyBoundChild(void) const override;
-        /**
          * @brief encode encodes a string that contains unicode signs as html escape sequences + replaces single _ with
          * __ and also the start and end of the html escape sequences with sequences the calculation kernel can work
          * with

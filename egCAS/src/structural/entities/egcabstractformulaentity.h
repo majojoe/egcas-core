@@ -67,11 +67,6 @@ public:
          */
         virtual bool cursorAtEnd(void) = 0;
         /**
-         * @brief isEmpty check if the formula is an empty formula
-         * @return true if empty, false otherwise
-         */
-        virtual bool isEmpty(void) const = 0;
-        /**
          * @brief setCursorPos set the cursor position at the given nodeId and sub position location
          * @param nodeId the node Id where to set the cursor
          * @param subPos the sub position where to set the cursor

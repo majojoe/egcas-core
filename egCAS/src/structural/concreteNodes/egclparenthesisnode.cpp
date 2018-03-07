@@ -32,24 +32,6 @@ LParenthesisNode::LParenthesisNode()
 {
 }
 
-bool LParenthesisNode::cursorSnaps(EgcNodeSide side) const
-{
-#warning remove after refactoring
-        if (side == EgcNodeSide::left)
-                return true;
-
-        return false;
-}
-
-bool LParenthesisNode::visibleSigns(EgcNodeSide side) const
-{
-#warning remove after refactoring
-        if (side == EgcNodeSide::left)
-                return true;
-
-        return false;
-}
-
 bool LParenthesisNode::valid()
 {
         return false;

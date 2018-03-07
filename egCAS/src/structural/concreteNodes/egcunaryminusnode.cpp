@@ -32,18 +32,3 @@ EgcUnaryMinusNode::EgcUnaryMinusNode()
 {
 }
 
-bool EgcUnaryMinusNode::cursorSnaps(EgcNodeSide side) const
-{
-        if (side == EgcNodeSide::left)
-                return true;
-
-        return false;
-}
-
-bool EgcUnaryMinusNode::visibleSigns(EgcNodeSide side) const
-{
-        if (side == EgcNodeSide::left)
-                return true;
-
-        return false;
-}

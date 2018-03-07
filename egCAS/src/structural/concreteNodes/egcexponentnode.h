@@ -40,27 +40,6 @@ class EgcExponentNode : public EgcBinaryOperator
         EGC_SET_EXPRESSION_TYPE(EgcExponentNode, EgcNodeType::ExponentNode);
 public:
         EgcExponentNode();
-        /**
-         * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
-         * left side of the container)
-         * @param side the side to test for cursor snap.
-         * @return true if the cursor will snap in at the given side, false otherwise
-         */
-        virtual bool cursorSnaps(EgcNodeSide side) const override;
-        /**
-         * @brief visibleSigns find out where the node has visible signs (e.g. a division node has visible signs in the
-         * middle of the container)
-         * @param side the side to test for visible signs
-         * @return true if the given side of the node has visible signs.
-         */
-        virtual bool visibleSigns(EgcNodeSide side) const override;
-        /**
-         * @brief modifyableElement find out where the node has modifyable elements (e.g. a exponent node has a
-         * modifyable operator in the middle, but it is not visible)
-         * @param side the side to test for visible signs
-         * @return true if the given side of the node has modifyable elements.
-         */
-        virtual bool modifyableElement(EgcNodeSide side) const override;
 };
 
 #endif // EGCEXPONENTNODE_H

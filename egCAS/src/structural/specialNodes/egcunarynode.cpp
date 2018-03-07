@@ -222,20 +222,3 @@ bool EgcUnaryNode::operator==(const EgcNode& node) const
         return retval;
 }
 
-bool EgcUnaryNode::cursorSnaps(EgcNodeSide side) const
-{
-        if (   side == EgcNodeSide::left 
-            || side == EgcNodeSide::right)
-                return true;
-        
-        return false;
-}
-
-bool EgcUnaryNode::visibleSigns(EgcNodeSide side) const
-{
-        if (   side == EgcNodeSide::left 
-            || side == EgcNodeSide::right)
-                return true;
-        
-        return false;        
-}

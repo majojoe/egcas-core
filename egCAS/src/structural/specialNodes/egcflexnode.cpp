@@ -382,10 +382,6 @@ bool EgcFlexNode::insert(quint32 index, EgcNode& node)
 bool EgcFlexNode::remove(quint32 index)
 {
         if (index < m_childs.count()) {
-                if (m_childs.at(index)) { //atomic childs may not be deleted without deleting the parent
-                        if (m_childs.at(index)->isAtomicallyBoundChild())
-                                return false;
-                }
                 delete m_childs.at(index);
                 m_childs[index] = nullptr;
                 m_childs.remove(index);
@@ -424,24 +420,6 @@ bool EgcFlexNode::operator==(const EgcNode& node) const
 
         return retval;
 
-}
-
-bool EgcFlexNode::cursorSnaps(EgcNodeSide side) const
-{
-        if (   side == EgcNodeSide::left 
-            || side == EgcNodeSide::right)
-                return true;
-        
-        return true;
-}
-
-bool EgcFlexNode::visibleSigns(EgcNodeSide side) const
-{
-        if (   side == EgcNodeSide::left 
-            || side == EgcNodeSide::right)
-                return true;
-        
-        return false;        
 }
 
 bool EgcFlexNode::determineIfChildIsAtomicallyBound(const EgcNode* node) const

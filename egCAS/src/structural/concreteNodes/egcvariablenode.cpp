@@ -307,16 +307,6 @@ bool EgcVariableNode::isOperation(void) const
         return false;
 }
 
-bool EgcVariableNode::cursorSnaps(EgcNodeSide side) const
-{
-        return false;
-}
-
-bool EgcVariableNode::visibleSigns(EgcNodeSide side) const
-{
-        return false;
-}
-
 bool EgcVariableNode::determineIfChildIsAtomicallyBound(const EgcNode* node) const
 {
         quint32 ind = 0;

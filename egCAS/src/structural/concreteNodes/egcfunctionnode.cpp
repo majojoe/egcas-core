@@ -57,21 +57,6 @@ QString EgcFunctionNode::getName(void)
         return m_fncName;
 }
 
-bool EgcFunctionNode::cursorSnaps(EgcNodeSide side) const
-{
-        if (side == EgcNodeSide::right)
-                return true;
-
-        return false;
-}
-
-bool EgcFunctionNode::visibleSigns(EgcNodeSide side) const
-{
-        (void) side;
-
-        return true;
-}
-
 bool EgcFunctionNode::determineIfChildIsAtomicallyBound(const EgcNode* node) const
 {
         quint32 ind = 0;

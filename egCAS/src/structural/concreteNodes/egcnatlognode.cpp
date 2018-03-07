@@ -32,20 +32,3 @@ EgcNatLogNode::EgcNatLogNode()
 {
 }
 
-bool EgcNatLogNode::cursorSnaps(EgcNodeSide side) const
-{
-        if (    side == EgcNodeSide::left
-             || side == EgcNodeSide::right)
-                return true;
-
-        return false;
-}
-
-bool EgcNatLogNode::visibleSigns(EgcNodeSide side) const
-{
-        if (    side == EgcNodeSide::left
-             || side == EgcNodeSide::right)
-                return true;
-
-        return false;
-}

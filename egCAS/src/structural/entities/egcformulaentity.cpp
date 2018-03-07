@@ -617,31 +617,6 @@ void EgcFormulaEntity::setSelected(bool selected)
         m_item->selectFormula(selected);
 }
 
-bool EgcFormulaEntity::isEmpty(void) const
-{
-        EgcNode* node = getRootElement();
-        if (!node)
-                return true;
-        if (node->getNodeType() == EgcNodeType::EmptyNode)
-                return true;
-        else { // if there are only invisible (unary) containers and the only leaf is an empty node
-                EgcContainerNode* container;
-                while(node->isContainer() && !node->hasVisibleSigns()) {
-                        container = static_cast<EgcContainerNode*>(node);
-                        if (container->getNumberChildNodes() == 1)
-                                node = static_cast<EgcContainerNode*>(node)->getChild(0);
-                        else
-                                break;
-                        if (!node->isContainer() && node->getNodeType() == EgcNodeType::EmptyNode) {
-                                return true;
-                        }
-
-                }
-        }
-
-        return false;
-}
-
 EgcAbstractFormulaItem* EgcFormulaEntity::getItem(void) const
 {
         return m_item;

@@ -433,14 +433,6 @@ int EgcFormulaItem::type() const
         return static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType);
 }
 
-bool EgcFormulaItem::isEmpty(void)
-{
-        if (m_entity)
-                return m_entity->isEmpty();
-
-        return false;
-}
-
 EgcAbstractFormulaEntity* EgcFormulaItem::getEnity(void) const
 {
         return m_entity;

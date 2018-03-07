@@ -155,20 +155,6 @@ void EgcAlnumNode::optimizeRegexes()
         }
 }
 
-bool EgcAlnumNode::visibleSigns(EgcNodeSide side) const
-{
-        return true;
-}
-
-bool EgcAlnumNode::isAtomicallyBoundChild(void) const
-{
-        EgcContainerNode* parent = getParent();
-        if (!parent)
-                return false;
-
-        return parent->determineIfChildIsAtomicallyBound(this);
-}
-
 QString EgcAlnumNode::encode(const QString& str)
 {
         //replace (stuffing) of "_" with "__" since "_" is used to concatenate variable name and subscript
