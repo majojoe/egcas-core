@@ -34,15 +34,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QRegularExpression>
 #include "../specialNodes/egcnode.h"
 
-class EgcSubindNodeIter;
-
 /**
  * @brief The EgcNumberNode class is a class that holds leafes with numbers
  */
 class EgcNumberNode : public EgcNode
 {
-        friend class EgcSubindNodeIter;
-
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcNumberNode, EgcNodeType::NumberNode);
 

@@ -45,16 +45,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 const char emptyElement[] = "_empty";
 const char emptyBinElement[] = "_emptybinop";
 
-/**
- * @brief The NodeIterReStructData class is intended for use during restructering a formula -> state does not change but
- * node pointers
- */
-class NodeIterReStructData {
-public:
-        NodeIterReStructData() : m_node{nullptr} {}
-        EgcNode* m_node;
-        EgcNode* m_iterPosAfterUpdate;
-};
 
 
 FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{formula},

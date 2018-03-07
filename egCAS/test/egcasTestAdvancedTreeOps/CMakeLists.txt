@@ -55,8 +55,6 @@ set(tst_egcas_advanced_tree_ops_SOURCES
         ../../src/structural/specialNodes/egcargumentsnode.cpp
         ../../src/structural/specialNodes/egcbinaryoperator.cpp
         ${tst_egcas_advanced_tree_ops_concrete_SOURCES}
-        ../../src/structural/iterator/screenHelpers/egcidnodeiter.cpp
-        ../../src/structural/iterator/screenHelpers/egcsubidnodeiter.cpp
         ../../src/structural/iterator/egcnodeiterator.cpp
         ../../src/structural/entities/egcformulaentity.cpp
         ../../src/structural/entities/egcentity.cpp

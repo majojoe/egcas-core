@@ -34,7 +34,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QRegularExpression>
 #include "../specialNodes/egcnode.h"
 
-class EgcSubindNodeIter;
 
 /**
  * @brief The EgcAlnumNode class is a class that holds leafes with alphanumerice identifier
@@ -47,8 +46,6 @@ class EgcSubindNodeIter;
  */
 class EgcAlnumNode : public EgcNode
 {
-        friend class EgcSubindNodeIter;
-
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcAlnumNode, EgcNodeType::AlnumNode);
 

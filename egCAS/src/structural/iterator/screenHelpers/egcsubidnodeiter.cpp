@@ -28,7 +28,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QChar>
-#include "egcsubidnodeiter.h"
 #include "specialNodes/egcnode.h"
 #include "concreteNodes/egcnumbernode.h"
 #include "concreteNodes/egcalnumnode.h"

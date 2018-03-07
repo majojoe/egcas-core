@@ -35,8 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "parser.hpp"
 #include "interpreter.h"
 #include "egckernelparser.h"
-#include "iterator/screenHelpers/egcidnodeiter.h"
-
+#include "entities/formulamodificator.h"
 
 using namespace CASParser;
 using namespace std;
