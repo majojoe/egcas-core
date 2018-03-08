@@ -57,18 +57,6 @@ QString EgcFunctionNode::getName(void)
         return m_fncName;
 }
 
-bool EgcFunctionNode::determineIfChildIsAtomicallyBound(const EgcNode* node) const
-{
-        quint32 ind = 0;
-
-        if (!node)
-                return false;
-
-        (void) getIndexOfChild(*const_cast<EgcNode*>(node), ind);
-
-        return false;
-}
-
 bool EgcFunctionNode::valid(void)
 {
         if (m_fncName.isEmpty())

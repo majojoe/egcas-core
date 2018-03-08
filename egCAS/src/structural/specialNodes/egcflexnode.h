@@ -160,15 +160,6 @@ public:
          * @return true if the trees are equal
          */
         virtual bool operator==(const EgcNode& node) const override;
-        /**
-         * @brief determineIfChildIsAtomicallyBound normally a parent knows better if his child is atomically bound to the
-         * parent. By implementing this the child can ask the parent whether it may be deleted (insert can take place)
-         * or not. So the method isAtomicallyBoundChild can be easily implemented.
-         * ONLY INTENDED TO BE USED BY DIRECT CHILDS!
-         * @param node the node to check for.
-         * @return true if child is atomically bound to its parent, false if not
-         */
-        virtual bool determineIfChildIsAtomicallyBound(const EgcNode* node) const;
 
 protected:
         /**

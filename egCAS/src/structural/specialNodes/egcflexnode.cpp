@@ -421,10 +421,3 @@ bool EgcFlexNode::operator==(const EgcNode& node) const
         return retval;
 
 }
-
-bool EgcFlexNode::determineIfChildIsAtomicallyBound(const EgcNode* node) const
-{
-        (void) node;
-
-        return true;
-}

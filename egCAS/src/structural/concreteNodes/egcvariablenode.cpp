@@ -307,18 +307,3 @@ bool EgcVariableNode::isOperation(void) const
         return false;
 }
 
-bool EgcVariableNode::determineIfChildIsAtomicallyBound(const EgcNode* node) const
-{
-        quint32 ind = 0;
-
-        if (!node)
-                return false;
-
-        (void) getIndexOfChild(*const_cast<EgcNode*>(node), ind);
-
-        if (ind == 0)
-                return true;
-
-        return false;
-
-}
