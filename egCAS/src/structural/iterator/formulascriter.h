@@ -128,7 +128,13 @@ public:
          * @return true if the vector contains the node, false otherwise
          */
         bool contains(EgcNode& node);
-
+        /**
+         * @brief split the vector this iterator points to and return the left (or right) part of the vector. The
+         * original vector will not be modified.
+         * @param left if true the left part will be returned, if false the right part
+         * @return the part of the vector we have chosen.
+         */
+        FormulaScrVector split(bool left = true);
 private:
         /**
          * @brief setIterPos set the iterator position. ATTENTION: use only for internal purposes (DO NOT MAKE PUBLIC)

@@ -160,6 +160,18 @@ bool FormulaScrIter::contains(EgcNode& node)
         return false;
 }
 
+FormulaScrVector FormulaScrIter::split(bool left)
+{
+        FormulaScrVector tmp = *m_vector;
+        if (left)
+                tmp.remove(m_pos, tmp.size() - m_pos);
+        else
+                tmp.remove(0, m_pos);
+        tmp.squeeze();
+
+        return tmp;
+}
+
 void FormulaScrIter::setIterPos(quint32 pos)
 {
         if (pos <= m_vector->size())

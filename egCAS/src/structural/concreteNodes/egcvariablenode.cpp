@@ -34,6 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "structural/specialNodes/egcemptynode.h"
 #include "utils/egcutfcodepoint.h"
 
+#warning rebuild EgcVariableNode so, that is is based on EgcNode (no container class like EgcNumber)
+
 
 //ATTENTION: as of now egCAS and even Qt does not support non bmp characters (unicode caracters > 0xFFFF)
 
