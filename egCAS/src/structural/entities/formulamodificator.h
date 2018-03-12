@@ -92,6 +92,12 @@ public:
          */
         void insertBinaryOperation(QString op);
         /**
+         * @brief insertBinaryOperation insert a binary operation
+         * @param op the binary operation to insert as ASCII string that can be interpreted by the parser
+         */
+        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString(),
+                                   QString leftChild = QString(), QString rightChild = QString());
+        /**
          * @brief removeElement remove a character or operation at the current cursor position
          * @param previous if true the character before the current cursor position is remove, if false the character behind
          */
@@ -191,11 +197,16 @@ private:
         /**
          * @brief insertEmptyNode insert an empty node at the current cursor position
          */
-        void insertEmptyNode(void);
+        void insertEmptyNode(void);        
         /**
-         * @brief insertEmptyNode insert an empty binary node at the current cursor position
+         * @brief insertBinEmptyNode insert an empty binary node at the current cursor position
          */
         void insertBinEmptyNode(void);
+        /**
+         * @brief insertEl insert an element with the given value
+         * @param el the value to insert
+         */
+        void insertEl(QString el);
         /**
          * @brief isEmpty checks if formula is currently empty (contains just an empty element)
          * @return true if formula is empty, false if not

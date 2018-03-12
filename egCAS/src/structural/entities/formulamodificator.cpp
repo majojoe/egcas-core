@@ -247,6 +247,75 @@ void FormulaModificator::insertBinaryOperation(QString op)
         updateFormula();
 }
 
+void FormulaModificator::insertBinaryOperation(QString op, QString left, QString right, QString leftChild, QString rightChild)
+{
+        bool insertEmptyLeft = false;
+        bool insertEmptyRight = false;
+        FormulaScrElement el;
+        el.m_value = op;
+
+        // check if there is an empty binary operation at the left or at the right
+        if (m_iter.hasPrevious()) {
+                EgcNode* l = m_iter.peekPrevious().m_node;
+                if (l) {
+                        if (l->getNodeType() == EgcNodeType::BinEmptyNode)
+                                m_iter.remove(true);
+                }
+        }
+        if (m_iter.hasNext()) {
+                EgcNode* r = m_iter.peekNext().m_node;
+                if (r) {
+                        if (r->getNodeType() == EgcNodeType::BinEmptyNode)
+                                m_iter.remove(false);
+                }
+        }
+
+        if (!m_iter.hasPrevious()) {
+                insertEmptyLeft = true;
+        } else {
+                FormulaScrElement &l_el = m_iter.peekPrevious();
+                EgcNode* lNode = l_el.m_node;
+                if (lNode) {
+                        if (    lNode->isOperation()
+                             && (    l_el.m_sideNode == FormulaScrElement::nodeLeftSide
+                                  || l_el.m_sideNode == FormulaScrElement::nodeMiddle))
+                                insertEmptyLeft = true;
+                }
+        }
+        if (!m_iter.hasNext()) {
+                insertEmptyRight = true;
+        } else {
+                FormulaScrElement &r_el = m_iter.peekNext();
+                EgcNode* rNode = r_el.m_node;
+                if (rNode) {
+                        if (    rNode->isOperation()
+                             && (    r_el.m_sideNode == FormulaScrElement::nodeRightSide
+                                  || r_el.m_sideNode == FormulaScrElement::nodeMiddle))
+                                insertEmptyRight = true;
+                }
+        }
+
+        // since a minus can also be a unary minus -> delete the empty node here
+        if (op == QString("-")) {
+                if (insertEmptyLeft)
+                        insertEmptyLeft = false;
+                else if (isEmptyElement(true))
+                        m_iter.remove(true);
+        }
+
+        if (!left.isEmpty())
+                insertEl(left);
+        if (insertEmptyLeft)
+                insertEmptyNode();
+        m_iter.insert(el);
+        if (insertEmptyRight)
+                insertEmptyNode();
+        if (!right.isEmpty())
+                insertEl(right);
+
+        updateFormula();
+}
+
 void FormulaModificator::insertCharacter(QChar character)
 {
         FormulaScrElement el;
@@ -890,6 +959,13 @@ void FormulaModificator::insertBinEmptyNode(void)
         FormulaScrElement el;
         el.m_value = emptyBinElement;
         m_iter.insert(el);
+}
+
+void FormulaModificator::insertEl(QString el)
+{
+        FormulaScrElement element;
+        element.m_value = el;
+        m_iter.insert(element);
 }
 
 bool FormulaModificator::isEmpty() const
