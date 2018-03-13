@@ -877,6 +877,25 @@ bool FormulaModificator::getLeftVisibleSide(EgcNode& node, FormulaScrIter& iter)
         return found;
 }
 
+QList<FormulaScrVector> FormulaModificator::split(const FormulaScrIter& leftIter, const FormulaScrIter& rightIter) const
+{
+        FormulaScrVector left;
+        FormulaScrVector middle;
+        FormulaScrVector right;
+
+        left = leftIter.split();
+        right = rightIter.split(false);
+
+        int leftSize = left.size();
+        int rightSize = right.size();
+        int middleSize = m_vector.size() - (leftSize + rightSize);
+        middleSize = qMax(0, middleSize);
+
+
+#error go on here
+
+}
+
 void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
 {
         bool sideMatters = false;

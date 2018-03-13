@@ -316,6 +316,13 @@ private:
          * @return true if visible, false otherwise
          */
         bool getLeftVisibleSide(EgcNode& node, FormulaScrIter& iter);
+        /**
+         * @brief split the current vector in a list with 3 vectors. The original vector will not be modified!
+         * @param leftIter the left (first) iterator that splits the vector in left and middle part
+         * @param rightIter the right (second) iterator the splits the vector in middle and right part
+         * @return a list of formula vectors
+         */
+        QList<FormulaScrVector> split(const FormulaScrIter& leftIter, const FormulaScrIter& rightIter) const;
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula
