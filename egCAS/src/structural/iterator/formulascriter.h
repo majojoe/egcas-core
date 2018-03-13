@@ -134,7 +134,7 @@ public:
          * @param left if true the left part will be returned, if false the right part
          * @return the part of the vector we have chosen.
          */
-        FormulaScrVector split(bool left = true);
+        FormulaScrVector split(bool left = true) const;
 private:
         /**
          * @brief setIterPos set the iterator position. ATTENTION: use only for internal purposes (DO NOT MAKE PUBLIC)

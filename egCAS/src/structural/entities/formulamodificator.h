@@ -91,12 +91,12 @@ public:
          * @param op the binary operation to insert as ASCII string that can be interpreted by the parser
          */
         void insertBinaryOperation(QString op);
-        /**
-         * @brief insertBinaryOperation insert a binary operation
-         * @param op the binary operation to insert as ASCII string that can be interpreted by the parser
-         */
-        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString(),
-                                   QString leftChild = QString(), QString rightChild = QString());
+//        /**
+//         * @brief insertBinaryOperation insert a binary operation
+//         * @param op the binary operation to insert as ASCII string that can be interpreted by the parser
+//         */
+//        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString(),
+//                                   QString leftChild = QString(), QString rightChild = QString());
         /**
          * @brief removeElement remove a character or operation at the current cursor position
          * @param previous if true the character before the current cursor position is remove, if false the character behind

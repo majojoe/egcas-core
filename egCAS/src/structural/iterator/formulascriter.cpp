@@ -160,7 +160,7 @@ bool FormulaScrIter::contains(EgcNode& node)
         return false;
 }
 
-FormulaScrVector FormulaScrIter::split(bool left)
+FormulaScrVector FormulaScrIter::split(bool left) const
 {
         FormulaScrVector tmp = *m_vector;
         if (left)
