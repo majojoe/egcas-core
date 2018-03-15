@@ -182,13 +182,8 @@ void FormulaModificator::viewHasChanged()
         }
 }
 
-void FormulaModificator::insertBinaryOperation(QString op)
+void FormulaModificator::removeBinEmptyNodes(void)
 {
-        bool insertEmptyLeft = false;
-        bool insertEmptyRight = false;
-        FormulaScrElement el;
-        el.m_value = op;
-
         // check if there is an empty binary operation at the left or at the right
         if (m_iter.hasPrevious()) {
                 EgcNode* l = m_iter.peekPrevious().m_node;
@@ -204,117 +199,154 @@ void FormulaModificator::insertBinaryOperation(QString op)
                                 m_iter.remove(false);
                 }
         }
+}
 
-        if (!m_iter.hasPrevious()) {
-                insertEmptyLeft = true;
+bool FormulaModificator::isEmptyChildNeeded4Binary(bool leftChild)
+{
+        bool retval = false;
+
+        if (leftChild) {
+                if (!m_iter.hasPrevious()) {
+                        retval = true;
+                } else {
+                        FormulaScrElement &l_el = m_iter.peekPrevious();
+                        EgcNode* lNode = l_el.m_node;
+                        if (lNode) {
+                                if (    lNode->isOperation()
+                                                && (    l_el.m_sideNode == FormulaScrElement::nodeLeftSide
+                                                        || l_el.m_sideNode == FormulaScrElement::nodeMiddle))
+                                        retval = true;
+                        }
+                }
         } else {
-                FormulaScrElement &l_el = m_iter.peekPrevious();
-                EgcNode* lNode = l_el.m_node;
-                if (lNode) {
-                        if (    lNode->isOperation()
-                             && (    l_el.m_sideNode == FormulaScrElement::nodeLeftSide
-                                  || l_el.m_sideNode == FormulaScrElement::nodeMiddle))
-                                insertEmptyLeft = true;
+                if (!m_iter.hasNext()) {
+                        retval = true;
+                } else {
+                        FormulaScrElement &r_el = m_iter.peekNext();
+                        EgcNode* rNode = r_el.m_node;
+                        if (rNode) {
+                                if (    rNode->isOperation()
+                                     && (    r_el.m_sideNode == FormulaScrElement::nodeRightSide
+                                          || r_el.m_sideNode == FormulaScrElement::nodeMiddle))
+                                        retval = true;
+                        }
                 }
         }
-        if (!m_iter.hasNext()) {
-                insertEmptyRight = true;
+
+        return retval;
+}
+
+void FormulaModificator::setMarker()
+{
+        if (rightSide()) {
+                if (m_iter.hasNext())
+                        m_iter.peekNext().m_isPositionMarker = true;
         } else {
-                FormulaScrElement &r_el = m_iter.peekNext();
-                EgcNode* rNode = r_el.m_node;
-                if (rNode) {
-                        if (    rNode->isOperation()
-                             && (    r_el.m_sideNode == FormulaScrElement::nodeRightSide
-                                  || r_el.m_sideNode == FormulaScrElement::nodeMiddle))
-                                insertEmptyRight = true;
+                if (m_iter.hasPrevious())
+                        m_iter.peekPrevious().m_isPositionMarker = true;
+        }
+}
+
+void FormulaModificator::placeCursorAtMarker()
+{
+        bool markerFound = false;
+        FormulaScrIter iter = m_iter;
+        iter.toFront();
+        while(iter.hasNext()) {
+                FormulaScrElement& el = iter.next();
+                if (el.m_isPositionMarker) {
+                        el.m_isPositionMarker = false;
+                        markerFound = true;
+                        break;
                 }
         }
 
-        // since a minus can also be a unary minus -> delete the empty node here
-        if (op == QString("-")) {
-                if (insertEmptyLeft)
-                        insertEmptyLeft = false;
-                else if (isEmptyElement(true))
-                        m_iter.remove(true);
+        if (markerFound)
+                m_iter = iter;
+}
+
+void FormulaModificator::insertBinaryOperation(QString op, QString left, QString right)
+{
+        bool insertEmptyLeft = false;
+        bool insertEmptyRight = false;
+        FormulaScrElement el;
+        el.m_value = op;
+        EgcNode* splitNode = nullptr;
+        bool integrateInLeftChild = true;
+        FormulaScrIter leftSplitter = m_iter;
+        FormulaScrIter rightSplitter = m_iter;
+
+        // remove binary empty nodes at right or left side of the current cursor
+        removeBinEmptyNodes();
+
+        insertEmptyLeft = isEmptyChildNeeded4Binary(true);
+        insertEmptyRight = isEmptyChildNeeded4Binary(false);
+
+        if (    (!insertEmptyLeft || !insertEmptyRight)
+             && (!left.isEmpty() && !right.isEmpty()) ) { //a splitting node is needed
+                if (m_underlinedNode) {
+                        splitNode = m_underlinedNode;
+                        if (m_underlineCursorLeft)
+                                integrateInLeftChild = false;
+                } else { // no node is underlined, so it depends if there is no
+                        if (m_iter.hasPrevious()) {
+                                splitNode = m_iter.peekPrevious().m_node;
+                        } else {
+                                splitNode = m_iter.peekNext().m_node;
+                                integrateInLeftChild = false;
+                        }
+                }
+                if (splitNode) {
+                        if (    !getLeftVisibleSide(*splitNode, leftSplitter)
+                                        || getRightVisibleSide(*splitNode, rightSplitter))
+                                splitNode = nullptr;
+                }
         }
 
-        if (insertEmptyLeft)
+
+        if (insertEmptyLeft) {
+                bool markerSet = false;
+                if (!left.isEmpty())
+                        insertEl(left);
+                if (m_iter.hasPrevious()) {
+                        markerSet = true;
+                        setMarker();
+                }
                 insertEmptyNode();
+                if (!markerSet)
+                        setMarker();
+        }
+
         m_iter.insert(el);
-        if (insertEmptyRight)
+        if (!insertEmptyLeft && !insertEmptyRight)
+                setMarker();
+
+        if (insertEmptyRight) {
+                if (!insertEmptyLeft)
+                        setMarker();
                 insertEmptyNode();
+                if (!right.isEmpty())
+                        insertEl(right);
+        }
+
+        //insert the child nodes if any nodes to insert
+        if (splitNode) {
+                if (integrateInLeftChild) {
+                        (void) getLeftVisibleSide(*splitNode, leftSplitter);
+                        m_iter = leftSplitter;
+                        insertEl(left);
+                } else {
+                        (void) getRightVisibleSide(*splitNode, rightSplitter);
+                        m_iter = rightSplitter;
+                        insertEl(right);
+                }
+        }
+
+        //place cursor at marker position
+        placeCursorAtMarker();
 
         updateFormula();
 }
-
-//void FormulaModificator::insertBinaryOperation(QString op, QString left, QString right, QString leftChild, QString rightChild)
-//{
-//        bool insertEmptyLeft = false;
-//        bool insertEmptyRight = false;
-//        FormulaScrElement el;
-//        el.m_value = op;
-
-//        // check if there is an empty binary operation at the left or at the right
-//        if (m_iter.hasPrevious()) {
-//                EgcNode* l = m_iter.peekPrevious().m_node;
-//                if (l) {
-//                        if (l->getNodeType() == EgcNodeType::BinEmptyNode)
-//                                m_iter.remove(true);
-//                }
-//        }
-//        if (m_iter.hasNext()) {
-//                EgcNode* r = m_iter.peekNext().m_node;
-//                if (r) {
-//                        if (r->getNodeType() == EgcNodeType::BinEmptyNode)
-//                                m_iter.remove(false);
-//                }
-//        }
-
-//        if (!m_iter.hasPrevious()) {
-//                insertEmptyLeft = true;
-//        } else {
-//                FormulaScrElement &l_el = m_iter.peekPrevious();
-//                EgcNode* lNode = l_el.m_node;
-//                if (lNode) {
-//                        if (    lNode->isOperation()
-//                             && (    l_el.m_sideNode == FormulaScrElement::nodeLeftSide
-//                                  || l_el.m_sideNode == FormulaScrElement::nodeMiddle))
-//                                insertEmptyLeft = true;
-//                }
-//        }
-//        if (!m_iter.hasNext()) {
-//                insertEmptyRight = true;
-//        } else {
-//                FormulaScrElement &r_el = m_iter.peekNext();
-//                EgcNode* rNode = r_el.m_node;
-//                if (rNode) {
-//                        if (    rNode->isOperation()
-//                             && (    r_el.m_sideNode == FormulaScrElement::nodeRightSide
-//                                  || r_el.m_sideNode == FormulaScrElement::nodeMiddle))
-//                                insertEmptyRight = true;
-//                }
-//        }
-
-//        // since a minus can also be a unary minus -> delete the empty node here
-//        if (op == QString("-")) {
-//                if (insertEmptyLeft)
-//                        insertEmptyLeft = false;
-//                else if (isEmptyElement(true))
-//                        m_iter.remove(true);
-//        }
-
-//        if (!left.isEmpty())
-//                insertEl(left);
-//        if (insertEmptyLeft)
-//                insertEmptyNode();
-//        m_iter.insert(el);
-//        if (insertEmptyRight)
-//                insertEmptyNode();
-//        if (!right.isEmpty())
-//                insertEl(right);
-
-//        updateFormula();
-//}
 
 void FormulaModificator::insertCharacter(QChar character)
 {
@@ -511,27 +543,42 @@ void FormulaModificator::insertOperation(EgcAction operation)
         resetUnderline();
 
         if (operation.m_op == EgcOperations::mathCharOperator) {
-                if (    operation.m_character == '+'
-                     || operation.m_character == '-'
-                     || operation.m_character == '/'
-                     || operation.m_character == '*'
-                     || operation.m_character == ':'
-                     || operation.m_character == '='
-                     || operation.m_character == '^'
-                     || operation.m_character == ','
-                )
-                        insertBinaryOperation(operation.m_character);
+                if (operation.m_character == '-') {
+                        bool unaryMinus = false;
 
-                if (operation.m_character == QChar(177))
+                        // since a minus can also be a unary minus -> delete the empty node here
+                        if (isEmptyChildNeeded4Binary(true)) // if a empty child would be needed for a binary minus
+                                unaryMinus = true;
+                        else if (isEmptyElement(true))
+                                m_iter.remove(true);
+                        if (unaryMinus)
+                                insertUnaryOperation("-");
+                        else
+                                insertBinaryOperation("-");
+
+                } else if (    operation.m_character == '+'
+                            || operation.m_character == '*'
+                            || operation.m_character == ':'
+                            || operation.m_character == '='
+                            || operation.m_character == '^'
+                            || operation.m_character == ','
+                               ) {
+                        if (m_underlinedNode)
+                                insertBinaryOperation(operation.m_character, "(", ")");
+                        else
+                                insertBinaryOperation(operation.m_character);
+                } else if (operation.m_character == '/') {
+                        insertBinaryOperation(operation.m_character, "_{", "_}");
+                } else if (operation.m_character == QChar(177)) {
                         insertUnaryOperation("-");
-                if (operation.m_character == QChar(8730)) {
+                } else if (operation.m_character == QChar(8730)) {
                         QString tmp = QString("_root(") % emptyElement % QString(",") % emptyElement % QString(")");
                         insertUnaryOperation(tmp);
+                } else if (operation.m_character == '(') {
+                        insertRedParenthesis(true);
+                } else if (operation.m_character == ')') {
+                        insertRedParenthesis(false);
                 }
-        } if (operation.m_character == '(') {
-                insertRedParenthesis(true);
-        } else if (operation.m_character == ')') {
-                insertRedParenthesis(false);
         } else if (operation.m_op == EgcOperations::mathFunction) { // functions
                 QString name;
                 bool nameGiven = false;

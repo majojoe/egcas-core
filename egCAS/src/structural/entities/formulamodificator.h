@@ -90,13 +90,7 @@ public:
          * @brief insertBinaryOperation insert a binary operation
          * @param op the binary operation to insert as ASCII string that can be interpreted by the parser
          */
-        void insertBinaryOperation(QString op);
-//        /**
-//         * @brief insertBinaryOperation insert a binary operation
-//         * @param op the binary operation to insert as ASCII string that can be interpreted by the parser
-//         */
-//        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString(),
-//                                   QString leftChild = QString(), QString rightChild = QString());
+        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString());
         /**
          * @brief removeElement remove a character or operation at the current cursor position
          * @param previous if true the character before the current cursor position is remove, if false the character behind
@@ -317,12 +311,31 @@ private:
          */
         bool getLeftVisibleSide(EgcNode& node, FormulaScrIter& iter);
         /**
-         * @brief split the current vector in a list with 3 vectors. The original vector will not be modified!
+         * @brief split the current vector in a list with 3 vecto1rs. The original vector will not be modified!
          * @param leftIter the left (first) iterator that splits the vector in left and middle part
          * @param rightIter the right (second) iterator the splits the vector in middle and right part
          * @return a list of formula vectors
          */
         QList<FormulaScrVector> split(const FormulaScrIter& leftIter, const FormulaScrIter& rightIter) const;
+        /**
+         * @brief removeBinEmptyNodes removes binary emtpy nodes at the right and left side of the current cursor
+         */
+        void removeBinEmptyNodes(void);
+        /**
+         * @brief isEmptyChildNeeded4Binary checks if an empty child is needed if a binary operation shall be inserted
+         * @param leftChild if true function will check for the left child of the binary operation to insert, if false
+         * it will be checked for the right child
+         * @return true if a empty child is needed, false if not.
+         */
+        bool isEmptyChildNeeded4Binary(bool leftChild);
+        /**
+         * @brief setMarker set a marker at the current cursor position
+         */
+        void setMarker(void);
+        /**
+         * @brief placeCursorAtMarker move the cursor to the current marker position
+         */
+        void placeCursorAtMarker(void);
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula
