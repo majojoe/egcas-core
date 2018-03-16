@@ -288,7 +288,7 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
                         splitNode = m_underlinedNode;
                         if (m_underlineCursorLeft)
                                 integrateInLeftChild = false;
-                } else { // no node is underlined, so it depends if there is no
+                } else { // no node is underlined
                         if (m_iter.hasPrevious()) {
                                 splitNode = m_iter.peekPrevious().m_node;
                         } else {
@@ -298,7 +298,7 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
                 }
                 if (splitNode) {
                         if (    !getLeftVisibleSide(*splitNode, leftSplitter)
-                                        || getRightVisibleSide(*splitNode, rightSplitter))
+                             || !getRightVisibleSide(*splitNode, rightSplitter))
                                 splitNode = nullptr;
                 }
         }
@@ -318,6 +318,7 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         }
 
         m_iter.insert(el);
+
         if (!insertEmptyLeft && !insertEmptyRight)
                 setMarker();
 
