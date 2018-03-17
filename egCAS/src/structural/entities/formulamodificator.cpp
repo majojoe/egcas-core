@@ -296,11 +296,12 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
                                 integrateInLeftChild = false;
                         }
                 }
-                if (splitNode) {
-                        if (    !getLeftVisibleSide(*splitNode, leftSplitter)
-                             || !getRightVisibleSide(*splitNode, rightSplitter))
-                                splitNode = nullptr;
-                }
+#warning after refactoring FormulaScrIter it should be possible to maintian multiple iterators on the formula vector, so activate this check again.
+//                if (splitNode) {
+//                        if (    !getLeftVisibleSide(*splitNode, leftSplitter)
+//                             || !getRightVisibleSide(*splitNode, rightSplitter))
+//                                splitNode = nullptr;
+//                }
         }
 
 
@@ -541,7 +542,6 @@ void FormulaModificator::insertOperation(EgcAction operation)
 {
         // save iterator state
         m_iter.save();
-        resetUnderline();
 
         if (operation.m_op == EgcOperations::mathCharOperator) {
                 if (operation.m_character == '-') {
@@ -668,6 +668,9 @@ void FormulaModificator::insertOperation(EgcAction operation)
 //                }
 
 //        }
+
+
+        resetUnderline();
 }
 
 bool FormulaModificator::rightSide(void) const
