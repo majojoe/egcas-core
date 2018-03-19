@@ -344,12 +344,13 @@ private:
         bool isEmptyChildNeeded4Binary(bool leftChild);
         /**
          * @brief setMarker set a marker at the current cursor position
+         * @param leftSide set marker on the left side of the cursor, if false on the right side
          */
-        void setMarker(void);
+        void saveCursorPos(bool leftSide = true);
         /**
          * @brief placeCursorAtMarker move the cursor to the current marker position
          */
-        void placeCursorAtMarker(void);
+        void restoreCursorPos(void);
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula

@@ -47,6 +47,11 @@ enum class CursorAdhesion {
         ultra,          ///< to override strong adhesion of alpha numeric symbols
 };
 
+enum class PositionMarker {
+        noMarker,               ///< the element has no position marked at all
+        leftMarker,             ///< the position is marked at the left side of the element
+        rightMarker             ///< the position is marked at the right side of the element
+};
 
 class TempDataScrIter
 {
@@ -64,6 +69,26 @@ class FormulaScrElement
 public:      
         enum SideNode{nodeLeftSide, nodeRightSide, nodeMiddle}; ///< at which section of the associated nodes the visible element belongs to
         FormulaScrElement();
+        /**
+         * @brief hasPositionMarker checks if the element has a marked position
+         * @return true if the position is marked, false if not
+         */
+        bool hasPositionMarker(void) const;
+        /**
+         * @brief markPosition mark the current element as position to remember
+         * @param rightSide if true the right side of the element is marked as position to remember, if false, the left
+         * side will be marked as position to remember.
+         */
+        void markPosition(bool rightSide = true);
+        /**
+         * @brief resetPositionMarker reset the current element to an unmarked element position
+         */
+        void resetPositionMarker(void);
+        /**
+         * @brief isRightPositionMarker check if it is a right position marker or a left one
+         * @return true if the current element has a position marker on the right side, false otherwise
+         */
+        bool isRightPositionMarker(void);
         QString m_value;        ///< formula element that is visible as entity on the screen
         CursorAdhesion m_cAdh;  ///< cursor adhesion of the node
         EgcNode* m_node;        ///< pointer to node this element is directly associated with
@@ -71,7 +96,7 @@ public:
         quint32 m_subpos_max;   ///< maximum subposition of this element
         enum SideNode m_sideNode; ///< which section of the node this visible element is associated to
         bool m_isSegmented;     ///< true if this element is segmented over more elements, meaning if this element is deleted, the others (pointing to the same m_node) will also be deleted
-        bool m_isPositionMarker;///< marker for position
+        PositionMarker m_positionMarker;///< marker for position
         TempDataScrIter lTemp;  ///< temporary data for left side of cursor element
         TempDataScrIter rTemp;  ///< temporary data for right side of cursor element
 };

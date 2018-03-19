@@ -236,23 +236,30 @@ bool FormulaModificator::isEmptyChildNeeded4Binary(bool leftChild)
         return retval;
 }
 
-void FormulaModificator::setMarker()
+void FormulaModificator::saveCursorPos(bool leftSide)
 {
-        if (m_iter.hasPrevious())
-                m_iter.peekPrevious().m_isPositionMarker = true;
-        else if (m_iter.hasNext())
-                m_iter.peekNext().m_isPositionMarker = true;
+        if (m_iter.hasNext() && !leftSide) {
+                       m_iter.peekNext().markPosition(false);
+        } else if (m_iter.hasPrevious()) {
+                FormulaScrElement &el = m_iter.peekPrevious();
+                if (isEmptyElement(true))
+                        el.markPosition(false);
+                else
+                        el.markPosition();
+        }
 }
 
-void FormulaModificator::placeCursorAtMarker()
+void FormulaModificator::restoreCursorPos()
 {
         bool markerFound = false;
         FormulaScrIter iter = m_iter;
         iter.toFront();
         while(iter.hasNext()) {
                 FormulaScrElement& el = iter.next();
-                if (el.m_isPositionMarker) {
-                        el.m_isPositionMarker = false;
+                if (el.hasPositionMarker()) {
+                        if (!el.isRightPositionMarker())
+                                (void) iter.previous();
+                        el.resetPositionMarker();
                         markerFound = true;
                         break;
                 }
@@ -294,14 +301,8 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         }
 
         if (insertEmptyLeft) {
-                bool markerSet = false;
-                if (m_iter.hasPrevious()) {
-                        markerSet = true;
-                        setMarker();
-                }
                 insertEmptyNode();
-                if (!markerSet)
-                        setMarker();
+                saveCursorPos();
         } else {
                 insertEl(right);
         }
@@ -309,14 +310,14 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         m_iter.insert(el);
 
         if (!insertEmptyLeft && !insertEmptyRight)
-                setMarker();
+                saveCursorPos();
 
         if (!insertEmptyRight) {
                 insertEl(left);
         } else {
-                if (!insertEmptyLeft)
-                        setMarker();
                 insertEmptyNode();
+                if (!insertEmptyLeft)
+                        saveCursorPos();
         }
 
         //insert the child nodes if any nodes to insert
@@ -331,7 +332,7 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         }
 
         //place cursor at marker position
-        placeCursorAtMarker();
+        restoreCursorPos();
 
         updateFormula();
 }
@@ -412,7 +413,7 @@ void FormulaModificator::insertRedParenthesis(bool left)
                 insertUnaryElement("_red_parenth_r", false);
         }
 
-        m_iter.peekPrevious().m_isPositionMarker = true;
+        m_iter.peekPrevious().markPosition();
         bool pendantFound = false;
 
         if (!left) {
@@ -447,8 +448,8 @@ void FormulaModificator::insertRedParenthesis(bool left)
         m_iter.toFront();
         while(m_iter.hasNext()) {
                 FormulaScrElement& i = m_iter.next();
-                if (i.m_isPositionMarker) {
-                        i.m_isPositionMarker = false;
+                if (i.hasPositionMarker()) {
+                        i.resetPositionMarker();
                         if (pendantFound) {
                                 if (!left)
                                         i.m_value = QString(")");
@@ -1317,12 +1318,12 @@ void FormulaModificator::rmSegmented(bool previous)
                 el = &m_iter.peekPrevious();
                 if (!el->m_isSegmented)
                         return;
-                el->m_isPositionMarker = true;
+                el->markPosition();
         } else if (!previous && m_iter.hasNext()) {
                 el = &m_iter.peekNext();
                 if (!el->m_isSegmented)
                         return;
-                el->m_isPositionMarker = true;
+                el->markPosition();
         } else {
                 return;
         }
@@ -1348,12 +1349,12 @@ void FormulaModificator::rmSegmented(bool previous)
                 toDelete = false;
                 FormulaScrElement &i = m_iter.next();
                 if (!deleteAll) {
-                        if (i.m_node == node && i.m_isSegmented && !i.m_isPositionMarker)
+                        if (i.m_node == node && i.m_isSegmented && !i.hasPositionMarker())
                                 m_iter.remove(true);
                 } else {
                         if (i.m_node == node && i.m_sideNode == FormulaScrElement::nodeLeftSide)
                                 deletingInProgress = true;
-                        if (deletingInProgress && !i.m_isPositionMarker)
+                        if (deletingInProgress && !i.hasPositionMarker())
                                 toDelete = true;
                         if (i.m_node == node && i.m_sideNode == FormulaScrElement::nodeRightSide) {
                                 deletingInProgress = false;
@@ -1367,7 +1368,7 @@ void FormulaModificator::rmSegmented(bool previous)
         m_iter.toFront();
         while(m_iter.hasNext()) {
                 FormulaScrElement &i = m_iter.next();
-                if (i.m_isPositionMarker) {
+                if (i.hasPositionMarker()) {
                         m_iter.remove(previous);
                         break;
                 }
