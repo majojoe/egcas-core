@@ -287,29 +287,43 @@ private:
          */
         bool isCursorNearLeftSideParent(EgcNode& node) const;
         /**
-         * @brief moveCursorToRightVisibleBorder move cursor to the right visible border of the container node given.
+         * @brief moveCursorToRightVisibleMargin move cursor to the right visible border of the container node given.
          * @param node the node to where the cursor to move
          */
-        void moveCursorToRightVisibleBorder(EgcNode& node);
+        void moveCursorToRightVisibleMargin(EgcNode& node);
         /**
-         * @brief moveCursorToLeftVisibleBorder move cursor to the left visible border of the container node given.
+         * @brief moveCursorToLeftVisibleMargin move cursor to the left visible border of the container node given.
          * @param node the node to where the cursor to move
          */
-        void moveCursorToLeftVisibleBorder(EgcNode& node);
+        void moveCursorToLeftVisibleMargin(EgcNode& node);
         /**
-         * @brief getRightVisibleSide check if right side of the given node is visible
+         * @brief findLeftVisibleMargin move the given iterator to the left visible margin of the node given.
+         * @param node the node to find the left visible margin for. e.g. for the formula (1+2) and the plus node,
+         * the function will find the position between '(' and '1'.
+         * @param iter the iterator to move to the position to be found
+         */
+        void findLeftVisibleMargin(EgcNode& node, FormulaScrIter& iter);
+        /**
+         * @brief findRightVisibleMargin move the given iterator to the right visible margin of the node given.
+         * @param node the node to find the left visible margin for. e.g. for the formula (1+2) and the plus node,
+         * the function will find the position between '2' and ')'.
+         * @param iter the iterator to move to the position to be found
+         */
+        void findRightVisibleMargin(EgcNode& node, FormulaScrIter& iter);
+        /**
+         * @brief isRightSideVisible check if right side of the given node is visible
          * @param node the given node to check
          * @param iter if the return value is true, this iterator contains the position found.
          * @return true if visible, false otherwise
          */
-        bool getRightVisibleSide(EgcNode& node, FormulaScrIter& iter);
+        bool isRightSideVisible(EgcNode& node, FormulaScrIter& iter);
         /**
-         * @brief getLeftVisibleSide check if left side of the given node is visible
+         * @brief isLeftSideVisible check if left side of the given node is visible
          * @param node the given node to check
          * @param iter if the return value is true, this iterator contains the position found.
          * @return true if visible, false otherwise
          */
-        bool getLeftVisibleSide(EgcNode& node, FormulaScrIter& iter);
+        bool isLeftSideVisible(EgcNode& node, FormulaScrIter& iter);
         /**
          * @brief split the current vector in a list with 3 vecto1rs. The original vector will not be modified!
          * @param leftIter the left (first) iterator that splits the vector in left and middle part

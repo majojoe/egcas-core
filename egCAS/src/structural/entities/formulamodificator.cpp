@@ -94,10 +94,10 @@ void FormulaModificator::moveCursor(bool forward)
                 }
         } else {
                 if (forward && m_underlineCursorLeft) {
-                        moveCursorToRightVisibleBorder(*m_underlinedNode);
+                        moveCursorToRightVisibleMargin(*m_underlinedNode);
                         m_underlineCursorLeft = false;
                 } else if (!forward && !m_underlineCursorLeft) {
-                        moveCursorToLeftVisibleBorder(*m_underlinedNode);
+                        moveCursorToLeftVisibleMargin(*m_underlinedNode);
                         m_underlineCursorLeft = true;
                 } else {
                         resetUnderline();
@@ -238,13 +238,10 @@ bool FormulaModificator::isEmptyChildNeeded4Binary(bool leftChild)
 
 void FormulaModificator::setMarker()
 {
-        if (rightSide()) {
-                if (m_iter.hasNext())
-                        m_iter.peekNext().m_isPositionMarker = true;
-        } else {
-                if (m_iter.hasPrevious())
-                        m_iter.peekPrevious().m_isPositionMarker = true;
-        }
+        if (m_iter.hasPrevious())
+                m_iter.peekPrevious().m_isPositionMarker = true;
+        else if (m_iter.hasNext())
+                m_iter.peekNext().m_isPositionMarker = true;
 }
 
 void FormulaModificator::placeCursorAtMarker()
@@ -273,8 +270,6 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         el.m_value = op;
         EgcNode* splitNode = nullptr;
         bool integrateInLeftChild = true;
-        FormulaScrIter leftSplitter = m_iter;
-        FormulaScrIter rightSplitter = m_iter;
 
         // remove binary empty nodes at right or left side of the current cursor
         removeBinEmptyNodes();
@@ -296,19 +291,10 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
                                 integrateInLeftChild = false;
                         }
                 }
-#warning after refactoring FormulaScrIter it should be possible to maintian multiple iterators on the formula vector, so activate this check again.
-//                if (splitNode) {
-//                        if (    !getLeftVisibleSide(*splitNode, leftSplitter)
-//                             || !getRightVisibleSide(*splitNode, rightSplitter))
-//                                splitNode = nullptr;
-//                }
         }
-
 
         if (insertEmptyLeft) {
                 bool markerSet = false;
-                if (!left.isEmpty())
-                        insertEl(left);
                 if (m_iter.hasPrevious()) {
                         markerSet = true;
                         setMarker();
@@ -316,6 +302,8 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
                 insertEmptyNode();
                 if (!markerSet)
                         setMarker();
+        } else {
+                insertEl(right);
         }
 
         m_iter.insert(el);
@@ -323,23 +311,21 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         if (!insertEmptyLeft && !insertEmptyRight)
                 setMarker();
 
-        if (insertEmptyRight) {
+        if (!insertEmptyRight) {
+                insertEl(left);
+        } else {
                 if (!insertEmptyLeft)
                         setMarker();
                 insertEmptyNode();
-                if (!right.isEmpty())
-                        insertEl(right);
         }
 
         //insert the child nodes if any nodes to insert
         if (splitNode) {
                 if (integrateInLeftChild) {
-                        (void) getLeftVisibleSide(*splitNode, leftSplitter);
-                        m_iter = leftSplitter;
+                        moveCursorToLeftVisibleMargin(*splitNode);
                         insertEl(left);
                 } else {
-                        (void) getRightVisibleSide(*splitNode, rightSplitter);
-                        m_iter = rightSplitter;
+                        moveCursorToRightVisibleMargin(*splitNode);
                         insertEl(right);
                 }
         }
@@ -569,7 +555,10 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         else
                                 insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == '/') {
-                        insertBinaryOperation(operation.m_character, "_{", "_}");
+                        if (m_underlinedNode)
+                                insertBinaryOperation(operation.m_character, "_{", "_}");
+                        else
+                                insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == QChar(177)) {
                         insertUnaryOperation("-");
                 } else if (operation.m_character == QChar(8730)) {
@@ -852,13 +841,42 @@ bool FormulaModificator::isCursorNearLeftSideParent(EgcNode& node) const
         return leftSide;
 }
 
-void FormulaModificator::moveCursorToRightVisibleBorder(EgcNode& node)
+void FormulaModificator::moveCursorToRightVisibleMargin(EgcNode& node)
 {
         FormulaScrIter iter = m_iter;
+        findRightVisibleMargin(node, iter);
+        m_iter = iter;
+}
+
+void FormulaModificator::moveCursorToLeftVisibleMargin(EgcNode& node)
+{
+        FormulaScrIter iter = m_iter;
+        findLeftVisibleMargin(node, iter);
+        m_iter = iter;
+}
+
+void FormulaModificator::findLeftVisibleMargin(EgcNode& node, FormulaScrIter& iter)
+{
         EgcNode* child = nullptr;
         EgcNode* nd = &node;
 
-        while(!getRightVisibleSide(*nd, iter)) {
+        while(!isLeftSideVisible(*nd, iter)) {
+                if (!node.isContainer())
+                        return;
+                EgcContainerNode* container = static_cast<EgcContainerNode*>(nd);
+                child = container->getChild(0);
+                if (!child)
+                        return;
+                nd = child;
+        }
+}
+
+void FormulaModificator::findRightVisibleMargin(EgcNode& node, FormulaScrIter& iter)
+{
+        EgcNode* child = nullptr;
+        EgcNode* nd = &node;
+
+        while(!isRightSideVisible(*nd, iter)) {
                 if (!node.isContainer())
                         return;
                 EgcContainerNode* container = static_cast<EgcContainerNode*>(nd);
@@ -869,28 +887,9 @@ void FormulaModificator::moveCursorToRightVisibleBorder(EgcNode& node)
                         return;
                 nd = child;
         }
-        m_iter = iter;
 }
 
-void FormulaModificator::moveCursorToLeftVisibleBorder(EgcNode& node)
-{
-        FormulaScrIter iter = m_iter;
-        EgcNode* child = nullptr;
-        EgcNode* nd = &node;
-
-        while(!getLeftVisibleSide(*nd, iter)) {
-                if (!node.isContainer())
-                        return;
-                EgcContainerNode* container = static_cast<EgcContainerNode*>(nd);
-                child = container->getChild(0);
-                if (!child)
-                        return;
-                nd = child;
-        }
-        m_iter = iter;
-}
-
-bool FormulaModificator::getRightVisibleSide(EgcNode& node, FormulaScrIter& iter)
+bool FormulaModificator::isRightSideVisible(EgcNode& node, FormulaScrIter& iter)
 {
         bool found = false;
         iter = m_iter;
@@ -909,7 +908,7 @@ bool FormulaModificator::getRightVisibleSide(EgcNode& node, FormulaScrIter& iter
         return found;
 }
 
-bool FormulaModificator::getLeftVisibleSide(EgcNode& node, FormulaScrIter& iter)
+bool FormulaModificator::isLeftSideVisible(EgcNode& node, FormulaScrIter& iter)
 {
         bool found = false;
         iter = m_iter;
@@ -1008,10 +1007,10 @@ void FormulaModificator::markParent()
         }
 
         if(isCursorNearLeftSideParent(*m_underlinedNode)) {
-                moveCursorToLeftVisibleBorder(*m_underlinedNode);
+                moveCursorToLeftVisibleMargin(*m_underlinedNode);
                 m_underlineCursorLeft = true;
         } else {
-                moveCursorToRightVisibleBorder(*m_underlinedNode);
+                moveCursorToRightVisibleMargin(*m_underlinedNode);
                 m_underlineCursorLeft = false;
         }
 
@@ -1039,7 +1038,9 @@ void FormulaModificator::insertBinEmptyNode(void)
 
 void FormulaModificator::insertEl(QString el)
 {
-        FormulaScrElement element;
+        if (el.isEmpty())
+                return;
+        FormulaScrElement element;        
         element.m_value = el;
         m_iter.insert(element);
 }
