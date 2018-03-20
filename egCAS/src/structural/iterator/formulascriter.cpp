@@ -3,9 +3,13 @@
 #include "../visitor/formulascrelement.h"
 #include <structural/entities/egcformulaentity.h>
 
-FormulaScrIter::FormulaScrIter(EgcFormulaEntity& formula, FormulaScrVector& vector) : m_formula{&formula},
+
+#define NEXT_POS() (m_pos >= 0u && m_pos < static_cast<quint32>(m_vector->size())?static_cast<int>(m_pos):0)
+#define PREV_POS() (m_pos > 0u && m_pos <= static_cast<quint32>(m_vector->size())?static_cast<int>(m_pos - 1):0)
+
+FormulaScrIter::FormulaScrIter(EgcFormulaEntity& formula, FormulaScrVector& vector) :
                                                             m_vector{&vector},
-                                                            m_iter{QMutableVectorIterator<FormulaScrElement>(vector)},
+                                                            m_formula{&formula},
                                                             m_pos{0},
                                                             m_tmpPos{0}
 
@@ -22,19 +26,25 @@ FormulaScrIter::~FormulaScrIter()
 
 bool FormulaScrIter::hasNext() const
 {
-        return m_iter.hasNext();
+        if (m_pos >= static_cast<quint32>(m_vector->size()))
+                return false;
+
+        return true;
 }
 
 bool FormulaScrIter::hasPrevious() const
 {
-        return m_iter.hasPrevious();
+        if (m_pos == 0)
+                return false;
+
+        return true;
 }
 
 bool FormulaScrIter::findNext(const QString& value)
 {
         bool retval = false;
 
-        while(m_iter.hasNext()) {
+        while(hasNext()) {
                 if (next().m_value == value) {
                         retval = true;
                         break;
@@ -48,7 +58,7 @@ bool FormulaScrIter::findPrevious(const QString& value)
 {
         bool retval = false;
 
-        while(m_iter.hasPrevious()) {
+        while(hasPrevious()) {
                 if (previous().m_value == value) {
                         retval = true;
                         break;
@@ -60,64 +70,67 @@ bool FormulaScrIter::findPrevious(const QString& value)
 
 FormulaScrElement&FormulaScrIter::next()
 {
-        if (m_pos < std::numeric_limits<quint32>::max() && m_iter.hasNext()) {
+        int nextPos = NEXT_POS();
+
+        if (m_pos < std::numeric_limits<quint32>::max() && hasNext()) {
                 m_pos++;
-                m_iter.next();
         }
+
+        return (*m_vector)[nextPos];
 }
 
 FormulaScrElement&FormulaScrIter::previous()
 {
-        if (m_pos != 0 && m_iter.hasPrevious()) {
+        int prevPos = PREV_POS();
+
+        if (m_pos != 0 && hasPrevious()) {
                 m_pos--;
-                m_iter.previous();
         }
+
+        return (*m_vector)[prevPos];
 }
 
 FormulaScrElement&FormulaScrIter::peekNext() const
 {
-        m_iter.peekNext();
+        return (*m_vector)[NEXT_POS()];
 }
 
 FormulaScrElement&FormulaScrIter::peekPrevious() const
 {
-        m_iter.peekPrevious();
+        return (*m_vector)[PREV_POS()];
 }
 
 void FormulaScrIter::toBack()
 {
-        m_iter.toBack();
-        m_pos = m_vector->size();
+        m_pos = static_cast<quint32>(m_vector->size());
 }
 
 void FormulaScrIter::toFront()
 {
-        m_iter.toFront();
         m_pos = 0;
 }
 
 void FormulaScrIter::insert(FormulaScrElement element)
 {
-        m_iter.insert(element);
-        m_pos = getIterPos();
+        if (m_pos > static_cast<quint32>(m_vector->size()))
+                m_pos = static_cast<quint32>(m_vector->size());
+        m_vector->insert(static_cast<int>(m_pos), element);
+        m_pos++;
 }
 
 void FormulaScrIter::remove(bool previous)
 {
-        if (previous && !m_iter.hasPrevious())
+        if (previous && !hasPrevious())
                 return;
-        if (!previous && !m_iter.hasNext())
+        if (!previous && !hasNext())
                 return;
 
         if (previous) {
-                m_iter.previous();
-                m_iter.next();
+                m_vector->remove(static_cast<int>(m_pos) - 1);
+                m_pos--;
         } else {
-                m_iter.next();
-                m_iter.previous();
+                m_vector->remove(static_cast<int>(m_pos));
         }
-        m_iter.remove();
-        m_pos = getIterPos();
 }
 
 void FormulaScrIter::update()
@@ -125,20 +138,19 @@ void FormulaScrIter::update()
         quint32 pos = m_pos;
         FormulaScrVisitor visitor = FormulaScrVisitor(*m_formula, *this);
         visitor.updateVector();
-        m_iter = QMutableVectorIterator<FormulaScrElement>(*m_vector);
         setIterPos(pos);
 }
 
 void FormulaScrIter::clear()
 {
         m_vector->clear();
-        m_iter = QMutableVectorIterator<FormulaScrElement>(*m_vector);
+        m_pos = 0;
 }
 
 void FormulaScrIter::revert()
 {
         *m_vector = m_tmpVector;
-        setIterPos(m_tmpPos);
+        m_pos = m_tmpPos;
 }
 
 void FormulaScrIter::save()
@@ -164,9 +176,9 @@ FormulaScrVector FormulaScrIter::split(bool left) const
 {
         FormulaScrVector tmp = *m_vector;
         if (left)
-                tmp.remove(m_pos, tmp.size() - m_pos);
+                tmp.remove(static_cast<int>(m_pos), tmp.size() - static_cast<int>(m_pos));
         else
-                tmp.remove(0, m_pos);
+                tmp.remove(0, static_cast<int>(m_pos));
         tmp.squeeze();
 
         return tmp;
@@ -174,27 +186,13 @@ FormulaScrVector FormulaScrIter::split(bool left) const
 
 void FormulaScrIter::setIterPos(quint32 pos)
 {
-        if (pos <= m_vector->size())
+        if (pos <= static_cast<quint32>(m_vector->size()))
                 m_pos = pos;
-        m_iter.toFront();
-        int i;
-        for(i = 0; i < pos; i++) {
-                if (m_iter.hasNext()) {
-                        (void) m_iter.next();
-                } else {
-                        break;
-                }
-        }
+        else
+                m_pos = static_cast<quint32>(m_vector->size());
 }
 
 quint32 FormulaScrIter::getIterPos()
 {
-        int i = 0;
-        QMutableVectorIterator<FormulaScrElement> iter = m_iter;
-        while(iter.hasPrevious()) {
-                i++;
-                (void) iter.previous();
-        }
-
-        return i;
+        return m_pos;
 }

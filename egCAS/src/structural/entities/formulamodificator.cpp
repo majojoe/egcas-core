@@ -556,10 +556,10 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         else
                                 insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == '/') {
-                        if (m_underlinedNode)
+                        //if (m_underlinedNode)
                                 insertBinaryOperation(operation.m_character, "_{", "_}");
-                        else
-                                insertBinaryOperation(operation.m_character);
+//                        else
+//                                insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == QChar(177)) {
                         insertUnaryOperation("-");
                 } else if (operation.m_character == QChar(8730)) {
@@ -1209,8 +1209,9 @@ void FormulaModificator::sanitizeMisc()
 {
         EgcNode* lnode = nullptr;
         EgcNode* rnode = nullptr;
-        enum FormulaScrElement::SideNode rside;
-        enum FormulaScrElement::SideNode lside;
+        enum FormulaScrElement::SideNode rside = FormulaScrElement::nodeMiddle;
+        enum FormulaScrElement::SideNode lside = FormulaScrElement::nodeMiddle;
+
         if (m_iter.hasNext()) {
                 FormulaScrElement &el = m_iter.peekNext();
                 rnode = el.m_node;
@@ -1283,6 +1284,8 @@ void FormulaModificator::sanitizeMisc()
 
 void FormulaModificator::sanitizeSpecials(FormulaScrElement el, bool previous)
 {
+        (void) (previous);
+
         if (!el.m_node)
                 return;
 
@@ -1295,8 +1298,7 @@ void FormulaModificator::sanitizeSpecials(FormulaScrElement el, bool previous)
                         previousType = previousNode->getNodeType();
         }
 
-        switch(type) {
-        case EgcNodeType::FunctionNode:
+        if (type == EgcNodeType::FunctionNode) {
                 if (    (!m_iter.hasPrevious() || previousType != EgcNodeType::FunctionNode)
                      && (m_iter.hasNext())) {
                         if (m_iter.peekNext().m_value == "(") {
@@ -1304,7 +1306,6 @@ void FormulaModificator::sanitizeSpecials(FormulaScrElement el, bool previous)
                                 (void) m_iter.previous();
                         }
                 }
-                break;
         }
 }
 
