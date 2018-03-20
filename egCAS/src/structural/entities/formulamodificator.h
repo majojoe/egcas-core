@@ -89,8 +89,10 @@ public:
         /**
          * @brief insertBinaryOperation insert a binary operation
          * @param op the binary operation to insert as ASCII string that can be interpreted by the parser
+         * @param bundle if left and/or right are given, they can be bundled with op to form one element e.g. in case
+         * of invisible parenthesis
          */
-        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString());
+        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString(), bool bundle = false);
         /**
          * @brief removeElement remove a character or operation at the current cursor position
          * @param previous if true the character before the current cursor position is remove, if false the character behind

@@ -269,7 +269,7 @@ void FormulaModificator::restoreCursorPos()
                 m_iter = iter;
 }
 
-void FormulaModificator::insertBinaryOperation(QString op, QString left, QString right)
+void FormulaModificator::insertBinaryOperation(QString op, QString left, QString right, bool bundle)
 {
         bool insertEmptyLeft = false;
         bool insertEmptyRight = false;
@@ -301,11 +301,22 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         }
 
         if (insertEmptyLeft) {
+                if (bundle)
+                        insertEl(left);
                 insertEmptyNode();
                 saveCursorPos();
+                if (bundle)
+                        insertEl(right);
         } else {
-                insertEl(right);
+                if (!bundle)
+                        insertEl(right);
+                else
+                        el.m_value = right % el.m_value; // only if e.g. invisible parenthesis must be bundled
         }
+
+        // only if e.g. invisible parenthesis must be bundled
+        if (bundle)
+                el.m_value = el.m_value % left;
 
         m_iter.insert(el);
 
@@ -313,11 +324,14 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
                 saveCursorPos();
 
         if (!insertEmptyRight) {
-                insertEl(left);
+                if (!bundle)
+                        insertEl(left);
         } else {
                 insertEmptyNode();
                 if (!insertEmptyLeft)
                         saveCursorPos();
+                if (bundle)
+                        insertEl(right);
         }
 
         //insert the child nodes if any nodes to insert
@@ -557,7 +571,7 @@ void FormulaModificator::insertOperation(EgcAction operation)
                                 insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == '/') {
                         //if (m_underlinedNode)
-                                insertBinaryOperation(operation.m_character, "_{", "_}");
+                                insertBinaryOperation(operation.m_character, "_{", "_}", true);
 //                        else
 //                                insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == QChar(177)) {
