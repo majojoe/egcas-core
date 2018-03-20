@@ -96,9 +96,8 @@ ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*{EMPTY}{0,1})
  /*parenthesis to define operation borders*/
 "_{"     { return CASParser::MaximaParser::make_LBRACKET_OP(CASParser::location()); }
 "_}"     { return CASParser::MaximaParser::make_RBRACKET_OP(CASParser::location()); }
-"_<1"     { return CASParser::MaximaParser::make_ITERATOR1(CASParser::location()); }
-"_<2"     { return CASParser::MaximaParser::make_ITERATOR2(CASParser::location()); }
-"_<3"     { return CASParser::MaximaParser::make_ITERATOR3(CASParser::location()); }
+"_>R"     { return CASParser::MaximaParser::make_ITERATOR_R(CASParser::location()); }
+"_<L"     { return CASParser::MaximaParser::make_ITERATOR_L(CASParser::location()); }
 "_integrate"  { return CASParser::MaximaParser::make_INTEGRAL(CASParser::location()); }
 "_diff"  { return CASParser::MaximaParser::make_DIFFERENTIAL(CASParser::location()); }
 "_root" { return CASParser::MaximaParser::make_ROOT(CASParser::location()); }

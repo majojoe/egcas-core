@@ -114,9 +114,8 @@
 %token NATLOGARITHM "_ln";
 %token RED_PARENTHESIS_R "_red_parenth_r";
 %token RED_PARENTHESIS_L "_red_parenth_l";
-%token ITERATOR1;
-%token ITERATOR2;
-%token ITERATOR3;
+%token ITERATOR_R;
+%token ITERATOR_L;
 
 
 %right "=" ":"
@@ -125,7 +124,7 @@
 %left "*" "/"
 %right "^"
 %nonassoc "|" UMINUS
-%nonassoc ITERATOR1 ITERATOR2 ITERATOR3
+%nonassoc ITERATOR_R ITERATOR_L
 
 
 %type<EgcNode*> expr;
@@ -187,9 +186,8 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}
      | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}
      | "_empty"            {$$ = interpreter.addEmptyNode();}
-     | expr ITERATOR1      {$$ = interpreter.updateIterator($1, 1);}
-     | expr ITERATOR2      {$$ = interpreter.updateIterator($1, 2);}
-     | expr ITERATOR3      {$$ = interpreter.updateIterator($1, 3);}
+     | expr ITERATOR_R      {$$ = interpreter.updateIterator($1, 1);}
+     | ITERATOR_L expr      {$$ = interpreter.updateIterator($2, 2);}
      | "_red_parenth_l" expr {$$ = interpreter.addUnaryExpression(EgcNodeType::LParenthesisNode, $2);}
      | expr "_red_parenth_r" {$$ = interpreter.addUnaryExpression(EgcNodeType::RParenthesisNode, $1);}
 ;
