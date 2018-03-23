@@ -101,7 +101,7 @@ public:
          * A variable expression is valid if the value is not empty.
          * @return true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
         /**
          * @brief encode encodes a string that contains unicode signs as html escape sequences + replaces single _ with
          * __ and also the start and end of the html escape sequences with sequences the calculation kernel can work
@@ -117,6 +117,12 @@ public:
          * @return the string decoded to human readable signs
          */
         static QString decode(const QString& str);
+        /**
+         * @brief isAlnum checks if given string is an alphanumeric string
+         * @param str string to check
+         * @return true if it is an alphanumeric string, false otherwise
+         */
+        static bool isAlnum(const QString& str);
 
 protected:
         /**

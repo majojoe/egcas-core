@@ -353,6 +353,34 @@ private:
          * @brief placeCursorAtMarker move the cursor to the current marker position
          */
         void restoreCursorPos(void);
+        /**
+         * @brief doIteratorPostProcessing do postprocessing for the iterator. Inserts the iterator position into the
+         * vector, so it can be extracted by the parser.
+         */
+        void doIteratorPostProcessing(void);
+        /**
+         * @brief insertLeftPointer insert left iterator pointer into vector in order to be able to find the iterator
+         * position later in the parser. The pointer points to the left side of the node the iterator points to.
+         */
+        void insertLeftPointer(void);
+        /**
+         * @brief insertRightPointer insert right iterator pointer into vector in order to be able to find the iterator
+         * position later in the parser. The pointer points to the right side of the node the iterator points to.
+         */
+        void insertRightPointer(void);
+        /**
+         * @brief isAlnum checks if given string is a alphanumeric element (digit of a (number) or letter of a (variable))
+         * @param val the string to check
+         * @return true if it is a alphanumeric string, false otherwise
+         */
+        bool isAlnum(QString val) const;
+        /**
+         * @brief findAlnumBegin find the beginning of a number or variable node from the underlying formula vector.
+         * The function returns the number of formula elements from the beginning of the node
+         * @return
+         */
+        quint32 findAlnumBegin(void);
+
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula

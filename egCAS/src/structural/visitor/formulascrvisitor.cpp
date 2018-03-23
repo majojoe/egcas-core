@@ -396,7 +396,6 @@ void FormulaScrVisitor::doPostprocessing(void)
 QString FormulaScrVisitor::getResult(void)
 {
         QString result;
-        FormulaScrElement i;
         FormulaScrIter iter = m_iter;
         iter.toFront();
         while(iter.hasNext())

@@ -70,6 +70,11 @@ public:
         enum SideNode{nodeLeftSide, nodeRightSide, nodeMiddle}; ///< at which section of the associated nodes the visible element belongs to
         FormulaScrElement();
         /**
+         * @brief FormulaScrElement constructor. Value is initialized with the given string
+         * @param value the string to initialize the value with.
+         */
+        FormulaScrElement(QString value);
+        /**
          * @brief hasPositionMarker checks if the element has a marked position
          * @return true if the position is marked, false if not
          */

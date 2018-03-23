@@ -736,6 +736,71 @@ quint32 FormulaModificator::subPosition(void) const
         return retval;
 }
 
+void FormulaModificator::doIteratorPostProcessing(void)
+{
+        FormulaScrElement* lel = nullptr;
+        FormulaScrElement* rel = nullptr;
+        if (m_iter.hasPrevious())
+                lel = &m_iter.peekPrevious();
+        if (m_iter.hasNext())
+                rel = &m_iter.peekNext();
+
+        if (rel) {
+                insertRightPointer();
+        } else if (lel) {
+                insertLeftPointer();
+        } else if (lel && rel) {
+                if (rel->m_node && rel->m_sideNode == FormulaScrElement::nodeLeftSide)
+                        insertRightPointer();
+                if (lel->m_node && lel->m_sideNode == FormulaScrElement::nodeRightSide)
+                        insertLeftPointer();
+                if (isAlnum(lel->m_value) && !isAlnum(rel->m_value))
+                        insertLeftPointer();
+                else if (isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
+                        quint32 nrElements;
+                        nrElements = findAlnumBegin();
+                        insertRightPointer();
+                }
+        } else {
+                insertRightPointer();
+        }
+}
+
+void FormulaModificator::insertLeftPointer()
+{
+        m_iter.insert(FormulaScrElement(QString("_<L")));
+        (void) m_iter.previous();
+}
+
+void FormulaModificator::insertRightPointer()
+{
+        m_iter.insert(FormulaScrElement(QString("_>R")));
+        (void) m_iter.previous();
+}
+
+bool FormulaModificator::isAlnum(QString val) const
+{
+        if (EgcAlnumNode::isAlnum(val))
+                return true;
+
+        return false;
+}
+
+quint32 FormulaModificator::findAlnumBegin()
+{
+        FormulaScrIter iter = m_iter;
+        quint32 i = 0;
+
+        while(iter.hasPrevious()) {
+                (void) iter.previous();
+                i++;
+                if (!isAlnum(iter.peekPrevious().m_value))
+                        break;
+        }
+
+        return i;
+}
+
 bool FormulaModificator::reStructureTree()
 {
         bool retval = true;
@@ -759,6 +824,8 @@ bool FormulaModificator::reStructureTree()
 bool FormulaModificator::updateFormula(void)
 {
         bool retval = true;
+
+        doIteratorPostProcessing();
 
         if (!reStructureTree()) {
                 retval = false;

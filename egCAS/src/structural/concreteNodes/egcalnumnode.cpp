@@ -191,3 +191,11 @@ QString EgcAlnumNode::decode(const QString& str)
         return EgcUtfCodepoint::decodeToUtf(tmp);
 
 }
+
+bool EgcAlnumNode::isAlnum(const QString& str)
+{
+        if (s_validator.match(str).hasMatch())
+                return true;
+
+        return  false;
+}
