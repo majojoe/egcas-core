@@ -41,6 +41,7 @@ QRegularExpression EgcAlnumNode::s_ampersandBegin = QRegularExpression("_2([^_]+
 QRegularExpression EgcAlnumNode::s_semi = QRegularExpression("(.*[^_]+)_3([^_]+.*)");
 QRegularExpression EgcAlnumNode::s_semiBegin = QRegularExpression("(.*[^_]+)_3");
 QRegularExpression EgcAlnumNode::s_validator = QRegularExpression("[_0-9a-zA-ZΆ-ώ]+");
+QRegularExpression EgcAlnumNode::s_alnumChecker = QRegularExpression("^[_0-9a-zA-ZΆ-ώ]+$");
 bool EgcAlnumNode::s_regexInitialized = false;
 
 EgcAlnumNode::EgcAlnumNode() : m_value(QString::null), m_firstCharMightBeNumber{false}
@@ -152,6 +153,8 @@ void EgcAlnumNode::optimizeRegexes()
                 s_ampersandBegin.optimize();
                 s_semi.optimize();
                 s_semiBegin.optimize();
+                s_validator.optimize();
+                s_alnumChecker.optimize();
         }
 }
 
@@ -194,7 +197,7 @@ QString EgcAlnumNode::decode(const QString& str)
 
 bool EgcAlnumNode::isAlnum(const QString& str)
 {
-        if (s_validator.match(str).hasMatch())
+        if (s_alnumChecker.match(str).hasMatch())
                 return true;
 
         return  false;

@@ -52,7 +52,9 @@ FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{fo
                                                                     m_underlinedNode{nullptr},
                                                                     m_startUnderlinedNode{nullptr},
                                                                     m_changeAwaited{false},
-                                                                    m_underlineCursorLeft{false}
+                                                                    m_underlineCursorLeft{false},
+                                                                    m_cursorPos{0},
+                                                                    m_cursorPosSaved{false}
 {
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_iter);
         visitor.updateVector();
@@ -236,40 +238,7 @@ bool FormulaModificator::isEmptyChildNeeded4Binary(bool leftChild)
         return retval;
 }
 
-void FormulaModificator::saveCursorPos(bool leftSide)
-{
-        if (m_iter.hasNext() && !leftSide) {
-                       m_iter.peekNext().markPosition(false);
-        } else if (m_iter.hasPrevious()) {
-                FormulaScrElement &el = m_iter.peekPrevious();
-                if (isEmptyElement(true))
-                        el.markPosition(false);
-                else
-                        el.markPosition();
-        }
-}
-
-void FormulaModificator::restoreCursorPos()
-{
-        bool markerFound = false;
-        FormulaScrIter iter = m_iter;
-        iter.toFront();
-        while(iter.hasNext()) {
-                FormulaScrElement& el = iter.next();
-                if (el.hasPositionMarker()) {
-                        if (!el.isRightPositionMarker())
-                                (void) iter.previous();
-                        el.resetPositionMarker();
-                        markerFound = true;
-                        break;
-                }
-        }
-
-        if (markerFound)
-                m_iter = iter;
-}
-
-void FormulaModificator::insertBinaryOperation(QString op, QString left, QString right, bool bundle)
+void FormulaModificator::insertBinaryOperation(QString op, QString left, QString right)
 {
         bool insertEmptyLeft = false;
         bool insertEmptyRight = false;
@@ -301,37 +270,23 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         }
 
         if (insertEmptyLeft) {
-                if (bundle)
-                        insertEl(left);
                 insertEmptyNode();
-                saveCursorPos();
-                if (bundle)
-                        insertEl(right);
+                saveCursorPosition();
         } else {
-                if (!bundle)
-                        insertEl(right);
-                else
-                        el.m_value = right % el.m_value; // only if e.g. invisible parenthesis must be bundled
+                insertEl(right);
         }
-
-        // only if e.g. invisible parenthesis must be bundled
-        if (bundle)
-                el.m_value = el.m_value % left;
 
         m_iter.insert(el);
 
         if (!insertEmptyLeft && !insertEmptyRight)
-                saveCursorPos();
+                saveCursorPosition();
 
         if (!insertEmptyRight) {
-                if (!bundle)
-                        insertEl(left);
+                insertEl(left);
         } else {
                 insertEmptyNode();
                 if (!insertEmptyLeft)
-                        saveCursorPos();
-                if (bundle)
-                        insertEl(right);
+                        saveCursorPosition();
         }
 
         //insert the child nodes if any nodes to insert
@@ -344,9 +299,6 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
                         insertEl(right);
                 }
         }
-
-        //place cursor at marker position
-        restoreCursorPos();
 
         updateFormula();
 }
@@ -571,7 +523,7 @@ void FormulaModificator::insertOperation(EgcAction operation)
                                 insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == '/') {
                         //if (m_underlinedNode)
-                                insertBinaryOperation(operation.m_character, "_{", "_}", true);
+                                insertBinaryOperation(operation.m_character, "_{", "_}");
 //                        else
 //                                insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == QChar(177)) {
@@ -736,8 +688,13 @@ quint32 FormulaModificator::subPosition(void) const
         return retval;
 }
 
-void FormulaModificator::doIteratorPostProcessing(void)
+void FormulaModificator::saveCursorPosition(void)
 {
+        if (m_cursorPosSaved)
+                return;
+        else
+                m_cursorPosSaved = true;
+
         FormulaScrElement* lel = nullptr;
         FormulaScrElement* rel = nullptr;
         if (m_iter.hasPrevious())
@@ -745,9 +702,10 @@ void FormulaModificator::doIteratorPostProcessing(void)
         if (m_iter.hasNext())
                 rel = &m_iter.peekNext();
 
-        if (rel) {
+        m_cursorPos = 0;
+        if (rel && !lel) {
                 insertRightPointer();
-        } else if (lel) {
+        } else if (lel && !rel) {
                 insertLeftPointer();
         } else if (lel && rel) {
                 if (rel->m_node && rel->m_sideNode == FormulaScrElement::nodeLeftSide)
@@ -757,8 +715,7 @@ void FormulaModificator::doIteratorPostProcessing(void)
                 if (isAlnum(lel->m_value) && !isAlnum(rel->m_value))
                         insertLeftPointer();
                 else if (isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
-                        quint32 nrElements;
-                        nrElements = findAlnumBegin();
+                        m_cursorPos = findAlnumBegin();
                         insertRightPointer();
                 }
         } else {
@@ -801,6 +758,37 @@ quint32 FormulaModificator::findAlnumBegin()
         return i;
 }
 
+void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
+{
+        m_cursorPosSaved = false;
+        FormulaScrIter iter = m_iter;
+        iter.toFront();
+        do {
+                if (iter.hasPrevious()) {
+                        FormulaScrElement &el = iter.peekNext();
+                        if (el.m_node == iterData.m_rightPointer) {
+                                break;
+                        }
+                }
+                if (iter.hasNext()) {
+                        FormulaScrElement &el = iter.peekPrevious();
+                        if (el.m_node == iterData.m_leftPointer) {
+                                break;
+                        }
+                }
+
+                (void) iter.next();
+        } while(iter.hasNext());
+
+        // go to the element position (inside number or variable name) saved
+        quint32 i;
+        for (i = 0; i <= m_cursorPos; i++) {
+                if (iter.hasNext())
+                        (void) iter.next();
+        }
+        m_iter = iter;
+}
+
 bool FormulaModificator::reStructureTree()
 {
         bool retval = true;
@@ -813,6 +801,7 @@ bool FormulaModificator::reStructureTree()
         EgcNode* tree = pp.getRestructParser()->restructureFormula(result, iterData, &errCode);
         if (tree) {
                 m_formula.setRootElement(tree);
+                restoreCursorPosition(iterData);
                 m_formula.updateView();
         } else {
                 retval = false;
@@ -825,7 +814,7 @@ bool FormulaModificator::updateFormula(void)
 {
         bool retval = true;
 
-        doIteratorPostProcessing();
+        saveCursorPosition();
 
         if (!reStructureTree()) {
                 retval = false;

@@ -148,6 +148,7 @@ private:
         QString m_value;                                ///< the value of the number
         bool m_firstCharMightBeNumber;                  ///< if true, first char can also be a number
         static QRegularExpression s_validator;          ///< a validator for character inputs
+        static QRegularExpression s_alnumChecker;       ///< a validator for character inputs
         static QRegularExpression s_ampersand;          ///< regex to replace ampersand
         static QRegularExpression s_ampersandBegin;     ///< regex to replace ampersand at the beginning
         static QRegularExpression s_semi;               ///< regex to replace semicolon

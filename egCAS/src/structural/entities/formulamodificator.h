@@ -41,9 +41,9 @@ class EgcFormulaEntity;
  */
 class NodeIterReStructData {
 public:
-        NodeIterReStructData() : m_node{nullptr} {}
-        EgcNode* m_node;
-        EgcNode* m_iterPosAfterUpdate;
+        NodeIterReStructData() : m_leftPointer{nullptr} {}
+        EgcNode* m_leftPointer;
+        EgcNode* m_rightPointer;
 };
 
 
@@ -89,10 +89,8 @@ public:
         /**
          * @brief insertBinaryOperation insert a binary operation
          * @param op the binary operation to insert as ASCII string that can be interpreted by the parser
-         * @param bundle if left and/or right are given, they can be bundled with op to form one element e.g. in case
-         * of invisible parenthesis
          */
-        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString(), bool bundle = false);
+        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString());
         /**
          * @brief removeElement remove a character or operation at the current cursor position
          * @param previous if true the character before the current cursor position is remove, if false the character behind
@@ -345,19 +343,10 @@ private:
          */
         bool isEmptyChildNeeded4Binary(bool leftChild);
         /**
-         * @brief setMarker set a marker at the current cursor position
-         * @param leftSide set marker on the left side of the cursor, if false on the right side
-         */
-        void saveCursorPos(bool leftSide = true);
-        /**
-         * @brief placeCursorAtMarker move the cursor to the current marker position
-         */
-        void restoreCursorPos(void);
-        /**
          * @brief doIteratorPostProcessing do postprocessing for the iterator. Inserts the iterator position into the
          * vector, so it can be extracted by the parser.
          */
-        void doIteratorPostProcessing(void);
+        void saveCursorPosition(void);
         /**
          * @brief insertLeftPointer insert left iterator pointer into vector in order to be able to find the iterator
          * position later in the parser. The pointer points to the left side of the node the iterator points to.
@@ -380,7 +369,11 @@ private:
          * @return
          */
         quint32 findAlnumBegin(void);
-
+        /**
+         * @brief restoreCursorPosition restore the cursor position after formula parsing
+         * @param iterData iterator data got from parser
+         */
+        void restoreCursorPosition(NodeIterReStructData& iterData);
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula
@@ -389,6 +382,8 @@ private:
         EgcNode* m_startUnderlinedNode;         ///< node where underining started
         bool m_changeAwaited;                   ///< is set if a change in the view is awaited. If this has happened we can complete the change operation
         bool m_underlineCursorLeft;             ///< if true the cursor is at left side of underline, if false on the right side
+        quint32 m_cursorPos;                    ///< cursor position for number or variable nodes
+        bool m_cursorPosSaved;                  ///< saves if cursor position has already been saved. The method does not allow to save it again until it has been removed due to parsing
 };
 
 #endif // FORMULAMODIFICATOR_H
