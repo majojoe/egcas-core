@@ -180,6 +180,7 @@ void FormulaModificator::viewHasChanged()
         if (m_changeAwaited) {
                 m_changeAwaited = false;
                 m_iter.update();
+                restoreCursorPosition(m_tempIterData);
                 showCurrentCursor();
         }
 }
@@ -522,10 +523,10 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         else
                                 insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == '/') {
-                        //if (m_underlinedNode)
+                        if (m_underlinedNode)
                                 insertBinaryOperation(operation.m_character, "_{", "_}");
-//                        else
-//                                insertBinaryOperation(operation.m_character);
+                        else
+                                insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == QChar(177)) {
                         insertUnaryOperation("-");
                 } else if (operation.m_character == QChar(8730)) {
@@ -706,14 +707,19 @@ void FormulaModificator::saveCursorPosition(void)
         if (rel && !lel) {
                 insertRightPointer();
         } else if (lel && !rel) {
+                m_cursorPos = findAlnumBegin();
                 insertLeftPointer();
         } else if (lel && rel) {
                 if (rel->m_node && rel->m_sideNode == FormulaScrElement::nodeLeftSide)
                         insertRightPointer();
-                if (lel->m_node && lel->m_sideNode == FormulaScrElement::nodeRightSide)
+                if (lel->m_node && lel->m_sideNode == FormulaScrElement::nodeRightSide) {
+                        m_cursorPos = findAlnumBegin();
                         insertLeftPointer();
-                if (isAlnum(lel->m_value) && !isAlnum(rel->m_value))
+                }
+                if (isAlnum(lel->m_value) && !isAlnum(rel->m_value)) {
+                        m_cursorPos = findAlnumBegin();
                         insertLeftPointer();
+                }
                 else if (isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
                         m_cursorPos = findAlnumBegin();
                         insertRightPointer();
@@ -748,6 +754,14 @@ quint32 FormulaModificator::findAlnumBegin()
         FormulaScrIter iter = m_iter;
         quint32 i = 0;
 
+        if (!iter.hasPrevious())
+                return i;
+
+        if (iter.hasPrevious()) {
+                if (!isAlnum(iter.peekPrevious().m_value))
+                        return i;
+        }
+
         while(iter.hasPrevious()) {
                 (void) iter.previous();
                 i++;
@@ -764,15 +778,15 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
         FormulaScrIter iter = m_iter;
         iter.toFront();
         do {
-                if (iter.hasPrevious()) {
+                if (iter.hasNext()) {
                         FormulaScrElement &el = iter.peekNext();
-                        if (el.m_node == iterData.m_rightPointer) {
+                        if (el.m_node == iterData.m_nodeLeftSide && el.m_sideNode == FormulaScrElement::nodeLeftSide) {
                                 break;
                         }
                 }
-                if (iter.hasNext()) {
+                if (iter.hasPrevious()) {
                         FormulaScrElement &el = iter.peekPrevious();
-                        if (el.m_node == iterData.m_leftPointer) {
+                        if (el.m_node == iterData.m_nodeRightSide && el.m_sideNode == FormulaScrElement::nodeRightSide) {
                                 break;
                         }
                 }
@@ -782,7 +796,7 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
 
         // go to the element position (inside number or variable name) saved
         quint32 i;
-        for (i = 0; i <= m_cursorPos; i++) {
+        for (i = 0; i < m_cursorPos; i++) {
                 if (iter.hasNext())
                         (void) iter.next();
         }
@@ -797,11 +811,9 @@ bool FormulaModificator::reStructureTree()
         FormulaScrVisitor restructVisitor(m_formula, m_iter);
         QString result = restructVisitor.getResult();
         int errCode;
-        NodeIterReStructData iterData;
-        EgcNode* tree = pp.getRestructParser()->restructureFormula(result, iterData, &errCode);
+        EgcNode* tree = pp.getRestructParser()->restructureFormula(result, m_tempIterData, &errCode);
         if (tree) {
                 m_formula.setRootElement(tree);
-                restoreCursorPosition(iterData);
                 m_formula.updateView();
         } else {
                 retval = false;

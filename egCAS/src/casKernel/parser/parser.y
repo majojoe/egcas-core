@@ -186,8 +186,8 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}
      | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}
      | "_empty"            {$$ = interpreter.addEmptyNode();}
-     | expr ITERATOR_L      {$$ = interpreter.updateIterator($1, 1);}
-     | ITERATOR_R expr      {$$ = interpreter.updateIterator($2, 2);}
+     | expr ITERATOR_L      {$$ = interpreter.updateIterator($1, 2);}
+     | ITERATOR_R expr      {$$ = interpreter.updateIterator($2, 1);}
      | "_red_parenth_l" expr {$$ = interpreter.addUnaryExpression(EgcNodeType::LParenthesisNode, $2);}
      | expr "_red_parenth_r" {$$ = interpreter.addUnaryExpression(EgcNodeType::RParenthesisNode, $1);}
 ;

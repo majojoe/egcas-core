@@ -41,9 +41,9 @@ class EgcFormulaEntity;
  */
 class NodeIterReStructData {
 public:
-        NodeIterReStructData() : m_leftPointer{nullptr} {}
-        EgcNode* m_leftPointer;
-        EgcNode* m_rightPointer;
+        NodeIterReStructData() : m_nodeRightSide{nullptr}, m_nodeLeftSide{nullptr} {}
+        EgcNode* m_nodeRightSide;
+        EgcNode* m_nodeLeftSide;
 };
 
 
@@ -384,6 +384,7 @@ private:
         bool m_underlineCursorLeft;             ///< if true the cursor is at left side of underline, if false on the right side
         quint32 m_cursorPos;                    ///< cursor position for number or variable nodes
         bool m_cursorPosSaved;                  ///< saves if cursor position has already been saved. The method does not allow to save it again until it has been removed due to parsing
+        NodeIterReStructData m_tempIterData;    ///< saves the data for cursor positions from parser to be able to restore them later
 };
 
 #endif // FORMULAMODIFICATOR_H
