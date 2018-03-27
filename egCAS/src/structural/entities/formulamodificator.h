@@ -375,6 +375,7 @@ private:
          */
         void restoreCursorPosition(NodeIterReStructData& iterData);
 
+
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
         FormulaScrVector m_vector;              ///< vector that contains all screen data to be able to iterate over the formula
         FormulaScrIter m_iter;                  ///< the iterator associated with this modificator

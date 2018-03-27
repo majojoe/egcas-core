@@ -272,7 +272,10 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
 
         if (insertEmptyLeft) {
                 insertEmptyNode();
+                (void) m_iter.previous();
                 saveCursorPosition();
+                (void) m_iter.next();
+                (void) m_iter.next();
         } else {
                 insertEl(right);
         }
@@ -286,8 +289,11 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
                 insertEl(left);
         } else {
                 insertEmptyNode();
-                if (!insertEmptyLeft)
+                if (!insertEmptyLeft) {
+                        (void) m_iter.previous();
                         saveCursorPosition();
+                        (void) m_iter.next();
+                }
         }
 
         //insert the child nodes if any nodes to insert
@@ -722,6 +728,9 @@ void FormulaModificator::saveCursorPosition(void)
                 else if (isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
                         m_cursorPos = findAlnumBegin();
                         insertRightPointer();
+                        //move the cursor back to the old position
+                        for (quint32 i = 0; i < m_cursorPos; i++)
+                                (void) m_iter.next();
                 } else if (isEmptyElement(false)) {
                         insertRightPointer();
                 } else if (isEmptyElement(true)) {
@@ -1147,8 +1156,7 @@ void FormulaModificator::insertEmptyNode(void)
 {
         FormulaScrElement el;
         el.m_value = emptyElement;
-        m_iter.insert(el);
-        (void) m_iter.previous();
+        m_iter.insert(el);        
 }
 
 void FormulaModificator::insertBinEmptyNode(void)
