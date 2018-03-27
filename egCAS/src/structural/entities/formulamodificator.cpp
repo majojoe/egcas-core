@@ -723,6 +723,10 @@ void FormulaModificator::saveCursorPosition(void)
                 else if (isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
                         m_cursorPos = findAlnumBegin();
                         insertRightPointer();
+                } else if (isEmptyElement(false)) {
+                        insertRightPointer();
+                } else if (isEmptyElement(true)) {
+                        insertLeftPointer();
                 }
         } else {
                 insertRightPointer();
@@ -1143,6 +1147,7 @@ void FormulaModificator::insertEmptyNode(void)
         FormulaScrElement el;
         el.m_value = emptyElement;
         m_iter.insert(el);
+        (void) m_iter.previous();
 }
 
 void FormulaModificator::insertBinEmptyNode(void)
