@@ -776,30 +776,63 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
 {
         m_cursorPosSaved = false;
         FormulaScrIter iter = m_iter;
-        iter.toFront();
-        do {
-                if (iter.hasNext()) {
-                        FormulaScrElement &el = iter.peekNext();
-                        if (el.m_node == iterData.m_nodeLeftSide && el.m_sideNode == FormulaScrElement::nodeLeftSide) {
-                                break;
-                        }
-                }
-                if (iter.hasPrevious()) {
-                        FormulaScrElement &el = iter.peekPrevious();
-                        if (el.m_node == iterData.m_nodeRightSide && el.m_sideNode == FormulaScrElement::nodeRightSide) {
-                                break;
-                        }
-                }
+        bool searchFromBack = false;
 
-                (void) iter.next();
-        } while(iter.hasNext());
-
-        // go to the element position (inside number or variable name) saved
-        quint32 i;
-        for (i = 0; i < m_cursorPos; i++) {
-                if (iter.hasNext())
-                        (void) iter.next();
+        if (iterData.m_nodeRightSide && m_cursorPos == 0) {
+                if (!iterData.m_nodeRightSide->isContainer())
+                        searchFromBack = true;
         }
+
+        if (searchFromBack) { //search for right side number and variable nodes only
+                iter.toBack();
+                do {
+                        if (iter.hasPrevious()) {
+                                FormulaScrElement &el = iter.peekPrevious();
+                                if (el.m_node == iterData.m_nodeRightSide) {
+                                                break;
+                                }
+                        }
+
+                        (void) iter.previous();
+                } while(iter.hasPrevious());
+
+        } else {
+                iter.toFront();
+                do {
+                        if (iter.hasNext()) {
+                                FormulaScrElement &el = iter.peekNext();
+                                if (el.m_node == iterData.m_nodeLeftSide) {
+                                        if (el.m_sideNode == FormulaScrElement::nodeLeftSide)
+                                                break;
+                                        else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
+                                                if (!el.m_node->isContainer())
+                                                        break;
+                                        }
+                                }
+                        }
+                        if (iter.hasPrevious()) {
+                                FormulaScrElement &el = iter.peekPrevious();
+                                if (el.m_node == iterData.m_nodeRightSide) {
+                                        if (el.m_sideNode == FormulaScrElement::nodeRightSide)
+                                                break;
+                                        else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
+                                                if (!el.m_node->isContainer())
+                                                        break;
+                                        }
+                                }
+                        }
+
+                        (void) iter.next();
+                } while(iter.hasNext());
+
+                // go to the element position (inside number or variable name) saved
+                quint32 i;
+                for (i = 0; i < m_cursorPos; i++) {
+                        if (iter.hasNext())
+                                (void) iter.next();
+                }
+        }
+
         m_iter = iter;
 }
 
