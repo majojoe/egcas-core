@@ -707,17 +707,16 @@ void FormulaModificator::saveCursorPosition(void)
         if (rel && !lel) {
                 insertRightPointer();
         } else if (lel && !rel) {
-                m_cursorPos = findAlnumBegin();
+                //m_cursorPos = findAlnumBegin();
                 insertLeftPointer();
         } else if (lel && rel) {
                 if (rel->m_node && rel->m_sideNode == FormulaScrElement::nodeLeftSide)
                         insertRightPointer();
                 if (lel->m_node && lel->m_sideNode == FormulaScrElement::nodeRightSide) {
-                        m_cursorPos = findAlnumBegin();
+                        //m_cursorPos = findAlnumBegin();
                         insertLeftPointer();
                 }
                 if (isAlnum(lel->m_value) && !isAlnum(rel->m_value)) {
-                        m_cursorPos = findAlnumBegin();
                         insertLeftPointer();
                 }
                 else if (isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
@@ -772,6 +771,8 @@ quint32 FormulaModificator::findAlnumBegin()
                 if (!isAlnum(iter.peekPrevious().m_value))
                         break;
         }
+
+        m_iter = iter;
 
         return i;
 }
