@@ -310,6 +310,64 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         updateFormula();
 }
 
+void FormulaModificator::insertUnaryOperation(QString left, QString right)
+{
+        FormulaScrElement lel;
+        FormulaScrElement rel;
+        bool both = false;
+        bool leftOnly = false;
+        bool rightOnly = false;
+
+        if (!left.isEmpty() && !right.isEmpty())
+                both = true;
+        if (!left.isEmpty() && right.isEmpty())
+                leftOnly = true;
+        if (left.isEmpty() && !right.isEmpty())
+                rightOnly = true;
+
+        if (!m_underlinedNode) {
+                if (!left.isEmpty()) {
+                        lel.m_value = left;
+                        if (isEmptyElement(true))
+                                m_iter.remove(true);
+                } else if (!right.isEmpty()) {
+                        rel.m_value = right;
+                        if (isEmptyElement(false))
+                                m_iter.remove(false);
+                }
+
+                if (!left.isEmpty()) {
+                        m_iter.insert(lel);
+                        if (leftOnly)
+                                saveCursorPosition();
+                }
+                if(both) {
+                        insertEmptyNode();
+                        saveCursorPosition();
+                }
+                if (!right.isEmpty()) {
+                        m_iter.insert(rel);
+                        if (rightOnly)
+                                saveCursorPosition();
+                }
+        } else {
+                if(left.isEmpty() || right.isEmpty())
+                        return; //this is not allowed since it produces unexpected behaviour
+
+                if (!m_underlineCursorLeft)
+                        moveCursorToLeftVisibleMargin(*m_underlinedNode);
+                insertEl(left);
+                if (m_underlineCursorLeft)
+                        saveCursorPosition();
+                moveCursorToRightVisibleMargin(*m_underlinedNode);
+                insertEl(right);
+                if (!m_underlineCursorLeft)
+                        saveCursorPosition();
+        }
+
+        updateFormula();
+}
+
 void FormulaModificator::insertCharacter(QChar character)
 {
         FormulaScrElement el;
@@ -468,11 +526,6 @@ void FormulaModificator::insertSigns(QString signs)
         }
 }
 
-void FormulaModificator::insertUnaryOperation(QString segment)
-{
-        insertUnaryElement(segment);
-        updateFormula();
-}
 
 void FormulaModificator::createSubscript()
 {
@@ -513,7 +566,7 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         else if (isEmptyElement(true))
                                 m_iter.remove(true);
                         if (unaryMinus)
-                                insertUnaryOperation("-");
+                                insertUnaryOperation("-", "");
                         else
                                 insertBinaryOperation("-");
 
@@ -534,14 +587,18 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         else
                                 insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == QChar(177)) {
-                        insertUnaryOperation("-");
+                        insertUnaryOperation("-", "");
                 } else if (operation.m_character == QChar(8730)) {
                         QString tmp = QString("_root(") % emptyElement % QString(",") % emptyElement % QString(")");
-                        insertUnaryOperation(tmp);
-                } else if (operation.m_character == '(') {
+                        //insertUnaryOperation(tmp);
+                } else if (operation.m_character == '(' && !m_underlinedNode) {
                         insertRedParenthesis(true);
-                } else if (operation.m_character == ')') {
+                } else if (operation.m_character == ')' && !m_underlinedNode) {
                         insertRedParenthesis(false);
+                } else if (    ((operation.m_character == '(' && m_underlineCursorLeft)
+                            || (operation.m_character == ')' && !m_underlineCursorLeft))
+                            && m_underlinedNode) {
+                        insertUnaryOperation("(", ")");
                 }
         } else if (operation.m_op == EgcOperations::mathFunction) { // functions
                 QString name;
@@ -716,16 +773,16 @@ void FormulaModificator::saveCursorPosition(void)
                 //m_cursorPos = findAlnumBegin();
                 insertLeftPointer();
         } else if (lel && rel) {
-                if (rel->m_node && rel->m_sideNode == FormulaScrElement::nodeLeftSide)
+                if (rel->m_node && rel->m_sideNode == FormulaScrElement::nodeLeftSide) {
                         insertRightPointer();
-                if (lel->m_node && lel->m_sideNode == FormulaScrElement::nodeRightSide) {
+                } else if (lel->m_node && lel->m_sideNode == FormulaScrElement::nodeRightSide) {
                         //m_cursorPos = findAlnumBegin();
                         insertLeftPointer();
-                }
-                if (isAlnum(lel->m_value) && !isAlnum(rel->m_value)) {
+                } else if (isAlnum(lel->m_value) && !isAlnum(rel->m_value)) {
                         insertLeftPointer();
-                }
-                else if (isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
+                } else if (!isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
+                        insertRightPointer();
+                } else if (isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
                         m_cursorPos = findAlnumBegin();
                         insertRightPointer();
                         //move the cursor back to the old position
@@ -735,6 +792,10 @@ void FormulaModificator::saveCursorPosition(void)
                         insertRightPointer();
                 } else if (isEmptyElement(true)) {
                         insertLeftPointer();
+                } else if (!lel->m_node) {
+                        insertLeftPointer();
+                } else if (!rel->m_node) {
+                        insertRightPointer();
                 }
         } else {
                 insertRightPointer();

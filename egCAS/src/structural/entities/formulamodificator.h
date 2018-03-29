@@ -99,9 +99,10 @@ public:
         /**
          * @brief insertSegment inserts a complete segment of elements. This does not need to be done in a per elements
          * way, since the parser will split that up again correctly.
-         * @param segment the segment to be insert (can consist of many elements)
+         * @param left the segment to be insert on the left side of the unary node
+         * @param right the segment to be insert on the right side of the unary node
          */
-        void insertUnaryOperation(QString segment);
+        void insertUnaryOperation(QString left, QString right);
         /**
          * @brief insertElement insert an element
          * @param segment the segment to insert
