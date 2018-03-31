@@ -89,8 +89,11 @@ public:
         /**
          * @brief insertBinaryOperation insert a binary operation
          * @param op the binary operation to insert as ASCII string that can be interpreted by the parser
+         * @param left element that is inserted on the left side of a child
+         * @param right element that is inserted on the right side of a child
+         * @param insertLRAlways if true the left and right elements are inserted always, even if only an empty child is inserted
          */
-        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString());
+        void insertBinaryOperation(QString op, QString left = QString(), QString right = QString(), bool insertLRAlways = false);
         /**
          * @brief removeElement remove a character or operation at the current cursor position
          * @param previous if true the character before the current cursor position is remove, if false the character behind

@@ -239,7 +239,7 @@ bool FormulaModificator::isEmptyChildNeeded4Binary(bool leftChild)
         return retval;
 }
 
-void FormulaModificator::insertBinaryOperation(QString op, QString left, QString right)
+void FormulaModificator::insertBinaryOperation(QString op, QString left, QString right, bool insertLRAlways)
 {
         bool insertEmptyLeft = false;
         bool insertEmptyRight = false;
@@ -271,11 +271,12 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         }
 
         if (insertEmptyLeft) {
+                if (insertLRAlways)
+                        insertEl(left);
                 insertEmptyNode();
-                (void) m_iter.previous();
                 saveCursorPosition();
-                (void) m_iter.next();
-                (void) m_iter.next();
+                if (insertLRAlways)
+                        insertEl(right);
         } else {
                 insertEl(right);
         }
@@ -288,12 +289,14 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
         if (!insertEmptyRight) {
                 insertEl(left);
         } else {
+                if (insertLRAlways)
+                        insertEl(left);
                 insertEmptyNode();
                 if (!insertEmptyLeft) {
-                        (void) m_iter.previous();
                         saveCursorPosition();
-                        (void) m_iter.next();
                 }
+                if (insertLRAlways)
+                        insertEl(right);
         }
 
         //insert the child nodes if any nodes to insert
@@ -583,7 +586,7 @@ void FormulaModificator::insertOperation(EgcAction operation)
                                 insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == '/') {
                         if (m_underlinedNode)
-                                insertBinaryOperation(operation.m_character, "_{", "_}");
+                                insertBinaryOperation(operation.m_character, "_{", "_}", true);
                         else
                                 insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == QChar(177)) {
@@ -805,13 +808,11 @@ void FormulaModificator::saveCursorPosition(void)
 void FormulaModificator::insertLeftPointer()
 {
         m_iter.insert(FormulaScrElement(QString("_<L")));
-        (void) m_iter.previous();
 }
 
 void FormulaModificator::insertRightPointer()
 {
         m_iter.insert(FormulaScrElement(QString("_>R")));
-        (void) m_iter.previous();
 }
 
 bool FormulaModificator::isAlnum(QString val) const
@@ -1280,7 +1281,8 @@ void FormulaModificator::sanitizeBinary()
                 EgcNode *lnode = m_iter.peekPrevious().m_node;
                 EgcNode *rnode = m_iter.peekNext().m_node;
                 if (lnode && rnode) {
-                        if (lnode->isBinaryNode() && rnode->isBinaryNode()) {
+                        if (    lnode->isBinaryNode() && rnode->isBinaryNode()
+                             && m_iter.peekNext().m_sideNode != FormulaScrElement::nodeLeftSide) {
                                 insertEmptyNode();
                                 m_iter.previous();
                         }
