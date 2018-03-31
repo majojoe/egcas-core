@@ -94,6 +94,21 @@ public:
          * @return true if the current element has a position marker on the right side, false otherwise
          */
         bool isRightPositionMarker(void);
+        /**
+         * @brief isEmptyElement checks if this element is an empty element
+         * @return true if this is a empty element, false otherwise
+         */
+        bool isEmptyElement(void) const;
+        /**
+         * @brief isRightCursorPointer checks if this element is a right cursor pointer
+         * @return true if this is a right cursor pointer element, false otherwise
+         */
+        bool isRightCursorPointer(void) const;
+        /**
+         * @brief isLeftCursorPointer checks if this element is a left cursor pointer
+         * @return true if this is a left cursor pointer element, false otherwise
+         */
+        bool isLeftCursorPointer(void) const;
         QString m_value;        ///< formula element that is visible as entity on the screen
         CursorAdhesion m_cAdh;  ///< cursor adhesion of the node
         EgcNode* m_node;        ///< pointer to node this element is directly associated with

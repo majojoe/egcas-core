@@ -28,7 +28,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "formulascrelement.h"
+#include <QString>
 
+const char emptyElement[] = "_empty";
+const char rightCursorPointer[] = "_>R";
+const char leftCursorPointer[] = "_<L";
 
 TempDataScrIter::TempDataScrIter() : m_id{0}, m_node{nullptr}, m_subpos{0}, m_left_side{true}
 {
@@ -69,6 +73,30 @@ void FormulaScrElement::resetPositionMarker()
 bool FormulaScrElement::isRightPositionMarker()
 {
         if (m_positionMarker == PositionMarker::rightMarker)
+                return true;
+
+        return false;
+}
+
+bool FormulaScrElement::isEmptyElement() const
+{
+        if (m_value == QString(emptyElement))
+                return true;
+
+        return false;
+}
+
+bool FormulaScrElement::isRightCursorPointer() const
+{
+        if (m_value == QString(rightCursorPointer))
+                return true;
+
+        return false;
+}
+
+bool FormulaScrElement::isLeftCursorPointer() const
+{
+        if (m_value == QString(leftCursorPointer))
                 return true;
 
         return false;

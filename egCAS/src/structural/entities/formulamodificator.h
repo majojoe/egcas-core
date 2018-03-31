@@ -378,6 +378,11 @@ private:
          * @param iterData iterator data got from parser
          */
         void restoreCursorPosition(NodeIterReStructData& iterData);
+        /**
+         * @brief sanitizeEmptyCursorPos if a empty element is inserted, we want the cursor to be on the left side of
+         * the empty element.
+         */
+        void sanitizeEmptyCursorPos(void);
 
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with

@@ -309,8 +309,6 @@ void FormulaModificator::insertBinaryOperation(QString op, QString left, QString
                         insertEl(right);
                 }
         }
-
-        updateFormula();
 }
 
 void FormulaModificator::insertUnaryOperation(QString left, QString right)
@@ -367,8 +365,6 @@ void FormulaModificator::insertUnaryOperation(QString left, QString right)
                 if (!m_underlineCursorLeft)
                         saveCursorPosition();
         }
-
-        updateFormula();
 }
 
 void FormulaModificator::insertCharacter(QChar character)
@@ -493,8 +489,6 @@ void FormulaModificator::insertRedParenthesis(bool left)
                         break;
                 }
         }
-
-        updateFormula();
 }
 
 void FormulaModificator::insertUnaryElement(QString segment, bool left)
@@ -629,7 +623,6 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         (void) m_iter.previous();
                         (void) m_iter.previous();
                 }
-                updateFormula();
         } else if (operation.m_op == EgcOperations::internalFunction) {
 
         }
@@ -692,7 +685,8 @@ void FormulaModificator::insertOperation(EgcAction operation)
 
 //        }
 
-
+        sanitizeEmptyCursorPos();
+        updateFormula();
         resetUnderline();
 }
 
@@ -910,6 +904,25 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
         }
 
         m_iter = iter;
+}
+
+void FormulaModificator::sanitizeEmptyCursorPos()
+{
+        FormulaScrIter iter = m_iter;
+        iter.toFront();
+        while(iter.hasNext()) {
+                FormulaScrElement &el = iter.next();
+                if (el.isEmptyElement() && iter.hasNext()) {
+                        if (iter.peekNext().isLeftCursorPointer()) {
+                                iter.remove(false);
+                                iter.previous();
+                                FormulaScrElement rPtr;
+                                rPtr.m_value = QString("_>R");
+                                iter.insert(rPtr);
+                                break;
+                        }
+                }
+        }
 }
 
 bool FormulaModificator::reStructureTree()
