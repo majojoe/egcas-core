@@ -185,6 +185,7 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | INTEGRAL "(" explist ")" {$$ = interpreter.changeFlexExpressionType(EgcNodeType::IntegralNode, $3);}
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}
      | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}
+     | "_root" "(" LBRACKET_OP expr RBRACKET_OP "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $4, $7);}
      | "_empty"            {$$ = interpreter.addEmptyNode();}
      | expr ITERATOR_L      {$$ = interpreter.updateIterator($1, 2);}
      | ITERATOR_R expr      {$$ = interpreter.updateIterator($2, 1);}
