@@ -123,27 +123,12 @@ public:
          * @return true if it is an alphanumeric string, false otherwise
          */
         static bool isAlnum(const QString& str);
-
-protected:
-        /**
-         * @brief insert insert a character at the given position
-         * @param character the character to insert
-         * @param position the position where to insert the given character
-         * @return true if the operation was successful, false otherwise
-         */
-        virtual bool insert(QChar character, int position);
-        /**
-         * @brief remove a charcter at the given position
-         * @param position the position at which to remove a character
-         * @return true if the operation was successful, false otherwise
-         */
-        virtual bool remove(int position);
-
-private:
         /**
          * @brief optimizeRegex optimizes the regeges
          */
         static void optimizeRegexes(void);
+
+private:
 
         QString m_value;                                ///< the value of the number
         bool m_firstCharMightBeNumber;                  ///< if true, first char can also be a number

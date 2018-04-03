@@ -108,43 +108,6 @@ int EgcAlnumNode::nrSubindexes(void) const
         return m_value.size();
 }
 
-bool EgcAlnumNode::insert(QChar character, int position)
-{
-        bool retval = false;
-
-        if (!m_firstCharMightBeNumber) {
-                //it's not allowed for a alphanumeric name to begin with a number
-                if (position == 0 && character.isDigit())
-                        return false;
-        }
-
-        if (s_validator.match(character).hasMatch()) {
-                if (position <= m_value.size() && position >= 0) {
-                        m_value.insert(position, character);
-                        retval = true;
-                }
-        }
-
-        return retval;
-}
-
-bool EgcAlnumNode::remove(int position)
-{
-        bool retval = false;
-
-        if (position >= 0 && position < m_value.size()) {
-                if (!(position == 0 && m_value[1].isDigit())) { //it's not allowed that the first character of a name is a digit
-                        retval = true;
-                        m_value.remove(position, 1);
-                } else if (m_firstCharMightBeNumber) { // if it's allowed that the first char can be a number
-                        retval = true;
-                        m_value.remove(position, 1);
-                }
-        }
-
-        return retval;
-}
-
 void EgcAlnumNode::optimizeRegexes()
 {
         if (!s_regexInitialized) {
