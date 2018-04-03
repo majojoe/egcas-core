@@ -242,14 +242,6 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
                         appendSegmented(")", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::ultra, 0, false, flex, 0, false);
                 }
                 break;
-        case EgcNodeType::VariableNode:
-                if (m_state == EgcIteratorState::MiddleIteration) {
-                        if (flex->getNumberChildNodes() == 2) {
-                                EgcVariableNode *var = static_cast<EgcVariableNode*>(flex);
-                                append(var->getStuffedVarSeparator(), flex);
-                        }
-                }
-                break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(flex->getNodeType())) ;
                 break;
@@ -270,6 +262,15 @@ void FormulaScrVisitor::visit(EgcNode* node)
         case EgcNodeType::NumberNode:
                 appendSigns(static_cast<EgcNumberNode*>(node)->getValue(), node, CursorAdhesion::strong);
                 break;
+        case EgcNodeType::VariableNode: {
+                EgcVariableNode *var = static_cast<EgcVariableNode*>(node);
+                appendSigns(var->getValue(), node, CursorAdhesion::strong);
+                if (!var->getSubscript().isEmpty()) {
+                        append(var->getStuffedVarSeparator(), node);
+                        appendSigns(var->getSubscript(), node, CursorAdhesion::strong);
+                }
+                break;
+        }
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(node->getNodeType())) ;
                 break;
