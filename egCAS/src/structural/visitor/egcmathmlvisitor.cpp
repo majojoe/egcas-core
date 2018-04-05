@@ -250,16 +250,6 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                         }
                 }
                 break;
-        case EgcNodeType::VariableNode: {
-                if (m_state == EgcIteratorState::RightIteration) {
-                        id = getId(node);
-                        if (static_cast<EgcVariableNode*>(node)->getNumberChildNodes() == 1)
-                                assembleResult("<mrow "%id%">%1</mrow>", node); //there is just the first EgcAlnumNode, the second is empty
-                        else
-                                assembleResult("<mrow "%id%"><msub>%1 %2</msub></mrow>", node);
-                }
-                break;
-        }
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType()));
                 break;
@@ -277,7 +267,18 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                 pushToStack("<mn" %id%">" % static_cast<EgcNumberNode*>(node)->getValue() % "</mn>", node);
                 break;
         case EgcNodeType::AlnumNode:
-                        pushToStack("<mi mathvariant=\"normal\"" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue() % "</mi>", node);
+                pushToStack("<mi mathvariant=\"normal\"" %id%">" % static_cast<EgcAlnumNode*>(node)->getValue()
+                            % "</mi>", node);
+                break;
+        case EgcNodeType::VariableNode: {
+                EgcVariableNode *var = static_cast<EgcVariableNode*>(node);
+                if (var->getSubscript().isEmpty())
+                        pushToStack("<mi mathvariant=\"normal\" "%id%">" % var->getValue() % "</mi>", node);
+                else
+                        pushToStack("<mrow><msub><mi mathvariant=\"normal\" "%id%">" % var->getValue()
+                                       % "</mi><mi mathvariant=\"normal\" "%id%">" % var->getSubscript()
+                                       % "</mi></msub></mrow>", node);
+        }
                 break;
         case EgcNodeType::EmptyNode:
                 pushToStack("<mi mathcolor=\"#7F7F7F\"" %id%">&#x2B1A;</mi>", node);
