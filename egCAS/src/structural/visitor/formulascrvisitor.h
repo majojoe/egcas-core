@@ -148,8 +148,11 @@ private:
          * @param str the formula element to add
          * @param node the node that is associated with this the signs
          * @param cursorAdhesion can be given to change the standard cursor Adhesion which is normal
+         * @param subposBegin this parameter can be given if the subposition should not start from 1, but from the
+         * former last subposition returned by last call to appendSigns
+         * @return returns subposition of last element added + 1
          */
-        void appendSigns(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::low);
+        quint32 appendSigns(QString str, EgcNode* node, CursorAdhesion cursorAdhesion = CursorAdhesion::low, quint32 subposBegin = 1);
         /**
          * @brief suppressNode suppress the given node (cursor will not react on it)
          * @param node the node to supress

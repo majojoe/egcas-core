@@ -264,10 +264,11 @@ void FormulaScrVisitor::visit(EgcNode* node)
                 break;
         case EgcNodeType::VariableNode: {
                 EgcVariableNode *var = static_cast<EgcVariableNode*>(node);
-                appendSigns(var->getValue(), node, CursorAdhesion::strong);
+                quint32 subpos;
+                subpos = appendSigns(var->getValue(), node, CursorAdhesion::strong);
                 if (!var->getSubscript().isEmpty()) {
                         append(var->getStuffedVarSeparator(), node);
-                        appendSigns(var->getSubscript(), node, CursorAdhesion::strong);
+                        appendSigns(var->getSubscript(), node, CursorAdhesion::strong, subpos);
                 }
                 break;
         }
@@ -313,10 +314,10 @@ void FormulaScrVisitor::append(QString str, EgcNode* node, CursorAdhesion cursor
         m_iter.insert(el);
 }
 
-void FormulaScrVisitor::appendSigns(QString str, EgcNode* node, CursorAdhesion cursorAdhesion)
+quint32 FormulaScrVisitor::appendSigns(QString str, EgcNode* node, CursorAdhesion cursorAdhesion, quint32 subposBegin)
 {
         QString i;
-        quint32 n = 1;
+        quint32 n = subposBegin;
         foreach (i, str) {
                 append(EgcAlnumNode::encode(i), node, cursorAdhesion);
                 FormulaScrElement& tmp = m_iter.peekPrevious();
@@ -326,6 +327,8 @@ void FormulaScrVisitor::appendSigns(QString str, EgcNode* node, CursorAdhesion c
                 tmp.m_subpos_max = n;
                 n++;
         }
+
+        return n;
 }
 
 void FormulaScrVisitor::updateVector(void)
