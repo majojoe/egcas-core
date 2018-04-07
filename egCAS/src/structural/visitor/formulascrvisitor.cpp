@@ -267,8 +267,14 @@ void FormulaScrVisitor::visit(EgcNode* node)
                 quint32 subpos;
                 subpos = appendSigns(var->getValue(), node, CursorAdhesion::strong);
                 if (!var->getSubscript().isEmpty()) {
-                        append(var->getStuffedVarSeparator(), node);
-                        appendSigns(var->getSubscript(), node, CursorAdhesion::strong, subpos);
+                        if (var->isSubscriptEmptyElement()) {
+                                append(var->getStuffedVarSeparator(), node);
+                                append("_empty", node, CursorAdhesion::strong);
+                                setElementSubposition(2);
+                        } else {
+                                append(var->getStuffedVarSeparator(), node);
+                                appendSigns(var->getSubscript(), node, CursorAdhesion::strong, subpos);
+                        }
                 }
                 break;
         }

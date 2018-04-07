@@ -275,7 +275,7 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                 if (var->getSubscript().isEmpty())
                         pushToStack("<mi mathvariant=\"normal\" "%id%">" % var->getValue() % "</mi>", node);
                 else
-                        pushToStack("<mrow "%id%"><msub><mi mathvariant=\"normal\" "%id%">" % var->getValue()
+                        pushToStack("<mrow><msub><mi mathvariant=\"normal\" "%id%">" % var->getValue()
                                        % "</mi><mi mathvariant=\"normal\" "%id%">" % var->getSubscript()
                                        % "</mi></msub></mrow>", node);
         }

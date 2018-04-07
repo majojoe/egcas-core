@@ -63,7 +63,7 @@ void EgcVariableNode::setValue(const QString& varName, const QString& subscript)
 {
         m_value = varName;
         m_subscript = subscript;
-        if (subscript == QString(emptyElement))
+        if (EgcEmptyNode::isEmptyValue(subscript))
                 m_subscrIsEmpty = true;
 }
 
@@ -83,7 +83,7 @@ void EgcVariableNode::setStuffedVar(const QString& varName)
                 m_value = EgcAlnumNode::decode(value);
                 if (subscript == QString(emptyElement)) {
                         m_subscrIsEmpty = true;
-                        m_subscript = subscript;
+                        m_subscript = EgcEmptyNode::getEmptyValue();
                 } else {
                         m_subscript = EgcAlnumNode::decode(subscript);
                 }

@@ -103,14 +103,14 @@ public:
          * @return true if the node is an operation, false otherwise
          */
         virtual bool isOperation(void) const override;
-
-protected:
         /**
          * @brief isSubscriptEmptyElement checks if subscript contains an empty element. This means not that the string
          * is empty!
          * @return true if it contains an empty element, false otherwise
          */
         bool isSubscriptEmptyElement(void);
+
+protected:
 
         static QRegularExpression s_varSubSeparator; ///< regex for separating variable and subscript
         static bool s_initializeRegex;    ///< initialize regex?

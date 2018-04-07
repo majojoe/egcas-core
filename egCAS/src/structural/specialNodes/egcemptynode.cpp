@@ -49,3 +49,16 @@ bool EgcEmptyNode::valid(void)
 {
         return false;
 }
+
+bool EgcEmptyNode::isEmptyValue(QString value)
+{
+        if (value == QChar(0x2B1A))
+                return true;
+
+        return false;
+}
+
+QString EgcEmptyNode::getEmptyValue()
+{
+        return QChar(0x2B1A);
+}
