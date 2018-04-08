@@ -36,10 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 //ATTENTION: as of now egCAS and even Qt does not support non bmp characters (unicode caracters > 0xFFFF)
 
-QRegularExpression EgcAlnumNode::s_ampersand = QRegularExpression("(.*[^_]+)_2([^_]+.*)");
-QRegularExpression EgcAlnumNode::s_ampersandBegin = QRegularExpression("_2([^_]+.*)");
-QRegularExpression EgcAlnumNode::s_semi = QRegularExpression("(.*[^_]+)_3([^_]+.*)");
-QRegularExpression EgcAlnumNode::s_semiBegin = QRegularExpression("(.*[^_]+)_3");
+QRegularExpression EgcAlnumNode::s_html_encoding = QRegularExpression("[^_]*_2([0-9]+|x[0-9a-fA-F]+)_3");
 QRegularExpression EgcAlnumNode::s_validator = QRegularExpression("[_0-9a-zA-ZΆ-ώ]+");
 QRegularExpression EgcAlnumNode::s_alnumChecker = QRegularExpression("^[_0-9a-zA-ZΆ-ώ]+$");
 bool EgcAlnumNode::s_regexInitialized = false;
@@ -112,10 +109,7 @@ void EgcAlnumNode::optimizeRegexes()
 {
         if (!s_regexInitialized) {
                 s_regexInitialized = true;
-                s_ampersand.optimize();
-                s_ampersandBegin.optimize();
-                s_semi.optimize();
-                s_semiBegin.optimize();
+                s_html_encoding.optimize();
                 s_validator.optimize();
                 s_alnumChecker.optimize();
         }
@@ -146,11 +140,7 @@ QString EgcAlnumNode::decode(const QString& str)
         }
 
         QString tmp = str;
-        tmp = tmp.replace(QRegularExpression(s_ampersand), "\\1&#\\2");
-        tmp.replace(QRegularExpression(s_ampersandBegin), "&#\\1"); //if the ampersand is at the beginning
-        //handle ";"s
-        tmp.replace(QRegularExpression(s_semi), "\\1;\\2");
-        tmp.replace(QRegularExpression(s_semiBegin), "\\1;");  //if the ";" is at the end
+        tmp = tmp.replace(QRegularExpression(s_html_encoding), "&#\\1;");
 
         tmp.replace("__", "_");
 
