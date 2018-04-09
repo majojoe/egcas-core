@@ -36,7 +36,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 //ATTENTION: as of now egCAS and even Qt does not support non bmp characters (unicode caracters > 0xFFFF)
 
-QRegularExpression EgcAlnumNode::s_html_encoding = QRegularExpression("[^_]*_2([0-9]+|x[0-9a-fA-F]+)_3");
+QRegularExpression EgcAlnumNode::s_html_encoding_start = QRegularExpression("([^_]{0,1})(_2)");
+QRegularExpression EgcAlnumNode::s_html_encoding_end = QRegularExpression("([^_]{1})(_3)");
 QRegularExpression EgcAlnumNode::s_validator = QRegularExpression("[_0-9a-zA-ZΆ-ώ]+");
 QRegularExpression EgcAlnumNode::s_alnumChecker = QRegularExpression("^[_0-9a-zA-ZΆ-ώ]+$");
 bool EgcAlnumNode::s_regexInitialized = false;
@@ -109,7 +110,8 @@ void EgcAlnumNode::optimizeRegexes()
 {
         if (!s_regexInitialized) {
                 s_regexInitialized = true;
-                s_html_encoding.optimize();
+                s_html_encoding_start.optimize();
+                s_html_encoding_end.optimize();
                 s_validator.optimize();
                 s_alnumChecker.optimize();
         }
@@ -140,7 +142,8 @@ QString EgcAlnumNode::decode(const QString& str)
         }
 
         QString tmp = str;
-        tmp = tmp.replace(QRegularExpression(s_html_encoding), "&#\\1;");
+        tmp = tmp.replace(QRegularExpression(s_html_encoding_start), "\\1&#");
+        tmp = tmp.replace(QRegularExpression(s_html_encoding_end), "\\1;");
 
         tmp.replace("__", "_");
 

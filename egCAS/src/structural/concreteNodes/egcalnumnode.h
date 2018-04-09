@@ -134,10 +134,8 @@ private:
         bool m_firstCharMightBeNumber;                  ///< if true, first char can also be a number
         static QRegularExpression s_validator;          ///< a validator for character inputs
         static QRegularExpression s_alnumChecker;       ///< a validator for character inputs
-        static QRegularExpression s_ampersand;          ///< regex to replace ampersand
-        static QRegularExpression s_ampersandBegin;     ///< regex to replace ampersand at the beginning
-        static QRegularExpression s_semi;               ///< regex to replace semicolon
-        static QRegularExpression s_semiBegin;          ///< regex to replace semicolon at the beginning
+        static QRegularExpression s_html_encoding_start;///< regex to replace ampersand
+        static QRegularExpression s_html_encoding_end;  ///< regex to replace semicolon
         static bool s_regexInitialized;                 ///< is the regex already initialized
 };
 
