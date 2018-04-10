@@ -47,6 +47,22 @@ const char emptyBinElement[] = "_emptybinop";
 
 
 
+// macro for function arguments for inserting functions
+#define FNC_ARG(x) do{ if (arg##x.isEmpty()) {                                 \
+                            el.m_value = ")";                                  \
+                            m_iter.insert(el);                                 \
+                            return;                                            \
+                    } else {                                                   \
+                            el.m_value = ",";                                  \
+                            m_iter.insert(el);                                 \
+                            el.m_value = arg##x;                               \
+                            m_iter.insert(el);                                 \
+                            if (stdPos == x)                                   \
+                                    saveCursorPosition();                      \
+                   }}while(0)
+
+
+
 FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{formula},
                                                                     m_iter(FormulaScrIter(m_formula, m_vector)),
                                                                     m_underlinedNode{nullptr},
@@ -367,6 +383,44 @@ void FormulaModificator::insertUnaryOperation(QString left, QString right)
         }
 }
 
+void FormulaModificator::insertFunction(QString name, quint32 stdPos, QString arg1, QString arg2, QString arg3, QString arg4, QString arg5, QString arg6)
+{
+        if (!m_underlinedNode) {
+
+                if (isEmptyElement(true)) {
+                        m_iter.remove(true);
+                }
+                if (isEmptyElement(false)) {
+                        m_iter.remove(false);
+                }
+
+                FormulaScrElement el;
+                el.m_value = name;
+                m_iter.insert(el);
+                if (stdPos == 0)
+                        saveCursorPosition();
+                el.m_value = "(";
+                m_iter.insert(el);
+
+                el.m_value = arg1;
+                m_iter.insert(el);
+                if (stdPos == 1)
+                        saveCursorPosition();
+
+                FNC_ARG(2);
+                FNC_ARG(3);
+                FNC_ARG(4);
+                FNC_ARG(5);
+                FNC_ARG(6);
+
+                el.m_value = ")";
+                m_iter.insert(el);
+
+        } else {
+                        saveCursorPosition();
+        }
+}
+
 void FormulaModificator::insertCharacter(QChar character)
 {
         FormulaScrElement el;
@@ -586,8 +640,7 @@ void FormulaModificator::insertOperation(EgcAction operation)
                 } else if (operation.m_character == QChar(177)) {
                         insertUnaryOperation("-", "");
                 } else if (operation.m_character == QChar(8730)) {
-                        QString tmp = QString("_root(") % emptyElement % QString(",") % emptyElement % QString(")");
-                        //insertUnaryOperation(tmp);
+                        insertFunction("_root", 2, emptyElement, emptyElement);
                 } else if (operation.m_character == '(' && !m_underlinedNode) {
                         insertRedParenthesis(true);
                 } else if (operation.m_character == ')' && !m_underlinedNode) {
@@ -599,30 +652,15 @@ void FormulaModificator::insertOperation(EgcAction operation)
                 }
         } else if (operation.m_op == EgcOperations::mathFunction) { // functions
                 QString name;
-                bool nameGiven = false;
+                quint32 pos = 1;
                 if (!operation.m_additionalData.isNull())  {
                         name = operation.m_additionalData.toString();
                 }
                 if (name.isEmpty()) {
-                        if (!isEmptyElement()) {
-                                name = emptyElement;
-                                insertEmptyNode();
-                        }
-                } else {
-                        insertSigns(name);
-                        nameGiven = true;
+                        name = emptyElement;
+                        pos = 0;
                 }
-                // insertUnaryElement is wrong here, since that would remove the empty node for the name
-                FormulaScrElement el;
-                el.m_value = "(";
-                m_iter.insert(el);
-                insertEmptyNode();
-                insertUnaryElement(")", false);
-                (void) m_iter.previous();
-                if (!nameGiven) {
-                        (void) m_iter.previous();
-                        (void) m_iter.previous();
-                }
+                insertFunction(name, pos, emptyElement);
         } else if (operation.m_op == EgcOperations::internalFunction) {
 
         }

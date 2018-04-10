@@ -107,6 +107,21 @@ public:
          */
         void insertUnaryOperation(QString left, QString right);
         /**
+         * @brief insertFunction insert function
+         * @param name the name of the function
+         * @param stdPos the position where the cursor shall be after inserting the function. Starts with 1, the cursor
+         * will in this case be after first argument.
+         * @param arg1 function argument 1
+         * @param arg2 function argument 2
+         * @param arg3 function argument 3
+         * @param arg4 function argument 4
+         * @param arg5 function argument 5
+         * @param arg6 function argument 6
+         */
+        void insertFunction(QString name, quint32 stdPos, QString arg1, QString arg2 = QString::null,
+                            QString arg3 = QString::null, QString arg4 = QString::null, QString arg5 = QString::null,
+                            QString arg6 = QString::null);
+        /**
          * @brief insertElement insert an element
          * @param segment the segment to insert
          * @param left true if the element is on the left side, false otherwise
