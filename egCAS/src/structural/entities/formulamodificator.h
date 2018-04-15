@@ -398,6 +398,20 @@ private:
          * the empty element.
          */
         void sanitizeEmptyCursorPos(void);
+        /**
+         * @brief setRightPtrAtNodeBeginToBeInserted set if a special right pointer needs to be inserted
+         */
+        void setRightPtrAtNodeBeginToBeInserted(void);
+        /**
+         * @brief rightPtrAtNodeBeginToBeInserted check if a right pointer needs to be inserted
+         * @return true if a right pointer needs to be inserted depending on conditions before inserting a character, false otherwise
+         */
+        bool rightPtrAtNodeBeginToBeInserted(void);
+        /**
+         * @brief checkForSpecialCursorConditions helper function to be called when insering characters that checks for
+         * special cursor conditions
+         */
+        void checkForSpecialCursorConditions(void);
 
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
@@ -410,6 +424,7 @@ private:
         quint32 m_cursorPos;                    ///< cursor position for number or variable nodes
         bool m_cursorPosSaved;                  ///< saves if cursor position has already been saved. The method does not allow to save it again until it has been removed due to parsing
         NodeIterReStructData m_tempIterData;    ///< saves the data for cursor positions from parser to be able to restore them later
+        bool m_insRightPtrAtNodeBegin;            ///< marker if in case of special operators a right pointer has to be inserted
 };
 
 #endif // FORMULAMODIFICATOR_H

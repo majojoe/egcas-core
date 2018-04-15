@@ -70,7 +70,8 @@ FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{fo
                                                                     m_changeAwaited{false},
                                                                     m_underlineCursorLeft{false},
                                                                     m_cursorPos{0},
-                                                                    m_cursorPosSaved{false}
+                                                                    m_cursorPosSaved{false},
+                                                                    m_insRightPtrAtNodeBegin{false}
 {
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_iter);
         visitor.updateVector();
@@ -385,8 +386,7 @@ void FormulaModificator::insertUnaryOperation(QString left, QString right)
 
 void FormulaModificator::insertFunction(QString name, quint32 stdPos, QString arg1, QString arg2, QString arg3, QString arg4, QString arg5, QString arg6)
 {
-        if (!m_underlinedNode) {
-
+        if (!m_underlinedNode) {                
                 if (isEmptyElement(true)) {
                         m_iter.remove(true);
                 }
@@ -426,6 +426,9 @@ void FormulaModificator::insertCharacter(QChar character)
         FormulaScrElement el;
         el.m_value = EgcAlnumNode::encode(character);
 
+        //checks for special cursor conditions when inserting characters
+        checkForSpecialCursorConditions();
+
         m_iter.save();
         resetUnderline();
 
@@ -443,6 +446,10 @@ void FormulaModificator::insertCharacter(QChar character)
 void FormulaModificator::removeElement(bool previous)
 {
         FormulaScrElement element;
+
+        //checks for special cursor conditions when removing characters
+        checkForSpecialCursorConditions();
+
         m_iter.save();
         resetUnderline();
 
@@ -802,7 +809,15 @@ void FormulaModificator::saveCursorPosition(void)
                 rel = &m_iter.peekNext();
 
         m_cursorPos = 0;
-        if (rel && !lel) {
+
+        if (rightPtrAtNodeBeginToBeInserted()) {
+                // a right pointer has to be inserted at node begin
+                m_cursorPos = findAlnumBegin();
+                insertRightPointer();
+                //move the cursor back to the old position
+                for (quint32 i = 0; i < m_cursorPos; i++)
+                        (void) m_iter.next();
+        } else if (rel && !lel) {
                 insertRightPointer();
         } else if (lel && !rel) {
                 //m_cursorPos = findAlnumBegin();
@@ -961,6 +976,45 @@ void FormulaModificator::sanitizeEmptyCursorPos()
                         }
                 }
         }
+}
+
+void FormulaModificator::setRightPtrAtNodeBeginToBeInserted(void)
+{
+        m_insRightPtrAtNodeBegin = true;
+}
+
+bool FormulaModificator::rightPtrAtNodeBeginToBeInserted()
+{
+        bool temp = m_insRightPtrAtNodeBegin;
+        m_insRightPtrAtNodeBegin = false;
+
+        return temp;
+}
+
+void FormulaModificator::checkForSpecialCursorConditions()
+{
+        // check if we are in the middle or at the end of a function node name
+        if (m_iter.hasNext() && m_iter.hasPrevious()) {
+                FormulaScrElement rel = m_iter.peekNext();
+                FormulaScrElement lel = m_iter.peekPrevious();
+                if (     rel.m_node == lel.m_node
+                     && lel.m_sideNode == FormulaScrElement::nodeLeftSide
+                     && rel.m_sideNode == FormulaScrElement::nodeLeftSide) {
+                        if (lel.m_node) {
+                                if (lel.m_node->getNodeType() == EgcNodeType::FunctionNode)
+                                        setRightPtrAtNodeBeginToBeInserted();
+                        }
+                }
+        } else if (m_iter.hasNext() && !m_iter.hasPrevious()) {
+                FormulaScrElement rel = m_iter.peekNext();
+                if (rel.m_sideNode == FormulaScrElement::nodeLeftSide) {
+                        if (rel.m_node) {
+                                if (rel.m_node->getNodeType() == EgcNodeType::FunctionNode)
+                                        setRightPtrAtNodeBeginToBeInserted();
+                        }
+                }
+        }
+
 }
 
 bool FormulaModificator::reStructureTree()
