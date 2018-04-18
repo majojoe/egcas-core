@@ -784,7 +784,7 @@ FormulaScrElement&FormulaModificator::elementAtCursor() const
 
 quint32 FormulaModificator::subPosition(void) const
 {
-        qint32 retval;
+        quint32 retval;
 
         if (rightSide())
                 retval = m_iter.peekNext().lTemp.m_subpos;
@@ -1667,7 +1667,7 @@ void FormulaModificator::rmSegmented(bool previous)
         while(m_iter.hasNext()) {
                 FormulaScrElement &i = m_iter.next();
                 if (i.hasPositionMarker()) {
-                        m_iter.remove(previous);
+                        m_iter.remove(true);
                         break;
                 }
         }
