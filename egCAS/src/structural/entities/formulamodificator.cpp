@@ -488,6 +488,7 @@ void FormulaModificator::removeElement(bool previous)
         sanitizeWithEmptyBinaryOps();
         sanitizeFlex();
         sanitizeSpecials(element, previous);
+        sanitizeFunctions(element, previous);
 
         updateFormula();
 }
@@ -1470,6 +1471,29 @@ void FormulaModificator::sanitizeFlex()
                         if (    lnode->isFlexNode() && rnode->isFlexNode()
                              && lnode == rnode
                              && lside == FormulaScrElement::nodeLeftSide && rside == FormulaScrElement::nodeRightSide) {
+                                insertEmptyNode();
+                                m_iter.previous();
+                        }
+                }
+        }
+}
+
+void FormulaModificator::sanitizeFunctions(FormulaScrElement el, bool previous)
+{
+        (void) el;
+        (void) previous;
+
+        if (m_iter.hasPrevious() && m_iter.hasNext()) {
+                EgcNode *lnode = m_iter.peekPrevious().m_node;
+                EgcNode *rnode = m_iter.peekNext().m_node;
+                enum FormulaScrElement::SideNode lside = m_iter.peekPrevious().m_sideNode;
+                enum FormulaScrElement::SideNode rside = m_iter.peekNext().m_sideNode;
+                if (lnode && rnode) {
+                        if (    lnode->getNodeType() == EgcNodeType::FunctionNode
+                             && rnode->getNodeType() == EgcNodeType::FunctionNode
+                             && lnode == rnode
+                             && (    (lside == FormulaScrElement::nodeLeftSide && rside == FormulaScrElement::nodeMiddle)
+                                  || (lside == FormulaScrElement::nodeMiddle && rside == FormulaScrElement::nodeRightSide))) {
                                 insertEmptyNode();
                                 m_iter.previous();
                         }
