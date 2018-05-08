@@ -168,7 +168,6 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | expr "-" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::MinusNode, $1, $3);}
      | expr "*" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::MultiplicationNode, $1, $3);}
      | expr "/" expr       {$$ = interpreter.addDivisionExpression($1, $3);}
-     | LBRACKET_OP expr RBRACKET_OP "/" LBRACKET_OP expr RBRACKET_OP  {$$ = interpreter.addDivisionExpression($2, $6);}
      | expr "^" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::ExponentNode, $1, $3);}
      | expr EMPTYBINOP expr {$$ = interpreter.addBinaryExpression(EgcNodeType::BinEmptyNode, $1, $3);}
      | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
@@ -185,12 +184,12 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | INTEGRAL "(" explist ")" {$$ = interpreter.changeFlexExpressionType(EgcNodeType::IntegralNode, $3);}
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}
      | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}
-     | "_root" "(" LBRACKET_OP expr RBRACKET_OP "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $4, $7);}
      | "_empty"            {$$ = interpreter.addEmptyNode();}
      | expr ITERATOR_L      {$$ = interpreter.updateIterator($1, 2);}
      | ITERATOR_R expr      {$$ = interpreter.updateIterator($2, 1);}
      | "_red_parenth_l" expr {$$ = interpreter.addUnaryExpression(EgcNodeType::LParenthesisNode, $2);}
      | expr "_red_parenth_r" {$$ = interpreter.addUnaryExpression(EgcNodeType::RParenthesisNode, $1);}
+     | LBRACKET_OP expr RBRACKET_OP {$$ = $2;}
 ;
     
 explist: expr            {$$ = interpreter.createArgList($1);}
