@@ -128,10 +128,9 @@ public:
          */
         void insertUnaryElement(QString segment, bool left = true);
         /**
-         * @brief insertSigns insert signs in the vector
-         * @param segment the signs (text) to insert
+         * @brief convertVarToFunc "converts" a variable to a function (parenthesis and an empty node are appended)
          */
-        void insertSigns(QString signs);
+        void convertVarToFunc(void);
         /**
          * @brief insertParenthesis insert red parenthesis and change them to normal parenthesis as needed
          * @param left true if the left parenthesis is to insert, false otherwise
