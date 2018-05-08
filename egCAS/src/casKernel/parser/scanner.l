@@ -112,12 +112,6 @@ ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*{EMPTY}{0,1})
 [0-9]+"."[0-9]*{EXPONENT}? |
 "."?[0-9]+{EXPONENT}? { return CASParser::MaximaParser::make_NUMBER(yytext, CASParser::location()); }
 
- /*builtin functions*/
-sin |
-cos {
-        return CASParser::MaximaParser::make_BUILTIN_FNCS(yytext, CASParser::location());
- }
-
  /*names*/
 {ALNUMNODE} {
         return CASParser::MaximaParser::make_NAMES(yytext, CASParser::location());

@@ -1310,7 +1310,7 @@ void FormulaModificator::sanitizeFlex()
         }
 }
 
-void FormulaModificator::sanitizeFunctions(FormulaScrElement el, bool previous)
+void FormulaModificator::sanitizeFlexFncs(FormulaScrElement el, bool previous)
 {
         (void) el;
         (void) previous;
@@ -1321,8 +1321,8 @@ void FormulaModificator::sanitizeFunctions(FormulaScrElement el, bool previous)
                 enum FormulaScrElement::SideNode lside = m_iter.peekPrevious().m_sideNode;
                 enum FormulaScrElement::SideNode rside = m_iter.peekNext().m_sideNode;
                 if (lnode && rnode) {
-                        if (    lnode->getNodeType() == EgcNodeType::FunctionNode
-                             && rnode->getNodeType() == EgcNodeType::FunctionNode
+                        if (    lnode->isFlexNode()
+                             && rnode->isFlexNode()
                              && lnode == rnode
                              && (    (lside == FormulaScrElement::nodeLeftSide && rside == FormulaScrElement::nodeMiddle)
                                   || (lside == FormulaScrElement::nodeMiddle && rside == FormulaScrElement::nodeRightSide))) {
@@ -1574,7 +1574,7 @@ void FormulaModificator::removeElement(bool previous)
         sanitizeWithEmptyBinaryOps();
         sanitizeFlex();
         sanitizeSpecials(element, previous);
-        sanitizeFunctions(element, previous);
+        sanitizeFlexFncs(element, previous);
 
         updateFormula();
 }

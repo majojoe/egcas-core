@@ -263,7 +263,7 @@ private:
          * @param el the element that has been deleted
          * @param previous true if the element has been in front of the current cursor or false if behind
          */
-        void sanitizeFunctions(FormulaScrElement el, bool previous);
+        void sanitizeFlexFncs(FormulaScrElement el, bool previous);
         /**
          * @brief sanitizeWithEmptyBinaryOps sanitize unary, number and variable elements after removing binary
          * operations

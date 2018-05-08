@@ -91,7 +91,6 @@
 %token <char> OPERATOR "operator";
 %token <std::string> NAMES "names";
 %token <std::string> VARSUB "varsub";
-%token <std::string> BUILTIN_FNCS "builtin_fncs";
 %token PLUS "+";
 %token MINUS "-";
 %token MULTIPLICATION "*";
@@ -177,7 +176,6 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | NAMES VARSUB        {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1 + $2);}
      | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}
      | EMPTY "(" explist ")"{$$ = interpreter.addFunction("", $3);}
-     | BUILTIN_FNCS "(" expr ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
      | LOGARITHM "(" expr ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::LogNode, $3);}
      | NATLOGARITHM "(" expr ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::NatLogNode, $3);}
      | "_sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}

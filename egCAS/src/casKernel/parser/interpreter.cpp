@@ -220,24 +220,6 @@ EgcNode* Interpreter::addFunction(const std::string& fncName, EgcArgumentsNode* 
         return static_cast<EgcNode*> (argList);
 }
 
-EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcNode* node0)
-{
-        QScopedPointer<EgcFunctionNode> node(static_cast<EgcFunctionNode*>(EgcNodeCreator::create(EgcNodeType::FunctionNode)));
-        QScopedPointer<EgcNode> node0Tmp(node0);
-        setNotDangling(node0);
-        QString name = QString::fromStdString(fncName);
-        node->setStuffedName(name);
-        if (!node.isNull() && node0) {
-                node->setChild(0, *node0Tmp.take());
-        } else {
-                throw std::runtime_error("Not enough memory to complete operation!");
-        }
-        EgcNode *nodePtr = node.data();
-        addDanglingNode(node.take());
-
-        return nodePtr;
-}
-
 EgcNode* Interpreter::updateIterator(EgcNode* node0, int i)
 {
         if (i == 1)
