@@ -93,7 +93,7 @@ MainWindow::MainWindow(QWidget *parent) :
     
     EgcFormulaEntity* formula6 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(650.0, 670.0)));
-    FormulaGenerator::getFormulaTree(formula6, "_integrate(z_120,x,0,10)=_empty");
+    FormulaGenerator::getFormulaTree(formula6, "_integrate(0,10,z_120,x)=_empty");
 
     EgcFormulaEntity* formula7 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 760.0)));

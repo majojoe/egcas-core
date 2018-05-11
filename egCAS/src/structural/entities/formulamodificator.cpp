@@ -1651,7 +1651,7 @@ void FormulaModificator::insertOperation(EgcAction operation)
                                 insertFunction("_log", 1, emptyElement);
                 } else if (operation.m_intType == InternalFunctionType::integral) {
                         if (operation.m_OpModificators == OpModificators::definiteIntegral) {
-                                insertFunction("_integrate", 1, emptyElement, emptyElement, emptyElement, emptyElement);
+                                insertFunction("_integrate", 3, emptyElement, emptyElement, emptyElement, emptyElement);
                         } else {
                                 insertFunction("_integrate", 1, emptyElement, emptyElement);
                         }

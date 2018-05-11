@@ -141,7 +141,7 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
                                 assembleResult("integrate(", ",", ")", flex);
                 } else if (flex->getNumberChildNodes() == 4) {
                         if (m_state == EgcIteratorState::RightIteration)
-                                assembleResult("romberg(", ",", ")", flex);
+                                assembleResult("romberg(%3,%4,%1,%2)", flex);
                 }
                 break;
         case EgcNodeType::DifferentialNode:

@@ -199,7 +199,7 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                 } else if (node->getNumberChildNodes() == 4) { // integral with limits number of childs should be 4!
                         if (m_state == EgcIteratorState::RightIteration) {
                                 id = getId(node);
-                                assembleResult("<mrow "%id%"><munderover><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>%3</mrow><mrow>%4</mrow></munderover><mrow>%1</mrow><mo>d</mo><mrow>%2</mrow></mrow>", node);
+                                assembleResult("<mrow "%id%"><munderover><mstyle scriptlevel=\"-1\"><mo>&Integral;</mo></mstyle><mrow>%1</mrow><mrow>%2</mrow></munderover><mrow>%3</mrow><mo>d</mo><mrow>%4</mrow></mrow>", node);
                         }
                 }
                 break;
