@@ -1655,30 +1655,16 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         } else {
                                 insertFunction("_integrate", 1, emptyElement, emptyElement);
                         }
+                } else if (operation.m_intType == InternalFunctionType::differential) {
+                        if (operation.m_lookModificatiors == LookModificators::differential_lagrange_notation_1)
+                                insertFunction("_diff", 2, QString("1"), emptyElement, emptyElement);
+                        else if (operation.m_lookModificatiors == LookModificators::differential_lagrange_notation_2)
+                                insertFunction("_diff", 2, QString("2"), emptyElement, emptyElement);
+                        else if (operation.m_lookModificatiors == LookModificators::differential_lagrange_notation_3)
+                                insertFunction("_diff", 2, QString("3"), emptyElement, emptyElement);
+                        else
+                                insertFunction("_diff", 2, QString("0"), emptyElement, emptyElement, emptyElement);
                 }
-//                else if (operations.m_intType == InternalFunctionType::differential) {
-//                        bool ret = createAndInsertOp(EgcNodeType::DifferentialNode);
-//                        if (ret) {
-//                                const EgcNode *nd = nullptr;
-//                                if (m_scrIter->node()) {
-//                                        nd = m_scrIter->node();
-//                                        EgcContainerNode *par = nullptr;
-//                                        par = nd->getParent();
-//                                        if (par->getNodeType() == EgcNodeType::DifferentialNode) {
-//                                                EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(par);
-//                                                static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
-//                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_1)
-//                                                        diff->setNrDerivative(1);
-//                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_2)
-//                                                        diff->setNrDerivative(2);
-//                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_3)
-//                                                        diff->setNrDerivative(3);
-//                                        }
-//                                }
-//                        }
-//                        return ret;
-//                }
-
         }
 
         sanitizeEmptyCursorPos();

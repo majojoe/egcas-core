@@ -50,6 +50,13 @@ public:
                 differential = 0, variable
         };
 
+        /**
+         * @brief The DifferentialType enum the visualisation type of the differential
+         */
+        enum class DifferentialType {
+                lagrange1, lagrange2, lagrange3, leibnitz
+        };
+
         EgcDifferentialNode();
         /**
          * @brief setNrDerivative set the derivative level (1st, 2nd, ...).
@@ -67,9 +74,20 @@ public:
          * @return the index of the child
          */
         quint32 getIndexOf(EgcDifferentialIndexes index);
+        /**
+         * @brief getDifferentialType returns the differential type of this differential
+         * @return the differential type used for visualisation of this differential
+         */
+        DifferentialType getDifferentialType(void) const;
+        /**
+         * @brief setDifferentialType set the differential type of this differential
+         * @param type the differential type to set
+         */
+        void setDifferentialType(DifferentialType type);
 
 protected:
         quint8 m_derivative;
+        DifferentialType m_differentialType;
 
 };
 

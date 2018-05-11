@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcdifferentialnode.h"
 
-EgcDifferentialNode::EgcDifferentialNode() : m_derivative{1}
+EgcDifferentialNode::EgcDifferentialNode() : m_derivative{1}, m_differentialType{DifferentialType::leibnitz}
 {
 
 }
@@ -52,4 +52,14 @@ quint32 EgcDifferentialNode::getIndexOf(EgcDifferentialIndexes index)
                 return 0;
         if (index == EgcDifferentialIndexes::variable)
                 return 1;
+}
+
+EgcDifferentialNode::DifferentialType EgcDifferentialNode::getDifferentialType() const
+{
+        return m_differentialType;
+}
+
+void EgcDifferentialNode::setDifferentialType(EgcDifferentialNode::DifferentialType type)
+{
+        m_differentialType = type;
 }
