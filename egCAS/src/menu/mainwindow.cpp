@@ -97,15 +97,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     EgcFormulaEntity* formula7 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 760.0)));
-    FormulaGenerator::getFormulaTree(formula7, "_diff(z_120,x,1)=_empty");
+    FormulaGenerator::getFormulaTree(formula7, "_diff(1,z_120,x,1)=_empty");
 
     EgcFormulaEntity* formula8 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(650.0, 760.0)));
-    FormulaGenerator::getFormulaTree(formula8, "_diff(z_120,x,3)=_empty");
+    FormulaGenerator::getFormulaTree(formula8, "_diff(3,z_120,x,3)=_empty");
 
     EgcFormulaEntity* formula9 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
                                                                                          QPointF(250.0, 830.0)));
-    FormulaGenerator::getFormulaTree(formula9, "_diff(z_120,x,5)=_empty");
+    FormulaGenerator::getFormulaTree(formula9, "_diff(0,z_120,x,5)=_empty");
 
     //add a text item
     EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text,

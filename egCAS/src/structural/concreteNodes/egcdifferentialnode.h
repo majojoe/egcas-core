@@ -42,13 +42,6 @@ class EgcDifferentialNode : public EgcFncContainerNode
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcDifferentialNode, EgcNodeType::DifferentialNode);
 public:
-        /**
-         * @brief The EgcDifferentialIndexes enum is a enum to determine the meaning of the child nodes inside the
-         * differential node
-         */
-        enum class EgcDifferentialIndexes {
-                differential = 0, variable
-        };
 
         /**
          * @brief The DifferentialType enum the visualisation type of the differential
@@ -68,12 +61,6 @@ public:
          * @return the level of derivative (1, 2, 3, ...)
          */
         quint8 getNrDerivative(void) const;
-        /**
-         * @brief getIndexOf get the index of the given meaning
-         * @param index the meaning of the child we are searching for
-         * @return the index of the child
-         */
-        quint32 getIndexOf(EgcDifferentialIndexes index);
         /**
          * @brief getDifferentialType returns the differential type of this differential
          * @return the differential type used for visualisation of this differential

@@ -351,19 +351,27 @@ EgcNode* Interpreter::addDifferentialExpression(EgcArgumentsNode* argList)
 
         unsigned int diff_type = 0;
         EgcNode* type = diff->getChild(0);
+        if (!type)
+                return node;
         if (type->getNodeType() == EgcNodeType::NumberNode)
                 diff_type = static_cast<EgcNumberNode*>(type)->getValue().toUInt();
         diff->remove(0);
         if (diff_type == 1 || diff_type == 2 || diff_type == 3) {
                 diff->setNrDerivative(static_cast<quint8>(diff_type));
-                if (diff_type == 1)
+                if (diff_type == 1) {
                         diff->setDifferentialType(EgcDifferentialNode::DifferentialType::lagrange1);
-                if (diff_type == 2)
+                        diff->setNrDerivative(1);
+                } else if (diff_type == 2) {
                         diff->setDifferentialType(EgcDifferentialNode::DifferentialType::lagrange2);
-                if (diff_type == 3)
+                        diff->setNrDerivative(2);
+                } else if (diff_type == 3) {
                         diff->setDifferentialType(EgcDifferentialNode::DifferentialType::lagrange3);
+                        diff->setNrDerivative(3);
+                }
         } else {
                 EgcNode* derivative = diff->getChild(2);
+                if (!derivative)
+                        return node;
                 unsigned int der = 1;
                 if (derivative->getNodeType() == EgcNodeType::NumberNode)
                         der = static_cast<EgcNumberNode*>(derivative)->getValue().toUInt();
@@ -371,7 +379,6 @@ EgcNode* Interpreter::addDifferentialExpression(EgcArgumentsNode* argList)
                 diff->setDifferentialType(EgcDifferentialNode::DifferentialType::leibnitz);
                 diff->remove(2);
         }
-
 
         return node;
 }

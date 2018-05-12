@@ -46,14 +46,6 @@ quint8 EgcDifferentialNode::getNrDerivative(void) const
         return m_derivative;
 }
 
-quint32 EgcDifferentialNode::getIndexOf(EgcDifferentialIndexes index)
-{
-        if (index == EgcDifferentialIndexes::differential)
-                return 0;
-        if (index == EgcDifferentialIndexes::variable)
-                return 1;
-}
-
 EgcDifferentialNode::DifferentialType EgcDifferentialNode::getDifferentialType() const
 {
         return m_differentialType;

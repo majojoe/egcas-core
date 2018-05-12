@@ -208,42 +208,42 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                         id = getId(node);
                         EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(node);
                         quint8 der = diff->getNrDerivative();
-                        quint32 indexD = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::differential);
-                        quint32 indexV = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::variable);
+                        EgcDifferentialNode::DifferentialType type = diff->getDifferentialType();
+                        QString derivative;
 
-                        if (    diff->getChild(indexD)->getNodeType() == EgcNodeType::VariableNode
-                             && der < 4) { // use lagrange's notation
-                                QString derivative;
-                                switch (der) {
-                                case 2:
-                                        derivative = "&Prime;";
-                                        break;
-                                case 3:
-                                        derivative = "&tprime;";
-                                        break;
-                                case 4:
-                                        derivative = "&qprime;";
-                                        break;
-                                default:
-                                        derivative = "&prime;";
-                                        break;
-                                }
+                        switch (type) {
+                        case EgcDifferentialNode::DifferentialType::lagrange2:
+                                derivative = "&Prime;";
+                                break;
+                        case EgcDifferentialNode::DifferentialType::lagrange3:
+                                derivative = "&tprime;";
+                                break;
+                        case EgcDifferentialNode::DifferentialType::leibnitz:
+                                derivative = "&qprime;";
+                                break;
+                        case EgcDifferentialNode::DifferentialType::lagrange1:
+                                derivative = "&prime;";
+                                break;
+                        }
 
+                        if (    type == EgcDifferentialNode::DifferentialType::lagrange1
+                             || type == EgcDifferentialNode::DifferentialType::lagrange2
+                             || type == EgcDifferentialNode::DifferentialType::lagrange3) {
                                 derivative = "<mstyle scriptlevel=\"-1\"><mo>" % derivative % "</mo></mstyle>";
-                                derivative = "<mrow "%id%"><msup>%" % QString::number(indexD + 1) % derivative
-                                             % "</msup><mfenced>%" % QString::number(indexV + 1) % "</mfenced></mrow>";
+                                derivative = "<mrow "%id%"><msup>%" % QString::number(1) % derivative
+                                             % "</msup><mfenced>%" % QString::number(2) % "</mfenced></mrow>";
                                 assembleResult(derivative, node);
                         } else { // use leibniz' notation
                                 QString result;
                                 if (der == 1)
-                                        result = "<mfrac "%id%"><mrow><mi>d</mi><mfenced>%" % QString::number(indexD + 1)
-                                                 % "</mfenced></mrow><mrow><mi>d</mi>%" % QString::number(indexV + 1)
+                                        result = "<mfrac "%id%"><mrow><mi>d</mi><mfenced>%" % QString::number(2)
+                                                 % "</mfenced></mrow><mrow><mi>d</mi>%" % QString::number(1)
                                                  % "</mrow></mfrac>";
                                 else
                                         result = "<mfrac "%id%"><mrow><msup><mi>d</mi><mn "%id%">" % QString::number(der)
-                                                 % "</mn></msup><mfenced>%" % QString::number(indexD + 1)
+                                                 % "</mn></msup><mfenced>%" % QString::number(1)
                                                  % "</mfenced></mrow><msup><mrow><mi>d</mi>%"
-                                                 % QString::number(indexV + 1) % "</mrow><mn>"
+                                                 % QString::number(2) % "</mrow><mn>"
                                                  % QString::number(der) % "</mn></msup></mfrac>";
 
                                 assembleResult(result, node);

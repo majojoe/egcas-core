@@ -147,10 +147,8 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
         case EgcNodeType::DifferentialNode:
                 if (m_state == EgcIteratorState::RightIteration) {
                         EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(flex);
-                        quint32 indexD = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::differential);
-                        quint32 indexV = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::variable);
 
-                        QString str = "diff(%" % QString::number(indexD + 1) % ",%" % QString::number(indexV + 1)
+                        QString str = "diff(%" % QString::number(2) % ",%" % QString::number(3)
                                       % "," % QString::number(diff->getNrDerivative()) % ")";
                         assembleResult(str, flex);
                 }
