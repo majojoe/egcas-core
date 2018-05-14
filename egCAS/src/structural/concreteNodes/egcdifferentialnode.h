@@ -47,7 +47,7 @@ public:
          * @brief The DifferentialType enum the visualisation type of the differential
          */
         enum class DifferentialType {
-                lagrange1, lagrange2, lagrange3, leibnitz
+                lagrange1 = 1, lagrange2 = 2, lagrange3 = 3, leibnitz = 0
         };
 
         EgcDifferentialNode();

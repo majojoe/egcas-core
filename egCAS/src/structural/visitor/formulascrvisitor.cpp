@@ -229,13 +229,9 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
                 break;
         case EgcNodeType::DifferentialNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
-                        if (static_cast<EgcDifferentialNode*>(flex)->getNrDerivative() <= 3) {
-                                appendSegmented("_diff(", flex, CursorAdhesion::low, 0, true, flex->getChild(0), 0, true);
-                        } else {
-                                appendSegmented("_diff(", flex, CursorAdhesion::ultra, 0, true, flex, 1, true);
-                                appendSigns(QString::number(static_cast<EgcDifferentialNode*>(flex)->getNrDerivative()), flex, CursorAdhesion::strong);
-                                appendSegmented(",", flex, CursorAdhesion::ultra, 1, false, flex->getChild(0), 0, true);
-                        }
+                        EgcDifferentialNode &diff = *static_cast<EgcDifferentialNode*>(flex);
+                        int type = static_cast<int>(diff.getDifferentialType());
+                        appendSegmented(QString("_diff(%1,").arg(type), flex, CursorAdhesion::low, 0, true, flex->getChild(0), 0, true);
                 } else if (m_state == EgcIteratorState::MiddleIteration) {
                         appendSegmented(",", flex->getChild(m_childIndex), CursorAdhesion::ultra, 0, false, flex->getChild(m_childIndex + 1), 0, true);
                 } else {
