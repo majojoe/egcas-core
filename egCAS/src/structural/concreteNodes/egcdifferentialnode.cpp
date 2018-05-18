@@ -34,6 +34,27 @@ EgcDifferentialNode::EgcDifferentialNode() : m_derivative{1}, m_differentialType
 
 }
 
+bool EgcDifferentialNode::valid(void)
+{
+        if (getDifferentialType() == DifferentialType::leibnitz) {
+                if (m_childs.count() != 3)
+                        return false;
+                if (m_childs.at(0)) {
+                        if (!m_childs.at(0)->valid())
+                                return false;
+                }
+                if (m_childs.at(1)) {
+                        if (!m_childs.at(1)->valid())
+                                return false;
+                }
+
+        } else {
+                return EgcFlexNode::valid();
+        }
+
+        return true;
+}
+
 void EgcDifferentialNode::setNrDerivative(quint8 derivative)
 {
         if (derivative < 1)

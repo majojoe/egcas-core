@@ -52,6 +52,11 @@ public:
 
         EgcDifferentialNode();
         /**
+         * @brief valid checks if the subnode is valid. This can be the case if e.g. the child is not NULL.
+         * @return returns true if the expression is valid, false otherwise.
+         */
+        virtual bool valid(void);
+        /**
          * @brief setNrDerivative set the derivative level (1st, 2nd, ...).
          * @param derivative the level of derivative (1, 2, 3, ...)
          */

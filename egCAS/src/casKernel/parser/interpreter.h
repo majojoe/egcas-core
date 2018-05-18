@@ -161,6 +161,13 @@ private:
          * @return node0
          */
         EgcNode* updateIterator(EgcNode* node0, int i);
+        /**
+         * @brief updateIterator if any iterator points to the given original pointer
+         * @param original the original pointer to check for (will be replaced by new pointer)
+         * @param new_pointer the new pointer that replaces the old one
+         * @return pointer that has been replaced
+         */
+        EgcNode* updateIterator(EgcNode* original, EgcNode* new_pointer);
 
         /**
          * @brief createArgList creates an argument list that is integrated later on in the function where it is used in

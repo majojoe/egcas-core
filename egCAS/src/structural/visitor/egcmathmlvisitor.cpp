@@ -235,16 +235,19 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                                 assembleResult(derivative, node);
                         } else { // use leibniz' notation
                                 QString result;
-                                if (der == 1)
-                                        result = "<mfrac "%id%"><mrow><mi>d</mi><mfenced>%" % QString::number(2)
-                                                 % "</mfenced></mrow><mrow><mi>d</mi>%" % QString::number(1)
-                                                 % "</mrow></mfrac>";
-                                else
+                                if (der == 1) {
+                                        result = "<mfrac "%id%"><mrow><mi>d</mi>"
+                                                 % "<mfenced>%" % QString::number(1)
+                                                 % "</mfenced></mrow><msup><mrow><mi>d</mi>%"
+                                                 % QString::number(2) % "</mrow>%"
+                                                 % QString::number(3) % "</msup></mfrac>";
+                                } else {
                                         result = "<mfrac "%id%"><mrow><msup><mi>d</mi><mn "%id%">" % QString::number(der)
                                                  % "</mn></msup><mfenced>%" % QString::number(1)
                                                  % "</mfenced></mrow><msup><mrow><mi>d</mi>%"
-                                                 % QString::number(2) % "</mrow><mn>"
-                                                 % QString::number(der) % "</mn></msup></mfrac>";
+                                                 % QString::number(2) % "</mrow>%"
+                                                 % QString::number(3) % "</msup></mfrac>";
+                                }
 
                                 assembleResult(result, node);
                         }

@@ -232,6 +232,18 @@ EgcNode* Interpreter::updateIterator(EgcNode* node0, int i)
         return node0;
 }
 
+EgcNode* Interpreter::updateIterator(EgcNode* original, EgcNode* new_pointer)
+{
+        if (original == m_iterPointer1)
+                m_iterPointer1 = new_pointer;
+        if (original == m_iterPointer2)
+                m_iterPointer2 = new_pointer;
+        if (original == m_iterPointer3)
+                m_iterPointer3 = new_pointer;
+
+        return new_pointer;
+}
+
 EgcArgumentsNode* Interpreter::createArgList(EgcNode* expression)
 {
         QScopedPointer<EgcArgumentsNode> node(static_cast<EgcArgumentsNode*>(EgcNodeCreator::create(EgcNodeType::ArgumentsNode)));
@@ -375,9 +387,16 @@ EgcNode* Interpreter::addDifferentialExpression(EgcArgumentsNode* argList)
                 unsigned int der = 1;
                 if (derivative->getNodeType() == EgcNodeType::NumberNode)
                         der = static_cast<EgcNumberNode*>(derivative)->getValue().toUInt();
+                if (der <= 0)
+                        der = 1;
                 diff->setNrDerivative(static_cast<quint8>(der));
                 diff->setDifferentialType(EgcDifferentialNode::DifferentialType::leibnitz);
-                diff->remove(2);
+                if (der == 1) {
+                        QScopedPointer<EgcEmptyNode> emptyNd(static_cast<EgcEmptyNode*>(EgcNodeCreator::create(EgcNodeType::EmptyNode)));
+                        (void) updateIterator(diff->getChild(2), emptyNd.data());
+                        diff->remove(2);
+                        diff->insert(2, *emptyNd.take());
+                }
         }
 
         return node;
