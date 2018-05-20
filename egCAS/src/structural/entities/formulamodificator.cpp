@@ -423,6 +423,7 @@ void FormulaModificator::insertFunction(QString name, quint32 stdPos, QString ar
 
 void FormulaModificator::insertCharacter(QChar character)
 {
+        bool insertBinaryEmptyNode = false;
         FormulaScrElement el;
         el.m_value = EgcAlnumNode::encode(character);
 
@@ -439,7 +440,18 @@ void FormulaModificator::insertCharacter(QChar character)
                 m_iter.remove(false);
         }
 
+        if (m_iter.hasNext()) {
+                if (m_iter.peekNext().m_node) {
+                        if (m_iter.peekNext().m_node->getNodeType() == EgcNodeType::VariableNode)
+                                insertBinaryEmptyNode = true;
+                }
+        }
+
         m_iter.insert(el);
+        if (insertBinaryEmptyNode) {
+                insertBinEmptyNode();
+                (void) m_iter.previous();
+        }
         updateFormula();
 }
 
