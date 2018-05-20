@@ -203,8 +203,14 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                         }
                 }
                 break;
-        case EgcNodeType::DifferentialNode:
-                if (m_state == EgcIteratorState::RightIteration) {
+        case EgcNodeType::DifferentialNode:               
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        // don't show the empty exponent if exponent is 1 and type is leibnitz
+                        if (    static_cast<EgcDifferentialNode*>(node)->getDifferentialType() == EgcDifferentialNode::DifferentialType::leibnitz
+                             && !m_formulaActive)
+                                suppressChildIfChildValue(node, 2, EgcNodeType::EmptyNode, "");
+
+                } else if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
                         EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(node);
                         quint8 der = diff->getNrDerivative();
@@ -236,11 +242,18 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                         } else { // use leibniz' notation
                                 QString result;
                                 if (der == 1) {
-                                        result = "<mfrac "%id%"><mrow><mi>d</mi>"
-                                                 % "<mfenced>%" % QString::number(1)
-                                                 % "</mfenced></mrow><msup><mrow><mi>d</mi>%"
-                                                 % QString::number(2) % "</mrow>%"
-                                                 % QString::number(3) % "</msup></mfrac>";
+                                        if (m_formulaActive) {
+                                                result = "<mfrac "%id%"><mrow><mi>d</mi>"
+                                                         % "<mfenced>%" % QString::number(1)
+                                                         % "</mfenced></mrow><msup><mrow><mi>d</mi>%"
+                                                         % QString::number(2) % "</mrow>%"
+                                                         % QString::number(3) % "</msup></mfrac>";
+                                        } else {
+                                                result = "<mfrac "%id%"><mrow><mi>d</mi>"
+                                                         % "<mfenced>%" % QString::number(1)
+                                                         % "</mfenced></mrow><mrow><mi>d</mi>%"
+                                                         % QString::number(2) % "</mrow></mfrac>";
+                                        }
                                 } else {
                                         result = "<mfrac "%id%"><mrow><msup><mi>d</mi><mn "%id%">" % QString::number(der)
                                                  % "</mn></msup><mfenced>%" % QString::number(1)
@@ -252,6 +265,8 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                                 assembleResult(result, node);
                         }
                 }
+                break;
+        case EgcNodeType::ArgumentsNode:
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType()));
