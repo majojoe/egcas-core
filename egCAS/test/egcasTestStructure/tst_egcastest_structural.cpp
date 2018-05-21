@@ -1221,7 +1221,7 @@ void EgcasTest_Structural::testVisitors()
         QVERIFY(formula5.getCASKernelCommand() == QString("fpprintprec:0$((30.452)+(3))+(2);"));
 
         //test math ml visitor
-        EgcMathMlVisitor mathMlVisitor(formula4);
+        EgcMathMlVisitor mathMlVisitor(formula4, false);
         result = mathMlVisitor.getResult();        
         QVERIFY(result == QString("<math><mrow  id=\"6\" ><mrow  id=\"3\" ><mn id=\"1\" >30.452</mn><mo id=\"4\" >+</mo><mn id=\"2\" >3</mn></mrow><mo id=\"7\" >+</mo><mn id=\"5\" >2</mn></mrow></math>"));
         QVERIFY(formula4.getMathMlCode() == QString("<math><mrow  id=\"6\" ><mrow  id=\"3\" ><mn id=\"1\" >30.452</mn><mo id=\"4\" >+</mo><mn id=\"2\" >3</mn></mrow><mo id=\"7\" >+</mo><mn id=\"5\" >2</mn></mrow></math>"));

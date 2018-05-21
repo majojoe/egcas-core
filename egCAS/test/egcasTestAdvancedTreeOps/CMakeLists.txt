@@ -29,7 +29,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 # Widgets finds its own dependencies.
-find_package(Qt5 COMPONENTS Core Widgets Test)
+find_package(Qt5 COMPONENTS Core Widgets Test Multimedia)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser)
@@ -64,6 +64,10 @@ set(tst_egcas_advanced_tree_ops_SOURCES
         ../../src/structural/visitor/egcmaximavisitor.cpp
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
+        ../../src/structural/entities/formulamodificator.cpp
+        ../../src/structural/iterator/formulascriter.cpp
+        ../../src/structural/visitor/formulascrvisitor.cpp
+        ../../src/structural/visitor/formulascrelement.cpp
         ../../src/utils/egcutfcodepoint.cpp
         ../../src/view/egcformulaitem.cpp
         ../../src/view/egcasscene.cpp
@@ -86,6 +90,6 @@ add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(tst_egcas_advanced_tree_ops ${tst_egcas_advanced_tree_ops_SOURCES} )
 add_dependencies(tst_egcas_advanced_tree_ops mmlegcas egcas)
-target_link_libraries(tst_egcas_advanced_tree_ops mmlegcas Qt5::Widgets Qt5::Core Qt5::Test)
+target_link_libraries(tst_egcas_advanced_tree_ops mmlegcas Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia)
 
 
