@@ -74,7 +74,7 @@ EMPTY        (_empty)
 EXPONENT     ([Eeb][-+]?[0-9]+)
 VARSEP       (_1)
 UNDERSCORE   (__)
-UNICODESIGN  (_2[0-9a-fA-F]+_3)
+UNICODESIGN  (_2[0-9]+_3)
 ALNUMNODE    (([a-zA-Z]{1}|{UNICODESIGN})([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*)
 ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*{EMPTY}{0,1})
 
