@@ -1,8 +1,8 @@
 This file lists where the icons originally come from:
-===========================================================
-file                                    origin
------------------------------------------------------------
-calculator.svg                          openclipart.org
+============================================================================================
+file                                    origin             License
+--------------------------------------------------------------------------------------------
+calculator.svg                          openclipart.org    Creative Commons Zero 1.0 License.
 egcas.svg                               jm
-insert_graphic.svg                      openclipart.org
-insert_text.svg                         openclipart.org
+insert_graphic.svg                      openclipart.org    Creative Commons Zero 1.0 License.
+insert_text.svg                         openclipart.org    Creative Commons Zero 1.0 License.
