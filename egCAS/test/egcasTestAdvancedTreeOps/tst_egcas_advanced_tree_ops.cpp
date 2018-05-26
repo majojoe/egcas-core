@@ -159,14 +159,10 @@ void EgcasTest_AdvancedTreeOps::pasteTreeCursorTest()
         action.m_op = EgcOperations::cursorForward;
         formula.handleAction(action);
         QCOMPARE(&formula.m_mod->nodeAtCursor(), rootNode->getChild(0));
-        QVERIFY(formula.m_mod->rightSide());
+        QVERIFY(!formula.m_mod->rightSide());
 
         QVERIFY(formula.paste(*copiedTree, *rootNode->getChild(0)));
         QVERIFY(rootNode->getChild(0)->getNodeType() == EgcNodeType::FunctionNode);
-        //update mathml table
-        (void) formula.getMathMlCode();
-        QCOMPARE(&formula.m_mod->nodeAtCursor(), rootNode->getChild(0));
-        QVERIFY(formula.m_mod->rightSide());
 }
 
 void EgcasTest_AdvancedTreeOps::pasteTreeCursorTest2()
@@ -201,14 +197,10 @@ void EgcasTest_AdvancedTreeOps::pasteTreeCursorTest2()
                 formula.handleAction(action);
         }
         QCOMPARE(&formula.m_mod->nodeAtCursor(), rootNode->getChild(0));
-        QVERIFY(!formula.m_mod->rightSide());
+        QVERIFY(formula.m_mod->rightSide());
 
         QVERIFY(formula.paste(*copiedTree, *rootNode->getChild(0)));
         QVERIFY(rootNode->getChild(0)->getNodeType() == EgcNodeType::FunctionNode);
-        //update mathml table
-        (void) formula.getMathMlCode();
-        QCOMPARE(&formula.m_mod->nodeAtCursor(), rootNode->getChild(0));
-        QVERIFY(!formula.m_mod->rightSide());
 }
 
 QTEST_MAIN(EgcasTest_AdvancedTreeOps)
