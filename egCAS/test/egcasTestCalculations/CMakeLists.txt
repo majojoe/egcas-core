@@ -74,6 +74,7 @@ set(tst_egcastest_calculations_SOURCES
 #set the verbosity level of the scanner and parser
 add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
+add_definitions(-DMAXIMA_BINARY_PATH="${CMAKE_BINARY_DIR}/maxima_installation/bin/")
 
 add_executable(tst_egcastest_calculations ${tst_egcastest_calculations_SOURCES} )
 add_dependencies(tst_egcastest_calculations egcas)
