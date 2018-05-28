@@ -77,7 +77,7 @@ add_definitions(-DEGC_PARSER_DEBUG=0)
 add_definitions(-DMAXIMA_BINARY_PATH="${CMAKE_BINARY_DIR}/maxima_installation/bin/")
 
 add_executable(tst_egcastest_calculations ${tst_egcastest_calculations_SOURCES} )
-add_dependencies(tst_egcastest_calculations egcas)
+add_dependencies(tst_egcastest_calculations egcas egcas_maxima)
 target_link_libraries(tst_egcastest_calculations Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia)
 
 
