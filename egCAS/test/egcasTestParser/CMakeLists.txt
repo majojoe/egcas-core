@@ -68,6 +68,10 @@ set(tst_egcastest_parser_SOURCES
         ../../src/utils/egcutfcodepoint.cpp
 )
 
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp PROPERTY SKIP_AUTOMOC ON)
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTY SKIP_AUTOMOC ON)
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTY SKIP_AUTOMOC ON)
+
 #set the verbosity level of the scanner and parser
 add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
