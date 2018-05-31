@@ -240,6 +240,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
                                         ${RUNTIME_PATH}/libpng16-16.dll
                                         ${RUNTIME_PATH}/Qt5Gui.dll
                                         ${RUNTIME_PATH}/Qt5Multimedia.dll
+                                        ${RUNTIME_PATH}/Qt5Network.dll
                                         ${RUNTIME_PATH}/Qt5Test.dll
                                         ${RUNTIME_PATH}/Qt5Xml.dll
                                         ${RUNTIME_PATH}/libfreetype-6.dll
@@ -253,6 +254,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
                                         ${RUNTIME_PATH}/Qt5Widgets.dll
                                         ${RUNTIME_PATH}/zlib1.dll
                                         ${RUNTIME_PATH}/libpcre2-16-0.dll
+                                        ${RUNTIME_PATH}/libcrypto-1_1.dll
+                                        ${RUNTIME_PATH}/libssl-1_1.dll
                                 )
                                 install(FILES ${RUNTIME_PATH}/platforms/qminimal.dll ${RUNTIME_PATH}/platforms/qoffscreen.dll ${RUNTIME_PATH}/platforms/qwindows.dll DESTINATION bin/platforms)
                         endif()
