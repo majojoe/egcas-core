@@ -34,8 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../egcnodes.h"
 #include "egcmathmlvisitor.h"
 
-EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula, bool formulaActive) : EgcNodeVisitor{formula},
-                                                                m_formulaActive{formulaActive},
+EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{formula},
                                                                 m_prettyPrint{true},
                                                                 m_idCounter{1},
                                                                 m_lookup(formula.getMathmlMappingRef()) //gcc bug
@@ -51,7 +50,7 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
         case EgcNodeType::RootNode:
                 if (m_state == EgcIteratorState::LeftIteration) {
                         // don't show the root exponent if it is empty
-                        if (!m_formulaActive)
+                        if (!m_formula->isActive())
                                 suppressChildIfChildValue(node, 0, EgcNodeType::EmptyNode, "");
                 } else if (m_state == EgcIteratorState::RightIteration) {
                         id = getId(node);
@@ -207,7 +206,7 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                 if (m_state == EgcIteratorState::LeftIteration) {
                         // don't show the empty exponent if exponent is 1 and type is leibnitz
                         if (    static_cast<EgcDifferentialNode*>(node)->getDifferentialType() == EgcDifferentialNode::DifferentialType::leibnitz
-                             && !m_formulaActive)
+                             && !m_formula->isActive())
                                 suppressChildIfChildValue(node, 2, EgcNodeType::EmptyNode, "");
 
                 } else if (m_state == EgcIteratorState::RightIteration) {
@@ -242,7 +241,7 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                         } else { // use leibniz' notation
                                 QString result;
                                 if (der == 1) {
-                                        if (m_formulaActive) {
+                                        if (m_formula->isActive()) {
                                                 result = "<mfrac "%id%"><mrow><mi>d</mi>"
                                                          % "<mfenced>%" % QString::number(1)
                                                          % "</mfenced></mrow><msup><mrow><mi>d</mi>%"

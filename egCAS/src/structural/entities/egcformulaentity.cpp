@@ -202,7 +202,7 @@ void EgcFormulaEntity::setRootElement(EgcNode* rootElement)
 
 QString EgcFormulaEntity::getMathMlCode(void)
 {
-        EgcMathMlVisitor mathMlVisitor(*this, m_isActive);
+        EgcMathMlVisitor mathMlVisitor(*this);
         QString tmp = mathMlVisitor.getResult();
 
         return tmp;
@@ -627,5 +627,10 @@ void EgcFormulaEntity::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSi
         if (m_mod)
                 m_mod->setCursorPos(nodeId, subPos, rightSide);
         showCurrentCursor();
+}
+
+bool EgcFormulaEntity::isActive() const
+{
+        return m_isActive;
 }
 

@@ -312,6 +312,11 @@ public:
          * @param rightSide set it at the right side or at the left of the given instance
          */
         virtual void setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide) override;
+        /**
+         * @brief isActive returns if formula is active
+         * @return true if formula is active, false otherwise.
+         */
+        bool isActive(void) const;
 
 private:
         /**
