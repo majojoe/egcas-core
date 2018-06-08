@@ -129,6 +129,7 @@ void EgcCalculation::nextCalculation(void)
 void EgcCalculation::resumeCalculation(void)
 {
         if (m_restartAfterResume) {
+                m_entity = nullptr;
                 restart();
                 return;
         }
