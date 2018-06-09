@@ -124,11 +124,11 @@ void EgcasTest_Calculation::evaluateResult(QString result)
                 formula.setRootElement(getTree("x^3+36-8*651.984"));
                 conn->sendCommand(formula.getCASKernelCommand());
         } else if (i == 1) {
-                QVERIFY(result == "31084.819");
+                QVERIFY(result == "31084.81900000001");
                 EgcFormulaEntity form_res;
                 form_res.setRootElement(getTree("y=3"));
                 QVERIFY(form_res.setResult(getTree(result)) == true);
-                QVERIFY(form_res.getMathMlCode() == "<math><mrow  id=\"4\" ><mrow  id=\"2\" ><mi mathvariant=\"normal\" id=\"1\" >y</mi></mrow><mo id=\"5\" >=</mo><mn id=\"3\" >31084.819</mn></mrow></math>");
+                QVERIFY(form_res.getMathMlCode() == "<math><mrow  id=\"3\" ><mi mathvariant=\"normal\"  id=\"1\" >y</mi><mo id=\"4\" >=</mo><mn id=\"2\" >31084.81900000001</mn></mrow></math>");
                 hasEnded = true;
         }
 

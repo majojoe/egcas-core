@@ -29,7 +29,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 # Widgets finds its own dependencies.
-find_package(Qt5 COMPONENTS Core Widgets Test)
+find_package(Qt5 COMPONENTS Core Widgets Test Multimedia)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser)
@@ -61,8 +61,16 @@ set(tst_egcastest_parser_SOURCES
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
         ../../src/structural/specialNodes/egcbinaryoperator.cpp
+        ../../src/structural/iterator/formulascriter.cpp
+        ../../src/structural/entities/formulamodificator.cpp
+        ../../src/structural/visitor/formulascrvisitor.cpp
+        ../../src/structural/visitor/formulascrelement.cpp
         ../../src/utils/egcutfcodepoint.cpp
 )
+
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp PROPERTY SKIP_AUTOMOC ON)
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTY SKIP_AUTOMOC ON)
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTY SKIP_AUTOMOC ON)
 
 #set the verbosity level of the scanner and parser
 add_definitions(-DEGC_SCANNER_DEBUG=0)
@@ -70,6 +78,6 @@ add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(tst_egcastest_parser ${tst_egcastest_parser_SOURCES} )
 add_dependencies(tst_egcastest_parser egcas)
-target_link_libraries(tst_egcastest_parser Qt5::Widgets Qt5::Core Qt5::Test)
+target_link_libraries(tst_egcastest_parser Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia)
 
 

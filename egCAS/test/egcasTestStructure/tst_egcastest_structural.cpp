@@ -120,8 +120,8 @@ void EgcasTest_Structural::testCopyConstructors()
 
         EgcRootNode copyExpression(rootExpression);
 
-        auto *copyChild = static_cast<EgcBinaryNode*>(static_cast<EgcParenthesisNode*>(copyExpression.getChild(0))->getChild(0));
-        auto *numberChild1 = static_cast<EgcNumberNode*>(static_cast<EgcParenthesisNode*>(copyChild->getChild(0))->getChild(0));
+        auto *copyChild = static_cast<EgcBinaryNode*>(copyExpression.getChild(0));
+        auto *numberChild1 = static_cast<EgcNumberNode*>(copyChild->getChild(0));
         auto *numberChild2 = static_cast<EgcNumberNode*>(copyExpression.getChild(1));
         QVERIFY(numberChild1->getValue() == "200.1");
         QVERIFY(numberChild2->getValue() == "90.365");
@@ -188,17 +188,17 @@ void EgcasTest_Structural::testTransferProperties()
         QVERIFY(node2->getChild(0) == nullptr);
         QVERIFY(node2->getChild(1) == nullptr);
         QVERIFY(node2->getParent() == nullptr);
-        QVERIFY(static_cast<EgcContainerNode*>(node1->getChild(0))->getChild(0) == transferNode4);
+        QVERIFY(node1->getChild(0) == transferNode4);
 
-        QVERIFY((static_cast<EgcNumberNode*>(static_cast<EgcContainerNode*>(transferNode4->getChild(0))->getChild(0) ))->getValue() == "3");
+        QVERIFY((static_cast<EgcNumberNode*>(transferNode4->getChild(0)))->getValue() == "3");
         QVERIFY((static_cast<EgcNumberNode*>(transferNode4->getChild(1)))->getValue() == "4");
-        QVERIFY(transferNode4->getParent()->getParent() == node1);
+        QVERIFY(transferNode4->getParent() == node1);
 
         delete(node2);
 
-        QVERIFY((static_cast<EgcNumberNode*>(static_cast<EgcContainerNode*>(transferNode4->getChild(0))->getChild(0) ))->getValue() == "3");
+        QVERIFY((static_cast<EgcNumberNode*>(transferNode4->getChild(0)))->getValue() == "3");
         QVERIFY((static_cast<EgcNumberNode*>(transferNode4->getChild(1)))->getValue() == "4");
-        QVERIFY(transferNode4->getParent()->getParent() == node1);
+        QVERIFY(transferNode4->getParent() == node1);
 
         delete(transferNode1);
         delete(transferNode2);
@@ -1424,11 +1424,14 @@ void EgcasTest_Structural::testFlexNodeVisitors()
         QVERIFY(formula5.getCASKernelCommand() == QString("fpprintprec:0$(testFunction(3,(5),6,7))+(8);"));
 
         //test math ml visitor
-        QVERIFY(formula5.getMathMlCode() == QString("<math><mrow  id=\"8\" ><mrow  id=\"6\" >"
-                "<mi mathvariant=\"italic\">testFunction</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow>"
-                "<mn id=\"1\" >3</mn><mo>,</mo><mfenced  id=\"3\"  open=\"(\" close=\")\" separators=\",\">"
-                "<mrow><mn id=\"2\" >5</mn></mrow></mfenced><mo>,</mo><mn id=\"4\" >6</mn><mo>,</mo><mn id=\"5\" >7</mn>"
-                "</mrow><mo>)</mo></mrow></mrow><mo id=\"9\" >+</mo><mn id=\"7\" >8</mn></mrow></math>"));
+        QVERIFY(formula5.getMathMlCode() == QString("<math><mrow  id=\"8\" ><mrow  id=\"6\" ><mi  mathvariant=\"italic\" "
+                                                    "id=\"6\" >testFunction</mi><mo>&ApplyFunction;</mo><mrow><mo "
+                                                    "id=\"6\" >(</mo><mrow><mn id=\"1\" >3</mn><mo id=\"6\" >,</mo>"
+                                                    "<mfenced  id=\"3\"  open=\"(\" close=\")\" separators=\",\"><mrow>"
+                                                    "<mn id=\"2\" >5</mn></mrow></mfenced><mo id=\"6\" >,</mo><mn "
+                                                    "id=\"4\" >6</mn><mo id=\"6\" >,</mo><mn id=\"5\" >7</mn></mrow>"
+                                                    "<mo id=\"6\" >)</mo></mrow></mrow><mo id=\"9\" >+</mo><mn "
+                                                    "id=\"7\" >8</mn></mrow></math>"));
 }
 
 EgcNode*EgcasTest_Structural::addChild(EgcNode& parent, EgcNodeType type, QString number)

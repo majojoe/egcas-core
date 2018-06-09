@@ -49,6 +49,9 @@ public:
 
 class FormulaModificator
 {
+        //for testing the class
+        friend class EgcasTest_AdvancedTreeOps;
+
 public:
         ///std constructor
         FormulaModificator(EgcFormulaEntity& formula);

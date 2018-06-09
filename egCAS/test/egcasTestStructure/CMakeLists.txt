@@ -15,7 +15,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 # Widgets finds its own dependencies.
-find_package(Qt5 COMPONENTS Widgets Core Test)
+find_package(Qt5 COMPONENTS Widgets Core Test Multimedia)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
@@ -45,10 +45,14 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/visitor/egcmaximavisitor.cpp 
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
+        ../../src/structural/entities/formulamodificator.cpp
+        ../../src/structural/iterator/formulascriter.cpp
+        ../../src/structural/visitor/formulascrvisitor.cpp
+        ../../src/structural/visitor/formulascrelement.cpp
         ../../src/utils/egcutfcodepoint.cpp
 )
 
 add_executable(tst_egcastest_structural ${tst_egcastest_structural_SOURCES} )
 add_dependencies(tst_egcastest_structural egcas)
 
-target_link_libraries(tst_egcastest_structural mmlegcas Qt5::Widgets Qt5::Core Qt5::Test)
+target_link_libraries(tst_egcastest_structural mmlegcas Qt5::Widgets Qt5::Core Qt5::Test  Qt5::Multimedia)
