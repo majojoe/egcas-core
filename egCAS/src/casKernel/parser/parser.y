@@ -91,7 +91,6 @@
 %token <char> OPERATOR "operator";
 %token <std::string> NAMES "names";
 %token <std::string> VARSUB "varsub";
-%token <std::string> BUILTIN_FNCS "builtin_fncs";
 %token PLUS "+";
 %token MINUS "-";
 %token MULTIPLICATION "*";
@@ -104,27 +103,31 @@
 %token LBRACKET_OP;
 %token RBRACKET_OP;
 %token EXPONENT "^";
-%token SQROOT "sqrt";
+%token SQROOT "_sqrt";
 %token INTEGRAL "_integrate";
 %token DIFFERENTIAL "_diff";
 %token ROOT "_root";
 %token EMPTY "_empty";
+%token EMPTYBINOP "_emptybinop";
 %token LOGARITHM "_log";
 %token NATLOGARITHM "_ln";
-%token ITERATOR1;
-%token ITERATOR2;
-%token ITERATOR3;
+%token RED_PARENTHESIS_R "_red_parenth_r";
+%token RED_PARENTHESIS_L "_red_parenth_l";
+%token ITERATOR_R;
+%token ITERATOR_L;
 
 
 %right "=" ":"
-%left "+" "-"
+%nonassoc RED_PARENTHESIS_L RED_PARENTHESIS_R
+%left "+" "-" "_emptybinop"
 %left "*" "/"
 %right "^"
 %nonassoc "|" UMINUS
-%nonassoc ITERATOR1 ITERATOR2 ITERATOR3
+%nonassoc ITERATOR_R ITERATOR_L
 
 
 %type<EgcNode*> expr;
+%type<EgcNode*> equation;
 %type<EgcArgumentsNode*> explist;
 
 %start formula
@@ -147,6 +150,17 @@ formula : /*nothing*/
                 #endif //#if (EGC_PARSER_DEBUG >= 1)
                 interpreter.setRootNode($2);
         }
+  | formula equation END
+      {
+              #if (EGC_PARSER_DEBUG >= 1)
+              cout << "***end" << endl;
+              #endif //#if (EGC_PARSER_DEBUG >= 1)
+              interpreter.setRootNode($2);
+      }
+;
+
+equation: expr "=" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::EqualNode, $1, $3);}
+        | expr ":" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::DefinitionNode, $1, $3);}
 ;
 
 expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::PlusNode, $1, $3);}
@@ -154,26 +168,26 @@ expr : expr "+" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::Pl
      | expr "*" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::MultiplicationNode, $1, $3);}
      | expr "/" expr       {$$ = interpreter.addDivisionExpression($1, $3);}
      | expr "^" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::ExponentNode, $1, $3);}
+     | expr EMPTYBINOP expr {$$ = interpreter.addBinaryExpression(EgcNodeType::BinEmptyNode, $1, $3);}
      | "(" expr ")"        {$$ = interpreter.addUnaryExpression(EgcNodeType::ParenthesisNode, $2);}
-     | LBRACKET_OP expr RBRACKET_OP {$$ = interpreter.addUnaryStructParenth($2);}
      | "-" expr %prec UMINUS {$$ = interpreter.addUnaryExpression(EgcNodeType::UnaryMinusNode, $2);}
-     | expr "=" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::EqualNode, $1, $3);}
-     | expr ":" expr       {$$ = interpreter.addBinaryExpression(EgcNodeType::DefinitionNode, $1, $3);}
      | NUMBER              {$$ = interpreter.addStringNode(EgcNodeType::NumberNode, $1);}
      | NAMES               {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1);}
      | NAMES VARSUB        {$$ = interpreter.addStringNode(EgcNodeType::VariableNode, $1 + $2);}
      | NAMES "(" explist ")"{$$ = interpreter.addFunction($1, $3);}
-     | BUILTIN_FNCS "(" explist ")"{$$ = interpreter.addBuiltinFunction($1, $3);}
-     | LOGARITHM "(" explist ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::LogNode, $3);}
-     | NATLOGARITHM "(" explist ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::NatLogNode, $3);}
-     | "sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}
+     | EMPTY "(" explist ")"{$$ = interpreter.addFunction("", $3);}
+     | LOGARITHM "(" expr ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::LogNode, $3);}
+     | NATLOGARITHM "(" expr ")" {$$ = interpreter.addUnaryExpression(EgcNodeType::NatLogNode, $3);}
+     | "_sqrt" "(" expr ")" {$$ = interpreter.addSqrtExpression($3);}
      | INTEGRAL "(" explist ")" {$$ = interpreter.changeFlexExpressionType(EgcNodeType::IntegralNode, $3);}
      | DIFFERENTIAL "(" explist ")" {$$ = interpreter.addDifferentialExpression($3);}
      | "_root" "(" expr "," expr ")" {$$ = interpreter.addBinaryExpression(EgcNodeType::RootNode, $3, $5);}
      | "_empty"            {$$ = interpreter.addEmptyNode();}
-     | expr ITERATOR1      {$$ = interpreter.updateIterator($1, 1);}
-     | expr ITERATOR2      {$$ = interpreter.updateIterator($1, 2);}
-     | expr ITERATOR3      {$$ = interpreter.updateIterator($1, 3);}
+     | expr ITERATOR_L      {$$ = interpreter.updateIterator($1, 2);}
+     | ITERATOR_R expr      {$$ = interpreter.updateIterator($2, 1);}
+     | "_red_parenth_l" expr {$$ = interpreter.addUnaryExpression(EgcNodeType::LParenthesisNode, $2);}
+     | expr "_red_parenth_r" {$$ = interpreter.addUnaryExpression(EgcNodeType::RParenthesisNode, $1);}
+     | LBRACKET_OP expr RBRACKET_OP {$$ = $2;}
 ;
     
 explist: expr            {$$ = interpreter.createArgList($1);}

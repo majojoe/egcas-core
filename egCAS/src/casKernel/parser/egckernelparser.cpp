@@ -35,8 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "parser.hpp"
 #include "interpreter.h"
 #include "egckernelparser.h"
-#include "iterator/screenHelpers/egcidnodeiter.h"
-
+#include "entities/formulamodificator.h"
 
 using namespace CASParser;
 using namespace std;
@@ -104,8 +103,8 @@ EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIter
                 return nullptr;
         }
 
-        iterData.m_node = m_i->getIteratorNode(1);
-        iterData.m_iterPosAfterUpdate = m_i->getIteratorNode(2);
+        iterData.m_nodeRightSide = m_i->getIteratorNode(2);
+        iterData.m_nodeLeftSide = m_i->getIteratorNode(1);
 
         return m_i->getRootNode();
 }

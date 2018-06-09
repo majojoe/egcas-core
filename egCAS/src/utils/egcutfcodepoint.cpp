@@ -73,19 +73,15 @@ QString EgcUtfCodepoint::decodeToUtf(const QString &str)
         }
 
         //for dec values
-        int pos = 0;
-        while( (match =  s_replaceDec.match(retval, pos)).hasMatch() ) {
+        while( (match =  s_replaceDec.match(retval, 0)).hasMatch() ) {
                 retval =  retval.replace( match.capturedStart(0), match.capturedLength(0),
                                           QChar( match.captured(1).toInt(0,10)));
-                pos +=  match.capturedLength();
         }
 
         //for hex values
-        pos = 0;
-        while( (match =  s_replaceHex.match(retval, pos)).hasMatch() ) {
+        while( (match =  s_replaceHex.match(retval, 0)).hasMatch() ) {
                 retval =  retval.replace( match.capturedStart(0), match.capturedLength(0),
                                           QChar( match.captured(1).toInt(0,16)));
-                pos +=  match.capturedLength();
         }
 
         return  retval;

@@ -135,6 +135,19 @@ public:
         */
         virtual void showRightCursor(quint32 mathmlId, quint32 subindex) override;
         /**
+         * @brief getElementRect returns the bounding rect of the requested element. If no element with the given
+         * parameters is availiable an empty rect will be returned
+         * @param mathmlId the mathml id for which the bounding rect is requested
+         * @param subindex the subindex for which the bounding rect is requested
+         * @return the bounding rect for given mathml id and subindex (in formula coordinates)
+         */
+        virtual QRectF getElementRect(quint32 mathmlId, quint32 subindex) override;
+        /**
+         * @brief showCursor shows the cursor given in the context of the current scene
+         * @param cursor the cursor to show up
+         */
+        virtual void showCursor(QLineF cursor) override;
+        /**
          * @brief hideCursors hide the cursors e.g. in case the element is moved
          */
         virtual void hideCursors(void) override;
@@ -149,11 +162,6 @@ public:
          * @return item type
          */
         virtual int type() const override;
-        /**
-         * @brief isEmpty check if the formula is an empty formula
-         * @return true if empty, false otherwise
-         */
-        bool isEmpty(void);
         /**
          * @brief setCursorAt set the cursor position near the given position
          * @param pos the position where to set the cursor

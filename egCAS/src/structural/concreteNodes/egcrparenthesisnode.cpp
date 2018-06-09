@@ -32,18 +32,8 @@ RParenthesisNode::RParenthesisNode()
 {
 }
 
-bool RParenthesisNode::cursorSnaps(EgcNodeSide side) const
+
+bool RParenthesisNode::valid()
 {
-        if (side == EgcNodeSide::right)
-                return true;
-
-        return false;
-}
-
-bool RParenthesisNode::visibleSigns(EgcNodeSide side) const
-{
-        if (side == EgcNodeSide::right)
-                return true;
-
         return false;
 }

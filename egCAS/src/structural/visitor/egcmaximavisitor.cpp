@@ -42,8 +42,18 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
 {
         switch (binary->getNodeType()) {
         case EgcNodeType::RootNode:
-                if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("(%1)^(1/%2)", binary);
+                if (m_state == EgcIteratorState::RightIteration) {
+                        bool sqrt = false;
+                        EgcNode *rootexp = binary->getChild(0);
+                        if (rootexp) {
+                                if (rootexp->getNodeType() == EgcNodeType::EmptyNode)
+                                        sqrt = true;
+                        }
+                        if (sqrt)
+                                assembleResult("(%2)^(1/(2%1))", binary); //%1 is a hack here and just works since an empty node has no signs (must be fixed)
+                        else
+                                assembleResult("(%2)^(1/%1)", binary);
+                }
                 break;
         case EgcNodeType::PlusNode:
                 if (m_state == EgcIteratorState::RightIteration)
@@ -123,7 +133,7 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
         switch (flex->getNodeType()) {
         case EgcNodeType::FunctionNode:
                 if (m_state == EgcIteratorState::RightIteration)
-                        assembleResult("", "(", ",", ")", flex);
+                        assembleResult(static_cast<EgcFunctionNode*>(flex)->getStuffedName() % "(", ",", ")", flex);
                 break;
         case EgcNodeType::IntegralNode:
                 if (flex->getNumberChildNodes() == 2) { // indefinite integral
@@ -131,29 +141,16 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
                                 assembleResult("integrate(", ",", ")", flex);
                 } else if (flex->getNumberChildNodes() == 4) {
                         if (m_state == EgcIteratorState::RightIteration)
-                                assembleResult("romberg(", ",", ")", flex);
+                                assembleResult("romberg(%3,%4,%1,%2)", flex);
                 }
                 break;
         case EgcNodeType::DifferentialNode:
                 if (m_state == EgcIteratorState::RightIteration) {
                         EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(flex);
-                        quint32 indexD = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::differential);
-                        quint32 indexV = diff->getIndexOf(EgcDifferentialNode::EgcDifferentialIndexes::variable);
 
-                        QString str = "diff(%" % QString::number(indexD + 1) % ",%" % QString::number(indexV + 1)
+                        QString str = "diff(%" % QString::number(1) % ",%" % QString::number(2)
                                       % "," % QString::number(diff->getNrDerivative()) % ")";
                         assembleResult(str, flex);
-                }
-                break;
-        case EgcNodeType::VariableNode:
-                if (m_state == EgcIteratorState::RightIteration) { //there are no subsequent nodes but the Alnum nodes -> so push to stack
-                        if (flex->getNumberChildNodes() == 2) {
-                                EgcVariableNode *var = static_cast<EgcVariableNode*>(flex);
-                                QString str = "%1" % var->getStuffedVarSeparator() % "%2";
-                                assembleResult(str, flex);
-                        } else if (flex->getNumberChildNodes() == 1) {
-                               assembleResult("%1", flex);
-                        }
                 }
                 break;
         default:
@@ -170,6 +167,9 @@ void EgcMaximaVisitor::visit(EgcNode* node)
                 break;
         case EgcNodeType::AlnumNode:  // normally we extract the AlnumNode's via their container classes
                 pushToStack(static_cast<EgcAlnumNode*>(node)->getStuffedValue(), node);
+                break;
+        case EgcNodeType::VariableNode:  // normally we extract the AlnumNode's via their container classes
+                pushToStack(static_cast<EgcVariableNode*>(node)->getStuffedValue(), node);
                 break;
         case EgcNodeType::NumberNode:
                 pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);

@@ -35,13 +35,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "specialNodes/egcbasenode.h"
 #include "egcnodes.h"
 #include "visitor/egcmaximavisitor.h"
-#include "visitor/restructurevisitor.h"
 #include "visitor/egcmathmlvisitor.h"
 #include "egcabstractformulaitem.h"
 #include "egcabstractentitylist.h"
 #include "actions/egcaction.h"
-#include "iterator/egcscrpositerator.h"
-#include "document/egcabstractdocument.h"
 #include "casKernel/parser/abstractkernelparser.h"
 #include "casKernel/parser/restructparserprovider.h"
 
@@ -51,7 +48,8 @@ int EgcFormulaEntity::s_fontSize = 20;
 EgcFormulaEntity::EgcFormulaEntity(EgcNodeType type) : m_numberSignificantDigits(0),
                                                        m_numberResultType(EgcNumberResultType::StandardType),
                                                        m_item(nullptr),
-                                                       m_errorMsg(QString::null)
+                                                       m_errorMsg(QString::null),
+                                                       m_isActive(false)
 {
         QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
         if (tmp.data()) {
@@ -204,12 +202,8 @@ void EgcFormulaEntity::setRootElement(EgcNode* rootElement)
 
 QString EgcFormulaEntity::getMathMlCode(void)
 {
-        EgcMathMlVisitor mathMlVisitor(*this);        
+        EgcMathMlVisitor mathMlVisitor(*this);
         QString tmp = mathMlVisitor.getResult();
-
-        // any started formula change must be finalized when the mathml lookup table has been populated, so do this
-        if (m_scrIter)
-                m_scrIter->finishFormulaChange();
 
         return tmp;
 }
@@ -220,21 +214,6 @@ QString EgcFormulaEntity::getCASKernelCommand(void)
         m_errorMsg.clear();
         EgcMaximaVisitor maximaVisitor(*this);
         return maximaVisitor.getResult();
-}
-
-void EgcFormulaEntity::reStructureTree(void)
-{
-        RestructParserProvider pp;
-        ReStructureVisitor restructureVisitor(*this);
-        QString result = restructureVisitor.getResult();
-        NodeIterReStructData iterData;
-        int errCode;
-        EgcNode* tree = pp.getRestructParser()->restructureFormula(result, iterData, &errCode);
-        if (tree) {
-                setRootElement(tree);
-                m_scrIter->invalidateCursor(getBaseElement());
-                m_scrIter->updateRestructureData(iterData);
-        }
 }
 
 bool EgcFormulaEntity::isResult(void)
@@ -303,7 +282,7 @@ bool EgcFormulaEntity::setResult(EgcNode* result)
 {
         bool repaint = false;
 
-        if (m_scrIter)
+        if (m_mod)
                 return false;
         
         //reset error message of the formula
@@ -334,7 +313,7 @@ void EgcFormulaEntity::resetResult(void)
 {
         if (isResult()) {
                 //don't do anything if the formula is modified at the moment
-                if (m_scrIter)
+                if (m_mod)
                         return;
 
                 QScopedPointer<EgcNode> emptyNode(EgcNodeCreator::create(EgcNodeType::EmptyNode));
@@ -406,6 +385,8 @@ void EgcFormulaEntity::itemChanged(EgcItemChangeType changeType)
         }
 
         if (changeType == EgcItemChangeType::contentChanged) {
+                if (m_mod)
+                        m_mod->viewHasChanged();
                 showCurrentCursor();
         }
 }
@@ -424,365 +405,65 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
 {
         switch (action.m_op) {
         case EgcOperations::formulaActivated:
-                m_scrIter.reset(new EgcScrPosIterator(*this));
+                m_isActive = true;
+                updateView();
+                m_mod.reset(new FormulaModificator(*this));
                 showCurrentCursor();
                 break;
         case EgcOperations::formulaDeactivated:
-                m_scrIter.reset();
+                m_isActive = false;
+                if (m_mod)
+                        m_mod.reset();
                 break;
         case EgcOperations::cursorForward:
-                moveCursor(true);
+                if (m_mod && m_item)
+                        m_mod->moveCursor(true);
                 break;
         case EgcOperations::cursorBackward:
-                moveCursor(false);
+                if (m_mod && m_item)
+                        m_mod->moveCursor(false);
                 break;
         case EgcOperations::spacePressed:
-                markParent();
+                if (m_mod && m_item)
+                        m_mod->markParent();
                 break;
         case EgcOperations::alnumKeyPressed:
-                insertCharacter(action.m_character);
+                if (m_mod && m_item)
+                        m_mod->insertCharacter(action.m_character);
                 break;
         case EgcOperations::backspacePressed:
-                removeCharacter(true);
+                if (m_mod && m_item)
+                        m_mod->removeElement(true);
                 break;
         case EgcOperations::delPressed:
-                removeCharacter(false);
+                if (m_mod && m_item)
+                        m_mod->removeElement(false);
                 break;
         case EgcOperations::mathCharOperator:
         case EgcOperations::mathFunction:
         case EgcOperations::internalFunction:
-                insertOperation(action);
+                if (m_mod && m_item)
+                        m_mod->insertOperation(action);
                 break;
         case EgcOperations::homePressed:
-                if (m_scrIter) {
-                        m_scrIter->toFront();
-                        m_scrIter->resetUnderline();
-                        showCurrentCursor();
-                }
+                if (m_mod && m_item)
+                        m_mod->toFront();
                 break;
         case EgcOperations::endPressed:
-                if (m_scrIter) {
-                        m_scrIter->toBack();
-                        m_scrIter->resetUnderline();
-                        showCurrentCursor();
-                }
+                if (m_mod && m_item)
+                        m_mod->toBack();
                 break;
-        case EgcOperations::createSubId:
-                createSubId();
+        case EgcOperations::createSubscript:
+                if (m_mod && m_item)
+                        m_mod->createSubscript();
                 break;
         }
-}
-
-void EgcFormulaEntity::createSubId(void)
-{
-        EgcNode* node = const_cast<EgcNode*>(m_scrIter->node());
-        if (node) {
-                if (node->isAtomicallyBoundChild()) {
-                        node = node->getParent();
-                        if (!node)
-                                return;
-                }
-                if (node->getNodeType() == EgcNodeType::VariableNode) {
-                        EgcVariableNode* var = static_cast<EgcVariableNode*>(node);
-                        if (var->getNumberChildNodes() != 1)
-                                return;
-                        var->insertSubscript();
-                        m_item->hideCursors();
-                        m_item->updateView();
-                        m_scrIter->next();
-                        showCurrentCursor();
-                }
-        }
-}
-
-EgcNode* EgcFormulaEntity::replaceEmptyNodeWith(EgcNodeType type)
-{
-        if (!isEmptyNode())  //check if current node is an empty node
-                return nullptr;
-
-        QScopedPointer<EgcNode> newNode(EgcNodeCreator::create(type));
-        if (!newNode)
-                return nullptr;
-
-        EgcNode* oldNode = const_cast<EgcNode*>(m_scrIter->node());
-        EgcNode* newPtr = newNode.data();
-        if (!paste(*newNode.take(), *oldNode))
-                return nullptr;
-
-        m_scrIter->updatePointer(newPtr, true);
-
-        return newPtr;
-}
-
-bool EgcFormulaEntity::isEmptyNode(void)
-{
-        if (m_scrIter->node()->getNodeType() == EgcNodeType::EmptyNode) {
-                return true;
-        }
-
-        return false;
-}
-
-void EgcFormulaEntity::insertOperation(EgcAction operation)
-{
-        if (!m_scrIter)
-                return;
-        if (!m_item)
-                return;
-
-        insertOp(operation);
-
-        reStructureTree();
-
-        m_item->hideCursors();
-        m_item->updateView();
-        showCurrentCursor();
-}
-
-bool EgcFormulaEntity::insertOp(EgcAction operations)
-{
-        bool retval = false;
-
-        if (operations.m_op == EgcOperations::mathCharOperator) {
-                if (    operations.m_character == '('
-                                || operations.m_character == ')') {
-                        if (    operations.m_character == '(')
-                                return createAndInsertOp(EgcNodeType::LParenthesisNode);
-                        if (    operations.m_character == ')')
-                                return createAndInsertOp(EgcNodeType::RParenthesisNode);
-                }
-                if (operations.m_character == '+')
-                        return createAndInsertOp(EgcNodeType::PlusNode);
-                if (operations.m_character == '-')
-                        return createAndInsertOp(EgcNodeType::MinusNode);
-                if (operations.m_character == '/')
-                        return createAndInsertOp(EgcNodeType::DivisionNode);
-                if (operations.m_character == '*')
-                        return createAndInsertOp(EgcNodeType::MultiplicationNode);
-                if (operations.m_character == ':')
-                        return createAndInsertOp(EgcNodeType::DefinitionNode);
-                if (operations.m_character == '=')
-                        return createAndInsertOp(EgcNodeType::EqualNode);
-                if (operations.m_character == QChar(177))
-                        return createAndInsertOp(EgcNodeType::UnaryMinusNode);
-                if (operations.m_character == QChar(8730))
-                        return createAndInsertOp(EgcNodeType::RootNode);
-                if (operations.m_character == QChar('^'))
-                        return createAndInsertOp(EgcNodeType::ExponentNode);
-                if (operations.m_character == QChar(','))
-                        return insertFunctionContainer();
-        } else if (operations.m_op == EgcOperations::mathFunction) { // functions
-                EgcFunctionNode* fnc = dynamic_cast<EgcFunctionNode*>(createAndInsertOperation(EgcNodeType::FunctionNode));
-                if (!fnc)
-                        return false;
-                if (!operations.m_additionalData.isNull()) {
-                        QString name = operations.m_additionalData.toString();
-                        if (!name.isEmpty()) {
-                                fnc->setName(name);
-                                m_scrIter->setCursorAtDelayed(fnc->getChild(0), true);
-                        } else {
-                                m_scrIter->setCursorAtDelayed(fnc, false);
-                        }
-                }
-        } else if (operations.m_op == EgcOperations::internalFunction) { // internal functions
-                if (operations.m_intType == InternalFunctionType::natLogarithm
-                     || operations.m_intType == InternalFunctionType::logarithm) {
-                        if (operations.m_intType == InternalFunctionType::natLogarithm)
-                                retval = createAndInsertOp(EgcNodeType::NatLogNode);
-                        else if (operations.m_intType == InternalFunctionType::logarithm)
-                                retval = createAndInsertOp(EgcNodeType::LogNode);
-
-                        if (retval) {
-                                const EgcNode *nd = nullptr;
-                                if (m_scrIter->node()) {
-                                        nd = m_scrIter->node();
-                                        m_scrIter->setCursorAtDelayed(const_cast<EgcNode*>(nd), true);
-                                }
-                        }
-                } else if (operations.m_intType == InternalFunctionType::integral) {
-                        bool ret = createAndInsertOp(EgcNodeType::IntegralNode);
-                        if (ret) {
-                                const EgcNode *nd = nullptr;
-                                if (m_scrIter->node()) {
-                                        nd = m_scrIter->node();
-                                        EgcContainerNode *par = nullptr;
-                                        par = nd->getParent();
-                                        if (par->getNodeType() == EgcNodeType::IntegralNode) {
-                                                static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
-                                                if (operations.m_OpModificators == OpModificators::definiteIntegral) {
-                                                        static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
-                                                        static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
-                                                }
-                                        }
-                                }
-                        }
-                        return ret;
-                } else if (operations.m_intType == InternalFunctionType::differential) {
-                        bool ret = createAndInsertOp(EgcNodeType::DifferentialNode);
-                        if (ret) {
-                                const EgcNode *nd = nullptr;
-                                if (m_scrIter->node()) {
-                                        nd = m_scrIter->node();
-                                        EgcContainerNode *par = nullptr;
-                                        par = nd->getParent();
-                                        if (par->getNodeType() == EgcNodeType::DifferentialNode) {
-                                                EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(par);
-                                                static_cast<EgcIntegralNode*>(par)->insert(0, *new EgcEmptyNode());
-                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_1)
-                                                        diff->setNrDerivative(1);
-                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_2)
-                                                        diff->setNrDerivative(2);
-                                                if (operations.m_lookModificatiors == LookModificators::differential_lagrange_notation_3)
-                                                        diff->setNrDerivative(3);
-                                        }
-                                }
-                        }
-                        return ret;
-                }
-
-        }
-        return retval;
-}
-
-bool EgcFormulaEntity::createAndInsertOp(EgcNodeType type)
-{
-    if (createAndInsertOperation(type))
-            return true;
-
-    return false;
-}
-
-EgcNode* EgcFormulaEntity::createAndInsertOperation(EgcNodeType type)
-{
-        const EgcNode* node = m_scrIter->node();
-        if (node) {
-                if (node->getNodeType() == EgcNodeType::AlnumNode)
-                        node = node->getParent();
-        }
-
-        if (!node)
-                return nullptr;
-
-        if (type == EgcNodeType::BaseNode)
-                return nullptr;
-
-        QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
-        if (!tmp)
-                return nullptr;
-
-        return m_scrIter->insert(type);
-}
-
-void EgcFormulaEntity::insertCharacter(QChar character)
-{
-        if (!m_scrIter)
-                return;
-        if (!m_item)
-                return;
-
-        if (isEmptyNode()) {
-                if (character.isDigit()) {
-                        EgcNumberNode * node = static_cast<EgcNumberNode*>(replaceEmptyNodeWith(EgcNodeType::NumberNode));
-                        if (node)
-                                node->setValue("");
-                } else {
-                        replaceEmptyNodeWith(EgcNodeType::VariableNode);
-                }
-                m_item->updateView();
-        }
-
-        (void) m_scrIter->insert(character);
-        m_item->hideCursors();
-        m_item->updateView();        
-}
-
-void EgcFormulaEntity::removeCharacter(bool before)
-{
-        bool structureChanged;
-
-        if (!m_scrIter)
-                return;
-        if (!m_item)
-                return;
-
-        if (m_scrIter->node()->getNodeType() == EgcNodeType::EmptyNode) {
-                if (isEmpty()) {
-                        if (getDocument()) {
-                                getDocument()->deleteEntity(this);
-                                return;
-                        }
-                }
-        }
-
-        if (before)
-                m_scrIter->backspace(structureChanged);
-        else
-                m_scrIter->remove(structureChanged);
-
-        if (structureChanged) {
-                reStructureTree();
-        }
-        //update m_scrIter since nothing is correct about the position
-        m_item->updateView();
-        m_item->hideCursors();
-        showCurrentCursor();
-}
-
-bool EgcFormulaEntity::insertFunctionContainer(void)
-{
-
-        return m_scrIter->insertChildSpace();
-}
-
-void EgcFormulaEntity::moveCursor(bool forward)
-{
-        if (!m_scrIter)
-                return;
-        if (!m_item)
-                return;
-        if (forward) {
-                if (m_scrIter->hasNext())
-                        (void) m_scrIter->next();
-                else
-                        m_scrIter->resetUnderline();
-        } else {
-                if (m_scrIter->hasPrevious())
-                        (void) m_scrIter->previous();
-                else
-                        m_scrIter->resetUnderline();
-        }
-
-        showCurrentCursor();
-        if (m_scrIter->isUnderlineActive())
-                m_item->showUnderline(m_scrIter->id());
 }
 
 void EgcFormulaEntity::showCurrentCursor(void)
 {
-        quint32 id;
-        qint32 ind;
-        bool rightSide;
-
-        if (!m_scrIter)
-                return;
-        if (!m_item)
-                return;
-
-        id = m_scrIter->id();
-        ind = m_scrIter->subIndex();
-        if (ind < 0) { //this is a container
-                ind = 0;
-        } else { //this is a glyph
-                ind++;
-        }
-        rightSide = m_scrIter->rightSide();
-
-        m_item->hideCursors();
-
-        if (rightSide)
-                m_item->showRightCursor(id, ind);
-        else
-                m_item->showLeftCursor(id, ind);
+        if (m_mod)
+                m_mod->showCurrentCursor();
 }
 
 EgcMathmlLookup& EgcFormulaEntity::getMathmlMappingRef(void)
@@ -793,34 +474,6 @@ EgcMathmlLookup& EgcFormulaEntity::getMathmlMappingRef(void)
 const EgcMathmlLookup& EgcFormulaEntity::getMathmlMappingCRef(void) const
 {
         return m_mathmlLookup;
-}
-
-void EgcFormulaEntity::markParent(void)
-{
-        quint32 id;
-        qint32 ind;
-        bool rightSide;
-
-        if (!m_scrIter)
-                return;
-        if (!m_item)
-                return;
-
-        rightSide = m_scrIter->rightSide();
-
-        id = m_scrIter->getNextVisibleParent();
-        ind = m_scrIter->subIndex();
-        if (ind < 0) { //this is a container
-                ind = 0;
-        } else { //this is a glyph
-                ind++;
-        }
-        if (rightSide)
-                m_item->showRightCursor(id, ind);
-        else
-                m_item->showLeftCursor(id, ind);
-
-        m_item->showUnderline(id);
 }
 
 EgcNode* EgcFormulaEntity::copy(EgcNode& node)
@@ -857,24 +510,11 @@ EgcNode* EgcFormulaEntity::cut(EgcNode& node)
         if (emtpyNode.isNull())
                 return nullptr;
 
-        //replace all references to node with the references to emptyNode in this class and its subclasses
-        bool rightSide;
-        EgcNode* newCursorPos;
-        if (isScreenIterInSubtree(node, rightSide)) {
-                newCursorPos = emtpyNode.data();
-        } else if (!m_scrIter.isNull()) {
-                newCursorPos = const_cast<EgcNode*>(m_scrIter->node());
-                rightSide = m_scrIter->rightSide();
-        }
-
         cutTree.reset(cParent->takeOwnership(node));
 
         if (!cParent->setChild(index, *emtpyNode.take()))
                 return nullptr;
         cParent->getChild(index)->provideParent(cParent);
-
-        if (!m_scrIter.isNull())
-                m_scrIter->updatePointer(newCursorPos, rightSide);
 
         return cutTree.take();
 }
@@ -901,16 +541,6 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
         if (!isChild)
                 return false;
 
-        //replace all references to node with the references to emptyNode in this class and its subclasses
-        bool rightSide;
-        EgcNode* newCursorPos;
-        if (isScreenIterInSubtree(whereToPaste, rightSide)) {
-                newCursorPos = &treeToPaste;
-        } else if (!m_scrIter.isNull()) {
-                newCursorPos = const_cast<EgcNode*>(m_scrIter->node());
-                rightSide = m_scrIter->rightSide();
-        }
-
         QScopedPointer<EgcNode> cutTree;
         cutTree.reset(cParent->takeOwnership(whereToPaste));
         cutTree.reset();
@@ -918,9 +548,6 @@ bool EgcFormulaEntity::paste(EgcNode& treeToPaste, EgcNode& whereToPaste)
         if (!cParent->setChild(index, treeToPaste))
                         return false;
         treeToPaste.provideParent(cParent);
-
-        if (!m_scrIter.isNull())
-                m_scrIter->updatePointer(newCursorPos, rightSide);
 
         return true;
 }
@@ -931,39 +558,6 @@ bool EgcFormulaEntity::isNodeInFormula(EgcNode& node)
 
         if (m_data.hasSubNode(node, index))
                 return true;
-
-        return false;
-}
-
-bool EgcFormulaEntity::isScreenIterInSubtree(EgcNode& tree, bool &rightSide) const
-{
-        EgcNode* node = nullptr;
-        
-        if (!m_scrIter.isNull())
-                node = const_cast<EgcNode*>(m_scrIter->node());
-        else
-                return false;
-
-        if (!node)
-                return false;
-
-        rightSide = m_scrIter->rightSide();
-
-        if (node == &tree)
-                return true;
-
-        if (tree.isContainer()) {
-                quint32 index;
-                EgcContainerNode* container = static_cast<EgcContainerNode*>(&tree);
-                if (container->hasSubNode(*node, index)) {
-                        if ((container->getNumberChildNodes() / 2) >= index)
-                                rightSide = true;
-                        else
-                                rightSide = false;
-
-                        return true;
-                }
-        }
 
         return false;
 }
@@ -1002,16 +596,18 @@ bool EgcFormulaEntity::isResultNode(const EgcNode& node)
 
 bool EgcFormulaEntity::cursorAtBegin(void)
 {
-        if (!m_scrIter->hasPrevious())
-                return true;
+        if (m_mod) {
+                return m_mod->cursorAtBegin();
+        }
 
         return false;
 }
 
 bool EgcFormulaEntity::cursorAtEnd(void)
 {
-        if (!m_scrIter->hasNext())
-                return true;
+        if (m_mod) {
+                return m_mod->cursorAtEnd();
+        }
 
         return false;
 }
@@ -1021,31 +617,6 @@ void EgcFormulaEntity::setSelected(bool selected)
         m_item->selectFormula(selected);
 }
 
-bool EgcFormulaEntity::isEmpty(void) const
-{
-        EgcNode* node = getRootElement();
-        if (!node)
-                return true;
-        if (node->getNodeType() == EgcNodeType::EmptyNode)
-                return true;
-        else { // if there are only invisible (unary) containers and the only leaf is an empty node
-                EgcContainerNode* container;
-                while(node->isContainer() && !node->hasVisibleSigns()) {
-                        container = static_cast<EgcContainerNode*>(node);
-                        if (container->getNumberChildNodes() == 1)
-                                node = static_cast<EgcContainerNode*>(node)->getChild(0);
-                        else
-                                break;
-                        if (!node->isContainer() && node->getNodeType() == EgcNodeType::EmptyNode) {
-                                return true;
-                        }
-
-                }
-        }
-
-        return false;
-}
-
 EgcAbstractFormulaItem* EgcFormulaEntity::getItem(void) const
 {
         return m_item;
@@ -1053,15 +624,13 @@ EgcAbstractFormulaItem* EgcFormulaEntity::getItem(void) const
 
 void EgcFormulaEntity::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
 {
-        EgcNode* node = m_mathmlLookup.findNode(nodeId);
-        if (node == nullptr)
-                return;
-
-        m_scrIter->setCursorAt(node, subPos, rightSide);
+        if (m_mod)
+                m_mod->setCursorPos(nodeId, subPos, rightSide);
         showCurrentCursor();
 }
 
-EgcScrPosIterator* EgcFormulaEntity::getIterator(void)
+bool EgcFormulaEntity::isActive() const
 {
-        return m_scrIter.data();
+        return m_isActive;
 }
+

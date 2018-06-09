@@ -42,15 +42,20 @@ class EgcDifferentialNode : public EgcFncContainerNode
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcDifferentialNode, EgcNodeType::DifferentialNode);
 public:
+
         /**
-         * @brief The EgcDifferentialIndexes enum is a enum to determine the meaning of the child nodes inside the
-         * differential node
+         * @brief The DifferentialType enum the visualisation type of the differential
          */
-        enum class EgcDifferentialIndexes {
-                differential = 0, variable
+        enum class DifferentialType {
+                lagrange1 = 1, lagrange2 = 2, lagrange3 = 3, leibnitz = 0
         };
 
         EgcDifferentialNode();
+        /**
+         * @brief valid checks if the subnode is valid. This can be the case if e.g. the child is not NULL.
+         * @return returns true if the expression is valid, false otherwise.
+         */
+        virtual bool valid(void);
         /**
          * @brief setNrDerivative set the derivative level (1st, 2nd, ...).
          * @param derivative the level of derivative (1, 2, 3, ...)
@@ -62,21 +67,19 @@ public:
          */
         quint8 getNrDerivative(void) const;
         /**
-         * @brief getIndexOf get the index of the given meaning
-         * @param index the meaning of the child we are searching for
-         * @return the index of the child
+         * @brief getDifferentialType returns the differential type of this differential
+         * @return the differential type used for visualisation of this differential
          */
-        quint32 getIndexOf(EgcDifferentialIndexes index);
+        DifferentialType getDifferentialType(void) const;
         /**
-         * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
-         * left side of the container)
-         * @param side the side to test for cursor snap.
-         * @return true if the cursor will snap in at the given side, false otherwise
+         * @brief setDifferentialType set the differential type of this differential
+         * @param type the differential type to set
          */
-        virtual bool cursorSnaps(EgcNodeSide side) const override;
+        void setDifferentialType(DifferentialType type);
 
 protected:
         quint8 m_derivative;
+        DifferentialType m_differentialType;
 
 };
 

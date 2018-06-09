@@ -15,5 +15,6 @@
         <file>fnc/differential_lagrange_3.png</file>
         <file>fnc/differential_leibnitz.png</file>
         <file>fnc/integral.png</file>
+        <file>sound/error.wav</file>
     </qresource>
 </RCC>

@@ -61,7 +61,7 @@ EgcAction EgcActionMapper::map(QKeyEvent *event)
         if (event->modifiers()==Qt::ControlModifier) {
                 switch(event->key()) {
                 case Qt::Key_Minus:
-                        action.m_op = EgcOperations::createSubId;
+                        action.m_op = EgcOperations::createSubscript;
                         break;
                 default:
                         action.m_op = EgcOperations::noAction;

@@ -5,7 +5,6 @@ add_subdirectory(egcasTestView)
 add_subdirectory(egcasTestStructure)
 add_subdirectory(egcasTestParser)
 add_subdirectory(egcasTestCalculations)
-add_subdirectory(egcasTestScreenIterators)
 add_subdirectory(egcasTestUtf)
 add_subdirectory(egcasTestAdvancedTreeOps)
 
@@ -14,7 +13,6 @@ set(tests-to-execute
         tst_egcas_advanced_tree_ops 
         tst_egcastest_calculations 
         tst_egcastest_parser 
-        tst_egcastest_scriters 
         tst_egcastest_structural 
         tst_egcastest_utf_encoding 
         tst_egcastest_view

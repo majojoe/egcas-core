@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define EGCABSTRACTFORMULAITEM_H
 
 #include <QHash>
+#include <QLineF>
 #include "egcasiteminterface.h"
 
 class EgcNode;
@@ -65,6 +66,19 @@ public:
         * @param subindex the subindex to use for identifying the mathml element (e.g. one character of a text)
         */
         virtual void showRightCursor(quint32 mathmlId, quint32 subindex) = 0;
+        /**
+         * @brief getElementRect returns the bounding rect of the requested element. If no element with the given
+         * parameters is availiable an empty rect will be returned
+         * @param mathmlId the mathml id for which the bounding rect is requested
+         * @param subindex the subindex for which the bounding rect is requested
+         * @return the bounding rect for given mathml id and subindex (in formula coordinates)
+         */
+        virtual QRectF getElementRect(quint32 mathmlId, quint32 subindex) = 0;
+        /**
+         * @brief showCursor shows the cursor given in the context of the current scene
+         * @param cursor the cursor to show up
+         */
+        virtual void showCursor(QLineF cursor) = 0;
         /**
          * @brief hideCursors hide the cursors e.g. in case the element is moved
          */

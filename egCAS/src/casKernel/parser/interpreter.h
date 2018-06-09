@@ -138,15 +138,14 @@ private:
          * @return pointer to the function created
          */
         EgcNode* addFunction(const std::string& fncName, EgcArgumentsNode* argList);
-
         /**
-         * @brief addBuiltinFunction add a builtin function to the formula
-         * @param fncName the function name of the function to create
-         * @param argList the argument list with all expression to add to the function. The List can be integrated
-         * directly into the function.
-         * @return pointer to the function created
+         * @brief isBuiltinOperation checks if a builtin operation of the maxima kernel was given which must be handled
+         * separately
+         * @param fncName name of the function
+         * @param node the node to use for the special operation
+         * @return pointer to the operation created
          */
-        EgcNode* addBuiltinFunction(const std::string& fncName, EgcArgumentsNode* argList);
+        EgcNode* isBuiltinOperation(const std::string& fncName, EgcNode* node);
 
         /**
          * @brief changeFlexExpressionType change the given argList form a function node type to the type given (move the cildren)
@@ -162,6 +161,13 @@ private:
          * @return node0
          */
         EgcNode* updateIterator(EgcNode* node0, int i);
+        /**
+         * @brief updateIterator if any iterator points to the given original pointer
+         * @param original the original pointer to check for (will be replaced by new pointer)
+         * @param new_pointer the new pointer that replaces the old one
+         * @return pointer that has been replaced
+         */
+        EgcNode* updateIterator(EgcNode* original, EgcNode* new_pointer);
 
         /**
          * @brief createArgList creates an argument list that is integrated later on in the function where it is used in

@@ -70,13 +70,13 @@
 %option yyclass="MaximaScanner"
 %option prefix="CASParser_"
 
-
+EMPTY        (_empty)
 EXPONENT     ([Eeb][-+]?[0-9]+)
 VARSEP       (_1)
 UNDERSCORE   (__)
-UNICODESIGN  (_2[0-9a-fA-F]+_3)
+UNICODESIGN  (_2[0-9]+_3)
 ALNUMNODE    (([a-zA-Z]{1}|{UNICODESIGN})([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*)
-ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*)
+ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*{EMPTY}{0,1})
 
 %%
 
@@ -92,30 +92,25 @@ ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*)
 ")"     { return CASParser::MaximaParser::make_RIGHTPARENTHESIS(CASParser::location()); }
 "^" |
 "**"    { return CASParser::MaximaParser::make_EXPONENT(CASParser::location()); }
-"sqrt"  { return CASParser::MaximaParser::make_SQROOT(CASParser::location()); }
+"_sqrt"  { return CASParser::MaximaParser::make_SQROOT(CASParser::location()); }
  /*parenthesis to define operation borders*/
 "_{"     { return CASParser::MaximaParser::make_LBRACKET_OP(CASParser::location()); }
 "_}"     { return CASParser::MaximaParser::make_RBRACKET_OP(CASParser::location()); }
-"_<1"     { return CASParser::MaximaParser::make_ITERATOR1(CASParser::location()); }
-"_<2"     { return CASParser::MaximaParser::make_ITERATOR2(CASParser::location()); }
-"_<3"     { return CASParser::MaximaParser::make_ITERATOR3(CASParser::location()); }
-
+"_>R"     { return CASParser::MaximaParser::make_ITERATOR_R(CASParser::location()); }
+"_<L"     { return CASParser::MaximaParser::make_ITERATOR_L(CASParser::location()); }
 "_integrate"  { return CASParser::MaximaParser::make_INTEGRAL(CASParser::location()); }
 "_diff"  { return CASParser::MaximaParser::make_DIFFERENTIAL(CASParser::location()); }
 "_root" { return CASParser::MaximaParser::make_ROOT(CASParser::location()); }
-"_empty" { return CASParser::MaximaParser::make_EMPTY(CASParser::location()); }
+{EMPTY} { return CASParser::MaximaParser::make_EMPTY(CASParser::location()); }
+"_emptybinop" { return CASParser::MaximaParser::make_EMPTYBINOP(CASParser::location()); }
 "_log" { return CASParser::MaximaParser::make_LOGARITHM(CASParser::location()); }
-"log" { return CASParser::MaximaParser::make_NATLOGARITHM(CASParser::location()); }
+"_ln" { return CASParser::MaximaParser::make_NATLOGARITHM(CASParser::location()); }
+"_red_parenth_r" { return CASParser::MaximaParser::make_RED_PARENTHESIS_R(CASParser::location()); }
+"_red_parenth_l" { return CASParser::MaximaParser::make_RED_PARENTHESIS_L(CASParser::location()); }
 
  /*numbers*/
 [0-9]+"."[0-9]*{EXPONENT}? |
 "."?[0-9]+{EXPONENT}? { return CASParser::MaximaParser::make_NUMBER(yytext, CASParser::location()); }
-
- /*builtin functions*/
-sin |
-cos {
-        return CASParser::MaximaParser::make_BUILTIN_FNCS(yytext, CASParser::location());
- }
 
  /*names*/
 {ALNUMNODE} {

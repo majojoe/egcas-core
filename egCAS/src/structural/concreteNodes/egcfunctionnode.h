@@ -58,34 +58,30 @@ public:
          */
         QString getName(void);
         /**
-         * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
-         * left side of the container)
-         * @param side the side to test for cursor snap.
-         * @return true if the cursor will snap in at the given side, false otherwise
-         */
-        virtual bool cursorSnaps(EgcNodeSide side) const override;
-        /**
-         * @brief visibleSigns find out where the node has visible signs (e.g. a division node has visible signs in the
-         * middle of the container)
-         * @param side the side to test for visible signs
-         * @return true if the given side of the node has visible signs.
-         */
-        virtual bool visibleSigns(EgcNodeSide side) const override;
-        /**
-         * @brief determineIfChildIsAtomicallyBound normally a parent knows better if his child is atomically bound to the
-         * parent. By implementing this the child can ask the parent whether it may be deleted (insert can take place)
-         * or not. So the method isAtomicallyBoundChild can be easily implemented.
-         * ONLY INTENDED TO BE USED BY DIRECT CHILDS!
-         * @param node the node to check for.
-         * @return true if child is atomically bound to its parent, false if not
-         */
-        virtual bool determineIfChildIsAtomicallyBound(const EgcNode* node) const;
-        /**
          * @brief valid returns true if the expression is valid and false otherwise.
          * A variable expression is valid if the value is not empty.
          * @return true if the expression is valid, false otherwise.
          */
         virtual bool valid(void);
+        /**
+         * @brief setStuffedName set the stuffed function name
+         * @param fncName the variable name as a string. This can include the stuffed special signs (a "_" in the
+         * variable name is stuffed into "__", and special signs are encoded with html escapes where 'ampersand'&'
+         * and ';' are again encoded with '_2' and '_3'. As a result all characters will be ASCII conform then and can
+         * be used by the calc kernel).
+         */
+        virtual void setStuffedName(const QString& fncName);
+        /**
+         * @brief getStuffedName returns the stuffed name (with stuffed special signs)
+         * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
+         * and special signs are encoded with html escapes where 'ampersand'&' and ';' are again encoded with '_2' and
+         * '_3'. As a result all characters will be ASCII conform then and can be used by the calc kernel).
+         */
+        virtual QString getStuffedName(void);
+
+
+private:
+        QString m_fncName;               ///< function name of the function
 };
 
 #endif // EGCFUNCTIONNODE_H

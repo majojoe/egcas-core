@@ -34,7 +34,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QRegularExpression>
 #include "../specialNodes/egcnode.h"
 
-class EgcSubindNodeIter;
 
 /**
  * @brief The EgcAlnumNode class is a class that holds leafes with alphanumerice identifier
@@ -47,8 +46,6 @@ class EgcSubindNodeIter;
  */
 class EgcAlnumNode : public EgcNode
 {
-        friend class EgcSubindNodeIter;
-
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcAlnumNode, EgcNodeType::AlnumNode);
 
@@ -104,46 +101,41 @@ public:
          * A variable expression is valid if the value is not empty.
          * @return true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
         /**
-         * @brief visibleSigns find out where the node has visible signs (e.g. a division node has visible signs in the
-         * middle of the container)
-         * @param side the side to test for visible signs
-         * @return true if the given side of the node has visible signs.
+         * @brief encode encodes a string that contains unicode signs as html escape sequences + replaces single _ with
+         * __ and also the start and end of the html escape sequences with sequences the calculation kernel can work
+         * with
+         * @param str the string to encode
+         * @return the encoded string
          */
-        virtual bool visibleSigns(EgcNodeSide side) const override;
+        static QString encode(const QString& str);
         /**
-         * @brief isAtomicallyBoundChild if a node is a child of a atomic node it may not be deleted seperately. There may be a
-         * parent that is marked as atomic (is deleteable), then the parent must be deleted in order to delete the not
-         * deleteable sub-node. This functionality is in some ways comparable to a composition. The also must not be
-         * inserted a node in between (this would change the structure).
-         * @return true if node is a child of a atomic node, false if NOT a child of a atomic node (majority).
+         * @brief decode decodes the given string from escape sequences the calculation kernel can work with back to
+         * unicode signs.
+         * @param str the string to decode
+         * @return the string decoded to human readable signs
          */
-        virtual bool isAtomicallyBoundChild(void) const override;
-
-protected:
+        static QString decode(const QString& str);
         /**
-         * @brief insert insert a character at the given position
-         * @param character the character to insert
-         * @param position the position where to insert the given character
-         * @return true if the operation was successful, false otherwise
+         * @brief isAlnum checks if given string is an alphanumeric string
+         * @param str string to check
+         * @return true if it is an alphanumeric string, false otherwise
          */
-        virtual bool insert(QChar character, int position);
+        static bool isAlnum(const QString& str);
         /**
-         * @brief remove a charcter at the given position
-         * @param position the position at which to remove a character
-         * @return true if the operation was successful, false otherwise
+         * @brief optimizeRegex optimizes the regeges
          */
-        virtual bool remove(int position);
+        static void optimizeRegexes(void);
 
 private:
+
         QString m_value;                                ///< the value of the number
         bool m_firstCharMightBeNumber;                  ///< if true, first char can also be a number
         static QRegularExpression s_validator;          ///< a validator for character inputs
-        static QRegularExpression s_ampersand;          ///< regex to replace ampersand
-        static QRegularExpression s_ampersandBegin;     ///< regex to replace ampersand at the beginning
-        static QRegularExpression s_semi;               ///< regex to replace semicolon
-        static QRegularExpression s_semiBegin;          ///< regex to replace semicolon at the beginning
+        static QRegularExpression s_alnumChecker;       ///< a validator for character inputs
+        static QRegularExpression s_html_encoding_start;///< regex to replace ampersand
+        static QRegularExpression s_html_encoding_end;  ///< regex to replace semicolon
         static bool s_regexInitialized;                 ///< is the regex already initialized
 };
 

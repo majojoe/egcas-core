@@ -36,22 +36,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 //ATTENTION: as of now egCAS and even Qt does not support non bmp characters (unicode caracters > 0xFFFF)
 
-QRegularExpression EgcAlnumNode::s_ampersand = QRegularExpression("(.*[^_]+)_2([^_]+.*)");
-QRegularExpression EgcAlnumNode::s_ampersandBegin = QRegularExpression("_2([^_]+.*)");
-QRegularExpression EgcAlnumNode::s_semi = QRegularExpression("(.*[^_]+)_3([^_]+.*)");
-QRegularExpression EgcAlnumNode::s_semiBegin = QRegularExpression("(.*[^_]+)_3");
+QRegularExpression EgcAlnumNode::s_html_encoding_start = QRegularExpression("(_2)([0-9]+_3)");
+QRegularExpression EgcAlnumNode::s_html_encoding_end = QRegularExpression("(&#[0-9]+)(_3)");
 QRegularExpression EgcAlnumNode::s_validator = QRegularExpression("[_0-9a-zA-ZΆ-ώ]+");
+QRegularExpression EgcAlnumNode::s_alnumChecker = QRegularExpression("^[_0-9a-zA-ZΆ-ώ]+$");
 bool EgcAlnumNode::s_regexInitialized = false;
 
 EgcAlnumNode::EgcAlnumNode() : m_value(QString::null), m_firstCharMightBeNumber{false}
 {
         //optimize all the regexes
         if (!s_regexInitialized) {
-                s_regexInitialized = true;
-                s_ampersand.optimize();
-                s_ampersandBegin.optimize();
-                s_semi.optimize();
-                s_semiBegin.optimize();
+                optimizeRegexes();
         }
 }
 
@@ -73,19 +68,7 @@ void EgcAlnumNode::setValue(const QString& varName)
 
 void EgcAlnumNode::setStuffedValue(const QString& varName)
 {
-        QString tmp = varName;
-        /*the regexes are copied from static expressions since copying is cheap but we don't need to build up the
-        regexes on the stack*/
-        //handle ampersands
-        tmp.replace(QRegularExpression(s_ampersand), "\\1&#\\2");
-        tmp.replace(QRegularExpression(s_ampersandBegin), "&#\\1"); //if the ampersand is at the beginning
-        //handle ";"s
-        tmp.replace(QRegularExpression(s_semi), "\\1;\\2");
-        tmp.replace(QRegularExpression(s_semiBegin), "\\1;");  //if the ";" is at the end
-
-        tmp.replace("__", "_");
-
-        m_value = EgcUtfCodepoint::decodeToUtf(tmp);
+        m_value = decode(varName);
 }
 
 QString EgcAlnumNode::getValue(void) const
@@ -95,15 +78,7 @@ QString EgcAlnumNode::getValue(void) const
 
 QString EgcAlnumNode::getStuffedValue(void)
 {
-        //replace (stuffing) of "_" with "__" since "_" is used to concatenate variable name and subscript
-        QString tmp = EgcUtfCodepoint::encodeToXml(m_value).replace("_", "__");
-
-        // ampersands and followning '#' in special symbols are replaced by "_2" for use in calculation kernel
-        tmp = tmp.replace("&#", "_2");
-        // ";" in special symbols are replaced by "_3" for use in calculation kernel
-        tmp = tmp.replace(";", "_3");
-
-        return tmp;
+        return encode(m_value);
 }
 
 bool EgcAlnumNode::valid(void)
@@ -131,53 +106,55 @@ int EgcAlnumNode::nrSubindexes(void) const
         return m_value.size();
 }
 
-bool EgcAlnumNode::insert(QChar character, int position)
+void EgcAlnumNode::optimizeRegexes()
 {
-        bool retval = false;
-
-        if (!m_firstCharMightBeNumber) {
-                //it's not allowed for a alphanumeric name to begin with a number
-                if (position == 0 && character.isDigit())
-                        return false;
+        if (!s_regexInitialized) {
+                s_regexInitialized = true;
+                s_html_encoding_start.optimize();
+                s_html_encoding_end.optimize();
+                s_validator.optimize();
+                s_alnumChecker.optimize();
         }
-
-        if (s_validator.match(character).hasMatch()) {
-                if (position <= m_value.size() && position >= 0) {
-                        m_value.insert(position, character);
-                        retval = true;
-                }
-        }
-
-        return retval;
 }
 
-bool EgcAlnumNode::remove(int position)
+QString EgcAlnumNode::encode(const QString& str)
 {
-        bool retval = false;
+        //replace (stuffing) of "_" with "__" since "_" is used to concatenate variable name and subscript
+        QString tmp = EgcUtfCodepoint::encodeToXml(str).replace("_", "__");
 
-        if (position >= 0 && position < m_value.size()) {
-                if (!(position == 0 && m_value[1].isDigit())) { //it's not allowed that the first character of a name is a digit
-                        retval = true;
-                        m_value.remove(position, 1);
-                } else if (m_firstCharMightBeNumber) { // if it's allowed that the first char can be a number
-                        retval = true;
-                        m_value.remove(position, 1);
-                }
+        // ampersands and followning '#' in special symbols are replaced by "_2" for use in calculation kernel
+        tmp = tmp.replace("&#", "_2");
+        // ";" in special symbols are replaced by "_3" for use in calculation kernel
+        tmp = tmp.replace(";", "_3");
+
+        return tmp;
+}
+
+QString EgcAlnumNode::decode(const QString& str)
+{
+        /*the regexes are copied from static expressions since copying is cheap but we don't need to build up the
+        regexes on the stack*/
+        //handle ampersands
+
+        //optimize all the regexes if not done so far
+        if (!s_regexInitialized) {
+                optimizeRegexes();
         }
 
-        return retval;
+        QString tmp = str;
+        tmp = tmp.replace(QRegularExpression(s_html_encoding_start), "&#\\2");
+        tmp = tmp.replace(QRegularExpression(s_html_encoding_end), "\\1;");
+
+        tmp.replace("__", "_");
+
+        return EgcUtfCodepoint::decodeToUtf(tmp);
+
 }
 
-bool EgcAlnumNode::visibleSigns(EgcNodeSide side) const
+bool EgcAlnumNode::isAlnum(const QString& str)
 {
-        return true;
-}
+        if (s_alnumChecker.match(str).hasMatch())
+                return true;
 
-bool EgcAlnumNode::isAtomicallyBoundChild(void) const
-{
-        EgcContainerNode* parent = getParent();
-        if (!parent)
-                return false;
-
-        return parent->determineIfChildIsAtomicallyBound(this);
+        return  false;
 }

@@ -159,9 +159,3 @@ bool EgcContainerNode::hasSubNode(const EgcNode& node, quint32 &index) const
         return true;
 }
 
-bool EgcContainerNode::determineIfChildIsAtomicallyBound(const EgcNode* node) const
-{
-        (void) node;
-
-        return false;
-}

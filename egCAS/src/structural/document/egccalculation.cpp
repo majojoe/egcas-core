@@ -129,6 +129,7 @@ void EgcCalculation::nextCalculation(void)
 void EgcCalculation::resumeCalculation(void)
 {
         if (m_restartAfterResume) {
+                m_entity = nullptr;
                 restart();
                 return;
         }
@@ -142,6 +143,11 @@ void EgcCalculation::handleCalculation(EgcFormulaEntity& entity)
         m_result = nullptr;
         EgcNode* node = entity.getRootElement();
         if (!node) { //process next formula -> prevent recursion with event
+                triggerNextCalcualtion();
+                return;
+        }
+
+        if (!node->valid()) { //process next formula -> prevent recursion with event
                 triggerNextCalcualtion();
                 return;
         }

@@ -29,7 +29,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 # Widgets finds its own dependencies.
-find_package(Qt5 COMPONENTS Core Widgets Test)
+find_package(Qt5 COMPONENTS Core Widgets Test Multimedia)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
@@ -54,9 +54,6 @@ set(tst_egcastest_calculations_SOURCES
         ../../src/structural/specialNodes/egccontainernode.cpp
         ${tst_egcastest_calculations_concrete_SOURCES}
         ../../src/structural/iterator/egcnodeiterator.cpp
-        ../../src/structural/iterator/egcscrpositerator.cpp
-        ../../src/structural/iterator/screenHelpers/egcidnodeiter.cpp
-        ../../src/structural/iterator/screenHelpers/egcsubidnodeiter.cpp
         ../../src/structural/entities/egcformulaentity.cpp
         ../../src/structural/entities/egcentity.cpp
         ../../src/structural/specialNodes/egcbasenode.cpp
@@ -65,18 +62,26 @@ set(tst_egcastest_calculations_SOURCES
         ../../src/structural/visitor/egcmaximavisitor.cpp
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
+        ../../src/structural/entities/formulamodificator.cpp
+        ../../src/structural/iterator/formulascriter.cpp
+        ../../src/structural/visitor/formulascrvisitor.cpp
+        ../../src/structural/visitor/formulascrelement.cpp
         ../../src/casKernel/egcmaximaconn.cpp
         ../../src/casKernel/egckernelconn.cpp
         ../../src/utils/egcutfcodepoint.cpp
-        ../../src/structural/visitor/restructurevisitor.cpp
 )
+
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp PROPERTY SKIP_AUTOMOC ON)
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTY SKIP_AUTOMOC ON)
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTY SKIP_AUTOMOC ON)
 
 #set the verbosity level of the scanner and parser
 add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
+add_definitions(-DMAXIMA_BINARY_PATH="${CMAKE_BINARY_DIR}/maxima_installation/bin/")
 
 add_executable(tst_egcastest_calculations ${tst_egcastest_calculations_SOURCES} )
-add_dependencies(tst_egcastest_calculations egcas)
-target_link_libraries(tst_egcastest_calculations Qt5::Widgets Qt5::Core Qt5::Test)
+add_dependencies(tst_egcastest_calculations egcas egcas_maxima)
+target_link_libraries(tst_egcastest_calculations Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia)
 
 

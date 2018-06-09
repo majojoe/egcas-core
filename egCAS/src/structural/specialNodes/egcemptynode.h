@@ -55,6 +55,17 @@ public:
          * @return true if the expression is valid, false otherwise.
          */
         virtual bool valid(void);
+        /**
+         * @brief isEmptyValue checks if the given string is an empty value
+         * @param value the value to check
+         * @return true if the given value is an empty value
+         */
+        static bool isEmptyValue(QString value);
+        /**
+         * @brief getEmptyValue returns the text (sign) for an empty value
+         * @return returns the empty value
+         */
+        static QString getEmptyValue(void);
 private:
         /**
          * @brief setValue set the variable name (value)

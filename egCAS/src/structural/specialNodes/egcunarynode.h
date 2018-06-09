@@ -71,11 +71,6 @@ public:
          */
         virtual bool isUnaryNode(void) const override;
         /**
-         * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
-         * @param child a pointer to the child that will be deleted soon
-         */
-        virtual void notifyContainerOnChildDeletion(EgcNode* child);
-        /**
          * @brief takeOwnership takes ownership of the child given. The user is responsible for deleting the child.
          * If the user doesn't handle the child properly a leak will occur.
          * @param child the child to take ownership over.
@@ -153,23 +148,13 @@ public:
          * @return true if the trees are equal
          */
         virtual bool operator==(const EgcNode& node) const override;
-        /**
-         * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the 
-         * left side of the container)
-         * @param side the side to test for cursor snap.
-         * @return true if the cursor will snap in at the given side, false otherwise
-         */
-        virtual bool cursorSnaps(EgcNodeSide side) const override;
-        /**
-         * @brief visibleSigns find out where the node has visible signs (e.g. a division node has visible signs in the 
-         * middle of the container)
-         * @param side the side to test for visible signs
-         * @return true if the given side of the node has visible signs.
-         */
-        virtual bool visibleSigns(EgcNodeSide side) const override;
-        
 
 protected:
+        /**
+         * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
+         * @param child a pointer to the child that will be deleted soon
+         */
+        virtual void notifyContainerOnChildDeletion(EgcNode* child);
         /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
          * ATTENTION: It is very unlikely that you will need this function outside the container classes.

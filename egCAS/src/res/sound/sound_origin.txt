@@ -1,0 +1,5 @@
+This file lists where the sounds originally come from:
+===========================================================
+file                                    origin
+-----------------------------------------------------------
+error.wav        http://soundbible.com/1540-Computer-Error-Alert.html License: Attribution 3.0 | Recorded by Mike Koenig

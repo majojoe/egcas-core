@@ -34,11 +34,3 @@ EgcDivisionNode::EgcDivisionNode()
 {
 }
 
-bool EgcDivisionNode::cursorSnaps(EgcNodeSide side) const
-{
-        if (   side == EgcNodeSide::left
-            || side == EgcNodeSide::right)
-                return true;
-
-        return false;
-}

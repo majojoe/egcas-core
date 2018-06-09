@@ -30,6 +30,7 @@
 #include <sstream>
 #include <QVector>
 #include <QScopedPointer>
+#include <QString>
 #include "interpreter.h"
 #include "../../structural/egcnodecreator.h"
 #include "../../structural/egcnodes.h"
@@ -187,28 +188,32 @@ EgcNode* Interpreter::getRootNode(void)
         return m_rootNode.take();
 }
 
+EgcNode* Interpreter::isBuiltinOperation(const std::string& fncName, EgcNode* node)
+{
+        EgcNode* retval = nullptr;
+
+        if (fncName == "log")
+                retval = addUnaryExpression(EgcNodeType::NatLogNode, node);
+        else if (fncName == "sqrt")
+                retval = addSqrtExpression(node);
+
+        return retval;
+}
 
 EgcNode* Interpreter::addFunction(const std::string& fncName, EgcArgumentsNode* argList)
 {
-        if (argList) {
-                EgcNode* node = changeFlexExpressionType(EgcNodeType::FunctionNode, argList);
-                EgcFunctionNode* function = static_cast<EgcFunctionNode*>(node);
-                function->setName(QString::fromStdString(fncName));
-                return static_cast<EgcNode*> (function);
+
+        EgcNode* builtinOp;
+        if (argList->getNumberChildNodes() == 1) {
+                builtinOp = isBuiltinOperation(fncName, static_cast<EgcNode*>(argList));
+                if (builtinOp)
+                        return builtinOp;
         }
 
-        return static_cast<EgcNode*> (argList);
-}
-
-EgcNode* Interpreter::addBuiltinFunction(const std::string& fncName, EgcArgumentsNode* argList)
-{
         if (argList) {
                 EgcNode* node = changeFlexExpressionType(EgcNodeType::FunctionNode, argList);
                 EgcFunctionNode* function = static_cast<EgcFunctionNode*>(node);
-                QString name = QString::fromStdString(fncName);
-                if (name == QString("log"))
-                        name = QString("ln");
-                function->setName(name);
+                function->setStuffedName(QString::fromStdString(fncName));
                 return static_cast<EgcNode*> (function);
         }
 
@@ -225,6 +230,18 @@ EgcNode* Interpreter::updateIterator(EgcNode* node0, int i)
                 m_iterPointer3 = node0;
 
         return node0;
+}
+
+EgcNode* Interpreter::updateIterator(EgcNode* original, EgcNode* new_pointer)
+{
+        if (original == m_iterPointer1)
+                m_iterPointer1 = new_pointer;
+        if (original == m_iterPointer2)
+                m_iterPointer2 = new_pointer;
+        if (original == m_iterPointer3)
+                m_iterPointer3 = new_pointer;
+
+        return new_pointer;
 }
 
 EgcArgumentsNode* Interpreter::createArgList(EgcNode* expression)
@@ -275,9 +292,8 @@ void Interpreter::deleteDanglingNodes(void)
 
 EgcNode* Interpreter::addSqrtExpression(EgcNode* node0)
 {
-        QScopedPointer<EgcNumberNode> nExp(static_cast<EgcNumberNode*>(EgcNodeCreator::create(EgcNodeType::NumberNode)));
-        nExp->setValue("2");
-        QScopedPointer<EgcNode> sqrt(addBinaryExpression(EgcNodeType::RootNode, node0, nExp.take()));
+        QScopedPointer<EgcEmptyNode> nExp(static_cast<EgcEmptyNode*>(EgcNodeCreator::create(EgcNodeType::EmptyNode)));
+        QScopedPointer<EgcNode> sqrt(addBinaryExpression(EgcNodeType::RootNode, nExp.take(), node0));
         
         return sqrt.take();        
 }
@@ -344,10 +360,44 @@ EgcNode* Interpreter::addDifferentialExpression(EgcArgumentsNode* argList)
 {
         EgcNode* node = changeFlexExpressionType(EgcNodeType::DifferentialNode, argList);
         EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(node);
-        EgcNode* derivative = diff->getChild(2);
-        if (derivative->getNodeType() == EgcNodeType::NumberNode)
-                diff->setNrDerivative(static_cast<EgcNumberNode*>(derivative)->getValue().toUInt());
-        diff->remove(2);
+
+        unsigned int diff_type = 0;
+        EgcNode* type = diff->getChild(0);
+        if (!type)
+                return node;
+        if (type->getNodeType() == EgcNodeType::NumberNode)
+                diff_type = static_cast<EgcNumberNode*>(type)->getValue().toUInt();
+        diff->remove(0);
+        if (diff_type == 1 || diff_type == 2 || diff_type == 3) {
+                diff->setNrDerivative(static_cast<quint8>(diff_type));
+                if (diff_type == 1) {
+                        diff->setDifferentialType(EgcDifferentialNode::DifferentialType::lagrange1);
+                        diff->setNrDerivative(1);
+                } else if (diff_type == 2) {
+                        diff->setDifferentialType(EgcDifferentialNode::DifferentialType::lagrange2);
+                        diff->setNrDerivative(2);
+                } else if (diff_type == 3) {
+                        diff->setDifferentialType(EgcDifferentialNode::DifferentialType::lagrange3);
+                        diff->setNrDerivative(3);
+                }
+        } else {
+                EgcNode* derivative = diff->getChild(2);
+                if (!derivative)
+                        return node;
+                unsigned int der = 1;
+                if (derivative->getNodeType() == EgcNodeType::NumberNode)
+                        der = static_cast<EgcNumberNode*>(derivative)->getValue().toUInt();
+                if (der <= 0)
+                        der = 1;
+                diff->setNrDerivative(static_cast<quint8>(der));
+                diff->setDifferentialType(EgcDifferentialNode::DifferentialType::leibnitz);
+                if (der == 1) {
+                        QScopedPointer<EgcEmptyNode> emptyNd(static_cast<EgcEmptyNode*>(EgcNodeCreator::create(EgcNodeType::EmptyNode)));
+                        (void) updateIterator(diff->getChild(2), emptyNd.data());
+                        diff->remove(2);
+                        diff->insert(2, *emptyNd.take());
+                }
+        }
 
         return node;
 }

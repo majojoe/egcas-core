@@ -29,9 +29,30 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcdifferentialnode.h"
 
-EgcDifferentialNode::EgcDifferentialNode() : m_derivative{1}
+EgcDifferentialNode::EgcDifferentialNode() : m_derivative{1}, m_differentialType{DifferentialType::leibnitz}
 {
 
+}
+
+bool EgcDifferentialNode::valid(void)
+{
+        if (getDifferentialType() == DifferentialType::leibnitz) {
+                if (m_childs.count() != 3)
+                        return false;
+                if (m_childs.at(0)) {
+                        if (!m_childs.at(0)->valid())
+                                return false;
+                }
+                if (m_childs.at(1)) {
+                        if (!m_childs.at(1)->valid())
+                                return false;
+                }
+
+        } else {
+                return EgcFlexNode::valid();
+        }
+
+        return true;
 }
 
 void EgcDifferentialNode::setNrDerivative(quint8 derivative)
@@ -46,19 +67,12 @@ quint8 EgcDifferentialNode::getNrDerivative(void) const
         return m_derivative;
 }
 
-quint32 EgcDifferentialNode::getIndexOf(EgcDifferentialIndexes index)
+EgcDifferentialNode::DifferentialType EgcDifferentialNode::getDifferentialType() const
 {
-        if (index == EgcDifferentialIndexes::differential)
-                return 0;
-        if (index == EgcDifferentialIndexes::variable)
-                return 1;
+        return m_differentialType;
 }
 
-bool EgcDifferentialNode::cursorSnaps(EgcNodeSide side) const
+void EgcDifferentialNode::setDifferentialType(EgcDifferentialNode::DifferentialType type)
 {
-        if (   side == EgcNodeSide::left
-            || side == EgcNodeSide::right)
-                return true;
-
-        return false;
+        m_differentialType = type;
 }

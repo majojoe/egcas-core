@@ -352,6 +352,24 @@ void EgcFormulaItem::showRightCursor(quint32 mathmlId, quint32 subindex)
         }
 }
 
+QRectF EgcFormulaItem::getElementRect(quint32 mathmlId, quint32 subindex)
+{
+        EgRenderingPosition renderPos;
+        renderPos = m_screenPos->findRenderingData(mathmlId, subindex);
+        if (renderPos.m_nodeId) {
+                return renderPos.m_itemRect;
+        }
+
+        return QRectF();
+}
+
+void EgcFormulaItem::showCursor(QLineF cursor)
+{
+        EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
+        if (scn)
+                scn->setFormulaCursor(QLineF(mapToScene(cursor.p1()), mapToScene(cursor.p2())));
+}
+
 void EgcFormulaItem::hideCursors(void)
 {
         EgCasScene* scn = qobject_cast<EgCasScene*>(scene());
@@ -413,14 +431,6 @@ void EgcFormulaItem::selectFormula(bool selected)
 int EgcFormulaItem::type() const
 {
         return static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType);
-}
-
-bool EgcFormulaItem::isEmpty(void)
-{
-        if (m_entity)
-                return m_entity->isEmpty();
-
-        return false;
 }
 
 EgcAbstractFormulaEntity* EgcFormulaItem::getEnity(void) const

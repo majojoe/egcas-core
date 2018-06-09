@@ -258,10 +258,3 @@ bool EgcBinaryNode::operator==(const EgcNode& node) const
         return retval;
 }
 
-bool EgcBinaryNode::visibleSigns(EgcNodeSide side) const
-{
-        if (   side == EgcNodeSide::middle)
-                return true;
-        
-        return false;        
-}

@@ -140,15 +140,6 @@ public:
          * containter node, the result will also be false.
          */
         bool hasSubNode(const EgcNode& node, quint32 &index) const;
-        /**
-         * @brief determineIfChildIsAtomicallyBound normally a parent knows better if his child is atomically bound to the
-         * parent. By implementing this the child can ask the parent whether it may be deleted (insert can take place)
-         * or not. So the method isAtomicallyBoundChild can be easily implemented.
-         * ONLY INTENDED TO BE USED BY DIRECT CHILDS!
-         * @param node the node to check for.
-         * @return true if child is atomically bound to its parent, false if not
-         */
-        virtual bool determineIfChildIsAtomicallyBound(const EgcNode* node) const;
 
 protected:
         /**

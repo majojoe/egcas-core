@@ -102,37 +102,3 @@ bool EgcNode::isOperation(void) const
         return false;
 }
 
-bool EgcNode::cursorSnaps(EgcNodeSide side) const
-{
-        (void) side;
-        
-        return false;
-}
-
-bool EgcNode::visibleSigns(EgcNodeSide side) const
-{
-        (void) side;
-        
-        return false;        
-}
-
-bool EgcNode::modifyableElement(EgcNodeSide side) const
-{
-        return this->visibleSigns(side);
-}
-
-bool EgcNode::hasVisibleSigns(void) const
-{
-        if (    visibleSigns(EgcNodeSide::left)
-             || visibleSigns(EgcNodeSide::middle)
-             || visibleSigns(EgcNodeSide::right)) {
-                return true;
-        }
-
-        return false;
-}
-
-bool EgcNode::isAtomicallyBoundChild(void) const
-{
-        return false;
-}

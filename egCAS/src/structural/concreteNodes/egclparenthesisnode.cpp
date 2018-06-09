@@ -32,18 +32,7 @@ LParenthesisNode::LParenthesisNode()
 {
 }
 
-bool LParenthesisNode::cursorSnaps(EgcNodeSide side) const
+bool LParenthesisNode::valid()
 {
-        if (side == EgcNodeSide::left)
-                return true;
-
-        return false;
-}
-
-bool LParenthesisNode::visibleSigns(EgcNodeSide side) const
-{
-        if (side == EgcNodeSide::left)
-                return true;
-
         return false;
 }

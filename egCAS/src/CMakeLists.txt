@@ -59,7 +59,7 @@ set_property(TARGET mathmlview PROPERTY CXX_STANDARD_REQUIRED ON)
 file(COPY ${PROJECT_SOURCE_DIR}/LICENSE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/res)
 
 # Widgets finds its own dependencies.
-find_package(Qt5 COMPONENTS Widgets Xml PrintSupport Gui Core)
+find_package(Qt5 COMPONENTS Widgets Xml PrintSupport Gui Core Multimedia)
 
 include_directories(casKernel)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -136,16 +136,15 @@ set(egcas_SOURCES
         structural/egcnodecreator.cpp
         structural/visitor/egcnodevisitor.cpp 
         structural/visitor/egcmathmllookup.cpp
+        structural/visitor/formulascrvisitor.cpp
+        structural/visitor/formulascrelement.cpp
         structural/specialNodes/egccontainernode.cpp 
         structural/entities/egcformulaentity.cpp
         structural/iterator/egcnodeiterator.cpp
-        structural/iterator/egcscrpositerator.cpp
-        structural/iterator/screenHelpers/egcidnodeiter.cpp
-        structural/iterator/screenHelpers/egcsubidnodeiter.cpp
+        structural/iterator/formulascriter.cpp
         structural/specialNodes/egcbasenode.cpp
         structural/specialNodes/egcemptynode.cpp
         structural/visitor/egcmaximavisitor.cpp 
-        structural/visitor/restructurevisitor.cpp 
         ${egcas_concrete_node_SOURCES}
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 
@@ -163,6 +162,7 @@ set(egcas_SOURCES
         structural/entities/creator/egcformulacreator.cpp
         structural/entities/creator/egctextcreator.cpp
         structural/entities/creator/egcpixmapcreator.cpp
+        structural/entities/formulamodificator.cpp
         formulagenerator.cpp
         menu/egclicenseinfo.cpp
         structural/document/egccalculation.cpp
@@ -239,6 +239,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
                                         ${RUNTIME_PATH}/libpcre16-0.dll
                                         ${RUNTIME_PATH}/libpng16-16.dll
                                         ${RUNTIME_PATH}/Qt5Gui.dll
+                                        ${RUNTIME_PATH}/Qt5Multimedia.dll
+                                        ${RUNTIME_PATH}/Qt5Network.dll
                                         ${RUNTIME_PATH}/Qt5Test.dll
                                         ${RUNTIME_PATH}/Qt5Xml.dll
                                         ${RUNTIME_PATH}/libfreetype-6.dll
@@ -252,6 +254,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
                                         ${RUNTIME_PATH}/Qt5Widgets.dll
                                         ${RUNTIME_PATH}/zlib1.dll
                                         ${RUNTIME_PATH}/libpcre2-16-0.dll
+                                        ${RUNTIME_PATH}/libcrypto-1_1.dll
+                                        ${RUNTIME_PATH}/libssl-1_1.dll
                                 )
                                 install(FILES ${RUNTIME_PATH}/platforms/qminimal.dll ${RUNTIME_PATH}/platforms/qoffscreen.dll ${RUNTIME_PATH}/platforms/qwindows.dll DESTINATION bin/platforms)
                         endif()
@@ -274,6 +278,10 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MinGW")
         set_target_properties(egcas PROPERTIES LINK_FLAGS "-mwindows")
 endif()
 
-target_link_libraries(egcas mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core)
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp PROPERTY SKIP_AUTOMOC ON)
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTY SKIP_AUTOMOC ON)
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTY SKIP_AUTOMOC ON)
+
+target_link_libraries(egcas mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core Qt5::Multimedia)
 install (TARGETS egcas RUNTIME DESTINATION bin)
 

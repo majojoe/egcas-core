@@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
  * _3  : as code for ";"
  * These symbols cannot be represented by a cas kernel or have different meaning, therefore the are stuffed.
  */
-class EgcVariableNode : public EgcFlexNode
+class EgcVariableNode : public EgcNode
 {
         //set the node type of this expression
         EGC_SET_EXPRESSION_TYPE(EgcVariableNode, EgcNodeType::VariableNode);
@@ -76,11 +76,11 @@ public:
          */
         virtual QString getSubscript(void) const;
         /**
-         * @brief getStuffedVar returns the stuffed variable name (with subscript)
+         * @brief getStuffedValue returns the stuffed variable name (with subscript)
          * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
          * and variable name and subscript is seperated via "_1").
          */
-        virtual QString getStuffedVar(void);
+        virtual QString getStuffedValue(void);
         /**
          * @brief getStuffedVarSeparator returns the stuffed var separator
          * @return returns the variable separator
@@ -91,7 +91,7 @@ public:
          * A variable expression is valid if the value is not empty.
          * @return true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
         /**
          * @brief operator== comparison operator overload
          * @param node the node to compare against
@@ -104,36 +104,19 @@ public:
          */
         virtual bool isOperation(void) const override;
         /**
-         * @brief insertSubscript inserts a empty subscript (EgcEmptyNode)
+         * @brief isSubscriptEmptyElement checks if subscript contains an empty element. This means not that the string
+         * is empty!
+         * @return true if it contains an empty element, false otherwise
          */
-        virtual void insertSubscript(void);
-        /**
-         * @brief cursorSnaps find out where a cursor will snap in (e.g. a division node will snap at right and at the
-         * left side of the container)
-         * @param side the side to test for cursor snap.
-         * @return true if the cursor will snap in at the given side, false otherwise
-         */
-        virtual bool cursorSnaps(EgcNodeSide side) const override;
-        /**
-         * @brief visibleSigns find out where the node has visible signs (e.g. a division node has visible signs in the
-         * middle of the container)
-         * @param side the side to test for visible signs
-         * @return true if the given side of the node has visible signs.
-         */
-        virtual bool visibleSigns(EgcNodeSide side) const override;
-        /**
-         * @brief determineIfChildIsAtomicallyBound normally a parent knows better if his child is atomically bound to the
-         * parent. By implementing this the child can ask the parent whether it may be deleted (insert can take place)
-         * or not. So the method isAtomicallyBoundChild can be easily implemented.
-         * ONLY INTENDED TO BE USED BY DIRECT CHILDS!
-         * @param node the node to check for.
-         * @return true if child is atomically bound to its parent, false if not
-         */
-        virtual bool determineIfChildIsAtomicallyBound(const EgcNode* node) const override;
+        bool isSubscriptEmptyElement(void);
 
-protected:        
+protected:
+
         static QRegularExpression s_varSubSeparator; ///< regex for separating variable and subscript
         static bool s_initializeRegex;    ///< initialize regex?
+        QString m_value;                  ///< value of the variable
+        QString m_subscript;              ///< subscript of the variable
+        bool m_subscrIsEmpty;             ///< subscript is an empty element
 };
 
 #endif // EGCVARIABLENODE_H

@@ -100,9 +100,3 @@ bool EgcNumberNode::remove(int position)
         return retval;
 }
 
-bool EgcNumberNode::visibleSigns(EgcNodeSide side) const
-{
-        (void) side;
-
-        return true;
-}

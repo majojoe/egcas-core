@@ -31,17 +31,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QString>
 #include <QScopedPointer>
-#include "../specialNodes/egcbasenode.h"
+#include <structural/specialNodes/egcbasenode.h>
 #include "egcentity.h"
 #include "egcabstractformulaentity.h"
-#include "../visitor/egcmathmllookup.h"
+#include <structural/visitor/egcmathmllookup.h>
+#include <structural/entities/formulamodificator.h>
+#include <structural/document/egcabstractdocument.h>
 
 class EgcNode;
 class EgcBaseNode;
 enum class EgcNodeType;
 class EgcAbstractFormulaItem;
 class EgcScreenPos;
-class EgcScrPosIterator;
 enum class EgcOperations;
 class AbstractKernelParser;
 
@@ -130,10 +131,6 @@ public:
          * @return the command to be executed in the CAS kernel as a string
          */
         QString getCASKernelCommand(void);
-        /**
-         * @brief reStructureTree restructure the tree e.g. after an insert or delete
-         */
-        void reStructureTree(void);
         /**
          * @brief Is the formula a result of a calculation? (Has to be set by the formula(visitor) - when the formula
          * changes)
@@ -282,13 +279,6 @@ public:
          */
         bool paste(EgcNode& treeToPaste, EgcNode& whereToPaste);
         /**
-         * @brief replaceEmptyNodeWith replace the empty node where currently the cursor is, with a node of the given
-         * type.
-         * @param type the type to use for the node as replacement for the empty node
-         * @return nullptr if operation was not successful, or node inserted at cursor position where empty node was.
-         */
-        EgcNode* replaceEmptyNodeWith(EgcNodeType type);
-        /**
          * @brief isResultNode check if the given node is part of a result from the calculation kernel
          * @param node the node to check for if it is a part of a result
          * @return true if it is a result node, false otherwise
@@ -316,11 +306,6 @@ public:
          */
         void setSelected(bool selected);
         /**
-         * @brief isEmpty check if the formula is an empty formula
-         * @return true if empty, false otherwise
-         */
-        virtual bool isEmpty(void) const;
-        /**
          * @brief setCursorPos set the cursor position at the given nodeId and sub position location
          * @param nodeId the node Id where to set the cursor
          * @param subPos the sub position where to set the cursor
@@ -328,80 +313,16 @@ public:
          */
         virtual void setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide) override;
         /**
-         * @brief getIterator returns a pointer to the iterator of the formula
-         * @return the pointer to the iterator
+         * @brief isActive returns if formula is active
+         * @return true if formula is active, false otherwise.
          */
-        EgcScrPosIterator* getIterator(void);
+        bool isActive(void) const;
 
 private:
-        /**
-         * @brief moveCursor move the screen formula cursor back- or forward
-         * @param forward true if the user wants to move the cursor forward, false if he wants to move it backward
-         */
-        void moveCursor(bool forward);
         /**
          * @brief showCurrentCursor shows the current cursor the iterator points to
          */
         void showCurrentCursor(void);
-        /**
-         * @brief markParent highlight the next parent upwards in the tree and move the cursor to that position.
-         */
-        void markParent(void);
-        /**
-         * @brief insertCharacter insert a character at the current cursor position
-         * @param character the character to insert
-         */
-        void insertCharacter(QChar character);
-        /**
-         * @brief insertOperation insert a operation into the tree
-         * @param operation the operation action to insert
-         */
-        void insertOperation(EgcAction operation);
-        /**
-         * @brief removeCharacter remove a character at the current cursor position
-         * @param before if true the character before the current cursor position is remove, if false the character behind
-         */
-        void removeCharacter(bool before);
-        /**
-         * @brief isScreenIterInSubtree check if screen iterator is in the given subtree.
-         * @param tree subtree to check if screen iterator is anywhere below.
-         * @param rightSide if screen iterator is in given subtree, return the side that is nearer. True if right is 
-         * nearer, false if left side is nearer
-         * @return true if screen iterator is in subtree, false otherwise
-         */
-        bool isScreenIterInSubtree(EgcNode& tree, bool &rightSide) const;
-        /**
-         * @brief isEmptyNode check if current node where cursor is, is an empty node or not
-         * @return true if it is an empty node, false otherwise
-         */
-        bool isEmptyNode(void);
-        /**
-         * @brief insertOp insert any operation at current position of the iterator
-         * @param operations the operation action to insert
-         * @return true if the insert operation was successful, false otherwise
-         */
-        bool insertOp(EgcAction operations);
-        /**
-         * @brief createAndInsertOp insert a unary node in the tree above the given node (position)
-         * @param type the node type to insert
-         * @return true if everything worked well, false otherwise.
-         */
-        bool createAndInsertOp(EgcNodeType type);
-        /**
-         * @brief createAndInsertOperation insert a unary node in the tree above the given node (position)
-         * @param type the node type to insert
-         * @return pointer to node inserted if everything worked well, nullptr otherwise.
-         */
-        EgcNode* createAndInsertOperation(EgcNodeType type);
-        /**
-         * @brief insertFunctionContainer insert any function node at current position of the iterator
-         * @return true if the insert operation was successful, false otherwise
-         */
-        bool insertFunctionContainer(void);
-        /**
-         * @brief createSubId create sub id if current node is a variable node and has no sub id yet.
-         */
-        void createSubId(void);
 
         static quint8 s_stdNrSignificantDigits; ///< the number of significant digits (in a global mannner (std))
         static int s_fontSize;                  ///< the font size of all formulas
@@ -411,7 +332,8 @@ private:
         EgcAbstractFormulaItem* m_item;         ///< pointer to the formula item interface on the scene
         QString m_errorMsg;                     ///< the error message for this formula, if one
         EgcMathmlLookup m_mathmlLookup;         ///< mathml id lookup table
-        QScopedPointer<EgcScrPosIterator> m_scrIter; ///< iterator for screen positions
+        QScopedPointer<FormulaModificator> m_mod; ///< formula modificator class
+        bool m_isActive;                        ///< true if formula is activated, false otherwise
 };
 
 #endif // EGCFORMULAENTITY_H

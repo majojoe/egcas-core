@@ -38,18 +38,3 @@ bool EgcFncContainerNode::transferArgs(EgcArgumentsNode& args)
         node = std::move(args);
 }
 
-bool EgcFncContainerNode::cursorSnaps(EgcNodeSide side) const
-{
-        if (   side == EgcNodeSide::left
-            || side == EgcNodeSide::right)
-                return true;
-
-        return false;
-}
-
-bool EgcFncContainerNode::visibleSigns(EgcNodeSide side) const
-{
-        (void) side;
-
-        return true;
-}
