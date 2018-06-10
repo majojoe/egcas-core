@@ -68,57 +68,57 @@ MainWindow::MainWindow(QWidget *parent) :
     setupToolbar();
     setupElementBar();
 
-//    //add some formulas
-//    EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 480.0)));
-//    FormulaGenerator::getFormulaTree(formula1, "_{sqrt(1+_root(3,2 + _root(5,3+ _root(7,4+ _root(11,5+_root(13,6+_root(17,7+_root(19,A))))))))_}/_{ⅇ^π_}=x^‴");
-//    EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 350.0)));
-//    FormulaGenerator::getFormulaTree(formula2, "_{-1+sqrt(5)_}/_{2_}=_empty");
-//    formula2->setNumberResultType(EgcNumberResultType::ScientificType);
-//    formula2->setNumberOfSignificantDigits(4);
+    //add some formulas
+    EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
+                                                                                         QPointF(250.0, 480.0)));
+    FormulaGenerator::getFormulaTree(formula1, "_{sqrt(1+_root(3,2 + _root(5,3+ _root(7,4+ _root(11,5+_root(13,6+_root(17,7+_root(19,A))))))))_}/_{ⅇ^π_}=x^‴");
+    EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
+                                                                                         QPointF(250.0, 350.0)));
+    FormulaGenerator::getFormulaTree(formula2, "_{-1+sqrt(5)_}/_{2_}=_empty");
+    formula2->setNumberResultType(EgcNumberResultType::ScientificType);
+    formula2->setNumberOfSignificantDigits(4);
     
-//    EgcFormulaEntity* formula3 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(330.0, 300.0)));
-//    FormulaGenerator::getFormulaTree(formula3, "(1+38)=_empty");
-//    formula3->setNumberResultType(EgcNumberResultType::EngineeringType);
+    EgcFormulaEntity* formula3 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
+                                                                                         QPointF(330.0, 300.0)));
+    FormulaGenerator::getFormulaTree(formula3, "(1+38)=_empty");
+    formula3->setNumberResultType(EgcNumberResultType::EngineeringType);
 
-//    EgcFormulaEntity* formula4 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 610.0)));
-//    FormulaGenerator::getFormulaTree(formula4, "z_120:_{x-1_}/_{x+5_}");
+    EgcFormulaEntity* formula4 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
+                                                                                         QPointF(250.0, 610.0)));
+    FormulaGenerator::getFormulaTree(formula4, "z_120:_{x-1_}/_{x+5_}");
 
-//    EgcFormulaEntity* formula5 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 670.0)));
-//    FormulaGenerator::getFormulaTree(formula5, "_integrate(z_120,x)=_empty");
+    EgcFormulaEntity* formula5 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
+                                                                                         QPointF(250.0, 670.0)));
+    FormulaGenerator::getFormulaTree(formula5, "_integrate(z_120,x)=_empty");
     
-//    EgcFormulaEntity* formula6 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(650.0, 670.0)));
-//    FormulaGenerator::getFormulaTree(formula6, "_integrate(0,10,z_120,x)=_empty");
+    EgcFormulaEntity* formula6 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
+                                                                                         QPointF(650.0, 670.0)));
+    FormulaGenerator::getFormulaTree(formula6, "_integrate(0,10,z_120,x)=_empty");
 
-//    EgcFormulaEntity* formula7 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 760.0)));
-//    FormulaGenerator::getFormulaTree(formula7, "_diff(1,z_120,x,1)=_empty");
+    EgcFormulaEntity* formula7 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
+                                                                                         QPointF(250.0, 760.0)));
+    FormulaGenerator::getFormulaTree(formula7, "_diff(1,z_120,x,1)=_empty");
 
-//    EgcFormulaEntity* formula8 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(650.0, 760.0)));
-//    FormulaGenerator::getFormulaTree(formula8, "_diff(3,z_120,x,3)=_empty");
+    EgcFormulaEntity* formula8 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
+                                                                                         QPointF(650.0, 760.0)));
+    FormulaGenerator::getFormulaTree(formula8, "_diff(3,z_120,x,3)=_empty");
 
-//    EgcFormulaEntity* formula9 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 830.0)));
-//    FormulaGenerator::getFormulaTree(formula9, "_diff(0,z_120,x,5)=_empty");
+    EgcFormulaEntity* formula9 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
+                                                                                         QPointF(250.0, 830.0)));
+    FormulaGenerator::getFormulaTree(formula9, "_diff(0,z_120,x,5)=_empty");
 
-//    //add a text item
-//    EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text,
-//                                                                               QPointF(60.0, 30.0)));
-//    QFont font_text(QString("Century Schoolbook L"));
-//    font_text.setPointSize(50);
-//    text->setFont(font_text);
-//    text->setText("This is a test text");
+    //add a text item
+    EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text,
+                                                                               QPointF(60.0, 30.0)));
+    QFont font_text(QString("Century Schoolbook L"));
+    font_text.setPointSize(50);
+    text->setFont(font_text);
+    text->setText("This is a test text");
 
-//    //add a pixmap item
-//    EgcPixmapEntity* pixmap = static_cast<EgcPixmapEntity*>(m_document->createEntity(EgcEntityType::Picture,
-//                                                                                     QPointF(750.0, 180.0)));
-//    pixmap->setFilePath(":res/plane.png");
+    //add a pixmap item
+    EgcPixmapEntity* pixmap = static_cast<EgcPixmapEntity*>(m_document->createEntity(EgcEntityType::Picture,
+                                                                                     QPointF(750.0, 180.0)));
+    pixmap->setFilePath(":res/plane.png");
 
     QRectF rect(0,0,2100, 2900);    
     m_document->getScene()->setSceneRect(rect);
