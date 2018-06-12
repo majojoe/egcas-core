@@ -48,17 +48,21 @@ const char emptyBinElement[] = "_emptybinop";
 
 
 // macro for function arguments for inserting functions
-#define FNC_ARG(x) do{ if (arg##x.isEmpty()) {                                 \
-                            el.m_value = ")";                                  \
-                            m_iter.insert(el);                                 \
-                            return;                                            \
-                    } else {                                                   \
-                            el.m_value = ",";                                  \
-                            m_iter.insert(el);                                 \
-                            el.m_value = arg##x;                               \
-                            m_iter.insert(el);                                 \
-                            if (stdPos == x)                                   \
-                                    saveCursorPosition();                      \
+#define FNC_ARG(x) do{ if (arg##x.isEmpty()) {                                          \
+                            el.m_value = ")";                                           \
+                            m_iter.insert(el);                                          \
+                            return;                                                     \
+                    } else {                                                            \
+                            el.m_value = ",";                                           \
+                            m_iter.insert(el);                                          \
+                            if (nodeToSurround && stdPos == x) {                        \
+                                    moveCursorToRightVisibleMargin(*nodeToSurround);    \
+                            } else {                                                    \
+                                    el.m_value = arg##x;                                \
+                                    m_iter.insert(el);                                  \
+                            }                                                           \
+                            if (stdPos == x)                                            \
+                                    saveCursorPosition();                               \
                    }}while(0)
 
 
@@ -384,41 +388,93 @@ void FormulaModificator::insertUnaryOperation(QString left, QString right)
         }
 }
 
+bool FormulaModificator::isNumberOrVariable(bool right)
+{
+        bool retval = false;
+
+        if (right) {
+                if (m_iter.hasNext()) {
+                        EgcNode *nd = m_iter.peekNext().m_node;
+                        if (nd) {
+                                if (    nd->getNodeType() == EgcNodeType::NumberNode
+                                     || nd->getNodeType() == EgcNodeType::VariableNode)
+                                        retval = true;
+                        }
+                }
+        } else {
+                if (m_iter.hasPrevious()) {
+                        EgcNode *nd = m_iter.peekPrevious().m_node;
+                        if (nd) {
+                                if (    nd->getNodeType() == EgcNodeType::NumberNode
+                                     || nd->getNodeType() == EgcNodeType::VariableNode)
+                                        retval = true;
+                        }
+                }
+        }
+
+        return retval;
+}
+
 void FormulaModificator::insertFunction(QString name, quint32 stdPos, QString arg1, QString arg2, QString arg3, QString arg4, QString arg5, QString arg6)
 {
-        if (!m_underlinedNode) {                
-                if (isEmptyElement(true)) {
-                        m_iter.remove(true);
-                }
-                if (isEmptyElement(false)) {
-                        m_iter.remove(false);
-                }
+        EgcNode* nodeToSurround = nullptr;
 
-                FormulaScrElement el;
-                el.m_value = name;
-                m_iter.insert(el);
-                if (stdPos == 0)
-                        saveCursorPosition();
-                el.m_value = "(";
-                m_iter.insert(el);
+        //get the node to surround with the function if one
+        if (m_underlinedNode) {
+                nodeToSurround = m_underlinedNode;
+        } else {
+                if (m_iter.hasNext()) {
+                        if (isNumberOrVariable(true)) {
+                                if (m_iter.peekNext().m_node)
+                                        nodeToSurround = m_iter.peekNext().m_node;
+                        }
+                }
+                if (m_iter.hasPrevious()) {
+                        if (isNumberOrVariable(false)) {
+                                if (m_iter.peekPrevious().m_node)
+                                        nodeToSurround = m_iter.peekPrevious().m_node;
+                        }
+                }
+        }
 
+        if (nodeToSurround)
+                moveCursorToLeftVisibleMargin(*nodeToSurround);
+
+
+        if (isEmptyElement(true)) {
+                m_iter.remove(true);
+        }
+        if (isEmptyElement(false)) {
+                m_iter.remove(false);
+        }
+
+        FormulaScrElement el;
+        el.m_value = name;
+        m_iter.insert(el);
+        if (stdPos == 0)
+                saveCursorPosition();
+        el.m_value = "(";
+        m_iter.insert(el);
+
+        if (nodeToSurround && stdPos == 1) {
+                moveCursorToRightVisibleMargin(*nodeToSurround);
+        } else {
                 el.m_value = arg1;
                 m_iter.insert(el);
-                if (stdPos == 1)
-                        saveCursorPosition();
-
-                FNC_ARG(2);
-                FNC_ARG(3);
-                FNC_ARG(4);
-                FNC_ARG(5);
-                FNC_ARG(6);
-
-                el.m_value = ")";
-                m_iter.insert(el);
-
-        } else {
-                        saveCursorPosition();
         }
+        if (stdPos == 1)
+                saveCursorPosition();
+
+
+        FNC_ARG(2);
+        FNC_ARG(3);
+        FNC_ARG(4);
+        FNC_ARG(5);
+        FNC_ARG(6);
+
+        el.m_value = ")";
+        m_iter.insert(el);
+
 }
 
 void FormulaModificator::insertCharacter(QChar character)

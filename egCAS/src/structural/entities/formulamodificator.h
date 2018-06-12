@@ -420,6 +420,14 @@ private:
          * special cursor conditions
          */
         void checkForSpecialCursorConditions(void);
+        /**
+         * @brief isNumberOrVariable checks if the node at the left/right side of the cursor is a number or a variable.
+         * @param right if true the node on the right side will be checked, if false the node on the left side will be
+         * checked
+         * @return true if the node at the left/right side of the current cursor is a number or a variable, false
+         * otherwise
+         */
+        bool isNumberOrVariable(bool right);
 
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with
