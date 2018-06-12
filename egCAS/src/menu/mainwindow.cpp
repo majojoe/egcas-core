@@ -142,7 +142,8 @@ void MainWindow::showInfo(void)
 {
         QMessageBox msgBox;
 
-        msgBox.setText(QString(tr("Version: ")) + QString(EGCAS_VERSION) + QString(" (pre-alpha - non-production)"));
+        msgBox.setText(QString(tr("Version: ")) + QString(EGCAS_VERSION) + QString(tr(" (pre-alpha - non-production)\n"))
+                       + QString(tr("Build Date: ")) + QString("%1 %2").arg(__DATE__).arg(__TIME__));
         msgBox.exec();
 }
 
