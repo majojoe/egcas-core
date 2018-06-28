@@ -266,3 +266,13 @@ void EgcDocument::updateView()
                 view->viewport()->update();
         }
 }
+
+void EgcDocument::serialize()
+{
+
+}
+
+void EgcDocument::deserialize(quint32 version)
+{
+
+}

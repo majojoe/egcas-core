@@ -90,6 +90,7 @@ add_custom_target(egcas_other_srcs ALL SOURCES
         casKernel/parser/parser.y
         casKernel/parser/abstractkernelparser.h
         menu/mathelement.h
+        structural/abstractserializer.h
 
 )
 

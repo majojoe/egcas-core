@@ -41,12 +41,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egccalculation.h"
 #include "actions/egcaction.h"
 #include "egcabstractdocument.h"
+#include "abstractserializer.h"
 
 class EgcEntityList;
 class EgCasScene;
 class EgcTextEntity;
 
-class EgcDocument : public QObject, EgcAbstractEntityList, public EgcAbstractDocument
+class EgcDocument : public QObject, EgcAbstractEntityList, public EgcAbstractDocument, public AbstractSerializer
 {
         Q_OBJECT
 public:
@@ -149,6 +150,17 @@ public:
          * @brief updateView update the view and rerender all items in the view
          */
         void updateView(void);
+        /**
+         * @brief interface for serializing a class
+         */
+        virtual void serialize(void) override;
+
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param version the version of the stream that is to be deserialized
+         */
+        virtual void deserialize(quint32 version) override;
+
 signals:
         /**
          * @brief startDeleletingEntity signal to be emitted when entity shall be deleted
