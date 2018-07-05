@@ -62,7 +62,7 @@ public:
          * @brief getScene get a pointer to the scene contained by the document
          * @return a pointer to the scene of the document
          */
-        EgCasScene* getScene(void);
+        EgCasScene* getScene(void) const;
         /**
          * @brief getCalcClass returns the calculation class in order to connect to its signals
          * @return a pointer to the EgcCalculation class
@@ -151,15 +151,41 @@ public:
          */
         void updateView(void);
         /**
-         * @brief interface for serializing a class
+         * @brief saveToFile saves complete document in file given
+         * @param filename the filename (including path) in which to save the document
          */
-        virtual void serialize(void) override;
+        void saveToFile(QString filename);
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serialize(QXmlStreamWriter& stream) override;
 
         /**
          * @brief deserialize interface for deserializing a class
          * @param version the version of the stream that is to be deserialized
          */
         virtual void deserialize(quint32 version) override;
+        /**
+         * @brief setHeight
+         * @param height
+         */
+        void setHeight(qreal height);
+        /**
+         * @brief getHeight
+         * @return
+         */
+        qreal getHeight(void) const;
+        /**
+         * @brief setWidth
+         * @param height
+         */
+        void setWidth(qreal width);
+        /**
+         * @brief getWidth
+         * @return
+         */
+        qreal getWidth(void) const;
 
 signals:
         /**

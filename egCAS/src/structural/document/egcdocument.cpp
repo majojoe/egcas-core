@@ -39,6 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "view/egcformulaitem.h"
 #include "entities/egctextentity.h"
 #include "view/egctextitem.h"
+#include <QXmlStreamWriter>
+#include <QFile>
 
 EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasScene(*this, nullptr)}, m_calc{new EgcCalculation()}
 {
@@ -53,7 +55,7 @@ EgcEntityList* EgcDocument::getEntityList(void)
         return m_list.data();
 }
 
-EgCasScene* EgcDocument::getScene(void)
+EgCasScene* EgcDocument::getScene(void) const
 {
         return m_scene.data();
 }
@@ -267,12 +269,65 @@ void EgcDocument::updateView()
         }
 }
 
-void EgcDocument::serialize()
+void EgcDocument::saveToFile(QString filename)
 {
+        QFile file(filename);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+                return;
+
+        QXmlStreamWriter stream(&file);
+        serialize(stream);
+
+        file.close();
+}
+
+void EgcDocument::serialize(QXmlStreamWriter& stream)
+{
+        stream.setAutoFormatting(true);
+        stream.writeStartDocument();
+
+        stream.writeStartElement("document");
+        stream.writeAttribute("width", QString("%1").arg(getWidth()));
+        stream.writeAttribute("heigth", QString("%1").arg(getHeight()));
+
+        EgcEntity* entity;
+        foreach(entity, m_list) {
+                entity->serialize(&stream);
+        }
+
+        stream.writeEndElement(); // document
+
+
+
+        stream.writeEndDocument();
 
 }
 
 void EgcDocument::deserialize(quint32 version)
 {
 
+}
+
+void EgcDocument::setHeight(qreal height)
+{
+        QRectF rct = getScene()->sceneRect();
+        rct.setHeight(height);
+        getScene()->setSceneRect(rct);
+}
+
+qreal EgcDocument::getHeight() const
+{
+        return getScene()->sceneRect().height();
+}
+
+void EgcDocument::setWidth(qreal width)
+{
+        QRectF rct = getScene()->sceneRect();
+        rct.setWidth(width);
+        getScene()->setSceneRect(rct);
+}
+
+qreal EgcDocument::getWidth() const
+{
+        return getScene()->sceneRect().width();
 }

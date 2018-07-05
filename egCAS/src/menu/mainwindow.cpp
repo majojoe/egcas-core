@@ -173,6 +173,7 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_new_page, SIGNAL(triggered()), this, SLOT(newPage()));
         connect(m_ui->mnu_insert_graphic, SIGNAL(triggered()), this, SLOT(insertGraphic()));
         connect(m_ui->mnu_insert_text, SIGNAL(triggered()), this, SLOT(insertText()));
+        connect(m_ui->mnu_save_file, SIGNAL(triggered()), this, SLOT(saveFile()));
 }
 
 void MainWindow::setupToolbar()
@@ -226,4 +227,9 @@ void MainWindow::insertText(void)
                                                                                                  lastPos));
         txt->setEditMode();
 
+}
+
+void MainWindow::saveFile(void)
+{
+        m_document->saveToFile("test.egc");
 }

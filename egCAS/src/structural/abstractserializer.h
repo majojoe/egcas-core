@@ -32,6 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QtGlobal>
 
+class QXmlStreamWriter;
+
 class AbstractSerializer
 {
 public:
@@ -40,7 +42,7 @@ public:
         /**
          * @brief interface for serializing a class
          */
-        virtual void serialize(void) = 0;
+        virtual void serialize(QXmlStreamWriter& stream) = 0;
 
         /**
          * @brief deserialize interface for deserializing a class
