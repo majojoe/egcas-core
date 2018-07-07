@@ -290,17 +290,15 @@ void EgcDocument::serialize(QXmlStreamWriter& stream)
         stream.writeAttribute("width", QString("%1").arg(getWidth()));
         stream.writeAttribute("heigth", QString("%1").arg(getHeight()));
 
-        EgcEntity* entity;
-        foreach(entity, m_list) {
-                entity->serialize(&stream);
+        EgcEntityList* list = getEntityList();
+        QMutableListIterator<EgcEntity*> iter = list->getIterator();
+        while(iter.hasNext()) {
+                iter.next()->serialize(stream);
         }
 
         stream.writeEndElement(); // document
 
-
-
         stream.writeEndDocument();
-
 }
 
 void EgcDocument::deserialize(quint32 version)

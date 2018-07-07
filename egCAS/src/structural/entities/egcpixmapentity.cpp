@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcpixmapentity.h"
 #include "egcabstractpixmapitem.h"
 #include "document/egcabstractdocument.h"
+#include <QXmlStreamWriter>
 
 EgcPixmapEntity::EgcPixmapEntity(void) : m_item(nullptr)
 {
@@ -139,4 +140,23 @@ void EgcPixmapEntity::itemChanged(EgcItemChangeType changeType)
                 if (doc)
                         doc->deleteEntity(this);
         }
+}
+
+void EgcPixmapEntity::serialize(QXmlStreamWriter& stream)
+{
+        stream.writeStartElement("pic_entity");
+        stream.writeAttribute("pos_x", QString("%1").arg(getPosition().x()));
+        stream.writeAttribute("pos_y", QString("%1").arg(getPosition().y()));
+        stream.writeAttribute("width", QString("%1").arg(getSize().width()));
+        stream.writeAttribute("height", QString("%1").arg(getSize().height()));
+        if (!m_isEmbedded)
+                stream.writeAttribute("path", m_path);
+        else
+                stream.writeCharacters(getB64Encoded());
+        stream.writeEndElement(); // document
+}
+
+void EgcPixmapEntity::deserialize(quint32 version)
+{
+
 }

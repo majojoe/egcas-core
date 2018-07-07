@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egctextentity.h"
 #include "egctextitem.h"
 #include "../document/egcabstractdocument.h"
+#include <QXmlStreamWriter>
 
 #if defined( Q_OS_WIN )
 QFont EgcTextEntity::s_genericFont = QFont(QString("Times New Roman"), 14);
@@ -140,5 +141,21 @@ void EgcTextEntity::setEditMode()
 {
         if (m_item)
                 m_item->setEditMode();
+}
+
+void EgcTextEntity::serialize(QXmlStreamWriter& stream)
+{
+        stream.writeStartElement("text_entity");
+        stream.writeAttribute("font", m_font->toString());
+        stream.writeAttribute("pos_x", QString("%1").arg(getPosition().x()));
+        stream.writeAttribute("pos_y", QString("%1").arg(getPosition().y()));
+        //QString text = getText();
+        stream.writeCharacters("text");
+        stream.writeEndElement(); // document
+}
+
+void EgcTextEntity::deserialize(quint32 version)
+{
+
 }
 

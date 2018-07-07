@@ -317,6 +317,17 @@ public:
          * @return true if formula is active, false otherwise.
          */
         bool isActive(void) const;
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serialize(QXmlStreamWriter& stream) override;
+
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param version the version of the stream that is to be deserialized
+         */
+        virtual void deserialize(quint32 version) override;
 
 private:
         /**

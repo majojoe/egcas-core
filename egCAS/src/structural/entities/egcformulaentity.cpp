@@ -634,3 +634,13 @@ bool EgcFormulaEntity::isActive() const
         return m_isActive;
 }
 
+void EgcFormulaEntity::serialize(QXmlStreamWriter& stream)
+{
+
+}
+
+void EgcFormulaEntity::deserialize(quint32 version)
+{
+
+}
+

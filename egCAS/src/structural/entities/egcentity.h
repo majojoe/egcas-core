@@ -33,6 +33,8 @@ class QPointF;
 class EgcAbstractEntityList;
 class EgcAbstractDocument;
 
+#include "abstractserializer.h"
+
 /**
  * @brief The EgcEntityType defines different types of entities inside a egCAS (formula) document/worksheet
  */
@@ -46,7 +48,7 @@ enum class EgcEntityType
 /**
  * @brief The EgcEntity class is a abstract base class for all types of entities in a document (text, formulas, pictures, ...)
  */
-class EgcEntity
+class EgcEntity : public AbstractSerializer
 {
 public:
         /**
@@ -94,6 +96,18 @@ public:
          * @return the document
          */
         EgcAbstractDocument* getDocument(void);
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serialize(QXmlStreamWriter& stream) override = 0;
+
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param version the version of the stream that is to be deserialized
+         */
+        virtual void deserialize(quint32 version) override = 0;
+
 
 
 protected:

@@ -100,6 +100,18 @@ public:
          * @brief itemChanged is called when the item that is associated with the enity has changed
          */
         virtual void itemChanged(EgcItemChangeType changeType) override;
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serialize(QXmlStreamWriter& stream) override;
+
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param version the version of the stream that is to be deserialized
+         */
+        virtual void deserialize(quint32 version) override;
+
 
 private:
         EgcAbstractPixmapItem *m_item;          ///< pointer to QGraphicsitem hold by scene
