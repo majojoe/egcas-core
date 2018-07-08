@@ -66,7 +66,7 @@ QString EgcTextEntity::getText(void) const
         if (!m_item)
                 return "";
 
-        m_item->getText();
+        return m_item->getText();
 }
 
 void EgcTextEntity::setItem(EgcAbstractTextItem* item)
@@ -149,8 +149,7 @@ void EgcTextEntity::serialize(QXmlStreamWriter& stream)
         stream.writeAttribute("font", m_font->toString());
         stream.writeAttribute("pos_x", QString("%1").arg(getPosition().x()));
         stream.writeAttribute("pos_y", QString("%1").arg(getPosition().y()));
-        //QString text = getText();
-        stream.writeCharacters("text");
+        stream.writeCharacters(getText());
         stream.writeEndElement(); // document
 }
 
