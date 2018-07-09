@@ -156,6 +156,11 @@ public:
          */
         void saveToFile(QString filename);
         /**
+         * @brief readFromFile reads complete document from file given
+         * @param filename the filename (including path) from which to read the document
+         */
+        void readFromFile(QString filename);
+        /**
          * @brief interface for serializing a class
          * @param stream the stream to use for serializing this class
          */
@@ -165,7 +170,7 @@ public:
          * @brief deserialize interface for deserializing a class
          * @param version the version of the stream that is to be deserialized
          */
-        virtual void deserialize(quint32 version) override;
+        virtual void deserialize(QXmlStreamReader& stream, quint32 version) override;
         /**
          * @brief setHeight
          * @param height

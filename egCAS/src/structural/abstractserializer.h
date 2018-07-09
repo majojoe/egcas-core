@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QtGlobal>
 
 class QXmlStreamWriter;
+class QXmlStreamReader;
 
 class AbstractSerializer
 {
@@ -48,7 +49,7 @@ public:
          * @brief deserialize interface for deserializing a class
          * @param version the version of the stream that is to be deserialized
          */
-        virtual void deserialize(quint32 version) = 0;
+        virtual void deserialize(QXmlStreamReader& stream, quint32 version) = 0;
 };
 
 #endif // ABSTRACTSERIALIZER_H

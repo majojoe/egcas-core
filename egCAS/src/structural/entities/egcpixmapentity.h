@@ -110,7 +110,7 @@ public:
          * @brief deserialize interface for deserializing a class
          * @param version the version of the stream that is to be deserialized
          */
-        virtual void deserialize(quint32 version) override;
+        virtual void deserialize(QXmlStreamReader& stream, quint32 version) override;
 
 
 private:

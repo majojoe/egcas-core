@@ -639,7 +639,7 @@ void EgcFormulaEntity::serialize(QXmlStreamWriter& stream)
 
 }
 
-void EgcFormulaEntity::deserialize(quint32 version)
+void EgcFormulaEntity::deserialize(QXmlStreamReader& stream, quint32 version)
 {
 
 }

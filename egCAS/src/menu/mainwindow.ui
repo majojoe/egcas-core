@@ -96,6 +96,7 @@ QToolButton:hover {background-color: lightgray; }
      <string>File</string>
     </property>
     <addaction name="mnu_save_file"/>
+    <addaction name="mnu_load_file"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -219,6 +220,11 @@ QToolButton:hover {background-color: lightgray; }
   <action name="mnu_save_file">
    <property name="text">
     <string>save File</string>
+   </property>
+  </action>
+  <action name="mnu_load_file">
+   <property name="text">
+    <string>load File</string>
    </property>
   </action>
  </widget>

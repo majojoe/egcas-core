@@ -174,6 +174,7 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_insert_graphic, SIGNAL(triggered()), this, SLOT(insertGraphic()));
         connect(m_ui->mnu_insert_text, SIGNAL(triggered()), this, SLOT(insertText()));
         connect(m_ui->mnu_save_file, SIGNAL(triggered()), this, SLOT(saveFile()));
+        connect(m_ui->mnu_load_file, SIGNAL(triggered()), this, SLOT(loadFile()));
 }
 
 void MainWindow::setupToolbar()
@@ -232,4 +233,9 @@ void MainWindow::insertText(void)
 void MainWindow::saveFile(void)
 {
         m_document->saveToFile("test.egc");
+}
+
+void MainWindow::loadFile(void)
+{
+        m_document->readFromFile("test.egc");
 }

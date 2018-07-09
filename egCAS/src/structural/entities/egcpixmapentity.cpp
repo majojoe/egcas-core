@@ -156,7 +156,7 @@ void EgcPixmapEntity::serialize(QXmlStreamWriter& stream)
         stream.writeEndElement(); // document
 }
 
-void EgcPixmapEntity::deserialize(quint32 version)
+void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, quint32 version)
 {
 
 }

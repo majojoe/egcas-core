@@ -62,6 +62,7 @@ public slots:
         void insertGraphic(void);
         void insertText(void);
         void saveFile(void);
+        void loadFile(void);
 private:
         /**
          * @brief setupConnections setup all connections to slots that are neccessary

@@ -40,6 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egctextentity.h"
 #include "view/egctextitem.h"
 #include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 #include <QFile>
 
 EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasScene(*this, nullptr)}, m_calc{new EgcCalculation()}
@@ -281,6 +282,18 @@ void EgcDocument::saveToFile(QString filename)
         file.close();
 }
 
+void EgcDocument::readFromFile(QString filename)
+{
+        QFile file(filename);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+                return;
+
+        QXmlStreamReader stream(&file);
+        deserialize(stream, 0);
+
+        file.close();
+}
+
 void EgcDocument::serialize(QXmlStreamWriter& stream)
 {
         stream.setAutoFormatting(true);
@@ -288,7 +301,8 @@ void EgcDocument::serialize(QXmlStreamWriter& stream)
 
         stream.writeStartElement("document");
         stream.writeAttribute("width", QString("%1").arg(getWidth()));
-        stream.writeAttribute("heigth", QString("%1").arg(getHeight()));
+        stream.writeAttribute("height", QString("%1").arg(getHeight()));
+        stream.writeAttribute("version", QString(EGCAS_VERSION));
 
         EgcEntityList* list = getEntityList();
         QMutableListIterator<EgcEntity*> iter = list->getIterator();
@@ -301,9 +315,42 @@ void EgcDocument::serialize(QXmlStreamWriter& stream)
         stream.writeEndDocument();
 }
 
-void EgcDocument::deserialize(quint32 version)
+void EgcDocument::deserialize(QXmlStreamReader& stream, quint32 version)
 {
+        version = 0;
 
+        if (stream.readNextStartElement()) {
+                if (stream.name() == QLatin1String("document")) {
+                        QXmlStreamAttributes attr = stream.attributes();
+                        QString ver = attr.value("version").toString();
+                        QStringList list = ver.split('.');
+                        if (list.size() == 3) {
+                                version = list.at(0).toUInt() << 16;
+                                version += list.at(1).toUInt() << 8;
+                                version += list.at(2).toUInt();
+                        }
+                        if (attr.hasAttribute("height") && attr.hasAttribute("width")) {
+                                qreal height = attr.value("height").toFloat();
+                                qreal width = attr.value("width").toFloat();
+                                setWidth(width);
+                                setHeight(height);
+                        }
+                        if (version == 2 || version == 3) {
+//                                while (stream.readNextStartElement()) {
+//                                        if (stream.name() == QLatin1String("text_entity"))
+//                                            readFolder(0);
+//                                        else if (stream.name() == QLatin1String("pic_entity"))
+//                                            readBookmark(0);
+//                                        else
+//                                            stream.skipCurrentElement();
+//                                }
+                        } else {
+                                stream.raiseError(QObject::tr("This file version is not supported. Maybe saved by a newer version."));
+                        }
+                } else {
+                        stream.raiseError(QObject::tr("The file is not an egcas file."));
+                }
+        }
 }
 
 void EgcDocument::setHeight(qreal height)

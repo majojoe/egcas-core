@@ -153,7 +153,7 @@ void EgcTextEntity::serialize(QXmlStreamWriter& stream)
         stream.writeEndElement(); // document
 }
 
-void EgcTextEntity::deserialize(quint32 version)
+void EgcTextEntity::deserialize(QXmlStreamReader& stream, quint32 version)
 {
 
 }
