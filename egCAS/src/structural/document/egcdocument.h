@@ -85,7 +85,7 @@ public:
          * @param point the position inside the scene where to create the entity
          * @return the entity created or a nullptr if the entity couldn't be created
          */
-        EgcEntity* createEntity(EgcEntityType type, QPointF point);
+        EgcEntity* createEntity(EgcEntityType type, QPointF point = QPointF());
         /**
          * @brief cloneEntity clone an existing entity
          * @param list the list where to insert the entity to be cloned
@@ -104,6 +104,10 @@ public:
          * @param entity the entity to delete
          */
         virtual void deleteEntity(EgcEntity* entity) override;
+        /**
+         * @brief deleteAll delete all entities from document
+         */
+        void deleteAll(void);
         /**
          * @brief resumeCalculation resume calculation after it has been stopped due to e.g. editing a formula.
          */
@@ -231,10 +235,6 @@ private:
         QScopedPointer<EgcEntityList> m_list;           ///< the list with the items to the text, pixmap and formual items
         QScopedPointer<EgCasScene> m_scene;             ///< the scene for rendering all items
         QScopedPointer<EgcCalculation> m_calc;          ///< the class which holds all tools for doing calculations
-        //QScopedPointer<EgcDocWindow> m_win;           ///< holds the window where to show the items
-        EgcFormulaCreator m_formulaCreator;             ///< creator for formula entities
-        EgcPixmapCreator m_pixmapCreator;               ///< creator for pixmap entities
-        EgcTextCreator m_textCreator;                   ///< creator for text entities
 };
 
 #endif // EGCDOCUMENT_H

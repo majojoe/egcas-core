@@ -60,6 +60,19 @@ bool EgcEntityList::deleteEntity(EgcEntity* entity)
         if (i >= 0) {
                 delete m_list.takeAt(i);
         }
+
+        return true;
+}
+
+bool EgcEntityList::deleteAll(void)
+{
+        EgcEntity* entity = nullptr;
+        foreach(entity, m_list) {
+                delete entity;
+        }
+        m_list.clear();
+
+        return true;
 }
 
 EgcEntity* EgcEntityList::takeEntity(EgcEntity* entity)

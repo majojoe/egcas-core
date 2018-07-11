@@ -73,17 +73,21 @@ EgcDocument* EgcDocument::getDocument(void)
 
 EgcEntity* EgcDocument::createEntity(EgcEntityType type, QPointF point)
 {
+        EgcFormulaCreator formulaCreator;             ///< creator for formula entities
+        EgcPixmapCreator pixmapCreator;               ///< creator for pixmap entities
+        EgcTextCreator textCreator;                   ///< creator for text entities
+
         EgcEntity* ptr = nullptr;
 
         switch (type) {
         case EgcEntityType::Text:
-                ptr = m_textCreator.create(*m_list, point);
+                ptr = textCreator.create(*m_list, point);
                 break;
         case EgcEntityType::Picture:
-                ptr = m_pixmapCreator.create(*m_list, point);
+                ptr = pixmapCreator.create(*m_list, point);
                 break;
-        default:
-                ptr = m_formulaCreator.create(*m_list, point);
+        case EgcEntityType::Formula:
+                ptr = formulaCreator.create(*m_list, point);
         }
 
         return ptr;
@@ -91,19 +95,22 @@ EgcEntity* EgcDocument::createEntity(EgcEntityType type, QPointF point)
 
 EgcEntity* EgcDocument::cloneEntity(EgcEntityList& list, EgcEntity& entity2copy)
 {
+        EgcFormulaCreator formulaCreator;             ///< creator for formula entities
+        EgcPixmapCreator pixmapCreator;               ///< creator for pixmap entities
+        EgcTextCreator textCreator;                   ///< creator for text entities
         EgcEntity* ptr = nullptr;
 
         EgcEntityType type = entity2copy.getEntityType();
 
         switch (type) {
         case EgcEntityType::Text:
-                ptr = m_textCreator.clone(list, entity2copy);
+                ptr = textCreator.clone(list, entity2copy);
                 break;
         case EgcEntityType::Picture:
-                ptr = m_pixmapCreator.clone(list, entity2copy);
+                ptr = pixmapCreator.clone(list, entity2copy);
                 break;
-        default:
-                ptr = m_formulaCreator.clone(list, entity2copy);
+        case EgcEntityType::Formula:
+                ptr = formulaCreator.clone(list, entity2copy);
         }
 
         return ptr;
@@ -143,6 +150,14 @@ bool EgcDocument::deleteFormula(EgcAbstractFormulaEntity* formula)
 void EgcDocument::deleteEntity(EgcEntity* entity)
 {
         emit startDeleletingEntity(entity);
+}
+
+void EgcDocument::deleteAll()
+{
+        //reset calculation
+        m_calc->reset();
+        m_scene->clear();
+        m_list->deleteAll();
 }
 
 void EgcDocument::deleteLaterEntity(EgcEntity* entity)
@@ -329,21 +344,28 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, quint32 version)
                                 version += list.at(1).toUInt() << 8;
                                 version += list.at(2).toUInt();
                         }
-                        if (attr.hasAttribute("height") && attr.hasAttribute("width")) {
+                        if (    attr.hasAttribute("height") && attr.hasAttribute("width")
+                             && (version == 2 || version == 3)) {
                                 qreal height = attr.value("height").toFloat();
                                 qreal width = attr.value("width").toFloat();
                                 setWidth(width);
                                 setHeight(height);
-                        }
-                        if (version == 2 || version == 3) {
-//                                while (stream.readNextStartElement()) {
-//                                        if (stream.name() == QLatin1String("text_entity"))
-//                                            readFolder(0);
-//                                        else if (stream.name() == QLatin1String("pic_entity"))
-//                                            readBookmark(0);
-//                                        else
-//                                            stream.skipCurrentElement();
-//                                }
+                                //delete all contents from the document
+                                deleteAll();
+
+                                EgcEntity* entity = nullptr;
+                                while (stream.readNextStartElement()) {
+                                        entity = nullptr;
+                                        if (stream.name() == QLatin1String("text_entity"))
+                                                entity = createEntity(EgcEntityType::Text);
+                                        else if (stream.name() == QLatin1String("pic_entity"))
+                                                entity = createEntity(EgcEntityType::Picture);
+                                        else
+                                                stream.skipCurrentElement();
+
+                                        if (entity)
+                                                entity->deserialize(stream, version);
+                                }
                         } else {
                                 stream.raiseError(QObject::tr("This file version is not supported. Maybe saved by a newer version."));
                         }

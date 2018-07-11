@@ -84,6 +84,10 @@ public:
          * @param entity the entity that is deleted.
          */
         void deleteEntity(EgcEntity* entity);
+        /**
+         * @brief reset reset the calculation (stop all running calculations and cleanup states)
+         */
+        void reset (void);
 signals:
         /**
          * @brief errorOccurred during calculation an error occurred

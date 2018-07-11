@@ -155,6 +155,24 @@ void EgcTextEntity::serialize(QXmlStreamWriter& stream)
 
 void EgcTextEntity::deserialize(QXmlStreamReader& stream, quint32 version)
 {
+        (void) version;
 
+        if (stream.name() == QLatin1String("text_entity")) {
+                QXmlStreamAttributes attr = stream.attributes();
+                if (attr.hasAttribute("font")) {
+                        QString font_str = attr.value("font").toString();
+                        QFont fnt;
+                        fnt.fromString(font_str);
+                        setFont(fnt);
+                }
+                if (attr.hasAttribute("pos_x") && attr.hasAttribute("pos_y")) {
+                        qreal x = attr.value("pos_x").toFloat();
+                        qreal y = attr.value("pos_y").toFloat();
+                        setPosition(QPointF(x, y));
+                }
+                setText(stream.readElementText());
+        }
+        if (!stream.isEndElement())
+                stream.skipCurrentElement();
 }
 

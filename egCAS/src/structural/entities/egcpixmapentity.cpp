@@ -158,5 +158,27 @@ void EgcPixmapEntity::serialize(QXmlStreamWriter& stream)
 
 void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, quint32 version)
 {
+        (void) version;
 
+        if (stream.name() == QLatin1String("pic_entity")) {
+                QXmlStreamAttributes attr = stream.attributes();
+                if (attr.hasAttribute("path")) {
+                        QString path = attr.value("path").toString();
+                        setFilePath(path);
+                } else {
+                        //setB64Encoded(stream.readElementText());
+                }
+                if (attr.hasAttribute("pos_x") && attr.hasAttribute("pos_y")) {
+                        qreal x = attr.value("pos_x").toFloat();
+                        qreal y = attr.value("pos_y").toFloat();
+                        setPosition(QPointF(x, y));
+                }
+                if (attr.hasAttribute("height") && attr.hasAttribute("width")) {
+                        qreal h = attr.value("height").toFloat();
+                        qreal w = attr.value("width").toFloat();
+                        setSize(QSizeF(w, h));
+                }
+        }
+        if (!stream.isEndElement())
+                stream.skipCurrentElement();
 }

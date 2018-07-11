@@ -61,6 +61,11 @@ public:
          */
         bool deleteEntity(EgcEntity* entity);
         /**
+         * @brief deleteAll delete all contents of the list
+         * @return true if everything went well.
+         */
+        bool deleteAll(void);
+        /**
          * @brief takeEntity removes the given entity from the list and returns it (the entity is not deleted). The
          * the caller takes the ownership of the entity!!!
          * @param entity the entiy to remove from list.
