@@ -342,6 +342,11 @@ void EgcFormulaEntity::setItem(EgcAbstractFormulaItem* item)
         m_item = item;
 }
 
+EgcAbstractFormulaItem*EgcFormulaEntity::getItem()
+{
+        return m_item;
+}
+
 void EgcFormulaEntity::setPosition(QPointF pos)
 {
         if (!m_item)

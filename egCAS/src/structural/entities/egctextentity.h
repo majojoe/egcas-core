@@ -104,7 +104,12 @@ public:
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)
          */
-        void setItem(EgcAbstractTextItem* item);
+        void setItem(EgcAbstractTextItem* item) override;
+        /**
+         * @brief getItem get the formula item that is associated with this entity
+         * @param item the item that is associated with this entity (can also be a nullptr)
+         */
+        virtual EgcAbstractTextItem* getItem(void) override;
         /**
          * @brief itemChanged is called when the item that is associated with the enity has changed
          */

@@ -39,6 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "view/egcformulaitem.h"
 #include "entities/egctextentity.h"
 #include "view/egctextitem.h"
+#include "entities/egcpixmapentity.h"
+#include "view/egcpixmapitem.h"
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 #include <QFile>
@@ -156,8 +158,32 @@ void EgcDocument::deleteAll()
 {
         //reset calculation
         m_calc->reset();
-        m_scene->clear();
-        m_list->deleteAll();
+        EgcEntity* entity;
+        QMutableListIterator<EgcEntity*> iter = m_list->getIterator();
+        while(iter.hasNext()) {
+                entity = iter.next();
+                if  (entity->getEntityType() == EgcEntityType::Formula) {
+                        EgcFormulaEntity *ent = static_cast<EgcFormulaEntity*>(entity);
+                        EgcAbstractFormulaItem *item = ent->getItem();
+                        ent->setItem(nullptr);
+                        m_scene->removeItem(dynamic_cast<QGraphicsItem*>(item));
+                        delete(item);
+                } else if (entity->getEntityType() == EgcEntityType::Text) {
+                        EgcTextEntity *ent = static_cast<EgcTextEntity*>(entity);
+                        EgcAbstractTextItem *item = ent->getItem();
+                        ent->setItem(nullptr);
+                        m_scene->removeItem(dynamic_cast<QGraphicsItem*>(item));
+                        delete(item);
+                } else { //pixmap
+                        EgcPixmapEntity *ent = static_cast<EgcPixmapEntity*>(entity);
+                        EgcAbstractPixmapItem *item = ent->getItem();
+                        ent->setItem(nullptr);
+                        m_scene->removeItem(dynamic_cast<QGraphicsItem*>(item));
+                        delete(item);
+                }
+        }
+
+        //m_list->deleteAll();
 }
 
 void EgcDocument::deleteLaterEntity(EgcEntity* entity)

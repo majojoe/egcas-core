@@ -97,6 +97,11 @@ public:
          */
         void setItem(EgcAbstractPixmapItem* item);
         /**
+         * @brief getItem get the formula item that is associated with this entity
+         * @param item the item that is associated with this entity (can also be a nullptr)
+         */
+        virtual EgcAbstractPixmapItem* getItem(void) override;
+        /**
          * @brief itemChanged is called when the item that is associated with the enity has changed
          */
         virtual void itemChanged(EgcItemChangeType changeType) override;

@@ -74,6 +74,11 @@ void EgcTextEntity::setItem(EgcAbstractTextItem* item)
         m_item = item;
 }
 
+EgcAbstractTextItem*EgcTextEntity::getItem()
+{
+        return m_item;
+}
+
 void EgcTextEntity::setPosition(QPointF pos)
 {
         if (!m_item)

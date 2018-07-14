@@ -46,7 +46,7 @@ EgcPixmapEntity::~EgcPixmapEntity()
 
 EgcEntityType EgcPixmapEntity::getEntityType(void) const
 {
-        return EgcEntityType::Text;
+        return EgcEntityType::Picture;
 }
 
 QPointF EgcPixmapEntity::getPosition(void) const
@@ -102,6 +102,11 @@ void EgcPixmapEntity::setSize(QSizeF size)
 void EgcPixmapEntity::setItem(EgcAbstractPixmapItem* item)
 {
         m_item = item;
+}
+
+EgcAbstractPixmapItem*EgcPixmapEntity::getItem()
+{
+        return m_item;
 }
 
 void EgcPixmapEntity::setPosition(QPointF pos)

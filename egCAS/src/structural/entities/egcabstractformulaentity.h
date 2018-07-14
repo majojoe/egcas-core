@@ -52,6 +52,11 @@ public:
          */
         virtual void setItem(EgcAbstractFormulaItem* item) = 0;
         /**
+         * @brief getItem get the formula item that is associated with this entity
+         * @param item the item that is associated with this entity (can also be a nullptr)
+         */
+        virtual EgcAbstractFormulaItem* getItem(void) = 0;
+        /**
          * @brief handleAction handles the given action (e.g. insert a char at the given position into the formula tree)
          * @param action the action given
          */

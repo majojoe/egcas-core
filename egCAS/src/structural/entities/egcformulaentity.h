@@ -221,6 +221,11 @@ public:
          */
         void setItem(EgcAbstractFormulaItem* item) override;
         /**
+         * @brief getItem get the formula item that is associated with this entity
+         * @param item the item that is associated with this entity (can also be a nullptr)
+         */
+        virtual EgcAbstractFormulaItem* getItem(void) override;
+        /**
          * @brief getItem returns a pointer to the item in the scene
          * @return pointer to item in scene
          */

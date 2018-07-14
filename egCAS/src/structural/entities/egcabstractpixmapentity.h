@@ -43,6 +43,11 @@ public:
          * @param item the item to set (can also be a nullptr)
          */
         virtual void setItem(EgcAbstractPixmapItem* item) = 0;
+        /**
+         * @brief getItem get the formula item that is associated with this entity
+         * @param item the item that is associated with this entity (can also be a nullptr)
+         */
+        virtual EgcAbstractPixmapItem* getItem(void) = 0;
 
 };
 
