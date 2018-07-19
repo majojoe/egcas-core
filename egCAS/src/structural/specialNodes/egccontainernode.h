@@ -140,6 +140,18 @@ public:
          * containter node, the result will also be false.
          */
         bool hasSubNode(const EgcNode& node, quint32 &index) const;
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serialize(QXmlStreamWriter& stream) override;
+
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param version the version of the stream that is to be deserialized
+         */
+        virtual void deserialize(QXmlStreamReader& stream, quint32 version) override;
+
 
 protected:
         /**

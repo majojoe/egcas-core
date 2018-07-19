@@ -29,6 +29,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCNODECREATOR_H
 #define EGCNODECREATOR_H
 
+#include <QLatin1String>
+
 class EgcNode;
 enum class EgcNodeType;
 
@@ -45,6 +47,12 @@ public:
          * @return a pointer to the newly created expression node
          */
         static EgcNode* create(EgcNodeType type);
+        /**
+         * @brief create creates a node of the type given as name in lowercase. E.g. multiplicationnode
+         * @param name the name of the node type
+         * @return a pointer to the newly created expression node
+         */
+        static EgcNode* create(QLatin1String name);
 private:
         EgcNodeCreator(){}
 };

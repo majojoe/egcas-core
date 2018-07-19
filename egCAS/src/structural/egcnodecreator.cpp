@@ -176,3 +176,120 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
 
         return retval;
 }
+
+EgcNode*EgcNodeCreator::create(QLatin1String name)
+{
+        EgcNode *retval = nullptr;
+
+        /*[[[cog
+        import cog
+        import os
+        import re
+
+        def find_nodes_in_file(filename):
+            nodes = list()
+            regex = re.compile("[\s]*EGC_SET_EXPRESSION_TYPE\(([a-zA-Z0-9_-]+)[\s]*,[\s]*[a-zA-Z0-9]+::([a-zA-Z0-9]+)[\s]*\)[\s]*;[\s]*", re.MULTILINE)
+            with open(filename, "r") as f:
+                content = f.read();
+                result = regex.findall(content)
+                if result:
+                    nodes.append(result)
+                else:
+                    nodes = None
+                f.close()
+                return nodes
+            return None
+
+        def find_nodes_in_dir(base_path, sub_path):
+            nodes = list()
+            dir_complete = os.path.join(base_path, sub_path)
+            files = list()
+            for root, directories, filenames in os.walk(dir_complete):
+                for filename in filenames:
+                    files.append(os.path.join(root,filename))
+            for file in files:
+                if file.endswith(".h") or file.endswith(".H"):
+                    nodes_temp = find_nodes_in_file(file)
+                    if nodes_temp:
+                        nodes.append(nodes_temp)
+            if not nodes:
+                cog.error("Seems you have changed the macro name \"EGC_SET_EXPRESSION_TYPE\" please change the above regex also to function again!")
+            return nodes
+
+        def flatten(param):
+            if not param:
+                return []
+            elif type(param) is not list:
+                return [param]
+            else:
+                first_el = flatten(param[0])
+                el = flatten(param[1:])
+                first_el.extend(el)
+                return first_el
+
+        nodes = find_nodes_in_dir(BaseDirToSearch, "structural")
+        nodes = flatten(nodes)
+
+        for node in nodes:
+            if node[1] != "NodeUndefined":
+                cog.outl("if (name == QLatin1String(\"" + node[1].lower() + "\"))")
+                cog.outl("        retval = new (std::nothrow) %s();" % node[0])
+
+        ]]]*/
+        if (name == QLatin1String("emptynode"))
+                retval = new (std::nothrow) EgcEmptyNode();
+        if (name == QLatin1String("argumentsnode"))
+                retval = new (std::nothrow) EgcArgumentsNode();
+        if (name == QLatin1String("natlognode"))
+                retval = new (std::nothrow) EgcNatLogNode();
+        if (name == QLatin1String("alnumnode"))
+                retval = new (std::nothrow) EgcAlnumNode();
+        if (name == QLatin1String("multiplicationnode"))
+                retval = new (std::nothrow) EgcMultiplicationNode();
+        if (name == QLatin1String("variablenode"))
+                retval = new (std::nothrow) EgcVariableNode();
+        if (name == QLatin1String("functionnode"))
+                retval = new (std::nothrow) EgcFunctionNode();
+        if (name == QLatin1String("divisionnode"))
+                retval = new (std::nothrow) EgcDivisionNode();
+        if (name == QLatin1String("lparenthesisnode"))
+                retval = new (std::nothrow) LParenthesisNode();
+        if (name == QLatin1String("numbernode"))
+                retval = new (std::nothrow) EgcNumberNode();
+        if (name == QLatin1String("minusnode"))
+                retval = new (std::nothrow) EgcMinusNode();
+        if (name == QLatin1String("integralnode"))
+                retval = new (std::nothrow) EgcIntegralNode();
+        if (name == QLatin1String("definitionnode"))
+                retval = new (std::nothrow) EgcDefinitionNode();
+        if (name == QLatin1String("exponentnode"))
+                retval = new (std::nothrow) EgcExponentNode();
+        if (name == QLatin1String("lognode"))
+                retval = new (std::nothrow) EgcLogNode();
+        if (name == QLatin1String("rootnode"))
+                retval = new (std::nothrow) EgcRootNode();
+        if (name == QLatin1String("binemptynode"))
+                retval = new (std::nothrow) EgcBinEmptyNode();
+        if (name == QLatin1String("fnccontainernode"))
+                retval = new (std::nothrow) EgcFncContainerNode();
+        if (name == QLatin1String("parenthesisnode"))
+                retval = new (std::nothrow) EgcParenthesisNode();
+        if (name == QLatin1String("differentialnode"))
+                retval = new (std::nothrow) EgcDifferentialNode();
+        if (name == QLatin1String("plusnode"))
+                retval = new (std::nothrow) EgcPlusNode();
+        if (name == QLatin1String("unaryminusnode"))
+                retval = new (std::nothrow) EgcUnaryMinusNode();
+        if (name == QLatin1String("equalnode"))
+                retval = new (std::nothrow) EgcEqualNode();
+        if (name == QLatin1String("rparenthesisnode"))
+                retval = new (std::nothrow) RParenthesisNode();
+        //[[[end]]]
+        //The list is generated automatically. Do NOT change it manually.
+
+        if (name == QLatin1String("basenode"))
+                retval = new (std::nothrow) EgcBaseNode();
+
+
+        return retval;
+}

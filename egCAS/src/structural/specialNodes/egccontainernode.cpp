@@ -26,6 +26,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 #include <QScopedPointer>
 #include "egccontainernode.h"
 #include "egcbinaryoperator.h"
@@ -157,5 +159,24 @@ bool EgcContainerNode::hasSubNode(const EgcNode& node, quint32 &index) const
         (void) container->getIndexOfChild(*node_l, index);
 
         return true;
+}
+
+void EgcContainerNode::serialize(QXmlStreamWriter& stream)
+{
+        quint32 i;
+        EgcNode* node;
+        quint32 n = getNumberChildNodes();
+
+        for(i = 0; i < n; i++) {
+                node = getChild(i);
+                if (node)
+                        node->serialize(stream);
+        }
+}
+
+void EgcContainerNode::deserialize(QXmlStreamReader& stream, quint32 version)
+{
+        (void) stream;
+        (void) version;
 }
 
