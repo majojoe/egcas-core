@@ -34,6 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class EgcContainerNode;
 class EgcNodeVisitor;
+class QXmlStreamWriter;
+class QXmlStreamReader;
 
 /**
  * @brief describes which side of the node is meant 
@@ -136,6 +138,17 @@ public:
          * @return true if the node is an operation, false otherwise
          */
         virtual bool isOperation(void) const;
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serialize(QXmlStreamWriter& stream) ;
+
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param version the version of the stream that is to be deserialized
+         */
+        virtual void deserialize(QXmlStreamReader& stream, quint32 version);
 
 protected:
 

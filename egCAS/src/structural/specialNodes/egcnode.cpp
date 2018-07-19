@@ -28,6 +28,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egccontainernode.h"
 #include "../visitor/egcnodevisitor.h"
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
+
 
 EgcNode::EgcNode() : m_parent(nullptr)
 {
@@ -100,5 +103,16 @@ int EgcNode::nrSubindexes(void) const
 bool EgcNode::isOperation(void) const
 {
         return false;
+}
+
+void EgcNode::serialize(QXmlStreamWriter& stream)
+{
+        (void) stream;
+}
+
+void EgcNode::deserialize(QXmlStreamReader& stream, quint32 version)
+{
+        (void) stream;
+        (void) version;
 }
 

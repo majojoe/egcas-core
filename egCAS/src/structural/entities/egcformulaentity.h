@@ -51,7 +51,6 @@ class AbstractKernelParser;
  */
 enum class EgcNumberResultType
 {
-        NotApplicable = 0,      ///< if this is not applicable
         StandardType,           ///< unchanged behaviour of the result
         IntegerType,            ///< result will be an integer
         EngineeringType,        ///< result will be of engineering type (exponent a multiple of 3)

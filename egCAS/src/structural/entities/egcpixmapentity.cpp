@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcabstractpixmapitem.h"
 #include "document/egcabstractdocument.h"
 #include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 
 EgcPixmapEntity::EgcPixmapEntity(void) : m_item(nullptr)
 {
