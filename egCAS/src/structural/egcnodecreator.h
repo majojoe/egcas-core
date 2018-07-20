@@ -53,6 +53,12 @@ public:
          * @return a pointer to the newly created expression node
          */
         static EgcNode* create(QLatin1String name);
+        /**
+         * @brief stringize stringify the node type given
+         * @param type the node type to stringify
+         * @return node type as latin1 string in lowercase
+         */
+        static QLatin1String stringize(EgcNodeType type);
 private:
         EgcNodeCreator(){}
 };

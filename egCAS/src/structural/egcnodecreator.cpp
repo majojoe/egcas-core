@@ -217,3 +217,108 @@ EgcNode*EgcNodeCreator::create(QLatin1String name)
 
         return retval;
 }
+
+QLatin1String EgcNodeCreator::stringize(EgcNodeType type)
+{
+        QLatin1String retval = QLatin1String("");
+
+        switch (type) {
+
+        /*[[[cog
+        import cog
+        import os
+        import re
+        import sys
+        sys.path.append(BaseDirToSearch + "/../tools/")
+        import python_helper as hlp
+
+        nodes = hlp.find_nodes_in_dir(BaseDirToSearch, "structural")
+        nodes = hlp.flatten(nodes)
+
+        for node in nodes:
+            if node[1] != "NodeUndefined":
+                cog.outl("case EgcNodeType::%s:" % node[1])
+                cog.outl("        retval = QLatin1String(\"" + node[1].lower() + "\");")
+                cog.outl("        break;")
+
+        ]]]*/
+        case EgcNodeType::EmptyNode:
+                retval = QLatin1String("emptynode");
+                break;
+        case EgcNodeType::ArgumentsNode:
+                retval = QLatin1String("argumentsnode");
+                break;
+        case EgcNodeType::NatLogNode:
+                retval = QLatin1String("natlognode");
+                break;
+        case EgcNodeType::AlnumNode:
+                retval = QLatin1String("alnumnode");
+                break;
+        case EgcNodeType::MultiplicationNode:
+                retval = QLatin1String("multiplicationnode");
+                break;
+        case EgcNodeType::VariableNode:
+                retval = QLatin1String("variablenode");
+                break;
+        case EgcNodeType::FunctionNode:
+                retval = QLatin1String("functionnode");
+                break;
+        case EgcNodeType::DivisionNode:
+                retval = QLatin1String("divisionnode");
+                break;
+        case EgcNodeType::LParenthesisNode:
+                retval = QLatin1String("lparenthesisnode");
+                break;
+        case EgcNodeType::NumberNode:
+                retval = QLatin1String("numbernode");
+                break;
+        case EgcNodeType::MinusNode:
+                retval = QLatin1String("minusnode");
+                break;
+        case EgcNodeType::IntegralNode:
+                retval = QLatin1String("integralnode");
+                break;
+        case EgcNodeType::DefinitionNode:
+                retval = QLatin1String("definitionnode");
+                break;
+        case EgcNodeType::ExponentNode:
+                retval = QLatin1String("exponentnode");
+                break;
+        case EgcNodeType::LogNode:
+                retval = QLatin1String("lognode");
+                break;
+        case EgcNodeType::RootNode:
+                retval = QLatin1String("rootnode");
+                break;
+        case EgcNodeType::BinEmptyNode:
+                retval = QLatin1String("binemptynode");
+                break;
+        case EgcNodeType::FncContainerNode:
+                retval = QLatin1String("fnccontainernode");
+                break;
+        case EgcNodeType::ParenthesisNode:
+                retval = QLatin1String("parenthesisnode");
+                break;
+        case EgcNodeType::DifferentialNode:
+                retval = QLatin1String("differentialnode");
+                break;
+        case EgcNodeType::PlusNode:
+                retval = QLatin1String("plusnode");
+                break;
+        case EgcNodeType::UnaryMinusNode:
+                retval = QLatin1String("unaryminusnode");
+                break;
+        case EgcNodeType::EqualNode:
+                retval = QLatin1String("equalnode");
+                break;
+        case EgcNodeType::RParenthesisNode:
+                retval = QLatin1String("rparenthesisnode");
+                break;
+        //[[[end]]]
+        //The list is generated automatically. Do NOT change it manually.
+
+        }
+
+        return retval;
+
+}
