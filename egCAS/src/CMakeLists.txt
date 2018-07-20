@@ -210,7 +210,7 @@ set(EGC_GEN_NODE_CREATOR_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnodecreator.tx
 add_custom_command(OUTPUT ${EGC_GEN_NODE_CREATOR_GENERATED}
         COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${EGC_GEN_NODE_CREATOR}
         COMMAND ${CMAKE_COMMAND} -E touch ${EGC_GEN_NODE_CREATOR_GENERATED}
-        DEPENDS ${EGC_GEN_NODE_CREATOR}
+        DEPENDS ${EGC_GEN_NODE_CREATOR} ${CMAKE_CURRENT_SOURCE_DIR}/../tools/python_helper.py
         COMMENT "generate node creator"
         VERBATIM
 )
