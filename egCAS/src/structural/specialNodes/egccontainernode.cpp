@@ -26,9 +26,11 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include "egcnodecreator.h"
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include <QScopedPointer>
+#include <QLatin1String>
 #include "egccontainernode.h"
 #include "egcbinaryoperator.h"
 
@@ -166,17 +168,62 @@ void EgcContainerNode::serialize(QXmlStreamWriter& stream)
         quint32 i;
         EgcNode* node;
         quint32 n = getNumberChildNodes();
+        QLatin1String str = EgcNodeCreator::stringize(getNodeType());
+        if (str.size() != 0) {
+                stream.writeStartElement(str);
+                serializeAttributes(stream);
+        }
 
         for(i = 0; i < n; i++) {
                 node = getChild(i);
                 if (node)
                         node->serialize(stream);
         }
+
+        if (str.size() != 0) {
+                stream.writeEndElement(); // document
+        }
 }
 
 void EgcContainerNode::deserialize(QXmlStreamReader& stream, quint32 version)
 {
+        if (stream.name() == EgcNodeCreator::stringize(getNodeType())) {
+                QXmlStreamAttributes attr = stream.attributes();
+                deserializeAttributes(stream, version, attr);
+                quint32 i = 0;
+                while (stream.readNextStartElement()) {
+                        QLatin1String str(stream.name().toLatin1());
+                        QScopedPointer<EgcNode> node(EgcNodeCreator::create(str));
+                        EgcNode* n = nullptr;
+                        if (node.isNull()) {
+                                stream.skipCurrentElement();
+                        } else {
+                                if (    (getNumberChildNodes() < i)
+                                     || (isFlexNode())) {
+                                        setChild(i, *node.take());
+                                        n = getChild(i);
+                                }
+                        }
+
+                        if (n != nullptr)
+                                n->deserialize(stream, version);
+
+                        i++;
+                }
+        }
+        if (!stream.isEndElement())
+                stream.skipCurrentElement();
+}
+
+void EgcContainerNode::serializeAttributes(QXmlStreamWriter& stream)
+{
+        (void) stream;
+}
+
+void EgcContainerNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
+{
         (void) stream;
         (void) version;
+        (void) attr;
 }
 

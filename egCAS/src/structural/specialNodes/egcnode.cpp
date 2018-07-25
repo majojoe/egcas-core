@@ -28,6 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egccontainernode.h"
 #include "../visitor/egcnodevisitor.h"
+#include "egcnodecreator.h"
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 
@@ -107,12 +108,34 @@ bool EgcNode::isOperation(void) const
 
 void EgcNode::serialize(QXmlStreamWriter& stream)
 {
-        (void) stream;
+        QLatin1String str = EgcNodeCreator::stringize(getNodeType());
+        if (str.size() != 0) {
+                stream.writeStartElement(str);
+                serializeAttributes(stream);
+                stream.writeEndElement(); // document
+        }
 }
 
 void EgcNode::deserialize(QXmlStreamReader& stream, quint32 version)
 {
+        (void) version;
+        if (stream.name() == EgcNodeCreator::stringize(getNodeType())) {
+                QXmlStreamAttributes attr = stream.attributes();
+                deserializeAttributes(stream, version, attr);
+        }
+        if (!stream.isEndElement())
+                stream.skipCurrentElement();
+}
+
+void EgcNode::serializeAttributes(QXmlStreamWriter& stream)
+{
+        (void) stream;
+}
+
+void EgcNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
+{
         (void) stream;
         (void) version;
+        (void) attr;
 }
 
