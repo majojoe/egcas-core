@@ -192,13 +192,13 @@ void EgcContainerNode::deserialize(QXmlStreamReader& stream, quint32 version)
                 deserializeAttributes(stream, version, attr);
                 quint32 i = 0;
                 while (stream.readNextStartElement()) {
-                        QLatin1String str(stream.name().toLatin1());
-                        QScopedPointer<EgcNode> node(EgcNodeCreator::create(str));
+                        QString str(stream.name().toLatin1());
+                        QScopedPointer<EgcNode> node(EgcNodeCreator::create(QLatin1String(str.toLatin1())));
                         EgcNode* n = nullptr;
                         if (node.isNull()) {
                                 stream.skipCurrentElement();
                         } else {
-                                if (    (getNumberChildNodes() < i)
+                                if (    (i < getNumberChildNodes())
                                      || (isFlexNode())) {
                                         setChild(i, *node.take());
                                         n = getChild(i);

@@ -386,6 +386,8 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, quint32 version)
                                                 entity = createEntity(EgcEntityType::Text);
                                         else if (stream.name() == QLatin1String("pic_entity"))
                                                 entity = createEntity(EgcEntityType::Picture);
+                                        else if (stream.name() == QLatin1String("formula_entity"))
+                                                entity = createEntity(EgcEntityType::Formula);
                                         else
                                                 stream.skipCurrentElement();
 

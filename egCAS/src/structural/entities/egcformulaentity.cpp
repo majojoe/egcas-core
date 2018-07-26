@@ -696,13 +696,15 @@ void EgcFormulaEntity::deserialize(QXmlStreamReader& stream, quint32 version)
                 }
 
                 stream.readNextStartElement();
-                if (stream.name() != QLatin1String("base_node"))
-                        stream.raiseError();
+//                if (stream.name() != QLatin1String("base_node"))
+//                        stream.raiseError();
 
                 m_data.deserialize(stream, version);
 
         }
         if (!stream.isEndElement())
                 stream.skipCurrentElement();
+
+        updateView();
 }
 

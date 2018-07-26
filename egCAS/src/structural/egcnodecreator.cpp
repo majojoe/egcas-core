@@ -317,6 +317,9 @@ QLatin1String EgcNodeCreator::stringize(EgcNodeType type)
         //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.
 
+        case EgcNodeType::BaseNode:
+                retval = QLatin1String("basenode");
+                break;
         }
 
         return retval;
