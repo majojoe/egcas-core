@@ -210,9 +210,11 @@ void EgcContainerNode::deserialize(QXmlStreamReader& stream, quint32 version)
 
                         i++;
                 }
-        }
-        if (!stream.isEndElement())
+
+
+        } else {
                 stream.skipCurrentElement();
+        }
 }
 
 void EgcContainerNode::serializeAttributes(QXmlStreamWriter& stream)

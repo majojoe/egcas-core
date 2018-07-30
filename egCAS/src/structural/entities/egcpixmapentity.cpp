@@ -185,6 +185,6 @@ void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, quint32 version)
                         setSize(QSizeF(w, h));
                 }
         }
-        if (!stream.isEndElement())
-                stream.skipCurrentElement();
+
+        stream.skipCurrentElement();
 }

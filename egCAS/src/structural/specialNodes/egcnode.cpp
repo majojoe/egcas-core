@@ -123,8 +123,8 @@ void EgcNode::deserialize(QXmlStreamReader& stream, quint32 version)
                 QXmlStreamAttributes attr = stream.attributes();
                 deserializeAttributes(stream, version, attr);
         }
-        if (!stream.isEndElement())
-                stream.skipCurrentElement();
+
+        stream.skipCurrentElement();
 }
 
 void EgcNode::serializeAttributes(QXmlStreamWriter& stream)
