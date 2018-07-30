@@ -27,6 +27,8 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include <QRegularExpression>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 #include "egcnumbernode.h"
 
 
@@ -72,6 +74,21 @@ bool EgcNumberNode::operator==(const EgcNode& node) const
 int EgcNumberNode::nrSubindexes(void) const
 {
         return m_value.size();
+}
+
+void EgcNumberNode::serializeAttributes(QXmlStreamWriter& stream)
+{
+        stream.writeAttribute("value", m_value);
+}
+
+void EgcNumberNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
+{
+        (void) version;
+        (void) stream;
+
+        if (attr.hasAttribute("value")) {
+                setValue(attr.value("value").toString());
+        }
 }
 
 bool EgcNumberNode::insert(QChar character, int position)

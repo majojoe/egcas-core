@@ -29,6 +29,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include <QStringBuilder>
 #include <QRegularExpression>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 #include "egcalnumnode.h"
 #include "egcvariablenode.h"
 #include "structural/specialNodes/egcemptynode.h"
@@ -158,5 +160,25 @@ bool EgcVariableNode::isOperation(void) const
 bool EgcVariableNode::isSubscriptEmptyElement()
 {
         return m_subscrIsEmpty;
+}
+
+void EgcVariableNode::serializeAttributes(QXmlStreamWriter& stream)
+{
+        stream.writeAttribute("value", m_value);
+        if (!isSubscriptEmptyElement())
+                stream.writeAttribute("subscript", getSubscript());
+}
+
+void EgcVariableNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
+{
+        (void) stream;
+        (void) version;
+
+        if (attr.hasAttribute("value")) {
+                if (attr.hasAttribute("subscript"))
+                        setValue(attr.value("value").toString(), attr.value("subscript").toString());
+                else
+                        setValue(attr.value("value").toString());
+        }
 }
 
