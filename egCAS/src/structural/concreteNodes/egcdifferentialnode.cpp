@@ -28,6 +28,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcdifferentialnode.h"
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
+
 
 EgcDifferentialNode::EgcDifferentialNode() : m_derivative{1}, m_differentialType{DifferentialType::leibnitz}
 {
@@ -75,4 +78,38 @@ EgcDifferentialNode::DifferentialType EgcDifferentialNode::getDifferentialType()
 void EgcDifferentialNode::setDifferentialType(EgcDifferentialNode::DifferentialType type)
 {
         m_differentialType = type;
+}
+
+void EgcDifferentialNode::serializeAttributes(QXmlStreamWriter& stream)
+{
+        stream.writeAttribute("derivative", QString("%1").arg(m_derivative));
+        if (m_differentialType == DifferentialType::lagrange1)
+                stream.writeAttribute("differential_type", "lagrange1");
+        if (m_differentialType == DifferentialType::lagrange2)
+                stream.writeAttribute("differential_type", "lagrange2");
+        if (m_differentialType == DifferentialType::lagrange3)
+                stream.writeAttribute("differential_type", "lagrange3");
+        if (m_differentialType == DifferentialType::leibnitz)
+                stream.writeAttribute("differential_type", "leibnitz");
+}
+
+void EgcDifferentialNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
+{
+        (void) stream;
+        (void) version;
+
+        if (attr.hasAttribute("derivative"))
+                setNrDerivative(static_cast<quint8>(attr.value("derivative").toUInt()));
+
+        if (attr.hasAttribute("differential_type")) {
+                QString type = attr.value("differential_type").toString();
+                if (type == QString("lagrange1"))
+                        setDifferentialType(DifferentialType::lagrange1);
+                if (type == QString("lagrange2"))
+                        setDifferentialType(DifferentialType::lagrange2);
+                if (type == QString("lagrange3"))
+                        setDifferentialType(DifferentialType::lagrange3);
+                if (type == QString("leibnitz"))
+                        setDifferentialType(DifferentialType::leibnitz);
+        }
 }

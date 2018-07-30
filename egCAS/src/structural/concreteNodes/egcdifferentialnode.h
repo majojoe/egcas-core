@@ -76,6 +76,19 @@ public:
          * @param type the differential type to set
          */
         void setDifferentialType(DifferentialType type);
+        /**
+         * @brief interface for serializing the attributes of a formula operation
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serializeAttributes(QXmlStreamWriter& stream) override;
+
+        /**
+         * @brief deserialize interface for deserializing the attributes of a formula operation
+         * @param stream the xml reader stream
+         * @param version the version of the stream that is to be deserialized
+         * @param attr the xml attributes provided by the parent
+         */
+        virtual void deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr) override;
 
 protected:
         quint8 m_derivative;
