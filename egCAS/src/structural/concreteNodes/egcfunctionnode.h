@@ -62,7 +62,7 @@ public:
          * A variable expression is valid if the value is not empty.
          * @return true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
         /**
          * @brief setStuffedName set the stuffed function name
          * @param fncName the variable name as a string. This can include the stuffed special signs (a "_" in the

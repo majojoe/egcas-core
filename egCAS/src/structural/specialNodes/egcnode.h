@@ -50,9 +50,9 @@ enum class EgcNodeSide
  * changed in a subclass */
 #define EGC_SET_EXPRESSION_TYPE(classname, type)                                                                       \
 public:                                                                                                                \
-        virtual EgcNodeType getNodeType(void) const {return s_nodeType;}                                               \
-        virtual QString getNodeName(void) const {return QString(#type);}                                               \
-        virtual EgcNode* copy(void) {                                                                                  \
+        virtual EgcNodeType getNodeType(void) const override {return s_nodeType;}                                      \
+        virtual QString getNodeName(void) const override {return QString(#type);}                                      \
+        virtual EgcNode* copy(void) override {                                                                         \
                 return new (std::nothrow) classname(static_cast<const classname&>(*this));                             \
         }                                                                                                              \
         static EgcNode* create(void) {return new (std::nothrow) classname();}                                          \

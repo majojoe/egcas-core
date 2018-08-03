@@ -46,7 +46,7 @@ public:
          * An expression is valid if all nodes are valid.
          * @return true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
 
 };
 

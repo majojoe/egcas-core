@@ -49,7 +49,7 @@ public:
          * @brief isContainer returns if the current element is a container or not
          * @return true if it is a container, false otherwise
          */
-        virtual bool isContainer(void) const;
+        virtual bool isContainer(void) const override;
         /**
          * @brief takeOwnership takes ownership of the child given. The user is responsible for deleting the child.
          * If the user doesn't handle the child properly a leak will occur.

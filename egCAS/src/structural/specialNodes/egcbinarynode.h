@@ -63,7 +63,7 @@ public:
          * @brief valid checks if the subnodes are valid. This can be the case if e.g. the childs are not NULL.
          * @return returns true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
         /**
          * @brief isBinaryNode returns if the current element is a binary expression (container) or not
          * @returntrue if it is a binary expression, false otherwise
