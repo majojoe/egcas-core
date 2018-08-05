@@ -282,7 +282,6 @@ void EgcCalculation::reset()
 {
         m_conn->reset();
         m_iterator.reset();
-        m_kernelStarted = false;
         m_computeWhenStarted = false;
         m_updateInstantly = true;
         m_result = nullptr;
