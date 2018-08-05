@@ -195,6 +195,8 @@ qt5_add_resources(EGCAS_RCCS res/ressources.qrc)
 add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
 
+set (PYTHON_HELPER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/../tools/)
+
 set(EGC_GEN_NODE_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h)
 set(EGC_GEN_NODE_HEADER_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnode_gen.txt)
 add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED}
@@ -205,12 +207,11 @@ add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED}
         VERBATIM
 )
 
-set(EGC_GEN_NODE_CREATOR ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp)
-set(EGC_GEN_NODE_CREATOR_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnodecreator.txt)
+set(EGC_GEN_NODE_CREATOR ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp.in)
+set(EGC_GEN_NODE_CREATOR_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp)
 add_custom_command(OUTPUT ${EGC_GEN_NODE_CREATOR_GENERATED}
-        COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${EGC_GEN_NODE_CREATOR}
-        COMMAND ${CMAKE_COMMAND} -E touch ${EGC_GEN_NODE_CREATOR_GENERATED}
-        DEPENDS ${EGC_GEN_NODE_CREATOR} ${CMAKE_CURRENT_SOURCE_DIR}/../tools/python_helper.py
+        COMMAND cog.py -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT} -o ${EGC_GEN_NODE_CREATOR_GENERATED} ${EGC_GEN_NODE_CREATOR}
+        DEPENDS ${EGC_GEN_NODE_CREATOR} ${PYTHON_HELPER_SCRIPT}
         COMMENT "generate node creator"
         VERBATIM
 )

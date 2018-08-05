@@ -34,24 +34,6 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         EgcNode *retval;
         switch (type) {
 
-        /*[[[cog
-        import cog
-        import os
-        import re
-        import sys
-        sys.path.append(BaseDirToSearch + "/../tools/")
-        import python_helper as hlp
-
-        nodes = hlp.find_nodes_in_dir(BaseDirToSearch, "structural")
-        nodes = hlp.flatten(nodes)
-
-        for node in nodes:
-            if node[1] != "NodeUndefined":
-                cog.outl("case EgcNodeType::%s:" % node[1])
-                cog.outl("        retval = new (std::nothrow) %s();" % node[0])
-                cog.outl("        break;")
-
-        ]]]*/
         case EgcNodeType::EmptyNode:
                 retval = new (std::nothrow) EgcEmptyNode();
                 break;
@@ -124,7 +106,6 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::RParenthesisNode:
                 retval = new (std::nothrow) RParenthesisNode();
                 break;
-        //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.
 
         case EgcNodeType::BaseNode:
@@ -143,23 +124,6 @@ EgcNode*EgcNodeCreator::create(QLatin1String name)
 {
         EgcNode *retval = nullptr;
 
-        /*[[[cog
-        import cog
-        import os
-        import re
-        import sys
-        sys.path.append(BaseDirToSearch + "/../tools/")
-        import python_helper as hlp
-
-        nodes = hlp.find_nodes_in_dir(BaseDirToSearch, "structural")
-        nodes = hlp.flatten(nodes)
-
-        for node in nodes:
-            if node[1] != "NodeUndefined":
-                cog.outl("if (name == QLatin1String(\"" + node[1].lower() + "\"))")
-                cog.outl("        retval = new (std::nothrow) %s();" % node[0])
-
-        ]]]*/
         if (name == QLatin1String("emptynode"))
                 retval = new (std::nothrow) EgcEmptyNode();
         if (name == QLatin1String("argumentsnode"))
@@ -208,7 +172,6 @@ EgcNode*EgcNodeCreator::create(QLatin1String name)
                 retval = new (std::nothrow) EgcEqualNode();
         if (name == QLatin1String("rparenthesisnode"))
                 retval = new (std::nothrow) RParenthesisNode();
-        //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.
 
         if (name == QLatin1String("basenode"))
@@ -224,24 +187,6 @@ QLatin1String EgcNodeCreator::stringize(EgcNodeType type)
 
         switch (type) {
 
-        /*[[[cog
-        import cog
-        import os
-        import re
-        import sys
-        sys.path.append(BaseDirToSearch + "/../tools/")
-        import python_helper as hlp
-
-        nodes = hlp.find_nodes_in_dir(BaseDirToSearch, "structural")
-        nodes = hlp.flatten(nodes)
-
-        for node in nodes:
-            if node[1] != "NodeUndefined":
-                cog.outl("case EgcNodeType::%s:" % node[1])
-                cog.outl("        retval = QLatin1String(\"" + node[1].lower() + "\");")
-                cog.outl("        break;")
-
-        ]]]*/
         case EgcNodeType::EmptyNode:
                 retval = QLatin1String("emptynode");
                 break;
@@ -314,7 +259,6 @@ QLatin1String EgcNodeCreator::stringize(EgcNodeType type)
         case EgcNodeType::RParenthesisNode:
                 retval = QLatin1String("rparenthesisnode");
                 break;
-        //[[[end]]]
         //The list is generated automatically. Do NOT change it manually.
 
         case EgcNodeType::BaseNode:
