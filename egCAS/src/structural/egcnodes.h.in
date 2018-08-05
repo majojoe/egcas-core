@@ -1,0 +1,30 @@
+#ifndef EGCNODES_H
+#define EGCNODES_H
+
+#include "specialNodes/egcnode.h"
+#include "specialNodes/egcunarynode.h"
+#include "specialNodes/egcbinarynode.h"
+#include "specialNodes/egcbasenode.h"
+#include "specialNodes/egcemptynode.h"
+#include "specialNodes/egcargumentsnode.h"
+
+/*[[[cog
+import cog
+import sys
+
+sys.path.append(PythonHelper)
+import python_helper as hlp
+
+nodes = hlp.find_nodes_in_dir(BaseDirToSearch, "structural/concreteNodes")
+nodes = hlp.flatten(nodes)
+
+#NumberNode = 0, VariableNode, RootNode, ParenthesisNode, BaseNode, EmptyNode, NodeUndefined
+first = nodes[0][1]
+for node in nodes:
+    cog.outl("#include \"concreteNodes/egc%s.h\"" % node[1].lower())
+
+]]]*/
+//[[[end]]]
+//The list is generated automatically. Do NOT change it manually.
+
+#endif // EGCNODES_H

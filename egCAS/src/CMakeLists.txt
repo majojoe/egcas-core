@@ -197,12 +197,11 @@ add_definitions(-DEGC_PARSER_DEBUG=0)
 
 set (PYTHON_HELPER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/../tools/)
 
-set(EGC_GEN_NODE_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h)
-set(EGC_GEN_NODE_HEADER_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnode_gen.txt)
+set(EGC_GEN_NODE_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h.in)
+set(EGC_GEN_NODE_HEADER_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h)
 add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED}
-        COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${EGC_GEN_NODE_HEADER}
-        COMMAND ${CMAKE_COMMAND} -E touch ${EGC_GEN_NODE_HEADER_GENERATED}
-        DEPENDS ${EGC_GEN_NODE_HEADER}
+        COMMAND cog.py -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT} -o ${EGC_GEN_NODE_HEADER_GENERATED} ${EGC_GEN_NODE_HEADER}
+        DEPENDS ${EGC_GEN_NODE_HEADER} ${PYTHON_HELPER_SCRIPT}
         COMMENT "generate node list"
         VERBATIM
 )
@@ -216,12 +215,11 @@ add_custom_command(OUTPUT ${EGC_GEN_NODE_CREATOR_GENERATED}
         VERBATIM
 )
 
-set(EGC_GEN_NODES ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h)
-set(EGC_GEN_NODES_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnodes.txt)
+set(EGC_GEN_NODES ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h.in)
+set(EGC_GEN_NODES_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h)
 add_custom_command(OUTPUT ${EGC_GEN_NODES_GENERATED}
-        COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${EGC_GEN_NODES}
-        COMMAND ${CMAKE_COMMAND} -E touch ${EGC_GEN_NODES_GENERATED}
-        DEPENDS ${EGC_GEN_NODES}
+        COMMAND cog.py -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}  -D PythonHelper=${PYTHON_HELPER_SCRIPT} -o ${EGC_GEN_NODES_GENERATED} ${EGC_GEN_NODES}
+        DEPENDS ${EGC_GEN_NODES} ${PYTHON_HELPER_SCRIPT}
         COMMENT "generate node header file"
         VERBATIM
 )

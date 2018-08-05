@@ -1,0 +1,37 @@
+#ifndef EGCNODETYPE_GEN_H
+#define EGCNODETYPE_GEN_H
+
+
+/**
+ * @brief The EgcNodeType enum is a enum to differentiate the different node types
+ * 
+ * This list is generated form the cog python code below. Do not change it manually!!!
+ */
+enum class EgcNodeType
+{
+/*[[[cog
+import cog
+import sys
+sys.path.append(PythonHelper)
+import python_helper as hlp
+
+
+nodes = hlp.find_nodes_in_dir(BaseDirToSearch, "structural")
+nodes = hlp.flatten(nodes)
+
+#NumberNode = 0, VariableNode, RootNode, ParenthesisNode, BaseNode, EmptyNode, NodeUndefined
+first = nodes[0][1]
+for node in nodes:
+    if (node[1] != "NodeUndefined") and (node[1] != "BaseNode"):
+        if node[1] is first:
+            cog.outl("        %s = 0," % node[1])
+        else:
+            cog.outl("        %s," % node[1])
+cog.outl("        BaseNode,")
+cog.outl("        NodeUndefined")
+]]]*/
+//[[[end]]]
+//The list is generated automatically. Do NOT change it manually.
+};
+
+#endif //#ifndef EGCNODETYPE_GEN_H
