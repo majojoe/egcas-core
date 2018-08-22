@@ -35,9 +35,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QPointF>
 #include "entities/egcentity.h"
 #include "entities/egcabstractentitylist.h"
-#include "entities/creator/egcformulacreator.h"
-#include "entities/creator/egcpixmapcreator.h"
-#include "entities/creator/egctextcreator.h"
 #include "egccalculation.h"
 #include "actions/egcaction.h"
 #include "egcabstractdocument.h"
@@ -79,8 +76,9 @@ public:
          */
         virtual EgcDocument* getDocument(void) override;
         /**
-         * @brief createEntity create an entity for a list that is a sublist of this document. The list given takes
-         * ownership of the created entity. The user doesn't need to worry about the pointer returned.
+         * @brief createEntity create an entity for this document. The document takes
+         * ownership of the created entity. The user doesn't need to worry about the pointer returned. The item as
+         * graphic representation of the entity is also created on the scene and linked to the entity.
          * @param type the entity type to create
          * @param point the position inside the scene where to create the entity
          * @return the entity created or a nullptr if the entity couldn't be created
@@ -88,22 +86,26 @@ public:
         EgcEntity* createEntity(EgcEntityType type, QPointF point = QPointF());
         /**
          * @brief cloneEntity clone an existing entity
-         * @param list the list where to insert the entity to be cloned
          * @param entity2copy the entity to clone
          * @return the cloned entity
          */
-        EgcEntity* cloneEntity(EgcEntityList& list, EgcEntity& entity2copy);
+        EgcEntity* cloneEntity(EgcEntity& entity2copy);
         /**
          * @brief deleteFormula delete a formula
          * @param formula the formula to delete
          * @return true if everything went well, false otherwise
          */
-        virtual bool deleteFormula(EgcAbstractFormulaEntity* formula) override;
+        virtual bool deleteFormulaEntity(EgcAbstractFormulaEntity* formula) override;
         /**
          * @brief deleteEntity Delete the given entity. This can be called from the entity itself.
          * @param entity the entity to delete
          */
         virtual void deleteEntity(EgcEntity* entity) override;
+        /**
+         * @brief itemDeleted is called by the scene if an item has been deleted
+         * @param item the item that has been deleted
+         */
+        virtual void itemDeleted(QGraphicsItem* item) override;
         /**
          * @brief deleteAll delete all entities from document
          */
@@ -198,11 +200,6 @@ public:
 
 signals:
         /**
-         * @brief startDeleletingEntity signal to be emitted when entity shall be deleted
-         * @param entity the entity to delete
-         */
-        void startDeleletingEntity(EgcEntity* entity);
-        /**
          * @brief selectionChanged signal that is emitted when the selection of an item changes
          */
         void selectionChanged(void);
@@ -213,12 +210,6 @@ private slots:
          * @param action the action to pass to the selected formula
          */
         void insertFormulaOnKeyPress(QPointF point, EgcAction action);
-        /**
-         * @brief deleteLaterEntity delete later the given entitiy. This can be called from the entity itself.
-         * @param entity the entity to delete
-         * @return true if this has been successful, false otherwise
-         */
-        void deleteLaterEntity(EgcEntity* entity);
         /**
          * @brief onSelectionChange is called if the selection of an item changes
          */
@@ -231,10 +222,17 @@ private slots:
         void handleKernelMessages(EgcKernelErrorType type, QString message);
 private:
         virtual void sort(void) override {}
+        /**
+         * @brief mapItem maps an given item to a given entity
+         * @param item the item that is mapped to the given entity
+         * @param entity the entity that is linked with the given item
+         */
+        void mapItem(QGraphicsItem* item, EgcEntity* entity);
         
         QScopedPointer<EgcEntityList> m_list;           ///< the list with the items to the text, pixmap and formual items
         QScopedPointer<EgCasScene> m_scene;             ///< the scene for rendering all items
         QScopedPointer<EgcCalculation> m_calc;          ///< the class which holds all tools for doing calculations
+        QHash<QGraphicsItem*, EgcEntity*> m_itemMapper; ///< hash table for looking up entity that is linked to an item
 };
 
 #endif // EGCDOCUMENT_H

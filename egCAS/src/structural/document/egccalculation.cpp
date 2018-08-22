@@ -272,8 +272,9 @@ void EgcCalculation::setAutoCalculation(bool on)
         m_autoCalc = on;
 }
 
-void EgcCalculation::deleteEntity(EgcEntity* entity)
+void EgcCalculation::startDeletingEntity(EgcEntity* entity)
 {
+        m_iterator.reset();
         if (entity == dynamic_cast<EgcEntity*>(m_entity))
                 m_entity = nullptr;
 }

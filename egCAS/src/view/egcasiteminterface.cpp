@@ -30,6 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcasiteminterface.h"
 
 
+EgcasItemInterface::~EgcasItemInterface()
+{
+
+}
+
 bool EgcasItemInterface::operator< ( const EgcasItemInterface &rhs)
 {
         QPointF op1 = getPosition();

@@ -136,7 +136,7 @@ EgcEntity* EgcEntityList::cloneEntity(EgcEntity& entity2copy)
 {
         EgcDocument* doc = getDocument();
         if (doc) {
-                EgcEntity* entity = doc->cloneEntity(*this, entity2copy);
+                EgcEntity* entity = doc->cloneEntity(entity2copy);
                 entity->setList(this);
                 return entity;
         } else {

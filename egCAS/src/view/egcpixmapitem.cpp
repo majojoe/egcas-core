@@ -163,7 +163,6 @@ void EgcPixmapItem::keyPressEvent(QKeyEvent *keyEvent)
                 break;
         case Qt::Key_Delete:
                 accepted = true;
-                deleteCurrentItem();
                 break;
         }
 

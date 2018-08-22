@@ -78,7 +78,6 @@ add_custom_target(egcas_other_srcs ALL SOURCES
         structural/entities/egcabstractformulaentity.h
         structural/entities/egcabstracttextentity.h
         structural/entities/egcabstractpixmapentity.h
-        structural/entities/creator/egcabstractentitycreator.h
         structural/entities/egcabstractentitylist.h
         structural/entities/egcabstractentity.h
         structural/actions/egcoperations.h
@@ -160,9 +159,6 @@ set(egcas_SOURCES
         structural/entities/egctextentity.cpp
         structural/entities/egcpixmapentity.cpp
         structural/document/egcdocument.cpp
-        structural/entities/creator/egcformulacreator.cpp
-        structural/entities/creator/egctextcreator.cpp
-        structural/entities/creator/egcpixmapcreator.cpp
         structural/entities/formulamodificator.cpp
         formulagenerator.cpp
         menu/egclicenseinfo.cpp

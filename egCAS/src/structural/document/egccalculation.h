@@ -83,7 +83,7 @@ public:
          * @brief deleteEntity must be called when any entity is deleted. So that calc class knows about that.
          * @param entity the entity that is deleted.
          */
-        void deleteEntity(EgcEntity* entity);
+        void startDeletingEntity(EgcEntity* entity);
         /**
          * @brief reset reset the calculation (stop all running calculations and cleanup states)
          */

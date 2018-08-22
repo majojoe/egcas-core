@@ -69,12 +69,3 @@ void EgcAbstractItem::ensureVisibility(void)
                 QTimer::singleShot(0, v, SLOT(ensureVisibility()) );
         }
 }
-
-void EgcAbstractItem::deleteCurrentItem()
-{
-        EgCasScene* scn = getEgcScene();
-        if (scn) {
-                scn->deleteActiveItem();
-        }
-}
-

@@ -301,7 +301,7 @@ void EgCasScene::itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem&
         case EgcSceneSnapDirection::left:
                 m_cross->left(bounds.left());
                 break;
-        default: //right
+        case EgcSceneSnapDirection::right:
                 m_cross->right(bounds.right());
                 break;
         }
@@ -438,25 +438,6 @@ bool EgCasScene::deleteItem(EgcAbstractTextItem* item)
         return deleteItem(qitem);
 }
 
-bool EgCasScene::deleteActiveItem()
-{
-        if (focusItem()) {
-                QTimer::singleShot(0, this, SLOT(deleteActiveItemSlot()));
-
-                return true;
-        }
-
-        return false;
-}
-
-void EgCasScene::deleteActiveItemSlot(void)
-{
-        QGraphicsItem* item = focusItem();
-        if (item) {
-                (void) deleteItem(item);
-        }
-}
-
 bool EgCasScene::deleteItem(QGraphicsItem *item)
 {
         if (!item)
@@ -467,6 +448,22 @@ bool EgCasScene::deleteItem(QGraphicsItem *item)
         delete item;
 
         return true;
+}
+
+void EgCasScene::keyPressEvent(QKeyEvent* keyEvent)
+{
+        int key = keyEvent->key();
+        if (key == Qt::Key_Delete || key == Qt::Key_Backspace) {
+                QList<QGraphicsItem*> list = selectedItems();
+                QGraphicsItem *item;
+                foreach (item, list) {
+                        deleteItem(item);
+                        m_document.itemDeleted(item);
+                }
+                keyEvent->accept();
+        } else {
+                QGraphicsScene::keyPressEvent(keyEvent);
+        }
 }
 
 void EgCasScene::addPage(quint32 pageIndex)

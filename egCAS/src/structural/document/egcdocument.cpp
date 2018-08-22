@@ -75,47 +75,111 @@ EgcDocument* EgcDocument::getDocument(void)
 
 EgcEntity* EgcDocument::createEntity(EgcEntityType type, QPointF point)
 {
-        EgcFormulaCreator formulaCreator;             ///< creator for formula entities
-        EgcPixmapCreator pixmapCreator;               ///< creator for pixmap entities
-        EgcTextCreator textCreator;                   ///< creator for text entities
+        EgcEntity* retval = nullptr;
+        QGraphicsItem* item = nullptr;
 
-        EgcEntity* ptr = nullptr;
-
-        switch (type) {
-        case EgcEntityType::Text:
-                ptr = textCreator.create(*m_list, point);
-                break;
-        case EgcEntityType::Picture:
-                ptr = pixmapCreator.create(*m_list, point);
-                break;
-        case EgcEntityType::Formula:
-                ptr = formulaCreator.create(*m_list, point);
+        if (type == EgcEntityType::Text) {
+                QScopedPointer<EgcTextEntity> entity(new EgcTextEntity());
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                item = scene->addText(*entity, point);
+                if (item) {
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+                        return retval;
+                }
+        } else if (type == EgcEntityType::Picture) {
+                QScopedPointer<EgcPixmapEntity> entity(new EgcPixmapEntity());
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                item = scene->addPixmap(*entity, point);
+                if (item) {
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+                        return retval;
+                }
+        } else { // formula
+                QScopedPointer<EgcFormulaEntity> entity(new EgcFormulaEntity());
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                item = scene->addFormula(*entity, point);
+                if (item) {
+                        entity->updateView();
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+                        return retval;
+                }
         }
 
-        return ptr;
+        return nullptr;
 }
 
-EgcEntity* EgcDocument::cloneEntity(EgcEntityList& list, EgcEntity& entity2copy)
+EgcEntity* EgcDocument::cloneEntity(EgcEntity& entity2copy)
 {
-        EgcFormulaCreator formulaCreator;             ///< creator for formula entities
-        EgcPixmapCreator pixmapCreator;               ///< creator for pixmap entities
-        EgcTextCreator textCreator;                   ///< creator for text entities
-        EgcEntity* ptr = nullptr;
-
+        EgcEntity* retval = nullptr;
         EgcEntityType type = entity2copy.getEntityType();
 
-        switch (type) {
-        case EgcEntityType::Text:
-                ptr = textCreator.clone(list, entity2copy);
-                break;
-        case EgcEntityType::Picture:
-                ptr = pixmapCreator.clone(list, entity2copy);
-                break;
-        case EgcEntityType::Formula:
-                ptr = formulaCreator.clone(list, entity2copy);
+        if (type == EgcEntityType::Text) {
+                EgcTextEntity& entityCopyRef = static_cast<EgcTextEntity&>(entity2copy);
+                QScopedPointer<EgcTextEntity> entity(new EgcTextEntity(entityCopyRef));
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                QGraphicsItem* item = scene->addText(*entity, entity2copy.getPosition());
+                if (item) {
+                        //set the item properties
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+
+                        return retval;
+                }
+
+                return nullptr;
+        } else if (type == EgcEntityType::Picture) {
+                EgcPixmapEntity& entityCopyRef = static_cast<EgcPixmapEntity&>(entity2copy);
+                QScopedPointer<EgcPixmapEntity> entity(new EgcPixmapEntity(entityCopyRef));
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                QGraphicsItem* item = scene->addPixmap(*entity, entity2copy.getPosition());
+                if (item) {
+                        //set the item properties
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+
+                        return retval;
+                }
+
+                return nullptr;
+        } else if (type == EgcEntityType::Formula) {
+                EgcFormulaEntity& entityCopyRef = static_cast<EgcFormulaEntity&>(entity2copy);
+                QScopedPointer<EgcFormulaEntity> entity(new EgcFormulaEntity(entityCopyRef));
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                QGraphicsItem* item = scene->addFormula(*entity, entity2copy.getPosition());
+                if (item) {
+                        //set the item properties
+                        entity->updateView();
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+
+                        return retval;
+                }
+
+                return nullptr;
         }
 
-        return ptr;
+        return nullptr;
 }
 
 EgcCalculation const* EgcDocument::getCalcClass(void)
@@ -130,71 +194,44 @@ void EgcDocument::insertFormulaOnKeyPress(QPointF point, EgcAction action)
         formula->handleAction(action);
 }
 
-bool EgcDocument::deleteFormula(EgcAbstractFormulaEntity* formula)
+bool EgcDocument::deleteFormulaEntity(EgcAbstractFormulaEntity* formula)
 {
         if(!formula)
                 return false;
         EgcFormulaEntity* entity = static_cast<EgcFormulaEntity*>(formula);
 
         //inform calculation about deleting an entity
-        m_calc->deleteEntity(entity);
-
-        EgcAbstractFormulaItem* item = entity->getItem();
-        if (!item)
-                return false;
-        this->m_scene->deleteItem(item);
-
-        m_list->deleteEntity(entity);
+        m_calc->startDeletingEntity(entity);
 
         return true;
 }
 
 void EgcDocument::deleteEntity(EgcEntity* entity)
+{        
+        if (entity->getEntityType() == EgcEntityType::Formula)
+                deleteFormulaEntity(dynamic_cast<EgcAbstractFormulaEntity*>(entity));
+        if (entity) {
+                m_list->deleteEntity(entity);
+        }
+}
+
+void EgcDocument::itemDeleted(QGraphicsItem* item)
 {
-        emit startDeleletingEntity(entity);
+        //remove entity that is linked with given item from list
+        if (m_itemMapper.contains(item)) {
+                EgcEntity* entity = m_itemMapper.value(item);
+                m_itemMapper.remove(item);
+                deleteEntity(entity);
+        }
 }
 
 void EgcDocument::deleteAll()
 {
         //reset calculation
         m_calc->reset();
-        EgcEntity* entity;
-        QMutableListIterator<EgcEntity*> iter = m_list->getIterator();
-        while(iter.hasNext()) {
-                entity = iter.next();
-                if  (entity->getEntityType() == EgcEntityType::Formula) {
-                        EgcFormulaEntity *ent = static_cast<EgcFormulaEntity*>(entity);
-                        EgcAbstractFormulaItem *item = ent->getItem();
-                        ent->setItem(nullptr);
-                        m_scene->removeItem(dynamic_cast<QGraphicsItem*>(item));
-                        delete(item);
-                } else if (entity->getEntityType() == EgcEntityType::Text) {
-                        EgcTextEntity *ent = static_cast<EgcTextEntity*>(entity);
-                        EgcAbstractTextItem *item = ent->getItem();
-                        ent->setItem(nullptr);
-                        m_scene->removeItem(dynamic_cast<QGraphicsItem*>(item));
-                        delete(item);
-                } else { //pixmap
-                        EgcPixmapEntity *ent = static_cast<EgcPixmapEntity*>(entity);
-                        EgcAbstractPixmapItem *item = ent->getItem();
-                        ent->setItem(nullptr);
-                        m_scene->removeItem(dynamic_cast<QGraphicsItem*>(item));
-                        delete(item);
-                }
-        }
-
-        //m_list->deleteAll();
-}
-
-void EgcDocument::deleteLaterEntity(EgcEntity* entity)
-{
-        if (entity->getEntityType() == EgcEntityType::Formula) {
-                deleteFormula(dynamic_cast<EgcAbstractFormulaEntity*>(entity));
-        } else {
-                if (entity) {
-                        m_list->deleteEntity(entity);
-                }
-        }
+        m_list->deleteAll();
+        m_itemMapper.clear();
+        m_scene->clear();
 }
 
 void EgcDocument::resumeCalculation(void)
@@ -291,6 +328,11 @@ void EgcDocument::handleKernelMessages(EgcKernelErrorType type, QString message)
         msgBox.setDefaultButton(QMessageBox::Ok);
         msgBox.setIcon(QMessageBox::Warning);
         (void) msgBox.exec();
+}
+
+void EgcDocument::mapItem(QGraphicsItem* item, EgcEntity* entity)
+{
+        m_itemMapper.insert(item, entity);
 }
 
 QPointF EgcDocument::getLastCursorPosition(void)
