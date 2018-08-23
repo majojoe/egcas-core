@@ -37,7 +37,7 @@ public:
         ///std constructor
         explicit ResizeHandle(QGraphicsItem *content, const QSizeF&size);
         ///std destructor
-        virtual ~ResizeHandle() {}
+        virtual ~ResizeHandle();
         ///set the bounding rect for the ResizeHandle
         QRectF boundingRect() const;
         void mousePressEvent(QGraphicsSceneMouseEvent * event);

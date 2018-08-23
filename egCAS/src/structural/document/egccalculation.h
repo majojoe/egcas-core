@@ -133,6 +133,7 @@ private:
         bool m_autoCalc;                        ///< if false the calculation is only done when calculation is triggered manually
         bool m_waitForResult;                   ///< if true class will wait for the result of a calculation
         bool m_restartAfterResume;              ///< restart calculation after s.th. changed in formulas
+        EgcEntityList* m_list;                  ///< pointer to list
 };
 
 #endif // EGCCALCULATION_H

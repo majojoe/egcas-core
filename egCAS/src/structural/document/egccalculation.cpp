@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcCalculation::EgcCalculation(QObject *parent) : QObject{parent}, m_conn{new EgcMaximaConn()}, m_iterator{nullptr},
         m_kernelStarted{false}, m_computeWhenStarted{false}, m_updateInstantly{true}, m_parser{new EgcKernelParser()},
         m_result{nullptr}, m_calculationRunning{false}, m_entity{nullptr}, m_paused{false}, m_autoCalc{true},
-        m_waitForResult{false}, m_restartAfterResume{false}
+        m_waitForResult{false}, m_restartAfterResume{false}, m_list{nullptr}
 {
         
         connect(m_conn.data(), SIGNAL(resultReceived(QString)), this, SLOT(resultReceived(QString)));
@@ -57,6 +57,7 @@ EgcCalculation::~EgcCalculation()
 
 bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly, EgcAbstractFormulaEntity* entity)
 {
+        m_list = &list;
         m_paused = false;
         m_entity = entity;
         if (m_calculationRunning)
@@ -274,7 +275,10 @@ void EgcCalculation::setAutoCalculation(bool on)
 
 void EgcCalculation::startDeletingEntity(EgcEntity* entity)
 {
-        m_iterator.reset();
+        if (m_list)
+                m_iterator.reset(new QMutableListIterator<EgcEntity*>(m_list->getIterator()));
+        else
+                m_iterator.reset();
         if (entity == dynamic_cast<EgcEntity*>(m_entity))
                 m_entity = nullptr;
 }

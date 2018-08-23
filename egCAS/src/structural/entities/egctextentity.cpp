@@ -135,11 +135,6 @@ QFont& EgcTextEntity::getGenericFont(void)
 
 void EgcTextEntity::itemChanged(EgcItemChangeType changeType)
 {
-        if (changeType == EgcItemChangeType::itemDeleted) {
-                EgcAbstractDocument* doc = getDocument();
-                if (doc)
-                        doc->deleteEntity(this);
-        }
 }
 
 void EgcTextEntity::setEditMode()

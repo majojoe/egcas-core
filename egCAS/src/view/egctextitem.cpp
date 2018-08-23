@@ -199,13 +199,13 @@ void EgcTextItem::keyPressEvent(QKeyEvent *keyEvent)
         case Qt::Key_Delete:
                 if (!m_editingActivated || toPlainText().isEmpty()) {
                         accepted = true;
-                        deleteCurrentItem();
+#warning delete condition must be implemented
                 }
                 break;
         case Qt::Key_Backspace:
                 if (m_editingActivated && toPlainText().isEmpty()) {
                         accepted = true;
-                        deleteCurrentItem();
+#warning delete condition must be implemented
                 }
                 break;
         }

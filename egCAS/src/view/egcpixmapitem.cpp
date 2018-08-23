@@ -51,8 +51,6 @@ EgcPixmapItem::EgcPixmapItem(const QPointF point, QGraphicsItem *parent) : EgcPi
 
 EgcPixmapItem::~EgcPixmapItem()
 {        
-        if (m_entity)
-                m_entity->itemChanged(EgcItemChangeType::itemDeleted);
 }
 
 void EgcPixmapItem::focusInEvent(QFocusEvent * event)

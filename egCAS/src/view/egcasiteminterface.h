@@ -40,7 +40,7 @@ public:
         ///std contructor
         EgcasItemInterface() {}
         ///std destructor
-        virtual ~EgcasItemInterface() {}
+        virtual ~EgcasItemInterface();
         /**
          * @brief getPosition needs to be overwritten by subclasses to get the position of the item
          * @return the Position of the item
@@ -51,6 +51,12 @@ public:
          * @param point the position to set.
          */
         virtual void setPos(const QPointF& point) = 0;
+        /**
+         * @brief aboutToBeDeleted checks if item is about to be deleted, e.g. if a formula is empty and one hits del
+         * key this function will return true, and false otherwise
+         * @return true if pressing del or backspace shall delete the item
+         */
+        virtual bool aboutToBeDeleted(void) { return true;}
         /**
          * @brief operator< operator overload of this class to be able to sort the items according to their position
          * @param rhs the right hand side operator

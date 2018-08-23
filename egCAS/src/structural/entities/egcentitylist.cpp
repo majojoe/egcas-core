@@ -120,30 +120,6 @@ EgcAbstractEntityList* EgcEntityList::getParent(void)
         return m_parent;
 }
 
-EgcEntity* EgcEntityList::createEntity(EgcEntityType type, QPointF point)
-{
-        EgcDocument* doc = getDocument();
-        if (doc) {
-                EgcEntity* entity = doc->createEntity(type, point);
-                entity->setList(this);
-                return entity;
-        } else {
-                return nullptr;
-        }
-}
-
-EgcEntity* EgcEntityList::cloneEntity(EgcEntity& entity2copy)
-{
-        EgcDocument* doc = getDocument();
-        if (doc) {
-                EgcEntity* entity = doc->cloneEntity(entity2copy);
-                entity->setList(this);
-                return entity;
-        } else {
-                return nullptr;
-        }
-}
-
 QMutableListIterator<EgcEntity*> EgcEntityList::getIterator(void)
 {
         QMutableListIterator<EgcEntity*> i(m_list);

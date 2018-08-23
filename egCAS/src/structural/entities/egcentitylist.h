@@ -93,19 +93,6 @@ public:
          */
         virtual EgcAbstractEntityList* getParent(void) override;
         /**
-         * @brief createEntity creates an entity for the given list
-         * @param type the type of entity to create
-         * @param point the position at which to create the entity (on the scene)
-         * @return the entity created, or a nullptr if no entity could be created
-         */
-        EgcEntity* createEntity(EgcEntityType type, QPointF point);
-        /**
-         * @brief cloneEntity copy a given entity including all of its subsequent elements
-         * @param entity entity to copy
-         * @return the created entity
-         */
-        EgcEntity* cloneEntity(EgcEntity& entity2copy);
-        /**
          * @brief getIterator returns an iterator that operates on the enity list
          * @return returns a list iterator
          */
