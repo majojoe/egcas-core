@@ -95,7 +95,7 @@ public:
          * @param formula the formula to delete
          * @return true if everything went well, false otherwise
          */
-        virtual bool deleteFormulaEntity(EgcAbstractFormulaEntity* formula) override;
+        virtual bool formulaEntityDeleted(EgcEntity* formula) override;
         /**
          * @brief deleteEntity Delete the given entity. This can be called from the entity itself.
          * @param entity the entity to delete

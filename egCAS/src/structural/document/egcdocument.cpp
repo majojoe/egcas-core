@@ -194,25 +194,24 @@ void EgcDocument::insertFormulaOnKeyPress(QPointF point, EgcAction action)
         formula->handleAction(action);
 }
 
-bool EgcDocument::deleteFormulaEntity(EgcAbstractFormulaEntity* formula)
+bool EgcDocument::formulaEntityDeleted(EgcEntity* formula)
 {
-        if(!formula)
-                return false;
-        EgcFormulaEntity* entity = static_cast<EgcFormulaEntity*>(formula);
-
         //inform calculation about deleting an entity
-        m_calc->startDeletingEntity(entity);
+        m_calc->startDeletingEntity(formula);
 
         return true;
 }
 
 void EgcDocument::deleteEntity(EgcEntity* entity)
 {        
+        bool notifyFormula = false;
         if (entity->getEntityType() == EgcEntityType::Formula)
-                deleteFormulaEntity(dynamic_cast<EgcAbstractFormulaEntity*>(entity));
+                notifyFormula = true;
         if (entity) {
                 m_list->deleteEntity(entity);
         }
+        if (notifyFormula)
+                formulaEntityDeleted(entity);
 }
 
 void EgcDocument::itemDeleted(QGraphicsItem* item)

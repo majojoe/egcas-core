@@ -59,7 +59,8 @@ bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly, EgcAbs
 {
         m_list = &list;
         m_paused = false;
-        m_entity = entity;
+        if (entity)
+                m_entity = dynamic_cast<EgcEntity*>(entity);
         if (m_calculationRunning)
                 return false;
         if (!m_autoCalc && entity) // only if auto calculation is active
@@ -106,7 +107,7 @@ void EgcCalculation::nextCalculation(void)
                 return;
         
         if (m_iterator->hasNext()) {
-                if (    (m_iterator->peekNext() != dynamic_cast<EgcEntity*>(m_entity))
+                if (    (m_iterator->peekNext() != m_entity)
                      || m_paused) {
                         m_paused = false;
                         entity = m_iterator->next();
@@ -279,7 +280,7 @@ void EgcCalculation::startDeletingEntity(EgcEntity* entity)
                 m_iterator.reset(new QMutableListIterator<EgcEntity*>(m_list->getIterator()));
         else
                 m_iterator.reset();
-        if (entity == dynamic_cast<EgcEntity*>(m_entity))
+        if (entity == m_entity)
                 m_entity = nullptr;
 }
 

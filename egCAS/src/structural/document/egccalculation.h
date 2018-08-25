@@ -128,7 +128,7 @@ private:
         EgcFormulaEntity* m_result;             ///< a pointer to the formula entity that is currently being calculated
         QScopedPointer<EgcKernelParser> m_parser; ///< the parser used for parsing cas kernel output
         bool m_calculationRunning;              ///< calculation is already running (no new one can be started)
-        EgcAbstractFormulaEntity* m_entity;     ///< pointer to entity where to pause calculation
+        EgcEntity* m_entity;                    ///< pointer to entity where to pause calculation
         bool m_paused;                          ///< calculation has been paused due to editing a formula
         bool m_autoCalc;                        ///< if false the calculation is only done when calculation is triggered manually
         bool m_waitForResult;                   ///< if true class will wait for the result of a calculation
