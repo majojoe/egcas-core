@@ -175,6 +175,13 @@ void EgcFormulaItem::setCursorAt(QPointF pos)
         m_entity->setCursorPos(rendPos.m_nodeId, rendPos.m_subPos, rightSide);
 }
 
+bool EgcFormulaItem::aboutToBeDeleted()
+{
+        if (!m_entity)
+                return false;
+        return m_entity->aboutToBeDeleted();
+}
+
 QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
         EgCasScene* scn = getEgcScene();

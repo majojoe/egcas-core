@@ -167,6 +167,13 @@ public:
          * @param pos the position where to set the cursor
          */
         void setCursorAt(QPointF pos);
+        /**
+         * @brief aboutToBeDeleted checks if item is about to be deleted, e.g. if a formula is empty and one hits del
+         * key this function will return true, and false otherwise
+         * @return true if pressing del or backspace shall delete the item
+         */
+        virtual bool aboutToBeDeleted(void) override;
+
 
 protected:
         /**

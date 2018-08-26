@@ -83,6 +83,13 @@ public:
          * @return the font size that should be used for this formula
          */
         virtual int getFontSize(void) const = 0;
+        /**
+         * @brief aboutToBeDeleted checks if item is about to be deleted, e.g. if a formula is empty and one hits del
+         * key this function will return true, and false otherwise
+         * @return true if pressing del or backspace shall delete the item
+         */
+        virtual bool aboutToBeDeleted(void) const = 0;
+
 
 };
 

@@ -1608,9 +1608,6 @@ void FormulaModificator::removeElement(bool previous)
         resetUnderline();
 
         if (isEmpty() || m_vector.size() == 1) {
-                if (m_formula.getDocument()) {
-                        m_formula.getDocument()->deleteEntity(&m_formula);
-                }
                 return;
         } else {
                 bool segmented = false;
@@ -1738,4 +1735,14 @@ void FormulaModificator::insertOperation(EgcAction operation)
         sanitizeEmptyCursorPos();
         updateFormula();
         resetUnderline();
+}
+
+bool FormulaModificator::aboutToBeDeleted() const
+{
+        if (    isEmpty()
+             || m_vector.size() == 1)
+                return true;
+
+        return false;
+
 }

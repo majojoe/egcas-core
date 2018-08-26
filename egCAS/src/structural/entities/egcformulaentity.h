@@ -332,6 +332,13 @@ public:
          * @param version the version of the stream that is to be deserialized
          */
         virtual void deserialize(QXmlStreamReader& stream, quint32 version) override;
+        /**
+         * @brief aboutToBeDeleted checks if item is about to be deleted, e.g. if a formula is empty and one hits del
+         * key this function will return true, and false otherwise
+         * @return true if pressing del or backspace shall delete the item
+         */
+        virtual bool aboutToBeDeleted(void) const override;
+
 
 private:
         /**

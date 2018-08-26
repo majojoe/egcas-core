@@ -707,3 +707,10 @@ void EgcFormulaEntity::deserialize(QXmlStreamReader& stream, quint32 version)
         updateView();
 }
 
+bool EgcFormulaEntity::aboutToBeDeleted() const
+{
+        if (m_mod)
+                return m_mod->aboutToBeDeleted();
+        return true;
+}
+
