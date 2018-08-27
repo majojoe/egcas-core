@@ -173,8 +173,9 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_new_page, SIGNAL(triggered()), this, SLOT(newPage()));
         connect(m_ui->mnu_insert_graphic, SIGNAL(triggered()), this, SLOT(insertGraphic()));
         connect(m_ui->mnu_insert_text, SIGNAL(triggered()), this, SLOT(insertText()));
-        connect(m_ui->mnu_save_file, SIGNAL(triggered()), this, SLOT(saveFile()));
+        connect(m_ui->mnu_saveFileAs, SIGNAL(triggered()), this, SLOT(saveFileAs()));
         connect(m_ui->mnu_load_file, SIGNAL(triggered()), this, SLOT(loadFile()));
+        connect(m_ui->mnu_saveFile, SIGNAL(triggered()), this, SLOT(saveFile()));
 }
 
 void MainWindow::setupToolbar()
@@ -230,12 +231,40 @@ void MainWindow::insertText(void)
 
 }
 
+void MainWindow::saveFileAs(void)
+{
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"), ".", tr("EgCAS files (*.egc)"));
+        if (fileName.isEmpty())
+                return;
+        if (QFileInfo::exists(fileName)) {
+                QMessageBox::StandardButton ret = QMessageBox::warning(this, tr("File exists"),
+                                                                       tr("File already exists. Overwrite?"),
+                                                                       QMessageBox::Ok | QMessageBox::Cancel,
+                                                                       QMessageBox::Cancel);
+                if (ret == QMessageBox::Cancel)
+                        return;
+        }
+
+        m_currentFileName = fileName;
+
+        m_document->saveToFile(fileName);
+}
+
 void MainWindow::saveFile(void)
 {
-        m_document->saveToFile("test.egc");
+        if (m_currentFileName.isEmpty()) {
+                saveFileAs();
+        } else {
+                m_document->saveToFile(m_currentFileName);
+        }
 }
 
 void MainWindow::loadFile(void)
 {
-        m_document->readFromFile("test.egc");
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), ".", tr("EgCAS files (*.egc)"));
+        if (fileName.isEmpty())
+                return;
+        m_currentFileName = fileName;
+
+        m_document->readFromFile(fileName);
 }

@@ -61,6 +61,7 @@ public slots:
         void newPage(void);
         void insertGraphic(void);
         void insertText(void);
+        void saveFileAs(void);
         void saveFile(void);
         void loadFile(void);
 private:
@@ -83,6 +84,7 @@ private:
         ResultType* m_resulttype;
         MathFont* m_mathFont;
         TextFont* m_textFont;
+        QString m_currentFileName;
 };
 
 #endif // MAINWINDOW_H

@@ -95,7 +95,8 @@ QToolButton:hover {background-color: lightgray; }
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="mnu_save_file"/>
+    <addaction name="mnu_saveFile"/>
+    <addaction name="mnu_saveFileAs"/>
     <addaction name="mnu_load_file"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -199,7 +200,7 @@ QToolButton:hover {background-color: lightgray; }
      <normaloff>:/res/insert_graphic.png</normaloff>:/res/insert_graphic.png</iconset>
    </property>
    <property name="text">
-    <string>insert Picture</string>
+    <string>insert Picture...</string>
    </property>
   </action>
   <action name="mnu_insert_text">
@@ -217,14 +218,26 @@ QToolButton:hover {background-color: lightgray; }
     <string>Ctrl+T</string>
    </property>
   </action>
-  <action name="mnu_save_file">
+  <action name="mnu_saveFileAs">
+   <property name="icon">
+    <iconset resource="../res/ressources.qrc">
+     <normaloff>:/res/save.png</normaloff>:/res/save.png</iconset>
+   </property>
    <property name="text">
-    <string>save File</string>
+    <string>Save As...</string>
    </property>
   </action>
   <action name="mnu_load_file">
    <property name="text">
-    <string>load File</string>
+    <string>Open...</string>
+   </property>
+  </action>
+  <action name="mnu_saveFile">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
