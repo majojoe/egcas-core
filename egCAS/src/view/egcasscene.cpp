@@ -580,3 +580,18 @@ QPointF EgCasScene::getLastCursorPositon(void)
 
         return QPointF();
 }
+
+void EgCasScene::deleteAll()
+{
+        QGraphicsItem *item;
+        QList<QGraphicsItem*> lst = items();
+        foreach (item, lst) {
+                if (    item != m_cursor
+                     && item != m_cross
+                     && item != m_nodeUnderline) {
+                        removeItem(item);
+                        delete (item);
+
+                }
+        }
+}

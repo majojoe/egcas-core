@@ -84,7 +84,8 @@ bool EgcCalculation::restart(void)
 {
         m_paused = false;
         m_restartAfterResume = false;
-        m_iterator->toFront();
+        if (!m_iterator)
+                m_iterator.reset(new QMutableListIterator<EgcEntity*>(m_list->getIterator()));
         m_calculationRunning = false;
         if (!m_autoCalc && m_entity) // only if auto calculation is active
                 return false;

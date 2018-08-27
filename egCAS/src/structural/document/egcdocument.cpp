@@ -230,7 +230,7 @@ void EgcDocument::deleteAll()
         m_calc->reset();
         m_list->deleteAll();
         m_itemMapper.clear();
-        m_scene->clear();
+        m_scene->deleteAll();
 }
 
 void EgcDocument::resumeCalculation(void)
@@ -442,6 +442,8 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, quint32 version)
                         stream.raiseError(QObject::tr("The file is not an egcas file."));
                 }
         }
+
+        restartCalculation();
 }
 
 void EgcDocument::setHeight(qreal height)

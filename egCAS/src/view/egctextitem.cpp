@@ -51,8 +51,6 @@ EgcTextItem::EgcTextItem(const QPointF point, QGraphicsItem *parent) : EgcTextIt
 
 EgcTextItem::~EgcTextItem()
 {
-        if (m_entity)
-                m_entity->itemChanged(EgcItemChangeType::itemDeleted);
 }
 
 void EgcTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

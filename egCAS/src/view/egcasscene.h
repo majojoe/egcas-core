@@ -207,6 +207,10 @@ public:
          * @return the last cursor position
          */
         QPointF getLastCursorPositon(void);
+        /**
+         * @brief deleteAll removes all items from the scene
+         */
+        void deleteAll(void);
 
 public slots:
         /**
