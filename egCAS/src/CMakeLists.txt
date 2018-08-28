@@ -31,6 +31,10 @@ if(debug_scene_rendering_pos)
         add_definitions(-DDEBUG_SCENE_RENDERING_POS )
 endif()
 
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+        add_definitions(-DLOAD_EGCAS_EXAMPLES_FILE="${CMAKE_SOURCE_DIR}/examples/default.egc")
+endif()
+
 find_package(BISON)
 find_package(FLEX)
 #find FlexLexer.h if not already found on windows (non crosscomilation)

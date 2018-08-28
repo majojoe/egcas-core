@@ -442,8 +442,6 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, quint32 version)
                         stream.raiseError(QObject::tr("The file is not an egcas file."));
                 }
         }
-
-        restartCalculation();
 }
 
 void EgcDocument::setHeight(qreal height)
