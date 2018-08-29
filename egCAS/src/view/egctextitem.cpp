@@ -88,6 +88,7 @@ void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                 QGraphicsTextItem::mouseDoubleClickEvent(event);
         }
         m_editingActivated = true;
+        setSelected(false);
 }
 
 void EgcTextItem::setEditMode(void)
@@ -100,6 +101,7 @@ void EgcTextItem::setEditMode(void)
         setTextCursor(cursor);
         setFocus();
         m_editingActivated = true;
+        setSelected(false);
 }
 
 void EgcTextItem::focusInEvent(QFocusEvent* event)

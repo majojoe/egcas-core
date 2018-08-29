@@ -48,7 +48,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasScene(*this, nullptr)}, m_calc{new EgcCalculation()}
 {
         connect(m_scene.data(), SIGNAL(createFormula(QPointF, EgcAction)), this, SLOT(insertFormulaOnKeyPress(QPointF, EgcAction)));
-        connect(this, SIGNAL(startDeleletingEntity(EgcEntity*)), this, SLOT(deleteLaterEntity(EgcEntity*)), Qt::QueuedConnection);
         connect(m_scene.data(), &EgCasScene::selectionChanged, this, &EgcDocument::selectionChanged);
         connect(m_calc.data(), SIGNAL(errorOccurred(EgcKernelErrorType,QString)),  this, SLOT(handleKernelMessages(EgcKernelErrorType,QString)));
 }
