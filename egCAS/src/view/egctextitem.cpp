@@ -196,18 +196,6 @@ void EgcTextItem::keyPressEvent(QKeyEvent *keyEvent)
                         scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
                 }
                 break;
-        case Qt::Key_Delete:
-                if (!m_editingActivated || toPlainText().isEmpty()) {
-                        accepted = true;
-#warning delete condition must be implemented
-                }
-                break;
-        case Qt::Key_Backspace:
-                if (m_editingActivated && toPlainText().isEmpty()) {
-                        accepted = true;
-#warning delete condition must be implemented
-                }
-                break;
         }
 
         if (accepted) {
