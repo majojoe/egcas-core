@@ -461,22 +461,11 @@ void EgCasScene::keyPressEvent(QKeyEvent* keyEvent)
                         QGraphicsItem *item;
                         foreach (item, list) {
                                 if (    item->type() == static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType)
-                                                || item->type() == static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType)
-                                                || item->type() == static_cast<int>(EgcGraphicsItemType::EgcTextItemType)) {
-                                        EgcFormulaItem *formula = dynamic_cast<EgcFormulaItem*>(item);
-                                        if (formula) {  //formula
-                                                if (formula->aboutToBeDeleted()) {
-                                                        deleteItem(item);
-                                                        m_document.itemDeleted(item);
-                                                        keyEvent->accept();
-                                                } else {  //call standard version that triggers the elements key event routine
-                                                        QGraphicsScene::keyPressEvent(keyEvent);
-                                                }
-                                        } else {  // pixmap or text
-                                                deleteItem(item);
-                                                m_document.itemDeleted(item);
-                                                keyEvent->accept();
-                                        }
+                                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType)
+                                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcTextItemType)) {
+                                        deleteItem(item);
+                                        m_document.itemDeleted(item);
+                                        keyEvent->accept();
                                 }
                         }
                 }

@@ -52,12 +52,6 @@ public:
          */
         virtual void setPos(const QPointF& point) = 0;
         /**
-         * @brief aboutToBeDeleted checks if item is about to be deleted, e.g. if a formula is empty and one hits del
-         * key this function will return true, and false otherwise
-         * @return true if pressing del or backspace shall delete the item
-         */
-        virtual bool aboutToBeDeleted(void) { return true;}
-        /**
          * @brief operator< operator overload of this class to be able to sort the items according to their position
          * @param rhs the right hand side operator
          * @return true if this object is smaller than  the given object

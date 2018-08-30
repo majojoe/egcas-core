@@ -167,13 +167,6 @@ public:
          * @param pos the position where to set the cursor
          */
         void setCursorAt(QPointF pos);
-        /**
-         * @brief aboutToBeDeleted checks if item is about to be deleted, e.g. if a formula is empty and one hits del
-         * key this function will return true, and false otherwise
-         * @return true if pressing del or backspace shall delete the item
-         */
-        virtual bool aboutToBeDeleted(void) override;
-
 
 protected:
         /**
@@ -192,6 +185,11 @@ protected:
          * @param event pointer to QGraphicsSceneMouseEvent
          */
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        /**
+         * @brief mouseDoubleClickEvent overrides the double click event form QGraphicsItem
+         * @param event pointer to QGraphicsSceneMouseEvent
+         */
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event);
         /**
          * @brief itemChange reimplements change function of QGraphicsItem to be able to realize a grid
          * @param change enum that describes state changes that are notified
@@ -244,7 +242,11 @@ protected:
          * @return the current position of the item
          */
         virtual QPointF getPos(void) override;
-
+        /**
+         * @brief setEditMode set the formula in edit mode or leave edit mode
+         * @param edit if true formula is set to edit mode, if false formula leaves edit mode
+         */
+        void setEditMode(bool edit);
 signals:
 
 public slots:
@@ -259,6 +261,7 @@ private:
         static bool s_regexInitialized;                 ///< check if regex is already initialized
         QPointF m_startPoint;                           ///< point where move operation started
         bool m_movePossible;                            ///< move is possible at the moment
+        bool m_editingActivated;                        ///< true if editing is activated
 
         Q_DISABLE_COPY(EgcFormulaItem)
 };
