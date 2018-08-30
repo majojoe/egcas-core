@@ -47,7 +47,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QComboBox>
 #include <QFileDialog>
 #include <QDir>
-
+#include <QDesktopServices>
+#include <QFileInfo>
 
 #define MAP_COMBO_TO_PRECISION(prec)  ((prec == 0) ? 0 : (prec + 1))
 #define MAP_PRECISION_TO_COMBO(prec)  ((prec == 0) ? 0 : (prec - 1))
@@ -85,6 +86,22 @@ void MainWindow::showLicense(void)
 {
         EgcLicenseInfo licenseInfo;
         licenseInfo.exec();
+}
+
+void MainWindow::showManual(void)
+{
+        QString manual;
+#if defined( Q_OS_WIN )
+        manual = QFileInfo(QCoreApplication::applicationFilePath()).absolutePath() + "\\doc\\manual.pdf";
+#endif //#if defined( Q_OS_WIN )
+
+#if defined( Q_OS_LINUX )
+        manual = EGCAS_MANUAL_INSTALL_PATH_LINUX;
+#endif //#if defined( Q_OS_LINUX )
+        if (QFile::exists(EGCAS_MANUAL_INSTALL_PATH_DEV))
+                QDesktopServices::openUrl(QUrl::fromLocalFile(EGCAS_MANUAL_INSTALL_PATH_DEV));
+        else if (QFile::exists(manual))
+                QDesktopServices::openUrl(QUrl::fromLocalFile(manual));
 }
 
 void MainWindow::showInfo(void)
@@ -128,6 +145,7 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_saveFileAs, SIGNAL(triggered()), this, SLOT(saveFileAs()));
         connect(m_ui->mnu_load_file, SIGNAL(triggered()), this, SLOT(loadFile()));
         connect(m_ui->mnu_saveFile, SIGNAL(triggered()), this, SLOT(saveFile()));
+        connect(m_ui->mnu_manual, SIGNAL(triggered()), this, SLOT(showManual()));
 }
 
 void MainWindow::setupToolbar()

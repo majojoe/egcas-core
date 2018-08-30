@@ -55,6 +55,7 @@ public:
 
 public slots:
         void showLicense(void);
+        void showManual(void);
         void showInfo(void);
         void calculate(void);
         void autoCalculation(bool on);
