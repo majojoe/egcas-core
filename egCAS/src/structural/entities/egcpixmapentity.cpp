@@ -174,7 +174,8 @@ void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, quint32 version)
                         QString path = attr.value("path").toString();
                         setFilePath(path);
                 } else {
-                        //setB64Encoded(stream.readElementText());
+                        QByteArray in = stream.readElementText().toLatin1();
+                        setB64Encoded(in);
                 }
                 if (attr.hasAttribute("pos_x") && attr.hasAttribute("pos_y")) {
                         qreal x = attr.value("pos_x").toFloat();
