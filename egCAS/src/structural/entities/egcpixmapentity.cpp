@@ -84,8 +84,10 @@ bool EgcPixmapEntity::setB64Encoded(QByteArray &bytes)
 {
         //write pixmap in bytes as png format
         QByteArray out = QByteArray::fromBase64(bytes);
-        bool retval = m_item->getPixmap().loadFromData(out, "PNG");
-        return retval;
+        QImage image = QImage::fromData(out, "PNG");
+        m_item->setPixmap(QPixmap::fromImage(image));
+
+        return true;
 }
 
 QSizeF EgcPixmapEntity::getSize(void) const
