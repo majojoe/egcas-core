@@ -84,8 +84,9 @@ public:
         /**
          * @brief setB64Encoded set pixmap from B64 encoded byte array
          * @param bytes a reference to the byte array that contains png data
+         * @return true if the conversion succeeded, false otherwise
          */
-        void setB64Encoded(QByteArray &bytes);
+        bool setB64Encoded(QByteArray &bytes);
         /**
          * @brief getSize returns the size of the pixmap
          * @return the size of the pixmap in the document
