@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class QXmlStreamWriter;
 class QXmlStreamReader;
+class SerializerProperties;
 
 class AbstractSerializer
 {
@@ -43,13 +44,13 @@ public:
         /**
          * @brief interface for serializing a class
          */
-        virtual void serialize(QXmlStreamWriter& stream) = 0;
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties &properties) = 0;
 
         /**
          * @brief deserialize interface for deserializing a class
          * @param version the version of the stream that is to be deserialized
          */
-        virtual void deserialize(QXmlStreamReader& stream, quint32 version) = 0;
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) = 0;
 };
 
 #endif // ABSTRACTSERIALIZER_H

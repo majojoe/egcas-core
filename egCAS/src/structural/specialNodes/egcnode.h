@@ -37,6 +37,8 @@ class EgcNodeVisitor;
 class QXmlStreamWriter;
 class QXmlStreamReader;
 class QXmlStreamAttributes;
+class SerializerProperties;
+
 /**
  * @brief describes which side of the node is meant 
  */
@@ -142,14 +144,14 @@ public:
          * @brief interface for serializing a class
          * @param stream the stream to use for serializing this class
          */
-        virtual void serialize(QXmlStreamWriter& stream) ;
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties &properties) ;
 
         /**
          * @brief deserialize interface for deserializing a class
          * @param stream the xml reader stream
          * @param version the version of the stream that is to be deserialized
          */
-        virtual void deserialize(QXmlStreamReader& stream, quint32 version);
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties);
         /**
          * @brief interface for serializing the attributes of a formula operation
          * @param stream the stream to use for serializing this class

@@ -50,7 +50,7 @@ public:
          * @brief interface for serializing a class
          * @param stream the stream to use for serializing this class
          */
-        virtual void serialize(QXmlStreamWriter& stream) override;
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties &properties) override;
 
 protected:
 };

@@ -106,7 +106,7 @@ bool EgcNode::isOperation(void) const
         return false;
 }
 
-void EgcNode::serialize(QXmlStreamWriter& stream)
+void EgcNode::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
 {
         QLatin1String str = EgcNodeCreator::stringize(getNodeType());
         if (str.size() != 0) {
@@ -116,12 +116,11 @@ void EgcNode::serialize(QXmlStreamWriter& stream)
         }
 }
 
-void EgcNode::deserialize(QXmlStreamReader& stream, quint32 version)
+void EgcNode::deserialize(QXmlStreamReader& stream, SerializerProperties &properties)
 {
-        (void) version;
         if (stream.name() == EgcNodeCreator::stringize(getNodeType())) {
                 QXmlStreamAttributes attr = stream.attributes();
-                deserializeAttributes(stream, version, attr);
+                deserializeAttributes(stream, properties.version, attr);
         }
 
         stream.skipCurrentElement();

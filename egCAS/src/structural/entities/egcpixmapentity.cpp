@@ -153,7 +153,7 @@ void EgcPixmapEntity::itemChanged(EgcItemChangeType changeType)
 {
 }
 
-void EgcPixmapEntity::serialize(QXmlStreamWriter& stream)
+void EgcPixmapEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
 {
         stream.writeStartElement("pic_entity");
         stream.writeAttribute("pos_x", QString("%1").arg(getPosition().x()));
@@ -167,7 +167,7 @@ void EgcPixmapEntity::serialize(QXmlStreamWriter& stream)
         stream.writeEndElement(); // document
 }
 
-void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, quint32 version)
+void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
 {
         (void) version;
 

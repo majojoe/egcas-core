@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcentitylist.h"
 #include "view/egcasscene.h"
 #include "egccalculation.h"
+#include "entities/egcentity.h"
 #include "entities/egcformulaentity.h"
 #include "view/egcformulaitem.h"
 #include "entities/egctextentity.h"
@@ -358,7 +359,9 @@ void EgcDocument::saveToFile(QString filename)
                 return;
 
         QXmlStreamWriter stream(&file);
-        serialize(stream);
+        SerializerProperties properties;
+        properties.filePath = filename;
+        serialize(stream, properties);
 
         file.close();
 }
@@ -370,12 +373,15 @@ void EgcDocument::readFromFile(QString filename)
                 return;
 
         QXmlStreamReader stream(&file);
-        deserialize(stream, 0);
+        SerializerProperties properties;
+        properties.version = 0;
+        properties.filePath = filename;
+        deserialize(stream, properties);
 
         file.close();
 }
 
-void EgcDocument::serialize(QXmlStreamWriter& stream)
+void EgcDocument::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
 {
         stream.setAutoFormatting(true);
         stream.writeStartDocument();
@@ -388,7 +394,7 @@ void EgcDocument::serialize(QXmlStreamWriter& stream)
         EgcEntityList* list = getEntityList();
         QMutableListIterator<EgcEntity*> iter = list->getIterator();
         while(iter.hasNext()) {
-                iter.next()->serialize(stream);
+                iter.next()->serialize(stream, properties);
         }
 
         stream.writeEndElement(); // document
@@ -396,9 +402,9 @@ void EgcDocument::serialize(QXmlStreamWriter& stream)
         stream.writeEndDocument();
 }
 
-void EgcDocument::deserialize(QXmlStreamReader& stream, quint32 version)
+void EgcDocument::deserialize(QXmlStreamReader& stream, SerializerProperties &properties)
 {
-        version = 0;
+        properties.version = 0;
 
         if (stream.readNextStartElement()) {
                 if (stream.name() == QLatin1String("document")) {
@@ -406,12 +412,12 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, quint32 version)
                         QString ver = attr.value("version").toString();
                         QStringList list = ver.split('.');
                         if (list.size() == 3) {
-                                version = list.at(0).toUInt() << 16;
-                                version += list.at(1).toUInt() << 8;
-                                version += list.at(2).toUInt();
+                                properties.version = list.at(0).toUInt() << 16;
+                                properties.version += list.at(1).toUInt() << 8;
+                                properties.version += list.at(2).toUInt();
                         }
                         if (    attr.hasAttribute("height") && attr.hasAttribute("width")
-                             && (version == 2 || version == 3)) {
+                             && (properties.version == 2 || properties.version == 3)) {
                                 qreal height = attr.value("height").toFloat();
                                 qreal width = attr.value("width").toFloat();
                                 setWidth(width);
@@ -432,7 +438,7 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, quint32 version)
                                                 stream.skipCurrentElement();
 
                                         if (entity)
-                                                entity->deserialize(stream, version);
+                                                entity->deserialize(stream, properties);
                                 }
                         } else {
                                 stream.raiseError(QObject::tr("This file version is not supported. Maybe saved by a newer version."));

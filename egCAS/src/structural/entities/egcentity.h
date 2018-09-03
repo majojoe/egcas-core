@@ -34,6 +34,7 @@ class EgcAbstractEntityList;
 class EgcAbstractDocument;
 
 #include "abstractserializer.h"
+#include <QString>
 
 /**
  * @brief The EgcEntityType defines different types of entities inside a egCAS (formula) document/worksheet
@@ -43,6 +44,15 @@ enum class EgcEntityType
         Formula = 0,        ///< this is a formula int the document
         Picture,            ///< this is a picture in the document
         Text                ///< this is a text element in the document
+};
+
+/**
+ * @brief The SerializerProperties class holds all properties neccessary for serializing and deserializing
+ */
+class SerializerProperties {
+public:
+        quint32 version;        ///< version of the file format
+        QString filePath;       ///< file path of the file where the document is saved into
 };
 
 /**
@@ -99,14 +109,15 @@ public:
         /**
          * @brief interface for serializing a class
          * @param stream the stream to use for serializing this class
+         * @param properties object with all neccessary information for serializing
          */
-        virtual void serialize(QXmlStreamWriter& stream) override = 0;
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties &properties) override = 0;
 
         /**
          * @brief deserialize interface for deserializing a class
-         * @param version the version of the stream that is to be deserialized
+         * @param properties object with all neccessary information for deserializing
          */
-        virtual void deserialize(QXmlStreamReader& stream, quint32 version) override = 0;
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override = 0;
 
 
 

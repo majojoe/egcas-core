@@ -324,14 +324,16 @@ public:
         /**
          * @brief interface for serializing a class
          * @param stream the stream to use for serializing this class
+         * @param properties object with all neccessary information for serializing
          */
-        virtual void serialize(QXmlStreamWriter& stream) override;
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties& properties) override;
 
         /**
          * @brief deserialize interface for deserializing a class
-         * @param version the version of the stream that is to be deserialized
+         * @param stream the stream to use for serializing this class
+         * @param properties object with all neccessary information for deserializing
          */
-        virtual void deserialize(QXmlStreamReader& stream, quint32 version) override;
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override;
         /**
          * @brief aboutToBeDeleted checks if item is about to be deleted, e.g. if a formula is empty and one hits del
          * key this function will return true, and false otherwise

@@ -44,7 +44,7 @@ bool EgcEqualNode::valid()
         return false;
 }
 
-void EgcEqualNode::serialize(QXmlStreamWriter& stream)
+void EgcEqualNode::serialize(QXmlStreamWriter& stream, SerializerProperties& properties)
 {
         EgcNode* node;
         QLatin1String str = EgcNodeCreator::stringize(getNodeType());
@@ -53,7 +53,7 @@ void EgcEqualNode::serialize(QXmlStreamWriter& stream)
 
         node = getChild(0);
         if (node)
-                node->serialize(stream);
+                node->serialize(stream, properties);
 
         //write empty element to file
         stream.writeStartElement("emptynode");

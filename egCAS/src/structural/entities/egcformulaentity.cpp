@@ -641,7 +641,7 @@ bool EgcFormulaEntity::isActive() const
         return m_isActive;
 }
 
-void EgcFormulaEntity::serialize(QXmlStreamWriter& stream)
+void EgcFormulaEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
 {
         stream.writeStartElement("formula_entity");
         stream.writeAttribute("pos_x", QString("%1").arg(getPosition().x()));
@@ -663,14 +663,14 @@ void EgcFormulaEntity::serialize(QXmlStreamWriter& stream)
         }
         stream.writeAttribute("digits", QString("%1").arg(getNumberOfSignificantDigits()));
 
-        m_data.serialize(stream);
+        m_data.serialize(stream, properties);
 
         stream.writeEndElement(); // formula_entity
 }
 
-void EgcFormulaEntity::deserialize(QXmlStreamReader& stream, quint32 version)
+void EgcFormulaEntity::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
 {
-        (void) version;
+        (void) properties;
 
         if (stream.name() == QLatin1String("formula_entity")) {
                 QXmlStreamAttributes attr = stream.attributes();
@@ -699,7 +699,7 @@ void EgcFormulaEntity::deserialize(QXmlStreamReader& stream, quint32 version)
                 if (stream.name() != QLatin1String("basenode"))
                         stream.raiseError();
 
-                m_data.deserialize(stream, version);
+                m_data.deserialize(stream, properties);
                 if (stream.name() == QLatin1String("basenode"))
                         stream.skipCurrentElement();
         }

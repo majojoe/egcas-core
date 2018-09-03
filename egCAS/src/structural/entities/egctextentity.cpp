@@ -143,7 +143,7 @@ void EgcTextEntity::setEditMode()
                 m_item->setEditMode();
 }
 
-void EgcTextEntity::serialize(QXmlStreamWriter& stream)
+void EgcTextEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
 {
         stream.writeStartElement("text_entity");
         stream.writeAttribute("font", m_font->toString());
@@ -153,9 +153,9 @@ void EgcTextEntity::serialize(QXmlStreamWriter& stream)
         stream.writeEndElement(); // document
 }
 
-void EgcTextEntity::deserialize(QXmlStreamReader& stream, quint32 version)
+void EgcTextEntity::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
 {
-        (void) version;
+        (void) properties;
 
         if (stream.name() == QLatin1String("text_entity")) {
                 QXmlStreamAttributes attr = stream.attributes();

@@ -163,7 +163,7 @@ bool EgcContainerNode::hasSubNode(const EgcNode& node, quint32 &index) const
         return true;
 }
 
-void EgcContainerNode::serialize(QXmlStreamWriter& stream)
+void EgcContainerNode::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
 {
         quint32 i;
         EgcNode* node;
@@ -177,7 +177,7 @@ void EgcContainerNode::serialize(QXmlStreamWriter& stream)
         for(i = 0; i < n; i++) {
                 node = getChild(i);
                 if (node)
-                        node->serialize(stream);
+                        node->serialize(stream, properties);
         }
 
         if (str.size() != 0) {
@@ -185,11 +185,11 @@ void EgcContainerNode::serialize(QXmlStreamWriter& stream)
         }
 }
 
-void EgcContainerNode::deserialize(QXmlStreamReader& stream, quint32 version)
+void EgcContainerNode::deserialize(QXmlStreamReader& stream, SerializerProperties &properties)
 {
         if (stream.name() == EgcNodeCreator::stringize(getNodeType())) {
                 QXmlStreamAttributes attr = stream.attributes();
-                deserializeAttributes(stream, version, attr);
+                deserializeAttributes(stream, properties.version, attr);
                 quint32 i = 0;
                 while (stream.readNextStartElement()) {
                         QString str(stream.name().toLatin1());
@@ -206,7 +206,7 @@ void EgcContainerNode::deserialize(QXmlStreamReader& stream, quint32 version)
                         }
 
                         if (n != nullptr)
-                                n->deserialize(stream, version);
+                                n->deserialize(stream, properties);
 
                         i++;
                 }

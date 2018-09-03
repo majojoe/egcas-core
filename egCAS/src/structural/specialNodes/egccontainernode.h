@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <new>
 #include <QtGlobal>
 #include "egcnode.h"
+#include "entities/egcentity.h"
 
 /**
  * @brief The EgcContainerNode class is a base class for a container expression that (binary or unary expression).
@@ -144,13 +145,13 @@ public:
          * @brief interface for serializing a class
          * @param stream the stream to use for serializing this class
          */
-        virtual void serialize(QXmlStreamWriter& stream) override;
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties &properties) override;
 
         /**
          * @brief deserialize interface for deserializing a class
          * @param version the version of the stream that is to be deserialized
          */
-        virtual void deserialize(QXmlStreamReader& stream, quint32 version) override;
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties& properties) override;
         /**
          * @brief interface for serializing the attributes of a formula operation
          * @param stream the stream to use for serializing this class
