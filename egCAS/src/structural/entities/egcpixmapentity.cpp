@@ -31,11 +31,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QByteArray>
 #include <QString>
 #include <QBuffer>
+#include <QDir>
 #include "egcpixmapentity.h"
 #include "egcabstractpixmapitem.h"
 #include "document/egcabstractdocument.h"
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
+#include <QCoreApplication>
 
 EgcPixmapEntity::EgcPixmapEntity(void) : m_item(nullptr)
 {
@@ -160,21 +162,37 @@ void EgcPixmapEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &
         stream.writeAttribute("pos_y", QString("%1").arg(getPosition().y()));
         stream.writeAttribute("width", QString("%1").arg(getSize().width()));
         stream.writeAttribute("height", QString("%1").arg(getSize().height()));
-        if (!m_isEmbedded)
-                stream.writeAttribute("path", m_path);
-        else
+        if (!m_isEmbedded) {
+                QFileInfo info(properties.filePath);
+                QDir path = QDir(info.path());
+                QString file = path.relativeFilePath(m_path);
+                stream.writeAttribute("path", file);
+
+        } else {
                 stream.writeCharacters(getB64Encoded());
+        }
         stream.writeEndElement(); // document
 }
 
 void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
 {
-        (void) version;
+        (void) properties;
 
         if (stream.name() == QLatin1String("pic_entity")) {
                 QXmlStreamAttributes attr = stream.attributes();
                 if (attr.hasAttribute("path")) {
-                        QString path = attr.value("path").toString();
+                        QString imageFile = attr.value("path").toString();
+                        QFileInfo info(properties.filePath);
+                        QDir dir(info.path());
+                        QString path = QDir::cleanPath(dir.absoluteFilePath(imageFile));
+                        QFileInfo file(path);
+                        if (!file.exists()) {
+                                QString errMsg(QCoreApplication::translate("File not found while loading document:",
+                                               "EgcPixmapEntity"));
+                                errMsg += QString(" ");
+                                errMsg += path;
+                                stream.raiseError(errMsg);
+                        }
                         setFilePath(path);
                 } else {
                         QByteArray in = stream.readElementText().toLatin1();
