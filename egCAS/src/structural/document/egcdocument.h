@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QObject>
 #include <QScopedPointer>
 #include <QPointF>
+#include <QMessageBox>
 #include "entities/egcentity.h"
 #include "entities/egcabstractentitylist.h"
 #include "egccalculation.h"
@@ -223,6 +224,11 @@ private slots:
          */
         void handleKernelMessages(EgcKernelErrorType type, QString message);
 private:
+        /**
+         * @brief handleDocumentMessages show error messages while loading a document if there is an error during loading
+         * @param message the message to display
+         */
+        void handleDocumentMessages(QString message, QMessageBox::Icon iconType = QMessageBox::Critical);
         virtual void sort(void) override {}
         /**
          * @brief mapItem maps an given item to a given entity

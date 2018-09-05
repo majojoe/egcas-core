@@ -53,6 +53,7 @@ class SerializerProperties {
 public:
         quint32 version;        ///< version of the file format
         QString filePath;       ///< file path of the file where the document is saved into
+        QString warningMessage; ///< if a warning occurred during loading of a document it is given here
 };
 
 /**

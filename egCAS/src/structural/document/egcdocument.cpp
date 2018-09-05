@@ -329,6 +329,20 @@ void EgcDocument::handleKernelMessages(EgcKernelErrorType type, QString message)
         (void) msgBox.exec();
 }
 
+void EgcDocument::handleDocumentMessages(QString message, QMessageBox::Icon iconType)
+{
+        QMessageBox msgBox;
+        if (iconType == QMessageBox::Critical)
+                msgBox.setText(tr("Error while loading document"));
+        else
+                msgBox.setText(tr("Warning:problem occurred while loading document"));
+        msgBox.setInformativeText(message);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.setIcon(iconType);
+        (void) msgBox.exec();
+}
+
 void EgcDocument::mapItem(QGraphicsItem* item, EgcEntity* entity)
 {
         m_itemMapper.insert(item, entity);
@@ -447,6 +461,22 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, SerializerProperties &pr
                         stream.raiseError(QObject::tr("The file is not an egcas file."));
                 }
         }
+
+        QXmlStreamReader::Error error = stream.error();
+        switch(error) {
+        case QXmlStreamReader::NoError:
+                break;
+        case QXmlStreamReader::NotWellFormedError:
+        case QXmlStreamReader::PrematureEndOfDocumentError:
+        case QXmlStreamReader::UnexpectedElementError:
+                handleDocumentMessages(tr("Document corrupted. The document has an unexpected structure."));
+                break;
+        case QXmlStreamReader::CustomError:
+                handleDocumentMessages(stream.errorString());
+                break;
+        }
+        if (!properties.warningMessage.isEmpty())
+                handleDocumentMessages(properties.warningMessage, QMessageBox::Warning);
 }
 
 void EgcDocument::setHeight(qreal height)

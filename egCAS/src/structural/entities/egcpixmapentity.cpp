@@ -187,13 +187,16 @@ void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, SerializerProperties
                         QString path = QDir::cleanPath(dir.absoluteFilePath(imageFile));
                         QFileInfo file(path);
                         if (!file.exists()) {
-                                QString errMsg(QCoreApplication::translate("File not found while loading document:",
-                                               "EgcPixmapEntity"));
+                                QString errMsg(QCoreApplication::translate("EgcPixmapEntity"
+                                                                           , "File not found while loading document:"));
                                 errMsg += QString(" ");
                                 errMsg += path;
-                                stream.raiseError(errMsg);
+                                properties.warningMessage = errMsg;
+                                stream.skipCurrentElement();
+                                return;
+                        } else {
+                                setFilePath(path);
                         }
-                        setFilePath(path);
                 } else {
                         QByteArray in = stream.readElementText().toLatin1();
                         setB64Encoded(in);
