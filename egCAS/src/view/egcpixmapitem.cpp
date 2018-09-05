@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcPixmapItem::EgcPixmapItem(QGraphicsItem*parent) : QGraphicsPixmapItem{parent}, m_entity{nullptr}
 {
-        m_resizeHandle.reset(new ResizeHandle(this, QSizeF(8.0, 8.0)));
+        m_resizeHandle = new ResizeHandle(this, QSizeF(8.0, 8.0));
         setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
 }
 

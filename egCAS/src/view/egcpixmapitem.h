@@ -140,7 +140,7 @@ signals:
 
 private:
         Q_DISABLE_COPY(EgcPixmapItem)
-        QScopedPointer<ResizeHandle> m_resizeHandle;
+        ResizeHandle* m_resizeHandle;
         bool m_childSelectionState;
         bool m_resizeHandleAdded;
         EgcAbstractPixmapEntity* m_entity;                      ///< pointer to pixmap entity
