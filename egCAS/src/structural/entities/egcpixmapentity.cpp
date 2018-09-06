@@ -213,5 +213,6 @@ void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, SerializerProperties
                 }
         }
 
-        stream.skipCurrentElement();
+        if (!stream.isEndElement())
+                stream.skipCurrentElement();
 }
