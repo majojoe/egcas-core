@@ -78,17 +78,26 @@ int EgcNumberNode::nrSubindexes(void) const
 
 void EgcNumberNode::serializeAttributes(QXmlStreamWriter& stream)
 {
-        stream.writeAttribute("value", m_value);
+        (void) stream;
 }
 
 void EgcNumberNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
 {
         (void) version;
         (void) stream;
+        (void) attr;
+}
 
-        if (attr.hasAttribute("value")) {
-                setValue(attr.value("value").toString());
-        }
+void EgcNumberNode::serialize(QXmlStreamWriter& stream, SerializerProperties& properties)
+{
+        (void)properties;
+        stream.writeCharacters(m_value);
+}
+
+void EgcNumberNode::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
+{
+        (void) properties;
+        setValue(stream.readElementText());
 }
 
 bool EgcNumberNode::insert(QChar character, int position)

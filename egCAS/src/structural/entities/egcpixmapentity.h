@@ -117,7 +117,6 @@ public:
          * @param properties object with all neccessary information for serializing
          */
         virtual void serialize(QXmlStreamWriter& stream, SerializerProperties& properties) override;
-
         /**
          * @brief deserialize interface for deserializing a class
          * @param stream the stream to use for deserializing this class

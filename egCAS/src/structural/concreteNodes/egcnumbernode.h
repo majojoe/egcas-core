@@ -82,6 +82,19 @@ public:
          * @param attr the xml attributes provided by the parent
          */
         virtual void deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr) override;
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         * @param properties object with all neccessary information for serializing
+         */
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties& properties) override;
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param stream the stream to use for deserializing this class
+         * @param properties object with all neccessary information for deserializing
+         */
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override;
+
 
 protected:
         /**
