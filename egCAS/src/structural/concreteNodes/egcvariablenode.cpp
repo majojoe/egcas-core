@@ -26,6 +26,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include "egcnodecreator.h"
 #include <QString>
 #include <QStringBuilder>
 #include <QRegularExpression>
@@ -162,23 +163,27 @@ bool EgcVariableNode::isSubscriptEmptyElement()
         return m_subscrIsEmpty;
 }
 
-void EgcVariableNode::serializeAttributes(QXmlStreamWriter& stream)
+void EgcVariableNode::serialize(QXmlStreamWriter& stream, SerializerProperties& properties)
 {
-        stream.writeAttribute("value", m_value);
-        if (!isSubscriptEmptyElement())
-                stream.writeAttribute("subscript", getSubscript());
+        (void)properties;
+        QLatin1String str = EgcNodeCreator::stringize(getNodeType());
+        if (str.size() != 0) {
+                stream.writeStartElement(str);
+                if (!isSubscriptEmptyElement())
+                        stream.writeAttribute("subscript", getSubscript());
+                stream.writeCharacters(m_value);
+                stream.writeEndElement();
+        }
 }
 
-void EgcVariableNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
+void EgcVariableNode::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
 {
-        (void) stream;
-        (void) version;
+        (void) properties;
+        QXmlStreamAttributes attr = stream.attributes();
+        QString subscr;
+        if (attr.hasAttribute("subscript"))
+                subscr = attr.value("subscript").toString();
 
-        if (attr.hasAttribute("value")) {
-                if (attr.hasAttribute("subscript"))
-                        setValue(attr.value("value").toString(), attr.value("subscript").toString());
-                else
-                        setValue(attr.value("value").toString());
-        }
+        setValue(stream.readElementText(), subscr);
 }
 

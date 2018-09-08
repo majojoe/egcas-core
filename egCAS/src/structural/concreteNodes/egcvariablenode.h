@@ -110,18 +110,17 @@ public:
          */
         bool isSubscriptEmptyElement(void);
         /**
-         * @brief interface for serializing the attributes of a formula operation
+         * @brief interface for serializing a class
          * @param stream the stream to use for serializing this class
+         * @param properties object with all neccessary information for serializing
          */
-        virtual void serializeAttributes(QXmlStreamWriter& stream) override;
-
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties& properties) override;
         /**
-         * @brief deserialize interface for deserializing the attributes of a formula operation
-         * @param stream the xml reader stream
-         * @param version the version of the stream that is to be deserialized
-         * @param attr the xml attributes provided by the parent
+         * @brief deserialize interface for deserializing a class
+         * @param stream the stream to use for deserializing this class
+         * @param properties object with all neccessary information for deserializing
          */
-        virtual void deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr) override;
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override;
 
 protected:
 

@@ -26,6 +26,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include "egcnodecreator.h"
 #include <QRegularExpression>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -91,7 +92,12 @@ void EgcNumberNode::deserializeAttributes(QXmlStreamReader& stream, quint32 vers
 void EgcNumberNode::serialize(QXmlStreamWriter& stream, SerializerProperties& properties)
 {
         (void)properties;
-        stream.writeCharacters(m_value);
+        QLatin1String str = EgcNodeCreator::stringize(getNodeType());
+        if (str.size() != 0) {
+                stream.writeStartElement(str);
+                stream.writeCharacters(m_value);
+                stream.writeEndElement();
+        }
 }
 
 void EgcNumberNode::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
