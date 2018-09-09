@@ -147,6 +147,9 @@ void EgcFormulaItem::mousePressEvent(QGraphicsSceneMouseEvent*event)
                 m_startPoint = pos();
                 m_movePossible = true;
         }
+        if (m_editingActivated) {
+                setCursorAt(event->pos());
+        }
 
         QGraphicsItem::mousePressEvent(event);
 }

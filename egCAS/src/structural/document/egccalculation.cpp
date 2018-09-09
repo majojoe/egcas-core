@@ -57,14 +57,15 @@ EgcCalculation::~EgcCalculation()
 
 bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly, EgcAbstractFormulaEntity* entity)
 {
-        m_list = &list;
-        m_paused = false;
-        if (entity)
-                m_entity = dynamic_cast<EgcEntity*>(entity);
         if (m_calculationRunning)
                 return false;
+        if (entity)
+                m_entity = dynamic_cast<EgcEntity*>(entity);
         if (!m_autoCalc && entity) // only if auto calculation is active
                 return false;
+
+        m_paused = false;
+        m_list = &list;
 
         m_conn->reset();
                 
