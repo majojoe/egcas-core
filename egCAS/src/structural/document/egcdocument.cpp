@@ -391,6 +391,8 @@ void EgcDocument::readFromFile(QString filename)
         properties.version = 0;
         properties.filePath = filename;
         deserialize(stream, properties);
+        // sort the list if all items are deserialized
+        m_list->sort();
 
         file.close();
 }
