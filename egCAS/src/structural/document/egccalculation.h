@@ -44,6 +44,17 @@ enum class EgcKernelErrorType {
 };
 
 /**
+ * @brief The CalcualtionState enum reflects the state of the calculation
+ */
+enum class CalcualtionState {
+        notStarted,             ///< initial state
+        paused,                 ///< has been paused e.g. when a formula is edited
+        running,                ///< calculation is running at the moment
+        restartAfterResume,     ///< e.g. after a error calculation must be restarted when calculation is resumed
+};
+
+
+/**
  * @brief The EgcCalculation class handles the calculation of the document.
  */
 class EgcCalculation : public QObject
@@ -109,7 +120,7 @@ private slots:
          */
         void nextCalculation(void);
 private:
-        Q_DISABLE_COPY(EgcCalculation);
+        Q_DISABLE_COPY(EgcCalculation)
         /**
          * @brief handleCalculation computes the calculation for the current formula
          * @param entity a reference to the formula currently computed
@@ -127,13 +138,11 @@ private:
         bool m_updateInstantly;                 ///< when true, update the view instantly, otherwise it's updated after resuming the calculation
         EgcFormulaEntity* m_result;             ///< a pointer to the formula entity that is currently being calculated
         QScopedPointer<EgcKernelParser> m_parser; ///< the parser used for parsing cas kernel output
-        bool m_calculationRunning;              ///< calculation is already running (no new one can be started)
         EgcEntity* m_entity;                    ///< pointer to entity where to pause calculation
-        bool m_paused;                          ///< calculation has been paused due to editing a formula
         bool m_autoCalc;                        ///< if false the calculation is only done when calculation is triggered manually
         bool m_waitForResult;                   ///< if true class will wait for the result of a calculation
-        bool m_restartAfterResume;              ///< restart calculation after s.th. changed in formulas
         EgcEntityList* m_list;                  ///< pointer to list
+        CalcualtionState m_state;               ///< the state of the calculation
 };
 
 #endif // EGCCALCULATION_H
