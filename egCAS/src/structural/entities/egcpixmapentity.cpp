@@ -134,6 +134,7 @@ void EgcPixmapEntity::setFilePath(QString file)
 {
         if (!m_item)
                 return;
+        m_isEmbedded = false;
 
         m_path = file;
         QPixmap pixmap(file);
@@ -149,6 +150,12 @@ void EgcPixmapEntity::setFilePath(QString file)
                 m_item->setScaleFactor(1.0/factor);
 
         m_item->setPixmap(pixmap);
+}
+
+void EgcPixmapEntity::setIsEmbedded()
+{
+        m_path = "";
+        m_isEmbedded = true;
 }
 
 void EgcPixmapEntity::itemChanged(EgcItemChangeType changeType)

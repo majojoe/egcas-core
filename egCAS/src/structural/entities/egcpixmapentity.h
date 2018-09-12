@@ -77,6 +77,10 @@ public:
          */
         void setFilePath(QString file);
         /**
+         * @brief setIsEmbedded set the pixmap as embedded pic
+         */
+        void setIsEmbedded(void);
+        /**
          * @brief getB64Encoded get the pixmap as base64 encoded text for saving in e.g. XML files
          * @return base64 encoded pixmap binary data
          */

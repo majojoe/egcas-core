@@ -49,6 +49,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QDir>
 #include <QDesktopServices>
 #include <QFileInfo>
+#include <QCheckBox>
+#include <QFileIconProvider>
 
 #define MAP_COMBO_TO_PRECISION(prec)  ((prec == 0) ? 0 : (prec + 1))
 #define MAP_PRECISION_TO_COMBO(prec)  ((prec == 0) ? 0 : (prec - 1))
@@ -179,15 +181,30 @@ void MainWindow::insertGraphic(void)
 {
         static QString directory = QDir::homePath();
         QPointF lastPos = m_document->getLastCursorPosition();
-        QString fileName = QFileDialog::getOpenFileName(this, tr("insert graphic"), directory,
-                                                        tr("Images (*.gif *.bmp *.jpg *.jpeg *.png)"));
+        QFileDialog dialog(this);
+        dialog.setOption(QFileDialog::DontUseNativeDialog, true);
+        QCheckBox *checkbox = new QCheckBox(tr("graphic is embedded in document"), &dialog);
+        dialog.layout()->addWidget(checkbox);
+        dialog.setNameFilter(tr("Images (*.gif *.bmp *.jpg *.jpeg *.png)"));
+        dialog.setFileMode(QFileDialog::ExistingFile);
+        dialog.setDirectory(directory);
+        dialog.setViewMode(QFileDialog::Detail);
+        dialog.setLabelText(QFileDialog::LookIn, tr("insert picture"));
+        dialog.exec();
+
+        QString fileName;
+        if (dialog.selectedFiles().size() > 0)
+                 fileName = dialog.selectedFiles().at(0);
 
         if (!fileName.isNull()) {
                 QFileInfo fileInfo(fileName);
                 directory = fileInfo.absolutePath();
                 EgcPixmapEntity* pixmap = static_cast<EgcPixmapEntity*>(m_document->createEntity(EgcEntityType::Picture,
-                                                                                                 lastPos));
+                                                                                            lastPos));
                 pixmap->setFilePath(fileName);
+                if (checkbox->isChecked())
+                        pixmap->setIsEmbedded();
+
         }
 }
 
