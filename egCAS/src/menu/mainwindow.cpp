@@ -181,30 +181,19 @@ void MainWindow::insertGraphic(void)
 {
         static QString directory = QDir::homePath();
         QPointF lastPos = m_document->getLastCursorPosition();
-        QFileDialog dialog(this);
-        dialog.setOption(QFileDialog::DontUseNativeDialog, true);
-        QCheckBox *checkbox = new QCheckBox(tr("graphic is embedded in document"), &dialog);
-        dialog.layout()->addWidget(checkbox);
-        dialog.setNameFilter(tr("Images (*.gif *.bmp *.jpg *.jpeg *.png)"));
-        dialog.setFileMode(QFileDialog::ExistingFile);
-        dialog.setDirectory(directory);
-        dialog.setViewMode(QFileDialog::Detail);
-        dialog.setLabelText(QFileDialog::LookIn, tr("insert picture"));
-        dialog.exec();
-
-        QString fileName;
-        if (dialog.selectedFiles().size() > 0)
-                 fileName = dialog.selectedFiles().at(0);
-
+        QString fileName = QFileDialog::getOpenFileName(this, tr("insert graphic"), directory,
+                                                        tr("Images (*.gif *.bmp *.jpg *.jpeg *.png)"));
+        QMessageBox::StandardButton button = QMessageBox::question(this, tr("embed into document?"),
+                              tr("embed graphic into document?"),
+                              QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (!fileName.isNull()) {
                 QFileInfo fileInfo(fileName);
                 directory = fileInfo.absolutePath();
                 EgcPixmapEntity* pixmap = static_cast<EgcPixmapEntity*>(m_document->createEntity(EgcEntityType::Picture,
                                                                                             lastPos));
                 pixmap->setFilePath(fileName);
-                if (checkbox->isChecked())
+                if (button == QMessageBox::Yes)
                         pixmap->setIsEmbedded();
-
         }
 }
 
