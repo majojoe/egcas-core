@@ -47,10 +47,15 @@ public:
          */
         virtual void setScaleFactor(qreal scaleFactor) = 0;
         /**
+         * @brief get the scale factor of the pixmap
+         * @return the scale Factor of the pixmap that is set
+         */
+        virtual qreal getScaleFactor(void) = 0;
+        /**
          * @brief getSize returns the size of the pixmap
          * @return the size of the pixmap as QSize
          */
-        virtual QSize getSize(void) = 0;
+        virtual QSizeF getSize(void) = 0;
         /**
          * @brief setPixmap sets the pixmap to use for the item
          * @param pixmap the pixmap to set

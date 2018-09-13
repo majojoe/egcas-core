@@ -109,7 +109,12 @@ void EgcPixmapItem::setScaleFactor(qreal scaleFactor)
         setScale(scaleFactor);
 }
 
-QSize EgcPixmapItem::getSize(void)
+qreal EgcPixmapItem::getScaleFactor()
+{
+        return scale();
+}
+
+QSizeF EgcPixmapItem::getSize(void)
 {
         return boundingRect().size().toSize();
 }

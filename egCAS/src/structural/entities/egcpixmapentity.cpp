@@ -97,7 +97,11 @@ QSizeF EgcPixmapEntity::getSize(void) const
         if (!m_item)
                 return QSizeF(0.0, 0.0);
 
-        return m_item->getSize();
+        qreal scale = m_item->getScaleFactor();
+        QSizeF size = m_item->getSize();
+        size = QSizeF(size.width() * scale, size.height() * scale);
+
+        return size;
 }
 
 void EgcPixmapEntity::setSize(QSizeF size)
@@ -208,15 +212,15 @@ void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, SerializerProperties
                         QByteArray in = stream.readElementText().toLatin1();
                         setB64Encoded(in);
                 }
-                if (attr.hasAttribute("pos_x") && attr.hasAttribute("pos_y")) {
-                        qreal x = attr.value("pos_x").toFloat();
-                        qreal y = attr.value("pos_y").toFloat();
-                        setPosition(QPointF(x, y));
-                }
                 if (attr.hasAttribute("height") && attr.hasAttribute("width")) {
                         qreal h = attr.value("height").toFloat();
                         qreal w = attr.value("width").toFloat();
                         setSize(QSizeF(w, h));
+                }
+                if (attr.hasAttribute("pos_x") && attr.hasAttribute("pos_y")) {
+                        qreal x = attr.value("pos_x").toFloat();
+                        qreal y = attr.value("pos_y").toFloat();
+                        setPosition(QPointF(x, y));
                 }
         }
 
