@@ -77,6 +77,16 @@ public:
          */
         void setFilePath(QString file);
         /**
+         * @brief set the file type of the picture. Default is PNG
+         * @param type this must be one of PNG, JPG, BMP, GIF
+         */
+        void setFileType(QString type);
+        /**
+         * @brief returns the file type of the picture
+         * @return the type of the picture (PNG, JPG, BMP, GIF)
+         */
+        QString getFileType(void) const;
+        /**
          * @brief setIsEmbedded set the pixmap as embedded pic
          */
         void setIsEmbedded(void);
@@ -126,13 +136,14 @@ public:
          * @param stream the stream to use for deserializing this class
          * @param properties object with all neccessary information for deserializing
          */
-        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override;
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override;        
 
 
 private:
         EgcAbstractPixmapItem *m_item;          ///< pointer to QGraphicsitem hold by scene
         bool m_isEmbedded;                      ///< determines if pixmap is embedded in document, or load by pathname
         QString m_path;                         ///< holds the path to the pixmap if m_isEmbedded is false
+        QString m_fileFormat;                   ///< format type of file (PNG, JPG,...)
 };
 
 #endif // EGCPIXMAPENTITY_H

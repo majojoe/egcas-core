@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QXmlStreamReader>
 #include <QCoreApplication>
 
-EgcPixmapEntity::EgcPixmapEntity(void) : m_item(nullptr)
+EgcPixmapEntity::EgcPixmapEntity(void) : m_item(nullptr), m_fileFormat{QString("PNG")}
 {
 }
 
@@ -68,6 +68,20 @@ QString EgcPixmapEntity::getFilePath(void) const
                 return m_path;
 }
 
+void EgcPixmapEntity::setFileType(QString type)
+{
+        if (    type == QString("PNG")
+             || type == QString("JPG")
+             || type == QString("BMP")
+             || type == QString("JPEG"))
+                m_fileFormat = type;
+}
+
+QString EgcPixmapEntity::getFileType() const
+{
+        return m_fileFormat;
+}
+
 QByteArray EgcPixmapEntity::getB64Encoded(void) const
 {
         if (!m_item)
@@ -77,7 +91,7 @@ QByteArray EgcPixmapEntity::getB64Encoded(void) const
         QByteArray bytes;
         QBuffer buffer(&bytes);
         buffer.open(QIODevice::WriteOnly);
-        m_item->getPixmap().save(&buffer, "PNG");
+        m_item->getPixmap().save(&buffer, m_fileFormat.toLatin1());
 
         return bytes.toBase64();
 }
@@ -86,7 +100,7 @@ bool EgcPixmapEntity::setB64Encoded(QByteArray &bytes)
 {
         //write pixmap in bytes as png format
         QByteArray out = QByteArray::fromBase64(bytes);
-        QImage image = QImage::fromData(out, "PNG");
+        QImage image = QImage::fromData(out, m_fileFormat.toLatin1());
         m_item->setPixmap(QPixmap::fromImage(image));
 
         return true;
@@ -173,6 +187,7 @@ void EgcPixmapEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &
         stream.writeAttribute("pos_y", QString("%1").arg(getPosition().y()));
         stream.writeAttribute("width", QString("%1").arg(getSize().width()));
         stream.writeAttribute("height", QString("%1").arg(getSize().height()));
+        stream.writeAttribute("format", m_fileFormat);
         if (!m_isEmbedded) {
                 QFileInfo info(properties.filePath);
                 QDir path = QDir(info.path());
@@ -191,6 +206,9 @@ void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, SerializerProperties
 
         if (stream.name() == QLatin1String("pic_entity")) {
                 QXmlStreamAttributes attr = stream.attributes();
+                if (attr.hasAttribute("format")) {
+                        setFileType(attr.value("format").toString());
+                }
                 if (attr.hasAttribute("path")) {
                         QString imageFile = attr.value("path").toString();
                         QFileInfo info(properties.filePath);
@@ -211,6 +229,7 @@ void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, SerializerProperties
                 } else {
                         QByteArray in = stream.readElementText().toLatin1();
                         setB64Encoded(in);
+                        setIsEmbedded();
                 }
                 if (attr.hasAttribute("height") && attr.hasAttribute("width")) {
                         qreal h = attr.value("height").toFloat();

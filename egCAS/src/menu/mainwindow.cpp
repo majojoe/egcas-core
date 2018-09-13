@@ -191,6 +191,15 @@ void MainWindow::insertGraphic(void)
                 directory = fileInfo.absolutePath();
                 EgcPixmapEntity* pixmap = static_cast<EgcPixmapEntity*>(m_document->createEntity(EgcEntityType::Picture,
                                                                                             lastPos));
+                QMimeDatabase db;
+                QMimeType mime = db.mimeTypeForFile(fileName, QMimeDatabase::MatchContent);
+                QString suffix = mime.preferredSuffix();
+                suffix = suffix.toUpper();
+                if (    suffix == QString("PNG")
+                     || suffix == QString("JPG")
+                     || suffix == QString("BMP")
+                     || suffix == QString("JPEG"))
+                        pixmap->setFileType(suffix);
                 pixmap->setFilePath(fileName);
                 if (button == QMessageBox::Yes)
                         pixmap->setIsEmbedded();
