@@ -37,7 +37,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 FormulaGenerator::FormulaGenerator()
 {
-#warning remove this class after it is possible to enter formulas over the user interface
 }
 
 
