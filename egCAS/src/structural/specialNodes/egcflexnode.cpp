@@ -31,9 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../egcnodecreator.h"
 #include "../visitor/egcnodevisitor.h"
 
-#ifdef EGC_PROJ_NAME
-#warning use a additional hash table for child lookup in this class if class is too slow QHash<EgcNode*, quint32> childsLookup
-#endif //#ifdef EGC_PROJ_NAME
 
 EgcFlexNode::EgcFlexNode() : m_childs(1)
 {
@@ -45,7 +42,7 @@ EgcFlexNode::EgcFlexNode(const EgcFlexNode& orig) : EgcContainerNode(orig)
         m_childs.clear();
         EgcNode *originalChild;
         quint32 i;
-        quint32 cnt = orig.m_childs.count();
+        quint32 cnt = static_cast<quint32>(orig.m_childs.count());
         QScopedPointer<EgcNode> child;
         for (i = 0; i < cnt; i++) {
                 originalChild = orig.getChild(i);
@@ -70,7 +67,7 @@ EgcFlexNode::EgcFlexNode(EgcFlexNode&& orig) : EgcContainerNode(orig)
         m_childs.clear();
         EgcNode *originalChild;
         quint32 i;
-        quint32 cnt = orig.m_childs.count();
+        quint32 cnt = static_cast<quint32>(orig.m_childs.count());
         QScopedPointer<EgcNode> child;
         for (i = 0; i < cnt; i++) {
                 originalChild = orig.getChild(i);
@@ -93,12 +90,12 @@ EgcFlexNode::EgcFlexNode(EgcFlexNode&& orig) : EgcContainerNode(orig)
 EgcFlexNode::~EgcFlexNode()
 {
         quint32 i;
-        quint32 cnt = m_childs.count();
+        quint32 cnt = static_cast<quint32>(m_childs.count());
         EgcNode* child;
 
         if (!m_childs.empty()) {
                 for (i = 0; i < cnt; i++) {
-                        child = m_childs.at(i);
+                        child = m_childs.at(static_cast<int>(i));
                         delete child;
                         child = nullptr;
                 }
@@ -111,7 +108,7 @@ EgcFlexNode::~EgcFlexNode()
 EgcFlexNode& EgcFlexNode::operator=(const EgcFlexNode &rhs)
 {
         quint32 i;
-        quint32 cnt = m_childs.count();
+        quint32 cnt = static_cast<quint32>(m_childs.count());
         EgcNode* child;
         quint32 cntRhs = rhs.getNumberChildNodes();
 
@@ -122,7 +119,7 @@ EgcFlexNode& EgcFlexNode::operator=(const EgcFlexNode &rhs)
         //delete the old content
         if (!m_childs.empty()) {
                 for (i = 0; i < cnt; i++) {
-                        child = m_childs.at(i);
+                        child = m_childs.at(static_cast<int>(i));
                         delete child;
                 }
                 m_childs.clear();
@@ -147,7 +144,7 @@ EgcFlexNode& EgcFlexNode::operator=(const EgcFlexNode &rhs)
 EgcFlexNode& EgcFlexNode::operator=(EgcFlexNode&& rhs)
 {
         quint32 i;
-        quint32 cnt = m_childs.count();
+        quint32 cnt = static_cast<quint32>(m_childs.count());
         EgcNode* child;
         quint32 cntRhs = rhs.getNumberChildNodes();
 
@@ -158,7 +155,7 @@ EgcFlexNode& EgcFlexNode::operator=(EgcFlexNode&& rhs)
         //delete the old content
         if (!m_childs.empty()) {
                 for (i = 0; i < cnt; i++) {
-                        child = m_childs.at(i);
+                        child = m_childs.at(static_cast<int>(i));
                         delete child;
                 }
                 m_childs.clear();
@@ -183,14 +180,14 @@ EgcFlexNode& EgcFlexNode::operator=(EgcFlexNode&& rhs)
 bool EgcFlexNode::valid(void)
 {
         quint32 i;
-        quint32 cnt = m_childs.count();
+        quint32 cnt = static_cast<quint32>(m_childs.count());
         EgcNode* child;
 
         if (m_childs.empty())
                 return false;
 
         for (i = 0; i < cnt; i++) {
-                child = m_childs.at(i);
+                child = m_childs.at(static_cast<int>(i));
                 if (child)
                         if (!child->valid())
                                 return false;
@@ -239,8 +236,8 @@ EgcNode* EgcFlexNode::getChild(quint32 index) const
         if (m_childs.empty())
                 return nullptr;
 
-        if (index < m_childs.count()) {
-                return m_childs.at(index);
+        if (index < static_cast<quint32>(m_childs.count())) {
+                return m_childs.at(static_cast<int>(index));
         } else {
                 return nullptr;
         }
@@ -252,32 +249,32 @@ bool EgcFlexNode::setChild(quint32 index, EgcNode& expression)
 
         QScopedPointer<const EgcNode> expr(&expression);
 
-        quint32 count = (quint32)m_childs.count();
+        quint32 count = static_cast<quint32>(m_childs.count());
         if (index >= count) {
-                m_childs.resize(index + 1);
+                m_childs.resize(static_cast<int>(index + 1));
         }
-        quint32 countNew = (quint32)m_childs.count();
+        quint32 countNew = static_cast<quint32>(m_childs.count());
 
         for (i = count; i < countNew; i++) {
-                m_childs[i] = nullptr;
+                m_childs[static_cast<int>(i)] = nullptr;
         }
 
-        if (m_childs[index]) {
-                delete m_childs[index];
+        if (m_childs[static_cast<int>(index)]) {
+                delete m_childs[static_cast<int>(index)];
         }
 
-        m_childs[index] = const_cast<EgcNode*>(expr.take());
+        m_childs[static_cast<int>(index)] = const_cast<EgcNode*>(expr.take());
 
         //set the parent also
-        if(m_childs[index])
-                m_childs[index]->provideParent(this);
+        if(m_childs[static_cast<int>(index)])
+                m_childs[static_cast<int>(index)]->provideParent(this);
 
         return true;
 }
 
 quint32 EgcFlexNode::getNumberChildNodes(void) const
 {
-        return (quint32)m_childs.count();
+        return static_cast<quint32>(m_childs.count());
 }
 
 bool EgcFlexNode::isFirstChild(EgcNode &child) const
@@ -307,15 +304,15 @@ EgcNode* EgcFlexNode::incrementToNextChild(EgcNode &previousChild) const
         (void) previousChild;
         int tempIndex = m_childs.indexOf(&previousChild);
         quint32 i;
-        quint32 index = (quint32)tempIndex;
-        quint32 nrChilds = m_childs.count();
+        quint32 index = static_cast<quint32>(tempIndex);
+        quint32 nrChilds = static_cast<quint32>(m_childs.count());
 
         if (m_childs.empty() || tempIndex < 0)
                 return nullptr;
 
         for (i = index + 1; i < nrChilds; i++) {
-                if (m_childs.at(i))
-                        return m_childs.at(i);
+                if (m_childs.at(static_cast<int>(i)))
+                        return m_childs.at(static_cast<int>(i));
         }
 
         return nullptr;
@@ -326,14 +323,14 @@ EgcNode* EgcFlexNode::decrementToPrevChild(EgcNode &previousChild) const
         (void) previousChild;
         int tempIndex = m_childs.indexOf(&previousChild);
         quint32 i;
-        quint32 index = (quint32)tempIndex;
+        quint32 index = static_cast<quint32>(tempIndex);
 
         if (m_childs.empty() || tempIndex < 0)
                 return nullptr;
 
         for (i = index - 1; i < index; i--) {
-                if (m_childs.at(i))
-                        return m_childs.at(i);
+                if (m_childs.at(static_cast<int>(i)))
+                        return m_childs.at(static_cast<int>(i));
         }
 
         return nullptr;
@@ -344,7 +341,7 @@ bool EgcFlexNode::getIndexOfChild(EgcNode& child, quint32& index) const
         if (child.getParent() == this) {
                 int ind = m_childs.indexOf(&child);
                 if (ind >= 0) {
-                        index = (quint32)ind;
+                        index = static_cast<quint32>(ind);
                         return true;
                 }
         }
@@ -360,18 +357,18 @@ bool EgcFlexNode::isFlexNode(void) const
 bool EgcFlexNode::insert(quint32 index, EgcNode& node)
 {
         bool retval = true;
-        quint32 count = (quint32)m_childs.count();
+        quint32 count = static_cast<quint32>(m_childs.count());
 
         if (index > count)
                 return false;
 
-        m_childs.insert((int)index, &node);
+        m_childs.insert(static_cast<int>(index), &node);
 
-        count = (quint32)m_childs.count();
-        if (index >= 0 && index < count) {
+        count = static_cast<quint32>(m_childs.count());
+        if (index < count) {
                 //set the parent also
-                if(m_childs[index])
-                        m_childs[index]->provideParent(this);
+                if(m_childs[static_cast<int>(index)])
+                        m_childs[static_cast<int>(index)]->provideParent(this);
         } else {
                 retval = false;
         }
@@ -381,10 +378,10 @@ bool EgcFlexNode::insert(quint32 index, EgcNode& node)
 
 bool EgcFlexNode::remove(quint32 index)
 {
-        if (index < m_childs.count()) {
-                delete m_childs.at(index);
-                m_childs[index] = nullptr;
-                m_childs.remove(index);
+        if (index < static_cast<quint32>(m_childs.count())) {
+                delete m_childs.at(static_cast<int>(index));
+                m_childs[static_cast<int>(index)] = nullptr;
+                m_childs.remove(static_cast<int>(index));
         } else {
                 return false;
         }
@@ -398,14 +395,14 @@ bool EgcFlexNode::operator==(const EgcNode& node) const
 
         if (node.isFlexNode() && this->getNodeType() == node.getNodeType()) {
                 quint32 i;
-                quint32 count = m_childs.count();
+                quint32 count = static_cast<quint32>(m_childs.count());
                 const EgcFlexNode& flexNode = static_cast<const EgcFlexNode&>(node);
-                if (flexNode.getNumberChildNodes() != m_childs.count())
+                if (flexNode.getNumberChildNodes() != static_cast<quint32>(m_childs.count()))
                         return false;
 
                 retval = true;
                 for(i = 0; i < count; i++) {
-                        EgcNode* lhs = m_childs.at(i);
+                        EgcNode* lhs = m_childs.at(static_cast<int>(i));
                         EgcNode* rhs = flexNode.getChild(i);
                         if (lhs && rhs) {
                                 if (!(*lhs == *rhs)) {
