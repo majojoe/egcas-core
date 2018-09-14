@@ -29,16 +29,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCMAXIMAVISITOR_H
 #define EGCMAXIMAVISITOR_H
 
+#include "visitorhelper.h"
 #include <QString>
 #include <QSet>
-#include "egcnodevisitor.h"
+
 
 /**
  * @brief The EgcKernelVisitor class is a visitor class for parsing the tree and output expressions formatted for the
  * used cas kernel.
  */
 
-class EgcMaximaVisitor : public EgcNodeVisitor
+class EgcMaximaVisitor : public VisitorHelper
 {
 public:
         /**

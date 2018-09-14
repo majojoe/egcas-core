@@ -48,6 +48,7 @@ set(tst_egcastest_structural_SOURCES
         ../../src/structural/entities/formulamodificator.cpp
         ../../src/structural/iterator/formulascriter.cpp
         ../../src/structural/visitor/formulascrvisitor.cpp
+        ../../src/structural/visitor/visitorhelper.cpp
         ../../src/structural/visitor/formulascrelement.cpp
         ../../src/utils/egcutfcodepoint.cpp
 )

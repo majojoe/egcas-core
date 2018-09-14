@@ -63,6 +63,7 @@ set(tst_egcas_advanced_tree_ops_SOURCES
         ../../src/structural/visitor/egcnodevisitor.cpp
         ../../src/structural/visitor/egcmaximavisitor.cpp
         ../../src/structural/visitor/egcmathmlvisitor.cpp
+        ../../src/structural/visitor/visitorhelper.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
         ../../src/structural/entities/formulamodificator.cpp
         ../../src/structural/iterator/formulascriter.cpp

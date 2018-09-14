@@ -60,6 +60,7 @@ set(tst_egcastest_parser_SOURCES
         ../../src/structural/visitor/egcmaximavisitor.cpp
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
+        ../../src/structural/visitor/visitorhelper.cpp
         ../../src/structural/specialNodes/egcbinaryoperator.cpp
         ../../src/structural/iterator/formulascriter.cpp
         ../../src/structural/entities/formulamodificator.cpp
