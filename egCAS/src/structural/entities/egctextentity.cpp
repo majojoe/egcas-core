@@ -146,7 +146,8 @@ void EgcTextEntity::setEditMode()
 void EgcTextEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
 {
         stream.writeStartElement("text_entity");
-        stream.writeAttribute("font", m_font->toString());
+        if (m_font)
+                stream.writeAttribute("font", m_font->toString());
         stream.writeAttribute("pos_x", QString("%1").arg(getPosition().x()));
         stream.writeAttribute("pos_y", QString("%1").arg(getPosition().y()));
         stream.writeCharacters(getText());

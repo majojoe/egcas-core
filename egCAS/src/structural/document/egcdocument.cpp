@@ -406,6 +406,7 @@ void EgcDocument::serialize(QXmlStreamWriter& stream, SerializerProperties &prop
         stream.writeAttribute("width", QString("%1").arg(getWidth()));
         stream.writeAttribute("height", QString("%1").arg(getHeight()));
         stream.writeAttribute("version", QString(EGCAS_VERSION));
+        stream.writeAttribute("doc_font", EgcTextEntity::getGenericFont().toString());
 
         EgcEntityList* list = getEntityList();
         QMutableListIterator<EgcEntity*> iter = list->getIterator();
@@ -425,6 +426,12 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, SerializerProperties &pr
         if (stream.readNextStartElement()) {
                 if (stream.name() == QLatin1String("document")) {
                         QXmlStreamAttributes attr = stream.attributes();
+                        if (attr.hasAttribute("doc_font")) {
+                                QString font_str = attr.value("doc_font").toString();
+                                QFont fnt;
+                                fnt.fromString(font_str);
+                                EgcTextEntity::setGenericFont(fnt);
+                        }
                         QString ver = attr.value("version").toString();
                         QStringList list = ver.split('.');
                         if (list.size() == 3) {
