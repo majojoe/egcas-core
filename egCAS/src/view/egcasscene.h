@@ -269,6 +269,11 @@ private:
          * @param rect active rectangle of the scene
          */
         void drawActiveAreaBorder(QPainter* painter, const QRectF&rect);
+        /**
+         * @brief deleteFocusedItem check if focused item shall be deleted
+         * @return true if it shall be deleted, false otherwise
+         */
+        bool deleteFocusedItem(void);
 
         egcas::Grid m_grid;                     ///< returns the grid
         EgcWorksheet m_worksheet;               ///< the worksheet we are working on

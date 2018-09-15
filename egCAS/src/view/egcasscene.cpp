@@ -450,13 +450,39 @@ bool EgCasScene::deleteItem(QGraphicsItem *item)
         return true;
 }
 
+bool EgCasScene::deleteFocusedItem(void)
+{
+        bool retval = false;
+
+        QGraphicsItem* focItem = focusItem();
+        if (focItem) {
+                if (focItem->type() == static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType)) {
+                        EgcAbstractFormulaEntity *formEntity = dynamic_cast<EgcFormulaItem*>(focItem)->getEnity();
+                        if (formEntity) {
+                                if (formEntity->aboutToBeDeleted()) {
+                                        retval = true;
+                                }
+                        }
+                }
+        }
+
+        return retval;
+}
+
 void EgCasScene::keyPressEvent(QKeyEvent* keyEvent)
 {
         int key = keyEvent->key();
         if (key == Qt::Key_Delete || key == Qt::Key_Backspace) {
                 QList<QGraphicsItem*> list = selectedItems();
                 if (list.isEmpty()) {
-                        QGraphicsScene::keyPressEvent(keyEvent);
+                        if (deleteFocusedItem()) {
+                                QGraphicsItem *focItem = focusItem();
+                                deleteItem(focItem);
+                                m_document.itemDeleted(focItem);
+                                keyEvent->accept();
+                        } else {
+                                QGraphicsScene::keyPressEvent(keyEvent);
+                        }
                 } else {
                         QGraphicsItem *item;
                         foreach (item, list) {

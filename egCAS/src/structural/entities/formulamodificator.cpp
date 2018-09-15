@@ -1744,5 +1744,4 @@ bool FormulaModificator::aboutToBeDeleted() const
                 return true;
 
         return false;
-
 }
