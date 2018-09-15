@@ -178,6 +178,7 @@ void EgcFormulaItem::setEditMode(bool edit)
                 action.m_op = EgcOperations::formulaActivated;
                 m_entity->handleAction(action);
                 m_editingActivated = true;
+                setFocus(Qt::OtherFocusReason);
                 setSelected(false);
                 EgCasScene* scn = getEgcScene();
                 if (scn) {
