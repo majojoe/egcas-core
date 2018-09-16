@@ -268,11 +268,16 @@ void EgcDocument::setAutoCalculation(bool on)
 EgcFormulaEntity* EgcDocument::getActiveFormulaEntity(void)
 {
         QList<QGraphicsItem*> list = m_scene->selectedItems();
-        if (list.empty())
-                return nullptr;
-        QGraphicsItem *item = list.at(0);
-        if (!item)
-                return nullptr;
+        QGraphicsItem *item = nullptr;
+        if (list.empty()) {
+                item = m_scene->focusItem();
+                if (!item)
+                        return nullptr;
+        } else {
+                item = list.at(0);
+                if (!item)
+                        return nullptr;
+        }
 
         EgcFormulaItem* formulaItem = dynamic_cast<EgcFormulaItem*>(item);
         if (!formulaItem)
@@ -291,11 +296,16 @@ EgcFormulaEntity* EgcDocument::getActiveFormulaEntity(void)
 EgcTextEntity* EgcDocument::getActiveTextEntity()
 {
         QList<QGraphicsItem*> list = m_scene->selectedItems();
-        if (list.empty())
-                return nullptr;
-        QGraphicsItem *item = list.at(0);
-        if (!item)
-                return nullptr;
+        QGraphicsItem *item = nullptr;
+        if (list.empty()) {
+                item = m_scene->focusItem();
+                if (!item)
+                        return nullptr;
+        } else {
+                item = list.at(0);
+                if (!item)
+                        return nullptr;
+        }
 
         EgcTextItem* textItem = dynamic_cast<EgcTextItem*>(item);
         if (!textItem)

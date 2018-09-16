@@ -145,12 +145,12 @@ void EgcTextItem::setPos(const QPointF &point)
 
 void EgcTextItem::setText(QString text)
 {
-        setHtml(text);
+        setPlainText(text);
 }
 
 QString EgcTextItem::getText(void)
 {
-        return toHtml();
+        return toPlainText();
 }
 
 EgCasScene* EgcTextItem::getEgcScene(void)
