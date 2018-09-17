@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 class QComboBox;
 class EgcDocument;
 class QToolBar;
+class EgcFormulaEntity;
 
 
 class PrecisionBox : public QWidget
@@ -60,6 +61,7 @@ private:
 
         QComboBox* m_box;
         EgcDocument* m_document;
+        EgcFormulaEntity* m_lastSelectedFormula;
 };
 
 #endif // PRECISIONBOX_H

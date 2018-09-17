@@ -74,6 +74,7 @@ private:
 
         QComboBox* m_box;
         EgcDocument* m_document;
+        EgcFormulaEntity* m_lastSelectedFormula;
 };
 
 #endif // RESULTTYPE_H
