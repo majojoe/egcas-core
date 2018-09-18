@@ -755,6 +755,8 @@ bool FormulaModificator::isAlnum(QString val) const
 {
         if (EgcAlnumNode::isAlnum(val))
                 return true;
+        if (val == ".")
+                return true;
 
         return false;
 }
