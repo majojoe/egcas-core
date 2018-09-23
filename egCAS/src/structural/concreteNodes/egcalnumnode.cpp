@@ -32,6 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "specialNodes/egccontainernode.h"
 #include "egcalnumnode.h"
 #include "utils/egcutfcodepoint.h"
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 
 //ATTENTION: as of now egCAS and even Qt does not support non bmp characters (unicode caracters > 0xFFFF)
@@ -114,6 +116,30 @@ void EgcAlnumNode::optimizeRegexes()
                 s_html_encoding_end.optimize();
                 s_validator.optimize();
                 s_alnumChecker.optimize();
+        }
+}
+
+void EgcAlnumNode::serializeAttributes(QXmlStreamWriter& stream)
+{
+        stream.writeAttribute("value", m_value);
+        if (m_firstCharMightBeNumber)
+                stream.writeAttribute("firstCharMightBeNumber", QString("true"));
+        else
+                stream.writeAttribute("firstCharMightBeNumber", QString("false"));
+}
+
+void EgcAlnumNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
+{
+        (void) stream;
+        (void) version;
+
+        if (attr.hasAttribute("value"))
+                setValue(attr.value("value").toString());
+        if (attr.hasAttribute("firstCharMightBeNumber")) {
+                if (attr.value("firstCharMightBeNumber").toString() == QString("true"))
+                        m_firstCharMightBeNumber = true;
+                else
+                        m_firstCharMightBeNumber = false;
         }
 }
 

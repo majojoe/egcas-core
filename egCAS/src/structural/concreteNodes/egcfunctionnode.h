@@ -62,7 +62,7 @@ public:
          * A variable expression is valid if the value is not empty.
          * @return true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
         /**
          * @brief setStuffedName set the stuffed function name
          * @param fncName the variable name as a string. This can include the stuffed special signs (a "_" in the
@@ -78,6 +78,19 @@ public:
          * '_3'. As a result all characters will be ASCII conform then and can be used by the calc kernel).
          */
         virtual QString getStuffedName(void);
+        /**
+         * @brief interface for serializing the attributes of a formula operation
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serializeAttributes(QXmlStreamWriter& stream) override;
+
+        /**
+         * @brief deserialize interface for deserializing the attributes of a formula operation
+         * @param stream the xml reader stream
+         * @param version the version of the stream that is to be deserialized
+         * @param attr the xml attributes provided by the parent
+         */
+        virtual void deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr) override;
 
 
 private:

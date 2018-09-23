@@ -26,9 +26,12 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include "egcnodecreator.h"
 #include <QString>
 #include <QStringBuilder>
 #include <QRegularExpression>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 #include "egcalnumnode.h"
 #include "egcvariablenode.h"
 #include "structural/specialNodes/egcemptynode.h"
@@ -158,5 +161,29 @@ bool EgcVariableNode::isOperation(void) const
 bool EgcVariableNode::isSubscriptEmptyElement()
 {
         return m_subscrIsEmpty;
+}
+
+void EgcVariableNode::serialize(QXmlStreamWriter& stream, SerializerProperties& properties)
+{
+        (void)properties;
+        QLatin1String str = EgcNodeCreator::stringize(getNodeType());
+        if (str.size() != 0) {
+                stream.writeStartElement(str);
+                if (!isSubscriptEmptyElement())
+                        stream.writeAttribute("subscript", getSubscript());
+                stream.writeCharacters(m_value);
+                stream.writeEndElement();
+        }
+}
+
+void EgcVariableNode::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
+{
+        (void) properties;
+        QXmlStreamAttributes attr = stream.attributes();
+        QString subscr;
+        if (attr.hasAttribute("subscript"))
+                subscr = attr.value("subscript").toString();
+
+        setValue(stream.readElementText(), subscr);
 }
 

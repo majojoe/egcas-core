@@ -51,8 +51,6 @@ EgcTextItem::EgcTextItem(const QPointF point, QGraphicsItem *parent) : EgcTextIt
 
 EgcTextItem::~EgcTextItem()
 {
-        if (m_entity)
-                m_entity->itemChanged(EgcItemChangeType::itemDeleted);
 }
 
 void EgcTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -90,6 +88,7 @@ void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
                 QGraphicsTextItem::mouseDoubleClickEvent(event);
         }
         m_editingActivated = true;
+        setSelected(false);
 }
 
 void EgcTextItem::setEditMode(void)
@@ -102,6 +101,7 @@ void EgcTextItem::setEditMode(void)
         setTextCursor(cursor);
         setFocus();
         m_editingActivated = true;
+        setSelected(false);
 }
 
 void EgcTextItem::focusInEvent(QFocusEvent* event)
@@ -145,12 +145,12 @@ void EgcTextItem::setPos(const QPointF &point)
 
 void EgcTextItem::setText(QString text)
 {
-        setHtml(text);
+        setPlainText(text);
 }
 
 QString EgcTextItem::getText(void)
 {
-        return toHtml();
+        return toPlainText();
 }
 
 EgCasScene* EgcTextItem::getEgcScene(void)
@@ -194,18 +194,6 @@ void EgcTextItem::keyPressEvent(QKeyEvent *keyEvent)
                 if (isAtBottom()) {
                         accepted = true;
                         scn->itemYieldsFocus(EgcSceneSnapDirection::down, *this);
-                }
-                break;
-        case Qt::Key_Delete:
-                if (!m_editingActivated || toPlainText().isEmpty()) {
-                        accepted = true;
-                        deleteCurrentItem();
-                }
-                break;
-        case Qt::Key_Backspace:
-                if (m_editingActivated && toPlainText().isEmpty()) {
-                        accepted = true;
-                        deleteCurrentItem();
                 }
                 break;
         }

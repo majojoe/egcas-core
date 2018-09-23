@@ -61,6 +61,11 @@ public:
          */
         bool deleteEntity(EgcEntity* entity);
         /**
+         * @brief deleteAll delete all contents of the list
+         * @return true if everything went well.
+         */
+        bool deleteAll(void);
+        /**
          * @brief takeEntity removes the given entity from the list and returns it (the entity is not deleted). The
          * the caller takes the ownership of the entity!!!
          * @param entity the entiy to remove from list.
@@ -87,19 +92,6 @@ public:
          * @return the parent
          */
         virtual EgcAbstractEntityList* getParent(void) override;
-        /**
-         * @brief createEntity creates an entity for the given list
-         * @param type the type of entity to create
-         * @param point the position at which to create the entity (on the scene)
-         * @return the entity created, or a nullptr if no entity could be created
-         */
-        EgcEntity* createEntity(EgcEntityType type, QPointF point);
-        /**
-         * @brief cloneEntity copy a given entity including all of its subsequent elements
-         * @param entity entity to copy
-         * @return the created entity
-         */
-        EgcEntity* cloneEntity(EgcEntity& entity2copy);
         /**
          * @brief getIterator returns an iterator that operates on the enity list
          * @return returns a list iterator

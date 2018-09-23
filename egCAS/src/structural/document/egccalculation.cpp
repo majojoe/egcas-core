@@ -36,10 +36,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcnodes.h"
 #include "casKernel/parser/egckernelparser.h"
 
+
 EgcCalculation::EgcCalculation(QObject *parent) : QObject{parent}, m_conn{new EgcMaximaConn()}, m_iterator{nullptr},
         m_kernelStarted{false}, m_computeWhenStarted{false}, m_updateInstantly{true}, m_parser{new EgcKernelParser()},
-        m_result{nullptr}, m_calculationRunning{false}, m_entity{nullptr}, m_paused{false}, m_autoCalc{true},
-        m_waitForResult{false}, m_restartAfterResume{false}
+        m_result{nullptr}, m_entity{nullptr}, m_autoCalc{true},
+        m_waitForResult{false}, m_list{nullptr}, m_state{CalcualtionState::notStarted}
 {
         
         connect(m_conn.data(), SIGNAL(resultReceived(QString)), this, SLOT(resultReceived(QString)));
@@ -57,12 +58,16 @@ EgcCalculation::~EgcCalculation()
 
 bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly, EgcAbstractFormulaEntity* entity)
 {
-        m_paused = false;
-        m_entity = entity;
-        if (m_calculationRunning)
+        if (m_state == CalcualtionState::running) {
+                m_state = CalcualtionState::restartAfterResume;
                 return false;
+        }
+        if (entity)
+                m_entity = dynamic_cast<EgcEntity*>(entity);
         if (!m_autoCalc && entity) // only if auto calculation is active
                 return false;
+
+        m_list = &list;
 
         m_conn->reset();
                 
@@ -80,10 +85,10 @@ bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly, EgcAbs
 
 bool EgcCalculation::restart(void)
 {
-        m_paused = false;
-        m_restartAfterResume = false;
-        m_iterator->toFront();
-        m_calculationRunning = false;
+        if (!m_iterator) {
+                if (m_list)
+                        m_iterator.reset(new QMutableListIterator<EgcEntity*>(m_list->getIterator()));
+        }
         if (!m_autoCalc && m_entity) // only if auto calculation is active
                 return false;
 
@@ -97,17 +102,15 @@ bool EgcCalculation::restart(void)
 
 void EgcCalculation::nextCalculation(void)
 {
-        if (!m_calculationRunning)
-                m_calculationRunning = true;
         EgcEntity* entity = nullptr;
 
         if (!m_iterator)
                 return;
         
         if (m_iterator->hasNext()) {
-                if (    (m_iterator->peekNext() != dynamic_cast<EgcEntity*>(m_entity))
-                     || m_paused) {
-                        m_paused = false;
+                if (    (m_iterator->peekNext() != m_entity)
+                     || m_state == CalcualtionState::paused) {
+                        m_state = CalcualtionState::running;
                         entity = m_iterator->next();
                         if (entity) {
                                 if (entity->getEntityType() == EgcEntityType::Formula)
@@ -118,23 +121,25 @@ void EgcCalculation::nextCalculation(void)
                                 triggerNextCalcualtion();
                         }
                 } else {
-                        m_paused = true;
+                        m_state = CalcualtionState::paused;
                 }
         } else {
-                m_calculationRunning = false;
+                m_state = CalcualtionState::notStarted;
                 m_entity = nullptr;
         }
 }
 
 void EgcCalculation::resumeCalculation(void)
 {
-        if (m_restartAfterResume) {
+        if (    m_state == CalcualtionState::restartAfterResume
+             || m_state == CalcualtionState::notStarted) {
+                m_state = CalcualtionState::notStarted;
                 m_entity = nullptr;
                 restart();
                 return;
         }
 
-        if (m_paused)
+        if (m_state == CalcualtionState::paused)
                 triggerNextCalcualtion();
 }
 
@@ -198,7 +203,6 @@ void EgcCalculation::resultReceived(QString result)
 
 void EgcCalculation::errorReceived(QString errorMsg)
 {
-        m_calculationRunning = false;
         m_waitForResult = false;
         
         if (m_result) {
@@ -213,7 +217,7 @@ void EgcCalculation::errorReceived(QString errorMsg)
         } else if (m_kernelStarted) {
                 //if an error occurred where it makes no sense to go on with calculation, wait for the user to change
                 //s.th.
-                m_restartAfterResume = true;
+                m_state = CalcualtionState::restartAfterResume;
         }
 }
 
@@ -229,7 +233,7 @@ void EgcCalculation::kernelStarted(void)
 
 void EgcCalculation::kernelTerminated(void)
 {
-        m_calculationRunning = false;
+        m_state = CalcualtionState::notStarted;
         m_waitForResult = false;
         
         emit errorOccurred(EgcKernelErrorType::kernelTerminated, tr("The CAS Kernel has terminated!"));
@@ -237,7 +241,7 @@ void EgcCalculation::kernelTerminated(void)
 
 void EgcCalculation::kernelErrorOccurred(QProcess::ProcessError error)
 {
-        m_calculationRunning = false;
+        m_state = CalcualtionState::notStarted;
         m_waitForResult = false;
 
         switch(error) {
@@ -272,8 +276,24 @@ void EgcCalculation::setAutoCalculation(bool on)
         m_autoCalc = on;
 }
 
-void EgcCalculation::deleteEntity(EgcEntity* entity)
+void EgcCalculation::startDeletingEntity(EgcEntity* entity)
 {
-        if (entity == dynamic_cast<EgcEntity*>(m_entity))
+        if (m_list)
+                m_iterator.reset(new QMutableListIterator<EgcEntity*>(m_list->getIterator()));
+        else
+                m_iterator.reset();
+        if (entity == m_entity)
                 m_entity = nullptr;
+}
+
+void EgcCalculation::reset()
+{
+        m_conn->reset();
+        m_iterator.reset();
+        m_computeWhenStarted = false;
+        m_updateInstantly = true;
+        m_result = nullptr;
+        m_entity = nullptr;
+        m_state = CalcualtionState::notStarted;
+        m_autoCalc = true;
 }

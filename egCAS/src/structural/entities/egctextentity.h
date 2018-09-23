@@ -104,7 +104,12 @@ public:
          * @brief setItem set the formula item that is associated with this entity
          * @param item the item to set (can also be a nullptr)
          */
-        void setItem(EgcAbstractTextItem* item);
+        void setItem(EgcAbstractTextItem* item) override;
+        /**
+         * @brief getItem get the formula item that is associated with this entity
+         * @param item the item that is associated with this entity (can also be a nullptr)
+         */
+        virtual EgcAbstractTextItem* getItem(void) override;
         /**
          * @brief itemChanged is called when the item that is associated with the enity has changed
          */
@@ -113,6 +118,20 @@ public:
          * @brief setEditMode sets this item in edit mode, so that the user can start to write text
          */
         void setEditMode(void);
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         * @param properties object with all neccessary information for serializing
+         */
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties& properties) override;
+
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param stream the stream to use for deserializing this class
+         * @param properties object with all neccessary information for deserializing
+         */
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override;
+
 
 private:
         EgcAbstractTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene

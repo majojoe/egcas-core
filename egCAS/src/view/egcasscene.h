@@ -154,12 +154,6 @@ public:
          */
         bool deleteItem(EgcAbstractTextItem* item);
         /**
-         * @brief deleteActiveItem deletes the item that currently has the focus. It's safe to call this from the item
-         * itsself
-         * @return true if the item could be deleted
-         */
-        bool deleteActiveItem(void);
-        /**
          * @brief moveItems moves all following (from the given point onwards) items up or down by the gridsize
          * @param moveDwn if true this moves the items downwards, upwards otherwise
          * @param point the point where onwards the movement shall be started
@@ -213,6 +207,10 @@ public:
          * @return the last cursor position
          */
         QPointF getLastCursorPositon(void);
+        /**
+         * @brief deleteAll removes all items from the scene
+         */
+        void deleteAll(void);
 
 public slots:
         /**
@@ -221,10 +219,6 @@ public slots:
          * @param action the action to route
          */
         void routeAction(EgcAction action);
-        /**
-         * @brief deleteActiveItemSlot slot for deleting item with active focus
-         */
-        void deleteActiveItemSlot(void);
 
 protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
@@ -239,7 +233,11 @@ protected:
          * @return true if successful, false otherwise
          */
         bool deleteItem(QGraphicsItem* item);
-
+        /**
+         * @brief keyPressEvent overrides key press event from QGraphicsScene
+         * @param event contains the key pressed
+         */
+        virtual void keyPressEvent(QKeyEvent *keyEvent);
 signals:
         /**
          * @brief createFormula signal that is emitted if a empty formula shall be created at the given position.
@@ -271,6 +269,11 @@ private:
          * @param rect active rectangle of the scene
          */
         void drawActiveAreaBorder(QPainter* painter, const QRectF&rect);
+        /**
+         * @brief deleteFocusedItem check if focused item shall be deleted
+         * @return true if it shall be deleted, false otherwise
+         */
+        bool deleteFocusedItem(void);
 
         egcas::Grid m_grid;                     ///< returns the grid
         EgcWorksheet m_worksheet;               ///< the worksheet we are working on

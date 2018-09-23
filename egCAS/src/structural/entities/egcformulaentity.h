@@ -51,7 +51,6 @@ class AbstractKernelParser;
  */
 enum class EgcNumberResultType
 {
-        NotApplicable = 0,      ///< if this is not applicable
         StandardType,           ///< unchanged behaviour of the result
         IntegerType,            ///< result will be an integer
         EngineeringType,        ///< result will be of engineering type (exponent a multiple of 3)
@@ -221,6 +220,11 @@ public:
          */
         void setItem(EgcAbstractFormulaItem* item) override;
         /**
+         * @brief getItem get the formula item that is associated with this entity
+         * @param item the item that is associated with this entity (can also be a nullptr)
+         */
+        virtual EgcAbstractFormulaItem* getItem(void) override;
+        /**
          * @brief getItem returns a pointer to the item in the scene
          * @return pointer to item in scene
          */
@@ -317,6 +321,26 @@ public:
          * @return true if formula is active, false otherwise.
          */
         bool isActive(void) const;
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         * @param properties object with all neccessary information for serializing
+         */
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties& properties) override;
+
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param stream the stream to use for serializing this class
+         * @param properties object with all neccessary information for deserializing
+         */
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override;
+        /**
+         * @brief aboutToBeDeleted checks if item is about to be deleted, e.g. if a formula is empty and one hits del
+         * key this function will return true, and false otherwise
+         * @return true if pressing del or backspace shall delete the item
+         */
+        virtual bool aboutToBeDeleted(void) const override;
+
 
 private:
         /**

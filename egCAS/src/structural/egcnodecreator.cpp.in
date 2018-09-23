@@ -1,0 +1,129 @@
+/*Copyright (c) 2014, Johannes Maier <maier_jo@gmx.de>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of egCAS nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+
+#include "egcnodecreator.h"
+#include "egcnodes.h"
+
+EgcNode* EgcNodeCreator::create(EgcNodeType type)
+{
+        EgcNode *retval;
+        switch (type) {
+
+        /*[[[cog
+        import cog
+        import sys
+        sys.path.append(PythonHelper)
+        import python_helper as hlp
+
+        nodes = hlp.find_nodes_in_dir(BaseDirToSearch, "structural")
+        nodes = hlp.flatten(nodes)
+
+        for node in nodes:
+            if node[1] != "NodeUndefined":
+                cog.outl("case EgcNodeType::%s:" % node[1])
+                cog.outl("        retval = new (std::nothrow) %s();" % node[0])
+                cog.outl("        break;")
+
+        ]]]*/
+        //[[[end]]]
+        //The list is generated automatically. Do NOT change it manually.
+
+        case EgcNodeType::BaseNode:
+                retval = new (std::nothrow) EgcBaseNode();
+                break;
+        default: //EgcNodeType::NodeUndefined
+                qDebug("The implementation of this function is not complete, Please provide an implementation for the newly added EgcNodeType.");
+                retval = nullptr;
+                break;
+        }
+
+        return retval;
+}
+
+EgcNode*EgcNodeCreator::create(QLatin1String name)
+{
+        EgcNode *retval = nullptr;
+
+        /*[[[cog
+        import cog
+        import sys
+        sys.path.append(PythonHelper)
+        import python_helper as hlp
+
+        nodes = hlp.find_nodes_in_dir(BaseDirToSearch, "structural")
+        nodes = hlp.flatten(nodes)
+
+        for node in nodes:
+            if node[1] != "NodeUndefined":
+                cog.outl("if (name == QLatin1String(\"" + node[1].lower() + "\"))")
+                cog.outl("        retval = new (std::nothrow) %s();" % node[0])
+
+        ]]]*/
+        //[[[end]]]
+        //The list is generated automatically. Do NOT change it manually.
+
+        if (name == QLatin1String("basenode"))
+                retval = new (std::nothrow) EgcBaseNode();
+
+
+        return retval;
+}
+
+QLatin1String EgcNodeCreator::stringize(EgcNodeType type)
+{
+        QLatin1String retval = QLatin1String("");
+
+        switch (type) {
+
+        /*[[[cog
+        import cog
+        import sys
+        sys.path.append(PythonHelper)
+        import python_helper as hlp
+
+        nodes = hlp.find_nodes_in_dir(BaseDirToSearch, "structural")
+        nodes = hlp.flatten(nodes)
+
+        for node in nodes:
+            if node[1] != "NodeUndefined":
+                cog.outl("case EgcNodeType::%s:" % node[1])
+                cog.outl("        retval = QLatin1String(\"" + node[1].lower() + "\");")
+                cog.outl("        break;")
+
+        ]]]*/
+        //[[[end]]]
+        //The list is generated automatically. Do NOT change it manually.
+
+        case EgcNodeType::BaseNode:
+                retval = QLatin1String("basenode");
+                break;
+        }
+
+        return retval;
+
+}

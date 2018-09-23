@@ -43,8 +43,8 @@ QRegularExpression EgcFormulaItem::s_alnumKeyFilter = QRegularExpression("[._0-9
 bool EgcFormulaItem::s_regexInitialized = false;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
-    QGraphicsItem{parent}, m_posChanged{false}, m_contentChanged{false}, m_entity{nullptr},
-    m_startPoint{QPointF(0.0, 0.0)}, m_movePossible{false}
+    QGraphicsItem{parent}, m_entity{nullptr}, m_posChanged{false}, m_contentChanged{false},
+    m_startPoint{QPointF(0.0, 0.0)}, m_movePossible{false}, m_editingActivated{false}
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         m_mathMlDoc.reset(new EgMathMLDocument());
@@ -89,7 +89,7 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
         QVector<EgRenderingPosition> positions = m_mathMlDoc->getRenderingPositions();
         m_screenPos->setPositions(positions);
 
-        if (isSelected()) {
+        if (hasFocus()) {
 #ifdef DEBUG_SCENE_RENDERING_POS
                 QVector<EgRenderingPosition> renderingPosition = m_mathMlDoc->getRenderingPositions();
 
@@ -118,7 +118,7 @@ void EgcFormulaItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
                 painter->drawRect( formulaRect );
                 painter->restore();
                 
-                //if the formula is selected, send a notification change
+                //if the formula has focus, send a notification change
                 if (m_entity) {
                         if (m_contentChanged) {
                                 m_contentChanged = false;
@@ -143,10 +143,12 @@ void EgcFormulaItem::setFormulaText(const QString &formula)
 
 void EgcFormulaItem::mousePressEvent(QGraphicsSceneMouseEvent*event)
 {        
-        setCursorAt(event->pos());
         if (!m_movePossible) {
                 m_startPoint = pos();
                 m_movePossible = true;
+        }
+        if (m_editingActivated) {
+                setCursorAt(event->pos());
         }
 
         QGraphicsItem::mousePressEvent(event);
@@ -155,7 +157,6 @@ void EgcFormulaItem::mousePressEvent(QGraphicsSceneMouseEvent*event)
 void EgcFormulaItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 {
         m_movePossible = false;
-        QGraphicsItem::mouseReleaseEvent(event);
         if (m_posChanged) {
                 m_posChanged = false;
                 //signal entity that item position has changed
@@ -163,6 +164,52 @@ void EgcFormulaItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
                         m_entity->itemChanged(EgcItemChangeType::posChanged);
         }
 
+        QGraphicsItem::mouseReleaseEvent(event);
+        if (m_editingActivated)
+                setSelected(false);
+}
+
+void EgcFormulaItem::setEditMode(bool edit)
+{
+        if (edit) {
+                if (!m_entity)
+                        return;
+                EgcAction action;
+                action.m_op = EgcOperations::formulaActivated;
+                m_entity->handleAction(action);
+                m_editingActivated = true;
+                setFocus(Qt::OtherFocusReason);
+                setSelected(false);
+                EgCasScene* scn = getEgcScene();
+                if (scn) {
+                        scn->document().startCalulation(m_entity);
+                }
+        } else {
+                if (!m_entity)
+                        return;
+                EgcAction action;
+                action.m_op = EgcOperations::formulaDeactivated;
+                m_entity->handleAction(action);
+                EgCasScene* scn = getEgcScene();
+                if (scn) {
+                        scn->hideFormulaCursors();
+                        scn->document().resumeCalculation();
+                }
+                m_editingActivated = false;
+        }
+}
+
+void EgcFormulaItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
+{
+        if (!m_editingActivated) {
+                clearFocus();
+                setFocus(Qt::OtherFocusReason);
+                setEditMode(true);
+                setCursorAt(event->pos());
+                event->accept();
+        }
+
+        QGraphicsItem::mouseDoubleClickEvent(event);
 }
 
 void EgcFormulaItem::setCursorAt(QPointF pos)
@@ -189,16 +236,6 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
                         return snap(point);
                 } else {
                         return m_startPoint;
-                }
-        } else if (change == ItemSelectedHasChanged) {
-                bool selected = value.toBool();
-                if (selected) {
-                        if (scn)
-                                scn->document().startCalulation(m_entity);
-                } else {
-                        if (scn) {
-                                scn->document().resumeCalculation();
-                        }
                 }
         }
 
@@ -248,29 +285,29 @@ const EgcScreenPos& EgcFormulaItem::getScreenPos(void) const
 
 void EgcFormulaItem::focusInEvent(QFocusEvent * event)
 {
-        if (event->reason() == Qt::ActiveWindowFocusReason)
+        if (event->reason() == Qt::ActiveWindowFocusReason) {
+                setSelected(false);
                 return;
-        if (!m_entity)
-                return;
-        EgcAction action;
-        action.m_op = EgcOperations::formulaActivated;
-        m_entity->handleAction(action);
-        EgCasScene* scn = getEgcScene();
+        }
+        if (event->reason() == Qt::OtherFocusReason) {
+                setEditMode(true);
+                event->accept();
+        }
+
+        QGraphicsItem::focusInEvent(event);
 }
 
 void EgcFormulaItem::focusOutEvent(QFocusEvent * event)
 {
         if (event->reason() == Qt::ActiveWindowFocusReason)
                 return;
-        if (!m_entity)
-                return;
-        EgcAction action;
-        action.m_op = EgcOperations::formulaDeactivated;
-        m_entity->handleAction(action);
-        EgCasScene* scn = getEgcScene();
-        if (scn) {
-                scn->hideFormulaCursors();
+
+        if (m_editingActivated) {
+                setEditMode(false);
+                event->accept();
         }
+
+        QGraphicsItem::focusOutEvent(event);
 }
 
 void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
@@ -313,7 +350,7 @@ void EgcFormulaItem::keyPressEvent(QKeyEvent * event)
 
 void EgcFormulaItem::keyReleaseEvent(QKeyEvent * event)
 {
-
+        (void) event;
 }
 
 void EgcFormulaItem::showUnderline(quint32 mathmlId)
@@ -420,11 +457,9 @@ void EgcFormulaItem::keyCursorKeyHandler(QKeyEvent *keyEvent)
 void EgcFormulaItem::selectFormula(bool selected)
 {
         if (selected) {
-                setSelected(true);
-                setFocus();
+                setEditMode(true);
         } else {
-                setSelected(false);
-                clearFocus();
+                setEditMode(false);
         }
 }
 

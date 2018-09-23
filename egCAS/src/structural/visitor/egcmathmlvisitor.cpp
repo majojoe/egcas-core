@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "../egcnodes.h"
 #include "egcmathmlvisitor.h"
 
-EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor{formula},
+EgcMathMlVisitor::EgcMathMlVisitor(EgcFormulaEntity& formula) : VisitorHelper{formula},
                                                                 m_prettyPrint{true},
                                                                 m_idCounter{1},
                                                                 m_lookup(formula.getMathmlMappingRef()) //gcc bug
@@ -414,5 +414,5 @@ EgcNode* EgcMathMlVisitor::getChildToSuppress(const EgcNode* node, quint32 index
         if (!m_prettyPrint)
                 return nullptr;
 
-        return EgcNodeVisitor::getChildToSuppress(node, index);
+        return VisitorHelper::getChildToSuppress(node, index);
 }

@@ -48,13 +48,13 @@ public:
          * @brief getValue returns the variable name (without subscript)
          * @return the variable name
          */
-        virtual QString getValue(void) const;
+        virtual QString getValue(void) const override;
         /**
          * @brief valid returns true if the expression is valid and false otherwise.
          * A variable expression is valid if the value is not empty.
          * @return true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
         /**
          * @brief isEmptyValue checks if the given string is an empty value
          * @param value the value to check
@@ -66,6 +66,20 @@ public:
          * @return returns the empty value
          */
         static QString getEmptyValue(void);
+        /**
+         * @brief interface for serializing the attributes of a formula operation
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serializeAttributes(QXmlStreamWriter& stream) override;
+
+        /**
+         * @brief deserialize interface for deserializing the attributes of a formula operation
+         * @param stream the xml reader stream
+         * @param version the version of the stream that is to be deserialized
+         * @param attr the xml attributes provided by the parent
+         */
+        virtual void deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr) override;
+
 private:
         /**
          * @brief setValue set the variable name (value)

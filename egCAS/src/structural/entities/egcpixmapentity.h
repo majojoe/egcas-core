@@ -77,10 +77,30 @@ public:
          */
         void setFilePath(QString file);
         /**
+         * @brief set the file type of the picture. Default is PNG
+         * @param type this must be one of PNG, JPG, BMP, GIF
+         */
+        void setFileType(QString type);
+        /**
+         * @brief returns the file type of the picture
+         * @return the type of the picture (PNG, JPG, BMP, GIF)
+         */
+        QString getFileType(void) const;
+        /**
+         * @brief setIsEmbedded set the pixmap as embedded pic
+         */
+        void setIsEmbedded(void);
+        /**
          * @brief getB64Encoded get the pixmap as base64 encoded text for saving in e.g. XML files
          * @return base64 encoded pixmap binary data
          */
         QByteArray getB64Encoded(void) const;
+        /**
+         * @brief setB64Encoded set pixmap from B64 encoded byte array
+         * @param bytes a reference to the byte array that contains png data
+         * @return true if the conversion succeeded, false otherwise
+         */
+        bool setB64Encoded(QByteArray &bytes);
         /**
          * @brief getSize returns the size of the pixmap
          * @return the size of the pixmap in the document
@@ -97,14 +117,33 @@ public:
          */
         void setItem(EgcAbstractPixmapItem* item);
         /**
+         * @brief getItem get the formula item that is associated with this entity
+         * @param item the item that is associated with this entity (can also be a nullptr)
+         */
+        virtual EgcAbstractPixmapItem* getItem(void) override;
+        /**
          * @brief itemChanged is called when the item that is associated with the enity has changed
          */
         virtual void itemChanged(EgcItemChangeType changeType) override;
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         * @param properties object with all neccessary information for serializing
+         */
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties& properties) override;
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param stream the stream to use for deserializing this class
+         * @param properties object with all neccessary information for deserializing
+         */
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override;        
+
 
 private:
         EgcAbstractPixmapItem *m_item;          ///< pointer to QGraphicsitem hold by scene
         bool m_isEmbedded;                      ///< determines if pixmap is embedded in document, or load by pathname
         QString m_path;                         ///< holds the path to the pixmap if m_isEmbedded is false
+        QString m_fileFormat;                   ///< format type of file (PNG, JPG,...)
 };
 
 #endif // EGCPIXMAPENTITY_H

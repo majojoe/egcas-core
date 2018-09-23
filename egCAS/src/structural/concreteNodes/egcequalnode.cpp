@@ -27,6 +27,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcequalnode.h"
+#include "../egcnodecreator.h"
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 EgcEqualNode::EgcEqualNode()
 {
@@ -40,3 +43,22 @@ bool EgcEqualNode::valid()
 
         return false;
 }
+
+void EgcEqualNode::serialize(QXmlStreamWriter& stream, SerializerProperties& properties)
+{
+        EgcNode* node;
+        QLatin1String str = EgcNodeCreator::stringize(getNodeType());
+        stream.writeStartElement(str);
+        serializeAttributes(stream);
+
+        node = getChild(0);
+        if (node)
+                node->serialize(stream, properties);
+
+        //write empty element to file
+        stream.writeStartElement("emptynode");
+        stream.writeEndElement();
+
+        stream.writeEndElement();
+}
+

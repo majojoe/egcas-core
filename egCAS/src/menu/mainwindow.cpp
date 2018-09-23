@@ -47,10 +47,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QComboBox>
 #include <QFileDialog>
 #include <QDir>
-
-#warning remove this after formula input via user interface is available
-#include "formulagenerator.h"
-
+#include <QDesktopServices>
+#include <QFileInfo>
+#include <QCheckBox>
+#include <QFileIconProvider>
 
 #define MAP_COMBO_TO_PRECISION(prec)  ((prec == 0) ? 0 : (prec + 1))
 #define MAP_PRECISION_TO_COMBO(prec)  ((prec == 0) ? 0 : (prec - 1))
@@ -68,57 +68,9 @@ MainWindow::MainWindow(QWidget *parent) :
     setupToolbar();
     setupElementBar();
 
-//    //add some formulas
-//    EgcFormulaEntity* formula1 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 480.0)));
-//    FormulaGenerator::getFormulaTree(formula1, "_{sqrt(1+_root(3,2 + _root(5,3+ _root(7,4+ _root(11,5+_root(13,6+_root(17,7+_root(19,A))))))))_}/_{ⅇ^π_}=x^‴");
-//    EgcFormulaEntity* formula2 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 350.0)));
-//    FormulaGenerator::getFormulaTree(formula2, "_{-1+sqrt(5)_}/_{2_}=_empty");
-//    formula2->setNumberResultType(EgcNumberResultType::ScientificType);
-//    formula2->setNumberOfSignificantDigits(4);
-    
-//    EgcFormulaEntity* formula3 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(330.0, 300.0)));
-//    FormulaGenerator::getFormulaTree(formula3, "(1+38)=_empty");
-//    formula3->setNumberResultType(EgcNumberResultType::EngineeringType);
-
-//    EgcFormulaEntity* formula4 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 610.0)));
-//    FormulaGenerator::getFormulaTree(formula4, "z_120:_{x-1_}/_{x+5_}");
-
-//    EgcFormulaEntity* formula5 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 670.0)));
-//    FormulaGenerator::getFormulaTree(formula5, "_integrate(z_120,x)=_empty");
-    
-//    EgcFormulaEntity* formula6 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(650.0, 670.0)));
-//    FormulaGenerator::getFormulaTree(formula6, "_integrate(0,10,z_120,x)=_empty");
-
-//    EgcFormulaEntity* formula7 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 760.0)));
-//    FormulaGenerator::getFormulaTree(formula7, "_diff(1,z_120,x,1)=_empty");
-
-//    EgcFormulaEntity* formula8 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(650.0, 760.0)));
-//    FormulaGenerator::getFormulaTree(formula8, "_diff(3,z_120,x,3)=_empty");
-
-//    EgcFormulaEntity* formula9 = static_cast<EgcFormulaEntity*>(m_document->createEntity(EgcEntityType::Formula,
-//                                                                                         QPointF(250.0, 830.0)));
-//    FormulaGenerator::getFormulaTree(formula9, "_diff(0,z_120,x,5)=_empty");
-
-//    //add a text item
-//    EgcTextEntity* text = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text,
-//                                                                               QPointF(60.0, 30.0)));
-//    QFont font_text(QString("Century Schoolbook L"));
-//    font_text.setPointSize(50);
-//    text->setFont(font_text);
-//    text->setText("This is a test text");
-
-//    //add a pixmap item
-//    EgcPixmapEntity* pixmap = static_cast<EgcPixmapEntity*>(m_document->createEntity(EgcEntityType::Picture,
-//                                                                                     QPointF(750.0, 180.0)));
-//    pixmap->setFilePath(":res/plane.png");
+#ifdef LOAD_EGCAS_EXAMPLES_FILE
+    m_document->readFromFile(LOAD_EGCAS_EXAMPLES_FILE);
+#endif //#ifdef LOAD_EGCAS_EXAMPLES_FILE
 
     QRectF rect(0,0,2100, 2900);    
     m_document->getScene()->setSceneRect(rect);
@@ -138,11 +90,31 @@ void MainWindow::showLicense(void)
         licenseInfo.exec();
 }
 
+void MainWindow::showManual(void)
+{
+        QString manual;
+#if defined( Q_OS_WIN )
+        manual = QFileInfo(QCoreApplication::applicationFilePath()).absolutePath() + "\\doc\\manual.pdf";
+#endif //#if defined( Q_OS_WIN )
+
+#if defined( Q_OS_LINUX )
+        manual = EGCAS_MANUAL_INSTALL_PATH_LINUX;
+#endif //#if defined( Q_OS_LINUX )
+        if (QFile::exists(EGCAS_MANUAL_INSTALL_PATH_DEV))
+                QDesktopServices::openUrl(QUrl::fromLocalFile(EGCAS_MANUAL_INSTALL_PATH_DEV));
+        else if (QFile::exists(manual))
+                QDesktopServices::openUrl(QUrl::fromLocalFile(manual));
+}
+
 void MainWindow::showInfo(void)
 {
         QMessageBox msgBox;
 
-        msgBox.setText(QString(tr("Version: ")) + QString(EGCAS_VERSION) + QString(" (pre-alpha - non-production)"));
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdate-time"
+        msgBox.setText(QString(tr("Version: ")) + QString(EGCAS_VERSION) + QString(tr(" (pre-alpha - non-production)\n"))
+                       + QString(tr("Build Date: ")) + QString("%1 %2").arg(__DATE__).arg(__TIME__));
+#pragma clang diagnostic pop
         msgBox.exec();
 }
 
@@ -172,6 +144,10 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_new_page, SIGNAL(triggered()), this, SLOT(newPage()));
         connect(m_ui->mnu_insert_graphic, SIGNAL(triggered()), this, SLOT(insertGraphic()));
         connect(m_ui->mnu_insert_text, SIGNAL(triggered()), this, SLOT(insertText()));
+        connect(m_ui->mnu_saveFileAs, SIGNAL(triggered()), this, SLOT(saveFileAs()));
+        connect(m_ui->mnu_load_file, SIGNAL(triggered()), this, SLOT(loadFile()));
+        connect(m_ui->mnu_saveFile, SIGNAL(triggered()), this, SLOT(saveFile()));
+        connect(m_ui->mnu_manual, SIGNAL(triggered()), this, SLOT(showManual()));
 }
 
 void MainWindow::setupToolbar()
@@ -207,13 +183,26 @@ void MainWindow::insertGraphic(void)
         QPointF lastPos = m_document->getLastCursorPosition();
         QString fileName = QFileDialog::getOpenFileName(this, tr("insert graphic"), directory,
                                                         tr("Images (*.gif *.bmp *.jpg *.jpeg *.png)"));
-
+        QMessageBox::StandardButton button = QMessageBox::question(this, tr("embed into document?"),
+                              tr("embed graphic into document?"),
+                              QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (!fileName.isNull()) {
                 QFileInfo fileInfo(fileName);
                 directory = fileInfo.absolutePath();
                 EgcPixmapEntity* pixmap = static_cast<EgcPixmapEntity*>(m_document->createEntity(EgcEntityType::Picture,
-                                                                                                 lastPos));
+                                                                                            lastPos));
+                QMimeDatabase db;
+                QMimeType mime = db.mimeTypeForFile(fileName, QMimeDatabase::MatchContent);
+                QString suffix = mime.preferredSuffix();
+                suffix = suffix.toUpper();
+                if (    suffix == QString("PNG")
+                     || suffix == QString("JPG")
+                     || suffix == QString("BMP")
+                     || suffix == QString("JPEG"))
+                        pixmap->setFileType(suffix);
                 pixmap->setFilePath(fileName);
+                if (button == QMessageBox::Yes)
+                        pixmap->setIsEmbedded();
         }
 }
 
@@ -225,4 +214,43 @@ void MainWindow::insertText(void)
                                                                                                  lastPos));
         txt->setEditMode();
 
+}
+
+void MainWindow::saveFileAs(void)
+{
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"), ".", tr("EgCAS files (*.egc)"));
+        if (fileName.isEmpty())
+                return;
+        if (QFileInfo::exists(fileName)) {
+                QMessageBox::StandardButton ret = QMessageBox::warning(this, tr("File exists"),
+                                                                       tr("File already exists. Overwrite?"),
+                                                                       QMessageBox::Ok | QMessageBox::Cancel,
+                                                                       QMessageBox::Cancel);
+                if (ret == QMessageBox::Cancel)
+                        return;
+        }
+
+        m_currentFileName = fileName;
+
+        m_document->saveToFile(fileName);
+}
+
+void MainWindow::saveFile(void)
+{
+        if (m_currentFileName.isEmpty()) {
+                saveFileAs();
+        } else {
+                m_document->saveToFile(m_currentFileName);
+        }
+}
+
+void MainWindow::loadFile(void)
+{
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), ".", tr("EgCAS files (*.egc)"));
+        if (fileName.isEmpty())
+                return;
+        m_currentFileName = fileName;
+
+        m_document->readFromFile(fileName);
+        calculate();
 }

@@ -34,6 +34,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class EgcContainerNode;
 class EgcNodeVisitor;
+class QXmlStreamWriter;
+class QXmlStreamReader;
+class QXmlStreamAttributes;
+class SerializerProperties;
 
 /**
  * @brief describes which side of the node is meant 
@@ -48,9 +52,9 @@ enum class EgcNodeSide
  * changed in a subclass */
 #define EGC_SET_EXPRESSION_TYPE(classname, type)                                                                       \
 public:                                                                                                                \
-        virtual EgcNodeType getNodeType(void) const {return s_nodeType;}                                               \
-        virtual QString getNodeName(void) const {return QString(#type);}                                               \
-        virtual EgcNode* copy(void) {                                                                                  \
+        virtual EgcNodeType getNodeType(void) const override {return s_nodeType;}                                      \
+        virtual QString getNodeName(void) const override {return QString(#type);}                                      \
+        virtual EgcNode* copy(void) override {                                                                         \
                 return new (std::nothrow) classname(static_cast<const classname&>(*this));                             \
         }                                                                                                              \
         static EgcNode* create(void) {return new (std::nothrow) classname();}                                          \
@@ -136,6 +140,31 @@ public:
          * @return true if the node is an operation, false otherwise
          */
         virtual bool isOperation(void) const;
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties &properties) ;
+
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param stream the xml reader stream
+         * @param version the version of the stream that is to be deserialized
+         */
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties);
+        /**
+         * @brief interface for serializing the attributes of a formula operation
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serializeAttributes(QXmlStreamWriter& stream) ;
+
+        /**
+         * @brief deserialize interface for deserializing the attributes of a formula operation
+         * @param stream the xml reader stream
+         * @param version the version of the stream that is to be deserialized
+         * @param attr the xml attributes provided by the parent
+         */
+        virtual void deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr);
 
 protected:
 

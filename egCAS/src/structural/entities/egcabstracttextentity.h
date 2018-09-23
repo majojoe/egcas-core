@@ -45,6 +45,11 @@ public:
          */
         virtual void setItem(EgcAbstractTextItem* item) = 0;
         /**
+         * @brief getItem get the formula item that is associated with this entity
+         * @param item the item that is associated with this entity (can also be a nullptr)
+         */
+        virtual EgcAbstractTextItem* getItem(void) = 0;
+        /**
          * @brief getEntityFont returns the base font of all texts in a document
          * @return the base font of all texts
          */

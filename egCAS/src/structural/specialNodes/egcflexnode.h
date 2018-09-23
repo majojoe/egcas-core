@@ -82,7 +82,7 @@ public:
          * 1 (the index starts at 0)
          * @return a pointer to the child at the index position
          */
-        virtual EgcNode* getChild(quint32 index) const;
+        virtual EgcNode* getChild(quint32 index) const override;
         /**
          * @brief setChild set the given expression as a child at position index. Takes ownership of the node given,
          * even if setting the child failed (the given node will be deleted in this case).
@@ -91,14 +91,14 @@ public:
          * @param expression the expression to set as child.
          * @return true if everything went well, false if index is > getNumberChildNodes() - 1
          */
-        virtual bool setChild(quint32 index, EgcNode& expression);
+        virtual bool setChild(quint32 index, EgcNode& expression) override;
         /**
          * @brief getNumberChildNodes returns the number of child nodes a container can have. Even the childs that are
          * null are counted in this context. Only the possibility to hold a number of childs counts. E.g. a binary
          * expression will always return 2 even if one or both of the child pointers are null.
          * @return the number of childs a container can hold.
          */
-        virtual quint32 getNumberChildNodes(void) const;
+        virtual quint32 getNumberChildNodes(void) const override;
         /**
          * @brief isFirstChild checks if the given node is the first (not the second or third) child of the current node.
          * @param child the child to check wether it is the first child the current parent holds.
@@ -166,7 +166,7 @@ protected:
          * @brief notifyContainerOnChildDeletion notifies a parent (container type) about deletion of (one) of its childs
          * @param child a pointer to the child that will be deleted soon
          */
-        virtual void notifyContainerOnChildDeletion(EgcNode* child);
+        virtual void notifyContainerOnChildDeletion(EgcNode* child) override;
         /**
          * @brief adjustChildPointers adjust the child pointers of the current object to point to the new child given.
          * ATTENTION: It is very unlikely that you will need this function outside the container classes.

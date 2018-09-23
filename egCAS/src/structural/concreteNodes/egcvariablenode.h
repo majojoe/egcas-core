@@ -109,6 +109,18 @@ public:
          * @return true if it contains an empty element, false otherwise
          */
         bool isSubscriptEmptyElement(void);
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         * @param properties object with all neccessary information for serializing
+         */
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties& properties) override;
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param stream the stream to use for deserializing this class
+         * @param properties object with all neccessary information for deserializing
+         */
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override;
 
 protected:
 

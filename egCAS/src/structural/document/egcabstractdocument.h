@@ -33,6 +33,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class EgcAbstractFormulaEntity;
 class EgcEntity;
+class QGraphicsItem;
+class QSizeF;
+class QPointF;
 
 class EgcAbstractDocument 
 {
@@ -44,7 +47,7 @@ public:
          * @param formula the formula to delete
          * @return true if everything went well, false otherwise
          */
-        virtual bool deleteFormula(EgcAbstractFormulaEntity* formula) = 0;
+        virtual bool formulaEntityDeleted(EgcEntity* formula) = 0;
         /**
          * @brief deleteEntity Delete the given entity. This can be called from the entity itself.
          * @param entity the entity to delete
@@ -71,6 +74,12 @@ public:
          * @return the maximum size the item can have
          */
         virtual QSizeF getMaxItemSize(QPointF point) const = 0;
+        /**
+         * @brief itemDeleted is called by the scene if an item has been deleted
+         * @param item the item that has been deleted
+         */
+        virtual void itemDeleted(QGraphicsItem* item) = 0;
+
 };
 
 #endif //#ifndef EGCABSTRACTDOCUMENT_H

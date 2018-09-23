@@ -6,3 +6,4 @@ calculator.svg                          openclipart.org    Creative Commons Zero
 egcas.svg                               jm
 insert_graphic.svg                      openclipart.org    Creative Commons Zero 1.0 License.
 insert_text.svg                         openclipart.org    Creative Commons Zero 1.0 License.
+save.svg                                openclipart.org    Creative Commons Zero 1.0 License.

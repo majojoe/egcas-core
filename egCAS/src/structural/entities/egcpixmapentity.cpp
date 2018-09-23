@@ -31,11 +31,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QByteArray>
 #include <QString>
 #include <QBuffer>
+#include <QDir>
 #include "egcpixmapentity.h"
 #include "egcabstractpixmapitem.h"
 #include "document/egcabstractdocument.h"
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
+#include <QCoreApplication>
 
-EgcPixmapEntity::EgcPixmapEntity(void) : m_item(nullptr)
+EgcPixmapEntity::EgcPixmapEntity(void) : m_item(nullptr), m_fileFormat{QString("PNG")}
 {
 }
 
@@ -45,7 +49,7 @@ EgcPixmapEntity::~EgcPixmapEntity()
 
 EgcEntityType EgcPixmapEntity::getEntityType(void) const
 {
-        return EgcEntityType::Text;
+        return EgcEntityType::Picture;
 }
 
 QPointF EgcPixmapEntity::getPosition(void) const
@@ -64,6 +68,20 @@ QString EgcPixmapEntity::getFilePath(void) const
                 return m_path;
 }
 
+void EgcPixmapEntity::setFileType(QString type)
+{
+        if (    type == QString("PNG")
+             || type == QString("JPG")
+             || type == QString("BMP")
+             || type == QString("JPEG"))
+                m_fileFormat = type;
+}
+
+QString EgcPixmapEntity::getFileType() const
+{
+        return m_fileFormat;
+}
+
 QByteArray EgcPixmapEntity::getB64Encoded(void) const
 {
         if (!m_item)
@@ -73,9 +91,19 @@ QByteArray EgcPixmapEntity::getB64Encoded(void) const
         QByteArray bytes;
         QBuffer buffer(&bytes);
         buffer.open(QIODevice::WriteOnly);
-        m_item->getPixmap().save(&buffer, "PNG");
+        m_item->getPixmap().save(&buffer, m_fileFormat.toLatin1());
 
         return bytes.toBase64();
+}
+
+bool EgcPixmapEntity::setB64Encoded(QByteArray &bytes)
+{
+        //write pixmap in bytes as png format
+        QByteArray out = QByteArray::fromBase64(bytes);
+        QImage image = QImage::fromData(out, m_fileFormat.toLatin1());
+        m_item->setPixmap(QPixmap::fromImage(image));
+
+        return true;
 }
 
 QSizeF EgcPixmapEntity::getSize(void) const
@@ -83,7 +111,11 @@ QSizeF EgcPixmapEntity::getSize(void) const
         if (!m_item)
                 return QSizeF(0.0, 0.0);
 
-        return m_item->getSize();
+        qreal scale = m_item->getScaleFactor();
+        QSizeF size = m_item->getSize();
+        size = QSizeF(size.width() * scale, size.height() * scale);
+
+        return size;
 }
 
 void EgcPixmapEntity::setSize(QSizeF size)
@@ -103,6 +135,11 @@ void EgcPixmapEntity::setItem(EgcAbstractPixmapItem* item)
         m_item = item;
 }
 
+EgcAbstractPixmapItem*EgcPixmapEntity::getItem()
+{
+        return m_item;
+}
+
 void EgcPixmapEntity::setPosition(QPointF pos)
 {
         if (!m_item)
@@ -115,6 +152,7 @@ void EgcPixmapEntity::setFilePath(QString file)
 {
         if (!m_item)
                 return;
+        m_isEmbedded = false;
 
         m_path = file;
         QPixmap pixmap(file);
@@ -132,11 +170,79 @@ void EgcPixmapEntity::setFilePath(QString file)
         m_item->setPixmap(pixmap);
 }
 
+void EgcPixmapEntity::setIsEmbedded()
+{
+        m_path = "";
+        m_isEmbedded = true;
+}
+
 void EgcPixmapEntity::itemChanged(EgcItemChangeType changeType)
 {
-        if (changeType == EgcItemChangeType::itemDeleted) {
-                EgcAbstractDocument* doc = getDocument();
-                if (doc)
-                        doc->deleteEntity(this);
+}
+
+void EgcPixmapEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
+{
+        stream.writeStartElement("pic_entity");
+        stream.writeAttribute("pos_x", QString("%1").arg(getPosition().x()));
+        stream.writeAttribute("pos_y", QString("%1").arg(getPosition().y()));
+        stream.writeAttribute("width", QString("%1").arg(getSize().width()));
+        stream.writeAttribute("height", QString("%1").arg(getSize().height()));
+        stream.writeAttribute("format", m_fileFormat);
+        if (!m_isEmbedded) {
+                QFileInfo info(properties.filePath);
+                QDir path = QDir(info.path());
+                QString file = path.relativeFilePath(m_path);
+                stream.writeAttribute("path", file);
+
+        } else {
+                stream.writeCharacters(getB64Encoded());
         }
+        stream.writeEndElement(); // document
+}
+
+void EgcPixmapEntity::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
+{
+        (void) properties;
+
+        if (stream.name() == QLatin1String("pic_entity")) {
+                QXmlStreamAttributes attr = stream.attributes();
+                if (attr.hasAttribute("format")) {
+                        setFileType(attr.value("format").toString());
+                }
+                if (attr.hasAttribute("path")) {
+                        QString imageFile = attr.value("path").toString();
+                        QFileInfo info(properties.filePath);
+                        QDir dir(info.path());
+                        QString path = QDir::cleanPath(dir.absoluteFilePath(imageFile));
+                        QFileInfo file(path);
+                        if (!file.exists()) {
+                                QString errMsg(QCoreApplication::translate("EgcPixmapEntity"
+                                                                           , "File not found while loading document:"));
+                                errMsg += QString(" ");
+                                errMsg += path;
+                                properties.warningMessage = errMsg;
+                                stream.skipCurrentElement();
+                                return;
+                        } else {
+                                setFilePath(path);
+                        }
+                } else {
+                        QByteArray in = stream.readElementText().toLatin1();
+                        setB64Encoded(in);
+                        setIsEmbedded();
+                }
+                if (attr.hasAttribute("height") && attr.hasAttribute("width")) {
+                        qreal h = attr.value("height").toFloat();
+                        qreal w = attr.value("width").toFloat();
+                        setSize(QSizeF(w, h));
+                }
+                if (attr.hasAttribute("pos_x") && attr.hasAttribute("pos_y")) {
+                        qreal x = attr.value("pos_x").toFloat();
+                        qreal y = attr.value("pos_y").toFloat();
+                        setPosition(QPointF(x, y));
+                }
+        }
+
+        if (!stream.isEndElement())
+                stream.skipCurrentElement();
 }

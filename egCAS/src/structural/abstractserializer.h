@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2015, Johannes Maier <maier_jo@gmx.de>
+Copyright (c) 2014 - 2018, Johannes Maier <maier_jo@gmx.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of the copyright holder nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -26,31 +26,31 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#ifndef ABSTRACTSERIALIZER_H
+#define ABSTRACTSERIALIZER_H
 
-#ifndef EGCPIXMAPCREATOR_H
-#define EGCPIXMAPCREATOR_H
 
-#include "egcabstractentitycreator.h"
+#include <QtGlobal>
 
-class EgcPixmapCreator : public EgcAbstractEntityCreator
+class QXmlStreamWriter;
+class QXmlStreamReader;
+class SerializerProperties;
+
+class AbstractSerializer
 {
 public:
-        EgcPixmapCreator();
-        virtual ~EgcPixmapCreator();
+        virtual ~AbstractSerializer() {}
+
         /**
-         * @brief create create a entity including all necessary setup in the scene (creating scene items etc.)
-         * @param list the list where to insert the entity
-         * @param point the point where to show the entity on the scene
-         * @return the created entity
+         * @brief interface for serializing a class
          */
-        virtual EgcEntity* create(EgcEntityList& list, QPointF point) override;
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties &properties) = 0;
+
         /**
-         * @brief clone copy a given entity including all of its subsequent elements
-         * @param list the list to add the copied entity to
-         * @param entity entity to copy
-         * @return the created entity
+         * @brief deserialize interface for deserializing a class
+         * @param version the version of the stream that is to be deserialized
          */
-        virtual EgcEntity* clone(EgcEntityList& list, EgcEntity& entity2copy) override;
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) = 0;
 };
 
-#endif // EGCPIXMAPCREATOR_H
+#endif // ABSTRACTSERIALIZER_H

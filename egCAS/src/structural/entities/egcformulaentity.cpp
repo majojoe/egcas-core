@@ -26,6 +26,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 #include <new>
 #include <QScopedPointer>
 #include <QPointF>
@@ -342,6 +344,11 @@ void EgcFormulaEntity::setItem(EgcAbstractFormulaItem* item)
         m_item = item;
 }
 
+EgcAbstractFormulaItem*EgcFormulaEntity::getItem()
+{
+        return m_item;
+}
+
 void EgcFormulaEntity::setPosition(QPointF pos)
 {
         if (!m_item)
@@ -632,5 +639,78 @@ void EgcFormulaEntity::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSi
 bool EgcFormulaEntity::isActive() const
 {
         return m_isActive;
+}
+
+void EgcFormulaEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
+{
+        stream.writeStartElement("formula_entity");
+        stream.writeAttribute("pos_x", QString("%1").arg(getPosition().x()));
+        stream.writeAttribute("pos_y", QString("%1").arg(getPosition().y()));
+        EgcNumberResultType type = getNumberResultType();
+        switch (type) {
+        case EgcNumberResultType::StandardType:
+                stream.writeAttribute("type", QLatin1String("standard"));
+                break;
+        case EgcNumberResultType::IntegerType:
+                stream.writeAttribute("type", QLatin1String("integer"));
+                break;
+        case EgcNumberResultType::EngineeringType:
+                stream.writeAttribute("type", QLatin1String("engineering"));
+                break;
+        case EgcNumberResultType::ScientificType:
+                stream.writeAttribute("type", QLatin1String("scientific"));
+                break;
+        }
+        stream.writeAttribute("digits", QString("%1").arg(getNumberOfSignificantDigits()));
+
+        m_data.serialize(stream, properties);
+
+        stream.writeEndElement(); // formula_entity
+}
+
+void EgcFormulaEntity::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
+{
+        (void) properties;
+
+        if (stream.name() == QLatin1String("formula_entity")) {
+                QXmlStreamAttributes attr = stream.attributes();
+                if (attr.hasAttribute("type")) {
+                        QString str = attr.value("type").toString();
+                        if (str == QLatin1String("standard"))
+                                setNumberResultType(EgcNumberResultType::StandardType);
+                        if (str == QLatin1String("engineering"))
+                                setNumberResultType(EgcNumberResultType::EngineeringType);
+                        if (str == QLatin1String("integer"))
+                                setNumberResultType(EgcNumberResultType::IntegerType);
+                        if (str == QLatin1String("scientific"))
+                                setNumberResultType(EgcNumberResultType::ScientificType);
+                }
+                if (attr.hasAttribute("pos_x") && attr.hasAttribute("pos_y")) {
+                        qreal x = attr.value("pos_x").toFloat();
+                        qreal y = attr.value("pos_y").toFloat();
+                        setPosition(QPointF(x, y));
+                }
+                if (attr.hasAttribute("digits")) {
+                        quint8 d = static_cast<quint8>(attr.value("digits").toUInt());
+                        setNumberOfSignificantDigits(d);
+                }
+
+                stream.readNextStartElement();
+                if (stream.name() != QLatin1String("basenode"))
+                        stream.raiseError();
+
+                m_data.deserialize(stream, properties);
+                if (stream.name() == QLatin1String("basenode"))
+                        stream.skipCurrentElement();
+        }
+
+        updateView();
+}
+
+bool EgcFormulaEntity::aboutToBeDeleted() const
+{
+        if (m_mod)
+                return m_mod->aboutToBeDeleted();
+        return true;
 }
 

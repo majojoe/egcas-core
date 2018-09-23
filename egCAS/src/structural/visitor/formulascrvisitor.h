@@ -91,21 +91,8 @@ public:
          * @param maxSubposition the maximum subposition of a sign that can be mapped to the current element.
          */
         void setElementSubposition(quint32 subposition, quint32 maxSubposition = 0);
-private:
-#warning let the absolute neccessary functions in the EgcNodeVisitor class and put the implementation specific functions in a implementation class later (EgcNodeVisitor->accept is needed in this class, so we have to inherit from EgcNodeVisitor)
-        /** hide all of the following functions* /
-        virtual void assembleResult(QString formatString, EgcNode* node);
-        virtual void assembleResult(QString startString, QString seperationString, QString endString, EgcNode* node);
-        virtual void assembleResult(QString lStartString, QString rStartString, QString seperationString,
-                                            QString endString, EgcNode* node);
-        virtual void pushToStack(QString str, EgcNode* node);
-        virtual void suppressChild(const EgcNode* node, quint32 index);
-        virtual void suppressThis(const EgcNode* node);
-        virtual EgcNode* getChildToSuppress(const EgcNode* node, quint32 index);
-        virtual void deleteFromStack(int nrStackObjects);
-        virtual QVector<QString> getAssembleArguments(EgcNode* node);
-        virtual QString& modifyNodeString(QString &nodeString, EgcNode* node);
 
+private:
         /**
          * @brief append append a formula element to the internal vector
          * @param str the formula element to add

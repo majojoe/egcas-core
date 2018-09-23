@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egctextentity.h"
 #include "egctextitem.h"
 #include "../document/egcabstractdocument.h"
+#include <QXmlStreamWriter>
 
 #if defined( Q_OS_WIN )
 QFont EgcTextEntity::s_genericFont = QFont(QString("Times New Roman"), 14);
@@ -65,12 +66,17 @@ QString EgcTextEntity::getText(void) const
         if (!m_item)
                 return "";
 
-        m_item->getText();
+        return m_item->getText();
 }
 
 void EgcTextEntity::setItem(EgcAbstractTextItem* item)
 {
         m_item = item;
+}
+
+EgcAbstractTextItem*EgcTextEntity::getItem()
+{
+        return m_item;
 }
 
 void EgcTextEntity::setPosition(QPointF pos)
@@ -129,16 +135,45 @@ QFont& EgcTextEntity::getGenericFont(void)
 
 void EgcTextEntity::itemChanged(EgcItemChangeType changeType)
 {
-        if (changeType == EgcItemChangeType::itemDeleted) {
-                EgcAbstractDocument* doc = getDocument();
-                if (doc)
-                        doc->deleteEntity(this);
-        }
 }
 
 void EgcTextEntity::setEditMode()
 {
         if (m_item)
                 m_item->setEditMode();
+}
+
+void EgcTextEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
+{
+        stream.writeStartElement("text_entity");
+        if (m_font)
+                stream.writeAttribute("font", m_font->toString());
+        stream.writeAttribute("pos_x", QString("%1").arg(getPosition().x()));
+        stream.writeAttribute("pos_y", QString("%1").arg(getPosition().y()));
+        stream.writeCharacters(getText());
+        stream.writeEndElement(); // document
+}
+
+void EgcTextEntity::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
+{
+        (void) properties;
+
+        if (stream.name() == QLatin1String("text_entity")) {
+                QXmlStreamAttributes attr = stream.attributes();
+                if (attr.hasAttribute("font")) {
+                        QString font_str = attr.value("font").toString();
+                        QFont fnt;
+                        fnt.fromString(font_str);
+                        setFont(fnt);
+                }
+                if (attr.hasAttribute("pos_x") && attr.hasAttribute("pos_y")) {
+                        qreal x = attr.value("pos_x").toFloat();
+                        qreal y = attr.value("pos_y").toFloat();
+                        setPosition(QPointF(x, y));
+                }
+                setText(stream.readElementText());
+        }
+        if (!stream.isEndElement())
+                stream.skipCurrentElement();
 }
 

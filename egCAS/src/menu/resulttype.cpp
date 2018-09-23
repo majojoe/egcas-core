@@ -35,7 +35,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "resulttype.h"
 
 
-ResultType::ResultType(EgcDocument* doc, QToolBar* toolbar, QWidget* parent) : QWidget(parent), m_document{doc}
+ResultType::ResultType(EgcDocument* doc, QToolBar* toolbar, QWidget* parent) : QWidget(parent), m_document{doc},
+                                                                               m_lastSelectedFormula{nullptr}
 {
         //add combo box for adjusting precision
         m_box = new QComboBox(parent);
@@ -63,11 +64,11 @@ ResultType::~ResultType()
 }
 
 void ResultType::setResultType(EgcNumberResultType result)
-{
-        EgcFormulaEntity* entity = m_document->getActiveFormulaEntity();
-        if (entity) {
-                entity->setNumberResultType(result);
-                entity->setSelected(false);
+{        
+        if (m_lastSelectedFormula) {
+                m_lastSelectedFormula->setNumberResultType(result);
+                m_lastSelectedFormula->setSelected(false);
+                m_document->startCalulation();
         }
 }
 
@@ -115,7 +116,10 @@ void ResultType::onSelectionChange(void)
         EgcFormulaEntity* formula = m_document->getActiveFormulaEntity();
         EgcNumberResultType type;
         if (formula) {
+                m_lastSelectedFormula = formula;
                 type = formula->getNumberResultType();
+        } else {
+                m_lastSelectedFormula = nullptr;
         }
 
         //set number of digits

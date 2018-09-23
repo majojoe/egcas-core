@@ -26,7 +26,10 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include "egcnodecreator.h"
 #include <QRegularExpression>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 #include "egcnumbernode.h"
 
 
@@ -72,6 +75,35 @@ bool EgcNumberNode::operator==(const EgcNode& node) const
 int EgcNumberNode::nrSubindexes(void) const
 {
         return m_value.size();
+}
+
+void EgcNumberNode::serializeAttributes(QXmlStreamWriter& stream)
+{
+        (void) stream;
+}
+
+void EgcNumberNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
+{
+        (void) version;
+        (void) stream;
+        (void) attr;
+}
+
+void EgcNumberNode::serialize(QXmlStreamWriter& stream, SerializerProperties& properties)
+{
+        (void)properties;
+        QLatin1String str = EgcNodeCreator::stringize(getNodeType());
+        if (str.size() != 0) {
+                stream.writeStartElement(str);
+                stream.writeCharacters(m_value);
+                stream.writeEndElement();
+        }
+}
+
+void EgcNumberNode::deserialize(QXmlStreamReader& stream, SerializerProperties& properties)
+{
+        (void) properties;
+        setValue(stream.readElementText());
 }
 
 bool EgcNumberNode::insert(QChar character, int position)

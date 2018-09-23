@@ -35,15 +35,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "entities/egcentitylist.h"
 #include "view/egcasscene.h"
 #include "egccalculation.h"
+#include "entities/egcentity.h"
 #include "entities/egcformulaentity.h"
 #include "view/egcformulaitem.h"
 #include "entities/egctextentity.h"
 #include "view/egctextitem.h"
+#include "entities/egcpixmapentity.h"
+#include "view/egcpixmapitem.h"
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
+#include <QFile>
 
 EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasScene(*this, nullptr)}, m_calc{new EgcCalculation()}
 {
         connect(m_scene.data(), SIGNAL(createFormula(QPointF, EgcAction)), this, SLOT(insertFormulaOnKeyPress(QPointF, EgcAction)));
-        connect(this, SIGNAL(startDeleletingEntity(EgcEntity*)), this, SLOT(deleteLaterEntity(EgcEntity*)), Qt::QueuedConnection);
         connect(m_scene.data(), &EgCasScene::selectionChanged, this, &EgcDocument::selectionChanged);
         connect(m_calc.data(), SIGNAL(errorOccurred(EgcKernelErrorType,QString)),  this, SLOT(handleKernelMessages(EgcKernelErrorType,QString)));
 }
@@ -53,7 +58,7 @@ EgcEntityList* EgcDocument::getEntityList(void)
         return m_list.data();
 }
 
-EgCasScene* EgcDocument::getScene(void)
+EgCasScene* EgcDocument::getScene(void) const
 {
         return m_scene.data();
 }
@@ -70,40 +75,111 @@ EgcDocument* EgcDocument::getDocument(void)
 
 EgcEntity* EgcDocument::createEntity(EgcEntityType type, QPointF point)
 {
-        EgcEntity* ptr = nullptr;
+        EgcEntity* retval = nullptr;
+        QGraphicsItem* item = nullptr;
 
-        switch (type) {
-        case EgcEntityType::Text:
-                ptr = m_textCreator.create(*m_list, point);
-                break;
-        case EgcEntityType::Picture:
-                ptr = m_pixmapCreator.create(*m_list, point);
-                break;
-        default:
-                ptr = m_formulaCreator.create(*m_list, point);
+        if (type == EgcEntityType::Text) {
+                QScopedPointer<EgcTextEntity> entity(new EgcTextEntity());
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                item = scene->addText(*entity, point);
+                if (item) {
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+                        return retval;
+                }
+        } else if (type == EgcEntityType::Picture) {
+                QScopedPointer<EgcPixmapEntity> entity(new EgcPixmapEntity());
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                item = scene->addPixmap(*entity, point);
+                if (item) {
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+                        return retval;
+                }
+        } else { // formula
+                QScopedPointer<EgcFormulaEntity> entity(new EgcFormulaEntity());
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                item = scene->addFormula(*entity, point);
+                if (item) {
+                        entity->updateView();
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+                        return retval;
+                }
         }
 
-        return ptr;
+        return nullptr;
 }
 
-EgcEntity* EgcDocument::cloneEntity(EgcEntityList& list, EgcEntity& entity2copy)
+EgcEntity* EgcDocument::cloneEntity(EgcEntity& entity2copy)
 {
-        EgcEntity* ptr = nullptr;
-
+        EgcEntity* retval = nullptr;
         EgcEntityType type = entity2copy.getEntityType();
 
-        switch (type) {
-        case EgcEntityType::Text:
-                ptr = m_textCreator.clone(list, entity2copy);
-                break;
-        case EgcEntityType::Picture:
-                ptr = m_pixmapCreator.clone(list, entity2copy);
-                break;
-        default:
-                ptr = m_formulaCreator.clone(list, entity2copy);
+        if (type == EgcEntityType::Text) {
+                EgcTextEntity& entityCopyRef = static_cast<EgcTextEntity&>(entity2copy);
+                QScopedPointer<EgcTextEntity> entity(new EgcTextEntity(entityCopyRef));
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                QGraphicsItem* item = scene->addText(*entity, entity2copy.getPosition());
+                if (item) {
+                        //set the item properties
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+
+                        return retval;
+                }
+
+                return nullptr;
+        } else if (type == EgcEntityType::Picture) {
+                EgcPixmapEntity& entityCopyRef = static_cast<EgcPixmapEntity&>(entity2copy);
+                QScopedPointer<EgcPixmapEntity> entity(new EgcPixmapEntity(entityCopyRef));
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                QGraphicsItem* item = scene->addPixmap(*entity, entity2copy.getPosition());
+                if (item) {
+                        //set the item properties
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+
+                        return retval;
+                }
+
+                return nullptr;
+        } else if (type == EgcEntityType::Formula) {
+                EgcFormulaEntity& entityCopyRef = static_cast<EgcFormulaEntity&>(entity2copy);
+                QScopedPointer<EgcFormulaEntity> entity(new EgcFormulaEntity(entityCopyRef));
+                if (entity.isNull())
+                        return nullptr;
+                EgCasScene* scene = getScene();
+                QGraphicsItem* item = scene->addFormula(*entity, entity2copy.getPosition());
+                if (item) {
+                        //set the item properties
+                        entity->updateView();
+                        retval = entity.data();
+                        mapItem(item, entity.data());
+                        m_list->addEntity(entity.take());
+
+                        return retval;
+                }
+
+                return nullptr;
         }
 
-        return ptr;
+        return nullptr;
 }
 
 EgcCalculation const* EgcDocument::getCalcClass(void)
@@ -118,39 +194,43 @@ void EgcDocument::insertFormulaOnKeyPress(QPointF point, EgcAction action)
         formula->handleAction(action);
 }
 
-bool EgcDocument::deleteFormula(EgcAbstractFormulaEntity* formula)
+bool EgcDocument::formulaEntityDeleted(EgcEntity* formula)
 {
-        if(!formula)
-                return false;
-        EgcFormulaEntity* entity = static_cast<EgcFormulaEntity*>(formula);
-
         //inform calculation about deleting an entity
-        m_calc->deleteEntity(entity);
-
-        EgcAbstractFormulaItem* item = entity->getItem();
-        if (!item)
-                return false;
-        this->m_scene->deleteItem(item);
-
-        m_list->deleteEntity(entity);
+        m_calc->startDeletingEntity(formula);
 
         return true;
 }
 
 void EgcDocument::deleteEntity(EgcEntity* entity)
-{
-        emit startDeleletingEntity(entity);
+{        
+        bool notifyFormula = false;
+        if (entity->getEntityType() == EgcEntityType::Formula)
+                notifyFormula = true;
+        if (entity) {
+                m_list->deleteEntity(entity);
+        }
+        if (notifyFormula)
+                formulaEntityDeleted(entity);
 }
 
-void EgcDocument::deleteLaterEntity(EgcEntity* entity)
+void EgcDocument::itemDeleted(QGraphicsItem* item)
 {
-        if (entity->getEntityType() == EgcEntityType::Formula) {
-                deleteFormula(dynamic_cast<EgcAbstractFormulaEntity*>(entity));
-        } else {
-                if (entity) {
-                        m_list->deleteEntity(entity);
-                }
+        //remove entity that is linked with given item from list
+        if (m_itemMapper.contains(item)) {
+                EgcEntity* entity = m_itemMapper.value(item);
+                m_itemMapper.remove(item);
+                deleteEntity(entity);
         }
+}
+
+void EgcDocument::deleteAll()
+{
+        //reset calculation
+        m_calc->reset();
+        m_list->deleteAll();
+        m_itemMapper.clear();
+        m_scene->deleteAll();
 }
 
 void EgcDocument::resumeCalculation(void)
@@ -188,11 +268,16 @@ void EgcDocument::setAutoCalculation(bool on)
 EgcFormulaEntity* EgcDocument::getActiveFormulaEntity(void)
 {
         QList<QGraphicsItem*> list = m_scene->selectedItems();
-        if (list.empty())
-                return nullptr;
-        QGraphicsItem *item = list.at(0);
-        if (!item)
-                return nullptr;
+        QGraphicsItem *item = nullptr;
+        if (list.empty()) {
+                item = m_scene->focusItem();
+                if (!item)
+                        return nullptr;
+        } else {
+                item = list.at(0);
+                if (!item)
+                        return nullptr;
+        }
 
         EgcFormulaItem* formulaItem = dynamic_cast<EgcFormulaItem*>(item);
         if (!formulaItem)
@@ -211,11 +296,16 @@ EgcFormulaEntity* EgcDocument::getActiveFormulaEntity(void)
 EgcTextEntity* EgcDocument::getActiveTextEntity()
 {
         QList<QGraphicsItem*> list = m_scene->selectedItems();
-        if (list.empty())
-                return nullptr;
-        QGraphicsItem *item = list.at(0);
-        if (!item)
-                return nullptr;
+        QGraphicsItem *item = nullptr;
+        if (list.empty()) {
+                item = m_scene->focusItem();
+                if (!item)
+                        return nullptr;
+        } else {
+                item = list.at(0);
+                if (!item)
+                        return nullptr;
+        }
 
         EgcTextItem* textItem = dynamic_cast<EgcTextItem*>(item);
         if (!textItem)
@@ -249,6 +339,25 @@ void EgcDocument::handleKernelMessages(EgcKernelErrorType type, QString message)
         (void) msgBox.exec();
 }
 
+void EgcDocument::handleDocumentMessages(QString message, QMessageBox::Icon iconType)
+{
+        QMessageBox msgBox;
+        if (iconType == QMessageBox::Critical)
+                msgBox.setText(tr("Error while loading document"));
+        else
+                msgBox.setText(tr("Warning:problem occurred while loading document"));
+        msgBox.setInformativeText(message);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.setIcon(iconType);
+        (void) msgBox.exec();
+}
+
+void EgcDocument::mapItem(QGraphicsItem* item, EgcEntity* entity)
+{
+        m_itemMapper.insert(item, entity);
+}
+
 QPointF EgcDocument::getLastCursorPosition(void)
 {
         return m_scene.data()->getLastCursorPositon();
@@ -265,4 +374,150 @@ void EgcDocument::updateView()
         if (view) {
                 view->viewport()->update();
         }
+}
+
+void EgcDocument::saveToFile(QString filename)
+{
+        QFile file(filename);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+                return;
+
+        QXmlStreamWriter stream(&file);
+        SerializerProperties properties;
+        properties.filePath = filename;
+        serialize(stream, properties);
+
+        file.close();
+}
+
+void EgcDocument::readFromFile(QString filename)
+{
+        QFile file(filename);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+                return;
+
+        QXmlStreamReader stream(&file);
+        SerializerProperties properties;
+        properties.version = 0;
+        properties.filePath = filename;
+        deserialize(stream, properties);
+        // sort the list if all items are deserialized
+        m_list->sort();
+
+        file.close();
+}
+
+void EgcDocument::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
+{
+        stream.setAutoFormatting(true);
+        stream.writeStartDocument();
+
+        stream.writeStartElement("document");
+        stream.writeAttribute("width", QString("%1").arg(getWidth()));
+        stream.writeAttribute("height", QString("%1").arg(getHeight()));
+        stream.writeAttribute("version", QString(EGCAS_VERSION));
+        stream.writeAttribute("doc_font", EgcTextEntity::getGenericFont().toString());
+
+        EgcEntityList* list = getEntityList();
+        QMutableListIterator<EgcEntity*> iter = list->getIterator();
+        while(iter.hasNext()) {
+                iter.next()->serialize(stream, properties);
+        }
+
+        stream.writeEndElement(); // document
+
+        stream.writeEndDocument();
+}
+
+void EgcDocument::deserialize(QXmlStreamReader& stream, SerializerProperties &properties)
+{
+        properties.version = 0;
+
+        if (stream.readNextStartElement()) {
+                if (stream.name() == QLatin1String("document")) {
+                        QXmlStreamAttributes attr = stream.attributes();
+                        if (attr.hasAttribute("doc_font")) {
+                                QString font_str = attr.value("doc_font").toString();
+                                QFont fnt;
+                                fnt.fromString(font_str);
+                                EgcTextEntity::setGenericFont(fnt);
+                        }
+                        QString ver = attr.value("version").toString();
+                        QStringList list = ver.split('.');
+                        if (list.size() == 3) {
+                                properties.version = list.at(0).toUInt() << 16;
+                                properties.version += list.at(1).toUInt() << 8;
+                                properties.version += list.at(2).toUInt();
+                        }
+                        if (    attr.hasAttribute("height") && attr.hasAttribute("width")
+                             && (properties.version == 2 || properties.version == 3)) {
+                                qreal height = attr.value("height").toFloat();
+                                qreal width = attr.value("width").toFloat();
+                                setWidth(width);
+                                setHeight(height);
+                                //delete all contents from the document
+                                deleteAll();
+
+                                EgcEntity* entity = nullptr;
+                                while (stream.readNextStartElement()) {
+                                        entity = nullptr;
+                                        if (stream.name() == QLatin1String("text_entity"))
+                                                entity = createEntity(EgcEntityType::Text);
+                                        else if (stream.name() == QLatin1String("pic_entity"))
+                                                entity = createEntity(EgcEntityType::Picture);
+                                        else if (stream.name() == QLatin1String("formula_entity"))
+                                                entity = createEntity(EgcEntityType::Formula);
+                                        else
+                                                stream.skipCurrentElement();
+
+                                        if (entity)
+                                                entity->deserialize(stream, properties);
+                                }
+                        } else {
+                                stream.raiseError(QObject::tr("This file version is not supported. Maybe saved by a newer version."));
+                        }
+                } else {
+                        stream.raiseError(QObject::tr("The file is not an egcas file."));
+                }
+        }
+
+        QXmlStreamReader::Error error = stream.error();
+        switch(error) {
+        case QXmlStreamReader::NoError:
+                break;
+        case QXmlStreamReader::NotWellFormedError:
+        case QXmlStreamReader::PrematureEndOfDocumentError:
+        case QXmlStreamReader::UnexpectedElementError:
+                handleDocumentMessages(tr("Document corrupted. The document has an unexpected structure."));
+                break;
+        case QXmlStreamReader::CustomError:
+                handleDocumentMessages(stream.errorString());
+                break;
+        }
+        if (!properties.warningMessage.isEmpty())
+                handleDocumentMessages(properties.warningMessage, QMessageBox::Warning);
+}
+
+void EgcDocument::setHeight(qreal height)
+{
+        QRectF rct = getScene()->sceneRect();
+        rct.setHeight(height);
+        getScene()->setSceneRect(rct);
+}
+
+qreal EgcDocument::getHeight() const
+{
+        return getScene()->sceneRect().height();
+}
+
+void EgcDocument::setWidth(qreal width)
+{
+        QRectF rct = getScene()->sceneRect();
+        rct.setWidth(width);
+        getScene()->setSceneRect(rct);
+}
+
+qreal EgcDocument::getWidth() const
+{
+        return getScene()->sceneRect().width();
 }

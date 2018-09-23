@@ -60,6 +60,19 @@ bool EgcEntityList::deleteEntity(EgcEntity* entity)
         if (i >= 0) {
                 delete m_list.takeAt(i);
         }
+
+        return true;
+}
+
+bool EgcEntityList::deleteAll(void)
+{
+        EgcEntity* entity = nullptr;
+        foreach(entity, m_list) {
+                delete entity;
+        }
+        m_list.clear();
+
+        return true;
 }
 
 EgcEntity* EgcEntityList::takeEntity(EgcEntity* entity)
@@ -105,30 +118,6 @@ EgcDocument* EgcEntityList::getDocument(void)
 EgcAbstractEntityList* EgcEntityList::getParent(void)
 {
         return m_parent;
-}
-
-EgcEntity* EgcEntityList::createEntity(EgcEntityType type, QPointF point)
-{
-        EgcDocument* doc = getDocument();
-        if (doc) {
-                EgcEntity* entity = doc->createEntity(type, point);
-                entity->setList(this);
-                return entity;
-        } else {
-                return nullptr;
-        }
-}
-
-EgcEntity* EgcEntityList::cloneEntity(EgcEntity& entity2copy)
-{
-        EgcDocument* doc = getDocument();
-        if (doc) {
-                EgcEntity* entity = doc->cloneEntity(*this, entity2copy);
-                entity->setList(this);
-                return entity;
-        } else {
-                return nullptr;
-        }
 }
 
 QMutableListIterator<EgcEntity*> EgcEntityList::getIterator(void)

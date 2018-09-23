@@ -52,6 +52,11 @@ public:
          */
         virtual void setItem(EgcAbstractFormulaItem* item) = 0;
         /**
+         * @brief getItem get the formula item that is associated with this entity
+         * @param item the item that is associated with this entity (can also be a nullptr)
+         */
+        virtual EgcAbstractFormulaItem* getItem(void) = 0;
+        /**
          * @brief handleAction handles the given action (e.g. insert a char at the given position into the formula tree)
          * @param action the action given
          */
@@ -78,6 +83,13 @@ public:
          * @return the font size that should be used for this formula
          */
         virtual int getFontSize(void) const = 0;
+        /**
+         * @brief aboutToBeDeleted checks if item is about to be deleted, e.g. if a formula is empty and one hits del
+         * key this function will return true, and false otherwise
+         * @return true if pressing del or backspace shall delete the item
+         */
+        virtual bool aboutToBeDeleted(void) const = 0;
+
 
 };
 

@@ -64,7 +64,7 @@ public:
          * @brief valid checks if the subnode is valid. This can be the case if e.g. the child is not NULL.
          * @return returns true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
         /**
          * @brief isUnaryNode returns if the current element is a unary expression (container) or not
          * @return true if it is a unary expression, false otherwise

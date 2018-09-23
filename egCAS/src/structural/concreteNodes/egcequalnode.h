@@ -45,7 +45,12 @@ public:
          * An expression is valid if all nodes are valid.
          * @return true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties &properties) override;
 
 protected:
 };

@@ -167,6 +167,12 @@ public:
          * @brief markParent highlight the next parent upwards in the tree and move the cursor to that position.
          */
         void markParent(void);
+        /**
+         * @brief aboutToBeDeleted checks if item is about to be deleted, e.g. if a formula is empty and one hits del
+         * key this function will return true, and false otherwise
+         * @return true if pressing del or backspace shall delete the item
+         */
+        bool aboutToBeDeleted(void) const;
 
 private:
         /**
@@ -420,6 +426,14 @@ private:
          * special cursor conditions
          */
         void checkForSpecialCursorConditions(void);
+        /**
+         * @brief isNumberOrVariable checks if the node at the left/right side of the cursor is a number or a variable.
+         * @param right if true the node on the right side will be checked, if false the node on the left side will be
+         * checked
+         * @return true if the node at the left/right side of the current cursor is a number or a variable, false
+         * otherwise
+         */
+        bool isNumberOrVariable(bool right);
 
 
         EgcFormulaEntity& m_formula;            ///< reference to the formula this modificator is associated with

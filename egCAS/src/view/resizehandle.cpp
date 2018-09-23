@@ -37,8 +37,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 ResizeHandle::ResizeHandle(QGraphicsItem *content, const QSizeF& size) :
         m_resizableContent(content), m_handleSize(size), m_contentStartScale(0.0), m_contentStartDiag(0.0), m_addedToScene(false), m_selectionState(false)
 {
-        setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable);
+        setFlags(ItemIsMovable | ItemClipsToShape);
         hide();
+}
+
+ResizeHandle::~ResizeHandle()
+{
+
 }
 
 QRectF ResizeHandle::boundingRect() const

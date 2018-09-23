@@ -301,7 +301,7 @@ void EgCasScene::itemYieldsFocus(EgcSceneSnapDirection direction, QGraphicsItem&
         case EgcSceneSnapDirection::left:
                 m_cross->left(bounds.left());
                 break;
-        default: //right
+        case EgcSceneSnapDirection::right:
                 m_cross->right(bounds.right());
                 break;
         }
@@ -438,25 +438,6 @@ bool EgCasScene::deleteItem(EgcAbstractTextItem* item)
         return deleteItem(qitem);
 }
 
-bool EgCasScene::deleteActiveItem()
-{
-        if (focusItem()) {
-                QTimer::singleShot(0, this, SLOT(deleteActiveItemSlot()));
-
-                return true;
-        }
-
-        return false;
-}
-
-void EgCasScene::deleteActiveItemSlot(void)
-{
-        QGraphicsItem* item = focusItem();
-        if (item) {
-                (void) deleteItem(item);
-        }
-}
-
 bool EgCasScene::deleteItem(QGraphicsItem *item)
 {
         if (!item)
@@ -467,6 +448,56 @@ bool EgCasScene::deleteItem(QGraphicsItem *item)
         delete item;
 
         return true;
+}
+
+bool EgCasScene::deleteFocusedItem(void)
+{
+        bool retval = false;
+
+        QGraphicsItem* focItem = focusItem();
+        if (focItem) {
+                if (focItem->type() == static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType)) {
+                        EgcAbstractFormulaEntity *formEntity = dynamic_cast<EgcFormulaItem*>(focItem)->getEnity();
+                        if (formEntity) {
+                                if (formEntity->aboutToBeDeleted()) {
+                                        retval = true;
+                                }
+                        }
+                }
+        }
+
+        return retval;
+}
+
+void EgCasScene::keyPressEvent(QKeyEvent* keyEvent)
+{
+        int key = keyEvent->key();
+        if (key == Qt::Key_Delete || key == Qt::Key_Backspace) {
+                QList<QGraphicsItem*> list = selectedItems();
+                if (list.isEmpty()) {
+                        if (deleteFocusedItem()) {
+                                QGraphicsItem *focItem = focusItem();
+                                deleteItem(focItem);
+                                m_document.itemDeleted(focItem);
+                                keyEvent->accept();
+                        } else {
+                                QGraphicsScene::keyPressEvent(keyEvent);
+                        }
+                } else {
+                        QGraphicsItem *item;
+                        foreach (item, list) {
+                                if (    item->type() == static_cast<int>(EgcGraphicsItemType::EgcFormulaItemType)
+                                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcPixmapItemType)
+                                     || item->type() == static_cast<int>(EgcGraphicsItemType::EgcTextItemType)) {
+                                        deleteItem(item);
+                                        m_document.itemDeleted(item);
+                                        keyEvent->accept();
+                                }
+                        }
+                }
+        } else {
+                QGraphicsScene::keyPressEvent(keyEvent);
+        }
 }
 
 void EgCasScene::addPage(quint32 pageIndex)
@@ -567,4 +598,19 @@ QPointF EgCasScene::getLastCursorPositon(void)
         }
 
         return QPointF();
+}
+
+void EgCasScene::deleteAll()
+{
+        QGraphicsItem *item;
+        QList<QGraphicsItem*> lst = items();
+        foreach (item, lst) {
+                if (    item != m_cursor
+                     && item != m_cross
+                     && item != m_nodeUnderline) {
+                        removeItem(item);
+                        delete (item);
+
+                }
+        }
 }

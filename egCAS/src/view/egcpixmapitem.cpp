@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 EgcPixmapItem::EgcPixmapItem(QGraphicsItem*parent) : QGraphicsPixmapItem{parent}, m_entity{nullptr}
 {
-        m_resizeHandle.reset(new ResizeHandle(this, QSizeF(8.0, 8.0)));
+        m_resizeHandle = new ResizeHandle(this, QSizeF(8.0, 8.0));
         setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
 }
 
@@ -51,8 +51,6 @@ EgcPixmapItem::EgcPixmapItem(const QPointF point, QGraphicsItem *parent) : EgcPi
 
 EgcPixmapItem::~EgcPixmapItem()
 {        
-        if (m_entity)
-                m_entity->itemChanged(EgcItemChangeType::itemDeleted);
 }
 
 void EgcPixmapItem::focusInEvent(QFocusEvent * event)
@@ -111,9 +109,14 @@ void EgcPixmapItem::setScaleFactor(qreal scaleFactor)
         setScale(scaleFactor);
 }
 
-QSize EgcPixmapItem::getSize(void)
+qreal EgcPixmapItem::getScaleFactor()
 {
-        boundingRect().size();
+        return scale();
+}
+
+QSizeF EgcPixmapItem::getSize(void)
+{
+        return boundingRect().size().toSize();
 }
 
 void EgcPixmapItem::setPixmap(QPixmap pixmap)
@@ -163,7 +166,6 @@ void EgcPixmapItem::keyPressEvent(QKeyEvent *keyEvent)
                 break;
         case Qt::Key_Delete:
                 accepted = true;
-                deleteCurrentItem();
                 break;
         }
 

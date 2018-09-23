@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QApplication>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QAbstractItemView>
 #include "document/egcdocument.h"
 #include "entities/egcformulaentity.h"
 #include "precisionbox.h"
@@ -39,12 +40,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #define MAP_COMBO_TO_PRECISION(prec)  ((prec == 0) ? 0 : (prec + 1))
 #define MAP_PRECISION_TO_COMBO(prec)  ((prec == 0) ? 0 : (prec - 1))
 
-PrecisionBox::PrecisionBox(EgcDocument* doc, QToolBar* toolbar, QWidget* parent) : QWidget(parent), m_document{doc}
+PrecisionBox::PrecisionBox(EgcDocument* doc, QToolBar* toolbar, QWidget* parent) : QWidget(parent), m_document{doc},
+                                                                                   m_lastSelectedFormula{nullptr}
 {
         //add combo box for adjusting precision
         m_box = new QComboBox(parent);
         m_box->setObjectName(QStringLiteral("comboBox"));
-        m_box->setFocusPolicy(Qt::NoFocus);
         setLayout(new QHBoxLayout());
         layout()->setMargin(0);
         layout()->addWidget(new QLabel(QString(tr("0,0:")), parent));
@@ -69,6 +70,7 @@ PrecisionBox::PrecisionBox(EgcDocument* doc, QToolBar* toolbar, QWidget* parent)
         m_box->insertItem(14, QApplication::translate("PrecisionBox", "15", 0));
         m_box->insertItem(15, QApplication::translate("PrecisionBox", "16", 0));
         m_box->setToolTip(QApplication::translate("PrecisionBox", "set number of significant digits", 0));
+        m_box->view()->setFocusPolicy(Qt::NoFocus);
         connect(m_box, SIGNAL(currentIndexChanged(int)), this, SLOT(precBox(int)));
         emit m_box->currentIndexChanged(m_box->currentIndex());
         connect(m_document, &EgcDocument::selectionChanged, this, &PrecisionBox::onSelectionChange);
@@ -81,14 +83,13 @@ PrecisionBox::~PrecisionBox()
 
 void PrecisionBox::setPrecision(int prec)
 {
-        EgcFormulaEntity* entity = m_document->getActiveFormulaEntity();
-        if (entity) {
-                entity->setNumberOfSignificantDigits(prec);
-                entity->setSelected(false);
+        if (m_lastSelectedFormula) {
+                m_lastSelectedFormula->setNumberOfSignificantDigits(static_cast<quint8>(prec));
+                m_lastSelectedFormula->setSelected(static_cast<quint8>(false));
         } else {
-                EgcFormulaEntity::setStdNrSignificantDigis(prec);
-                m_document->startCalulation();
+                EgcFormulaEntity::setStdNrSignificantDigis(static_cast<quint8>(prec));
         }
+        m_document->startCalulation();
 }
 
 void PrecisionBox::precBox(int prec)
@@ -102,8 +103,10 @@ void PrecisionBox::onSelectionChange(void)
         quint8 digits;
         if (formula) {
                 digits = formula->getNumberOfSignificantDigits();
+                m_lastSelectedFormula = formula;
         } else {
                 digits = EgcFormulaEntity::getStdNrSignificantDigis();
+                m_lastSelectedFormula = nullptr;
         }
 
         //set number of digits

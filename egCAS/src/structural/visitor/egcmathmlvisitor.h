@@ -29,17 +29,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCMATHMLVISITOR_H
 #define EGCMATHMLVISITOR_H
 
+#include "visitorhelper.h"
+#include "egcmathmllookup.h"
 #include <QString>
 #include <QSet>
-#include "egcnodevisitor.h"
-#include "egcmathmllookup.h"
 
 /**
  * @brief The EgcMathMlVisitor class is a visitor class for parsing the tree and output expressions formatted for the
  * used cas kernel.
  */
 
-class EgcMathMlVisitor : public EgcNodeVisitor
+class EgcMathMlVisitor : public VisitorHelper
 {
 public:
         /**

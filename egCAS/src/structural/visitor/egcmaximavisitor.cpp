@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcmaximavisitor.h"
 #include "../entities/egcformulaentity.h"
 
-EgcMaximaVisitor::EgcMaximaVisitor(EgcFormulaEntity& formula) : EgcNodeVisitor(formula)
+EgcMaximaVisitor::EgcMaximaVisitor(EgcFormulaEntity& formula) : VisitorHelper(formula)
 {
 }
 

@@ -3,13 +3,15 @@ cmake_minimum_required(VERSION 2.8.11)
 #set the project name
 add_definitions(-DEGC_PROJ_NAME=egcas)
 
+if(POLICY CMP0071)
+        cmake_policy(SET CMP0071 NEW)
+endif()
+
 # Tell CMake to run moc when necessary:
 set(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake
 # to always look for includes there:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-#set(CMAKE_BUILD_TYPE Release)
 
 option(debug_maxima_kernel "switch debugging for maxima kernel on" OFF)
 if(debug_maxima_kernel)
@@ -29,6 +31,10 @@ endif()
 option(debug_scene_rendering_pos "switch debugging for scene position rendering on" OFF)
 if(debug_scene_rendering_pos)
         add_definitions(-DDEBUG_SCENE_RENDERING_POS )
+endif()
+
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+        add_definitions(-DLOAD_EGCAS_EXAMPLES_FILE="${CMAKE_SOURCE_DIR}/examples/default.egc")
 endif()
 
 find_package(BISON)
@@ -78,7 +84,6 @@ add_custom_target(egcas_other_srcs ALL SOURCES
         structural/entities/egcabstractformulaentity.h
         structural/entities/egcabstracttextentity.h
         structural/entities/egcabstractpixmapentity.h
-        structural/entities/creator/egcabstractentitycreator.h
         structural/entities/egcabstractentitylist.h
         structural/entities/egcabstractentity.h
         structural/actions/egcoperations.h
@@ -90,6 +95,7 @@ add_custom_target(egcas_other_srcs ALL SOURCES
         casKernel/parser/parser.y
         casKernel/parser/abstractkernelparser.h
         menu/mathelement.h
+        structural/abstractserializer.h
 
 )
 
@@ -138,6 +144,7 @@ set(egcas_SOURCES
         structural/visitor/egcmathmllookup.cpp
         structural/visitor/formulascrvisitor.cpp
         structural/visitor/formulascrelement.cpp
+        structural/visitor/visitorhelper.cpp
         structural/specialNodes/egccontainernode.cpp 
         structural/entities/egcformulaentity.cpp
         structural/iterator/egcnodeiterator.cpp
@@ -159,9 +166,6 @@ set(egcas_SOURCES
         structural/entities/egctextentity.cpp
         structural/entities/egcpixmapentity.cpp
         structural/document/egcdocument.cpp
-        structural/entities/creator/egcformulacreator.cpp
-        structural/entities/creator/egctextcreator.cpp
-        structural/entities/creator/egcpixmapcreator.cpp
         structural/entities/formulamodificator.cpp
         formulagenerator.cpp
         menu/egclicenseinfo.cpp
@@ -194,32 +198,37 @@ qt5_add_resources(EGCAS_RCCS res/ressources.qrc)
 add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
 
-set(EGC_GEN_NODE_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h)
-set(EGC_GEN_NODE_HEADER_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnode_gen.txt)
+set(ALWAYS_BUILD ${CMAKE_CURRENT_BINARY_DIR}/always_build.txt)
+add_custom_command(OUTPUT ${ALWAYS_BUILD} COMMAND cmake -E touch ${ALWAYS_BUILD})
+
+set (PYTHON_HELPER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/../tools/)
+
+set(EGC_GEN_NODE_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h.in)
+set(EGC_GEN_NODE_HEADER_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h)
 add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED}
-        COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${EGC_GEN_NODE_HEADER}
-        COMMAND ${CMAKE_COMMAND} -E touch ${EGC_GEN_NODE_HEADER_GENERATED}
-        DEPENDS ${EGC_GEN_NODE_HEADER}
+        COMMAND python3 -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
+        -o ${EGC_GEN_NODE_HEADER_GENERATED} ${EGC_GEN_NODE_HEADER}
+        DEPENDS ${EGC_GEN_NODE_HEADER} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
         COMMENT "generate node list"
         VERBATIM
 )
 
-set(EGC_GEN_NODE_CREATOR ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp)
-set(EGC_GEN_NODE_CREATOR_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnodecreator.txt)
+set(EGC_GEN_NODE_CREATOR ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp.in)
+set(EGC_GEN_NODE_CREATOR_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp)
 add_custom_command(OUTPUT ${EGC_GEN_NODE_CREATOR_GENERATED}
-        COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${EGC_GEN_NODE_CREATOR}
-        COMMAND ${CMAKE_COMMAND} -E touch ${EGC_GEN_NODE_CREATOR_GENERATED}
-        DEPENDS ${EGC_GEN_NODE_CREATOR}
+        COMMAND python3 -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
+        -o ${EGC_GEN_NODE_CREATOR_GENERATED} ${EGC_GEN_NODE_CREATOR}
+        DEPENDS ${EGC_GEN_NODE_CREATOR} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
         COMMENT "generate node creator"
         VERBATIM
 )
 
-set(EGC_GEN_NODES ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h)
-set(EGC_GEN_NODES_GENERATED ${CMAKE_CURRENT_BINARY_DIR}/egcnodes.txt)
+set(EGC_GEN_NODES ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h.in)
+set(EGC_GEN_NODES_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h)
 add_custom_command(OUTPUT ${EGC_GEN_NODES_GENERATED}
-        COMMAND cog.py -r -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} ${EGC_GEN_NODES}
-        COMMAND ${CMAKE_COMMAND} -E touch ${EGC_GEN_NODES_GENERATED}
-        DEPENDS ${EGC_GEN_NODES}
+        COMMAND python3 -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}  -D PythonHelper=${PYTHON_HELPER_SCRIPT}
+        -o ${EGC_GEN_NODES_GENERATED} ${EGC_GEN_NODES}
+        DEPENDS ${EGC_GEN_NODES} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
         COMMENT "generate node header file"
         VERBATIM
 )

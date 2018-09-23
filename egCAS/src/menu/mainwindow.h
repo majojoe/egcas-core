@@ -55,12 +55,16 @@ public:
 
 public slots:
         void showLicense(void);
+        void showManual(void);
         void showInfo(void);
         void calculate(void);
         void autoCalculation(bool on);
         void newPage(void);
         void insertGraphic(void);
         void insertText(void);
+        void saveFileAs(void);
+        void saveFile(void);
+        void loadFile(void);
 private:
         /**
          * @brief setupConnections setup all connections to slots that are neccessary
@@ -81,6 +85,7 @@ private:
         ResultType* m_resulttype;
         MathFont* m_mathFont;
         TextFont* m_textFont;
+        QString m_currentFileName;
 };
 
 #endif // MAINWINDOW_H

@@ -62,3 +62,15 @@ QString EgcEmptyNode::getEmptyValue()
 {
         return QChar(0x2B1A);
 }
+
+void EgcEmptyNode::serializeAttributes(QXmlStreamWriter& stream)
+{
+        (void) stream;
+}
+
+void EgcEmptyNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
+{
+        (void) stream;
+        (void) version;
+        (void) attr;
+}

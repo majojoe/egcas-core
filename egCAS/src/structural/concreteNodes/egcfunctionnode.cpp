@@ -29,6 +29,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egcfunctionnode.h"
 #include "egcalnumnode.h"
 #include "structural/specialNodes/egcemptynode.h"
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 
 
 EgcFunctionNode::EgcFunctionNode()
@@ -73,4 +75,18 @@ void EgcFunctionNode::setStuffedName(const QString& fncName)
 QString EgcFunctionNode::getStuffedName()
 {
         return EgcAlnumNode::encode(m_fncName);
+}
+
+void EgcFunctionNode::serializeAttributes(QXmlStreamWriter& stream)
+{
+        stream.writeAttribute("name", m_fncName);
+}
+
+void EgcFunctionNode::deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr)
+{
+        (void) stream;
+        (void) version;
+
+        if (attr.hasAttribute("name"))
+                setName(attr.value("name").toString());
 }

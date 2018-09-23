@@ -62,6 +62,7 @@ set(tst_egcastest_calculations_SOURCES
         ../../src/structural/visitor/egcmaximavisitor.cpp
         ../../src/structural/visitor/egcmathmlvisitor.cpp
         ../../src/structural/visitor/egcmathmllookup.cpp
+        ../../src/structural/visitor/visitorhelper.cpp
         ../../src/structural/entities/formulamodificator.cpp
         ../../src/structural/iterator/formulascriter.cpp
         ../../src/structural/visitor/formulascrvisitor.cpp

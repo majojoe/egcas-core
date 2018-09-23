@@ -40,7 +40,7 @@ public:
         ///std contructor
         EgcasItemInterface() {}
         ///std destructor
-        virtual ~EgcasItemInterface() {}
+        virtual ~EgcasItemInterface();
         /**
          * @brief getPosition needs to be overwritten by subclasses to get the position of the item
          * @return the Position of the item

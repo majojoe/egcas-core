@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <new>
 #include <QtGlobal>
 #include "egcnode.h"
+#include "entities/egcentity.h"
 
 /**
  * @brief The EgcContainerNode class is a base class for a container expression that (binary or unary expression).
@@ -49,7 +50,7 @@ public:
          * @brief isContainer returns if the current element is a container or not
          * @return true if it is a container, false otherwise
          */
-        virtual bool isContainer(void) const;
+        virtual bool isContainer(void) const override;
         /**
          * @brief takeOwnership takes ownership of the child given. The user is responsible for deleting the child.
          * If the user doesn't handle the child properly a leak will occur.
@@ -140,6 +141,30 @@ public:
          * containter node, the result will also be false.
          */
         bool hasSubNode(const EgcNode& node, quint32 &index) const;
+        /**
+         * @brief interface for serializing a class
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serialize(QXmlStreamWriter& stream, SerializerProperties &properties) override;
+
+        /**
+         * @brief deserialize interface for deserializing a class
+         * @param version the version of the stream that is to be deserialized
+         */
+        virtual void deserialize(QXmlStreamReader& stream, SerializerProperties& properties) override;
+        /**
+         * @brief interface for serializing the attributes of a formula operation
+         * @param stream the stream to use for serializing this class
+         */
+        virtual void serializeAttributes(QXmlStreamWriter& stream) override;
+
+        /**
+         * @brief deserialize interface for deserializing the attributes of a formula operation
+         * @param stream the xml reader stream
+         * @param version the version of the stream that is to be deserialized
+         * @param attr the xml attributes provided by the parent
+         */
+        virtual void deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr) override;
 
 protected:
         /**
