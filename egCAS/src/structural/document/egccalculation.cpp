@@ -85,8 +85,10 @@ bool EgcCalculation::calculate(EgcEntityList& list, bool updateInstantly, EgcAbs
 
 bool EgcCalculation::restart(void)
 {
-        if (!m_iterator)
-                m_iterator.reset(new QMutableListIterator<EgcEntity*>(m_list->getIterator()));
+        if (!m_iterator) {
+                if (m_list)
+                        m_iterator.reset(new QMutableListIterator<EgcEntity*>(m_list->getIterator()));
+        }
         if (!m_autoCalc && m_entity) // only if auto calculation is active
                 return false;
 
@@ -129,7 +131,8 @@ void EgcCalculation::nextCalculation(void)
 
 void EgcCalculation::resumeCalculation(void)
 {
-        if (m_state == CalcualtionState::restartAfterResume) {
+        if (    m_state == CalcualtionState::restartAfterResume
+             || m_state == CalcualtionState::notStarted) {
                 m_state = CalcualtionState::notStarted;
                 m_entity = nullptr;
                 restart();
