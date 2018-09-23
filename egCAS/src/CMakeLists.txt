@@ -3,13 +3,15 @@ cmake_minimum_required(VERSION 2.8.11)
 #set the project name
 add_definitions(-DEGC_PROJ_NAME=egcas)
 
+if(POLICY CMP0071)
+        cmake_policy(SET CMP0071 NEW)
+endif()
+
 # Tell CMake to run moc when necessary:
 set(CMAKE_AUTOMOC ON)
 # As moc files are generated in the binary dir, tell CMake
 # to always look for includes there:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-#set(CMAKE_BUILD_TYPE Release)
 
 option(debug_maxima_kernel "switch debugging for maxima kernel on" OFF)
 if(debug_maxima_kernel)
