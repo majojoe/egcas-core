@@ -59,12 +59,12 @@ int Interpreter::parse(bool parseKernelResult)
         m_iterPointer1 = nullptr;
         m_iterPointer2 = nullptr;
         m_iterPointer3 = nullptr;
-        m_location.initialize(NULL, 1, 1);
+        m_location.initialize(NULL, 0, 0);
         return m_parser.parse();
 }
 
 void Interpreter::clear() {
-        m_location.initialize(NULL, 1, 1);
+        m_location.initialize(NULL, 0, 0);
         m_rootNode.reset(nullptr);
         deleteDanglingNodes();
 #if (EGC_PARSER_DEBUG >= 3)
@@ -79,7 +79,7 @@ void Interpreter::switchInputStream(std::istream *is) {
 void Interpreter::increaseLocation(unsigned int loc) {
         m_location.columns(loc);
 //#if (EGC_PARSER_DEBUG >= 3)
-        cout << "increaseLocation(): " << loc << ", total = " << m_location.begin.column << " : " << m_location.end.column ;
+        cout << "increaseLocation(): " << loc << ", total = " << m_location.begin.column << " : " << m_location.end.column << "  ";
 //#endif //#if (EGC_PARSER_DEBUG >= 3)
 }
 
