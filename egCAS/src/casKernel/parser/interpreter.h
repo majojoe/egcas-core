@@ -212,7 +212,7 @@ private:
         void increaseLocation(unsigned int loc);
     
         // Used to get last MaximaScanner location. Used in error messages.
-        unsigned int location() const;
+        location locat() const;
 
         /**
          * @brief addSqrtExpression add a square root to the tree. This is some sort of a hack, since a root node is a
@@ -255,7 +255,7 @@ private:
         MaximaScanner m_scanner;                        ///< the scanner to use for parsing
         MaximaParser m_parser;                          ///< the parser to use
         QScopedPointer<EgcNode> m_rootNode;             ///< the base node of the formula
-        unsigned int m_location;                        ///< Used by scanner
+        location m_location;                        ///< Used by scanner
         QSet<EgcNode*> m_danglingNodes;                 ///< holds the dangling nodes during AST is built up
         EgcNode* m_iterPointer1;                        ///< special pointer that is given by some visitors
         EgcNode* m_iterPointer2;                        ///< special pointer that is given by some visitors

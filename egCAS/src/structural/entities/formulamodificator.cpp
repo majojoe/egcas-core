@@ -908,6 +908,7 @@ void FormulaModificator::checkForSpecialCursorConditions()
 
 }
 
+#include <QDebug>
 bool FormulaModificator::reStructureTree()
 {
         bool retval = true;
@@ -915,6 +916,7 @@ bool FormulaModificator::reStructureTree()
         RestructParserProvider pp;
         FormulaScrVisitor restructVisitor(m_formula, m_iter);
         QString result = restructVisitor.getResult();
+        qDebug() << result;
         int errCode;
         EgcNode* tree = pp.getRestructParser()->restructureFormula(result, m_tempIterData, &errCode);
         if (tree) {

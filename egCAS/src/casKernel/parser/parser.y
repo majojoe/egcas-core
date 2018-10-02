@@ -204,5 +204,5 @@ void CASParser::MaximaParser::error(const location &loc , const std::string &mes
         // Let's grab location directly from interpreter class.
 	// cout << "Error: " << message << endl << "Location: " << loc << endl;
 	
-        cout << "Error: " << message << endl << "Error location: " << interpreter.location() << endl;
+        cout << "Error: " << message << endl << "Error location: " << interpreter.locat() << endl;
 }

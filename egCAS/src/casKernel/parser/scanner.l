@@ -57,9 +57,10 @@
 
         void scanner_dbg(char* tokenText)
         {
-                #if (EGC_SCANNER_DEBUG >= 3)
+
+                //#if (EGC_SCANNER_DEBUG >= 3)
                         cout << "Lexer: matched token -> [" << tokenText << "]" << endl;
-                #endif //#if (EGC_SCANNER_DEBUG >= 3)
+                //#endif //#if (EGC_SCANNER_DEBUG >= 3)
         }
 
 %}
@@ -79,6 +80,7 @@ ALNUMNODE    (([a-zA-Z]{1}|{UNICODESIGN})([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN}
 ALNUMNODESUB (([a-zA-Z0-9]|{UNDERSCORE}|{UNICODESIGN})*{EMPTY}{0,1})
 
 %%
+
 
  /*operators*/
 "+"     { return CASParser::MaximaParser::make_PLUS(CASParser::location()); }
