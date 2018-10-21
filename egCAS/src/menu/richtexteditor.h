@@ -29,17 +29,36 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef RICHTEXTEDITOR_H
 #define RICHTEXTEDITOR_H
 
-#include <QWidget>
+#include <QObject>
 
-class RichTextEditor
+class QDialog;
+class QWidget;
+class MRichTextEdit;
+class QGridLayout;
+class QPushButton;
+
+class RichTextEditor : public QObject
 {
+        Q_OBJECT
 public:
-        RichTextEditor();
+        RichTextEditor(QWidget* parent = nullptr);
+        virtual ~RichTextEditor();
         /**
          * @brief exec executes the rich text editor and returns the html text entered
+         * @param initialText the initial text to set when starting editing
          * @return the html text entered
          */
-        QString exec(void);
+        QString exec(QString initialText);
+public slots:
+        void ok_clicked(void);
+        void cancel_clicked(void);
+private:
+        QDialog *m_dialog;
+        MRichTextEdit *m_rte;
+        QGridLayout *m_gl;
+        QPushButton *m_ok_btn;
+        QPushButton *m_cancel_btn;
+        QString m_initialText;
 };
 
 #endif // RICHTEXTEDITOR_H

@@ -224,7 +224,7 @@ void MainWindow::insertHtmlText(void)
         EgcTextEntity* txt = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text, lastPos));
 
         RichTextEditor editor;
-        txt->setHtmlText(editor.exec());
+        txt->setHtmlText(editor.exec(""));
 }
 
 void MainWindow::saveFileAs(void)

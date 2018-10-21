@@ -30,24 +30,51 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "richtexteditor.h"
 #include <QApplication>
 #include <QDialog>
+#include <QPushButton>
 
-RichTextEditor::RichTextEditor()
+RichTextEditor::RichTextEditor(QWidget* parent) : QObject(parent)
 {
-
+        m_dialog = new QDialog(0);
+        m_rte = new MRichTextEdit(m_dialog, false);
+        m_gl = new QGridLayout(m_dialog);
+        m_ok_btn = new QPushButton(m_dialog);
+        m_ok_btn->setText(QObject::tr("Ok"));
+        m_cancel_btn = new QPushButton(m_dialog);
+        m_cancel_btn->setText(QObject::tr("Cancel"));
+        m_gl->addWidget(m_rte,0,0,1,2);
+        m_gl->addWidget(m_cancel_btn, 1, 0);
+        m_gl->addWidget(m_ok_btn, 1, 1);
+        m_dialog->setWindowTitle(QObject::tr("Rich text editor"));
+        m_dialog->setMinimumWidth (400);
+        m_dialog->setMinimumHeight(400);
+        m_dialog->setModal(true);
+        connect(m_ok_btn, &QPushButton::clicked, this, &RichTextEditor::ok_clicked);
+        connect(m_cancel_btn, &QPushButton::clicked, this, &RichTextEditor::cancel_clicked);
 }
 
-QString RichTextEditor::exec()
+RichTextEditor::~RichTextEditor()
 {
-        QDialog *dialog = new QDialog(0);
-        MRichTextEdit *rte = new MRichTextEdit(dialog, false);
-        QGridLayout *gl = new QGridLayout(dialog);
-        gl->addWidget(rte,0,0,1,1);
-        dialog->setWindowTitle(QObject::tr("Rich text editor"));
-        dialog->setMinimumWidth (400);
-        dialog->setMinimumHeight(400);
-        dialog->setModal(true);
-        dialog->exec();
+        delete m_dialog;
+        m_dialog = nullptr;
+}
 
-        return rte->toHtml();
+QString RichTextEditor::exec(QString initialText)
+{
+        m_initialText = initialText;
+        m_rte->setText(initialText);
+        m_dialog->exec();
+
+        return m_rte->toHtml();
+}
+
+void RichTextEditor::ok_clicked()
+{
+        m_dialog->accept();
+}
+
+void RichTextEditor::cancel_clicked()
+{
+        m_rte->setText(m_initialText);
+        m_dialog->reject();
 }
 
