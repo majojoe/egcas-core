@@ -62,6 +62,7 @@ public slots:
         void newPage(void);
         void insertGraphic(void);
         void insertText(void);
+        void insertHtmlText(void);
         void saveFileAs(void);
         void saveFile(void);
         void loadFile(void);

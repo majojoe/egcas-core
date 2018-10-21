@@ -153,6 +153,16 @@ QString EgcTextItem::getText(void)
         return toPlainText();
 }
 
+void EgcTextItem::setHtmlText(QString text)
+{
+        setHtml(text);
+}
+
+QString EgcTextItem::getHtmlText()
+{
+        return toHtml();
+}
+
 EgCasScene* EgcTextItem::getEgcScene(void)
 {
         QGraphicsScene *scene = this->scene();

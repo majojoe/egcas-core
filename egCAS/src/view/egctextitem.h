@@ -72,6 +72,16 @@ public:
          */
         virtual QString getText(void) override;
         /**
+         * @brief setHtmlText set text that is already in html style
+         * @param text the text to set
+         */
+        virtual void setHtmlText(QString text) override;
+        /**
+         * @brief getHtmlText get text that is already in html style
+         * @return text in html format
+         */
+        virtual QString getHtmlText(void) override;
+        /**
          * @brief setEditMode sets this item in edit mode, so that the user can start to write text
          */
         virtual void setEditMode(void) override;
