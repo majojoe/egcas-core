@@ -186,6 +186,7 @@ set(egcas_SOURCES
         menu/resulttype.cpp
         menu/mathfont.cpp
         menu/textfont.cpp
+        menu/richtexteditor.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS
@@ -291,6 +292,6 @@ set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp PROPERTY SKIP_AUTOMOC
 set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTY SKIP_AUTOMOC ON)
 set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTY SKIP_AUTOMOC ON)
 
-target_link_libraries(egcas mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core Qt5::Multimedia)
+target_link_libraries(egcas mmlegcas mrichtextedit Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core Qt5::Multimedia)
 install (TARGETS egcas RUNTIME DESTINATION bin)
 

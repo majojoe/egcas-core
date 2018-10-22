@@ -66,7 +66,7 @@ public:
          */
         virtual void setPosition(QPointF pos) override;
         /**
-         * @brief getText returns the text hold by this entity/item
+         * @brief getText returns the text hold by this entity/item (can be plain text or html text)
          * @return the text hold
          */
         QString getText(void) const;
@@ -75,6 +75,11 @@ public:
          * @param text the text to set
          */
         void setText(QString text);
+        /**
+         * @brief setHtmlText set text that is already in html style
+         * @param text the text to set
+         */
+        void setHtmlText(QString text);
         /**
          * @brief getFont returns the font used by this entity/item
          * @return the font used
@@ -131,12 +136,21 @@ public:
          * @param properties object with all neccessary information for deserializing
          */
         virtual void deserialize(QXmlStreamReader& stream, SerializerProperties &properties) override;
-
+        /**
+         * @brief isHtmlText returns if text that this entity holds is in html format
+         * @return true if text is in html format
+         */
+        bool isHtmlText(void);
+        /**
+         * @brief setIsHtml sets the entity to use html encoding
+         */
+        void setIsHtml(void);
 
 private:
         EgcAbstractTextItem *m_item;                    ///< pointer to QGraphicsitem hold by scene
         static QFont s_genericFont;                     ///< the generic font to use for all text entities
         QFont* m_font;                                  ///< pointer to font chosen for this object
+        bool m_isHtml;                                  ///< if true, this is a html text, otherwise normal simple text
 };
 
 #endif // EGCTEXTENTITY_H

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2015, Johannes Maier <maier_jo@gmx.de>
+Copyright (c) 2014 - 2018, Johannes Maier <maier_jo@gmx.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@ modification, are permitted provided that the following conditions are met:
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the egCAS nor the names of its
+* Neither the name of the copyright holder nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -26,46 +26,46 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+#ifndef RICHTEXTEDITOR_H
+#define RICHTEXTEDITOR_H
 
-#ifndef EGCABSTRACTTEXTITEM_H
-#define EGCABSTRACTTEXTITEM_H
-
-#include <QString>
+#include <QWidget>
 #include <QFont>
-#include "egcasiteminterface.h"
 
-class EgcAbstractTextItem : public EgcasItemInterface
+class QDialog;
+class MRichTextEdit;
+class QGridLayout;
+class QPushButton;
+
+class RichTextEditor : public QWidget
 {
+        Q_OBJECT
 public:
+        RichTextEditor(QWidget* parent = nullptr);
+        virtual ~RichTextEditor();
         /**
-         * @brief ~EgcAbstractFormulaItem virtual destructor in order to be able to delete subclasses
+         * @brief exec executes the rich text editor and returns the html text entered
+         * @param initialText the initial text to set when starting editing
+         * @return the html text entered
          */
-        virtual ~EgcAbstractTextItem() {}
+        QString exec(QString initialText);
         /**
-         * @brief setText set the given text
-         * @param text the text to set
+         * @brief setGenericFont set the font used by this class if nothing else is set for the object
+         * @param font the font to set
          */
-        virtual void setText(QString text) = 0;
-        /**
-         * @brief getText returns the text of the associated item
-         * @return the text of this item
-         */
-        virtual QString getText(void) = 0;
-        /**
-         * @brief setHtmlText set text that is already in html style
-         * @param text the text to set
-         */
-        virtual void setHtmlText(QString text) = 0;
-        /**
-         * @brief getHtmlText get text that is already in html style
-         * @return text in html format
-         */
-        virtual QString getHtmlText(void) = 0;
-        /**
-         * @brief setEditMode sets this item in edit mode, so that the user can start to write text
-         * @param activateEditing activate the edition if true, deactivate it if false
-         */
-        virtual void setEditMode(bool activateEditing = true) = 0;
+        static void setGenericFont(const QFont& font);
+
+public slots:
+        void ok_clicked(void);
+        void cancel_clicked(void);
+private:
+        QDialog *m_dialog;
+        MRichTextEdit *m_rte;
+        QGridLayout *m_gl;
+        QPushButton *m_ok_btn;
+        QPushButton *m_cancel_btn;
+        QString m_initialText;
+        static QFont s_genericFont;                     ///< the generic font to use for all text entities
 };
 
-#endif // EGCABSTRACTTEXTITEM_H
+#endif // RICHTEXTEDITOR_H

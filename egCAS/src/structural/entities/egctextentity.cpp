@@ -26,6 +26,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include "menu/richtexteditor.h"
 #include <QFont>
 #include "egctextentity.h"
 #include "egctextitem.h"
@@ -39,7 +40,7 @@ QFont EgcTextEntity::s_genericFont = QFont(QString("Century Schoolbook L"), 14);
 #endif //#if defined( Q_OS_WIN )
 
 
-EgcTextEntity::EgcTextEntity(void) : m_item(nullptr), m_font{nullptr}
+EgcTextEntity::EgcTextEntity(void) : m_item(nullptr), m_font{nullptr}, m_isHtml{false}
 {
 }
 
@@ -66,7 +67,10 @@ QString EgcTextEntity::getText(void) const
         if (!m_item)
                 return "";
 
-        return m_item->getText();
+        if (m_isHtml)
+                return m_item->getHtmlText();
+        else
+                return m_item->getText();
 }
 
 void EgcTextEntity::setItem(EgcAbstractTextItem* item)
@@ -92,7 +96,17 @@ void EgcTextEntity::setText(QString text)
         if (!m_item)
                 return;
 
+        m_isHtml = false;
         m_item->setText(text);
+}
+
+void EgcTextEntity::setHtmlText(QString text)
+{
+        if (!m_item)
+                return;
+
+        m_isHtml = true;
+        m_item->setHtmlText(text);
 }
 
 QFont EgcTextEntity::getFont(void) const
@@ -107,6 +121,8 @@ void EgcTextEntity::setFont(const QFont& font)
 {
         if (m_font)
                 delete m_font;
+        if (m_isHtml)   // will not be set if text is html type
+                return;
         m_font = new QFont(font);
         //delete font for this entity if it is the same as the generic font
         if (*m_font == s_genericFont) {
@@ -135,19 +151,31 @@ QFont& EgcTextEntity::getGenericFont(void)
 
 void EgcTextEntity::itemChanged(EgcItemChangeType changeType)
 {
+        if (changeType == EgcItemChangeType::itemEdited) {
+                if (m_item && m_isHtml) {
+                        m_item->setEditMode(false);
+
+                        RichTextEditor editor;
+                        setHtmlText(editor.exec(getText()));
+                }
+        }
 }
 
 void EgcTextEntity::setEditMode()
 {
         if (m_item)
-                m_item->setEditMode();
+                m_item->setEditMode();        
 }
 
 void EgcTextEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
 {
+        (void) properties;
+
         stream.writeStartElement("text_entity");
-        if (m_font)
+        if (m_font && !m_isHtml)
                 stream.writeAttribute("font", m_font->toString());
+        if (m_isHtml)
+                stream.writeAttribute("is_html", "true");
         stream.writeAttribute("pos_x", QString("%1").arg(getPosition().x()));
         stream.writeAttribute("pos_y", QString("%1").arg(getPosition().y()));
         stream.writeCharacters(getText());
@@ -166,6 +194,11 @@ void EgcTextEntity::deserialize(QXmlStreamReader& stream, SerializerProperties& 
                         fnt.fromString(font_str);
                         setFont(fnt);
                 }
+                if (attr.hasAttribute("is_html")) {
+                        QString is_html_str = attr.value("is_html").toString();
+                        if (is_html_str == "true")
+                                setIsHtml();
+                }
                 if (attr.hasAttribute("pos_x") && attr.hasAttribute("pos_y")) {
                         qreal x = attr.value("pos_x").toFloat();
                         qreal y = attr.value("pos_y").toFloat();
@@ -175,5 +208,15 @@ void EgcTextEntity::deserialize(QXmlStreamReader& stream, SerializerProperties& 
         }
         if (!stream.isEndElement())
                 stream.skipCurrentElement();
+}
+
+bool EgcTextEntity::isHtmlText()
+{
+        return m_isHtml;
+}
+
+void EgcTextEntity::setIsHtml()
+{
+        m_isHtml = true;
 }
 

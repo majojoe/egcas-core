@@ -83,25 +83,39 @@ void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
         if (!m_editingActivated) {
                 clearFocus();
+                m_editingActivated = true;
+                setSelected(false);
                 setFocus(Qt::OtherFocusReason);
         } else {
                 QGraphicsTextItem::mouseDoubleClickEvent(event);
         }
-        m_editingActivated = true;
-        setSelected(false);
 }
 
-void EgcTextItem::setEditMode(void)
+void EgcTextItem::setEditMode(bool activateEditing)
 {
-        setTextInteractionFlags(Qt::TextEditorInteraction);
-        if (!hasCursor())
-                setCursor(QCursor(Qt::IBeamCursor));
-        QTextCursor cursor = textCursor();
-        cursor.movePosition(QTextCursor::End);
-        setTextCursor(cursor);
-        setFocus();
-        m_editingActivated = true;
-        setSelected(false);
+        if (activateEditing) {
+                setTextInteractionFlags(Qt::TextEditorInteraction);
+                if (!hasCursor())
+                        setCursor(QCursor(Qt::IBeamCursor));
+                QTextCursor cursor = textCursor();
+                cursor.movePosition(QTextCursor::End);
+                setTextCursor(cursor);
+                setFocus();
+                m_editingActivated = true;
+                setSelected(false);
+                if (getEnity())
+                        getEnity()->itemChanged(EgcItemChangeType::itemEdited);
+        } else {
+                m_editingActivated = false;
+                setSelected(true);
+                setTextInteractionFlags(Qt::NoTextInteraction);
+                if (hasCursor()) {
+                        QTextCursor cursor = textCursor();
+                        cursor.clearSelection();
+                        setTextCursor(cursor);
+                }
+                unsetCursor();
+        }
 }
 
 void EgcTextItem::focusInEvent(QFocusEvent* event)
@@ -151,6 +165,16 @@ void EgcTextItem::setText(QString text)
 QString EgcTextItem::getText(void)
 {
         return toPlainText();
+}
+
+void EgcTextItem::setHtmlText(QString text)
+{
+        setHtml(text);
+}
+
+QString EgcTextItem::getHtmlText()
+{
+        return toHtml();
 }
 
 EgCasScene* EgcTextItem::getEgcScene(void)

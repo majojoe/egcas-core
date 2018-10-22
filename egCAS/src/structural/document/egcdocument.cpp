@@ -45,6 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 #include <QFile>
+#include "menu/richtexteditor.h"
 
 EgcDocument::EgcDocument() : m_list{new EgcEntityList(this)}, m_scene{new EgCasScene(*this, nullptr)}, m_calc{new EgcCalculation()}
 {
@@ -441,6 +442,7 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, SerializerProperties &pr
                                 QFont fnt;
                                 fnt.fromString(font_str);
                                 EgcTextEntity::setGenericFont(fnt);
+                                RichTextEditor::setGenericFont(fnt);
                         }
                         QString ver = attr.value("version").toString();
                         QStringList list = ver.split('.');
