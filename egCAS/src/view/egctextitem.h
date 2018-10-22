@@ -84,7 +84,7 @@ public:
         /**
          * @brief setEditMode sets this item in edit mode, so that the user can start to write text
          */
-        virtual void setEditMode(void) override;
+        virtual void setEditMode(bool activateEditing = true) override;
         /**
          * @brief override paint from QGraphicsItem
          * @param painter pointer to painter

@@ -63,8 +63,9 @@ public:
         virtual QString getHtmlText(void) = 0;
         /**
          * @brief setEditMode sets this item in edit mode, so that the user can start to write text
+         * @param activateEditing activate the edition if true, deactivate it if false
          */
-        virtual void setEditMode(void) = 0;
+        virtual void setEditMode(bool activateEditing = true) = 0;
 };
 
 #endif // EGCABSTRACTTEXTITEM_H

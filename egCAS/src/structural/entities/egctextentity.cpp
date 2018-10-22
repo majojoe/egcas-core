@@ -26,6 +26,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include "menu/richtexteditor.h"
 #include <QFont>
 #include "egctextentity.h"
 #include "egctextitem.h"
@@ -150,12 +151,19 @@ QFont& EgcTextEntity::getGenericFont(void)
 
 void EgcTextEntity::itemChanged(EgcItemChangeType changeType)
 {
+        if (changeType == EgcItemChangeType::itemEdited) {
+                if (m_item && m_isHtml) {
+                        m_item->setEditMode(false);
+                        RichTextEditor editor;
+                        setHtmlText(editor.exec(getText()));
+                }
+        }
 }
 
 void EgcTextEntity::setEditMode()
 {
         if (m_item)
-                m_item->setEditMode();
+                m_item->setEditMode();        
 }
 
 void EgcTextEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)

@@ -91,17 +91,31 @@ void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
         setSelected(false);
 }
 
-void EgcTextItem::setEditMode(void)
+void EgcTextItem::setEditMode(bool activateEditing)
 {
-        setTextInteractionFlags(Qt::TextEditorInteraction);
-        if (!hasCursor())
-                setCursor(QCursor(Qt::IBeamCursor));
-        QTextCursor cursor = textCursor();
-        cursor.movePosition(QTextCursor::End);
-        setTextCursor(cursor);
-        setFocus();
-        m_editingActivated = true;
-        setSelected(false);
+        if (activateEditing) {
+                setTextInteractionFlags(Qt::TextEditorInteraction);
+                if (!hasCursor())
+                        setCursor(QCursor(Qt::IBeamCursor));
+                QTextCursor cursor = textCursor();
+                cursor.movePosition(QTextCursor::End);
+                setTextCursor(cursor);
+                setFocus();
+                m_editingActivated = true;
+                setSelected(false);
+                if (getEnity())
+                        getEnity()->itemChanged(EgcItemChangeType::itemEdited);
+        } else {
+                m_editingActivated = false;
+                setSelected(true);
+                setTextInteractionFlags(Qt::NoTextInteraction);
+                if (hasCursor()) {
+                        QTextCursor cursor = textCursor();
+                        cursor.clearSelection();
+                        setTextCursor(cursor);
+                }
+                unsetCursor();
+        }
 }
 
 void EgcTextItem::focusInEvent(QFocusEvent* event)
