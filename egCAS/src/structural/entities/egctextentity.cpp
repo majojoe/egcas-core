@@ -154,6 +154,7 @@ void EgcTextEntity::itemChanged(EgcItemChangeType changeType)
         if (changeType == EgcItemChangeType::itemEdited) {
                 if (m_item && m_isHtml) {
                         m_item->setEditMode(false);
+
                         RichTextEditor editor;
                         setHtmlText(editor.exec(getText()));
                 }
@@ -168,6 +169,8 @@ void EgcTextEntity::setEditMode()
 
 void EgcTextEntity::serialize(QXmlStreamWriter& stream, SerializerProperties &properties)
 {
+        (void) properties;
+
         stream.writeStartElement("text_entity");
         if (m_font && !m_isHtml)
                 stream.writeAttribute("font", m_font->toString());

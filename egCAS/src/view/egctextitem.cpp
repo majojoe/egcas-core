@@ -83,12 +83,12 @@ void EgcTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
         if (!m_editingActivated) {
                 clearFocus();
+                m_editingActivated = true;
+                setSelected(false);
                 setFocus(Qt::OtherFocusReason);
         } else {
                 QGraphicsTextItem::mouseDoubleClickEvent(event);
         }
-        m_editingActivated = true;
-        setSelected(false);
 }
 
 void EgcTextItem::setEditMode(bool activateEditing)
