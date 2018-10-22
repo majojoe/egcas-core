@@ -209,3 +209,4 @@ void TextFont::italicText(bool italic)
         }
         m_document->updateView();
 }
+

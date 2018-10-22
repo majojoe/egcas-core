@@ -29,15 +29,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef RICHTEXTEDITOR_H
 #define RICHTEXTEDITOR_H
 
-#include <QObject>
+#include <QWidget>
+#include <QFont>
 
 class QDialog;
-class QWidget;
 class MRichTextEdit;
 class QGridLayout;
 class QPushButton;
 
-class RichTextEditor : public QObject
+class RichTextEditor : public QWidget
 {
         Q_OBJECT
 public:
@@ -49,6 +49,12 @@ public:
          * @return the html text entered
          */
         QString exec(QString initialText);
+        /**
+         * @brief setGenericFont set the font used by this class if nothing else is set for the object
+         * @param font the font to set
+         */
+        static void setGenericFont(const QFont& font);
+
 public slots:
         void ok_clicked(void);
         void cancel_clicked(void);
@@ -59,6 +65,7 @@ private:
         QPushButton *m_ok_btn;
         QPushButton *m_cancel_btn;
         QString m_initialText;
+        static QFont s_genericFont;                     ///< the generic font to use for all text entities
 };
 
 #endif // RICHTEXTEDITOR_H

@@ -32,10 +32,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QDialog>
 #include <QPushButton>
 
-RichTextEditor::RichTextEditor(QWidget* parent) : QObject(parent)
+
+#if defined( Q_OS_WIN )
+QFont RichTextEditor::s_genericFont = QFont(QString("Times New Roman"), 14);
+#else //#if defined( Q_OS_WIN )
+QFont RichTextEditor::s_genericFont = QFont(QString("Century Schoolbook L"), 14);
+#endif //#if defined( Q_OS_WIN )
+
+RichTextEditor::RichTextEditor(QWidget* parent) : QWidget(parent)
 {
-        m_dialog = new QDialog(0);
+        m_dialog = new QDialog(this);
         m_rte = new MRichTextEdit(m_dialog, false);
+        m_rte->setBasicFont(s_genericFont);
+        m_rte->setHeadingPointSizes(22, 18, 16, 15);
         m_gl = new QGridLayout(m_dialog);
         m_ok_btn = new QPushButton(m_dialog);
         m_ok_btn->setText(QObject::tr("Ok"));
@@ -54,8 +63,6 @@ RichTextEditor::RichTextEditor(QWidget* parent) : QObject(parent)
 
 RichTextEditor::~RichTextEditor()
 {
-        delete m_dialog;
-        m_dialog = nullptr;
 }
 
 QString RichTextEditor::exec(QString initialText)
@@ -78,3 +85,7 @@ void RichTextEditor::cancel_clicked()
         m_dialog->reject();
 }
 
+void RichTextEditor::setGenericFont(const QFont& font)
+{
+        s_genericFont = font;
+}
