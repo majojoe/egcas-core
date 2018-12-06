@@ -1,0 +1,3 @@
+[submodule "egCAS/src/casKernel/parser/antlr4"]
+	path = egCAS/src/casKernel/parser/antlr4
+	url = https://github.com/egcas/antlr4.git
