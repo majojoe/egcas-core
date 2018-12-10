@@ -179,14 +179,6 @@ private:
         void deleteDanglingNodes(void);
 
         /**
-         * @brief addSqrtExpression add a square root to the tree. This is some sort of a hack, since a root node is a
-         * binary node, but this is constructed with just one argument (unary), the second node (2) is constructed in
-         * the background
-         * @param node0 the radicand to use
-         * @return
-         */
-        EgcNode* addSqrtExpression(EgcNode* node0);
-        /**
          * @brief addDifferentialExpression add a differential node
          * @param argList the arg list to use
          * @return pointer to the new type

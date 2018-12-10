@@ -53,6 +53,9 @@ int FormulaInterpreter::parse(std::istream &istream, bool parseKernelResult)
         } catch (std::runtime_error &e) {
                 (void) e;
                 return 1;
+        } catch (std::out_of_range &e) {
+                (void) e;
+                return 1;
         }
 
         m_rootNode.reset(nodeTree);
@@ -99,14 +102,150 @@ antlrcpp::Any FormulaInterpreter::visitPlusMinus(EgcParser::PlusMinusContext *ct
 
 antlrcpp::Any FormulaInterpreter::visitNumber(EgcParser::NumberContext *ctx)
 {
-    size_t start = ctx->getStart()->getCharPositionInLine();
-    Token* stopToken = ctx->getStop();
-    size_t stop = stopToken->getCharPositionInLine();
-    stop += stopToken->getText().length() - 1;
+        (void) visitChildren(ctx);
 
-    cout << "number: " << start << "/" << stop << endl;
+        EgcNode *nodePtr = nullptr;
+        QScopedPointer<EgcNumberNode> node(static_cast<EgcNumberNode*>(EgcNodeCreator::create(EgcNodeType::NumberNode)));
+        if (node.isNull())
+                return nullptr;
+        node->setValue(QString::fromStdString(ctx->NUMBER()->getText()));
+        nodePtr = node.data();
+        addDanglingNode(node.take());
 
-  return visitChildren(ctx);
+        return nodePtr;
+}
+
+antlrcpp::Any FormulaInterpreter::visitEquality(EgcParser::EqualityContext *ctx)
+{
+        return addBinaryExpression(EgcNodeType::EqualNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+}
+
+antlrcpp::Any FormulaInterpreter::visitDefinition(EgcParser::DefinitionContext *ctx)
+{
+        return addBinaryExpression(EgcNodeType::DefinitionNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+}
+
+antlrcpp::Any FormulaInterpreter::visitRedParenthesisL(EgcParser::RedParenthesisLContext *ctx)
+{
+        return addUnaryExpression(EgcNodeType::LParenthesisNode, visit(ctx->expr()));
+}
+
+antlrcpp::Any FormulaInterpreter::visitUMinus(EgcParser::UMinusContext *ctx)
+{
+        return addUnaryExpression(EgcNodeType::UnaryMinusNode, visit(ctx->expr()));
+}
+
+antlrcpp::Any FormulaInterpreter::visitVariable(EgcParser::VariableContext *ctx)
+{
+        (void) visitChildren(ctx);
+
+        EgcNode *nodePtr = nullptr;
+        QScopedPointer<EgcVariableNode> node(static_cast<EgcVariableNode*>(EgcNodeCreator::create(EgcNodeType::VariableNode)));
+        if (node.isNull())
+                return nullptr;
+        QString var = QString::fromStdString(ctx->NAMES()->getText());
+        if (ctx->VARSUB())
+                var += QString::fromStdString(ctx->VARSUB()->getText());
+        node->setStuffedVar(var);
+        nodePtr = node.data();
+        addDanglingNode(node.take());
+
+        return nodePtr;
+}
+
+antlrcpp::Any FormulaInterpreter::visitBracketOp(EgcParser::BracketOpContext *ctx)
+{
+        return visitChildren(ctx);
+}
+
+antlrcpp::Any FormulaInterpreter::visitDifferential(EgcParser::DifferentialContext *ctx)
+{
+
+}
+
+antlrcpp::Any FormulaInterpreter::visitRoot(EgcParser::RootContext *ctx)
+{
+        return addBinaryExpression(EgcNodeType::RootNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+}
+
+antlrcpp::Any FormulaInterpreter::visitExponent(EgcParser::ExponentContext *ctx)
+{
+
+}
+
+antlrcpp::Any FormulaInterpreter::visitMulDiv(EgcParser::MulDivContext *ctx)
+{
+        EgcNode* retval = nullptr;
+        size_t t = ctx->op->getType();
+        if (t == EgcParser::MULT)
+                retval = addBinaryExpression(EgcNodeType::MultiplicationNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        else
+                retval = addDivisionExpression(visit(ctx->expr(0)), visit(ctx->expr(1)));
+
+        return retval;
+}
+
+antlrcpp::Any FormulaInterpreter::visitSqrt(EgcParser::SqrtContext *ctx)
+{
+        QScopedPointer<EgcEmptyNode> nExp(static_cast<EgcEmptyNode*>(EgcNodeCreator::create(EgcNodeType::EmptyNode)));
+        QScopedPointer<EgcNode> sqrt(addBinaryExpression(EgcNodeType::RootNode, nExp.take(), visit(ctx->expr())));
+
+        return sqrt.take();
+}
+
+antlrcpp::Any FormulaInterpreter::visitEmptyBinOp(EgcParser::EmptyBinOpContext *ctx)
+{
+
+}
+
+antlrcpp::Any FormulaInterpreter::visitIteratorL(EgcParser::IteratorLContext *ctx)
+{
+
+}
+
+antlrcpp::Any FormulaInterpreter::visitRedParenthesisR(EgcParser::RedParenthesisRContext *ctx)
+{
+        return addUnaryExpression(EgcNodeType::RParenthesisNode, visit(ctx->expr()));
+}
+
+antlrcpp::Any FormulaInterpreter::visitFunction(EgcParser::FunctionContext *ctx)
+{
+
+}
+
+antlrcpp::Any FormulaInterpreter::visitParenthesis(EgcParser::ParenthesisContext *ctx)
+{
+        return addUnaryExpression(EgcNodeType::ParenthesisNode, visit(ctx->expr()));
+}
+
+antlrcpp::Any FormulaInterpreter::visitEmpty(EgcParser::EmptyContext *ctx)
+{
+
+}
+
+antlrcpp::Any FormulaInterpreter::visitIteratorR(EgcParser::IteratorRContext *ctx)
+{
+
+}
+
+antlrcpp::Any FormulaInterpreter::visitNatlogarithm(EgcParser::NatlogarithmContext *ctx)
+{
+
+}
+
+antlrcpp::Any FormulaInterpreter::visitLogarithm(EgcParser::LogarithmContext *ctx)
+{
+
+}
+
+antlrcpp::Any FormulaInterpreter::visitIntegral(EgcParser::IntegralContext *ctx)
+{
+
+}
+
+antlrcpp::Any FormulaInterpreter::visitExplist(EgcParser::ExplistContext *ctx)
+{
+
 }
 
 EgcNode* FormulaInterpreter::addBinaryExpression(EgcNodeType type, EgcNode* node0,
@@ -130,7 +269,7 @@ EgcNode* FormulaInterpreter::addBinaryExpression(EgcNodeType type, EgcNode* node
         return nodePtr;
 }
 
-EgcNode* Interpreter::addUnaryExpression(EgcNodeType type, EgcNode* node0)
+EgcNode* FormulaInterpreter::addUnaryExpression(EgcNodeType type, EgcNode* node0)
 {
         QScopedPointer<EgcUnaryNode> node(static_cast<EgcUnaryNode*>(EgcNodeCreator::create(type)));
         QScopedPointer<EgcNode> node0Tmp(node0);
@@ -294,17 +433,17 @@ EgcArgumentsNode* Interpreter::addArgument(EgcNode* expressionToAdd, EgcArgument
         return argumentList;
 }
 
-void Interpreter::addDanglingNode(EgcNode* node)
+void FormulaInterpreter::addDanglingNode(EgcNode* node)
 {
         m_danglingNodes.insert(node);
 }
 
-void Interpreter::setNotDangling(EgcNode* node)
+void FormulaInterpreter::setNotDangling(EgcNode* node)
 {
         m_danglingNodes.remove(node);
 }
 
-void Interpreter::deleteDanglingNodes(void)
+void FormulaInterpreter::deleteDanglingNodes(void)
 {
         foreach (EgcNode* node, m_danglingNodes) {
                 delete node;
@@ -312,20 +451,12 @@ void Interpreter::deleteDanglingNodes(void)
         m_danglingNodes.clear();
 }
 
-EgcNode* Interpreter::addSqrtExpression(EgcNode* node0)
-{
-        QScopedPointer<EgcEmptyNode> nExp(static_cast<EgcEmptyNode*>(EgcNodeCreator::create(EgcNodeType::EmptyNode)));
-        QScopedPointer<EgcNode> sqrt(addBinaryExpression(EgcNodeType::RootNode, nExp.take(), node0));
-        
-        return sqrt.take();        
-}
-
 EgcNode* Interpreter::addUnaryStructParenth(EgcNode* node)
 {
         return node;
 }
 
-EgcNode* Interpreter::addDivisionExpression(EgcNode* node0, EgcNode* node1)
+EgcNode* FormulaInterpreter::addDivisionExpression(EgcNode* node0, EgcNode* node1)
 {
         EgcNode* retval;
 
@@ -378,7 +509,7 @@ EgcNode* Interpreter::changeFlexExpressionType(EgcNodeType type, EgcArgumentsNod
         }
 }
 
-EgcNode* Interpreter::addDifferentialExpression(EgcArgumentsNode* argList)
+EgcNode* FormulaInterpreter::addDifferentialExpression(EgcArgumentsNode* argList)
 {
         EgcNode* node = changeFlexExpressionType(EgcNodeType::DifferentialNode, argList);
         EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(node);
