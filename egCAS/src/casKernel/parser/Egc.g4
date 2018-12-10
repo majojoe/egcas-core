@@ -1,5 +1,5 @@
 // Define a grammar for egcas
-grammar egc;
+grammar Egc;
 formula:          
         | expr 
         | equation;
@@ -15,8 +15,8 @@ expr : <assoc=right> expr EXP expr              # Exponent
      | ITERATOR_R expr                          # IteratorR
      | RED_PARENTHESIS_L expr                   # RedParenthesisL
      | expr RED_PARENTHESIS_R                   # RedParenthesisR
-     | expr ('*' | '/') expr                    # MulDiv
-     | expr ('+' | '-') expr                    # PlusMinus
+     | expr op=(MULT | DIV) expr                # MulDiv
+     | expr op=(PLUS | MINUS) expr              # PlusMinus
      | expr EMPTYBINOP expr                     # EmptyBinOp
      | '(' expr ')'                             # Parenthesis
      | NUMBER                                   # Number
@@ -40,6 +40,10 @@ explist: expr
 
 // LEXER
 //operators
+PLUS:           '+';
+MINUS:          '-';
+MULT:           '*';
+DIV:            '/';
 EXP:            '^' | '**';
 SQRT:           '_sqrt';
 //parenthesis to define operation borders

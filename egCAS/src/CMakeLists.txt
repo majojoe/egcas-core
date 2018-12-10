@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 
-set(ANTLR4_GRAMMAR_FILE "${CMAKE_CURRENT_LIST_DIR}/casKernel/parser/egc.g4")
-set(ANTLR4_GRAMMAR_NAME "egc")
+set(ANTLR4_GRAMMAR_FILE "${CMAKE_CURRENT_LIST_DIR}/casKernel/parser/Egc.g4")
+set(ANTLR4_GRAMMAR_NAME "Egc")
 set(ANTLR4_BASE_RULE_NAME "formula")
 
 add_subdirectory(casKernel/parser/antlr4)
@@ -168,6 +168,7 @@ set(egcas_SOURCES
         casKernel/egcmaximaconn.cpp 
         casKernel/egckernelconn.cpp
         casKernel/parser/interpreter.cpp
+        casKernel/parser/formulainterpreter.cpp
         casKernel/parser/egckernelparser.cpp
         casKernel/parser/restructparserprovider.cpp
         ${BISON_cas_parser_OUTPUTS}
