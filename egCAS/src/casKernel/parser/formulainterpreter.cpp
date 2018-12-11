@@ -160,7 +160,7 @@ antlrcpp::Any FormulaInterpreter::visitBracketOp(EgcParser::BracketOpContext *ct
 
 antlrcpp::Any FormulaInterpreter::visitDifferential(EgcParser::DifferentialContext *ctx)
 {
-
+        return addDifferentialExpression(visit(ctx->explist()));
 }
 
 antlrcpp::Any FormulaInterpreter::visitRoot(EgcParser::RootContext *ctx)
@@ -170,7 +170,7 @@ antlrcpp::Any FormulaInterpreter::visitRoot(EgcParser::RootContext *ctx)
 
 antlrcpp::Any FormulaInterpreter::visitExponent(EgcParser::ExponentContext *ctx)
 {
-
+        return addBinaryExpression(EgcNodeType::ExponentNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
 }
 
 antlrcpp::Any FormulaInterpreter::visitMulDiv(EgcParser::MulDivContext *ctx)
@@ -195,12 +195,12 @@ antlrcpp::Any FormulaInterpreter::visitSqrt(EgcParser::SqrtContext *ctx)
 
 antlrcpp::Any FormulaInterpreter::visitEmptyBinOp(EgcParser::EmptyBinOpContext *ctx)
 {
-
+        return addBinaryExpression(EgcNodeType::BinEmptyNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
 }
 
 antlrcpp::Any FormulaInterpreter::visitIteratorL(EgcParser::IteratorLContext *ctx)
 {
-
+        return updateIterator(visit(ctx->expr()), 2);
 }
 
 antlrcpp::Any FormulaInterpreter::visitRedParenthesisR(EgcParser::RedParenthesisRContext *ctx)
@@ -210,7 +210,6 @@ antlrcpp::Any FormulaInterpreter::visitRedParenthesisR(EgcParser::RedParenthesis
 
 antlrcpp::Any FormulaInterpreter::visitFunction(EgcParser::FunctionContext *ctx)
 {
-
 }
 
 antlrcpp::Any FormulaInterpreter::visitParenthesis(EgcParser::ParenthesisContext *ctx)
@@ -220,27 +219,28 @@ antlrcpp::Any FormulaInterpreter::visitParenthesis(EgcParser::ParenthesisContext
 
 antlrcpp::Any FormulaInterpreter::visitEmpty(EgcParser::EmptyContext *ctx)
 {
-
+        (void) visitChildren(ctx);
+        return addEmptyNode();
 }
 
 antlrcpp::Any FormulaInterpreter::visitIteratorR(EgcParser::IteratorRContext *ctx)
 {
-
+        return updateIterator(visit(ctx->expr()), 1);
 }
 
 antlrcpp::Any FormulaInterpreter::visitNatlogarithm(EgcParser::NatlogarithmContext *ctx)
 {
-
+        return addUnaryExpression(EgcNodeType::NatLogNode, visit(ctx->expr()));
 }
 
 antlrcpp::Any FormulaInterpreter::visitLogarithm(EgcParser::LogarithmContext *ctx)
 {
-
+        return addUnaryExpression(EgcNodeType::LogNode, visit(ctx->expr()));
 }
 
 antlrcpp::Any FormulaInterpreter::visitIntegral(EgcParser::IntegralContext *ctx)
 {
-
+        return changeFlexExpressionType(EgcNodeType::IntegralNode, visit(ctx->explist()));
 }
 
 antlrcpp::Any FormulaInterpreter::visitExplist(EgcParser::ExplistContext *ctx)
@@ -381,7 +381,7 @@ EgcNode* Interpreter::addFunction(const std::string& fncName, EgcArgumentsNode* 
         return static_cast<EgcNode*> (argList);
 }
 
-EgcNode* Interpreter::updateIterator(EgcNode* node0, int i)
+EgcNode* FormulaInterpreter::updateIterator(EgcNode* node0, int i)
 {
         if (i == 1)
                 m_iterPointer1 = node0;
@@ -491,13 +491,15 @@ EgcNode* Interpreter::addEmptyNode(void)
         return node;
 }
 
-EgcNode* Interpreter::changeFlexExpressionType(EgcNodeType type, EgcArgumentsNode* argList)
+EgcNode* FormulaInterpreter::changeFlexExpressionType(EgcNodeType type, EgcNode* argList)
 {
         QScopedPointer<EgcFncContainerNode> node(static_cast<EgcFncContainerNode*>(EgcNodeCreator::create(type)));
         assert(node->isFlexNode());
         if (node->isFlexNode()) {
-                if (argList)
-                        node->transferArgs(*argList);
+                if (argList) {
+                        if (argList->getNodeType() == EgcNodeType::ArgumentsNode)
+                                node->transferArgs(*static_cast<EgcArgumentsNode*>(argList));
+                }
                 delete argList;
                 setNotDangling(argList);
                 EgcFlexNode *nodePtr = node.data();
@@ -509,7 +511,7 @@ EgcNode* Interpreter::changeFlexExpressionType(EgcNodeType type, EgcArgumentsNod
         }
 }
 
-EgcNode* FormulaInterpreter::addDifferentialExpression(EgcArgumentsNode* argList)
+EgcNode* FormulaInterpreter::addDifferentialExpression(EgcNode* argList)
 {
         EgcNode* node = changeFlexExpressionType(EgcNodeType::DifferentialNode, argList);
         EgcDifferentialNode* diff = static_cast<EgcDifferentialNode*>(node);

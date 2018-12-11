@@ -123,7 +123,7 @@ private:
          * @param argList the arg list to use
          * @return pointer to the new type
          */
-        EgcNode* changeFlexExpressionType(EgcNodeType type, EgcArgumentsNode* argList);
+        EgcNode* changeFlexExpressionType(EgcNodeType type, EgcNode *argList);
         /**
          * @brief updateIterator to point to the given node
          * @param node0 the node to update the iterator with
@@ -183,7 +183,7 @@ private:
          * @param argList the arg list to use
          * @return pointer to the new type
          */
-        EgcNode* addDifferentialExpression(EgcArgumentsNode* argList);
+        EgcNode* addDifferentialExpression(EgcNode *argList);
         /**
          * @brief addUnaryStructParenth just remove the parenthesis in the formula stream that the formulagenerator
          * needs to build up the structure. When just entering the formulas over the UI this is not needed.
