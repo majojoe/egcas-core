@@ -34,8 +34,9 @@ expr : <assoc=right> expr EXP expr              # Exponent
      | LBRACKET_OP expr RBRACKET_OP             # BracketOp
      ;
     
-explist: expr            
-       | expr ',' explist;
+explist: expr                                   # createArglist
+       | expr ',' explist                       # addArgument
+       ;
 
 
 // LEXER

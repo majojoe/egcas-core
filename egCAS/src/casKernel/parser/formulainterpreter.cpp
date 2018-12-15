@@ -187,10 +187,7 @@ antlrcpp::Any FormulaInterpreter::visitMulDiv(EgcParser::MulDivContext *ctx)
 
 antlrcpp::Any FormulaInterpreter::visitSqrt(EgcParser::SqrtContext *ctx)
 {
-        QScopedPointer<EgcEmptyNode> nExp(static_cast<EgcEmptyNode*>(EgcNodeCreator::create(EgcNodeType::EmptyNode)));
-        QScopedPointer<EgcNode> sqrt(addBinaryExpression(EgcNodeType::RootNode, nExp.take(), visit(ctx->expr())));
-
-        return sqrt.take();
+        return addSqrtExpression(visit(ctx->expr()));
 }
 
 antlrcpp::Any FormulaInterpreter::visitEmptyBinOp(EgcParser::EmptyBinOpContext *ctx)
@@ -210,6 +207,10 @@ antlrcpp::Any FormulaInterpreter::visitRedParenthesisR(EgcParser::RedParenthesis
 
 antlrcpp::Any FormulaInterpreter::visitFunction(EgcParser::FunctionContext *ctx)
 {
+        std::string var = "";
+        if (ctx->NAMES())
+                var = ctx->NAMES()->getText();
+        return addFunction(var, visit(ctx->explist()));
 }
 
 antlrcpp::Any FormulaInterpreter::visitParenthesis(EgcParser::ParenthesisContext *ctx)
@@ -243,10 +244,16 @@ antlrcpp::Any FormulaInterpreter::visitIntegral(EgcParser::IntegralContext *ctx)
         return changeFlexExpressionType(EgcNodeType::IntegralNode, visit(ctx->explist()));
 }
 
-antlrcpp::Any FormulaInterpreter::visitExplist(EgcParser::ExplistContext *ctx)
+antlrcpp::Any FormulaInterpreter::visitCreateArglist(EgcParser::CreateArglistContext *ctx)
 {
-
+        return createArgList(visit(ctx->expr()));
 }
+
+antlrcpp::Any FormulaInterpreter::visitAddArgument(EgcParser::AddArgumentContext *ctx)
+{
+        return addArgument(visit(ctx->expr()), visit(ctx->explist()));
+}
+
 
 EgcNode* FormulaInterpreter::addBinaryExpression(EgcNodeType type, EgcNode* node0,
                                                     EgcNode* node1)
@@ -285,7 +292,7 @@ EgcNode* FormulaInterpreter::addUnaryExpression(EgcNodeType type, EgcNode* node0
         return nodePtr;
 }
 
-bool Interpreter::removeParenthesisChild(EgcNode& parenthesisNode)
+bool FormulaInterpreter::removeParenthesisChild(EgcNode& parenthesisNode)
 {
         if (parenthesisNode.getNodeType() != EgcNodeType::ParenthesisNode)
                 return false;
@@ -309,47 +316,18 @@ bool Interpreter::removeParenthesisChild(EgcNode& parenthesisNode)
         return true;
 }
 
-EgcNode* Interpreter::addStringNode(EgcNodeType type, const std::string& value)
-{
-        EgcNode *nodePtr = nullptr;
-        QScopedPointer<EgcNode> node(static_cast<EgcNode*>(EgcNodeCreator::create(type)));
-        if (!node.isNull()) {
-                switch (type) {
-                case EgcNodeType::NumberNode: {
-                        EgcNumberNode* tmp = static_cast<EgcNumberNode*>(node.data());
-                        tmp->setValue(QString::fromStdString(value));
-                        break;
-                }
-                case EgcNodeType::VariableNode: {
-                        EgcVariableNode* tmp = static_cast<EgcVariableNode*>(node.data());
-                        tmp->setStuffedVar(QString::fromStdString(value));
-                        break;
-                }
-                default: /*do nothing*/
-                        break;
-                }
-                nodePtr = node.data();
-                addDanglingNode(node.take());
-        } else {
-                throw std::runtime_error("Not enough memory to complete operation!");
-        }
-
-
-        return nodePtr;
-}
-
-void Interpreter::setRootNode(EgcNode* node)
+void FormulaInterpreter::setRootNode(EgcNode* node)
 {
         m_rootNode.reset(node);
         setNotDangling(node);
 }
 
-EgcNode* Interpreter::getRootNode(void)
+EgcNode* FormulaInterpreter::getRootNode(void)
 {
         return m_rootNode.take();
 }
 
-EgcNode* Interpreter::isBuiltinOperation(const std::string& fncName, EgcNode* node)
+EgcNode* FormulaInterpreter::isBuiltinOperation(const std::string& fncName, EgcNode* node)
 {
         EgcNode* retval = nullptr;
 
@@ -361,14 +339,16 @@ EgcNode* Interpreter::isBuiltinOperation(const std::string& fncName, EgcNode* no
         return retval;
 }
 
-EgcNode* Interpreter::addFunction(const std::string& fncName, EgcArgumentsNode* argList)
+EgcNode* FormulaInterpreter::addFunction(const std::string& fncName, EgcNode* argList)
 {
-
         EgcNode* builtinOp;
-        if (argList->getNumberChildNodes() == 1) {
-                builtinOp = isBuiltinOperation(fncName, static_cast<EgcNode*>(argList));
-                if (builtinOp)
-                        return builtinOp;
+        EgcArgumentsNode* argL = static_cast<EgcArgumentsNode*>(argList);
+        if (argList) {
+                if (argL->getNumberChildNodes() == 1) {
+                        builtinOp = isBuiltinOperation(fncName, static_cast<EgcNode*>(argList));
+                        if (builtinOp)
+                                return builtinOp;
+                }
         }
 
         if (argList) {
@@ -393,7 +373,7 @@ EgcNode* FormulaInterpreter::updateIterator(EgcNode* node0, int i)
         return node0;
 }
 
-EgcNode* Interpreter::updateIterator(EgcNode* original, EgcNode* new_pointer)
+EgcNode* FormulaInterpreter::updateIterator(EgcNode* original, EgcNode* new_pointer)
 {
         if (original == m_iterPointer1)
                 m_iterPointer1 = new_pointer;
@@ -405,7 +385,7 @@ EgcNode* Interpreter::updateIterator(EgcNode* original, EgcNode* new_pointer)
         return new_pointer;
 }
 
-EgcArgumentsNode* Interpreter::createArgList(EgcNode* expression)
+EgcNode* FormulaInterpreter::createArgList(EgcNode* expression)
 {
         QScopedPointer<EgcArgumentsNode> node(static_cast<EgcArgumentsNode*>(EgcNodeCreator::create(EgcNodeType::ArgumentsNode)));
         QScopedPointer<EgcNode> exprPtr(expression);
@@ -421,12 +401,13 @@ EgcArgumentsNode* Interpreter::createArgList(EgcNode* expression)
         return nodePtr;
 }
 
-EgcArgumentsNode* Interpreter::addArgument(EgcNode* expressionToAdd, EgcArgumentsNode* argumentList)
+EgcNode* FormulaInterpreter::addArgument(EgcNode* expressionToAdd, EgcNode* argumentList)
 {
         QScopedPointer<EgcNode> exprToAdd(expressionToAdd);
         setNotDangling(expressionToAdd);
         if (argumentList && expressionToAdd) {
-                if (argumentList->insert(0, *exprToAdd.data()))
+                EgcArgumentsNode* argLst = static_cast<EgcArgumentsNode*>(argumentList);
+                if (argLst->insert(0, *exprToAdd.data()))
                         (void) exprToAdd.take();
         }
 
@@ -449,11 +430,6 @@ void FormulaInterpreter::deleteDanglingNodes(void)
                 delete node;
         }
         m_danglingNodes.clear();
-}
-
-EgcNode* Interpreter::addUnaryStructParenth(EgcNode* node)
-{
-        return node;
 }
 
 EgcNode* FormulaInterpreter::addDivisionExpression(EgcNode* node0, EgcNode* node1)
@@ -479,7 +455,7 @@ EgcNode* FormulaInterpreter::addDivisionExpression(EgcNode* node0, EgcNode* node
         return retval;
 }
 
-EgcNode* Interpreter::addEmptyNode(void)
+EgcNode* FormulaInterpreter::addEmptyNode(void)
 {
         EgcNode *node = EgcNodeCreator::create(EgcNodeType::EmptyNode);
         if (node) {
@@ -509,6 +485,14 @@ EgcNode* FormulaInterpreter::changeFlexExpressionType(EgcNodeType type, EgcNode*
         } else {
                 return argList;
         }
+}
+
+EgcNode* FormulaInterpreter::addSqrtExpression(EgcNode* node0)
+{
+        QScopedPointer<EgcEmptyNode> nExp(static_cast<EgcEmptyNode*>(EgcNodeCreator::create(EgcNodeType::EmptyNode)));
+        QScopedPointer<EgcNode> sqrt(addBinaryExpression(EgcNodeType::RootNode, nExp.take(), node0));
+
+        return sqrt.take();
 }
 
 EgcNode* FormulaInterpreter::addDifferentialExpression(EgcNode* argList)
@@ -557,7 +541,7 @@ EgcNode* FormulaInterpreter::addDifferentialExpression(EgcNode* argList)
         return node;
 }
 
-EgcNode* Interpreter::getIteratorNode(int i)
+EgcNode* FormulaInterpreter::getIteratorNode(int i)
 {
         if (i == 1)
                 return m_iterPointer1;

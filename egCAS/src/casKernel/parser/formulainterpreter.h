@@ -71,7 +71,8 @@ public:
         virtual antlrcpp::Any visitNatlogarithm(EgcParser::NatlogarithmContext *ctx) override;
         virtual antlrcpp::Any visitLogarithm(EgcParser::LogarithmContext *ctx) override;
         virtual antlrcpp::Any visitIntegral(EgcParser::IntegralContext *ctx) override;
-        virtual antlrcpp::Any visitExplist(EgcParser::ExplistContext *ctx) override;
+        virtual antlrcpp::Any visitCreateArglist(EgcParser::CreateArglistContext *ctx) override;
+        virtual antlrcpp::Any visitAddArgument(EgcParser::AddArgumentContext *ctx) override;
 
 private:
         /**
@@ -93,21 +94,13 @@ private:
         EgcNode* addUnaryExpression(EgcNodeType type, EgcNode* node0);
 
         /**
-         * @brief addStringNode add node Expression to the current AST
-         * @param type the type of binary expression to create
-         * @param value the value to use to build the node from
-         * @return a pointer to the expression created
-         */
-        EgcNode* addStringNode(EgcNodeType type, const std::string& value);
-
-        /**
          * @brief addFunction add a user defined function to the formula
          * @param fncName the function name of the function to create
          * @param argList the argument list with all expression to add to the function. The List can be integrated
          * directly into the function.
          * @return pointer to the function created
          */
-        EgcNode* addFunction(const std::string& fncName, EgcArgumentsNode* argList);
+        EgcNode* addFunction(const std::string& fncName, EgcNode* argList);
         /**
          * @brief isBuiltinOperation checks if a builtin operation of the maxima kernel was given which must be handled
          * separately
@@ -144,7 +137,7 @@ private:
          * @param expression the expression to add to the argument list
          * @return a pointer to the created argument list
          */
-        EgcArgumentsNode* createArgList(EgcNode* expression);
+        EgcNode* createArgList(EgcNode* expression);
 
         /**
          * @brief addArgument adds an argument to the argument list given
@@ -152,7 +145,7 @@ private:
          * @param argumentList the argument list to use to add the argument to
          * @return a pointer to the changed argument list
          */
-        EgcArgumentsNode* addArgument(EgcNode* expressionToAdd, EgcArgumentsNode* argumentList);
+        EgcNode* addArgument(EgcNode* expressionToAdd, EgcNode *argumentList);
         /**
          * @brief addEmptyNode add an empty node. USE THIS FOR DEBUG PURPOSES ONLY.
          * @return return a EgcNode of an emtpy node
@@ -184,13 +177,6 @@ private:
          * @return pointer to the new type
          */
         EgcNode* addDifferentialExpression(EgcNode *argList);
-        /**
-         * @brief addUnaryStructParenth just remove the parenthesis in the formula stream that the formulagenerator
-         * needs to build up the structure. When just entering the formulas over the UI this is not needed.
-         * @param node the node to forward to the parser (removing the parenthesis of type "_( and _)" )
-         * @return the node that has been forwarded (*node)
-         */
-        EgcNode* addUnaryStructParenth(EgcNode* node);
 
         /**
          * @brief addDivisionExpression add a divison Expression to the current AST
@@ -207,6 +193,14 @@ private:
          * @return true if everything worked well, false otherwise.
          */
         bool removeParenthesisChild(EgcNode& parenthesisNode);
+        /**
+         * @brief addSqrtExpression add a square root to the tree. This is some sort of a hack, since a root node is a
+         * binary node, but this is constructed with just one argument (unary), the second node (2) is constructed in
+         * the background
+         * @param node0 the radicand to use
+         * @return
+         */
+        EgcNode* addSqrtExpression(EgcNode* node0);
 
         //Q_DISABLE_COPY(FormulaInterpreter)
 
