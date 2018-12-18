@@ -5,13 +5,14 @@
 #include <QSet>
 #include <QScopedPointer>
 #include <antlr4-runtime/antlr4-runtime.h>
+#include <antlr4-runtime/BaseErrorListener.h>
 #include "EgcBaseVisitor.h"
 
 
 class EgcNode;
 enum class EgcNodeType;
 
-class FormulaInterpreter : EgcBaseVisitor
+class FormulaInterpreter : public EgcBaseVisitor, public antlr4::BaseErrorListener
 {
 public:
         FormulaInterpreter();

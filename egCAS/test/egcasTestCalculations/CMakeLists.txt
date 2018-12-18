@@ -20,6 +20,10 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
+include_directories(${CMAKE_BINARY_DIR}/include)
+# due to cpp runtime bug this include must also be set
+include_directories(${CMAKE_BINARY_DIR}/include/antlr4-runtime)
+include_directories(${CMAKE_BINARY_DIR}/parser_gen)
 
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -41,6 +45,7 @@ file(GLOB_RECURSE tst_egcastest_calculations_concrete_SOURCES "../../src/structu
 set(tst_egcastest_calculations_SOURCES
         tst_egcastest_calculations.cpp 
         ../../src/casKernel/parser/interpreter.cpp 
+        ../../src/casKernel/parser/formulainterpreter.cpp
         ../../src/casKernel/parser/egckernelparser.cpp
         ${BISON_cas_calculations_tst_OUTPUTS}
         ${FLEX_cas_scanner_tst_OUTPUTS}
@@ -83,6 +88,6 @@ add_definitions(-DMAXIMA_BINARY_PATH="${CMAKE_BINARY_DIR}/maxima_installation/bi
 
 add_executable(tst_egcastest_calculations ${tst_egcastest_calculations_SOURCES} )
 add_dependencies(tst_egcastest_calculations egcas egcas_maxima)
-target_link_libraries(tst_egcastest_calculations Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia)
+target_link_libraries(tst_egcastest_calculations Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia antlr4_parser_generated_static antlr4_static)
 
 
