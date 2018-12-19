@@ -60,10 +60,10 @@ int FormulaInterpreter::parse(std::istream &istream, bool parseKernelResult)
 
         m_rootNode.reset(nodeTree);
 
-        if (nodeTree)
-            return 0;
+        if (nodeTree.isNull())
+            return 1;
 
-        return 1;
+        return 0;
 }
 
 void FormulaInterpreter::clear() {
