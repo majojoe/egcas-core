@@ -22,7 +22,9 @@ FormulaInterpreter::FormulaInterpreter() :
         m_location(0),
         m_iterPointer1(nullptr),
         m_iterPointer2(nullptr),
-        m_iterPointer3(nullptr)
+        m_iterPointer3(nullptr),
+        m_parseKernelResult(false),
+        m_isErrorOccurred(false)
 {
 
 }
@@ -39,6 +41,7 @@ int FormulaInterpreter::parse(std::istream &istream, bool parseKernelResult)
         m_iterPointer2 = nullptr;
         m_iterPointer3 = nullptr;
         m_location = 0;
+        m_isErrorOccurred = false;
 
         ANTLRInputStream input(istream);
         EgcLexer lexer(&input);
@@ -218,6 +221,7 @@ antlrcpp::Any FormulaInterpreter::visitParenthesis(EgcParser::ParenthesisContext
 
 antlrcpp::Any FormulaInterpreter::visitEmpty(EgcParser::EmptyContext *ctx)
 {
+        (void) ctx;
         return addEmptyNode();
 }
 
@@ -552,5 +556,30 @@ EgcNode* FormulaInterpreter::getIteratorNode(int i)
 
 void FormulaInterpreter::syntaxError(Recognizer *recognizer, Token *offendingSymbol, size_t line, size_t charPositionInLine, const string &msg, std::__exception_ptr::exception_ptr e)
 {
-        std::cout << msg;
+        (void) recognizer;
+        (void) line;
+        (void) e;
+
+        m_isErrorOccurred = true;
+        QString tmp;
+
+        for (size_t i=0; i < charPositionInLine; i++)
+                tmp += QString(" ");
+        size_t start = offendingSymbol->getStartIndex();
+        size_t stop = offendingSymbol->getStopIndex();
+        for (size_t i= start; i <= stop; i++) {
+                tmp += QString("^");
+        }
+
+        m_errorMessage = QString(msg.c_str() + QString('\n') + tmp);
+}
+
+QString FormulaInterpreter::getErrorMessage(void)
+{
+        return m_errorMessage;
+}
+
+bool FormulaInterpreter::isParsingErrorOccurred(void)
+{
+        return m_isErrorOccurred;
 }

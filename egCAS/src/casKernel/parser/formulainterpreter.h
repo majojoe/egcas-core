@@ -50,7 +50,17 @@ public:
         void syntaxError(antlr4::Recognizer * recognizer, antlr4::Token * offendingSymbol, size_t line, size_t charPositionInLine,
                          const std::string &msg, std::exception_ptr e) override;
 
+        /**
+         * @brief getErrorMessage returns parsing error message if one occurred
+         * @return the message occurred
+         */
+        QString getErrorMessage(void);
 
+        /**
+         * @brief isParsingErrorOccurred checks if parsing error occurred
+         * @return true if error occurred
+         */
+        bool isParsingErrorOccurred(void);
 
         virtual antlrcpp::Any visitFormula(EgcParser::FormulaContext *ctx) override;
         virtual antlrcpp::Any visitEquality(EgcParser::EqualityContext *ctx) override;
@@ -222,6 +232,8 @@ private:
         EgcNode* m_iterPointer2;                        ///< special pointer that is given by some visitors
         EgcNode* m_iterPointer3;                        ///< special pointer that is given by some visitors
         bool m_parseKernelResult;                       ///< post process Formula  e.g. removing unneccessary parenthesis
+        QString m_errorMessage;                         ///< error message when error during parsing.
+        bool m_isErrorOccurred;
 };
 
 

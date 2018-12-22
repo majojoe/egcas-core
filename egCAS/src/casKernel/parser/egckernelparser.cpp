@@ -35,6 +35,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "egckernelparser.h"
 #include "entities/formulamodificator.h"
 
+//#include <cxxabi.h>  //only for getting exception type
+
 using namespace std;
 
 
@@ -60,16 +62,18 @@ EgcNode* EgcKernelParser::parseKernelOutput(const QString& strToParse)
         } catch (runtime_error& e) {
                 m_errMessage = "runtime error: " % QString(e.what()) % " : Not enough memory?";
                 return nullptr;
+        } catch (antlr4::RecognitionException& e) {
+                m_errMessage = "recognition error: " % QString(e.what());
+                return nullptr;
         } catch (...) {
                 m_errMessage = "common unspecified exception while parsing input";
                 return nullptr;
         }
 
-#warning implement error message
-//        m_errMessage = "parsing error: " % QString(e.what()) %
-//                       QString(" at position: %1, %2").arg(e.location.begin.line).arg(e.location.begin.column);
-//        return nullptr;
-
+        if (m_i->isParsingErrorOccurred()) {
+                m_errMessage = m_i->getErrorMessage();
+                return nullptr;
+        }
 
         return m_i->getRootNode();
 }
@@ -92,11 +96,13 @@ EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIter
                 *errCode = 3;
                 return nullptr;
         } catch (antlr4::RecognitionException& e) {
-                const char* msg = e.what();
+                (void) e;
                 *errCode = 2;
                 return nullptr;
         } catch (...) {
                 //common unspecified exception while parsing input
+                //int status;
+                //const char* tmp = abi::__cxa_demangle(abi::__cxa_current_exception_type()->name(), 0, 0, &status);
                 *errCode = 4;
                 return nullptr;
         }
