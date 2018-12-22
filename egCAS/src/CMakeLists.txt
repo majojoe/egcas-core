@@ -43,28 +43,6 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
         add_definitions(-DLOAD_EGCAS_EXAMPLES_FILE="${CMAKE_SOURCE_DIR}/examples/default.egc")
 endif()
 
-find_package(BISON)
-find_package(FLEX)
-#find FlexLexer.h if not already found on windows (non crosscomilation)
-if(${FLEX_LIBRARIES} STREQUAL "FL_LIBRARY-NOTFOUND")
-        get_filename_component(FLEX_BIN_DIR ${FLEX_EXECUTABLE} DIRECTORY)
-        get_filename_component(FLEX_ROOT_DIR ${FLEX_BIN_DIR}/../ REALPATH)
-        find_file(FLEX_HEADER_PATH FlexLexer.h PATHS "${FLEX_ROOT_DIR}/lib/winflexbison3/tools" )
-        if (${FLEX_HEADER_PATH} STREQUAL "FLEX_HEADER_PATH-NOTFOUND")
-                find_file(FLEX_HEADER_PATH FlexLexer.h PATHS "${FLEX_ROOT_DIR}/include/" )
-        endif()
-        if (NOT ${FLEX_HEADER_PATH} STREQUAL "FLEX_HEADER_PATH-NOTFOUND")
-                get_filename_component(FLEX_HEADER_INC_DIR ${FLEX_HEADER_PATH} DIRECTORY)
-                include_directories(${FLEX_HEADER_INC_DIR})
-        endif()
-endif()
-
-
-BISON_TARGET(cas_parser casKernel/parser/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
-FLEX_TARGET(cas_scanner casKernel/parser/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp )
-ADD_FLEX_BISON_DEPENDENCY(cas_scanner cas_parser)
-
-
 set_property(TARGET mathmlview PROPERTY CXX_STANDARD 11)
 set_property(TARGET mathmlview PROPERTY CXX_STANDARD_REQUIRED ON)
 
@@ -167,12 +145,9 @@ set(egcas_SOURCES
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 
         casKernel/egckernelconn.cpp
-        casKernel/parser/interpreter.cpp
         casKernel/parser/formulainterpreter.cpp
         casKernel/parser/egckernelparser.cpp
         casKernel/parser/restructparserprovider.cpp
-        ${BISON_cas_parser_OUTPUTS}
-        ${FLEX_cas_scanner_OUTPUTS}
         structural/entities/egcentitylist.cpp
         structural/entities/egcentity.cpp
         structural/entities/egctextentity.cpp

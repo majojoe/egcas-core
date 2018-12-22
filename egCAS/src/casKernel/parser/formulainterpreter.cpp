@@ -85,7 +85,7 @@ antlrcpp::Any FormulaInterpreter::visitFormula(EgcParser::FormulaContext *ctx)
     Token* stopToken = ctx->getStop();
     size_t stop = stopToken->getCharPositionInLine();
     stop += stopToken->getText().length() - 1;
-    cout << "formula: " << start << "/" << stop << endl;
+    //cout << "formula: " << start << "/" << stop << endl;
 
     Any retval = visitChildren(ctx);
     setNotDangling(retval);
