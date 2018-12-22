@@ -91,6 +91,10 @@ EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIter
                 //runtime error: e.what(): Not enough memory?
                 *errCode = 3;
                 return nullptr;
+        } catch (antlr4::RecognitionException& e) {
+                const char* msg = e.what();
+                *errCode = 2;
+                return nullptr;
         } catch (...) {
                 //common unspecified exception while parsing input
                 *errCode = 4;

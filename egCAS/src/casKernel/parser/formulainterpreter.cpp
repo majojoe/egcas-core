@@ -44,6 +44,8 @@ int FormulaInterpreter::parse(std::istream &istream, bool parseKernelResult)
         EgcLexer lexer(&input);
         CommonTokenStream tokens(&lexer);
         EgcParser parser(&tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(this);
 
         EgcParser::FormulaContext* tree = parser.formula();
 
@@ -102,8 +104,6 @@ antlrcpp::Any FormulaInterpreter::visitPlusMinus(EgcParser::PlusMinusContext *ct
 
 antlrcpp::Any FormulaInterpreter::visitNumber(EgcParser::NumberContext *ctx)
 {
-        (void) visitChildren(ctx);
-
         EgcNode *nodePtr = nullptr;
         QScopedPointer<EgcNumberNode> node(static_cast<EgcNumberNode*>(EgcNodeCreator::create(EgcNodeType::NumberNode)));
         if (node.isNull())
@@ -137,8 +137,6 @@ antlrcpp::Any FormulaInterpreter::visitUMinus(EgcParser::UMinusContext *ctx)
 
 antlrcpp::Any FormulaInterpreter::visitVariable(EgcParser::VariableContext *ctx)
 {
-        (void) visitChildren(ctx);
-
         EgcNode *nodePtr = nullptr;
         QScopedPointer<EgcVariableNode> node(static_cast<EgcVariableNode*>(EgcNodeCreator::create(EgcNodeType::VariableNode)));
         if (node.isNull())
@@ -155,7 +153,7 @@ antlrcpp::Any FormulaInterpreter::visitVariable(EgcParser::VariableContext *ctx)
 
 antlrcpp::Any FormulaInterpreter::visitBracketOp(EgcParser::BracketOpContext *ctx)
 {
-        return visitChildren(ctx);
+        return visit(ctx->expr());
 }
 
 antlrcpp::Any FormulaInterpreter::visitDifferential(EgcParser::DifferentialContext *ctx)
@@ -220,7 +218,6 @@ antlrcpp::Any FormulaInterpreter::visitParenthesis(EgcParser::ParenthesisContext
 
 antlrcpp::Any FormulaInterpreter::visitEmpty(EgcParser::EmptyContext *ctx)
 {
-        (void) visitChildren(ctx);
         return addEmptyNode();
 }
 
@@ -551,4 +548,9 @@ EgcNode* FormulaInterpreter::getIteratorNode(int i)
                 return m_iterPointer3;
 
         return nullptr;
+}
+
+void FormulaInterpreter::syntaxError(Recognizer *recognizer, Token *offendingSymbol, size_t line, size_t charPositionInLine, const string &msg, std::__exception_ptr::exception_ptr e)
+{
+        std::cout << msg;
 }
