@@ -9,13 +9,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #set(CMAKE_BUILD_TYPE Release)
 
-find_package(BISON)
-find_package(FLEX)
-
-BISON_TARGET(cas_parser_tst ${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
-FLEX_TARGET(cas_scanner_tst ${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp )
-ADD_FLEX_BISON_DEPENDENCY(cas_scanner_tst cas_parser_tst)
-
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
@@ -46,7 +39,6 @@ file(GLOB_RECURSE tst_egcas_advanced_tree_ops_concrete_SOURCES "../../src/struct
 
 set(tst_egcas_advanced_tree_ops_SOURCES
         tst_egcas_advanced_tree_ops.cpp 
-        ../../src/casKernel/parser/interpreter.cpp 
         ../../src/casKernel/parser/formulainterpreter.cpp
         ../../src/casKernel/parser/egckernelparser.cpp
         ${BISON_cas_parser_tst_OUTPUTS}
@@ -89,10 +81,6 @@ set(tst_egcas_advanced_tree_ops_SOURCES
         ../../src/view/grid.cpp
         ../../src/menu/egcgraphicsview.cpp
 )
-
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp PROPERTY SKIP_AUTOMOC ON)
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTY SKIP_AUTOMOC ON)
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTY SKIP_AUTOMOC ON)
 
 #set the verbosity level of the scanner and parser
 add_definitions(-DEGC_SCANNER_DEBUG=0)

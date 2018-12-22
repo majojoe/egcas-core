@@ -9,12 +9,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #set(CMAKE_BUILD_TYPE Release)
 
-find_package(BISON)
-find_package(FLEX)
-
-BISON_TARGET(cas_calculations_tst ${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
-FLEX_TARGET(cas_scanner_tst ${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp )
-ADD_FLEX_BISON_DEPENDENCY(cas_scanner_tst cas_calculations_tst)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -44,7 +38,6 @@ file(GLOB_RECURSE tst_egcastest_calculations_concrete_SOURCES "../../src/structu
 
 set(tst_egcastest_calculations_SOURCES
         tst_egcastest_calculations.cpp 
-        ../../src/casKernel/parser/interpreter.cpp 
         ../../src/casKernel/parser/formulainterpreter.cpp
         ../../src/casKernel/parser/egckernelparser.cpp
         ${BISON_cas_calculations_tst_OUTPUTS}
@@ -76,10 +69,6 @@ set(tst_egcastest_calculations_SOURCES
         ../../src/casKernel/egckernelconn.cpp
         ../../src/utils/egcutfcodepoint.cpp
 )
-
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp PROPERTY SKIP_AUTOMOC ON)
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTY SKIP_AUTOMOC ON)
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTY SKIP_AUTOMOC ON)
 
 #set the verbosity level of the scanner and parser
 add_definitions(-DEGC_SCANNER_DEBUG=0)
