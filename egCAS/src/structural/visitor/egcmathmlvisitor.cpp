@@ -323,7 +323,11 @@ QString EgcMathMlVisitor::getResult(void)
                 if (!m_formula->getErrorMessage().isEmpty()) {
                         temp += "<mi mathcolor='#cc0000'>";
 #ifdef EGC_PROJ_NAME
-#warning replace '\n' with mathml linebreaks
+#ifdef __GNUC__
+        #warning replace '\n' with mathml linebreaks
+#else //#ifdef __GNUC__
+        #pragma message("replace '\n' with mathml linebreaks")
+#endif //#ifdef __GNUC__
 #endif //#ifdef EGC_PROJ_NAME
                         //temp += "<mspace linebreak='newline'/>";
                         //temp += "<mstyle scriptlevel=\"-1\">";

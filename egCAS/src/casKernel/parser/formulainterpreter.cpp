@@ -554,7 +554,7 @@ EgcNode* FormulaInterpreter::getIteratorNode(int i)
         return nullptr;
 }
 
-void FormulaInterpreter::syntaxError(Recognizer *recognizer, Token *offendingSymbol, size_t line, size_t charPositionInLine, const string &msg, std::__exception_ptr::exception_ptr e)
+void FormulaInterpreter::syntaxError(Recognizer *recognizer, Token *offendingSymbol, size_t line, size_t charPositionInLine, const string &msg, std::exception_ptr e)
 {
         (void) recognizer;
         (void) line;

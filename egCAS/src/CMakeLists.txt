@@ -193,8 +193,13 @@ set (PYTHON_HELPER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/../tools/)
 
 set(EGC_GEN_NODE_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h.in)
 set(EGC_GEN_NODE_HEADER_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+        set(EGC_PYTHON_INTERPRETER python3)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        set(EGC_PYTHON_INTERPRETER py)
+endif()
 add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED}
-        COMMAND python3 -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
+        COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
         -o ${EGC_GEN_NODE_HEADER_GENERATED} ${EGC_GEN_NODE_HEADER}
         DEPENDS ${EGC_GEN_NODE_HEADER} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
         COMMENT "generate node list"
@@ -204,7 +209,7 @@ add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED}
 set(EGC_GEN_NODE_CREATOR ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp.in)
 set(EGC_GEN_NODE_CREATOR_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp)
 add_custom_command(OUTPUT ${EGC_GEN_NODE_CREATOR_GENERATED}
-        COMMAND python3 -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
+        COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
         -o ${EGC_GEN_NODE_CREATOR_GENERATED} ${EGC_GEN_NODE_CREATOR}
         DEPENDS ${EGC_GEN_NODE_CREATOR} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
         COMMENT "generate node creator"
@@ -214,7 +219,7 @@ add_custom_command(OUTPUT ${EGC_GEN_NODE_CREATOR_GENERATED}
 set(EGC_GEN_NODES ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h.in)
 set(EGC_GEN_NODES_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h)
 add_custom_command(OUTPUT ${EGC_GEN_NODES_GENERATED}
-        COMMAND python3 -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}  -D PythonHelper=${PYTHON_HELPER_SCRIPT}
+        COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}  -D PythonHelper=${PYTHON_HELPER_SCRIPT}
         -o ${EGC_GEN_NODES_GENERATED} ${EGC_GEN_NODES}
         DEPENDS ${EGC_GEN_NODES} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
         COMMENT "generate node header file"
