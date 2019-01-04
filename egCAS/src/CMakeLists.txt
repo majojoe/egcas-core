@@ -80,8 +80,6 @@ add_custom_target(egcas_other_srcs ALL SOURCES
         view/egcabstractformulaitem.h
         view/egcabstracttextitem.h
         view/egcabstractpixmapitem.h
-        casKernel/parser/scanner.l
-        casKernel/parser/parser.y
         casKernel/parser/abstractkernelparser.h
         menu/mathelement.h
         structural/abstractserializer.h
