@@ -3,10 +3,10 @@
 #include <QVector>
 #include <QScopedPointer>
 #include <QString>
-#include <antlr4-runtime/antlr4-runtime.h>
+#include <antlr4-runtime.h>
 #include "formulainterpreter.h"
-#include "EgcLexer.h"
-#include "EgcParser.h"
+#include <EgcLexer.h>
+#include <EgcParser.h>
 #include "../../structural/egcnodecreator.h"
 #include "../../structural/egcnodes.h"
 #include "../../structural/specialNodes/egcnode.h"

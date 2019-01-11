@@ -1,10 +1,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 
-set(ANTLR4_GRAMMAR_FILE "${CMAKE_CURRENT_LIST_DIR}/casKernel/parser/Egc.g4")
-set(ANTLR4_GRAMMAR_NAME "Egc")
-set(ANTLR4_BASE_RULE_NAME "formula")
 
-add_subdirectory(casKernel/parser/antlr4)
+add_subdirectory(casKernel/parser)
 
 #set the project name
 add_definitions(-DEGC_PROJ_NAME=egcas)
@@ -59,9 +56,8 @@ include_directories(view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_BINARY_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-# due to cpp runtime bug this include must also be set
-include_directories(${CMAKE_BINARY_DIR}/include/antlr4-runtime)
-include_directories(${CMAKE_BINARY_DIR}/parser_gen)
+include_directories(${ANTLR4_INCLUDE_DIRS})
+include_directories(${ANTLR_egcGrammar_OUTPUT_DIR})
 
 
 set(MAXIMA_BINARY_PATH ${CMAKE_BINARY_DIR}/${MAXIMA_INST_PATH}/bin/)
@@ -278,5 +274,5 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MinGW")
         set_target_properties(egcas PROPERTIES LINK_FLAGS "-mwindows")
 endif()
 
-target_link_libraries(egcas mmlegcas mrichtextedit Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core Qt5::Multimedia antlr4_parser_generated_static antlr4_static)
+target_link_libraries(egcas mmlegcas mrichtextedit Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core Qt5::Multimedia egcas_parser)
 install (TARGETS egcas RUNTIME DESTINATION bin)
