@@ -38,10 +38,6 @@ file(GLOB_RECURSE tst_egcastest_parser_concrete_SOURCES "../../src/structural/co
 
 set(tst_egcastest_parser_SOURCES
         tst_egcastest_parser.cpp 
-        ../../src/casKernel/parser/formulainterpreter.cpp
-        ../../src/casKernel/parser/egckernelparser.cpp
-        ${BISON_cas_parser_tst_OUTPUTS}
-        ${FLEX_cas_scanner_tst_OUTPUTS}
         ../../src/structural/specialNodes/egcunarynode.cpp
         ../../src/structural/specialNodes/egcbinarynode.cpp
         ../../src/structural/specialNodes/egcflexnode.cpp
@@ -74,6 +70,6 @@ add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(tst_egcastest_parser ${tst_egcastest_parser_SOURCES} )
 add_dependencies(tst_egcastest_parser egcas)
-target_link_libraries(tst_egcastest_parser Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia antlr4_parser_generated_static antlr4_static)
+target_link_libraries(tst_egcastest_parser Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia egcas_parser)
 
 

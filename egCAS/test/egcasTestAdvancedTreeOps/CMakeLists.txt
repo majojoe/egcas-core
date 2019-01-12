@@ -39,10 +39,6 @@ file(GLOB_RECURSE tst_egcas_advanced_tree_ops_concrete_SOURCES "../../src/struct
 
 set(tst_egcas_advanced_tree_ops_SOURCES
         tst_egcas_advanced_tree_ops.cpp 
-        ../../src/casKernel/parser/formulainterpreter.cpp
-        ../../src/casKernel/parser/egckernelparser.cpp
-        ${BISON_cas_parser_tst_OUTPUTS}
-        ${FLEX_cas_scanner_tst_OUTPUTS}
         ../../src/structural/specialNodes/egcunarynode.cpp
         ../../src/structural/specialNodes/egcbinarynode.cpp
         ../../src/structural/specialNodes/egcflexnode.cpp
@@ -88,6 +84,6 @@ add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(tst_egcas_advanced_tree_ops ${tst_egcas_advanced_tree_ops_SOURCES} )
 add_dependencies(tst_egcas_advanced_tree_ops mmlegcas egcas)
-target_link_libraries(tst_egcas_advanced_tree_ops mmlegcas Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia antlr4_parser_generated_static antlr4_static)
+target_link_libraries(tst_egcas_advanced_tree_ops mmlegcas Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia egcas_parser)
 
 

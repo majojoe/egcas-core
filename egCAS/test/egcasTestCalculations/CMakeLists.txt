@@ -38,10 +38,6 @@ file(GLOB_RECURSE tst_egcastest_calculations_concrete_SOURCES "../../src/structu
 
 set(tst_egcastest_calculations_SOURCES
         tst_egcastest_calculations.cpp 
-        ../../src/casKernel/parser/formulainterpreter.cpp
-        ../../src/casKernel/parser/egckernelparser.cpp
-        ${BISON_cas_calculations_tst_OUTPUTS}
-        ${FLEX_cas_scanner_tst_OUTPUTS}
         ../../src/structural/specialNodes/egcunarynode.cpp
         ../../src/structural/specialNodes/egcbinarynode.cpp
         ../../src/structural/specialNodes/egcflexnode.cpp
@@ -77,6 +73,6 @@ add_definitions(-DMAXIMA_BINARY_PATH="${CMAKE_BINARY_DIR}/maxima_installation/bi
 
 add_executable(tst_egcastest_calculations ${tst_egcastest_calculations_SOURCES} )
 add_dependencies(tst_egcastest_calculations egcas egcas_maxima)
-target_link_libraries(tst_egcastest_calculations Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia antlr4_parser_generated_static antlr4_static)
+target_link_libraries(tst_egcastest_calculations Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia egcas_parser)
 
 
