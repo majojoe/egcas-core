@@ -76,7 +76,6 @@ add_custom_target(egcas_other_srcs ALL SOURCES
         view/egcabstractformulaitem.h
         view/egcabstracttextitem.h
         view/egcabstractpixmapitem.h
-        casKernel/parser/abstractkernelparser.h
         menu/mathelement.h
         structural/abstractserializer.h
 
@@ -139,9 +138,6 @@ set(egcas_SOURCES
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 
         casKernel/egckernelconn.cpp
-        casKernel/parser/formulainterpreter.cpp
-        casKernel/parser/egckernelparser.cpp
-        casKernel/parser/restructparserprovider.cpp
         structural/entities/egcentitylist.cpp
         structural/entities/egcentity.cpp
         structural/entities/egctextentity.cpp

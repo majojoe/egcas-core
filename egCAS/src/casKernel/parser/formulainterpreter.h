@@ -62,6 +62,8 @@ public:
          */
         bool isParsingErrorOccurred(void);
 
+
+private:
         virtual antlrcpp::Any visitFormula(EgcParser::FormulaContext *ctx) override;
         virtual antlrcpp::Any visitEquality(EgcParser::EqualityContext *ctx) override;
         virtual antlrcpp::Any visitDefinition(EgcParser::DefinitionContext *ctx) override;
@@ -89,7 +91,7 @@ public:
         virtual antlrcpp::Any visitCreateArglist(EgcParser::CreateArglistContext *ctx) override;
         virtual antlrcpp::Any visitAddArgument(EgcParser::AddArgumentContext *ctx) override;
 
-private:
+    
         /**
          * @brief addBinaryExpression add binary Expression to the current AST
          * @param type the type of binary expression to create

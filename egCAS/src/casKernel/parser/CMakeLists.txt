@@ -9,6 +9,12 @@ set(CMAKE_CXX_STANDARD 11)
 set(ANTLR4_GRAMMAR_FILE ${CMAKE_CURRENT_SOURCE_DIR}/Egc.g4)
 set(ANTLR4_GRAMMAR_NAME "Egc")
 
+# Widgets finds its own dependencies.
+find_package(Qt5 COMPONENTS Widgets Xml PrintSupport Gui Core Multimedia)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../structural)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../..)
+
 # required if linking to static library
 add_definitions(-DANTLR4CPP_STATIC)
 
@@ -34,8 +40,8 @@ antlr_target(egcGrammar ${ANTLR4_GRAMMAR_FILE} VISITOR)
 include_directories(${ANTLR_egcGrammar_OUTPUT_DIR})
 
 # add generated grammar to demo binary target
-add_library(egcas_parser ${ANTLR_egcGrammar_CXX_OUTPUTS})
-target_link_libraries(egcas_parser antlr4_static) 
+add_library(egcas_parser STATIC ${ANTLR_egcGrammar_CXX_OUTPUTS} formulainterpreter.cpp restructparserprovider.cpp egckernelparser.cpp)
+target_link_libraries(egcas_parser Qt5::Core antlr4_static) 
 
 #########################################
 #generate the java gui
