@@ -183,16 +183,20 @@ set (PYTHON_HELPER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/../tools/)
 
 set(EGC_GEN_NODE_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h.in)
 set(EGC_GEN_NODE_HEADER_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h)
+set(EGC_GEN_NODES ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h.in)
+set(EGC_GEN_NODES_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h)
 if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
         set(EGC_PYTHON_INTERPRETER python3)
 elseif(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
         set(EGC_PYTHON_INTERPRETER py)
 endif()
-add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED}
+add_custom_target(generate_egc_node_header
         COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
         -o ${EGC_GEN_NODE_HEADER_GENERATED} ${EGC_GEN_NODE_HEADER}
-        DEPENDS ${EGC_GEN_NODE_HEADER} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
-        COMMENT "generate node list"
+        COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}  -D PythonHelper=${PYTHON_HELPER_SCRIPT}
+        -o ${EGC_GEN_NODES_GENERATED} ${EGC_GEN_NODES}
+        DEPENDS ${EGC_GEN_NODES} ${EGC_GEN_NODE_HEADER} ${PYTHON_HELPER_SCRIPT}
+        COMMENT "generate node list and node header files"
         VERBATIM
 )
 
@@ -203,16 +207,6 @@ add_custom_command(OUTPUT ${EGC_GEN_NODE_CREATOR_GENERATED}
         -o ${EGC_GEN_NODE_CREATOR_GENERATED} ${EGC_GEN_NODE_CREATOR}
         DEPENDS ${EGC_GEN_NODE_CREATOR} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
         COMMENT "generate node creator"
-        VERBATIM
-)
-
-set(EGC_GEN_NODES ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h.in)
-set(EGC_GEN_NODES_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h)
-add_custom_command(OUTPUT ${EGC_GEN_NODES_GENERATED}
-        COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}  -D PythonHelper=${PYTHON_HELPER_SCRIPT}
-        -o ${EGC_GEN_NODES_GENERATED} ${EGC_GEN_NODES}
-        DEPENDS ${EGC_GEN_NODES} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
-        COMMENT "generate node header file"
         VERBATIM
 )
 
@@ -262,7 +256,7 @@ add_executable(egcas WIN32 ${egcas_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
                      ${EGC_GEN_NODE_CREATOR_GENERATED}
                      ${EGC_GEN_NODES_GENERATED}
                      ${WIN_RESOURCE_FILE})
-add_dependencies(egcas mmlegcas)
+add_dependencies(egcas mmlegcas generate_egc_node_header)
 #only for cmake >= 3.1
 set_property(TARGET egcas PROPERTY CXX_STANDARD 11)
 set_property(TARGET egcas PROPERTY CXX_STANDARD_REQUIRED ON)

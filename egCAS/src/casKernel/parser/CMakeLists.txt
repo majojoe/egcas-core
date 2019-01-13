@@ -42,6 +42,7 @@ include_directories(${ANTLR_egcGrammar_OUTPUT_DIR})
 # add generated grammar to demo binary target
 add_library(egcas_parser STATIC ${ANTLR_egcGrammar_CXX_OUTPUTS} formulainterpreter.cpp restructparserprovider.cpp egckernelparser.cpp)
 target_link_libraries(egcas_parser Qt5::Core antlr4_static) 
+add_dependencies(egcas_parser generate_egc_node_header)
 
 #########################################
 #generate the java gui
