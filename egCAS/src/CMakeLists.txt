@@ -190,7 +190,8 @@ if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
 elseif(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
         set(EGC_PYTHON_INTERPRETER py)
 endif()
-add_custom_target(generate_egc_node_header
+
+add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED} ${EGC_GEN_NODES_GENERATED}
         COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
         -o ${EGC_GEN_NODE_HEADER_GENERATED} ${EGC_GEN_NODE_HEADER}
         COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}  -D PythonHelper=${PYTHON_HELPER_SCRIPT}
@@ -199,6 +200,10 @@ add_custom_target(generate_egc_node_header
         COMMENT "generate node list and node header files"
         VERBATIM
 )
+add_custom_target(generate_egc_node_header
+        DEPENDS ${EGC_GEN_NODE_HEADER_GENERATED} ${EGC_GEN_NODES_GENERATED}
+)
+
 
 set(EGC_GEN_NODE_CREATOR ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp.in)
 set(EGC_GEN_NODE_CREATOR_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp)
