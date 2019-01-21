@@ -217,6 +217,15 @@ add_custom_command(OUTPUT ${EGC_GEN_NODE_CREATOR_GENERATED}
 
 set(WIN_RESOURCE_FILE res/egcas.rc)
 
+add_executable(egcas WIN32 ${egcas_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
+                     ${EGC_GEN_NODE_HEADER_GENERATED}
+                     ${EGC_GEN_NODE_CREATOR_GENERATED}
+                     ${EGC_GEN_NODES_GENERATED}
+                     ${WIN_RESOURCE_FILE})
+add_dependencies(egcas mmlegcas generate_egc_node_header)
+
+include(DeployQt)
+
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
                 if(${CMAKE_FIND_ROOT_PATH} MATCHES "/mxe/") # mxe environment
@@ -252,16 +261,13 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
                         endif()
                 endif()
         endif()
+		if (${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
+				windeployqt(egcas)
+		endif()
         INCLUDE(InstallRequiredSystemLibraries)
         INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION bin)
 endif()
 
-add_executable(egcas WIN32 ${egcas_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
-                     ${EGC_GEN_NODE_HEADER_GENERATED}
-                     ${EGC_GEN_NODE_CREATOR_GENERATED}
-                     ${EGC_GEN_NODES_GENERATED}
-                     ${WIN_RESOURCE_FILE})
-add_dependencies(egcas mmlegcas generate_egc_node_header)
 #only for cmake >= 3.1
 set_property(TARGET egcas PROPERTY CXX_STANDARD 11)
 set_property(TARGET egcas PROPERTY CXX_STANDARD_REQUIRED ON)
