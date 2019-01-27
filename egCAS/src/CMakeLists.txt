@@ -225,6 +225,8 @@ add_executable(egcas WIN32 ${egcas_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
 add_dependencies(egcas mmlegcas generate_egc_node_header)
 
 include(DeployQt)
+#execute windeployqt after building egcas
+run_windeployqt(egcas)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -269,9 +271,13 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
                         add_qt_lib_for_installation(Gui)
                         add_qt_lib_for_installation(Multimedia)
                         add_qt_lib_for_installation(Network)
+                        add_lib_for_installation(libgcc_s_dw2-1.dll)
+                        add_lib_for_installation(libstdc++-6.dll)
+                        add_lib_for_installation(libwinpthread-1.dll)
         endif()
         INCLUDE(InstallRequiredSystemLibraries)
         INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION bin)
+        INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/platforms/qwindows.dll" DESTINATION bin/platforms)
 endif()
 
 #only for cmake >= 3.1
