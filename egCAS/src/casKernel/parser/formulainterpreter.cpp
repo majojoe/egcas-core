@@ -24,7 +24,13 @@ FormulaInterpreter::FormulaInterpreter() :
         m_iterPointer2(nullptr),
         m_iterPointer3(nullptr),
         m_parseKernelResult(false),
-        m_isErrorOccurred(false)
+        m_isErrorOccurred(false),
+        m_elementLength(SIZE_MAX),
+        m_startPosition(0),
+        m_stopPosition(0),
+        m_cursorPosition(0),
+        m_iterPointer(nullptr)
+
 {
 
 }
@@ -81,16 +87,11 @@ void FormulaInterpreter::clear() {
 
 antlrcpp::Any FormulaInterpreter::visitFormula(EgcParser::FormulaContext *ctx)
 {
-    size_t start = ctx->getStart()->getCharPositionInLine();
-    Token* stopToken = ctx->getStop();
-    size_t stop = stopToken->getCharPositionInLine();
-    stop += stopToken->getText().length() - 1;
-    //cout << "formula: " << start << "/" << stop << endl;
+        bool refined = refinePosition(ctx);
+        Any retval = visitChildren(ctx);
+        setNotDangling(retval);
 
-    Any retval = visitChildren(ctx);
-    setNotDangling(retval);
-
-    return retval;
+        return retval;
 }
 
 antlrcpp::Any FormulaInterpreter::visitPlusMinus(EgcParser::PlusMinusContext *ctx)
@@ -321,6 +322,32 @@ void FormulaInterpreter::setRootNode(EgcNode* node)
 {
         m_rootNode.reset(node);
         setNotDangling(node);
+}
+
+void FormulaInterpreter::findStartStop(ParserRuleContext *ctx, size_t &start, size_t &stop)
+{
+        start = ctx->getStart()->getCharPositionInLine();
+        Token* stopToken = ctx->getStop();
+        stop = stopToken->getCharPositionInLine();
+        stop += stopToken->getText().length() - 1;
+}
+
+bool FormulaInterpreter::refinePosition(ParserRuleContext *ctx)
+{
+        size_t start;
+        size_t stop;
+        findStartStop(ctx, start, stop);
+        if (    start <= m_cursorPosition
+                && stop >= m_cursorPosition
+                && (stop - start) < m_elementLength) {
+                m_elementLength = stop - start;
+                m_startPosition = start;
+                m_stopPosition = stop;
+
+                return true;
+        }
+
+        return false;
 }
 
 EgcNode* FormulaInterpreter::getRootNode(void)

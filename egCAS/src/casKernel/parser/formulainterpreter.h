@@ -227,6 +227,21 @@ private:
          */
         void setRootNode(EgcNode* node);
 
+        /**
+         * @brief findStartStop find the start and stop position of the current parse element within the string to parse
+         * @param ctx pointer to the parser context
+         * @param start reference to the start position
+         * @param stop reference to the stop postition
+         */
+        void findStartStop(antlr4::ParserRuleContext* ctx, size_t& start, size_t& stop);
+
+        /**
+         * @brief refinePosition refine position if a better match is found within the current parsing element
+         * @param ctx pointer to the parser context
+         * @return true if position could be refined
+         */
+        bool refinePosition(antlr4::ParserRuleContext* ctx);
+
         QScopedPointer<EgcNode> m_rootNode;             ///< the base node of the formula
         unsigned int m_location;                        ///< Used by scanner
         QSet<EgcNode*> m_danglingNodes;                 ///< holds the dangling nodes during AST is built up
@@ -236,6 +251,11 @@ private:
         bool m_parseKernelResult;                       ///< post process Formula  e.g. removing unneccessary parenthesis
         QString m_errorMessage;                         ///< error message when error during parsing.
         bool m_isErrorOccurred;
+        size_t m_elementLength;                         ///< the position localisation algorithm tries to minimize the element length in order to refine the position
+        size_t m_startPosition;                         ///< best match for start position until now
+        size_t m_stopPosition;                          ///< best match for stop position until now
+        size_t m_cursorPosition;                        ///< cursor position that has to be set before starting the parsing
+        EgcNode* m_iterPointer;                         ///< best match for pointer to node where the cursor is
 };
 
 
