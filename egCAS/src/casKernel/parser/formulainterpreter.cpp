@@ -28,9 +28,8 @@ FormulaInterpreter::FormulaInterpreter() :
         m_elementLength(SIZE_MAX),
         m_startPosition(0),
         m_stopPosition(0),
-        m_cursorPosition(0),
+        m_cursorPosition(SIZE_MAX),
         m_iterPointer(nullptr)
-
 {
 
 }
@@ -87,9 +86,9 @@ void FormulaInterpreter::clear() {
 
 antlrcpp::Any FormulaInterpreter::visitFormula(EgcParser::FormulaContext *ctx)
 {
-        bool refined = refinePosition(ctx);
         Any retval = visitChildren(ctx);
         setNotDangling(retval);
+        refinePosition(ctx, retval);
 
         return retval;
 }
@@ -103,6 +102,7 @@ antlrcpp::Any FormulaInterpreter::visitPlusMinus(EgcParser::PlusMinusContext *ct
         else
                 retval = addBinaryExpression(EgcNodeType::MinusNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
 
+        refinePosition(ctx, retval);
         return retval;
 }
 
@@ -116,27 +116,40 @@ antlrcpp::Any FormulaInterpreter::visitNumber(EgcParser::NumberContext *ctx)
         nodePtr = node.data();
         addDanglingNode(node.take());
 
+        refinePosition(ctx, nodePtr);
         return nodePtr;
 }
 
 antlrcpp::Any FormulaInterpreter::visitEquality(EgcParser::EqualityContext *ctx)
 {
-        return addBinaryExpression(EgcNodeType::EqualNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        EgcNode* retval;
+        retval = addBinaryExpression(EgcNodeType::EqualNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        refinePosition(ctx, retval);
+        return retval;
 }
 
 antlrcpp::Any FormulaInterpreter::visitDefinition(EgcParser::DefinitionContext *ctx)
 {
-        return addBinaryExpression(EgcNodeType::DefinitionNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        EgcNode* retval;
+        retval = addBinaryExpression(EgcNodeType::DefinitionNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        refinePosition(ctx, retval);
+        return retval;
 }
 
 antlrcpp::Any FormulaInterpreter::visitRedParenthesisL(EgcParser::RedParenthesisLContext *ctx)
 {
-        return addUnaryExpression(EgcNodeType::LParenthesisNode, visit(ctx->expr()));
+        EgcNode* retval;
+        retval = addUnaryExpression(EgcNodeType::LParenthesisNode, visit(ctx->expr()));
+        refinePosition(ctx, retval);
+        return retval;
 }
 
 antlrcpp::Any FormulaInterpreter::visitUMinus(EgcParser::UMinusContext *ctx)
 {
-        return addUnaryExpression(EgcNodeType::UnaryMinusNode, visit(ctx->expr()));
+        EgcNode* retval;
+        retval = addUnaryExpression(EgcNodeType::UnaryMinusNode, visit(ctx->expr()));
+        refinePosition(ctx, retval);
+        return retval;
 }
 
 antlrcpp::Any FormulaInterpreter::visitVariable(EgcParser::VariableContext *ctx)
@@ -150,7 +163,8 @@ antlrcpp::Any FormulaInterpreter::visitVariable(EgcParser::VariableContext *ctx)
                 var += QString::fromStdString(ctx->VARSUB()->getText());
         node->setStuffedVar(var);
         nodePtr = node.data();
-        addDanglingNode(node.take());
+        addDanglingNode(node.take());        
+        refinePosition(ctx, nodePtr);
 
         return nodePtr;
 }
@@ -332,7 +346,7 @@ void FormulaInterpreter::findStartStop(ParserRuleContext *ctx, size_t &start, si
         stop += stopToken->getText().length() - 1;
 }
 
-bool FormulaInterpreter::refinePosition(ParserRuleContext *ctx)
+void FormulaInterpreter::refinePosition(ParserRuleContext *ctx, EgcNode* node)
 {
         size_t start;
         size_t stop;
@@ -343,11 +357,8 @@ bool FormulaInterpreter::refinePosition(ParserRuleContext *ctx)
                 m_elementLength = stop - start;
                 m_startPosition = start;
                 m_stopPosition = stop;
-
-                return true;
+                m_iterPointer = node;
         }
-
-        return false;
 }
 
 EgcNode* FormulaInterpreter::getRootNode(void)

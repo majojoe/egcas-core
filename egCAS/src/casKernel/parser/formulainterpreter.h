@@ -12,7 +12,9 @@
 class EgcNode;
 enum class EgcNodeType;
 
-class FormulaInterpreter : public EgcBaseVisitor, public antlr4::BaseErrorListener
+using namespace antlr4;
+
+class FormulaInterpreter : public EgcBaseVisitor, public BaseErrorListener
 {
 public:
         FormulaInterpreter();
@@ -47,7 +49,7 @@ public:
          */
         EgcNode* getIteratorNode(int i);
 
-        void syntaxError(antlr4::Recognizer * recognizer, antlr4::Token * offendingSymbol, size_t line, size_t charPositionInLine,
+        void syntaxError(Recognizer * recognizer, Token * offendingSymbol, size_t line, size_t charPositionInLine,
                          const std::string &msg, std::exception_ptr e) override;
 
         /**
@@ -233,14 +235,14 @@ private:
          * @param start reference to the start position
          * @param stop reference to the stop postition
          */
-        void findStartStop(antlr4::ParserRuleContext* ctx, size_t& start, size_t& stop);
+        void findStartStop(ParserRuleContext* ctx, size_t& start, size_t& stop);
 
         /**
          * @brief refinePosition refine position if a better match is found within the current parsing element
          * @param ctx pointer to the parser context
-         * @return true if position could be refined
+         * @param node pointer to node that is related to given context
          */
-        bool refinePosition(antlr4::ParserRuleContext* ctx);
+        void refinePosition(ParserRuleContext* ctx, EgcNode* node);
 
         QScopedPointer<EgcNode> m_rootNode;             ///< the base node of the formula
         unsigned int m_location;                        ///< Used by scanner
