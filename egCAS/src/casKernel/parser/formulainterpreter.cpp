@@ -171,22 +171,30 @@ antlrcpp::Any FormulaInterpreter::visitVariable(EgcParser::VariableContext *ctx)
 
 antlrcpp::Any FormulaInterpreter::visitBracketOp(EgcParser::BracketOpContext *ctx)
 {
-        return visit(ctx->expr());
+        EgcNode* node = visit(ctx->expr());
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitDifferential(EgcParser::DifferentialContext *ctx)
 {
-        return addDifferentialExpression(visit(ctx->explist()));
+        EgcNode* node = addDifferentialExpression(visit(ctx->explist()));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitRoot(EgcParser::RootContext *ctx)
 {
-        return addBinaryExpression(EgcNodeType::RootNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        EgcNode* node = addBinaryExpression(EgcNodeType::RootNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitExponent(EgcParser::ExponentContext *ctx)
 {
-        return addBinaryExpression(EgcNodeType::ExponentNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        EgcNode* node = addBinaryExpression(EgcNodeType::ExponentNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitMulDiv(EgcParser::MulDivContext *ctx)
@@ -197,18 +205,23 @@ antlrcpp::Any FormulaInterpreter::visitMulDiv(EgcParser::MulDivContext *ctx)
                 retval = addBinaryExpression(EgcNodeType::MultiplicationNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
         else
                 retval = addDivisionExpression(visit(ctx->expr(0)), visit(ctx->expr(1)));
+        refinePosition(ctx, retval);
 
         return retval;
 }
 
 antlrcpp::Any FormulaInterpreter::visitSqrt(EgcParser::SqrtContext *ctx)
 {
-        return addSqrtExpression(visit(ctx->expr()));
+        EgcNode* node = addSqrtExpression(visit(ctx->expr()));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitEmptyBinOp(EgcParser::EmptyBinOpContext *ctx)
 {
-        return addBinaryExpression(EgcNodeType::BinEmptyNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        EgcNode* node = addBinaryExpression(EgcNodeType::BinEmptyNode, visit(ctx->expr(0)), visit(ctx->expr(1)));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitIteratorL(EgcParser::IteratorLContext *ctx)
@@ -218,7 +231,9 @@ antlrcpp::Any FormulaInterpreter::visitIteratorL(EgcParser::IteratorLContext *ct
 
 antlrcpp::Any FormulaInterpreter::visitRedParenthesisR(EgcParser::RedParenthesisRContext *ctx)
 {
-        return addUnaryExpression(EgcNodeType::RParenthesisNode, visit(ctx->expr()));
+        EgcNode* node = addUnaryExpression(EgcNodeType::RParenthesisNode, visit(ctx->expr()));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitFunction(EgcParser::FunctionContext *ctx)
@@ -226,18 +241,24 @@ antlrcpp::Any FormulaInterpreter::visitFunction(EgcParser::FunctionContext *ctx)
         std::string var = "";
         if (ctx->NAMES())
                 var = ctx->NAMES()->getText();
-        return addFunction(var, visit(ctx->explist()));
+        EgcNode* node = addFunction(var, visit(ctx->explist()));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitParenthesis(EgcParser::ParenthesisContext *ctx)
 {
-        return addUnaryExpression(EgcNodeType::ParenthesisNode, visit(ctx->expr()));
+        EgcNode* node = addUnaryExpression(EgcNodeType::ParenthesisNode, visit(ctx->expr()));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitEmpty(EgcParser::EmptyContext *ctx)
 {
         (void) ctx;
-        return addEmptyNode();
+        EgcNode* node = addEmptyNode();
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitIteratorR(EgcParser::IteratorRContext *ctx)
@@ -247,7 +268,9 @@ antlrcpp::Any FormulaInterpreter::visitIteratorR(EgcParser::IteratorRContext *ct
 
 antlrcpp::Any FormulaInterpreter::visitNatlogarithm(EgcParser::NatlogarithmContext *ctx)
 {
-        return addUnaryExpression(EgcNodeType::NatLogNode, visit(ctx->expr()));
+        EgcNode* node = addUnaryExpression(EgcNodeType::NatLogNode, visit(ctx->expr()));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitLogarithm(EgcParser::LogarithmContext *ctx)
