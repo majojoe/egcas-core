@@ -80,8 +80,6 @@ void FormulaInterpreter::clear() {
         m_location = 0;
         m_rootNode.reset(nullptr);
         deleteDanglingNodes();
-#if (EGC_PARSER_DEBUG >= 3)
-#endif //#if (EGC_PARSER_DEBUG >= 3)
 }
 
 antlrcpp::Any FormulaInterpreter::visitFormula(EgcParser::FormulaContext *ctx)
@@ -275,22 +273,30 @@ antlrcpp::Any FormulaInterpreter::visitNatlogarithm(EgcParser::NatlogarithmConte
 
 antlrcpp::Any FormulaInterpreter::visitLogarithm(EgcParser::LogarithmContext *ctx)
 {
-        return addUnaryExpression(EgcNodeType::LogNode, visit(ctx->expr()));
+        EgcNode* node = addUnaryExpression(EgcNodeType::LogNode, visit(ctx->expr()));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitIntegral(EgcParser::IntegralContext *ctx)
 {
-        return changeFlexExpressionType(EgcNodeType::IntegralNode, visit(ctx->explist()));
+        EgcNode* node = changeFlexExpressionType(EgcNodeType::IntegralNode, visit(ctx->explist()));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitCreateArglist(EgcParser::CreateArglistContext *ctx)
 {
-        return createArgList(visit(ctx->expr()));
+        EgcNode* node = createArgList(visit(ctx->expr()));
+        refinePosition(ctx, node);
+        return node;
 }
 
 antlrcpp::Any FormulaInterpreter::visitAddArgument(EgcParser::AddArgumentContext *ctx)
 {
-        return addArgument(visit(ctx->expr()), visit(ctx->explist()));
+        EgcNode* node = addArgument(visit(ctx->expr()), visit(ctx->explist()));
+        refinePosition(ctx, node);
+        return node;
 }
 
 
@@ -373,14 +379,16 @@ void FormulaInterpreter::refinePosition(ParserRuleContext *ctx, EgcNode* node)
 {
         size_t start;
         size_t stop;
-        findStartStop(ctx, start, stop);
-        if (    start <= m_cursorPosition
-                && stop >= m_cursorPosition
-                && (stop - start) < m_elementLength) {
-                m_elementLength = stop - start;
-                m_startPosition = start;
-                m_stopPosition = stop;
-                m_iterPointer = node;
+        if (m_cursorPosition != SIZE_MAX) {
+                findStartStop(ctx, start, stop);
+                if (    start <= m_cursorPosition
+                        && stop >= m_cursorPosition
+                        && (stop - start) < m_elementLength) {
+                        m_elementLength = stop - start;
+                        m_startPosition = start;
+                        m_stopPosition = stop;
+                        m_iterPointer = node;
+                }
         }
 }
 
@@ -605,6 +613,8 @@ EgcNode* FormulaInterpreter::addDifferentialExpression(EgcNode* argList)
 
 EgcNode* FormulaInterpreter::getIteratorNode(int i)
 {
+        if (i == 0)
+                return m_iterPointer;
         if (i == 1)
                 return m_iterPointer1;
         if (i == 2)
@@ -613,6 +623,18 @@ EgcNode* FormulaInterpreter::getIteratorNode(int i)
                 return m_iterPointer3;
 
         return nullptr;
+}
+
+quint32 FormulaInterpreter::getOffset()
+{
+        if ((m_cursorPosition - m_startPosition) > 0)
+                return static_cast<quint32>(m_cursorPosition - m_startPosition);
+        return 0;
+}
+
+void FormulaInterpreter::setCursorPosition(quint32 pos)
+{
+        m_cursorPosition = pos;
 }
 
 void FormulaInterpreter::syntaxError(Recognizer *recognizer, Token *offendingSymbol, size_t line, size_t charPositionInLine, const string &msg, std::exception_ptr e)
