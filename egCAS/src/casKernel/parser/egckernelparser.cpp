@@ -78,12 +78,34 @@ EgcNode* EgcKernelParser::parseKernelOutput(const QString& strToParse)
         return m_i->getRootNode();
 }
 
+QString EgcKernelParser::determineColumnOfCursor(QString strToParse, int &column, bool &isLeftPointer)
+{
+        QString str = strToParse;
+        column = -1;
+        int lind = strToParse.indexOf("_<L");
+        int rind = strToParse.indexOf("_<R");
+        if (lind != -1) { //remove left pointer from string
+                str = str.remove(lind, 3);
+                column = lind - 1;
+                isLeftPointer = true;
+        } else if (rind != -1) { //remove right pointer from string
+                str = str.remove(rind, 3);
+                column = rind;
+                isLeftPointer = false;
+        }
+
+        return str;
+}
+
 EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIterReStructData& iterData, int* errCode)
 {
         stringstream ss;
         *errCode = 0;
+        int column;
+        bool isLeftPointer;
 
-        ss << strToParse.toStdString();
+        QString str = determineColumnOfCursor(strToParse, column, isLeftPointer);
+        ss << str.toStdString();
         try {
                 if (m_i->parse(ss)) {
                         //common unspecified error while parsing input
