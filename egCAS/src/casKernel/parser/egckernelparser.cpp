@@ -106,6 +106,10 @@ EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIter
 
         QString str = determineColumnOfCursor(strToParse, column, isLeftPointer);
         ss << str.toStdString();
+        if (column != -1) {
+                m_i->setCursorColumn(static_cast<quint32>(column));
+                m_i->setSideOfColumn(isLeftPointer);
+        }
         try {
                 if (m_i->parse(ss)) {
                         //common unspecified error while parsing input
@@ -129,8 +133,9 @@ EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIter
                 return nullptr;
         }
 
-        iterData.m_nodeRightSide = m_i->getIteratorNode(2);
-        iterData.m_nodeLeftSide = m_i->getIteratorNode(1);
+        iterData.m_node = m_i->getIteratorNode(0);
+        iterData.m_isLeftPointer = isLeftPointer;
+        iterData.m_offset = m_i->getOffset();
 
         return m_i->getRootNode();
 }

@@ -59,7 +59,13 @@ public:
          * @brief setCursorPosition set the cursor position. Must be done before parsing!
          * @param pos the position of the cursor within the parsing string.
          */
-        void setCursorPosition(quint32 pos);
+        void setCursorColumn(quint32 pos);
+
+        /**
+         * @brief setSideOfColumn determines if cursor is on the left or right side of the column set with setCursorColumn
+         * @param isLeftPointer true if cursor is on the left side, false otherwise.
+         */
+        void setSideOfColumn(bool isLeftPointer);
 
         void syntaxError(Recognizer * recognizer, Token * offendingSymbol, size_t line, size_t charPositionInLine,
                          const std::string &msg, std::exception_ptr e) override;
@@ -268,8 +274,10 @@ private:
         size_t m_elementLength;                         ///< the position localisation algorithm tries to minimize the element length in order to refine the position
         size_t m_startPosition;                         ///< best match for start position until now
         size_t m_stopPosition;                          ///< best match for stop position until now
-        size_t m_cursorPosition;                        ///< cursor position that has to be set before starting the parsing
+        size_t m_cursorColumn;                          ///< cursor position that has to be set before starting the parsing
         EgcNode* m_iterPointer;                         ///< best match for pointer to node where the cursor is
+        bool m_cursorIsOnLeftSide;                      ///< true if cursor is on the left side of the given column
+
 };
 
 

@@ -28,8 +28,9 @@ FormulaInterpreter::FormulaInterpreter() :
         m_elementLength(SIZE_MAX),
         m_startPosition(0),
         m_stopPosition(0),
-        m_cursorPosition(SIZE_MAX),
-        m_iterPointer(nullptr)
+        m_cursorColumn(SIZE_MAX),
+        m_iterPointer(nullptr),
+        m_cursorIsOnLeftSide(false)
 {
 
 }
@@ -379,12 +380,12 @@ void FormulaInterpreter::refinePosition(ParserRuleContext *ctx, EgcNode* node)
 {
         size_t start;
         size_t stop;
-        if (m_cursorPosition != SIZE_MAX) {
+        if (m_cursorColumn != SIZE_MAX) {
                 findStartStop(ctx, start, stop);
-                if (    start <= m_cursorPosition
-                        && stop >= m_cursorPosition
+                if (    start <= m_cursorColumn
+                        && stop >= m_cursorColumn
                         && (stop - start) < m_elementLength) {
-                        m_elementLength = stop - start;
+                        m_elementLength = (stop - start) + 1;
                         m_startPosition = start;
                         m_stopPosition = stop;
                         m_iterPointer = node;
@@ -627,14 +628,19 @@ EgcNode* FormulaInterpreter::getIteratorNode(int i)
 
 quint32 FormulaInterpreter::getOffset()
 {
-        if ((m_cursorPosition - m_startPosition) > 0)
-                return static_cast<quint32>(m_cursorPosition - m_startPosition);
+        if ((m_cursorColumn - m_startPosition) > 0)
+                return static_cast<quint32>(m_cursorColumn - m_startPosition);
         return 0;
 }
 
-void FormulaInterpreter::setCursorPosition(quint32 pos)
+void FormulaInterpreter::setCursorColumn(quint32 pos)
 {
-        m_cursorPosition = pos;
+        m_cursorColumn = pos;
+}
+
+void FormulaInterpreter::setSideOfColumn(bool isLeftPointer)
+{
+        m_cursorIsOnLeftSide = isLeftPointer;
 }
 
 void FormulaInterpreter::syntaxError(Recognizer *recognizer, Token *offendingSymbol, size_t line, size_t charPositionInLine, const string &msg, std::exception_ptr e)

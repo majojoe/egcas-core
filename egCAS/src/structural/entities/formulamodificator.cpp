@@ -634,7 +634,7 @@ bool FormulaModificator::rightSide(void) const
                 if (m_iter.hasNext()) {
                         FormulaScrElement& lel = m_iter.peekPrevious();
                         FormulaScrElement& rel = m_iter.peekNext();
-                        if ((int)lel.m_cAdh < (int)rel.m_cAdh)
+                        if (static_cast<int>(lel.m_cAdh) < static_cast<int>(rel.m_cAdh))
                                 retval = true;
                         else
                                 retval = false;
@@ -663,7 +663,7 @@ EgcNode& FormulaModificator::nodeAtCursor(void) const
         return *node;
 }
 
-FormulaScrElement&FormulaModificator::elementAtCursor() const
+FormulaScrElement& FormulaModificator::elementAtCursor() const
 {
         if (rightSide() && m_iter.hasNext())
                 return m_iter.peekNext();
@@ -792,8 +792,8 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
         FormulaScrIter iter = m_iter;
         bool searchFromBack = false;
 
-        if (iterData.m_nodeRightSide && m_cursorPos == 0) {
-                if (!iterData.m_nodeRightSide->isContainer())
+        if (iterData.m_node && !iterData.m_isLeftPointer && m_cursorPos == 0) {
+                if (!iterData.m_node->isContainer())
                         searchFromBack = true;
         }
 
@@ -802,7 +802,7 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
                 do {
                         if (iter.hasPrevious()) {
                                 FormulaScrElement &el = iter.peekPrevious();
-                                if (el.m_node == iterData.m_nodeRightSide) {
+                                if (el.m_node == iterData.m_node && !iterData.m_isLeftPointer) {
                                                 break;
                                 }
                         }
@@ -815,7 +815,7 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
                 do {
                         if (iter.hasNext()) {
                                 FormulaScrElement &el = iter.peekNext();
-                                if (el.m_node == iterData.m_nodeLeftSide) {
+                                if (el.m_node == iterData.m_node && iterData.m_isLeftPointer) {
                                         if (el.m_sideNode == FormulaScrElement::nodeLeftSide)
                                                 break;
                                         else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
@@ -826,7 +826,7 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
                         }
                         if (iter.hasPrevious()) {
                                 FormulaScrElement &el = iter.peekPrevious();
-                                if (el.m_node == iterData.m_nodeRightSide) {
+                                if (el.m_node == iterData.m_node && !iterData.m_isLeftPointer) {
                                         if (el.m_sideNode == FormulaScrElement::nodeRightSide)
                                                 break;
                                         else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
@@ -1015,7 +1015,7 @@ bool FormulaModificator::isCursorNearLeftSideParent(EgcNode& node) const
                                 leftSide = false;
                 } else {
                         quint32 pos = subPosition();
-                        quint32 subind = curr.nrSubindexes();
+                        quint32 subind = static_cast<quint32>(curr.nrSubindexes());
 
                         if (pos >= (subind/2))
                                 leftSide = false;
@@ -1143,7 +1143,7 @@ QList<FormulaScrVector> FormulaModificator::split(const FormulaScrIter& leftIter
 void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
 {
         bool sideMatters = false;
-        FormulaScrElement::SideNode sideNode;
+        FormulaScrElement::SideNode sideNode = FormulaScrElement::nodeMiddle;
         bool found = false;
         const EgcMathmlLookup lookup = m_formula.getMathmlMappingCRef();
         EgcNode* node = lookup.findNode(nodeId);

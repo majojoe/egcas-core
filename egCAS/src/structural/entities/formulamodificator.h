@@ -41,9 +41,10 @@ class EgcFormulaEntity;
  */
 class NodeIterReStructData {
 public:
-        NodeIterReStructData() : m_nodeRightSide{nullptr}, m_nodeLeftSide{nullptr} {}
-        EgcNode* m_nodeRightSide;
-        EgcNode* m_nodeLeftSide;
+        NodeIterReStructData() : m_node{nullptr}, m_isLeftPointer{false}, m_offset{0} {}
+        EgcNode* m_node;
+        bool m_isLeftPointer;
+        quint32 m_offset;
 };
 
 
