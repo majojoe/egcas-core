@@ -699,7 +699,13 @@ void FormulaModificator::saveCursorPosition(void)
 
         m_cursorPos = 0;
 
-        if (rightPtrAtNodeBeginToBeInserted()) {
+        if (rel && !lel) {
+                insertRightPointer();
+        } else {
+                insertLeftPointer();
+        }
+
+/*        if (rightPtrAtNodeBeginToBeInserted()) {
                 // a right pointer has to be inserted at node begin
                 m_cursorPos = findAlnumBegin();
                 insertRightPointer();
@@ -738,7 +744,7 @@ void FormulaModificator::saveCursorPosition(void)
                 }
         } else {
                 insertRightPointer();
-        }
+        }*/
 }
 
 void FormulaModificator::insertLeftPointer()

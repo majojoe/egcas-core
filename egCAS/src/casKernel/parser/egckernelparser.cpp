@@ -83,7 +83,7 @@ QString EgcKernelParser::determineColumnOfCursor(QString strToParse, int &column
         QString str = strToParse;
         column = -1;
         int lind = strToParse.indexOf("_<L");
-        int rind = strToParse.indexOf("_<R");
+        int rind = strToParse.indexOf("_>R");
         if (lind != -1) { //remove left pointer from string
                 str = str.remove(lind, 3);
                 column = lind - 1;

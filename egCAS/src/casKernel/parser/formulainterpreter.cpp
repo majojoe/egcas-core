@@ -636,6 +636,7 @@ quint32 FormulaInterpreter::getOffset()
 void FormulaInterpreter::setCursorColumn(quint32 pos)
 {
         m_cursorColumn = pos;
+        m_elementLength = SIZE_MAX;
 }
 
 void FormulaInterpreter::setSideOfColumn(bool isLeftPointer)
