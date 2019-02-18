@@ -276,7 +276,7 @@ private:
         size_t m_stopPosition;                          ///< best match for stop position until now
         size_t m_cursorColumn;                          ///< cursor position that has to be set before starting the parsing
         EgcNode* m_iterPointer;                         ///< best match for pointer to node where the cursor is
-        bool m_cursorIsOnLeftSide;                      ///< true if cursor is on the left side of the given column
+        bool m_cursorIsOnRightSide;                     ///< true if cursor is on the right side of the given column
 
 };
 

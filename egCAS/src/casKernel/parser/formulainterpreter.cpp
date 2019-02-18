@@ -30,7 +30,7 @@ FormulaInterpreter::FormulaInterpreter() :
         m_stopPosition(0),
         m_cursorColumn(SIZE_MAX),
         m_iterPointer(nullptr),
-        m_cursorIsOnLeftSide(false)
+        m_cursorIsOnRightSide(false)
 {
 
 }
@@ -639,9 +639,9 @@ void FormulaInterpreter::setCursorColumn(quint32 pos)
         m_elementLength = SIZE_MAX;
 }
 
-void FormulaInterpreter::setSideOfColumn(bool isLeftPointer)
+void FormulaInterpreter::setSideOfColumn(bool isOnRightSide)
 {
-        m_cursorIsOnLeftSide = isLeftPointer;
+        m_cursorIsOnRightSide = isOnRightSide;
 }
 
 void FormulaInterpreter::syntaxError(Recognizer *recognizer, Token *offendingSymbol, size_t line, size_t charPositionInLine, const string &msg, std::exception_ptr e)

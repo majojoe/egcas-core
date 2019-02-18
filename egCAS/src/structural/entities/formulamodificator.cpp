@@ -685,11 +685,6 @@ quint32 FormulaModificator::subPosition(void) const
 
 void FormulaModificator::saveCursorPosition(void)
 {
-        if (m_cursorPosSaved)
-                return;
-        else
-                m_cursorPosSaved = true;
-
         FormulaScrElement* lel = nullptr;
         FormulaScrElement* rel = nullptr;
         if (m_iter.hasPrevious())
@@ -794,11 +789,10 @@ quint32 FormulaModificator::findAlnumBegin()
 
 void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
 {
-        m_cursorPosSaved = false;
         FormulaScrIter iter = m_iter;
         bool searchFromBack = false;
 
-        if (iterData.m_node && !iterData.m_isLeftPointer && m_cursorPos == 0) {
+        if (iterData.m_node && !iterData.m_isLeftPointer && iterData.m_offset == 0) {
                 if (!iterData.m_node->isContainer())
                         searchFromBack = true;
         }
@@ -847,7 +841,7 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
 
                 // go to the element position (inside number or variable name) saved
                 quint32 i;
-                for (i = 0; i < m_cursorPos; i++) {
+                for (i = 0; i < iterData.m_offset; i++) {
                         if (iter.hasNext())
                                 (void) iter.next();
                 }

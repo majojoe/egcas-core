@@ -70,7 +70,7 @@ public:
          */
         QString getErrorMessage();
 private:
-        QString determineColumnOfCursor(QString strToParse, int &column, bool &isLeftPointer);
+        QString determineColumnOfCursor(QString strToParse, int &column, bool &isOnRightSide);
         QString m_errMessage;   /// stores a error message if an error ocurred while parsing
         QScopedPointer<FormulaInterpreter> m_i;        ///< stores an interpreter
 

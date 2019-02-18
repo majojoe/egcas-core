@@ -78,7 +78,7 @@ EgcNode* EgcKernelParser::parseKernelOutput(const QString& strToParse)
         return m_i->getRootNode();
 }
 
-QString EgcKernelParser::determineColumnOfCursor(QString strToParse, int &column, bool &isLeftPointer)
+QString EgcKernelParser::determineColumnOfCursor(QString strToParse, int &column, bool &isOnRightSide)
 {
         QString str = strToParse;
         column = -1;
@@ -87,11 +87,11 @@ QString EgcKernelParser::determineColumnOfCursor(QString strToParse, int &column
         if (lind != -1) { //remove left pointer from string
                 str = str.remove(lind, 3);
                 column = lind - 1;
-                isLeftPointer = true;
+                isOnRightSide = true;
         } else if (rind != -1) { //remove right pointer from string
                 str = str.remove(rind, 3);
                 column = rind;
-                isLeftPointer = false;
+                isOnRightSide = false;
         }
 
         return str;
@@ -102,13 +102,13 @@ EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIter
         stringstream ss;
         *errCode = 0;
         int column;
-        bool isLeftPointer;
+        bool isOnRightSide;
 
-        QString str = determineColumnOfCursor(strToParse, column, isLeftPointer);
+        QString str = determineColumnOfCursor(strToParse, column, isOnRightSide);
         ss << str.toStdString();
         if (column != -1) {
                 m_i->setCursorColumn(static_cast<quint32>(column));
-                m_i->setSideOfColumn(isLeftPointer);
+                m_i->setSideOfColumn(isOnRightSide);
         }
         try {
                 if (m_i->parse(ss)) {
@@ -134,7 +134,7 @@ EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIter
         }
 
         iterData.m_node = m_i->getIteratorNode(0);
-        iterData.m_isLeftPointer = isLeftPointer;
+        iterData.m_isLeftPointer = isOnRightSide;
         iterData.m_offset = m_i->getOffset();
 
         return m_i->getRootNode();
