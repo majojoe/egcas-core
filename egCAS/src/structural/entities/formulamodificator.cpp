@@ -73,8 +73,6 @@ FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{fo
                                                                     m_startUnderlinedNode{nullptr},
                                                                     m_changeAwaited{false},
                                                                     m_underlineCursorLeft{false},
-                                                                    m_cursorPos{0},
-                                                                    m_cursorPosSaved{false},
                                                                     m_insRightPtrAtNodeBegin{false}
 {
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_iter);
@@ -691,8 +689,6 @@ void FormulaModificator::saveCursorPosition(void)
                 lel = &m_iter.peekPrevious();
         if (m_iter.hasNext())
                 rel = &m_iter.peekNext();
-
-        m_cursorPos = 0;
 
         if (rel && !lel) {
                 insertRightPointer();

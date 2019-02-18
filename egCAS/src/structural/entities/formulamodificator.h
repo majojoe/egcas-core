@@ -444,8 +444,6 @@ private:
         EgcNode* m_startUnderlinedNode;         ///< node where underining started
         bool m_changeAwaited;                   ///< is set if a change in the view is awaited. If this has happened we can complete the change operation
         bool m_underlineCursorLeft;             ///< if true the cursor is at left side of underline, if false on the right side
-        quint32 m_cursorPos;                    ///< cursor position for number or variable nodes
-        bool m_cursorPosSaved;                  ///< saves if cursor position has already been saved. The method does not allow to save it again until it has been removed due to parsing
         NodeIterReStructData m_tempIterData;    ///< saves the data for cursor positions from parser to be able to restore them later
         bool m_insRightPtrAtNodeBegin;            ///< marker if in case of special operators a right pointer has to be inserted
 };
