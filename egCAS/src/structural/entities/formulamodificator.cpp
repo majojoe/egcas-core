@@ -692,6 +692,9 @@ void FormulaModificator::saveCursorPosition(void)
 
         if (rel && !lel) {
                 insertRightPointer();
+        } else if (   rel && lel
+                   && (!isAlnum(lel->m_value) && isAlnum(rel->m_value))) {
+                insertRightPointer();
         } else {
                 insertLeftPointer();
         }
@@ -838,6 +841,10 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
                 // go to the element position (inside number or variable name) saved
                 quint32 i;
                 for (i = 0; i < iterData.m_offset; i++) {
+                        if (iter.hasNext())
+                                (void) iter.next();
+                }
+                if (iterData.m_isLeftPointer) {
                         if (iter.hasNext())
                                 (void) iter.next();
                 }
