@@ -698,47 +698,6 @@ void FormulaModificator::saveCursorPosition(void)
         } else {
                 insertLeftPointer();
         }
-
-/*        if (rightPtrAtNodeBeginToBeInserted()) {
-                // a right pointer has to be inserted at node begin
-                m_cursorPos = findAlnumBegin();
-                insertRightPointer();
-                //move the cursor back to the old position
-                for (quint32 i = 0; i < m_cursorPos; i++)
-                        (void) m_iter.next();
-        } else if (rel && !lel) {
-                insertRightPointer();
-        } else if (lel && !rel) {
-                //m_cursorPos = findAlnumBegin();
-                insertLeftPointer();
-        } else if (lel && rel) {
-                if (rel->m_node && rel->m_sideNode == FormulaScrElement::nodeLeftSide) {
-                        insertRightPointer();
-                } else if (lel->m_node && lel->m_sideNode == FormulaScrElement::nodeRightSide) {
-                        //m_cursorPos = findAlnumBegin();
-                        insertLeftPointer();
-                } else if (isAlnum(lel->m_value) && !isAlnum(rel->m_value)) {
-                        insertLeftPointer();
-                } else if (!isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
-                        insertRightPointer();
-                } else if (isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
-                        m_cursorPos = findAlnumBegin();
-                        insertRightPointer();
-                        //move the cursor back to the old position
-                        for (quint32 i = 0; i < m_cursorPos; i++)
-                                (void) m_iter.next();
-                } else if (isEmptyElement(false)) {
-                        insertRightPointer();
-                } else if (isEmptyElement(true)) {
-                        insertLeftPointer();
-                } else if (!lel->m_node) {
-                        insertLeftPointer();
-                } else if (!rel->m_node) {
-                        insertRightPointer();
-                }
-        } else {
-                insertRightPointer();
-        }*/
 }
 
 void FormulaModificator::insertLeftPointer()
@@ -789,65 +748,44 @@ quint32 FormulaModificator::findAlnumBegin()
 void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
 {
         FormulaScrIter iter = m_iter;
-        bool searchFromBack = false;
 
-        if (iterData.m_node && !iterData.m_isLeftPointer && iterData.m_offset == 0) {
-                if (!iterData.m_node->isContainer())
-                        searchFromBack = true;
-        }
-
-        if (searchFromBack) { //search for right side number and variable nodes only
-                iter.toBack();
-                do {
-                        if (iter.hasPrevious()) {
-                                FormulaScrElement &el = iter.peekPrevious();
-                                if (el.m_node == iterData.m_node && !iterData.m_isLeftPointer) {
+        iter.toFront();
+        do {
+                if (iter.hasNext()) {
+                        FormulaScrElement &el = iter.peekNext();
+                        if (el.m_node == iterData.m_node && !iterData.m_isLeftPointer) {
+                                if (el.m_sideNode == FormulaScrElement::nodeLeftSide)
+                                        break;
+                                else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
+                                        if (el.m_node->getNodeType() == EgcNodeType::EmptyNode)
+                                                iterData.m_offset = 0;
+                                        if (!el.m_node->isContainer())
                                                 break;
                                 }
                         }
-
-                        (void) iter.previous();
-                } while(iter.hasPrevious());
-
-        } else {
-                iter.toFront();
-                do {
-                        if (iter.hasNext()) {
-                                FormulaScrElement &el = iter.peekNext();
-                                if (el.m_node == iterData.m_node && iterData.m_isLeftPointer) {
-                                        if (el.m_sideNode == FormulaScrElement::nodeLeftSide)
+                }
+                if (iter.hasPrevious()) {
+                        FormulaScrElement &el = iter.peekPrevious();
+                        if (el.m_node == iterData.m_node && iterData.m_isLeftPointer) {
+                                if (el.m_sideNode == FormulaScrElement::nodeRightSide)
+                                        break;
+                                else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
+                                        if (el.m_node->getNodeType() == EgcNodeType::EmptyNode)
+                                                iterData.m_offset = 0;
+                                        if (!el.m_node->isContainer())
                                                 break;
-                                        else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
-                                                if (!el.m_node->isContainer())
-                                                        break;
-                                        }
                                 }
                         }
-                        if (iter.hasPrevious()) {
-                                FormulaScrElement &el = iter.peekPrevious();
-                                if (el.m_node == iterData.m_node && !iterData.m_isLeftPointer) {
-                                        if (el.m_sideNode == FormulaScrElement::nodeRightSide)
-                                                break;
-                                        else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
-                                                if (!el.m_node->isContainer())
-                                                        break;
-                                        }
-                                }
-                        }
+                }
 
+                (void) iter.next();
+        } while(iter.hasNext());
+
+        // go to the element position (inside number or variable name) saved
+        quint32 i;
+        for (i = 0; i < iterData.m_offset; i++) {
+                if (iter.hasNext())
                         (void) iter.next();
-                } while(iter.hasNext());
-
-                // go to the element position (inside number or variable name) saved
-                quint32 i;
-                for (i = 0; i < iterData.m_offset; i++) {
-                        if (iter.hasNext())
-                                (void) iter.next();
-                }
-                if (iterData.m_isLeftPointer) {
-                        if (iter.hasNext())
-                                (void) iter.next();
-                }
         }
 
         m_iter = iter;
