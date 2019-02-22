@@ -73,7 +73,8 @@ FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{fo
                                                                     m_startUnderlinedNode{nullptr},
                                                                     m_changeAwaited{false},
                                                                     m_underlineCursorLeft{false},
-                                                                    m_insRightPtrAtNodeBegin{false}
+                                                                    m_insRightPtrAtNodeBegin{false},
+                                                                    m_cursorSaved{false}
 {
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_iter);
         visitor.updateVector();
@@ -683,6 +684,9 @@ quint32 FormulaModificator::subPosition(void) const
 
 void FormulaModificator::saveCursorPosition(void)
 {
+        if (m_cursorSaved)
+                return;
+        m_cursorSaved = true;
         FormulaScrElement* lel = nullptr;
         FormulaScrElement* rel = nullptr;
         if (m_iter.hasPrevious())
@@ -747,6 +751,7 @@ quint32 FormulaModificator::findAlnumBegin()
 
 void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
 {
+        m_cursorSaved = false;
         FormulaScrIter iter = m_iter;
 
         iter.toFront();
