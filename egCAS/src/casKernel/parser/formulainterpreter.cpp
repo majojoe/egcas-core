@@ -223,11 +223,6 @@ antlrcpp::Any FormulaInterpreter::visitEmptyBinOp(EgcParser::EmptyBinOpContext *
         return node;
 }
 
-antlrcpp::Any FormulaInterpreter::visitIteratorL(EgcParser::IteratorLContext *ctx)
-{
-        return updateIterator(visit(ctx->expr()), 2);
-}
-
 antlrcpp::Any FormulaInterpreter::visitRedParenthesisR(EgcParser::RedParenthesisRContext *ctx)
 {
         EgcNode* node = addUnaryExpression(EgcNodeType::RParenthesisNode, visit(ctx->expr()));
@@ -258,11 +253,6 @@ antlrcpp::Any FormulaInterpreter::visitEmpty(EgcParser::EmptyContext *ctx)
         EgcNode* node = addEmptyNode();
         refinePosition(ctx, node);
         return node;
-}
-
-antlrcpp::Any FormulaInterpreter::visitIteratorR(EgcParser::IteratorRContext *ctx)
-{
-        return updateIterator(visit(ctx->expr()), 1);
 }
 
 antlrcpp::Any FormulaInterpreter::visitNatlogarithm(EgcParser::NatlogarithmContext *ctx)

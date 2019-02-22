@@ -97,13 +97,11 @@ private:
         virtual antlrcpp::Any visitMulDiv(EgcParser::MulDivContext *ctx) override;
         virtual antlrcpp::Any visitSqrt(EgcParser::SqrtContext *ctx) override;
         virtual antlrcpp::Any visitEmptyBinOp(EgcParser::EmptyBinOpContext *ctx) override;
-        virtual antlrcpp::Any visitIteratorL(EgcParser::IteratorLContext *ctx) override;
         virtual antlrcpp::Any visitRedParenthesisR(EgcParser::RedParenthesisRContext *ctx) override;
         virtual antlrcpp::Any visitPlusMinus(EgcParser::PlusMinusContext *ctx) override;
         virtual antlrcpp::Any visitFunction(EgcParser::FunctionContext *ctx) override;
         virtual antlrcpp::Any visitParenthesis(EgcParser::ParenthesisContext *ctx) override;
         virtual antlrcpp::Any visitEmpty(EgcParser::EmptyContext *ctx) override;
-        virtual antlrcpp::Any visitIteratorR(EgcParser::IteratorRContext *ctx) override;
         virtual antlrcpp::Any visitNumber(EgcParser::NumberContext *ctx) override;
         virtual antlrcpp::Any visitNatlogarithm(EgcParser::NatlogarithmContext *ctx) override;
         virtual antlrcpp::Any visitLogarithm(EgcParser::LogarithmContext *ctx) override;

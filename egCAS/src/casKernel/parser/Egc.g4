@@ -11,8 +11,6 @@ equation: <assoc=right> expr '=' expr           # Equality
 
 expr : <assoc=right> expr EXP expr              # Exponent
      | '-' expr                                 # UMinus
-     | expr ITERATOR_L                          # IteratorL
-     | ITERATOR_R expr                          # IteratorR
      | RED_PARENTHESIS_L expr                   # RedParenthesisL
      | expr RED_PARENTHESIS_R                   # RedParenthesisR
      | expr op=(MULT | DIV) expr                # MulDiv
@@ -50,8 +48,6 @@ SQRT:           '_sqrt';
 //parenthesis to define operation borders
 LBRACKET_OP:    '_{';
 RBRACKET_OP:    '_}';
-ITERATOR_R:     '_>R';
-ITERATOR_L:     '_<L';
 INTEGRAL:       '_integrate';
 DIFFERENTIAL:   '_diff';
 ROOT:           '_root';
