@@ -762,8 +762,6 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
                                 if (el.m_sideNode == FormulaScrElement::nodeLeftSide)
                                         break;
                                 else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
-                                        if (el.m_node->getNodeType() == EgcNodeType::EmptyNode)
-                                                iterData.m_offset = 0;
                                         if (!el.m_node->isContainer())
                                                 break;
                                 }
@@ -775,8 +773,6 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
                                 if (el.m_sideNode == FormulaScrElement::nodeRightSide)
                                         break;
                                 else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
-                                        if (el.m_node->getNodeType() == EgcNodeType::EmptyNode)
-                                                iterData.m_offset = 0;
                                         if (!el.m_node->isContainer())
                                                 break;
                                 }
@@ -788,7 +784,7 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
 
         // go to the element position (inside number or variable name) saved
         quint32 i;
-        for (i = 0; i < iterData.m_offset; i++) {
+        for (i = 0; i < iterData.m_offset; i+=static_cast<quint32>(iter.peekPrevious().m_value.length())) {
                 if (iter.hasNext())
                         (void) iter.next();
         }
