@@ -495,10 +495,14 @@ void FormulaModificator::insertCharacter(QChar character)
                 m_iter.remove(false);
         }
 
-        if (m_iter.hasNext()) {
+        if (m_iter.hasNext() && character.isDigit()) {
                 if (m_iter.peekNext().m_node) {
                         if (m_iter.peekNext().m_node->getNodeType() == EgcNodeType::VariableNode)
                                 insertBinaryEmptyNode = true;
+                        if (m_iter.hasPrevious()) {
+                                if (m_iter.peekPrevious().m_node->getNodeType() == EgcNodeType::VariableNode)
+                                        insertBinaryEmptyNode = false;
+                        }
                 }
         }
 
