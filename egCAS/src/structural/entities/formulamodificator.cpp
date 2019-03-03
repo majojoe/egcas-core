@@ -757,41 +757,25 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
 {
         m_cursorSaved = false;
         FormulaScrIter iter = m_iter;
+        int i = 0;
+        int temp = 0;
 
         iter.toFront();
         do {
                 if (iter.hasNext()) {
                         FormulaScrElement &el = iter.peekNext();
-                        if (el.m_node == iterData.m_node && !iterData.m_isLeftPointer) {
-                                if (el.m_sideNode == FormulaScrElement::nodeLeftSide)
-                                        break;
-                                else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
-                                        if (!el.m_node->isContainer())
-                                                break;
-                                }
-                        }
-                }
-                if (iter.hasPrevious()) {
-                        FormulaScrElement &el = iter.peekPrevious();
-                        if (el.m_node == iterData.m_node && iterData.m_isLeftPointer) {
-                                if (el.m_sideNode == FormulaScrElement::nodeRightSide)
-                                        break;
-                                else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
-                                        if (!el.m_node->isContainer())
-                                                break;
-                                }
-                        }
+                        temp = el.m_value.length();
                 }
 
+                if (i == static_cast<int>(iterData.m_cursorColumn)) {
+                        if (iterData.m_isLeftPointer)
+                                (void) iter.next();
+                        break;
+                }
+
+                i += temp;
                 (void) iter.next();
         } while(iter.hasNext());
-
-        // go to the element position (inside number or variable name) saved
-        quint32 i;
-        for (i = 0; i < iterData.m_offset; i+=static_cast<quint32>(iter.peekPrevious().m_value.length())) {
-                if (iter.hasNext())
-                        (void) iter.next();
-        }
 
         m_iter = iter;
 }

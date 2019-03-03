@@ -62,6 +62,12 @@ public:
         void setCursorColumn(quint32 pos);
 
         /**
+         * @brief getCursorPosition get the cursor position. Must be done after parsing!
+         * @return pos the position of the cursor within the parsing string.
+         */
+        size_t getCursorColumn();
+
+        /**
          * @brief setSideOfColumn determines if cursor is on the left or right side of the column set with setCursorColumn
          * @param isLeftPointer true if cursor is on the left side, false otherwise.
          */

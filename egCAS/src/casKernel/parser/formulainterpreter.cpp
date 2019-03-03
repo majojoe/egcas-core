@@ -623,6 +623,11 @@ quint32 FormulaInterpreter::getOffset()
         return 0;
 }
 
+size_t FormulaInterpreter::getCursorColumn()
+{
+        return m_cursorColumn;
+}
+
 void FormulaInterpreter::setCursorColumn(quint32 pos)
 {
         m_cursorColumn = pos;

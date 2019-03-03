@@ -41,10 +41,11 @@ class EgcFormulaEntity;
  */
 class NodeIterReStructData {
 public:
-        NodeIterReStructData() : m_node{nullptr}, m_isLeftPointer{false}, m_offset{0} {}
+        NodeIterReStructData() : m_node{nullptr}, m_isLeftPointer{false}, m_offset{0}, m_cursorColumn{SIZE_MAX} {}
         EgcNode* m_node;
         bool m_isLeftPointer;
         quint32 m_offset;
+        size_t m_cursorColumn;
 };
 
 
