@@ -757,7 +757,7 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
 {
         m_cursorSaved = false;
         FormulaScrIter iter = m_iter;
-        int i = 0;
+        int i = -1;
         int temp = 0;
 
         iter.toFront();
@@ -767,9 +767,10 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
                         temp = el.m_value.length();
                 }
 
-                if (i == static_cast<int>(iterData.m_cursorColumn)) {
-                        if (iterData.m_isLeftPointer)
-                                (void) iter.next();
+                if (i == static_cast<int>(iterData.m_cursorColumn) && iterData.m_isLeftPointer) {
+                        break;
+                }
+                if (i+1 == static_cast<int>(iterData.m_cursorColumn) && !iterData.m_isLeftPointer) {
                         break;
                 }
 
