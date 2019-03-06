@@ -133,9 +133,7 @@ EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIter
                 return nullptr;
         }
 
-        iterData.m_node = m_i->getIteratorNode(0);
         iterData.m_isLeftPointer = isOnRightSide;
-        iterData.m_offset = m_i->getOffset();
         iterData.m_cursorColumn = m_i->getCursorColumn();
 
         return m_i->getRootNode();

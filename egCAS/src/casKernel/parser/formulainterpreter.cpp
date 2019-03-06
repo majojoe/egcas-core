@@ -616,13 +616,6 @@ EgcNode* FormulaInterpreter::getIteratorNode(int i)
         return nullptr;
 }
 
-quint32 FormulaInterpreter::getOffset()
-{
-        if ((m_cursorColumn - m_startPosition) > 0)
-                return static_cast<quint32>(m_cursorColumn - m_startPosition);
-        return 0;
-}
-
 size_t FormulaInterpreter::getCursorColumn()
 {
         return m_cursorColumn;

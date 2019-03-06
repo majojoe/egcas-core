@@ -50,12 +50,6 @@ public:
         EgcNode* getIteratorNode(int i);
 
         /**
-         * @brief getOffset get offset to beginning of current node
-         * @return the offset: describes where the cursor is relative to where the current node begins. e.g. 0 Means in Front of the first glyph.
-         */
-        quint32 getOffset(void);
-
-        /**
          * @brief setCursorPosition set the cursor position. Must be done before parsing!
          * @param pos the position of the cursor within the parsing string.
          */
