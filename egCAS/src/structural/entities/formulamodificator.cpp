@@ -853,6 +853,7 @@ bool FormulaModificator::reStructureTree()
                 m_formula.updateView();
         } else {
                 retval = false;
+                m_cursorSaved = false;
         }
 
         return retval;
