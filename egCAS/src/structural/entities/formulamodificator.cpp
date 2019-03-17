@@ -706,6 +706,8 @@ void FormulaModificator::saveCursorPosition(void)
         } else {
                 insertLeftPointer();
         }
+
+        m_tmpColumnOffset = 0;
 }
 
 void FormulaModificator::insertLeftPointer()
@@ -759,6 +761,7 @@ void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
         FormulaScrIter iter = m_iter;
         int i = -1;
         int temp = 0;
+        iterData.m_cursorColumn += m_tmpColumnOffset;
 
         iter.toFront();
         do {
@@ -1609,10 +1612,12 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         else
                                 insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == '/') {
-                        if (m_underlinedNode)
+                        if (m_underlinedNode) {
                                 insertBinaryOperation(operation.m_character, "_{", "_}", true);
-                        else
+                        } else {
                                 insertBinaryOperation(operation.m_character);
+                                m_tmpColumnOffset = 6;
+                        }
                 } else if (operation.m_character == QChar(177)) {
                         insertUnaryOperation("-", "");
                 } else if (operation.m_character == QChar(8730)) {

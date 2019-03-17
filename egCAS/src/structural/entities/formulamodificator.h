@@ -446,6 +446,7 @@ private:
         NodeIterReStructData m_tempIterData;    ///< saves the data for cursor positions from parser to be able to restore them later
         bool m_insRightPtrAtNodeBegin;          ///< marker if in case of special operators a right pointer has to be inserted
         bool m_cursorSaved;                     ///< has cursor already been saved?
+        size_t m_tmpColumnOffset;               ///< additional column offset for special cases. E.g. in case of inserting  a '/' operator
 };
 
 #endif // FORMULAMODIFICATOR_H
