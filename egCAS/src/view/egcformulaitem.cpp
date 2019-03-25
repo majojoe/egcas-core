@@ -44,7 +44,7 @@ bool EgcFormulaItem::s_regexInitialized = false;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
     QGraphicsItem{parent}, m_entity{nullptr}, m_posChanged{false}, m_contentChanged{false},
-    m_startPoint{QPointF(0.0, 0.0)}, m_movePossible{false}, m_editingActivated{false}
+    m_startPoint{QPointF(0.0, 0.0)}, m_movePossible{false}, m_editingActivated{false}, m_err_msg{nullptr}
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         m_mathMlDoc.reset(new EgMathMLDocument());
@@ -54,6 +54,9 @@ EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
                 s_regexInitialized = true;
                 s_alnumKeyFilter.optimize();
         }
+
+        m_err_msg = new QGraphicsSimpleTextItem("", this);
+        m_err_msg->hide();
 }
 
 EgcFormulaItem::~EgcFormulaItem()
@@ -239,6 +242,8 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
                 }
         }
 
+        //
+
         return QGraphicsItem::itemChange(change, value);
 }
 
@@ -266,6 +271,8 @@ void EgcFormulaItem::updateView(void)
         m_contentChanged = true;
         m_mathMlDoc->setContent(m_entity->getMathMlCode());
         update();
+        if (m_err_msg)
+                m_err_msg->setPos(QPointF(0.0, this->boundingRect().height() + 2.0 ));
 }
 
 EgCasScene* EgcFormulaItem::getEgcScene(void)

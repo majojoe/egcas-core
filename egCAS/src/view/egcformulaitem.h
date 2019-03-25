@@ -262,6 +262,7 @@ private:
         QPointF m_startPoint;                           ///< point where move operation started
         bool m_movePossible;                            ///< move is possible at the moment
         bool m_editingActivated;                        ///< true if editing is activated
+        QGraphicsSimpleTextItem* m_errMsgItem;          ///< pointer to error message text item
 
         Q_DISABLE_COPY(EgcFormulaItem)
 };
