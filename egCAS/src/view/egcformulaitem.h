@@ -247,6 +247,15 @@ protected:
          * @param edit if true formula is set to edit mode, if false formula leaves edit mode
          */
         void setEditMode(bool edit);
+        /**
+         * @brief setErrorMessage set an error message that is associated with the current formula item
+         * @param msg the error message to set
+         */
+        void setErrorMessage(QString msg) override;
+        /**
+         * @brief clearErrorMessage clear the error message of the current formula item
+         */
+        void clearErrorMessage(void) override;
 signals:
 
 public slots:
@@ -262,7 +271,7 @@ private:
         QPointF m_startPoint;                           ///< point where move operation started
         bool m_movePossible;                            ///< move is possible at the moment
         bool m_editingActivated;                        ///< true if editing is activated
-        QGraphicsSimpleTextItem* m_errMsgItem;          ///< pointer to error message text item
+        QGraphicsTextItem* m_errMsgItem;                ///< pointer to error message text item
 
         Q_DISABLE_COPY(EgcFormulaItem)
 };
