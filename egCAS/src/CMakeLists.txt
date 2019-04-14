@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 2.8.11)
 
+
+add_subdirectory(casKernel/parser)
+
 #set the project name
 add_definitions(-DEGC_PROJ_NAME=egcas)
 
@@ -37,27 +40,6 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
         add_definitions(-DLOAD_EGCAS_EXAMPLES_FILE="${CMAKE_SOURCE_DIR}/examples/default.egc")
 endif()
 
-find_package(BISON)
-find_package(FLEX)
-#find FlexLexer.h if not already found on windows (non crosscomilation)
-if(${FLEX_LIBRARIES} STREQUAL "FL_LIBRARY-NOTFOUND")
-        get_filename_component(FLEX_BIN_DIR ${FLEX_EXECUTABLE} DIRECTORY)
-        get_filename_component(FLEX_ROOT_DIR ${FLEX_BIN_DIR}/../ REALPATH)
-        find_file(FLEX_HEADER_PATH FlexLexer.h PATHS "${FLEX_ROOT_DIR}/lib/winflexbison3/tools" )
-        if (${FLEX_HEADER_PATH} STREQUAL "FLEX_HEADER_PATH-NOTFOUND")
-                find_file(FLEX_HEADER_PATH FlexLexer.h PATHS "${FLEX_ROOT_DIR}/include/" )
-        endif()
-        if (NOT ${FLEX_HEADER_PATH} STREQUAL "FLEX_HEADER_PATH-NOTFOUND")
-                get_filename_component(FLEX_HEADER_INC_DIR ${FLEX_HEADER_PATH} DIRECTORY)
-                include_directories(${FLEX_HEADER_INC_DIR})
-        endif()
-endif()
-
-
-BISON_TARGET(cas_parser casKernel/parser/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
-FLEX_TARGET(cas_scanner casKernel/parser/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp )
-ADD_FLEX_BISON_DEPENDENCY(cas_scanner cas_parser)
-
 set_property(TARGET mathmlview PROPERTY CXX_STANDARD 11)
 set_property(TARGET mathmlview PROPERTY CXX_STANDARD_REQUIRED ON)
 
@@ -74,6 +56,9 @@ include_directories(view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_BINARY_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${ANTLR4_INCLUDE_DIRS})
+include_directories(${ANTLR_egcGrammar_OUTPUT_DIR})
+
 
 set(MAXIMA_BINARY_PATH ${CMAKE_BINARY_DIR}/${MAXIMA_INST_PATH}/bin/)
 add_definitions(-DMAXIMA_BINARY_PATH="${MAXIMA_BINARY_PATH}")
@@ -91,9 +76,6 @@ add_custom_target(egcas_other_srcs ALL SOURCES
         view/egcabstractformulaitem.h
         view/egcabstracttextitem.h
         view/egcabstractpixmapitem.h
-        casKernel/parser/scanner.l
-        casKernel/parser/parser.y
-        casKernel/parser/abstractkernelparser.h
         menu/mathelement.h
         structural/abstractserializer.h
 
@@ -156,11 +138,6 @@ set(egcas_SOURCES
         structural/visitor/egcmathmlvisitor.cpp 
         casKernel/egcmaximaconn.cpp 
         casKernel/egckernelconn.cpp
-        casKernel/parser/interpreter.cpp
-        casKernel/parser/egckernelparser.cpp
-        casKernel/parser/restructparserprovider.cpp
-        ${BISON_cas_parser_OUTPUTS}
-        ${FLEX_cas_scanner_OUTPUTS}
         structural/entities/egcentitylist.cpp
         structural/entities/egcentity.cpp
         structural/entities/egctextentity.cpp
@@ -186,6 +163,7 @@ set(egcas_SOURCES
         menu/resulttype.cpp
         menu/mathfont.cpp
         menu/textfont.cpp
+        menu/richtexteditor.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS
@@ -205,37 +183,53 @@ set (PYTHON_HELPER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/../tools/)
 
 set(EGC_GEN_NODE_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h.in)
 set(EGC_GEN_NODE_HEADER_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/specialNodes/egcnode_gen.h)
-add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED}
-        COMMAND python3 -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
+set(EGC_GEN_NODES ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h.in)
+set(EGC_GEN_NODES_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h)
+if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
+        set(EGC_PYTHON_INTERPRETER python3)
+elseif(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
+        set(EGC_PYTHON_INTERPRETER py)
+endif()
+
+add_custom_command(OUTPUT ${EGC_GEN_NODE_HEADER_GENERATED} ${EGC_GEN_NODES_GENERATED}
+        COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
         -o ${EGC_GEN_NODE_HEADER_GENERATED} ${EGC_GEN_NODE_HEADER}
-        DEPENDS ${EGC_GEN_NODE_HEADER} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
-        COMMENT "generate node list"
+        COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}  -D PythonHelper=${PYTHON_HELPER_SCRIPT}
+        -o ${EGC_GEN_NODES_GENERATED} ${EGC_GEN_NODES}
+        DEPENDS ${EGC_GEN_NODES} ${EGC_GEN_NODE_HEADER} ${PYTHON_HELPER_SCRIPT}
+        COMMENT "generate node list and node header files"
         VERBATIM
 )
+add_custom_target(generate_egc_node_header
+        DEPENDS ${EGC_GEN_NODE_HEADER_GENERATED} ${EGC_GEN_NODES_GENERATED}
+)
+
 
 set(EGC_GEN_NODE_CREATOR ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp.in)
 set(EGC_GEN_NODE_CREATOR_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodecreator.cpp)
 add_custom_command(OUTPUT ${EGC_GEN_NODE_CREATOR_GENERATED}
-        COMMAND python3 -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
+        COMMAND ${EGC_PYTHON_INTERPRETER} -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR} -D PythonHelper=${PYTHON_HELPER_SCRIPT}
         -o ${EGC_GEN_NODE_CREATOR_GENERATED} ${EGC_GEN_NODE_CREATOR}
         DEPENDS ${EGC_GEN_NODE_CREATOR} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
         COMMENT "generate node creator"
         VERBATIM
 )
 
-set(EGC_GEN_NODES ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h.in)
-set(EGC_GEN_NODES_GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/structural/egcnodes.h)
-add_custom_command(OUTPUT ${EGC_GEN_NODES_GENERATED}
-        COMMAND python3 -m cogapp -d -D BaseDirToSearch=${CMAKE_CURRENT_SOURCE_DIR}  -D PythonHelper=${PYTHON_HELPER_SCRIPT}
-        -o ${EGC_GEN_NODES_GENERATED} ${EGC_GEN_NODES}
-        DEPENDS ${EGC_GEN_NODES} ${PYTHON_HELPER_SCRIPT} ${ALWAYS_BUILD}
-        COMMENT "generate node header file"
-        VERBATIM
-)
-
 set(WIN_RESOURCE_FILE res/egcas.rc)
 
+add_executable(egcas WIN32 ${egcas_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
+                     ${EGC_GEN_NODE_HEADER_GENERATED}
+                     ${EGC_GEN_NODE_CREATOR_GENERATED}
+                     ${EGC_GEN_NODES_GENERATED}
+                     ${WIN_RESOURCE_FILE})
+add_dependencies(egcas mmlegcas generate_egc_node_header)
+
+include(DeployQt)
+
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        #execute windeployqt after building egcas
+        run_windeployqt(egcas)
+
         if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
                 if(${CMAKE_FIND_ROOT_PATH} MATCHES "/mxe/") # mxe environment
                         set(RUNTIME_PATH ${CMAKE_FIND_ROOT_PATH}/../../../runtime/)
@@ -270,16 +264,25 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
                         endif()
                 endif()
         endif()
+        if (${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
+                add_qt_lib_for_installation(Widgets)
+                add_qt_lib_for_installation(Core)
+                add_qt_lib_for_installation(Xml)
+                add_qt_lib_for_installation(PrintSupport)
+                add_qt_lib_for_installation(Gui)
+                add_qt_lib_for_installation(Multimedia)
+                add_qt_lib_for_installation(Network)
+                if (CMAKE_CXX_COMPILER_ID STREQUAL "MinGW")
+                        add_lib_for_installation(libgcc_s_dw2-1.dll)
+                        add_lib_for_installation(libstdc++-6.dll)
+                        add_lib_for_installation(libwinpthread-1.dll)
+                endif()
+        endif()
         INCLUDE(InstallRequiredSystemLibraries)
         INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION bin)
+        INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/platforms/qwindows.dll" DESTINATION bin/platforms)
 endif()
 
-add_executable(egcas WIN32 ${egcas_SOURCES} ${EGCAS_RCCS} ${EGCAS_UIS}
-                     ${EGC_GEN_NODE_HEADER_GENERATED}
-                     ${EGC_GEN_NODE_CREATOR_GENERATED}
-                     ${EGC_GEN_NODES_GENERATED}
-                     ${WIN_RESOURCE_FILE})
-add_dependencies(egcas mmlegcas)
 #only for cmake >= 3.1
 set_property(TARGET egcas PROPERTY CXX_STANDARD 11)
 set_property(TARGET egcas PROPERTY CXX_STANDARD_REQUIRED ON)
@@ -287,10 +290,5 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MinGW")
         set_target_properties(egcas PROPERTIES LINK_FLAGS "-mwindows")
 endif()
 
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp PROPERTY SKIP_AUTOMOC ON)
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTY SKIP_AUTOMOC ON)
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTY SKIP_AUTOMOC ON)
-
-target_link_libraries(egcas mmlegcas Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core Qt5::Multimedia)
+target_link_libraries(egcas mmlegcas mrichtextedit Qt5::Xml Qt5::Widgets Qt5::PrintSupport Qt5::Gui Qt5::Core Qt5::Multimedia egcas_parser)
 install (TARGETS egcas RUNTIME DESTINATION bin)
-

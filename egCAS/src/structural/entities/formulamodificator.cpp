@@ -73,9 +73,8 @@ FormulaModificator::FormulaModificator(EgcFormulaEntity& formula) : m_formula{fo
                                                                     m_startUnderlinedNode{nullptr},
                                                                     m_changeAwaited{false},
                                                                     m_underlineCursorLeft{false},
-                                                                    m_cursorPos{0},
-                                                                    m_cursorPosSaved{false},
-                                                                    m_insRightPtrAtNodeBegin{false}
+                                                                    m_insRightPtrAtNodeBegin{false},
+                                                                    m_cursorSaved{false}
 {
         FormulaScrVisitor visitor = FormulaScrVisitor(m_formula, m_iter);
         visitor.updateVector();
@@ -496,10 +495,14 @@ void FormulaModificator::insertCharacter(QChar character)
                 m_iter.remove(false);
         }
 
-        if (m_iter.hasNext()) {
+        if (m_iter.hasNext() && character.isDigit()) {
                 if (m_iter.peekNext().m_node) {
                         if (m_iter.peekNext().m_node->getNodeType() == EgcNodeType::VariableNode)
                                 insertBinaryEmptyNode = true;
+                        if (m_iter.hasPrevious()) {
+                                if (m_iter.peekPrevious().m_node->getNodeType() == EgcNodeType::VariableNode)
+                                        insertBinaryEmptyNode = false;
+                        }
                 }
         }
 
@@ -634,7 +637,7 @@ bool FormulaModificator::rightSide(void) const
                 if (m_iter.hasNext()) {
                         FormulaScrElement& lel = m_iter.peekPrevious();
                         FormulaScrElement& rel = m_iter.peekNext();
-                        if ((int)lel.m_cAdh < (int)rel.m_cAdh)
+                        if (static_cast<int>(lel.m_cAdh) < static_cast<int>(rel.m_cAdh))
                                 retval = true;
                         else
                                 retval = false;
@@ -663,7 +666,7 @@ EgcNode& FormulaModificator::nodeAtCursor(void) const
         return *node;
 }
 
-FormulaScrElement&FormulaModificator::elementAtCursor() const
+FormulaScrElement& FormulaModificator::elementAtCursor() const
 {
         if (rightSide() && m_iter.hasNext())
                 return m_iter.peekNext();
@@ -685,11 +688,9 @@ quint32 FormulaModificator::subPosition(void) const
 
 void FormulaModificator::saveCursorPosition(void)
 {
-        if (m_cursorPosSaved)
+        if (m_cursorSaved)
                 return;
-        else
-                m_cursorPosSaved = true;
-
+        m_cursorSaved = true;
         FormulaScrElement* lel = nullptr;
         FormulaScrElement* rel = nullptr;
         if (m_iter.hasPrevious())
@@ -697,48 +698,16 @@ void FormulaModificator::saveCursorPosition(void)
         if (m_iter.hasNext())
                 rel = &m_iter.peekNext();
 
-        m_cursorPos = 0;
-
-        if (rightPtrAtNodeBeginToBeInserted()) {
-                // a right pointer has to be inserted at node begin
-                m_cursorPos = findAlnumBegin();
+        if (rel && !lel) {
                 insertRightPointer();
-                //move the cursor back to the old position
-                for (quint32 i = 0; i < m_cursorPos; i++)
-                        (void) m_iter.next();
-        } else if (rel && !lel) {
+        } else if (   rel && lel
+                   && (!isAlnum(lel->m_value) && isAlnum(rel->m_value))) {
                 insertRightPointer();
-        } else if (lel && !rel) {
-                //m_cursorPos = findAlnumBegin();
-                insertLeftPointer();
-        } else if (lel && rel) {
-                if (rel->m_node && rel->m_sideNode == FormulaScrElement::nodeLeftSide) {
-                        insertRightPointer();
-                } else if (lel->m_node && lel->m_sideNode == FormulaScrElement::nodeRightSide) {
-                        //m_cursorPos = findAlnumBegin();
-                        insertLeftPointer();
-                } else if (isAlnum(lel->m_value) && !isAlnum(rel->m_value)) {
-                        insertLeftPointer();
-                } else if (!isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
-                        insertRightPointer();
-                } else if (isAlnum(lel->m_value) && isAlnum(rel->m_value)) {
-                        m_cursorPos = findAlnumBegin();
-                        insertRightPointer();
-                        //move the cursor back to the old position
-                        for (quint32 i = 0; i < m_cursorPos; i++)
-                                (void) m_iter.next();
-                } else if (isEmptyElement(false)) {
-                        insertRightPointer();
-                } else if (isEmptyElement(true)) {
-                        insertLeftPointer();
-                } else if (!lel->m_node) {
-                        insertLeftPointer();
-                } else if (!rel->m_node) {
-                        insertRightPointer();
-                }
         } else {
-                insertRightPointer();
+                insertLeftPointer();
         }
+
+        m_tmpColumnOffset = 0;
 }
 
 void FormulaModificator::insertLeftPointer()
@@ -788,64 +757,29 @@ quint32 FormulaModificator::findAlnumBegin()
 
 void FormulaModificator::restoreCursorPosition(NodeIterReStructData& iterData)
 {
-        m_cursorPosSaved = false;
+        m_cursorSaved = false;
         FormulaScrIter iter = m_iter;
-        bool searchFromBack = false;
+        int i = -1;
+        int temp = 0;
+        iterData.m_cursorColumn += m_tmpColumnOffset;
 
-        if (iterData.m_nodeRightSide && m_cursorPos == 0) {
-                if (!iterData.m_nodeRightSide->isContainer())
-                        searchFromBack = true;
-        }
-
-        if (searchFromBack) { //search for right side number and variable nodes only
-                iter.toBack();
-                do {
-                        if (iter.hasPrevious()) {
-                                FormulaScrElement &el = iter.peekPrevious();
-                                if (el.m_node == iterData.m_nodeRightSide) {
-                                                break;
-                                }
-                        }
-
-                        (void) iter.previous();
-                } while(iter.hasPrevious());
-
-        } else {
-                iter.toFront();
-                do {
-                        if (iter.hasNext()) {
-                                FormulaScrElement &el = iter.peekNext();
-                                if (el.m_node == iterData.m_nodeLeftSide) {
-                                        if (el.m_sideNode == FormulaScrElement::nodeLeftSide)
-                                                break;
-                                        else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
-                                                if (!el.m_node->isContainer())
-                                                        break;
-                                        }
-                                }
-                        }
-                        if (iter.hasPrevious()) {
-                                FormulaScrElement &el = iter.peekPrevious();
-                                if (el.m_node == iterData.m_nodeRightSide) {
-                                        if (el.m_sideNode == FormulaScrElement::nodeRightSide)
-                                                break;
-                                        else if (el.m_sideNode == FormulaScrElement::nodeMiddle && el.m_node) {
-                                                if (!el.m_node->isContainer())
-                                                        break;
-                                        }
-                                }
-                        }
-
-                        (void) iter.next();
-                } while(iter.hasNext());
-
-                // go to the element position (inside number or variable name) saved
-                quint32 i;
-                for (i = 0; i < m_cursorPos; i++) {
-                        if (iter.hasNext())
-                                (void) iter.next();
+        iter.toFront();
+        do {
+                if (iter.hasNext()) {
+                        FormulaScrElement &el = iter.peekNext();
+                        temp = el.m_value.length();
                 }
-        }
+
+                if (i == static_cast<int>(iterData.m_cursorColumn) && iterData.m_isLeftPointer) {
+                        break;
+                }
+                if (i+1 == static_cast<int>(iterData.m_cursorColumn) && !iterData.m_isLeftPointer) {
+                        break;
+                }
+
+                i += temp;
+                (void) iter.next();
+        } while(iter.hasNext());
 
         m_iter = iter;
 }
@@ -922,6 +856,7 @@ bool FormulaModificator::reStructureTree()
                 m_formula.updateView();
         } else {
                 retval = false;
+                m_cursorSaved = false;
         }
 
         return retval;
@@ -1015,7 +950,7 @@ bool FormulaModificator::isCursorNearLeftSideParent(EgcNode& node) const
                                 leftSide = false;
                 } else {
                         quint32 pos = subPosition();
-                        quint32 subind = curr.nrSubindexes();
+                        quint32 subind = static_cast<quint32>(curr.nrSubindexes());
 
                         if (pos >= (subind/2))
                                 leftSide = false;
@@ -1143,7 +1078,7 @@ QList<FormulaScrVector> FormulaModificator::split(const FormulaScrIter& leftIter
 void FormulaModificator::setCursorPos(quint32 nodeId, quint32 subPos, bool rightSide)
 {
         bool sideMatters = false;
-        FormulaScrElement::SideNode sideNode;
+        FormulaScrElement::SideNode sideNode = FormulaScrElement::nodeMiddle;
         bool found = false;
         const EgcMathmlLookup lookup = m_formula.getMathmlMappingCRef();
         EgcNode* node = lookup.findNode(nodeId);
@@ -1677,10 +1612,12 @@ void FormulaModificator::insertOperation(EgcAction operation)
                         else
                                 insertBinaryOperation(operation.m_character);
                 } else if (operation.m_character == '/') {
-                        if (m_underlinedNode)
+                        if (m_underlinedNode) {
                                 insertBinaryOperation(operation.m_character, "_{", "_}", true);
-                        else
+                        } else {
                                 insertBinaryOperation(operation.m_character);
+                                m_tmpColumnOffset = 6;
+                        }
                 } else if (operation.m_character == QChar(177)) {
                         insertUnaryOperation("-", "");
                 } else if (operation.m_character == QChar(8730)) {

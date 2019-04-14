@@ -36,5 +36,7 @@ bool EgcFncContainerNode::transferArgs(EgcArgumentsNode& args)
 {
         EgcFlexNode& node = *this;
         node = std::move(args);
+
+        return true;
 }
 

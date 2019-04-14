@@ -31,9 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class NodeIterReStructData;
 class EgcNode;
-namespace CASParser {
-        class Interpreter;
-}
+class FormulaInterpreter;
 
 #include <QString>
 #include <QScopedPointer>
@@ -72,8 +70,9 @@ public:
          */
         QString getErrorMessage();
 private:
+        QString determineColumnOfCursor(QString strToParse, int &column, bool &isOnRightSide);
         QString m_errMessage;   /// stores a error message if an error ocurred while parsing
-        QScopedPointer<CASParser::Interpreter> m_i;        ///< stores an interpreter
+        QScopedPointer<FormulaInterpreter> m_i;        ///< stores an interpreter
 
         Q_DISABLE_COPY(EgcKernelParser);
 };

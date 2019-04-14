@@ -72,7 +72,7 @@ EgRenderingPosition EgcScreenPos::getMathmlIdAtPos(const QPointF &pos)
 
 bool EgcScreenPos::empty(void)
 {
-        m_positions.empty();
+        return m_positions.empty();
 }
 
 EgRenderingPosition EgcScreenPos::findRenderingData(quint32 mathmId, quint32 subindex = 0)

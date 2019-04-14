@@ -9,18 +9,15 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #set(CMAKE_BUILD_TYPE Release)
 
-find_package(BISON)
-find_package(FLEX)
-
-BISON_TARGET(cas_parser_tst ${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
-FLEX_TARGET(cas_scanner_tst ${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel/parser/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp )
-ADD_FLEX_BISON_DEPENDENCY(cas_scanner_tst cas_parser_tst)
-
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/view)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/structural)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/casKernel)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
+include_directories(${CMAKE_BINARY_DIR}/include)
+# due to cpp runtime bug this include must also be set
+include_directories(${CMAKE_BINARY_DIR}/include/antlr4-runtime)
+include_directories(${CMAKE_BINARY_DIR}/parser_gen)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         add_definitions(-std=c++11)
@@ -42,10 +39,6 @@ file(GLOB_RECURSE tst_egcas_advanced_tree_ops_concrete_SOURCES "../../src/struct
 
 set(tst_egcas_advanced_tree_ops_SOURCES
         tst_egcas_advanced_tree_ops.cpp 
-        ../../src/casKernel/parser/interpreter.cpp 
-        ../../src/casKernel/parser/egckernelparser.cpp
-        ${BISON_cas_parser_tst_OUTPUTS}
-        ${FLEX_cas_scanner_tst_OUTPUTS}
         ../../src/structural/specialNodes/egcunarynode.cpp
         ../../src/structural/specialNodes/egcbinarynode.cpp
         ../../src/structural/specialNodes/egcflexnode.cpp
@@ -85,16 +78,12 @@ set(tst_egcas_advanced_tree_ops_SOURCES
         ../../src/menu/egcgraphicsview.cpp
 )
 
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp PROPERTY SKIP_AUTOMOC ON)
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTY SKIP_AUTOMOC ON)
-set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTY SKIP_AUTOMOC ON)
-
 #set the verbosity level of the scanner and parser
 add_definitions(-DEGC_SCANNER_DEBUG=0)
 add_definitions(-DEGC_PARSER_DEBUG=0)
 
 add_executable(tst_egcas_advanced_tree_ops ${tst_egcas_advanced_tree_ops_SOURCES} )
 add_dependencies(tst_egcas_advanced_tree_ops mmlegcas egcas)
-target_link_libraries(tst_egcas_advanced_tree_ops mmlegcas Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia)
+target_link_libraries(tst_egcas_advanced_tree_ops mmlegcas Qt5::Widgets Qt5::Core Qt5::Test Qt5::Multimedia egcas_parser)
 
 

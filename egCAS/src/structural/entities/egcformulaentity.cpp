@@ -50,7 +50,6 @@ int EgcFormulaEntity::s_fontSize = 20;
 EgcFormulaEntity::EgcFormulaEntity(EgcNodeType type) : m_numberSignificantDigits(0),
                                                        m_numberResultType(EgcNumberResultType::StandardType),
                                                        m_item(nullptr),
-                                                       m_errorMsg(QString::null),
                                                        m_isActive(false)
 {
         QScopedPointer<EgcNode> tmp(EgcNodeCreator::create(type));
@@ -74,8 +73,7 @@ EgcFormulaEntity::EgcFormulaEntity(EgcNodeType type) : m_numberSignificantDigits
 
 EgcFormulaEntity::EgcFormulaEntity(EgcNode& rootElement) : m_numberSignificantDigits(0),
                                                            m_numberResultType(EgcNumberResultType::StandardType),
-                                                           m_item(nullptr),
-                                                           m_errorMsg(QString::null)
+                                                           m_item(nullptr)
 {
         QScopedPointer<EgcNode> tmp(&rootElement);
         if (tmp.data()) {
@@ -89,8 +87,7 @@ EgcFormulaEntity::EgcFormulaEntity(void) : EgcFormulaEntity{EgcNodeType::EmptyNo
 
 EgcFormulaEntity::EgcFormulaEntity(const EgcFormulaEntity& orig) : m_numberSignificantDigits(0),
                                                                    m_numberResultType(EgcNumberResultType::StandardType),
-                                                                   m_item(nullptr),
-                                                                   m_errorMsg(QString::null)
+                                                                   m_item(nullptr)
 {
         QScopedPointer<EgcNode> tmp;
         EgcNode* originalRoot = orig.getRootElement();
@@ -105,8 +102,7 @@ EgcFormulaEntity::EgcFormulaEntity(const EgcFormulaEntity& orig) : m_numberSigni
 
 EgcFormulaEntity::EgcFormulaEntity(EgcFormulaEntity&& orig) : m_numberSignificantDigits(0),
                                                               m_numberResultType(EgcNumberResultType::StandardType),
-                                                              m_item(nullptr),
-                                                              m_errorMsg(QString::null)
+                                                              m_item(nullptr)
 {
         EgcNode* originalRoot = orig.getRootElement();
         if (originalRoot) {
@@ -136,7 +132,6 @@ EgcFormulaEntity& EgcFormulaEntity::operator=(const EgcFormulaEntity &rhs)
         m_numberSignificantDigits = rhs.m_numberSignificantDigits;
         m_numberResultType = rhs.m_numberResultType;
         m_item = nullptr;
-        m_errorMsg = QString::null;
 
         return *this;
 }
@@ -159,7 +154,6 @@ EgcFormulaEntity& EgcFormulaEntity::operator=(EgcFormulaEntity&& rhs)
         }
 
         m_item = nullptr;
-        m_errorMsg = QString::null;
 
         return *this;
 }
@@ -213,7 +207,8 @@ QString EgcFormulaEntity::getMathMlCode(void)
 QString EgcFormulaEntity::getCASKernelCommand(void)
 {
         //delete the error message in case of a recalculation
-        m_errorMsg.clear();
+        if (m_item)
+                m_item->clearErrorMessage();
         EgcMaximaVisitor maximaVisitor(*this);
         return maximaVisitor.getResult();
 }
@@ -288,7 +283,8 @@ bool EgcFormulaEntity::setResult(EgcNode* result)
                 return false;
         
         //reset error message of the formula
-        m_errorMsg.clear();
+        if (m_item)
+                m_item->clearErrorMessage();
         
         QScopedPointer<EgcNode> res(result);
         if (isResult()) {
@@ -400,12 +396,8 @@ void EgcFormulaEntity::itemChanged(EgcItemChangeType changeType)
 
 void EgcFormulaEntity::setErrorMessage(QString msg)
 {
-        m_errorMsg = msg;
-}
-
-QString EgcFormulaEntity::getErrorMessage(void)
-{
-        return m_errorMsg;
+        if (m_item)
+                m_item->setErrorMessage(msg);
 }
 
 void EgcFormulaEntity::handleAction(const EgcAction& action)

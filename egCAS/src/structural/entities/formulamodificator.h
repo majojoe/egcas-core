@@ -41,9 +41,9 @@ class EgcFormulaEntity;
  */
 class NodeIterReStructData {
 public:
-        NodeIterReStructData() : m_nodeRightSide{nullptr}, m_nodeLeftSide{nullptr} {}
-        EgcNode* m_nodeRightSide;
-        EgcNode* m_nodeLeftSide;
+        NodeIterReStructData() : m_isLeftPointer{false}, m_cursorColumn{SIZE_MAX} {}
+        bool m_isLeftPointer;
+        size_t m_cursorColumn;
 };
 
 
@@ -443,10 +443,10 @@ private:
         EgcNode* m_startUnderlinedNode;         ///< node where underining started
         bool m_changeAwaited;                   ///< is set if a change in the view is awaited. If this has happened we can complete the change operation
         bool m_underlineCursorLeft;             ///< if true the cursor is at left side of underline, if false on the right side
-        quint32 m_cursorPos;                    ///< cursor position for number or variable nodes
-        bool m_cursorPosSaved;                  ///< saves if cursor position has already been saved. The method does not allow to save it again until it has been removed due to parsing
         NodeIterReStructData m_tempIterData;    ///< saves the data for cursor positions from parser to be able to restore them later
-        bool m_insRightPtrAtNodeBegin;            ///< marker if in case of special operators a right pointer has to be inserted
+        bool m_insRightPtrAtNodeBegin;          ///< marker if in case of special operators a right pointer has to be inserted
+        bool m_cursorSaved;                     ///< has cursor already been saved?
+        size_t m_tmpColumnOffset;               ///< additional column offset for special cases. E.g. in case of inserting  a '/' operator
 };
 
 #endif // FORMULAMODIFICATOR_H

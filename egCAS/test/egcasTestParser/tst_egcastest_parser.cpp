@@ -246,10 +246,10 @@ void EgcasTest_Parser::fncOperations1TestParser()
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::PlusNode);
 
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer->getNodeType() == EgcNodeType::ExponentNode);
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::UnaryMinusNode);
 
         nodePointer = &(iter.next());
-        QVERIFY(nodePointer->getNodeType() == EgcNodeType::UnaryMinusNode);
+        QVERIFY(nodePointer->getNodeType() == EgcNodeType::ExponentNode);
 
         nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::VariableNode);
@@ -257,10 +257,10 @@ void EgcasTest_Parser::fncOperations1TestParser()
 
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
-        nodePointer = &(iter.next());
         QVERIFY(nodePointer->getNodeType() == EgcNodeType::NumberNode);
         QCOMPARE(static_cast<EgcNumberNode*>(nodePointer)->getValue(), QString("45"));
 
+        nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());
         nodePointer = &(iter.next());

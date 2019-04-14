@@ -318,20 +318,6 @@ QString EgcMathMlVisitor::getResult(void)
 
         temp = "<math>";
         temp += EgcNodeVisitor::getResult();
-
-        if (m_formula) {
-                if (!m_formula->getErrorMessage().isEmpty()) {
-                        temp += "<mi mathcolor='#cc0000'>";
-#ifdef EGC_PROJ_NAME
-#warning replace '\n' with mathml linebreaks
-#endif //#ifdef EGC_PROJ_NAME
-                        //temp += "<mspace linebreak='newline'/>";
-                        //temp += "<mstyle scriptlevel=\"-1\">";
-                        temp += m_formula->getErrorMessage();
-                        //temp += "</mstyle>";
-                        temp += "</mi>";
-                }
-        }
         temp += "</math>";
 
         //remove entries from lookup table that shall not be rendered

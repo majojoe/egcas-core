@@ -243,11 +243,6 @@ public:
          */
         void setErrorMessage(QString msg);
         /**
-         * @brief getErrorMessage returns the error message of the formula, if one
-         * @return the error message
-         */
-        QString getErrorMessage(void);
-        /**
          * @brief handleAction handles the given action (e.g. insert a char at the given position into the formula tree)
          * @param EgcAction the action given
          */
@@ -354,7 +349,6 @@ private:
         EgcNumberResultType m_numberResultType; ///< the style how the number result shall be presented to the user
         EgcBaseNode m_data;                     ///< holds a pointer to the root element of the formula tree
         EgcAbstractFormulaItem* m_item;         ///< pointer to the formula item interface on the scene
-        QString m_errorMsg;                     ///< the error message for this formula, if one
         EgcMathmlLookup m_mathmlLookup;         ///< mathml id lookup table
         QScopedPointer<FormulaModificator> m_mod; ///< formula modificator class
         bool m_isActive;                        ///< true if formula is activated, false otherwise

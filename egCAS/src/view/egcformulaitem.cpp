@@ -44,7 +44,7 @@ bool EgcFormulaItem::s_regexInitialized = false;
 
 EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
     QGraphicsItem{parent}, m_entity{nullptr}, m_posChanged{false}, m_contentChanged{false},
-    m_startPoint{QPointF(0.0, 0.0)}, m_movePossible{false}, m_editingActivated{false}
+    m_startPoint{QPointF(0.0, 0.0)}, m_movePossible{false}, m_editingActivated{false}, m_errMsgItem{nullptr}
 {
         setFlags(ItemIsMovable | ItemClipsToShape | ItemIsSelectable | ItemIsFocusable | ItemSendsScenePositionChanges);
         m_mathMlDoc.reset(new EgMathMLDocument());
@@ -54,6 +54,13 @@ EgcFormulaItem::EgcFormulaItem(QGraphicsItem *parent) :
                 s_regexInitialized = true;
                 s_alnumKeyFilter.optimize();
         }
+
+        m_errMsgItem = new QGraphicsTextItem("", this);
+        m_errMsgItem->setDefaultTextColor(QColor(Qt::red));
+        QFont font;
+        font.setPointSizeF(10.0);
+        m_errMsgItem->setFont(font);
+        m_errMsgItem->hide();
 }
 
 EgcFormulaItem::~EgcFormulaItem()
@@ -199,6 +206,16 @@ void EgcFormulaItem::setEditMode(bool edit)
         }
 }
 
+void EgcFormulaItem::setErrorMessage(QString msg)
+{
+        m_errMsgItem->setHtml(QString("<div style='background:rgba(220, 220, 220, 50%);'>") + msg);
+}
+
+void EgcFormulaItem::clearErrorMessage()
+{
+        m_errMsgItem->setHtml("");
+}
+
 void EgcFormulaItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
         if (!m_editingActivated) {
@@ -239,6 +256,8 @@ QVariant EgcFormulaItem::itemChange(GraphicsItemChange change, const QVariant &v
                 }
         }
 
+        //
+
         return QGraphicsItem::itemChange(change, value);
 }
 
@@ -266,6 +285,14 @@ void EgcFormulaItem::updateView(void)
         m_contentChanged = true;
         m_mathMlDoc->setContent(m_entity->getMathMlCode());
         update();
+        if (m_errMsgItem) {
+                if (!m_errMsgItem->toHtml().isEmpty()) {
+                        m_errMsgItem->show();
+                        m_errMsgItem->setPos(QPointF(0.0, this->boundingRect().height() - m_errMsgItem->font().pointSizeF() + 5.0 ));
+                } else {
+                        m_errMsgItem->hide();
+                }
+        }
 }
 
 EgCasScene* EgcFormulaItem::getEgcScene(void)

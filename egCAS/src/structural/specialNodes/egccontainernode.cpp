@@ -69,6 +69,8 @@ bool EgcContainerNode::setChild(quint32 index, EgcNode& expression)
 {
         (void) index;
         (void) expression;
+
+        return false;
 }
 
 quint32 EgcContainerNode::getNumberChildNodes(void) const

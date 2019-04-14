@@ -31,17 +31,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <sstream>
 #include <QString>
 #include <QStringBuilder>
-#include "scanner.h"
-#include "parser.hpp"
-#include "interpreter.h"
+#include "formulainterpreter.h"
 #include "egckernelparser.h"
 #include "entities/formulamodificator.h"
 
-using namespace CASParser;
+//#include <cxxabi.h>  //only for getting exception type
+
 using namespace std;
 
 
-EgcKernelParser::EgcKernelParser() : m_i{new Interpreter()}
+EgcKernelParser::EgcKernelParser() : m_i{new FormulaInterpreter()}
 {
 }
 
@@ -55,56 +54,87 @@ EgcNode* EgcKernelParser::parseKernelOutput(const QString& strToParse)
         stringstream ss;
 
         ss << strToParse.toStdString();
-        m_i->switchInputStream(&ss);
         try {
-                if (m_i->parse(true)) {
+                if (m_i->parse(ss, true)) {
                         m_errMessage = "common unspecified error while parsing input";
                         return nullptr;
                 }
-        } catch (const MaximaParser::syntax_error& e) {
-                m_errMessage = "parsing error: " % QString(e.what()) %
-                               QString(" at position: %1, %2").arg(e.location.begin.line).arg(e.location.begin.column);
-                return nullptr;
         } catch (runtime_error& e) {
                 m_errMessage = "runtime error: " % QString(e.what()) % " : Not enough memory?";
+                return nullptr;
+        } catch (antlr4::RecognitionException& e) {
+                m_errMessage = "recognition error: " % QString(e.what());
                 return nullptr;
         } catch (...) {
                 m_errMessage = "common unspecified exception while parsing input";
                 return nullptr;
         }
 
+        if (m_i->isParsingErrorOccurred()) {
+                m_errMessage = m_i->getErrorMessage();
+                return nullptr;
+        }
+
         return m_i->getRootNode();
+}
+
+QString EgcKernelParser::determineColumnOfCursor(QString strToParse, int &column, bool &isOnRightSide)
+{
+        QString str = strToParse;
+        column = -1;
+        int lind = strToParse.indexOf("_<L");
+        int rind = strToParse.indexOf("_>R");
+        if (lind != -1) { //remove left pointer from string
+                str = str.remove(lind, 3);
+                column = lind - 1;
+                isOnRightSide = true;
+        } else if (rind != -1) { //remove right pointer from string
+                str = str.remove(rind, 3);
+                column = rind;
+                isOnRightSide = false;
+        }
+
+        return str;
 }
 
 EgcNode* EgcKernelParser::restructureFormula(const QString& strToParse, NodeIterReStructData& iterData, int* errCode)
 {
         stringstream ss;
         *errCode = 0;
+        int column;
+        bool isOnRightSide;
 
-        ss << strToParse.toStdString();
-        m_i->switchInputStream(&ss);
+        QString str = determineColumnOfCursor(strToParse, column, isOnRightSide);
+        ss << str.toStdString();
+        if (column != -1) {
+                m_i->setCursorColumn(static_cast<quint32>(column));
+                m_i->setSideOfColumn(isOnRightSide);
+        }
         try {
-                if (m_i->parse()) {
+                if (m_i->parse(ss)) {
                         //common unspecified error while parsing input
                         *errCode = 1;
                         return nullptr;
                 }
-        } catch (const MaximaParser::syntax_error& e) {
-                //parsing error: e.what() at position: e.location.begin.line, e.location.begin.column
-                *errCode = 2;
-                return nullptr;
         } catch (runtime_error& e) {
+                (void) e;
                 //runtime error: e.what(): Not enough memory?
                 *errCode = 3;
                 return nullptr;
+        } catch (antlr4::RecognitionException& e) {
+                (void) e;
+                *errCode = 2;
+                return nullptr;
         } catch (...) {
                 //common unspecified exception while parsing input
+                //int status;
+                //const char* tmp = abi::__cxa_demangle(abi::__cxa_current_exception_type()->name(), 0, 0, &status);
                 *errCode = 4;
                 return nullptr;
         }
 
-        iterData.m_nodeRightSide = m_i->getIteratorNode(2);
-        iterData.m_nodeLeftSide = m_i->getIteratorNode(1);
+        iterData.m_isLeftPointer = isOnRightSide;
+        iterData.m_cursorColumn = m_i->getCursorColumn();
 
         return m_i->getRootNode();
 }

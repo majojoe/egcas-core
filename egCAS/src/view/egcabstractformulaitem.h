@@ -88,6 +88,16 @@ public:
          * @param selected if true formula gets selected, if false deselected
          */
         virtual void selectFormula(bool selected) = 0;
+        /**
+         * @brief setErrorMessage set an error message that is associated with the current formula item
+         * @param msg the error message to set
+         */
+        virtual void setErrorMessage(QString msg) = 0;
+        /**
+         * @brief clearErrorMessage clear the error message of the current formula item
+         */
+        virtual void clearErrorMessage(void) = 0;
+
 };
 
 #endif // EGCABSTRACTFORMULAITEM_H

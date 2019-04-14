@@ -26,6 +26,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+#include "richtexteditor.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "view/egcformulaitem.h"
@@ -144,6 +145,7 @@ void MainWindow::setupConnections(void)
         connect(m_ui->mnu_new_page, SIGNAL(triggered()), this, SLOT(newPage()));
         connect(m_ui->mnu_insert_graphic, SIGNAL(triggered()), this, SLOT(insertGraphic()));
         connect(m_ui->mnu_insert_text, SIGNAL(triggered()), this, SLOT(insertText()));
+        connect(m_ui->mnu_insert_html, SIGNAL(triggered()), this, SLOT(insertHtmlText()));
         connect(m_ui->mnu_saveFileAs, SIGNAL(triggered()), this, SLOT(saveFileAs()));
         connect(m_ui->mnu_load_file, SIGNAL(triggered()), this, SLOT(loadFile()));
         connect(m_ui->mnu_saveFile, SIGNAL(triggered()), this, SLOT(saveFile()));
@@ -157,6 +159,7 @@ void MainWindow::setupToolbar()
         //m_ui->mainToolBar->addAction(m_ui->mnu_new_page);
         m_ui->mainToolBar->addAction(m_ui->mnu_insert_graphic);
         m_ui->mainToolBar->addAction(m_ui->mnu_insert_text);
+        m_ui->mainToolBar->addAction(m_ui->mnu_insert_html);
         //setup math toolbar
         m_ui->mathToolBar->layout()->setContentsMargins(0,0,5,0);
         m_ui->mathToolBar->addAction(m_ui->mnu_autoCalc);
@@ -210,10 +213,18 @@ void MainWindow::insertText(void)
 {
         QPointF lastPos = m_document->getLastCursorPosition();
 
-        EgcTextEntity* txt = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text,
-                                                                                                 lastPos));
+        EgcTextEntity* txt = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text, lastPos));
         txt->setEditMode();
+}
 
+void MainWindow::insertHtmlText(void)
+{
+        QPointF lastPos = m_document->getLastCursorPosition();
+
+        EgcTextEntity* txt = static_cast<EgcTextEntity*>(m_document->createEntity(EgcEntityType::Text, lastPos));
+
+        RichTextEditor editor;
+        txt->setHtmlText(editor.exec(""));
 }
 
 void MainWindow::saveFileAs(void)

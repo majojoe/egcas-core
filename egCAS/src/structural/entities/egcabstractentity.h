@@ -40,7 +40,8 @@ enum class EgcItemChangeType
 {
         posChanged = 0,        ///< position of the item on the scene has changed
         contentChanged = 1,    ///< content of the item has changed
-        itemDeleted = 2        ///< item has been deleted
+        itemDeleted = 2,       ///< item has been deleted
+        itemEdited = 3,        ///< editing of the item has been activated
 };
 
 
