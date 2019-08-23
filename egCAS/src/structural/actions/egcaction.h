@@ -83,6 +83,17 @@ public:
                                       m_additionalData{addDat}
         {}
 
+        EgcAction(EgcOperations op,
+                  Constants constant) :
+                                      m_op{op}, m_character{QChar()},
+                                      m_elementId{0}, m_subId{0},
+                                      m_intType{InternalFunctionType::undefined},
+                                      m_OpModificators{OpModificators::standard},
+                                      m_lookModificatiors{LookModificators::standard},
+                                      m_additionalData{QVariant::fromValue(constant)}
+        {}
+
+
         EgcAction(const EgcAction &rhs) {m_op = rhs.m_op; m_character = rhs.m_character; m_elementId = rhs.m_elementId;
                                          m_subId = rhs.m_subId; m_intType = rhs.m_intType ;
                                          m_OpModificators = rhs.m_OpModificators;

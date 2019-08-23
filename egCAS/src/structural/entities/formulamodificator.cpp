@@ -514,6 +514,25 @@ void FormulaModificator::insertCharacter(QChar character)
         updateFormula();
 }
 
+void FormulaModificator::insertConstName(QString name)
+{
+        FormulaScrElement el;
+        el.m_value = name;
+
+        m_iter.save();
+        resetUnderline();
+
+        if (isEmptyElement(true)) {
+                m_iter.remove(true);
+        }
+        if (isEmptyElement(false)) {
+                m_iter.remove(false);
+        }
+
+        m_iter.insert(el);
+        updateFormula();
+}
+
 void FormulaModificator::insertRedParenthesis(bool left)
 {
         if (left) {
@@ -1668,6 +1687,22 @@ void FormulaModificator::insertOperation(EgcAction operation)
                                 insertFunction("_diff", 2, QString("3"), emptyElement, emptyElement);
                         else
                                 insertFunction("_diff", 2, QString("0"), emptyElement, emptyElement, emptyElement);
+                }
+        } else if (operation.m_op == EgcOperations::constant) {
+                switch(operation.m_additionalData.value<Constants>()) {
+                case Constants::e:
+                        insertConstName("_const_euler");
+                        break;
+                case Constants::i:
+                        insertConstName("_const_imag_unit");
+                        break;
+                case Constants::infinity:
+                        insertConstName("_const_infinity");
+                        break;
+                case Constants::pi:
+                        insertConstName("_const_pi");
+                        break;
+
                 }
         }
 

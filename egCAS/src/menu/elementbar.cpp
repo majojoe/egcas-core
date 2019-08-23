@@ -60,6 +60,7 @@ void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* s
         setupCalcSection(parent, barLayout, scene);
         setupGreekSection(parent, barLayout, scene);
         setupAnalysisSection(parent, barLayout, scene);
+        setupConstantSection(parent, barLayout, scene);
 }
 
 void ElementBar::setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
@@ -194,6 +195,23 @@ void ElementBar::setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, E
         //Symbolic
         //Logic
         //Common
+
+        bool ass_ret;
+        ass_ret = connect(section, &MathSection::actionTriggered, scene, &EgCasScene::routeAction);
+        Q_ASSERT(ass_ret == true);
+}
+
+void ElementBar::setupConstantSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
+{
+        MathSection* section = getNewSection(parent, barLayout, tr("Constants"));
+        if (section) {
+                section->setChecked();
+
+                section->addElement(MathElement("π", EgcAction(EgcOperations::constant, Constants::pi), false));
+                section->addElement(MathElement("e", EgcAction(EgcOperations::constant, Constants::e), false));
+                section->addElement(MathElement("∞", EgcAction(EgcOperations::constant, Constants::infinity), false));
+                section->addElement(MathElement("i", EgcAction(EgcOperations::constant, Constants::i), false));
+        }
 
         bool ass_ret;
         ass_ret = connect(section, &MathSection::actionTriggered, scene, &EgCasScene::routeAction);

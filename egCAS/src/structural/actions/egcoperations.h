@@ -30,6 +30,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #ifndef EGCOPERATIONS_H
 #define EGCOPERATIONS_H
 
+#include <QMetaType>
+
 /**
  * @brief The EgcOperations enum These are operations that can be sent from the item classes to the entity classes to
  * describe any sort of action to take for any specific entity
@@ -51,6 +53,7 @@ enum class EgcOperations
         endPressed,                     ///< user pressed End key
         alnumKeyPressed,                ///< user pressed any digit or letter key
         createSubscript,                ///< create subid of a variable
+        constant,                       ///< a constant has been activated or deactivated
         noAction,
 
 };
@@ -87,5 +90,20 @@ enum class InternalFunctionType
         integral,
         differential,
 };
+
+/**
+ * @brief The Constants enum defines common constant types
+ */
+enum class Constants
+{
+        pi,             ///< circle
+        e,              ///< euler number
+        i,              ///< i, complex number
+        infinity,
+        undefined       ///< no constant defined
+};
+
+Q_DECLARE_METATYPE(Constants)
+
 
 #endif // EGCOPERATIONS_H

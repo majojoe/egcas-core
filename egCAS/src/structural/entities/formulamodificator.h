@@ -72,6 +72,11 @@ public:
          */
         void insertCharacter(QChar character);
         /**
+         * @brief insertConstName insert the name for a constant at the current cursor position
+         * @param name constant to insert
+         */
+        void insertConstName(QString name);
+        /**
          * @brief showCurrentCursor show the cursor of the currently active formula at current position
          */
         void showCurrentCursor(void);

@@ -73,6 +73,10 @@ private:
          * @brief setupAnalysisSection setup analysis section
          */
         static void setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
+        /**
+         * @brief setupConstantSection setup constants section
+         */
+        static void setupConstantSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
 
         explicit ElementBar();
         virtual ~ElementBar();

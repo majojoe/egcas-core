@@ -168,6 +168,21 @@ antlrcpp::Any FormulaInterpreter::visitVariable(EgcParser::VariableContext *ctx)
         return nodePtr;
 }
 
+antlrcpp::Any FormulaInterpreter::visitConstants(EgcParser::ConstantsContext *ctx)
+{
+        EgcNode *nodePtr = nullptr;
+        QScopedPointer<EgcConstantNode> node(static_cast<EgcConstantNode*>(EgcNodeCreator::create(EgcNodeType::ConstantNode)));
+        if (node.isNull())
+                return nullptr;
+        QString var = QString::fromStdString(ctx->NAMES()->getText());
+        node->setConstantName(var);
+        nodePtr = node.data();
+        addDanglingNode(node.take());
+        refinePosition(ctx, nodePtr);
+
+        return nodePtr;
+}
+
 antlrcpp::Any FormulaInterpreter::visitBracketOp(EgcParser::BracketOpContext *ctx)
 {
         EgcNode* node = visit(ctx->expr());
