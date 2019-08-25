@@ -297,6 +297,21 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                                        % "</mi></msub></mrow>", node);
         }
                 break;
+        case EgcNodeType::ConstantNode: {
+                EgcConstantNode *cnst = static_cast<EgcConstantNode*>(node);
+                QString str = cnst->getStringRepresentation();
+                str = str.remove("_const_");
+                Constants c = cnst->getValue();
+                switch (c) {
+                case Constants::infinity:
+                        pushToStack("<mo "%id%">&#x221E;</mo>", node);
+                        break;
+                default:
+                        pushToStack("<mi mathvariant=\"italic\" "%id%">&InvisibleTimes; " % str % " &InvisibleTimes;</mi>", node);
+                        break;
+                }
+        }
+                break;
         case EgcNodeType::EmptyNode:
                 pushToStack("<mi mathcolor=\"#7F7F7F\"" %id%">&#x2B1A;</mi>", node);
                 break;

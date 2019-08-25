@@ -174,8 +174,8 @@ antlrcpp::Any FormulaInterpreter::visitConstants(EgcParser::ConstantsContext *ct
         QScopedPointer<EgcConstantNode> node(static_cast<EgcConstantNode*>(EgcNodeCreator::create(EgcNodeType::ConstantNode)));
         if (node.isNull())
                 return nullptr;
-        QString var = QString::fromStdString(ctx->NAMES()->getText());
-        node->setConstantName(var);
+        QString var = QString::fromStdString(ctx->CONSTANTS()->getText());
+        node->setConstantFromName(var);
         nodePtr = node.data();
         addDanglingNode(node.take());
         refinePosition(ctx, nodePtr);

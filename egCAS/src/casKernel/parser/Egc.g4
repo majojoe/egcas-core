@@ -59,7 +59,6 @@ NATLOGRITHM:    '_ln';
 RED_PARENTHESIS_R: '_red_parenth_r';
 RED_PARENTHESIS_L: '_red_parenth_l';
 CONSTANTS:         '_const_' [a-zA-Z_]+;
-
 NUMBER:         [0-9]+ '.' [0-9]* EXPONENT? | '.'? [0-9]+ EXPONENT?;        //numbers
 NAMES:          ALNUMNODE;      //names
 VARSUB:         VARSEP ALNUMNODESUB;     //variable separator

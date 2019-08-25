@@ -24,6 +24,7 @@
 #include "concreteNodes/egcdifferentialnode.h"
 #include "concreteNodes/egclparenthesisnode.h"
 #include "concreteNodes/egcplusnode.h"
+#include "concreteNodes/egcconstantnode.h"
 #include "concreteNodes/egcunaryminusnode.h"
 #include "concreteNodes/egcvariablenode.h"
 #include "concreteNodes/egcminusnode.h"

@@ -26,8 +26,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef EGCVARIABLENODE_H
-#define EGCVARIABLENODE_H
+#ifndef EGCCONSTANTSNODE_H
+#define EGCCONSTANTSNODE_H
 
 #include "../actions/egcoperations.h"
 #include <QString>
@@ -122,4 +122,4 @@ protected:
         Constants m_constant;             ///< enum variable that holds the constant type
 };
 
-#endif // EGCVARIABLENODE_H
+#endif // EGCCONSTANTSNODE_H

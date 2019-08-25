@@ -90,6 +90,7 @@ private:
         virtual antlrcpp::Any visitRedParenthesisL(EgcParser::RedParenthesisLContext *ctx) override;
         virtual antlrcpp::Any visitUMinus(EgcParser::UMinusContext *ctx) override;
         virtual antlrcpp::Any visitVariable(EgcParser::VariableContext *ctx) override;
+        virtual antlrcpp::Any visitConstants(EgcParser::ConstantsContext *ctx) override;
         virtual antlrcpp::Any visitBracketOp(EgcParser::BracketOpContext *ctx) override;
         virtual antlrcpp::Any visitDifferential(EgcParser::DifferentialContext *ctx) override;
         virtual antlrcpp::Any visitRoot(EgcParser::RootContext *ctx) override;
