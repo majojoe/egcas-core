@@ -175,7 +175,17 @@ antlrcpp::Any FormulaInterpreter::visitConstants(EgcParser::ConstantsContext *ct
         if (node.isNull())
                 return nullptr;
         QString var = QString::fromStdString(ctx->CONSTANTS()->getText());
-        node->setConstantFromName(var);
+        if (var.startsWith("_const_")) {
+                node->setConstantFromName(var);
+        } else {
+                if (var == QString("infinity")) {
+                        node->setValue(Constants::infinity);
+                } else {
+                        var.remove('%');
+                        var.prepend("_const_");
+                        node->setConstantFromName(var);
+                }
+        }
         nodePtr = node.data();
         addDanglingNode(node.take());
         refinePosition(ctx, nodePtr);
