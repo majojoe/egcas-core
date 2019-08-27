@@ -82,6 +82,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::PlusNode:
                 retval = new (std::nothrow) EgcPlusNode();
                 break;
+        case EgcNodeType::ConstantNode:
+                retval = new (std::nothrow) EgcConstantNode();
+                break;
         case EgcNodeType::UnaryMinusNode:
                 retval = new (std::nothrow) EgcUnaryMinusNode();
                 break;
@@ -156,6 +159,8 @@ EgcNode*EgcNodeCreator::create(QLatin1String name)
                 retval = new (std::nothrow) LParenthesisNode();
         if (name == QLatin1String("plusnode"))
                 retval = new (std::nothrow) EgcPlusNode();
+        if (name == QLatin1String("constantnode"))
+                retval = new (std::nothrow) EgcConstantNode();
         if (name == QLatin1String("unaryminusnode"))
                 retval = new (std::nothrow) EgcUnaryMinusNode();
         if (name == QLatin1String("variablenode"))
@@ -234,6 +239,9 @@ QLatin1String EgcNodeCreator::stringize(EgcNodeType type)
                 break;
         case EgcNodeType::PlusNode:
                 retval = QLatin1String("plusnode");
+                break;
+        case EgcNodeType::ConstantNode:
+                retval = QLatin1String("constantnode");
                 break;
         case EgcNodeType::UnaryMinusNode:
                 retval = QLatin1String("unaryminusnode");

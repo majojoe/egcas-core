@@ -255,6 +255,9 @@ void FormulaScrVisitor::visit(EgcNode* node)
         case EgcNodeType::AlnumNode:
                 appendSigns(static_cast<EgcAlnumNode*>(node)->getValue(), node, CursorAdhesion::strong);
                 break;
+        case EgcNodeType::ConstantNode:
+                append(static_cast<EgcConstantNode*>(node)->getStringRepresentation(), node, CursorAdhesion::strong);
+                break;
         case EgcNodeType::NumberNode:
                 appendSigns(static_cast<EgcNumberNode*>(node)->getValue(), node, CursorAdhesion::strong);
                 break;

@@ -444,6 +444,10 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
                 if (m_mod && m_item)
                         m_mod->insertOperation(action);
                 break;
+        case EgcOperations::constant:
+                if (m_mod && m_item)
+                        m_mod->insertConstName(EgcConstantNode::encode(action.m_additionalData.value<Constants>()));
+                break;
         case EgcOperations::homePressed:
                 if (m_mod && m_item)
                         m_mod->toFront();

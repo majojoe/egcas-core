@@ -171,6 +171,25 @@ void EgcMaximaVisitor::visit(EgcNode* node)
         case EgcNodeType::VariableNode:  // normally we extract the AlnumNode's via their container classes
                 pushToStack(static_cast<EgcVariableNode*>(node)->getStuffedValue(), node);
                 break;
+        case EgcNodeType::ConstantNode:
+                switch (static_cast<EgcConstantNode*>(node)->getValue()) {
+                case Constants::e:
+                        pushToStack("%e", node);
+                        break;
+                case Constants::i:
+                        pushToStack("%i", node);
+                        break;
+                case Constants::pi:
+                        pushToStack("%pi", node);
+                        break;
+                case Constants::infinity:
+                        pushToStack("infinity", node);
+                        break;
+                default:
+                        qDebug("No visitor code for maxima defined for this constant type: %d ", static_cast<int>(static_cast<EgcConstantNode*>(node)->getValue())) ;
+                        break;
+                }
+                break;
         case EgcNodeType::NumberNode:
                 pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);
                 break;

@@ -41,6 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "casKernel/parser/restructparserprovider.h"
 #include "casKernel/parser/abstractkernelparser.h"
 #include "../concreteNodes/egcalnumnode.h"
+#include "../concreteNodes/egcconstantnode.h"
 
 const char emptyElement[] = "_empty";
 const char emptyBinElement[] = "_emptybinop";
@@ -1689,21 +1690,8 @@ void FormulaModificator::insertOperation(EgcAction operation)
                                 insertFunction("_diff", 2, QString("0"), emptyElement, emptyElement, emptyElement);
                 }
         } else if (operation.m_op == EgcOperations::constant) {
-                switch(operation.m_additionalData.value<Constants>()) {
-                case Constants::e:
-                        insertConstName("_const_euler");
-                        break;
-                case Constants::i:
-                        insertConstName("_const_imag_unit");
-                        break;
-                case Constants::infinity:
-                        insertConstName("_const_infinity");
-                        break;
-                case Constants::pi:
-                        insertConstName("_const_pi");
-                        break;
-
-                }
+                EgcConstantNode nd(operation.m_additionalData.value<Constants>());
+                insertConstName(nd.getStringRepresentation());
         }
 
         sanitizeEmptyCursorPos();
