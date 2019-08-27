@@ -44,7 +44,7 @@ QRegularExpression EgcAlnumNode::s_validator = QRegularExpression("[_0-9a-zA-ZΆ
 QRegularExpression EgcAlnumNode::s_alnumChecker = QRegularExpression("^[_0-9a-zA-ZΆ-ώ]+$");
 bool EgcAlnumNode::s_regexInitialized = false;
 
-EgcAlnumNode::EgcAlnumNode() : m_value(QString::null), m_firstCharMightBeNumber{false}
+EgcAlnumNode::EgcAlnumNode() : m_value(QString()), m_firstCharMightBeNumber{false}
 {
         //optimize all the regexes
         if (!s_regexInitialized) {

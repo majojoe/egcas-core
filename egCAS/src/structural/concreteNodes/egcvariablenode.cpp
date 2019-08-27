@@ -47,7 +47,7 @@ QRegularExpression EgcVariableNode::s_varSubSeparator = QRegularExpression("(.*[
                                                                            % "(.+)");
 bool EgcVariableNode::s_initializeRegex = true;
 
-EgcVariableNode::EgcVariableNode() : m_value(QString::null), m_subscript(QString::null), m_subscrIsEmpty(false)
+EgcVariableNode::EgcVariableNode() : m_value(QString()), m_subscript(QString()), m_subscrIsEmpty(false)
 {
         //optimize all the regexes
         if (s_initializeRegex) {
@@ -92,7 +92,7 @@ void EgcVariableNode::setStuffedVar(const QString& varName)
                 }
         } else {
                 m_value = EgcAlnumNode::decode(tmp);
-                m_subscript = QString::null;
+                m_subscript = QString();
         }
 }
 

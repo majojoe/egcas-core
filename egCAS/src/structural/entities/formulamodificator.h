@@ -126,9 +126,9 @@ public:
          * @param arg5 function argument 5
          * @param arg6 function argument 6
          */
-        void insertFunction(QString name, quint32 stdPos, QString arg1, QString arg2 = QString::null,
-                            QString arg3 = QString::null, QString arg4 = QString::null, QString arg5 = QString::null,
-                            QString arg6 = QString::null);
+        void insertFunction(QString name, quint32 stdPos, QString arg1, QString arg2 = QString(),
+                            QString arg3 = QString(), QString arg4 = QString(), QString arg5 = QString(),
+                            QString arg6 = QString());
         /**
          * @brief insertElement insert an element
          * @param segment the segment to insert

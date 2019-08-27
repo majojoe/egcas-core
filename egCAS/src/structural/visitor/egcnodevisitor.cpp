@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 
-EgcNodeVisitor::EgcNodeVisitor(EgcFormulaEntity& formula) : m_result{QString::null}, m_formula{&formula},
+EgcNodeVisitor::EgcNodeVisitor(EgcFormulaEntity& formula) : m_result{QString()}, m_formula{&formula},
                                                             m_state{EgcIteratorState::LeftIteration},
                                                             m_childIndex{0}
 {
@@ -69,7 +69,7 @@ QString EgcNodeVisitor::getResult(void)
                 }
                 node->accept(this);
                 result += m_result;
-                m_result = QString::null;
+                m_result = QString();
         };
 
         //add the result from the stack

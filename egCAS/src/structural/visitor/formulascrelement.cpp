@@ -39,7 +39,7 @@ TempDataScrIter::TempDataScrIter() : m_id{0}, m_node{nullptr}, m_subpos{0}, m_le
 
 }
 
-FormulaScrElement::FormulaScrElement() : FormulaScrElement{QString::null}
+FormulaScrElement::FormulaScrElement() : FormulaScrElement{QString()}
 {
 }
 

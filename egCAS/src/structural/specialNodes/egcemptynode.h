@@ -92,7 +92,7 @@ private:
          * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
          * and variable name and subscript is seperated via "_")
          */
-        virtual QString getStuffedValue(void) override {return QString::null;}
+        virtual QString getStuffedValue(void) override {return QString();}
         /**
          * @brief setValue set the stuffed variable name (value)
          * @param varName the variable name as a string. This can include the stuffed special signs (a "_" in the

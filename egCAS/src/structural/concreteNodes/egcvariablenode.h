@@ -59,7 +59,7 @@ public:
          * @param varName the variable name as a string
          * @param subscript the subscript of the variable if any
          */
-        virtual void setValue(const QString& varName, const QString& subscript = QString::null);
+        virtual void setValue(const QString& varName, const QString& subscript = QString());
         /**
          * @brief setStuffedVar set the raw variable name (value) maybe including stuffed subscript
          * @param varName the variable name as a string. This can include the stuffed subscript
