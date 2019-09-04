@@ -306,8 +306,11 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                 case Constants::infinity:
                         pushToStack("<mo "%id%">&#x221E;</mo>", node);
                         break;
+                case Constants::pi:
+                        pushToStack("<mi mathvariant=\"italic\" "%id%">π </mi>", node);
+                        break;
                 default:
-                        pushToStack("<mi mathvariant=\"italic\" "%id%">&InvisibleTimes; " % str % " &InvisibleTimes;</mi>", node);
+                        pushToStack("<mi mathvariant=\"italic\" "%id%">&InvisibleTimes; " % str % " </mi>", node);
                         break;
                 }
         }
