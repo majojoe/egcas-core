@@ -57,6 +57,7 @@ bool EgcConstantNode::decode(QString representation, Constants &constant)
                         constant = Constants::undefined;
                 }
         }
+        return ret;
 }
 
 QString EgcConstantNode::encode(Constants constant)
