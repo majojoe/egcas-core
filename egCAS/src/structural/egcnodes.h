@@ -16,6 +16,7 @@
 #include "concreteNodes/egcalnumnode.h"
 #include "concreteNodes/egcnumbernode.h"
 #include "concreteNodes/egcmultiplicationnode.h"
+#include "concreteNodes/egcmatrixnode.h"
 #include "concreteNodes/egcparenthesisnode.h"
 #include "concreteNodes/egcdivisionnode.h"
 #include "concreteNodes/egcfnccontainernode.h"
