@@ -45,7 +45,7 @@ public:
         ///move constructor
         EgcFlexNode(EgcFlexNode&& orig);
         /// destructor
-        virtual ~EgcFlexNode() = 0;
+        virtual ~EgcFlexNode() override = 0;
         /**
          * @brief operator= overloads = operator since we have dynamic elements in this class
          * @param rhs a reference to the object to be assigned
@@ -62,7 +62,7 @@ public:
          * @brief valid checks if the subnode is valid. This can be the case if e.g. the child is not NULL.
          * @return returns true if the expression is valid, false otherwise.
          */
-        virtual bool valid(void);
+        virtual bool valid(void) override;
         /**
          * @brief takeOwnership takes ownership of the child given. The user is responsible for deleting the child.
          * If the user doesn't handle the child properly a leak will occur.

@@ -35,43 +35,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 
-
-/*
-void EgcFunctionNode::setName(const QString& fncName)
-{
-        m_fncName = fncName;
-}
-
-QString EgcFunctionNode::getName(void)
-{
-        return m_fncName;
-}
-
-void EgcFunctionNode::setStuffedName(const QString& fncName)
-{
-        m_fncName = EgcAlnumNode::decode(fncName);
-}
-
-QString EgcFunctionNode::getStuffedName()
-{
-        return EgcAlnumNode::encode(m_fncName);
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 EgcMatrixNode::EgcMatrixNode() : m_rows{1}, m_columns{1}
 {
         QScopedPointer<EgcVariableNode> val(new EgcVariableNode());
@@ -105,6 +68,57 @@ quint16 EgcMatrixNode::columns(void) const
         return m_columns;
 }
 
+void EgcMatrixNode::setValue(const QString &varName, const QString &subscript)
+{
+        EgcVariableNode* var = getVarNode();
+        if (!var)
+                return;
+        var->setValue(varName, subscript);
+}
+
+void EgcMatrixNode::setStuffedVar(const QString &varName)
+{
+        EgcVariableNode* var = getVarNode();
+        if (!var)
+                return;
+        var->setStuffedVar(varName);
+}
+
+QString EgcMatrixNode::getValue() const
+{
+        EgcVariableNode* var = getVarNode();
+        if (!var)
+                return QString();
+        return var->getValue();
+}
+
+QString EgcMatrixNode::getSubscript() const
+{
+        EgcVariableNode* var = getVarNode();
+        if (!var)
+                return QString();
+        return var->getSubscript();
+
+}
+
+QString EgcMatrixNode::getStuffedValue()
+{
+        EgcVariableNode* var = getVarNode();
+        if (!var)
+                return QString();
+        return var->getStuffedValue();
+}
+
+EgcNode *EgcMatrixNode::getMatrixChild(quint32 index) const
+{
+        return getChild(index + 1);
+}
+
+bool EgcMatrixNode::setMatrixChild(quint32 index, EgcNode &expression)
+{
+        return setChild(index + 1, expression);
+}
+
 void EgcMatrixNode::serializeAttributes(QXmlStreamWriter& stream)
 {
         QLatin1String str = EgcNodeCreator::stringize(getNodeType());
@@ -127,4 +141,13 @@ void EgcMatrixNode::deserializeAttributes(QXmlStreamReader& stream, quint32 vers
                 m_rows = static_cast<quint16>(attr.value("rows").toInt());
         if (attr.hasAttribute("columns"))
                 m_columns = static_cast<quint16>(attr.value("columns").toInt());
+}
+
+EgcVariableNode *EgcMatrixNode::getVarNode() const
+{
+        if (m_childs.at(0))
+                return nullptr;
+        if (m_childs.at(0)->getNodeType() != EgcNodeType::VariableNode)
+                return nullptr;
+        return static_cast<EgcVariableNode*>(m_childs.at(0));
 }
