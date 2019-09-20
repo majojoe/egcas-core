@@ -29,13 +29,55 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #include "egcnodecreator.h"
 #include "egcmatrixnode.h"
+#include "structural/concreteNodes/egcvariablenode.h"
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
 
+
+
+/*
+void EgcFunctionNode::setName(const QString& fncName)
+{
+        m_fncName = fncName;
+}
+
+QString EgcFunctionNode::getName(void)
+{
+        return m_fncName;
+}
+
+void EgcFunctionNode::setStuffedName(const QString& fncName)
+{
+        m_fncName = EgcAlnumNode::decode(fncName);
+}
+
+QString EgcFunctionNode::getStuffedName()
+{
+        return EgcAlnumNode::encode(m_fncName);
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 EgcMatrixNode::EgcMatrixNode() : m_rows{1}, m_columns{1}
 {
-
+        QScopedPointer<EgcVariableNode> val(new EgcVariableNode());
+        if (val) {
+                setChild(0, *val.take());
+        }
 }
 
 bool EgcMatrixNode::valid(void)
