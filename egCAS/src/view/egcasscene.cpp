@@ -574,12 +574,15 @@ EgcAbstractDocument& EgCasScene::document(void) const
 
 void EgCasScene::routeAction(EgcAction action)
 {
+        interceptActionRouting(&action);
+
         if (m_cross->isVisible()) {
                 if (    action.m_op == EgcOperations::mathCharOperator
                      || action.m_op == EgcOperations::mathFunction
                      || action.m_op == EgcOperations::internalFunction
                      || action.m_op == EgcOperations::alnumKeyPressed
-                     || action.m_op == EgcOperations::constant) {
+                     || action.m_op == EgcOperations::constant
+                     || action.m_op == EgcOperations::insertMatrix) {
                         triggerFormulaCreation(m_cross->scenePos(), action);
                 }
         } else {

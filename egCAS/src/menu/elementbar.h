@@ -77,6 +77,13 @@ private:
          * @brief setupConstantSection setup constants section
          */
         static void setupConstantSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
+        /**
+         * @brief setupMatrixSection setup matrix toolbar
+         * @param parent
+         * @param barLayout
+         * @param scene
+         */
+        static void setupMatrixSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
 
         explicit ElementBar();
         virtual ~ElementBar();
