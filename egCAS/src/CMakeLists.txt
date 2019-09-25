@@ -166,11 +166,13 @@ set(egcas_SOURCES
         menu/mathfont.cpp
         menu/textfont.cpp
         menu/richtexteditor.cpp
+        menu/matrixbox.cpp
 )
 
 qt5_wrap_ui(EGCAS_UIS
             menu/mainwindow.ui
             menu/egclicenseinfo.ui
+            menu/matrixbox.ui
 )
 qt5_add_resources(EGCAS_RCCS res/ressources.qrc)
 

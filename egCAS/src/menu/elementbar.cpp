@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "menu/mathsection.h"
 #include "view/egcasscene.h"
 #include "../structural/actions/egcaction.h"
+#include "matrixbox.h"
 
 
 ElementBar::ElementBar()
@@ -67,6 +68,10 @@ void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* s
 
 void ElementBar::interceptSignals(EgcAction action)
 {
+        MatrixBox matrixBox;
+        MatrixDimension matrixDimension = matrixBox.getDimension();
+        action.m_additionalData.fromValue(matrixDimension);
+
         emit actionTriggered(action);
 }
 
@@ -231,7 +236,7 @@ void ElementBar::setupMatrixSection(QWidget* parent, QVBoxLayout* barLayout, EgC
         if (section) {
                 section->setChecked();
 
-                section->addElement(MathElement("M", EgcAction(EgcOperations::insertMatrix,  3, 3), false));
+                section->addElement(MathElement("M", EgcAction(EgcOperations::insertMatrix,  0, 0), false));
         }
 
         bool ass_ret;
