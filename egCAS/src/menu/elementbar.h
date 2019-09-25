@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 class MathSection;
 class EgCasScene;
+class EgcAction;
 
 /**
  * @brief The ElementBar class is to setup the element bar of the main window
@@ -43,15 +44,22 @@ class ElementBar : public QObject
 {
         Q_OBJECT
 public:
+        explicit ElementBar();
+        virtual ~ElementBar();
+
         /**
          * @brief setupBar setup the bar layout of the main window
          * @param barLayout the layout where to insert the sections in
          * @param scene pointer to the scene where to send the actions
          */
-        static void setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
+        void setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
 signals:
-
+        void actionTriggered(EgcAction action);
 public slots:
+        /**
+         * @brief interceptSignals intercept signals when pressing elementbar
+         */
+        void interceptSignals(EgcAction action);
 private:
         /**
          * @brief getNewSection prepares a new section
@@ -60,33 +68,31 @@ private:
          * @param title the title of the section
          * @return nullptr in case anything went wrong, or a pointer to the new section if successful
          */
-        static MathSection* getNewSection(QWidget* parent, QVBoxLayout* barLayout, QString title);
+        MathSection* getNewSection(QWidget* parent, QVBoxLayout* barLayout, QString title);
         /**
          * @brief setupAlgebraSection setup algebra section
          */
-        static void setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
+        void setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
         /**
          * @brief setupGreekSection setup greek section
          */
-        static void setupGreekSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
+        void setupGreekSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
         /**
          * @brief setupAnalysisSection setup analysis section
          */
-        static void setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
+        void setupAnalysisSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
         /**
          * @brief setupConstantSection setup constants section
          */
-        static void setupConstantSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
+        void setupConstantSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
         /**
          * @brief setupMatrixSection setup matrix toolbar
          * @param parent
          * @param barLayout
          * @param scene
          */
-        static void setupMatrixSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
+        void setupMatrixSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
 
-        explicit ElementBar();
-        virtual ~ElementBar();
 };
 
 #endif // ELEMENTBAR_H

@@ -30,8 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include "elementbar.h"
 #include "menu/mathsection.h"
-#include "menu/mathsection.h"
 #include "view/egcasscene.h"
+#include "../structural/actions/egcaction.h"
+
 
 ElementBar::ElementBar()
 {
@@ -62,6 +63,11 @@ void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* s
         setupAnalysisSection(parent, barLayout, scene);
         setupConstantSection(parent, barLayout, scene);
         setupMatrixSection(parent, barLayout, scene);
+}
+
+void ElementBar::interceptSignals(EgcAction action)
+{
+        emit actionTriggered(action);
 }
 
 void ElementBar::setupCalcSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
@@ -229,6 +235,8 @@ void ElementBar::setupMatrixSection(QWidget* parent, QVBoxLayout* barLayout, EgC
         }
 
         bool ass_ret;
-        ass_ret = connect(section, &MathSection::actionTriggered, scene, &EgCasScene::routeAction);
+        ass_ret = connect(section, &MathSection::actionTriggered, this, &ElementBar::interceptSignals);
+        Q_ASSERT(ass_ret == true);
+        ass_ret = connect(this, &ElementBar::actionTriggered, scene, &EgCasScene::routeAction);
         Q_ASSERT(ass_ret == true);
 }

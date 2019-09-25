@@ -44,6 +44,7 @@ class PrecisionBox;
 class ResultType;
 class MathFont;
 class TextFont;
+class ElementBar;
 
 class MainWindow : public QMainWindow
 {
@@ -87,6 +88,7 @@ private:
         MathFont* m_mathFont;
         TextFont* m_textFont;
         QString m_currentFileName;
+        QScopedPointer<ElementBar> m_elementBar;
 };
 
 #endif // MAINWINDOW_H
