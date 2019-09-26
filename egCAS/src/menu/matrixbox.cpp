@@ -7,6 +7,7 @@ MatrixBox::MatrixBox(QWidget *parent) :
         ui(new Ui::MatrixBox)
 {
         ui->setupUi(this);
+        ui->spinBox_rows->selectAll();
 }
 
 MatrixBox::~MatrixBox()
