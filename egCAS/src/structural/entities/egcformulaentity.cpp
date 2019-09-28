@@ -460,6 +460,10 @@ void EgcFormulaEntity::handleAction(const EgcAction& action)
                 if (m_mod && m_item)
                         m_mod->createSubscript();
                 break;
+        case EgcOperations::insertMatrix:
+                if (m_mod && m_item)
+                        m_mod->insertMatrix(action.m_additionalData.value<MatrixDimension>());
+                break;
         }
 }
 

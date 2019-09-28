@@ -70,7 +70,7 @@ void ElementBar::interceptSignals(EgcAction action)
 {
         MatrixBox matrixBox;
         MatrixDimension matrixDimension = matrixBox.getDimension();
-        action.m_additionalData.fromValue(matrixDimension);
+        action.m_additionalData = QVariant::fromValue(matrixDimension);
 
         emit actionTriggered(action);
 }

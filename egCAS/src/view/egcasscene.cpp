@@ -579,10 +579,11 @@ void EgCasScene::routeAction(EgcAction action)
                      || action.m_op == EgcOperations::mathFunction
                      || action.m_op == EgcOperations::internalFunction
                      || action.m_op == EgcOperations::alnumKeyPressed
-                     || action.m_op == EgcOperations::constant
-                     || action.m_op == EgcOperations::insertMatrix) {
+                     || action.m_op == EgcOperations::constant) {
                         triggerFormulaCreation(m_cross->scenePos(), action);
                 }
+        } else if (action.m_op == EgcOperations::insertMatrix) {
+                triggerFormulaCreation(m_cross->scenePos(), action);
         } else {
                 EgcFormulaItem* formula = dynamic_cast<EgcFormulaItem*>(focusItem());
                 if (formula) {

@@ -534,6 +534,54 @@ void FormulaModificator::insertConstName(QString name)
         updateFormula();
 }
 
+void FormulaModificator::insertMatrix(MatrixDimension dimension)
+{
+        FormulaScrElement el;
+        quint32 cols = dimension.columnCount();
+        quint32 rows = dimension.rowCount();
+
+        m_iter.save();
+        resetUnderline();
+
+        if (isEmptyElement(true)) {
+                m_iter.remove(true);
+        }
+        if (isEmptyElement(false)) {
+                m_iter.remove(false);
+        }
+
+        el.m_value = "matrix(";
+        m_iter.insert(el);
+
+        for (quint32 i = 0; i<rows; i++){
+                QString tmp;
+                for (quint32 x = 0; x < cols; ++x) {
+                        if (x == 0)
+                                tmp = tmp % "[";
+                        tmp = tmp % emptyElement;
+                        if (x == cols -1) {
+                                tmp = tmp % "]";
+                                if (i < rows -1)
+                                        tmp = tmp % ",";
+                        } else {
+                                tmp = tmp % ",";
+                        }
+                        el.m_value = tmp;
+                        m_iter.insert(el);
+                        tmp.clear();
+                        if (i == 0 && x == 0)
+                                saveCursorPosition();
+                }
+                tmp.clear();
+                if (i != rows -1)
+                        tmp = tmp % ",";
+        }
+
+        el.m_value = ")";
+        m_iter.insert(el);
+        updateFormula();
+}
+
 void FormulaModificator::insertRedParenthesis(bool left)
 {
         if (left) {

@@ -77,6 +77,11 @@ public:
          */
         void insertConstName(QString name);
         /**
+         * @brief insertMatrix insert a new matrix with the given dimension
+         * @param dimension the dimension of the matrix to insert into calculation sheet
+         */
+        void insertMatrix(MatrixDimension dimension);
+        /**
          * @brief showCurrentCursor show the cursor of the currently active formula at current position
          */
         void showCurrentCursor(void);
