@@ -267,6 +267,14 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                 break;
         case EgcNodeType::ArgumentsNode:
                 break;
+        case EgcNodeType::MatrixNode:
+                if (m_state == EgcIteratorState::RightIteration) {
+                        id = getId(node);
+                        EgcMatrixNode *nd = static_cast<EgcMatrixNode*>(node);
+                        assembleResult("<mfenced "%id%" open=\"[\" close=\"]\"><mtable><mtr><mtd><mn>", "</mn></mtd><mtd "%id%"><mn>",
+                                       "</mn></mtd></mtr><mtr  "%id%"><mtd><mn>", nd->columns(), "</mn></mtd></mtr></mtable></mfenced>",node);
+                }
+                break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType()));
                 break;

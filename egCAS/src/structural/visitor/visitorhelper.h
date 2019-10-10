@@ -60,7 +60,22 @@ protected:
          * @param endString the end string of the node
          * @param node the node we are currently operating on
          */
-        virtual void assembleResult(QString startString, QString seperationString, QString endString, EgcNode* node);
+        virtual void assembleResult(QString startString, QString seperationString, QString endString, EgcNode* node);        
+        /**
+         * @brief assembleResult assemble the result string of a node. This is a convinience version of the above
+         * function. The function can be used in cases when there are many (variable) arguments, e.g. for assembling matrices.
+         * E.g. it can be used with the following mathml function:
+         * assembleResult("<mfenced open="[" close="]"><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr>
+         * <mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr></mtable></mfenced>", node);
+         * @param startString the start string of a node (if any - give an empty string if this is not used)
+         * @param seperationString the separation string that is used as seperation of each child node
+         * @param nthSeparationString the separation string that is used as all nth separtion instead of the normal separation string
+         * @param allNthSep all nth argument the non standard separation string will be used.
+         * @param endString the end string of the node
+         * @param node the node we are currently operating on
+         */
+        virtual void assembleResult(QString startString, QString seperationString, QString nthSeparationString,
+                                           quint32 allNthSep, QString endString, EgcNode* node);
         /**
          * @brief assembleResult assemble the result string of a node. This is a version e.g. for functions where the
          * first node contains the name of the function. The left part of the start string would be given as first

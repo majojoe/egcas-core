@@ -157,6 +157,35 @@ void VisitorHelper::assembleResult(QString startString, QString seperationString
                 m_stack.push(result);
 }
 
+void VisitorHelper::assembleResult(QString startString, QString seperationString, QString nthSeparationString,
+                                   quint32 allNthSep, QString endString, EgcNode* node)
+{
+        QString result = startString;
+        quint32 nrArguments = 0;
+
+        QVector<QString> args = getAssembleArguments(node);
+        nrArguments = static_cast<quint32>(args.size());
+        if (nrArguments == 0)
+                return;
+
+        for (quint32 i = 0; i < nrArguments; i++) {
+                result += args.at(static_cast<int>(i));
+                if (i != nrArguments - 1) {
+                        if ((i % allNthSep) == 0)
+                                result += nthSeparationString;
+                        else
+                                result += seperationString;
+                } else {
+                        result += endString;
+                }
+        }
+
+        result = modifyNodeString(result, node);
+
+        if (!m_suppressList.contains(node))
+                m_stack.push(result);
+}
+
 void VisitorHelper::deleteFromStack(quint32 nrStackObjects)
 {
         quint32 i;

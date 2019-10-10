@@ -66,33 +66,6 @@ public:
          */
         quint16 columns(void) const;
         /**
-         * @brief setValue set the variable name (value)
-         * @param varName the variable name as a string
-         * @param subscript the subscript of the variable if any
-         */
-        void setValue(const QString& varName, const QString& subscript = QString());
-        /**
-         * @brief setStuffedVar set the raw variable name (value) maybe including stuffed subscript
-         * @param varName the variable name as a string. This can include the stuffed subscript
-         */
-        void setStuffedVar(const QString& varName);
-        /**
-         * @brief getValue returns the variable name (without subscript)
-         * @return the variable name
-         */
-        QString getValue(void) const;
-        /**
-         * @brief getSubscript returns the subscript of a variable name
-         * @return the subscript of this variable object
-         */
-        QString getSubscript(void) const;
-        /**
-         * @brief getStuffedValue returns the stuffed variable name (with subscript)
-         * @return the stuffed variable name (a "_" in the variable name is stuffed into "__",
-         * and variable name and subscript is seperated via "_1").
-         */
-        QString getStuffedValue(void);
-        /**
          * @brief getMatrixChild get a pointer to the child at index. If index is > getNumberChildNodes() - 1, the returned
          * pointer is NULL.
          * @param index the index where the child is. E.g. a binary node has a left child 0 and a right child with index
@@ -125,12 +98,6 @@ public:
         virtual void deserializeAttributes(QXmlStreamReader& stream, quint32 version, QXmlStreamAttributes& attr) override;
 
 protected:
-        /**
-         * @brief getVarNode returns the internal variable node for internal use
-         * @return nullptr if no internal variable node is there, the variable node otherwise
-         */
-        EgcVariableNode* getVarNode(void) const;
-
         quint16 m_rows;
         quint16 m_columns;
 };
