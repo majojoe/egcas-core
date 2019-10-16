@@ -109,6 +109,7 @@ private:
         virtual antlrcpp::Any visitIntegral(EgcParser::IntegralContext *ctx) override;
         virtual antlrcpp::Any visitCreateArglist(EgcParser::CreateArglistContext *ctx) override;
         virtual antlrcpp::Any visitAddArgument(EgcParser::AddArgumentContext *ctx) override;
+        virtual antlrcpp::Any visitMatrix(EgcParser::MatrixContext *ctx) override;
 
     
         /**

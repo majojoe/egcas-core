@@ -24,15 +24,23 @@ expr : <assoc=right> expr EXP expr              # Exponent
      | LOGARITHM '(' expr ')'                   # Logarithm
      | NATLOGRITHM '(' expr ')'                 # Natlogarithm
      | SQRT '(' expr ')'                        # Sqrt
+     | ROOT '(' expr ',' expr ')'               # Root
      | INTEGRAL '(' explist ')'                 # Integral
      | DIFFERENTIAL '(' explist ')'             # Differential
-     | ROOT '(' expr ',' expr ')'               # Root
      | EMPTY                                    # Empty
      | NAMES '(' explist ')'                    # Function
      | EMPTY '(' explist ')'                    # Function
+     | MATRIX '(' matrix_list ')'               # Matrix
      | LBRACKET_OP expr RBRACKET_OP             # BracketOp
      ;
     
+matrix_list: matrix_row
+      | matrix_row ',' matrix_list
+      ;
+
+matrix_row: '[' explist ']'
+      ;
+
 explist: expr                                   # createArglist
        | expr ',' explist                       # addArgument
        ;
@@ -59,9 +67,10 @@ NATLOGRITHM:    '_ln';
 RED_PARENTHESIS_R: '_red_parenth_r';
 RED_PARENTHESIS_L: '_red_parenth_l';
 CONSTANTS:         ('_const_' [a-zA-Z_]+) | '%e' | '%i' | '%pi' | 'infinity';   //constants starting with % are for maxima kernel
-NUMBER:         [0-9]+ '.' [0-9]* EXPONENT? | '.'? [0-9]+ EXPONENT?;        //numbers
-NAMES:          ALNUMNODE;      //names
-VARSUB:         VARSEP ALNUMNODESUB;     //variable separator
+MATRIX:         'matrix';                                               //maxima matrix definition
+NUMBER:         [0-9]+ '.' [0-9]* EXPONENT? | '.'? [0-9]+ EXPONENT?;    //numbers
+NAMES:          ALNUMNODE;                                              //names
+VARSUB:         VARSEP ALNUMNODESUB;                                    //variable separator
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines 
 

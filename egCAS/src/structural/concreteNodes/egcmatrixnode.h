@@ -33,7 +33,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QString>
 #include "egcfnccontainernode.h"
 
-class EgcVariableNode;
 
 /**
  * @brief The EgcMatrixNode class represents a differential

@@ -265,6 +265,13 @@ antlrcpp::Any FormulaInterpreter::visitFunction(EgcParser::FunctionContext *ctx)
         return node;
 }
 
+antlrcpp::Any FormulaInterpreter::visitMatrix(EgcParser::MatrixContext *ctx)
+{
+        EgcNode* node = changeFlexExpressionType(EgcNodeType::MatrixNode, visit(ctx->matrix_list()));
+        refinePosition(ctx, node);
+        return node;
+}
+
 antlrcpp::Any FormulaInterpreter::visitParenthesis(EgcParser::ParenthesisContext *ctx)
 {
         EgcNode* node = addUnaryExpression(EgcNodeType::ParenthesisNode, visit(ctx->expr()));
