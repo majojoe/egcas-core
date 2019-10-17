@@ -66,7 +66,7 @@ LOGARITHM:      '_log';
 NATLOGRITHM:    '_ln';
 RED_PARENTHESIS_R: '_red_parenth_r';
 RED_PARENTHESIS_L: '_red_parenth_l';
-CONSTANTS:         ('_const_' [a-zA-Z_]+) | '%e' | '%i' | '%pi' | 'infinity';   //constants starting with % are for maxima kernel
+CONSTANTS:         ('_const_' [a-zA-Z]+) | '%e' | '%i' | '%pi' | 'infinity';   //constants starting with % are for maxima kernel
 MATRIX:         'matrix';                                               //maxima matrix definition
 NUMBER:         [0-9]+ '.' [0-9]* EXPONENT? | '.'? [0-9]+ EXPONENT?;    //numbers
 NAMES:          ALNUMNODE;                                              //names
