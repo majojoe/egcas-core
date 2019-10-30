@@ -34,11 +34,11 @@ expr : <assoc=right> expr EXP expr              # Exponent
      | LBRACKET_OP expr RBRACKET_OP             # BracketOp
      ;
     
-matrix_list: matrix_row
-      | matrix_row ',' matrix_list
+matrix_list: matrix_row                         # createMatrixList
+      | matrix_row ',' matrix_list              # addMatrixRow
       ;
 
-matrix_row: '[' explist ']'
+matrix_row: '[' explist ']'                     # passRow
       ;
 
 explist: expr                                   # createArglist

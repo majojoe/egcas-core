@@ -58,6 +58,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::MultiplicationNode:
                 retval = new (std::nothrow) EgcMultiplicationNode();
                 break;
+        case EgcNodeType::MatrixNode:
+                retval = new (std::nothrow) EgcMatrixNode();
+                break;
         case EgcNodeType::ParenthesisNode:
                 retval = new (std::nothrow) EgcParenthesisNode();
                 break;
@@ -143,6 +146,8 @@ EgcNode*EgcNodeCreator::create(QLatin1String name)
                 retval = new (std::nothrow) EgcNumberNode();
         if (name == QLatin1String("multiplicationnode"))
                 retval = new (std::nothrow) EgcMultiplicationNode();
+        if (name == QLatin1String("matrixnode"))
+                retval = new (std::nothrow) EgcMatrixNode();
         if (name == QLatin1String("parenthesisnode"))
                 retval = new (std::nothrow) EgcParenthesisNode();
         if (name == QLatin1String("divisionnode"))
@@ -215,6 +220,9 @@ QLatin1String EgcNodeCreator::stringize(EgcNodeType type)
                 break;
         case EgcNodeType::MultiplicationNode:
                 retval = QLatin1String("multiplicationnode");
+                break;
+        case EgcNodeType::MatrixNode:
+                retval = QLatin1String("matrixnode");
                 break;
         case EgcNodeType::ParenthesisNode:
                 retval = QLatin1String("parenthesisnode");

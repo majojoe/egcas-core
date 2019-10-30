@@ -110,7 +110,9 @@ private:
         virtual antlrcpp::Any visitCreateArglist(EgcParser::CreateArglistContext *ctx) override;
         virtual antlrcpp::Any visitAddArgument(EgcParser::AddArgumentContext *ctx) override;
         virtual antlrcpp::Any visitMatrix(EgcParser::MatrixContext *ctx) override;
-
+        virtual antlrcpp::Any visitCreateMatrixList(EgcParser::CreateMatrixListContext *ctx) override;
+        virtual antlrcpp::Any visitAddMatrixRow(EgcParser::AddMatrixRowContext *ctx) override;
+        virtual antlrcpp::Any visitPassRow(EgcParser::PassRowContext *ctx) override;
     
         /**
          * @brief addBinaryExpression add binary Expression to the current AST
@@ -183,6 +185,19 @@ private:
          * @return a pointer to the changed argument list
          */
         EgcNode* addArgument(EgcNode* expressionToAdd, EgcNode *argumentList);
+        /**
+         * @brief createMatrixList creates an matrix list that is integrated later on in the matrix where it is used in
+         * @param expression the expression to add to the matrix list
+         * @return a pointer to the created argument matrix
+         */
+        EgcNode* createMatrixList(EgcNode* expression);
+        /**
+         * @brief addMatrixRow adds an matrix row to the argument matrix given
+         * @param expressionToAdd the expression (argument) to add
+         * @param argumentList the argument list to use to add the argument to
+         * @return a pointer to the changed argument list
+         */
+        EgcNode* addMatrixRow(EgcNode* expressionToAdd, EgcNode* argumentList);
         /**
          * @brief addEmptyNode add an empty node. USE THIS FOR DEBUG PURPOSES ONLY.
          * @return return a EgcNode of an emtpy node

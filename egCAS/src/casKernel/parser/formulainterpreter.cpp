@@ -267,7 +267,7 @@ antlrcpp::Any FormulaInterpreter::visitFunction(EgcParser::FunctionContext *ctx)
 
 antlrcpp::Any FormulaInterpreter::visitMatrix(EgcParser::MatrixContext *ctx)
 {
-        EgcNode* node = changeFlexExpressionType(EgcNodeType::MatrixNode, visit(ctx->matrix_list()));
+        EgcNode* node =  visit(ctx->matrix_list());
         refinePosition(ctx, node);
         return node;
 }
@@ -322,6 +322,26 @@ antlrcpp::Any FormulaInterpreter::visitAddArgument(EgcParser::AddArgumentContext
         return node;
 }
 
+antlrcpp::Any FormulaInterpreter::visitCreateMatrixList(EgcParser::CreateMatrixListContext *ctx)
+{
+        EgcNode* node =  createMatrixList(visit(ctx->matrix_row()));
+        refinePosition(ctx, node);
+        return node;
+}
+
+antlrcpp::Any FormulaInterpreter::visitAddMatrixRow(EgcParser::AddMatrixRowContext *ctx)
+{
+        EgcNode* node = addMatrixRow(visit(ctx->matrix_row()), visit(ctx->matrix_list()));
+        refinePosition(ctx, node);
+        return node;
+}
+
+antlrcpp::Any FormulaInterpreter::visitPassRow(EgcParser::PassRowContext *ctx)
+{
+        EgcNode* node =  visit(ctx->explist());
+        refinePosition(ctx, node);
+        return node;
+}
 
 EgcNode* FormulaInterpreter::addBinaryExpression(EgcNodeType type, EgcNode* node0,
                                                     EgcNode* node1)
@@ -500,6 +520,35 @@ EgcNode* FormulaInterpreter::addArgument(EgcNode* expressionToAdd, EgcNode* argu
         setNotDangling(expressionToAdd);
         if (argumentList && expressionToAdd) {
                 EgcArgumentsNode* argLst = static_cast<EgcArgumentsNode*>(argumentList);
+                if (argLst->insert(0, *exprToAdd.data()))
+                        (void) exprToAdd.take();
+        }
+
+        return argumentList;
+}
+
+EgcNode* FormulaInterpreter::createMatrixList(EgcNode* expression)
+{
+        QScopedPointer<EgcMatrixNode> node(static_cast<EgcMatrixNode*>(EgcNodeCreator::create(EgcNodeType::MatrixNode)));
+        QScopedPointer<EgcNode> exprPtr(expression);
+        setNotDangling(expression);
+        if (!node.isNull()) {
+                node->setChild(0, *exprPtr.take());
+        } else {
+                throw std::runtime_error("Not enough memory to complete operation!");
+        }
+        EgcMatrixNode *nodePtr = node.data();
+        addDanglingNode(node.take());
+
+        return nodePtr;
+}
+
+EgcNode* FormulaInterpreter::addMatrixRow(EgcNode* expressionToAdd, EgcNode* argumentList)
+{
+        QScopedPointer<EgcNode> exprToAdd(expressionToAdd);
+        setNotDangling(expressionToAdd);
+        if (argumentList && expressionToAdd) {
+                EgcMatrixNode* argLst = static_cast<EgcMatrixNode*>(argumentList);
                 if (argLst->insert(0, *exprToAdd.data()))
                         (void) exprToAdd.take();
         }
