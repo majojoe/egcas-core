@@ -89,6 +89,8 @@ void EgcMaximaVisitor::visit(EgcBinaryNode* binary)
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("(%1)()(%2)", binary);
                 break;
+        case EgcNodeType::NodeUndefined:
+                break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(binary->getNodeType())) ;
                 break;
@@ -122,6 +124,8 @@ void EgcMaximaVisitor::visit(EgcUnaryNode* unary)
                 if (m_state == EgcIteratorState::RightIteration)
                         assembleResult("-(%1)", unary);
                 break;
+        case EgcNodeType::NodeUndefined:
+                break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(unary->getNodeType())) ;
                 break;
@@ -152,6 +156,14 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
                                       % "," % QString::number(diff->getNrDerivative()) % ")";
                         assembleResult(str, flex);
                 }
+                break;
+        case EgcNodeType::MatrixNode:
+                if (m_state == EgcIteratorState::RightIteration) {
+                        EgcMatrixNode* mat = static_cast<EgcMatrixNode*>(flex);
+                        assembleResult("matrix([", ",", "],[", mat->columns(), ")", flex);
+                }
+                break;
+        case EgcNodeType::NodeUndefined:
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(flex->getNodeType())) ;
@@ -192,6 +204,8 @@ void EgcMaximaVisitor::visit(EgcNode* node)
                 break;
         case EgcNodeType::NumberNode:
                 pushToStack(static_cast<EgcNumberNode*>(node)->getValue(), node);
+                break;
+        case EgcNodeType::NodeUndefined:
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(node->getNodeType())) ;

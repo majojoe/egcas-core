@@ -232,7 +232,7 @@ void ElementBar::setupConstantSection(QWidget* parent, QVBoxLayout* barLayout, E
 
 void ElementBar::setupMatrixSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
 {
-        MathSection* section = getNewSection(parent, barLayout, tr("Constants"));
+        MathSection* section = getNewSection(parent, barLayout, tr("Vector/Matrix"));
         if (section) {
                 section->setChecked();
 
