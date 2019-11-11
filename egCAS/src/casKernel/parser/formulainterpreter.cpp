@@ -529,31 +529,26 @@ EgcNode* FormulaInterpreter::addArgument(EgcNode* expressionToAdd, EgcNode* argu
 
 EgcNode* FormulaInterpreter::createMatrixList(EgcNode* expression)
 {
-        QScopedPointer<EgcMatrixNode> node(static_cast<EgcMatrixNode*>(EgcNodeCreator::create(EgcNodeType::MatrixNode)));
-        QScopedPointer<EgcNode> exprPtr(expression);
-        setNotDangling(expression);
-        if (!node.isNull()) {
-                node->setChild(0, *exprPtr.take());
-        } else {
-                throw std::runtime_error("Not enough memory to complete operation!");
+        if (expression) {
+                EgcNode* node = changeFlexExpressionType(EgcNodeType::MatrixNode, expression);
+                EgcMatrixNode* mat = static_cast<EgcMatrixNode*>(node);
+                mat->setDimension(static_cast<quint16>(mat->getNumberChildNodes()), 1);
         }
-        EgcMatrixNode *nodePtr = node.data();
-        addDanglingNode(node.take());
 
-        return nodePtr;
+        return expression;
 }
 
-EgcNode* FormulaInterpreter::addMatrixRow(EgcNode* expressionToAdd, EgcNode* argumentList)
+EgcNode* FormulaInterpreter::addMatrixRow(EgcNode* expression, EgcNode* rowToAdd)
 {
-        QScopedPointer<EgcNode> exprToAdd(expressionToAdd);
-        setNotDangling(expressionToAdd);
-        if (argumentList && expressionToAdd) {
-                EgcMatrixNode* argLst = static_cast<EgcMatrixNode*>(argumentList);
-                if (argLst->insert(0, *exprToAdd.data()))
-                        (void) exprToAdd.take();
+        if (rowToAdd && expression && rowToAdd->isContainer() && expression->isContainer()) {
+                EgcContainerNode& row = static_cast<EgcContainerNode&>(*rowToAdd);
+                EgcContainerNode& container = static_cast<EgcContainerNode&>(*expression);
+                container.addAllChilds(row);
+                delete rowToAdd;
+                setNotDangling(rowToAdd);
         }
 
-        return argumentList;
+        return expression;
 }
 
 void FormulaInterpreter::addDanglingNode(EgcNode* node)
@@ -609,14 +604,13 @@ EgcNode* FormulaInterpreter::addEmptyNode(void)
         return node;
 }
 
-EgcNode* FormulaInterpreter::changeFlexExpressionType(EgcNodeType type, EgcNode* argList)
+EgcNode* FormulaInterpreter::changeFlexExpressionType(EgcNodeType type, EgcNode *argList)
 {
-        QScopedPointer<EgcFncContainerNode> node(static_cast<EgcFncContainerNode*>(EgcNodeCreator::create(type)));
+        QScopedPointer<EgcFlexNode> node(static_cast<EgcFlexNode*>(EgcNodeCreator::create(type)));
         assert(node->isFlexNode());
         if (node->isFlexNode()) {
                 if (argList) {
-                        if (argList->getNodeType() == EgcNodeType::ArgumentsNode)
-                                node->transferArgs(*static_cast<EgcArgumentsNode*>(argList));
+                        node->transferArgs(*static_cast<EgcArgumentsNode*>(argList));
                 }
                 delete argList;
                 setNotDangling(argList);

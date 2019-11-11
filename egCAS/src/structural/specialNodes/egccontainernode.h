@@ -129,6 +129,23 @@ public:
          */
         bool transferProperties(EgcContainerNode &from);
         /**
+         * @brief addAllChilds adds/transfers all childs from the node "from" to this node.
+         * After this operation has succeeded the node "from" has no childs or parent anymore. The operation is only
+         * possible if this nodes are equal or this node is a variable node like a FlexNode. This node takes ownership
+         * of the childs of the node "from".
+         * @param from the node to transfer the childs from.
+         * @return true if the operation succeeded, false if the number of childs are different or this node is not
+         * empty.
+         */
+        bool addAllChilds(EgcContainerNode &from);
+        /**
+         * @brief addChild adds a child given as argument to this node.
+         * The operation is only possible if this container is of type flex node. No child pointer adjustments or other operations for node are taken.
+         * @param node the node to add to this container.
+         * @return true if the operation succeeded, false if not.
+         */
+        bool addChild(EgcNode& node);
+        /**
          * @brief isOperation checks if the node is a operation. There are also nodes that are containers, but no operations
          * @return true if the node is an operation, false otherwise
          */

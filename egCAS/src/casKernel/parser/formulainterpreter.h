@@ -193,11 +193,11 @@ private:
         EgcNode* createMatrixList(EgcNode* expression);
         /**
          * @brief addMatrixRow adds an matrix row to the argument matrix given
-         * @param expressionToAdd the expression (argument) to add
-         * @param argumentList the argument list to use to add the argument to
+         * @param expression the expression (argument) to add
+         * @param rowToAdd the argument list to use to add the argument to
          * @return a pointer to the changed argument list
          */
-        EgcNode* addMatrixRow(EgcNode* expressionToAdd, EgcNode* argumentList);
+        EgcNode* addMatrixRow(EgcNode* expression, EgcNode* rowToAdd);
         /**
          * @brief addEmptyNode add an empty node. USE THIS FOR DEBUG PURPOSES ONLY.
          * @return return a EgcNode of an emtpy node

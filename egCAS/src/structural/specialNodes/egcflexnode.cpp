@@ -418,3 +418,11 @@ bool EgcFlexNode::operator==(const EgcNode& node) const
         return retval;
 
 }
+
+bool EgcFlexNode::transferArgs(EgcFlexNode &args)
+{
+        EgcFlexNode& node = *this;
+        node = std::move(args);
+
+        return true;
+}

@@ -160,6 +160,12 @@ public:
          * @return true if the trees are equal
          */
         virtual bool operator==(const EgcNode& node) const override;
+        /**
+         * @brief transferArgs transfers all arguments to the new function container
+         * @param args the argument list to transfer
+         * @return true if everything went well, false otherwise
+         */
+        virtual bool transferArgs(EgcFlexNode& args);
 
 protected:
         /**

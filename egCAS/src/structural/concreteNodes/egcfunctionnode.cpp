@@ -41,14 +41,6 @@ EgcFunctionNode::EgcFunctionNode()
         }
 }
 
-bool EgcFunctionNode::transferArgs(EgcArgumentsNode& args)
-{
-        EgcFlexNode& node = *this;
-        node = std::move(args);
-
-        return true;
-}
-
 void EgcFunctionNode::setName(const QString& fncName)
 {
         m_fncName = fncName;

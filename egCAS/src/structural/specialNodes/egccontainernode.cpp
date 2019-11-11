@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <QLatin1String>
 #include "egccontainernode.h"
 #include "egcbinaryoperator.h"
+#include "egcflexnode.h"
 
 EgcContainerNode::EgcContainerNode()
 {
@@ -137,6 +138,49 @@ bool EgcContainerNode::transferProperties(EgcContainerNode &from)
         retval = true;
 
         return retval;
+}
+
+bool EgcContainerNode::addAllChilds(EgcContainerNode &from)
+{
+        bool retval = false;
+        quint32 nrChildNodes = this->getNumberChildNodes();
+        quint32 nrChildsFrom = from.getNumberChildNodes();
+        quint32 i;
+
+        if (!this->isFlexNode()) {
+                if (from.getNumberChildNodes() != nrChildNodes)
+                        return false;
+        }
+
+        EgcNode* child;
+        QScopedPointer<EgcNode> tempChild;
+        for (i = 0; i < nrChildsFrom; i++) {
+                child = from.getChild(i);
+                if (child) {
+                        tempChild.reset(from.takeOwnership(*child));
+                        bool ret = this->addChild(*tempChild.take());
+                        if (!ret)
+                                return false;
+                }
+        }
+        m_parent = from.getParent();
+        m_parent->adjustChildPointers(from, *this);
+        from.m_parent = nullptr;
+        retval = true;
+
+        return retval;
+}
+
+bool EgcContainerNode::addChild(EgcNode &node)
+{
+        if (!this->isFlexNode()) {
+                return false;
+        }
+
+        EgcFlexNode& flex = static_cast<EgcFlexNode&>(*this);
+        flex.insert(flex.getNumberChildNodes(),node);
+
+        return true;
 }
 
 bool EgcContainerNode::isOperation(void) const

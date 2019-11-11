@@ -42,12 +42,6 @@ class EgcFunctionNode : public EgcFncContainerNode
 public:
         EgcFunctionNode();
         /**
-         * @brief transferArgs transfers all arguments to the new function container
-         * @param args the argument list to transfer
-         * @return true if everything went well, false otherwise
-         */
-        virtual bool transferArgs(EgcArgumentsNode& args) override;
-        /**
          * @brief setName set the function name
          * @param fncName the variable name as a string
          */

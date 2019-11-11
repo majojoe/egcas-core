@@ -35,7 +35,7 @@ expr : <assoc=right> expr EXP expr              # Exponent
      ;
     
 matrix_list: matrix_row                         # createMatrixList
-      | matrix_row ',' matrix_list              # addMatrixRow
+      | matrix_list ',' matrix_row              # addMatrixRow
       ;
 
 matrix_row: '[' explist ']'                     # passRow

@@ -41,12 +41,6 @@ class EgcFncContainerNode : public EgcArgumentsNode
         EGC_SET_EXPRESSION_TYPE(EgcFncContainerNode, EgcNodeType::FncContainerNode);
 public:
         EgcFncContainerNode();
-        /**
-         * @brief transferArgs transfers all arguments to the new function container
-         * @param args the argument list to transfer
-         * @return true if everything went well, false otherwise
-         */
-        virtual bool transferArgs(EgcArgumentsNode& args);
 };
 
 #endif // EGCFNCCONTAINERNODE_H
