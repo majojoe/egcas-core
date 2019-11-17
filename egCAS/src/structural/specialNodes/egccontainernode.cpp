@@ -164,7 +164,8 @@ bool EgcContainerNode::addAllChilds(EgcContainerNode &from)
                 }
         }
         m_parent = from.getParent();
-        m_parent->adjustChildPointers(from, *this);
+        if (m_parent)
+                m_parent->adjustChildPointers(from, *this);
         from.m_parent = nullptr;
         retval = true;
 

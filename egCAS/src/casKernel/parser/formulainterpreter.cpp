@@ -331,7 +331,7 @@ antlrcpp::Any FormulaInterpreter::visitCreateMatrixList(EgcParser::CreateMatrixL
 
 antlrcpp::Any FormulaInterpreter::visitAddMatrixRow(EgcParser::AddMatrixRowContext *ctx)
 {
-        EgcNode* node = addMatrixRow(visit(ctx->matrix_row()), visit(ctx->matrix_list()));
+        EgcNode* node = addMatrixRow(visit(ctx->matrix_list()), visit(ctx->matrix_row()));
         refinePosition(ctx, node);
         return node;
 }
@@ -533,6 +533,7 @@ EgcNode* FormulaInterpreter::createMatrixList(EgcNode* expression)
                 EgcNode* node = changeFlexExpressionType(EgcNodeType::MatrixNode, expression);
                 EgcMatrixNode* mat = static_cast<EgcMatrixNode*>(node);
                 mat->setDimension(static_cast<quint16>(mat->getNumberChildNodes()), 1);
+                return mat;
         }
 
         return expression;
