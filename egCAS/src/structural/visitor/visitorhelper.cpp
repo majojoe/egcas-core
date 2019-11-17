@@ -171,7 +171,7 @@ void VisitorHelper::assembleResult(QString startString, QString seperationString
         for (quint32 i = 0; i < nrArguments; i++) {
                 result += args.at(static_cast<int>(i));
                 if (i != nrArguments - 1) {
-                        if ((i % allNthSep) == 0)
+                        if (((i + 1) % allNthSep) == 0)
                                 result += nthSeparationString;
                         else
                                 result += seperationString;
