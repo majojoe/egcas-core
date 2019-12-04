@@ -160,7 +160,7 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
         case EgcNodeType::MatrixNode:
                 if (m_state == EgcIteratorState::RightIteration) {
                         EgcMatrixNode* mat = static_cast<EgcMatrixNode*>(flex);
-                        assembleResult("matrix([", ",", "],[", mat->columns(), ")", flex);
+                        assembleResult("matrix([", ",", "],[", mat->columns(), "])", flex);
                 }
                 break;
         case EgcNodeType::NodeUndefined:

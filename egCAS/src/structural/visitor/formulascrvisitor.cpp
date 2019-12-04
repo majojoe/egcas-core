@@ -238,6 +238,21 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
                         appendSegmented(")", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::ultra, 0, false, flex, 0, false);
                 }
                 break;
+        case EgcNodeType::MatrixNode:
+                if (m_state == EgcIteratorState::LeftIteration) {
+                        appendSegmented(QString("matrix(["), flex, CursorAdhesion::low, 0, true, flex->getChild(0), 0, true);
+                } else if (m_state == EgcIteratorState::MiddleIteration) {
+                        EgcMatrixNode &mat = *static_cast<EgcMatrixNode*>(flex);
+                        quint16 cols = mat.columns();
+                        if ((m_childIndex + 1) % cols == 0)
+                                appendSegmented("],[", flex->getChild(m_childIndex), CursorAdhesion::ultra, 0, false, flex->getChild(m_childIndex + 1), 0, true);
+                        else
+                                appendSegmented(",", flex->getChild(m_childIndex), CursorAdhesion::ultra, 0, false, flex->getChild(m_childIndex + 1), 0, true);
+                } else {
+                        appendSegmented("])", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::ultra, 0, false, flex, 0, false);
+                }
+                break;
+
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(flex->getNodeType())) ;
                 break;
