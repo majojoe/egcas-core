@@ -211,6 +211,11 @@ public:
          * @brief deleteAll removes all items from the scene
          */
         void deleteAll(void);
+        /**
+         * @brief isCrossVisible checks if cursor cross is visible
+         * @return true if visible, false otherwise
+         */
+        bool isCrossVisible(void);
 
 public slots:
         /**

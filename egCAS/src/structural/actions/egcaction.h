@@ -54,7 +54,8 @@ public:
                                                                             m_intType{intType},
                                                                             m_OpModificators{mod},
                                                                             m_lookModificatiors{look},
-                                                                            m_additionalData{addDat}
+                                                                            m_additionalData{addDat},
+                                                                            m_createNewFormula{false}
 
         {}
 
@@ -68,7 +69,8 @@ public:
                                       m_intType{intType},
                                       m_OpModificators{mod},
                                       m_lookModificatiors{look},
-                                      m_additionalData{addDat}
+                                      m_additionalData{addDat},
+                                      m_createNewFormula{false}
         {}
 
         EgcAction(EgcOperations op,
@@ -80,7 +82,8 @@ public:
                                       m_intType{InternalFunctionType::undefined},
                                       m_OpModificators{mod},
                                       m_lookModificatiors{look},
-                                      m_additionalData{addDat}
+                                      m_additionalData{addDat},
+                                      m_createNewFormula{false}
         {}
 
         EgcAction(EgcOperations op, quint32 column_count, quint32 row_count) :
@@ -89,7 +92,8 @@ public:
                                       m_intType{InternalFunctionType::undefined},
                                       m_OpModificators{OpModificators::standard},
                                       m_lookModificatiors{LookModificators::standard},
-                                      m_additionalData{QVariant::fromValue(MatrixDimension(column_count, row_count))}
+                                      m_additionalData{QVariant::fromValue(MatrixDimension(column_count, row_count))},
+                                      m_createNewFormula{false}
         {}
 
         EgcAction(EgcOperations op,
@@ -99,14 +103,17 @@ public:
                                       m_intType{InternalFunctionType::undefined},
                                       m_OpModificators{OpModificators::standard},
                                       m_lookModificatiors{LookModificators::standard},
-                                      m_additionalData{QVariant::fromValue(constant)}
+                                      m_additionalData{QVariant::fromValue(constant)},
+                                      m_createNewFormula{false}
         {}
 
         EgcAction(const EgcAction &rhs) {m_op = rhs.m_op; m_character = rhs.m_character; m_elementId = rhs.m_elementId;
                                          m_subId = rhs.m_subId; m_intType = rhs.m_intType ;
                                          m_OpModificators = rhs.m_OpModificators;
                                          m_lookModificatiors = rhs.m_lookModificatiors;
-                                         m_additionalData = rhs.m_additionalData;}
+                                         m_additionalData = rhs.m_additionalData;
+                                         m_createNewFormula = rhs.m_createNewFormula;}
+
         ~EgcAction() {}
 
         EgcOperations m_op;               ///< the operation to do
@@ -117,6 +124,7 @@ public:
         OpModificators m_OpModificators;  ///< any modificators of the action/operation
         LookModificators m_lookModificatiors; ///< modificators for the look of an operator
         QVariant m_additionalData;        ///< an action can have some additional data
+        bool m_createNewFormula;          ///< if true a new formula shall be created
 };
 
 Q_DECLARE_METATYPE(EgcAction);

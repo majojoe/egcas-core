@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include "matrixbox.h"
 
 
-ElementBar::ElementBar()
+ElementBar::ElementBar() : m_scene{nullptr}
 {
         qRegisterMetaType<EgcAction>("EgcAction");
 }
@@ -59,6 +59,7 @@ MathSection* ElementBar::getNewSection(QWidget* parent, QVBoxLayout* barLayout, 
 
 void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene)
 {
+        m_scene = scene;
         setupCalcSection(parent, barLayout, scene);
         setupGreekSection(parent, barLayout, scene);
         setupAnalysisSection(parent, barLayout, scene);
@@ -69,6 +70,8 @@ void ElementBar::setupBar(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* s
 void ElementBar::interceptSignals(EgcAction action)
 {
         MatrixBox matrixBox;
+        if (m_scene)
+                action.m_createNewFormula = m_scene->isCrossVisible();
         MatrixDimension matrixDimension = matrixBox.getDimension();
         action.m_additionalData = QVariant::fromValue(matrixDimension);
 

@@ -574,16 +574,15 @@ EgcAbstractDocument& EgCasScene::document(void) const
 
 void EgCasScene::routeAction(EgcAction action)
 {
-        if (m_cross->isVisible()) {
+        if (isCrossVisible() || action.m_createNewFormula) {
                 if (    action.m_op == EgcOperations::mathCharOperator
                      || action.m_op == EgcOperations::mathFunction
                      || action.m_op == EgcOperations::internalFunction
                      || action.m_op == EgcOperations::alnumKeyPressed
-                     || action.m_op == EgcOperations::constant) {
+                     || action.m_op == EgcOperations::constant
+                     || action.m_op == EgcOperations::insertMatrix) {
                         triggerFormulaCreation(m_cross->scenePos(), action);
                 }
-        } else if (action.m_op == EgcOperations::insertMatrix) {
-                triggerFormulaCreation(m_cross->scenePos(), action);
         } else {
                 EgcFormulaItem* formula = dynamic_cast<EgcFormulaItem*>(focusItem());
                 if (formula) {
@@ -616,4 +615,9 @@ void EgCasScene::deleteAll()
 
                 }
         }
+}
+
+bool EgCasScene::isCrossVisible()
+{
+        return m_cross->isVisible();
 }

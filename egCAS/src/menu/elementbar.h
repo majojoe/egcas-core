@@ -93,6 +93,7 @@ private:
          */
         void setupMatrixSection(QWidget* parent, QVBoxLayout* barLayout, EgCasScene* scene);
 
+        EgCasScene* m_scene;
 };
 
 #endif // ELEMENTBAR_H
