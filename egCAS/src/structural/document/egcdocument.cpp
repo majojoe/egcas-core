@@ -444,6 +444,14 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, SerializerProperties &pr
                                 EgcTextEntity::setGenericFont(fnt);
                                 RichTextEditor::setGenericFont(fnt);
                         }
+                        QString currVerStr = QString(EGCAS_VERSION);
+                        quint32 currVer = 0;
+                        QStringList verList = currVerStr.split('.');
+                        if (verList.size() == 3) {
+                                currVer = verList.at(0).toUInt() << 16;
+                                currVer += verList.at(1).toUInt() << 8;
+                                currVer += verList.at(2).toUInt();
+                        }
                         QString ver = attr.value("version").toString();
                         QStringList list = ver.split('.');
                         if (list.size() == 3) {
@@ -452,9 +460,9 @@ void EgcDocument::deserialize(QXmlStreamReader& stream, SerializerProperties &pr
                                 properties.version += list.at(2).toUInt();
                         }
                         if (    attr.hasAttribute("height") && attr.hasAttribute("width")
-                             && (properties.version == 2 || properties.version == 3)) {
-                                qreal height = attr.value("height").toFloat();
-                                qreal width = attr.value("width").toFloat();
+                             && (properties.version >= 2 && properties.version <= currVer)) {
+                                qreal height = static_cast<qreal>(attr.value("height").toFloat());
+                                qreal width = static_cast<qreal>(attr.value("width").toFloat());
                                 setWidth(width);
                                 setHeight(height);
                                 //delete all contents from the document
