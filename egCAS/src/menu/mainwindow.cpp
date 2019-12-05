@@ -233,14 +233,6 @@ void MainWindow::saveFileAs(void)
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"), ".", tr("EgCAS files (*.egc)"));
         if (fileName.isEmpty())
                 return;
-        if (QFileInfo::exists(fileName)) {
-                QMessageBox::StandardButton ret = QMessageBox::warning(this, tr("File exists"),
-                                                                       tr("File already exists. Overwrite?"),
-                                                                       QMessageBox::Ok | QMessageBox::Cancel,
-                                                                       QMessageBox::Cancel);
-                if (ret == QMessageBox::Cancel)
-                        return;
-        }
 
         m_currentFileName = fileName;
 

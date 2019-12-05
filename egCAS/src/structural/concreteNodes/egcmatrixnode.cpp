@@ -78,10 +78,8 @@ void EgcMatrixNode::serializeAttributes(QXmlStreamWriter& stream)
 {
         QLatin1String str = EgcNodeCreator::stringize(getNodeType());
         if (str.size() != 0) {
-                stream.writeStartElement(str);
                 stream.writeAttribute("rows", QString::number(m_rows));
                 stream.writeAttribute("columns", QString::number(m_columns));
-                stream.writeEndElement();
         }
 }
 
