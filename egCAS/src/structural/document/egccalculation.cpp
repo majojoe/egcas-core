@@ -201,15 +201,25 @@ void EgcCalculation::resultReceived(QString result)
         nextCalculation();
 }
 
+bool EgcCalculation::suppressWarning(QString msg)
+{
+        if (msg == "WARNING: redefining MAXIMA::EXPLODEN in DEFUN")
+                return true;
+
+        return false;
+}
+
 void EgcCalculation::errorReceived(QString errorMsg)
 {
         bool trigger_next = m_waitForResult;
         m_waitForResult = false;
         
         if (m_result) {
-                m_result->setErrorMessage(errorMsg);
-                if (m_updateInstantly)
-                        m_result->updateView();
+                if (!suppressWarning(errorMsg)) {
+                        m_result->setErrorMessage(errorMsg);
+                        if (m_updateInstantly)
+                                m_result->updateView();
+                }
         }
 
         //go on to next calculation (even after an error with the current calculation)

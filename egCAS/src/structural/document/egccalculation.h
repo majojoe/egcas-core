@@ -130,6 +130,12 @@ private:
          * @brief triggerNextCalcualtion triggers the next calculation
          */
         void triggerNextCalcualtion(void);
+        /**
+         * @brief suppressWarning check if error or warning shall be suppressed
+         * @param msg error message
+         * @return true if it shall be suppressed, false otherwise
+         */
+        bool suppressWarning(QString msg);
 
         QScopedPointer<EgcKernelConn> m_conn;   ///< the connection to the cas kernel
         QScopedPointer<QMutableListIterator<EgcEntity*>> m_iterator;   ///< iterator that operates on the entity list we are calculating on
