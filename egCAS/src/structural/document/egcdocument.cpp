@@ -223,6 +223,7 @@ void EgcDocument::itemDeleted(QGraphicsItem* item)
                 m_itemMapper.remove(item);
                 deleteEntity(entity);
         }
+        restartCalculation();
 }
 
 void EgcDocument::deleteAll()

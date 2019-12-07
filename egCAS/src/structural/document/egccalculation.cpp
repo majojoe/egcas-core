@@ -203,6 +203,7 @@ void EgcCalculation::resultReceived(QString result)
 
 void EgcCalculation::errorReceived(QString errorMsg)
 {
+        bool trigger_next = m_waitForResult;
         m_waitForResult = false;
         
         if (m_result) {
@@ -212,12 +213,10 @@ void EgcCalculation::errorReceived(QString errorMsg)
         }
 
         //go on to next calculation (even after an error with the current calculation)
-        if (m_waitForResult) {
+        if (trigger_next) {
                 nextCalculation();
-        } else if (m_kernelStarted) {
-                //if an error occurred where it makes no sense to go on with calculation, wait for the user to change
-                //s.th.
-                m_state = CalcualtionState::restartAfterResume;
+        } else if (m_kernelStarted && trigger_next) {
+                nextCalculation();
         }
 }
 
