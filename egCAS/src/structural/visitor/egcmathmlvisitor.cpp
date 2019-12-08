@@ -106,6 +106,8 @@ void EgcMathMlVisitor::visit(EgcBinaryNode* node)
                         assembleResult("<msup "%id%">%1 %2</msup>", node);
                 }
                 break;
+        case EgcNodeType::NodeUndefined:
+                break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType())) ;
                 break;
@@ -161,6 +163,8 @@ void EgcMathMlVisitor::visit(EgcUnaryNode* node)
                         id = getId(node);
                         assembleResult("<mrow "%id%"><mo" % getId(node) % ">-</mo>%1</mrow>", node);
                 }
+                break;
+        case EgcNodeType::NodeUndefined:
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType())) ;
@@ -275,6 +279,8 @@ void EgcMathMlVisitor::visit(EgcFlexNode* node)
                                        "</mtd></mtr><mtr  "%id%"><mtd>", nd->columns(), "</mtd></mtr></mtable></mfenced>",node);
                 }
                 break;
+        case EgcNodeType::NodeUndefined:
+                break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType()));
                 break;
@@ -325,6 +331,8 @@ void EgcMathMlVisitor::visit(EgcNode* node)
                 break;
         case EgcNodeType::EmptyNode:
                 pushToStack("<mi mathcolor=\"#7F7F7F\"" %id%">&#x2B1A;</mi>", node);
+                break;
+        case EgcNodeType::NodeUndefined:
                 break;
         default:
                 qDebug("No visitor code for mathml defined for this type: %d", static_cast<int>(node->getNodeType()));

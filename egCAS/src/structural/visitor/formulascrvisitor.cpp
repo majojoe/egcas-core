@@ -117,6 +117,8 @@ void FormulaScrVisitor::visit(EgcBinaryNode* binary)
                         setElementSubposition(1, 2);
                 }
                 break;
+        case EgcNodeType::NodeUndefined:
+                break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(binary->getNodeType())) ;
                 break;
@@ -176,6 +178,8 @@ void FormulaScrVisitor::visit(EgcUnaryNode* unary)
                         append("-", unary, CursorAdhesion::normal);
                         setElementSubposition(1);
                 }
+                break;
+        case EgcNodeType::NodeUndefined:
                 break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(unary->getNodeType())) ;
@@ -252,7 +256,8 @@ void FormulaScrVisitor::visit(EgcFlexNode* flex)
                         appendSegmented("])", flex->getChild(flex->getNumberChildNodes() - 1), CursorAdhesion::ultra, 0, false, flex, 0, false);
                 }
                 break;
-
+        case EgcNodeType::NodeUndefined:
+                break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(flex->getNodeType())) ;
                 break;
@@ -292,6 +297,8 @@ void FormulaScrVisitor::visit(EgcNode* node)
                 }
                 break;
         }
+        case EgcNodeType::NodeUndefined:
+                break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(node->getNodeType())) ;
                 break;
