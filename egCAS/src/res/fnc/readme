@@ -1,1 +1,3 @@
 In order to generate icons in this directory, insert mathml code in the enclosed html file and make a screenshot in firefox at 100% scale.
+convert white background to transparent with imagemagick:
+convert  matrix.png  -transparent white  matrix_transparent.png

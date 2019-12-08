@@ -239,7 +239,7 @@ void ElementBar::setupMatrixSection(QWidget* parent, QVBoxLayout* barLayout, EgC
         if (section) {
                 section->setChecked();
 
-                section->addElement(MathElement("M", EgcAction(EgcOperations::insertMatrix,  0, 0), false));
+                section->addElement(MathElement(":/res/fnc/matrix.png", EgcAction(EgcOperations::insertMatrix,  0, 0), true));
         }
 
         bool ass_ret;

@@ -76,6 +76,11 @@ protected slots:
          * @brief errorOutput overrride the error output
          */
         virtual void errorOutput(void) override;
+        /**
+         * @brief waitForErrorsAtStartup wait for a small time since it can be possible that some errors occur after loading modules, which
+         * are just warnings, but can disturb synchronity of outputs
+         */
+        void waitForErrorsAtStartup(void);
 protected:
         /**
          * @brief clearKernelOutQueue clears the output queue of the kernel

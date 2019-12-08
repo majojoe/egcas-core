@@ -164,6 +164,13 @@ void EgcMaximaConn::sendCommand(QString cmd)
         m_casKernelProcess->write(cmd.toUtf8());
 }
 
+void EgcMaximaConn::waitForErrorsAtStartup(void)
+{
+        emit kernelStarted();
+        m_startState = EgcKernelStart::Started;
+}
+
+
 void EgcMaximaConn::stdOutput(void)
 {
         //stop timer if active
@@ -194,8 +201,8 @@ void EgcMaximaConn::stdOutput(void)
                 match = m_startRegex.match(m_result);
                 if (match.hasMatch()) {
                         m_result.clear();
-                        emit kernelStarted();
-                        m_startState = EgcKernelStart::Started;
+                        //wait for errors during startup
+                        QTimer::singleShot(100, this, SLOT(waitForErrorsAtStartup()));
                 }
                 break;
         default:

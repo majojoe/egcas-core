@@ -201,31 +201,22 @@ void EgcCalculation::resultReceived(QString result)
         nextCalculation();
 }
 
-bool EgcCalculation::suppressWarning(QString msg)
-{
-        if (msg == "WARNING: redefining MAXIMA::EXPLODEN in DEFUN")
-                return true;
-
-        return false;
-}
-
 void EgcCalculation::errorReceived(QString errorMsg)
-{
+{       
         bool trigger_next = m_waitForResult;
-        m_waitForResult = false;
-        
+
+        m_waitForResult = false;                
         if (m_result) {
-                if (!suppressWarning(errorMsg)) {
-                        m_result->setErrorMessage(errorMsg);
-                        if (m_updateInstantly)
-                                m_result->updateView();
-                }
+                m_result->setErrorMessage(errorMsg);
+                if (m_updateInstantly)
+                        m_result->updateView();
         }
 
         //go on to next calculation (even after an error with the current calculation)
         if (trigger_next) {
-                nextCalculation();
-        } else if (m_kernelStarted && trigger_next) {
+                //earlier we waited for the user to change something in order to go on with calculation by setting the state
+                //to CalcualtionState::restartAfterResume, but this seems not to be good strategy, since doing so leads to
+                //some strange results shown to the user. So for now we simply go on with calculation...
                 nextCalculation();
         }
 }
