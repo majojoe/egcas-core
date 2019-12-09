@@ -165,6 +165,8 @@ void EgcMaximaVisitor::visit(EgcFlexNode* flex)
                 break;
         case EgcNodeType::NodeUndefined:
                 break;
+        case EgcNodeType::ArgumentsNode: //no need to act on it so far.
+                break;
         default:
                 qDebug("No visitor code for maxima defined for this type: %d", static_cast<int>(flex->getNodeType())) ;
                 break;
