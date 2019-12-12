@@ -240,6 +240,14 @@ void ElementBar::setupMatrixSection(QWidget* parent, QVBoxLayout* barLayout, EgC
                 section->setChecked();
 
                 section->addElement(MathElement(":/res/fnc/matrix.png", EgcAction(EgcOperations::insertMatrix,  0, 0), true));
+                section->addElement(MathElement(":/res/fnc/matrix_cross_prod.png", EgcAction(EgcOperations::insertMatrix,  0, 0), true));
+                section->addElement(MathElement(":/res/fnc/matrix_skalar_prod.png", EgcAction(EgcOperations::insertMatrix,  0, 0), true));
+                section->addElement(MathElement(":/res/fnc/matrix_transpose.png", EgcAction(EgcOperations::insertMatrix,  0, 0), true));
+                section->newRow();
+                section->addElement(MathElement(":/res/fnc/matrix_inverse.png", EgcAction(EgcOperations::insertMatrix,  0, 0), true));
+                section->addElement(MathElement(":/res/fnc/matrix_determinant.png", EgcAction(EgcOperations::insertMatrix,  0, 0), true));
+                section->addElement(MathElement(":/res/fnc/matrix_cols.png", EgcAction(EgcOperations::insertMatrix,  0, 0), true));
+                section->addElement(MathElement(":/res/fnc/matrix_element.png", EgcAction(EgcOperations::insertMatrix,  0, 0), true));
         }
 
         bool ass_ret;

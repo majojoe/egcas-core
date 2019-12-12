@@ -43,6 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 QString EgcMaximaConn::s_startupConfig = QString("set_display(none)$"
                                                  "display2d:false$"
                                                  "load(\"engineering-format\")$"
+                                                 "load(\"vect\")$"
                                                  "engineering_format_floats:false$");
 
 QString EgcMaximaConn::s_modulesLoadingConfig = QString("ev(1)$");

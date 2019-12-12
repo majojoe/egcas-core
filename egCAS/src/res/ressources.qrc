@@ -18,5 +18,13 @@
         <file>fnc/integral.png</file>
         <file>fnc/matrix.png</file>
         <file>sound/error.wav</file>
+        <file>fnc/matrix_cross_prod.png</file>
+        <file>fnc/matrix_element.png</file>
+        <file>fnc/matrix.png</file>
+        <file>fnc/matrix_transpose.png</file>
+        <file>fnc/matrix_cols.png</file>
+        <file>fnc/matrix_determinant.png</file>  
+        <file>fnc/matrix_inverse.png</file>
+        <file>fnc/matrix_skalar_prod.png</file>
     </qresource>
 </RCC>
