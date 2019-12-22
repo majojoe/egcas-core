@@ -76,6 +76,9 @@ EgcNode* EgcNodeCreator::create(EgcNodeType type)
         case EgcNodeType::RParenthesisNode:
                 retval = new (std::nothrow) RParenthesisNode();
                 break;
+        case EgcNodeType::CrossProductNode:
+                retval = new (std::nothrow) EgcCrossProductNode();
+                break;
         case EgcNodeType::DifferentialNode:
                 retval = new (std::nothrow) EgcDifferentialNode();
                 break;
@@ -158,6 +161,8 @@ EgcNode*EgcNodeCreator::create(QLatin1String name)
                 retval = new (std::nothrow) EgcIntegralNode();
         if (name == QLatin1String("rparenthesisnode"))
                 retval = new (std::nothrow) RParenthesisNode();
+        if (name == QLatin1String("crossproductnode"))
+                retval = new (std::nothrow) EgcCrossProductNode();
         if (name == QLatin1String("differentialnode"))
                 retval = new (std::nothrow) EgcDifferentialNode();
         if (name == QLatin1String("lparenthesisnode"))
@@ -238,6 +243,9 @@ QLatin1String EgcNodeCreator::stringize(EgcNodeType type)
                 break;
         case EgcNodeType::RParenthesisNode:
                 retval = QLatin1String("rparenthesisnode");
+                break;
+        case EgcNodeType::CrossProductNode:
+                retval = QLatin1String("crossproductnode");
                 break;
         case EgcNodeType::DifferentialNode:
                 retval = QLatin1String("differentialnode");

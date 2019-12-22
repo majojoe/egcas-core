@@ -22,6 +22,7 @@
 #include "concreteNodes/egcfnccontainernode.h"
 #include "concreteNodes/egcintegralnode.h"
 #include "concreteNodes/egcrparenthesisnode.h"
+#include "concreteNodes/egccrossproductnode.h"
 #include "concreteNodes/egcdifferentialnode.h"
 #include "concreteNodes/egclparenthesisnode.h"
 #include "concreteNodes/egcplusnode.h"
